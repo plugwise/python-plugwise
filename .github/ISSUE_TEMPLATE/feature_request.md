@@ -22,8 +22,8 @@ A clear and concise description of any alternative solutions or features you've 
  - Installed plugwise version: [e.g. 'plugwise-beta or HA-core']
  - Installed through [e.g. 'HACS', 'Core' or manual custom_component]
 
-**Smile/Stretch/USB (please complete the following information):**
- - Sort of Smile, Strech or used product: [e.g. Adam/Anna/P1/Stretch/Stick (Circle/Stealth/etc.)]
+**Used Plugwise product and setup (please complete the following information):**
+ - Type: [e.g. Adam/Anna/P1/Stretch/Stick (Circle/Stealth/etc.)]
  - Firmware: [check through the app or the integrations page in Home Assistant]
  - Setup: [what additional components do you have such as Anna, Lisa, Koen, Floor, Tom, etc. - what kind of auxiliary devices as boilers/heaters/heat-exchangers]
 
