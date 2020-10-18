@@ -38,7 +38,7 @@ If applicable, add screenshots to help explain your problem.
  - Installed through [e.g. 'HACS', 'Core' or manual custom_component]
 
 **Smile (please complete the following information):**
- - Sort of Smile: [e.g. Adam/Anna/P1]
+ - Sort of Smile, Strech or used product: [e.g. Adam/Anna/P1/Stretch/Stick (Circle/Stealth/etc.)]
  - Firmware: [check through the app or the integrations page in Home Assistant]
 
 **Additional context**
