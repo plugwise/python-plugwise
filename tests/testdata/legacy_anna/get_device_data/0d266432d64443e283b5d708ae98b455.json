@@ -1,1 +1,0 @@
-{"temperature": 20.4, "setpoint": 20.5, "schedule_temperature": 20.0, "active_preset": "home", "presets": {"away": [19.0, 0], "vacation": [15.0, 0], "asleep": [19.0, 0], "home": [20.0, 0], "no_frost": [10.0, 0]}, "available_schedules": ["Thermostat schedule"], "selected_schedule": "Thermostat schedule", "last_used": "Thermostat schedule", "illuminance": 151}

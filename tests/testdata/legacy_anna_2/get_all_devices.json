@@ -1,1 +1,0 @@
-{"9e7377867dc24e51b8098a5ba02bd89d": {"name": "Anna", "types": {"py/set": ["home", "temperature", "thermostat"]}, "class": "thermostat", "location": "be81e3f8275b4129852c4d8d550ae2eb"}, "ea5d8a7177e541b0a4b52da815166de4": {"name": "Anna", "types": {"py/set": ["home", "temperature", "thermostat"]}, "class": "heater_central", "location": "be81e3f8275b4129852c4d8d550ae2eb"}}
