@@ -38,7 +38,9 @@ setup(
     install_requires=[
         "aiohttp",
         "async_timeout<4.0",
+        "crcmod",
         "lxml",
+        "pyserial",
         "pytz",
         "python-dateutil",
         "semver",
