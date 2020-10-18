@@ -24,7 +24,13 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 
 [![Generic badge](https://img.shields.io/badge/HA%20core-no-red.svg)](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise)
 
-Note we currently have a `plugwise` [component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) in core that will be replaced (eventually, then continously) with stable releases from this project
+Note we currently have a `plugwise` [component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) in core that will be replaced (eventually, then continuously) with stable releases from this project
+
+## Development/patches
+
+Like Home Assistant Core we use `pre-commit` to validate your commits and eventually PRs.
+
+Please make sure you at least ran `pip install -r requirements_commit.txt` before attempting to `git commit`. But we sincerely recommended to also use local testing, see `tests/README.md` for more information.
 
 ## Project support status
 
@@ -45,7 +51,7 @@ Module providing interfacing with the Plugwise devices:
 
 ## License, origins and contributors
 
-Original (and therefor, license) by [haanna](https://github.com/laetificat/haanna) by Kevin Heruer
+Original (and therefore, license) by [haanna](https://github.com/laetificat/haanna) by Kevin Heruer
 
 Modified and adjusted by @CoMPaTech and @bouwew in his repository but in 2020 cloned to Plugwise to include more than 'just Anna'
 

@@ -1,15 +1,8 @@
 black
-codecov
 coverage
 flake8-black
-jsonpickle
 mypy
 pre-commit
 pydocstyle
 pylint
-pytest>=5.4.0
-pytest-aiohttp
-pytest-asyncio
-pytest-cov
-pytest-coverage
 pylint_strict_informational

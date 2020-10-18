@@ -9,14 +9,14 @@ import re
 
 import aiohttp
 import async_timeout
+from dateutil.parser import parse
+from lxml import etree
 
 # Time related
 import pytz
 
 # Version detection
 import semver
-from dateutil.parser import parse
-from lxml import etree
 
 APPLIANCES = "/core/appliances"
 DIRECT_OBJECTS = "/core/direct_objects"
@@ -50,11 +50,11 @@ DEVICE_MEASUREMENTS = {
     "temperature": "temperature",
     # HA Core setpoint
     "thermostat": "setpoint",
-    # Anna/Adam 
+    # Anna/Adam
     "boiler_temperature": "water_temperature",
     "domestic_hot_water_state": "dhw_state",
     "intended_boiler_temperature": "intended_boiler_temperature",  # non-zero when heating, zero when dhw-heating
-    "intended_central_heating_state": "heating_state", # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
+    "intended_central_heating_state": "heating_state",  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
     "modulation_level": "modulation_level",
     "return_water_temperature": "return_temperature",
     # Used with the Elga heatpump - marcelveldt
@@ -62,14 +62,14 @@ DEVICE_MEASUREMENTS = {
     "cooling_state": "cooling_state",
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
     "slave_boiler_state": "slave_boiler_state",
-    "flame_state": "flame_state", # also present when there is a single gas-heater
+    "flame_state": "flame_state",  # also present when there is a single gas-heater
     # Anna only
     "central_heater_water_pressure": "water_pressure",
-    "outdoor_temperature": "outdoor_temperature", # Outdoor temp as reported on the Anna, in the App
-    "schedule_temperature": "schedule_temperature", # Only present on legacy Anna and Anna_v3
+    "outdoor_temperature": "outdoor_temperature",  # Outdoor temp as reported on the Anna, in the App
+    "schedule_temperature": "schedule_temperature",  # Only present on legacy Anna and Anna_v3
     # Legacy Anna: similar to flame-state on Anna/Adam
     "boiler_state": "boiler_state",
-    # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determinded reliably
+    # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably
     "intended_boiler_state": "intended_boiler_state",
     # Lisa and Tom
     "battery": "battery",
@@ -171,7 +171,6 @@ class Smile:
         self.smile_type = None
         self.smile_version = ()
 
-
     async def connect(self):
         """Connect to Plugwise device."""
         # pylint: disable=too-many-return-statements,raise-missing-from
@@ -194,7 +193,7 @@ class Smile:
                 )
                 raise self.ConnectionFailedError
 
-        # TODO creat this as another function NOT part of connect!
+        # TODO create this as another function NOT part of connect!
         # just using request to parse the data
         gateway = result.find(".//gateway")
 
@@ -244,8 +243,8 @@ class Smile:
             _LOGGER.error("Unable to find model or version information")
             raise self.UnsupportedDeviceError
 
-        ver = semver.parse(version)
-        target_smile = f"{model}_v{ver['major']}"
+        ver = semver.VersionInfo.parse(version)
+        target_smile = f"{model}_v{ver.major}"
 
         _LOGGER.debug("Plugwise identified as %s", target_smile)
 
@@ -321,7 +320,7 @@ class Smile:
         # Command accepted gives empty body with status 202
         if resp.status == 202:
             return
-        # Cornercase for stretch not responsing 202
+        # Cornercase for stretch not responding with 202
         if method == "put" and resp.status == 200:
             return
 
@@ -401,7 +400,7 @@ class Smile:
     @staticmethod
     def _types_finder(data):
         """Detect types within locations from logs."""
-        types = set([])
+        types = set()
         for measure, measure_type in HOME_MEASUREMENTS.items():
             locator = f".//logs/point_log[type='{measure}']"
             if data.find(locator) is not None:
@@ -428,7 +427,7 @@ class Smile:
             # get_appliance_data can use loc_id for dev_id.
             appliances[self._home_location] = {
                 "name": "P1",
-                "types": set(["power", "home"]),
+                "types": {"power", "home"},
                 "class": "gateway",
                 "location": home_location,
             }
@@ -454,7 +453,7 @@ class Smile:
 
         for appliance in self._appliances:
             appliance_location = None
-            appliance_types = set([])
+            appliance_types = set()
 
             appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
@@ -480,7 +479,7 @@ class Smile:
                     appliance_id = self.gateway_id
                     appliance_name = self.smile_name
 
-            # Determine appliance_type from funcitonality
+            # Determine appliance_type from functionality
             if (
                 appliance.find(".//actuator_functionalities/relay_functionality")
                 is not None
@@ -509,7 +508,7 @@ class Smile:
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         if len(self._locations) == 0 and self._smile_legacy:
-            appliances = set([])
+            appliances = set()
             home_location = 0
 
             # Add Anna appliances
@@ -519,13 +518,13 @@ class Smile:
             if self.smile_type == "thermostat":
                 locations[0] = {
                     "name": "Legacy Anna",
-                    "types": set(["temperature"]),
+                    "types": {"temperature"},
                     "members": appliances,
                 }
             if self.smile_type == "stretch":
                 locations[0] = {
                     "name": "Legacy Stretch",
-                    "types": set(["power"]),
+                    "types": {"power"},
                     "members": appliances,
                 }
 
@@ -536,8 +535,8 @@ class Smile:
         for location in self._locations:
             location_name = location.find("name").text
             location_id = location.attrib["id"]
-            location_types = set([])
-            location_members = set([])
+            location_types = set()
+            location_members = set()
 
             # Group of appliances
             locator = ".//appliances/appliance"
@@ -608,11 +607,11 @@ class Smile:
 
             if "thermostat" in location_details["types"] and loc_id != home_location:
                 locations[loc_id].update(
-                    {"master": None, "master_prio": 0, "slaves": set([])}
+                    {"master": None, "master_prio": 0, "slaves": set()}
                 )
             elif loc_id == home_location and self._smile_legacy:
                 locations[loc_id].update(
-                    {"master": None, "master_prio": 0, "slaves": set([])}
+                    {"master": None, "master_prio": 0, "slaves": set()}
                 )
             else:
                 continue
@@ -738,16 +737,14 @@ class Smile:
     def get_open_valves(self):
         """Obtain the amount of open valves, from APPLIANCES."""
         appliances = self._appliances.findall(".//appliance")
-        
+
         open_valve_count = 0
         for appliance in appliances:
-                locator = (
-                    f'.//logs/point_log[type="valve_position"]/period/measurement'
-                )
-                if appliance.find(locator) is not None:
-                    measure = appliance.find(locator).text
-                    if float(measure) > 0.0:
-                        open_valve_count += 1
+            locator = './/logs/point_log[type="valve_position"]/period/measurement'
+            if appliance.find(locator) is not None:
+                measure = appliance.find(locator).text
+                if float(measure) > 0.0:
+                    open_valve_count += 1
 
         return open_valve_count
 
@@ -775,7 +772,7 @@ class Smile:
             device_data.pop("heating_state", None)
 
         # Adam: indicate heating_state based on valves being open in case of city-provided heating
-        if self.smile_name == "Adam": 
+        if self.smile_name == "Adam":
             if details["class"] == "heater_central":
                 if not self.active_device_present:
                     device_data["heating_state"] = True
@@ -871,7 +868,7 @@ class Smile:
                         continue
                     # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
                     if (
-                        measurement == "compressor_state" 
+                        measurement == "compressor_state"
                         or measurement == "flame_state"
                     ):
                         self.active_device_present = True
@@ -1383,10 +1380,9 @@ class Smile:
     async def delete_notification(self):
         """Send a set request to the schema with the given name."""
         uri = f"{NOTIFICATIONS}"
-        
+
         await self.request(uri, method="delete")
         return True
-
 
     class PlugwiseError(Exception):
         """Plugwise exceptions class."""

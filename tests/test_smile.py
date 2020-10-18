@@ -1,20 +1,19 @@
 """Test Plugwise Home Assistant module and generate test JSONs."""
 
+import asyncio
+
+# Fixture writing
+import io
+import logging
+import os
 from pprint import PrettyPrinter
 
 # Testing
 import aiohttp
-import asyncio
-import logging
+import jsonpickle as json
 import pytest
 
-# Fixture writing
-import io
-import os
-
 from plugwise.smile import Smile
-
-import jsonpickle as json
 
 pp = PrettyPrinter(indent=8)
 
@@ -23,7 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
 
 # Prepare aiohttp app routes
-# taking self.smile_setup (i.e. directory name under tests/{smile_app}/
+# taking self.smile_setup (i.e. directory name under userdata/{smile_app}/
 # as inclusion point
 
 
@@ -32,7 +31,9 @@ class TestPlugwise:
 
     def _write_json(self, call, data):
         """Store JSON data to per-setup files for HA component testing."""
-        path = os.path.join(os.path.dirname(__file__), "testdata/" + self.smile_setup)
+        path = os.path.join(
+            os.path.dirname(__file__), "../fixtures/" + self.smile_setup
+        )
         datafile = os.path.join(path, call + ".json")
         if not os.path.exists(path):
             os.mkdir(path)
@@ -82,21 +83,33 @@ class TestPlugwise:
     # Wrapper for appliances uri
     async def smile_appliances(self, request):
         """Render setup specific appliances endpoint."""
-        f = open("tests/{}/core.appliances.xml".format(self.smile_setup), "r")
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.appliances.xml",
+        )
+        f = open(userdata)
         data = f.read()
         f.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_domain_objects(self, request):
         """Render setup specific domain objects endpoint."""
-        f = open("tests/{}/core.domain_objects.xml".format(self.smile_setup), "r")
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.domain_objects.xml",
+        )
+        f = open(userdata)
         data = f.read()
         f.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_locations(self, request):
         """Render setup specific locations endpoint."""
-        f = open("tests/{}/core.locations.xml".format(self.smile_setup), "r")
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.locations.xml",
+        )
+        f = open(userdata)
         data = f.read()
         f.close()
         return aiohttp.web.Response(text=data)
@@ -104,7 +117,11 @@ class TestPlugwise:
     async def smile_status(self, request):
         """Render setup specific status endpoint."""
         try:
-            f = open("tests/{}/system_status_xml.xml".format(self.smile_setup), "r")
+            userdata = os.path.join(
+                os.path.dirname(__file__),
+                f"../userdata/{self.smile_setup}/system_status_xml.xml",
+            )
+            f = open(userdata)
             data = f.read()
             f.close()
             return aiohttp.web.Response(text=data)
@@ -201,7 +218,7 @@ class TestPlugwise:
             _LOGGER.error(" - timeout not handled")
             raise self.ConnectError
         except (Smile.DeviceTimeoutError, Smile.ResponseError):
-            _LOGGER.info(" + succesfully passed timeout handling.")
+            _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
             _LOGGER.warning("Connecting to device with missing data:")
@@ -209,7 +226,7 @@ class TestPlugwise:
             _LOGGER.error(" - broken information not handled")
             raise self.ConnectError
         except Smile.InvalidXMLError:
-            _LOGGER.info(" + succesfully passed XML issue handling.")
+            _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
         return await self.connect()
@@ -248,7 +265,6 @@ class TestPlugwise:
         _LOGGER.info("Asserting testdata:")
         device_list = smile.get_all_devices()
         self._write_json("get_all_devices", device_list)
-        self._write_json("notifications", smile.notifications)
 
         location_list, dummy = smile.scan_thermostats()
 
@@ -350,7 +366,7 @@ class TestPlugwise:
                 assert_state = False
                 warning = " Negative test"
                 new_preset = new_preset[1:]
-            _LOGGER.info("%s", "- Adjusting preset to {}{}".format(new_preset, warning))
+            _LOGGER.info("%s", f"- Adjusting preset to {new_preset}{warning}")
             try:
                 preset_change = await smile.set_preset(loc_id, new_preset)
                 assert preset_change == assert_state
@@ -371,9 +387,7 @@ class TestPlugwise:
                     assert_state = False
                     warning = " Negative test"
                     new_schema = new_schema[1:]
-                _LOGGER.info(
-                    "- Adjusting schedule to %s", "{}{}".format(new_schema, warning)
-                )
+                _LOGGER.info("- Adjusting schedule to %s", f"{new_schema}{warning}")
                 try:
                     schema_change = await smile.set_schedule_state(
                         loc_id, new_schema, "auto"
@@ -384,7 +398,7 @@ class TestPlugwise:
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
                     else:
-                        _LOGGER.info("  - suceeded unexpectedly for some reason")
+                        _LOGGER.info("  - succeeded unexpectedly for some reason")
                         raise self.UnexpectedError
         else:
             _LOGGER.info("- Skipping schema adjustments")
@@ -1215,7 +1229,7 @@ class TestPlugwise:
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_copy_with_error_domain_added(self):
-        """Test erronous domain_objects file from user."""
+        """Test erroneous domain_objects file from user."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
 
         self.smile_setup = "adam_plus_anna_copy_with_error_domain_added"
@@ -1239,7 +1253,7 @@ class TestPlugwise:
 
     @pytest.mark.asyncio
     async def test_connect_stretch_v31(self):
-        """Test erronous domain_objects file from user."""
+        """Test erroneous domain_objects file from user."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Koelkast
@@ -1272,7 +1286,7 @@ class TestPlugwise:
 
     @pytest.mark.asyncio
     async def test_fail_legacy_system(self):
-        """Test erronous legacy stretch system."""
+        """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
         try:
             server, smile, client = await self.connect_wrapper()
