@@ -14,7 +14,7 @@ import os
 
 import jsonpickle as json
 
-from Plugwise_Smile.Smile import Smile
+from plugwise.Smile import Smile
 
 pp = PrettyPrinter(indent=8)
 
