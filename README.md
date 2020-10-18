@@ -30,7 +30,7 @@ Note we currently have a `plugwise` [component](https://github.com/home-assistan
 
 Like Home Assistant Core we use `pre-commit` to validate your commits and eventually PRs.
 
-Please make sure you at least ran `pip install -r requirements_commit.txt` before attempting to `git commit`. But we sincerely recommended to also use local testing, see `tests/README.md` for more information.
+Please make sure you at least ran `scripts/setup.sh` before attempting to `git commit`. But we sincerely recommended to also use local testing, see `tests/README.md` for more information.
 
 ## Project support status
 
