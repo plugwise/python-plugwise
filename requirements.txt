@@ -1,0 +1,6 @@
+aiohttp
+async_timeout
+lxml
+pytz
+python-dateutil
+semver
