@@ -25,7 +25,7 @@ Ensure you have python(3) with virtualenv installed. For ubuntu based systems `a
 
 From the main directory of this repository run `python3 -m venv venv` followed by `source venv/bin/activate`. 
 
-Now install the requirements into your virtual environment by running `pip install -r requirements.txt -r requirements_test.txt`. **Note** that you'll have to run the `source venv/bin/activate` each time you work on files to ensure you have the virtual environment.
+Now install the requirements into your virtual environment by running `scripts/setup_test.sh`. **Note** that you'll have to run the `source venv/bin/activate` each time you work on files to ensure you have the virtual environment.
 
-Now you can test using `scripts/run_tests_and_coverage.sh` from the main directory and watch the results.
+Now you can test using `scripts/tests_and_coverage.sh` from the main directory and watch the results.
 

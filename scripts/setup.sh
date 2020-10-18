@@ -15,7 +15,11 @@ my_path=$(git rev-parse --show-toplevel)
 for venv in venv .venv .; do
   if [ -f "${my_path}/${venv}/bin/activate" ]; then
     . "${my_path}/${venv}/bin/activate"
-    pip install -Ur requirements_commit.txt
+    # Install module requirements
+    python setup.py install
+    # Install commit requirements
+    pip install --upgrade -r requirements_commit.txt
+    # Install pre-commit hook
     ${my_path}/${venv}/bin/pre-commit install
   fi
 done
