@@ -37,7 +37,7 @@ setup(
     packages=["plugwise"],
     install_requires=[
         "aiohttp",
-        "async_timeout",
+        "async_timeout<4.0",
         "lxml",
         "pytz",
         "python-dateutil",

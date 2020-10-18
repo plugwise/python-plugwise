@@ -9,9 +9,10 @@ before_install:
 - python --version
 - pip install -U pip
 install:
-- pip install -U -r requirements.txt -r requirements_test.txt
+- python setup.py install
+- pip install --upgrade -r requirements_test.txt
 script:
-- PYTHONPATH=`pwd` pytest -rpP --log-level info tests/test_smile.py --cov='.'
+- PYTHONPATH=`pwd` pytest --log-level info tests/test_smile.py --cov='.'
 after_success:
 - codecov
 deploy:
