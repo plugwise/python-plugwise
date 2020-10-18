@@ -265,6 +265,7 @@ class TestPlugwise:
         _LOGGER.info("Asserting testdata:")
         device_list = smile.get_all_devices()
         self._write_json("get_all_devices", device_list)
+        self._write_json("notifications", smile.notifications)
 
         location_list, dummy = smile.scan_thermostats()
 
