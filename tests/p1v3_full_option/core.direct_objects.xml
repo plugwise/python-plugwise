@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<direct_objects>
+	<appliance id='e950c7d5e1ee407a858e2a8b5016c8b3'>
+		<name>Gateway C4930004DD24</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2019-09-18T15:00:27.237+02:00</created_date>
+		<modified_date>2020-04-06T12:38:51.578+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='0f949d720b2c446bb341ba6dff93ab9d'>
+				<updated_date>2020-04-06T12:38:51.541+02:00</updated_date>
+				<type>lan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:36.344+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:51.541+02:00" end_date="2020-04-06T12:38:51.541+02:00">
+					<measurement log_date="2020-04-06T12:38:51.541+02:00">up</measurement>
+				</period>
+				<network_state id='ed55e68d63a3430ca7303ae8d2129e83'/>
+			</point_log>
+			<point_log id='3de6ef20ae484579b997da2ba9971079'>
+				<updated_date>2020-04-06T12:38:45+02:00</updated_date>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:45+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:45+02:00" end_date="2020-04-06T12:38:45+02:00">
+					<measurement log_date="2020-04-06T12:38:45+02:00">127.0.0.1</measurement>
+				</period>
+				<network_address id='93e8f9822a1741258e5c346f0a0e80fd'/>
+			</point_log>
+			<point_log id='8be3d3c330324824a1c186cb9a964da3'>
+				<updated_date>2020-04-06T12:38:51.564+02:00</updated_date>
+				<type>wlan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:51.564+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:51.564+02:00" end_date="2020-04-06T12:38:51.564+02:00">
+					<measurement log_date="2020-04-06T12:38:51.564+02:00">down</measurement>
+				</period>
+				<network_state id='aa8193a634a34ca0b23624ec89a586bf'/>
+			</point_log>
+			<point_log id='af8bb16ab15145f9b76fea8239b49bd6'>
+				<updated_date>2020-04-06T12:38:51.541+02:00</updated_date>
+				<type>lan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:36+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:51.541+02:00" end_date="2020-04-06T12:38:51.541+02:00">
+					<measurement log_date="2020-04-06T12:38:51.541+02:00">127.0.0.1</measurement>
+				</period>
+				<network_address id='b4fd3d27e4554a699b1bf8487aa384b5'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+	<location id='cd3e822288064775a7c4afcdd70bdda2'>
+		<name>Home</name>
+		<description>A building with a smart meter.</description>
+		<type>building</type>
+		<created_date>2020-03-16T20:51:10.471+01:00</created_date>
+		<modified_date>2020-04-08T13:59:00.969+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<interval_log id='1d08b6877f514d00863f802bfa6c860a'>
+				<updated_date>2020-04-08T13:45:00+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-04-08T13:30:00+02:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<period start_date="2020-04-08T13:45:00+02:00" end_date="2020-04-08T13:45:00+02:00" interval="PT15M">
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_interval_meter id='24540350c98d4c1b93b873f55c1b2bfc'/>
+			</interval_log>
+			<interval_log id='4e0d78a9862e49d68531920f4d913dce'>
+				<updated_date>2020-04-08T13:00:00+02:00</updated_date>
+				<type>gas_consumed</type>
+				<unit>m3</unit>
+				<last_consecutive_log_date>2020-04-08T12:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2020-04-08T13:00:00+02:00" end_date="2020-04-08T13:00:00+02:00" interval="PT1H">
+					<measurement log_date="2020-04-08T13:00:00+02:00">0.00</measurement>
+				</period>
+				<gas_interval_meter id='d28cd8b90b7643e38ef01780b12b6b5c'/>
+			</interval_log>
+			<cumulative_log id='9cff4a96cabc4b35a0e0411e032bc1cf'>
+				<updated_date>2020-04-08T13:45:00+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-04-08T13:45:00+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-08T13:45:00+02:00" end_date="2020-04-08T13:45:00+02:00">
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_peak">396559.00</measurement>
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_offpeak">154491.00</measurement>
+				</period>
+				<electricity_cumulative_meter id='e0a0345611344d4bae927317fbc1b8c7'/>
+			</cumulative_log>
+			<cumulative_log id='a319499a72d146f993bfa52c88f694f1'>
+				<updated_date>2020-04-08T13:55:00+02:00</updated_date>
+				<type>gas_consumed</type>
+				<unit>m3</unit>
+				<last_consecutive_log_date>2020-04-08T13:55:00+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-08T13:55:00+02:00" end_date="2020-04-08T13:55:00+02:00">
+					<measurement log_date="2020-04-08T13:55:00+02:00">584.85</measurement>
+				</period>
+				<gas_cumulative_meter id='1bda9cd3919943e3a52fbc6926ff91fa'/>
+			</cumulative_log>
+			<interval_log id='b61cd85a98dd4e02a571c278a8945b2f'>
+				<updated_date>2020-04-08T13:45:00+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-04-08T13:30:00+02:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<period start_date="2020-04-08T13:45:00+02:00" end_date="2020-04-08T13:45:00+02:00" interval="PT15M">
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_interval_meter id='24540350c98d4c1b93b873f55c1b2bfc'/>
+			</interval_log>
+			<point_log id='c35294c5771541339bcd563eb8174099'>
+				<updated_date>2020-04-08T13:58:59+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-04-08T09:51:57+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-08T13:58:59+02:00" end_date="2020-04-08T13:58:59+02:00">
+					<measurement log_date="2020-04-08T13:58:59+02:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-04-08T13:58:59+02:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_point_meter id='199728709275469dabd60cff37fd908d'/>
+			</point_log>
+			<cumulative_log id='cd516b1c631f48da9da6f6d63561df18'>
+				<updated_date>2020-04-08T13:45:00+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-04-08T13:45:00+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-08T13:45:00+02:00" end_date="2020-04-08T13:45:00+02:00">
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_peak">442932.00</measurement>
+					<measurement log_date="2020-04-08T13:45:00+02:00" tariff="nl_offpeak">551090.00</measurement>
+				</period>
+				<electricity_cumulative_meter id='e0a0345611344d4bae927317fbc1b8c7'/>
+			</cumulative_log>
+			<point_log id='e8531fddbbb047218ac28380a3b65a9d'>
+				<updated_date>2020-04-08T13:58:59+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-04-08T13:58:59+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-08T13:58:59+02:00" end_date="2020-04-08T13:58:59+02:00">
+					<measurement log_date="2020-04-08T13:58:59+02:00" tariff="nl_peak">2809.00</measurement>
+					<measurement log_date="2020-04-08T13:58:59+02:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_point_meter id='199728709275469dabd60cff37fd908d'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+</direct_objects>

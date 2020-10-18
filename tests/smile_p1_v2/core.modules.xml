@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module id='1e4783850f4c4595b5be8c9cf3462f56'>
+		<vendor_name>Ene5\T210-DESMR5.0</vendor_name>
+		<vendor_model>Ene5\T210-DESMR5.0</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-03-15T14:24:43.239+01:00</created_date>
+		<modified_date>2020-03-11T21:31:54.422+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='5bf96af3657544c1b7d74602bebc11a5'>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='produced' tariff_indicator='nl_offpeak'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='produced' tariff_indicator='nl_peak'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='consumed' tariff_indicator='nl_offpeak'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='consumed' tariff_indicator='nl_peak'>250.000</measurement>
+			</electricity_interval_meter>
+			<electricity_cumulative_meter id='34494826ac91454b9a52565079816c42'>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='produced' tariff_indicator='nl_offpeak'>482598.000</measurement>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='produced' tariff_indicator='nl_peak'>1296136.000</measurement>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='consumed' tariff_indicator='nl_offpeak'>1642740.000</measurement>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='consumed' tariff_indicator='nl_peak'>1155195.000</measurement>
+			</electricity_cumulative_meter>
+			<electricity_point_meter id='954b543356184d3198616251130ea6fb'>
+				<measurement log_date='2020-03-11T21:31:44+01:00' unit='W' directionality='produced'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:31:44+01:00' unit='W' directionality='consumed'>458.000</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<dsmrmain id='9a68dc0c267444ba8769b3fb5e2ad35e'>
+				<serial>E0048000028931118</serial>
+				<dsmrmbuses>
+					<dsmrgas id='971a1b3112c34ab795c4f0ef911b8ef4'/>
+				</dsmrmbuses>
+			</dsmrmain>
+		</protocols>
+	</module>
+	<module id='3582b41427e2417a8f6a10fe412cc95c'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-11-08T11:19:56.987+01:00</created_date>
+		<modified_date>2020-03-11T21:31:54.422+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<gas_interval_meter id='7df1571450814d8495e2d21a20f382ef'>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='m3' interval='PT1H' directionality='consumed'>0.016</measurement>
+			</gas_interval_meter>
+			<gas_cumulative_meter id='18434cd441344195acad25d314c08121'>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='m3' directionality='consumed'>584.433</measurement>
+			</gas_cumulative_meter>
+		</services>
+		<protocols>
+			<dsmrgas id='971a1b3112c34ab795c4f0ef911b8ef4'>
+				<serial>G000000000000001</serial>
+					<dsmrmain id='9a68dc0c267444ba8769b3fb5e2ad35e'/>
+			</dsmrgas>
+		</protocols>
+	</module>
+</modules>

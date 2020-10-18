@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appliances>
+	<appliance id='e950c7d5e1ee407a858e2a8b5016c8b3'>
+		<name>Gateway C4930004DD24</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2019-09-18T15:00:27.237+02:00</created_date>
+		<modified_date>2020-04-06T12:38:51.578+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='0f949d720b2c446bb341ba6dff93ab9d'>
+				<updated_date>2020-04-06T12:38:51.541+02:00</updated_date>
+				<type>lan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:36.344+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:51.541+02:00" end_date="2020-04-06T12:38:51.541+02:00">
+					<measurement log_date="2020-04-06T12:38:51.541+02:00">up</measurement>
+				</period>
+				<network_state id='ed55e68d63a3430ca7303ae8d2129e83'/>
+			</point_log>
+			<point_log id='3de6ef20ae484579b997da2ba9971079'>
+				<updated_date>2020-04-06T12:38:45+02:00</updated_date>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:45+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:45+02:00" end_date="2020-04-06T12:38:45+02:00">
+					<measurement log_date="2020-04-06T12:38:45+02:00">127.0.0.1</measurement>
+				</period>
+				<network_address id='93e8f9822a1741258e5c346f0a0e80fd'/>
+			</point_log>
+			<point_log id='8be3d3c330324824a1c186cb9a964da3'>
+				<updated_date>2020-04-06T12:38:51.564+02:00</updated_date>
+				<type>wlan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:51.564+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:51.564+02:00" end_date="2020-04-06T12:38:51.564+02:00">
+					<measurement log_date="2020-04-06T12:38:51.564+02:00">down</measurement>
+				</period>
+				<network_state id='aa8193a634a34ca0b23624ec89a586bf'/>
+			</point_log>
+			<point_log id='af8bb16ab15145f9b76fea8239b49bd6'>
+				<updated_date>2020-04-06T12:38:51.541+02:00</updated_date>
+				<type>lan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-06T12:38:36+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-06T12:38:51.541+02:00" end_date="2020-04-06T12:38:51.541+02:00">
+					<measurement log_date="2020-04-06T12:38:51.541+02:00">127.0.0.1</measurement>
+				</period>
+				<network_address id='b4fd3d27e4554a699b1bf8487aa384b5'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+</appliances>

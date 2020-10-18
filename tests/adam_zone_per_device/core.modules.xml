@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module id='f887b0af3d1e45c794057ee606b21db8'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>158-01</vendor_model>
+		<hardware_version>255</hardware_version>
+		<firmware_version>2016-10-27T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-25T17:46:39.267+01:00</created_date>
+		<modified_date>2019-01-25T17:53:34.957+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<thermostat id='167bae6db9314377b3e8dc4a6049966d' log_type='thermostat'>
+				<functionalities><point_log id='1f8e435f82c844f287df00b94e026968'/><thermostat_functionality id='df60eedde8044f95af8b716bbe3f9c7f'/></functionalities>
+			</thermostat>
+			<thermo_meter id='a7d08c3fbdc749178f198b1ab2b2d574' log_type='temperature'>
+				<functionalities><point_log id='233cb3877f7b428d924d9c429f47b1ea'/></functionalities>
+			</thermo_meter>
+			<battery_meter id='bf556740293d4670bd1bc6d5f96b1046' log_type='battery'>
+				<functionalities><point_log id='23bcd6bcefd941f38e6946fd7ded680c'/></functionalities>
+			</battery_meter>
+			<temperature_offset id='ff262509f55d43ef98d837bad2004e11' log_type='temperature_offset'>
+				<functionalities><offset_functionality id='1b3f58f8a22544df87f97083c736410f'/><point_log id='e6c424ca6bf64d9aa621c64e04283ac1'/></functionalities>
+			</temperature_offset>
+		</services>
+		<protocols>
+			<zig_bee_node id='9468211aeaf340aab36c58624ce8abfe'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='39e077a2eb224dcea3415471de00823c'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>106-03</vendor_model>
+		<hardware_version>1</hardware_version>
+		<firmware_version>2019-03-27T01:00:00+01:00</firmware_version>
+		<created_date>2019-01-23T18:55:54.552+01:00</created_date>
+		<modified_date>2020-01-15T15:43:07.112+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<battery_meter id='42a77407884e40d0ac56fce8d592ac4d' log_type='battery'>
+				<functionalities><point_log id='c24657dda6f0409e8c5b6cebf18209d6'/></functionalities>
+			</battery_meter>
+			<thermo_meter id='5be9090c5b574159bf72572d6b4f019a' log_type='temperature'>
+				<functionalities><point_log id='a616e31429664cb4afdeb37199c82ea0'/></functionalities>
+			</thermo_meter>
+			<temperature_offset id='6d8a8a1e025f4ee580626ac0bac82f33' log_type='temperature_offset'>
+				<functionalities><offset_functionality id='4b7c3abfb53e4178acf81886b7f19ae8'/><point_log id='911c1a9a51dc4829bf9127a3c79358d8'/></functionalities>
+			</temperature_offset>
+			<thermostat id='6ff996ee372343cead94d9ae65e25f11' log_type='thermostat'>
+				<functionalities><point_log id='aa33b19f570a41328c01096ff60952b9'/><thermostat_functionality id='f2dd4f72d9394e309d46f73e9cb37651'/></functionalities>
+			</thermostat>
+			<thermo_meter id='8d8cc736cf834ec9adb416be21a8c2b6' log_type='temperature_difference'>
+				<functionalities><point_log id='996e2c86b551454fa60ff0d9e0f6f438'/></functionalities>
+			</thermo_meter>
+			<thermo_meter id='a7bf958b92a944a28f8d65e58bf5aeb4' log_type='uncorrected_temperature'>
+				<functionalities><point_log id='3685e5bc41ed42adbb6dd542f9d4ca50'/></functionalities>
+			</thermo_meter>
+			<valve_position_meter id='de48b432be0d4ba08622d087a19629cf' log_type='valve_position'>
+				<functionalities><point_log id='b7283b507238445ba0989fa3ca562b4c'/></functionalities>
+			</valve_position_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='1314db193c454638940d8f9629f588ca'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='9c04327dbc4540359658f5e64f695347'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>Gateway</vendor_model>
+		<hardware_version>AME Smile 2.0 board</hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2018-10-29T14:06:41.297+01:00</created_date>
+		<modified_date>2020-01-15T15:41:42.938+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<regulation_mode_control id='1a0a377706cf4a13a911c49421a05f38' log_type='regulation_mode'>
+				<functionalities><regulation_mode_control_functionality id='aad2d7f6c5584e449ee3be783b8dc5dc'/><point_log id='d3f6be1658704d139f97f0f30ccfa1e4'/></functionalities>
+			</regulation_mode_control>
+			<network_address id='5c8d37d70728418cbe4d8dc7c2567eeb' log_type='wlan_ip_address'>
+				<functionalities><point_log id='0c4d09c11e76409da0a58d0d3773885d'/></functionalities>
+			</network_address>
+			<network_state id='7658ea9125ca47978f8b206fcdfbcc60' log_type='lan_state'>
+				<functionalities><point_log id='6e8eaff4b399443c8c22c6d251d0e286'/></functionalities>
+			</network_state>
+			<signal_strength id='94dbd6f702ad4b36b85cfb2b48f18a06' log_type='signal_strength'>
+				<functionalities><point_log id='2af7e6dd661d4aeb82cd55cac6674632'/></functionalities>
+			</signal_strength>
+			<network_state id='a1b1afe90c754580a8b123dbeb1511d7' log_type='wlan_state'>
+				<functionalities><point_log id='b14ccea1c7fa4c148fde323553935398'/></functionalities>
+			</network_state>
+			<link_quality id='f297c0165857497cbfeb7cb4839f62f2' log_type='link_quality'>
+				<functionalities><point_log id='f97c9e3d3f9e48b785cad4848a80fcfa'/></functionalities>
+			</link_quality>
+		</services>
+		<protocols>
+			<wireless_local_area_network id='709ffa8127b348d987856e15a2f5257e'/>
+			<local_area_network id='e5a9285139c54a54a76e7b6388c37804'/>
+		</protocols>
+	</module>
+	<module id='487070ecad83497483073755ffe6a2b1'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2016-12-01T01:00:00+01:00</firmware_version>
+		<created_date>2019-01-07T15:49:36.790+01:00</created_date>
+		<modified_date>2020-01-15T18:06:52.761+01:00</modified_date>
+		<deleted_date pending_delete_since='2020-01-15T18:06:52+01:00'></deleted_date>
+		<services>
+			<electricity_point_meter id='0165d29359f9476696ee02e4af7e5a71' log_type='electricity'><functionalities/></electricity_point_meter>
+			<relay id='9503c8c9b37f46f7b8adef36ae9d7ccd' log_type='relay'><functionalities/></relay>
+			<electricity_interval_meter id='f13abe1b10d946fb904a5fb980aa5deb' log_type='electricity'><functionalities/></electricity_interval_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='9f6a2117b2164257845422183d832caa'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>false</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='468bbe14853f4fb18a8860333cecc42a'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>106-03</vendor_model>
+		<hardware_version>1</hardware_version>
+		<firmware_version>2019-03-27T01:00:00+01:00</firmware_version>
+		<created_date>2018-12-10T11:32:41.282+01:00</created_date>
+		<modified_date>2020-01-15T15:42:34.628+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<battery_meter id='30b0ccec12f346ff86fec7075864d497' log_type='battery'>
+				<functionalities><point_log id='6d937cf2a31746dca0f4455d3372638d'/></functionalities>
+			</battery_meter>
+			<thermo_meter id='3545416d0b2444b0938eb8fd5e3d4358' log_type='uncorrected_temperature'>
+				<functionalities><point_log id='a17bd04d758441dba6797f6344cc1226'/></functionalities>
+			</thermo_meter>
+			<valve_position_meter id='4e0cf4d2691f4d1c984a390f1748ccb9' log_type='valve_position'>
+				<functionalities><point_log id='3acf367946064d48a6d71a3a42c42279'/></functionalities>
+			</valve_position_meter>
+			<thermo_meter id='57c48ff0734848aba2af66b1a721965e' log_type='temperature'>
+				<functionalities><point_log id='72800b648cb54c47acb6fc47e4bfb06a'/></functionalities>
+			</thermo_meter>
+			<thermo_meter id='b48d55f1f2204e7d8e31630772a36d50' log_type='temperature_difference'>
+				<functionalities><point_log id='543e77313292413f98cdbe22ffec30cc'/></functionalities>
+			</thermo_meter>
+			<temperature_offset id='cae3a18886fa4361a22407390b563a71' log_type='temperature_offset'>
+				<functionalities><offset_functionality id='c34c9f53a4504b27bab89d27711f0792'/><point_log id='e2899035e7b24d6c9569c14cb1500fa8'/></functionalities>
+			</temperature_offset>
+			<status_code id='ce0dddd626f54ca5a7e58586dcc7fbb1' log_type='msp_status_code'><functionalities/></status_code>
+			<thermostat id='f519db78b7f2463bb15c74ea6667e109' log_type='thermostat'>
+				<functionalities><thermostat_functionality id='6e8416599617481f97b6e1ab41256ee2'/><point_log id='94b450d8e4a84ac19492715dc5efbcac'/></functionalities>
+			</thermostat>
+		</services>
+		<protocols>
+			<zig_bee_node id='65dd9860b14b4813879658b5fcd8c236'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='a010f244aac84fd78fac5c7b1eb9cb19'>
+		<vendor_name></vendor_name>
+		<vendor_model>159.1</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2017-08-09T11:55:57.154+02:00</created_date>
+		<modified_date>2018-10-29T14:06:59.466+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services/>
+		<protocols>
+			<open_therm_thermostat id='b68b7068ba7f434c8803c224e681625d'>
+				<open_therm_version>0.0</open_therm_version>
+				<open_therm_gateway id='9f6832594b3541b08652da968a35682a'/>
+			</open_therm_thermostat>
+		</protocols>
+	</module>
+	<module id='3e4e2fa7fa2a4cf18b1be5ed32a978a1'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-21T17:45:53.497+01:00</created_date>
+		<modified_date>2020-01-15T16:40:16.140+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='19cb705ee78b4d80864faaa2b52b0f14' log_type='electricity'>
+				<functionalities><interval_log id='57ff520dd8bf406192b004bdc76a004b'/><interval_log id='b7dc648ba216498798c50ffcc9563d17'/></functionalities>
+			</electricity_interval_meter>
+			<relay id='94f20e3292204a50bdf733cb32ab36cd' log_type='relay'>
+				<functionalities><point_log id='212e08d8636a4be78ef40891f171430e'/><relay_functionality id='ea32c7f8b1ce41bb90deb5d447500508'/></functionalities>
+			</relay>
+			<electricity_point_meter id='e02caee6244847d282cee1755fc2b8a2' log_type='electricity'>
+				<functionalities><point_log id='2e6b1d4b9f4949589f569cf64de91d72'/><point_log id='afdce8630aab46a3a359967679446eda'/></functionalities>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='04ed662277f045b288312eb607b2c234'/><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='800d5287643c4fd89dfcfbf336d4f7ec'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-14T16:46:49.917+01:00</created_date>
+		<modified_date>2020-01-15T16:16:01.164+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='134fc4d30c29467eb4e18e54791737b7' log_type='relay'>
+				<functionalities><relay_functionality id='19ed8aa2033f40f4bf602b8ae83b417b'/><point_log id='a85b141a7a56451ea02410d3498f0ad2'/></functionalities>
+			</relay>
+			<electricity_point_meter id='4e248a8c1cd34b739293011afe048e1b' log_type='electricity'>
+				<functionalities><point_log id='7f426157db334f05bfa4c0657e12b3a6'/><point_log id='afe343bfd7bf49d682a0816880cbb500'/></functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='ba4615d47f85456691abe67e0943a006' log_type='electricity'>
+				<functionalities><interval_log id='058d0c0950e2493f85d5b2daf5808bce'/><interval_log id='ce5999c275574c8fa4fc0deb42bbf4f7'/></functionalities>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='6326dbad401e4745a31cce1650b29851'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='04ed662277f045b288312eb607b2c234'/><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='9f6a2117b2164257845422183d832caa'/><zig_bee_node id='d0ab902b286147b3a3aa130789e1fddd'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='4e1632d53c0d4f2389f8186867114d70'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2018-10-29T14:06:42.721+01:00</created_date>
+		<modified_date>2020-01-15T15:43:09.591+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<hygro_meter id='0e1c080efa364958b8d0b869cb25b23e' log_type='humidity'>
+				<functionalities><point_log id='c0481f25027e411bb7b54a2865a66332'/></functionalities>
+			</hygro_meter>
+			<irradiance_meter id='710df8940e2248b682e5889d78b1ce9e' log_type='solar_irradiance'>
+				<functionalities><point_log id='a6e06822b3554679b2cbdba0e7231145'/></functionalities>
+			</irradiance_meter>
+			<weather_descriptor id='7709827e8dc04bd2af33f92e307591cf' log_type='weather_description'>
+				<functionalities><point_log id='e83a0c9e530c4e49b9c187cbbabf8b0c'/></functionalities>
+			</weather_descriptor>
+			<thermo_meter id='aaf800c24f314e21a5f58bf493f3083f' log_type='outdoor_temperature'>
+				<functionalities><point_log id='a6901ef78770494cb57a8956591281bc'/></functionalities>
+			</thermo_meter>
+			<wind_vector id='d611511848a649938ee51164f50a1f8c' log_type='wind_vector'>
+				<functionalities><point_log id='981630112a334e87b73338be8cae9338'/></functionalities>
+			</wind_vector>
+		</services>
+		<protocols>
+			<weather_feed id='b899bddd49bd45e7b18761bd2fbdc090'/>
+		</protocols>
+	</module>
+	<module id='d00e1ba75ed14b2388971b32abc94cde'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>106-03</vendor_model>
+		<hardware_version>1</hardware_version>
+		<firmware_version>2019-03-27T01:00:00+01:00</firmware_version>
+		<created_date>2019-01-21T19:14:49.122+01:00</created_date>
+		<modified_date>2020-02-09T17:35:41.864+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<temperature_offset id='0ddc3a687af14e8e9ec912221a8da490' log_type='temperature_offset'>
+				<functionalities><offset_functionality id='322681cbdead4cb1922f86fda4629502'/><point_log id='b5365d383df0410bb67d3f7af23d63f4'/></functionalities>
+			</temperature_offset>
+			<thermo_meter id='7cea48376d8848d38c56992a715aa918' log_type='temperature_difference'><functionalities/></thermo_meter>
+			<thermo_meter id='a960cbb1c0cd44559ac1988c29ac3829' log_type='temperature_difference'>
+				<functionalities><point_log id='1c1976594ac4444d9435b96e95c68f8e'/></functionalities>
+			</thermo_meter>
+			<thermostat id='aaee54522af7467d80d499f065885cac' log_type='thermostat'>
+				<functionalities><thermostat_functionality id='30288ab7bb2c426ba551ea04395e5bd9'/><point_log id='c43ea60541b140f087938bd187a7510a'/></functionalities>
+			</thermostat>
+			<thermo_meter id='adb52f77c6584320868b20787a4bae60' log_type='uncorrected_temperature'>
+				<functionalities><point_log id='8f68c198826f40f99af0e6bcc896ad6f'/></functionalities>
+			</thermo_meter>
+			<battery_meter id='b64d3da119154b6180768bfceaab3c2b' log_type='battery'>
+				<functionalities><point_log id='0aec1a389142463da95c41f129a3cca3'/></functionalities>
+			</battery_meter>
+			<thermo_meter id='d958ee4448634ccb886385ddb1ee2afa' log_type='temperature'>
+				<functionalities><point_log id='989b025c2a034a5d8733e82165e09be3'/></functionalities>
+			</thermo_meter>
+			<valve_position_meter id='f7af67db22cf4f56af469d797a3b7ad0' log_type='valve_position'>
+				<functionalities><point_log id='b33dcfdfd9744f1590763a99024f8108'/></functionalities>
+			</valve_position_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='416c77c0526149b1938bb6c4e67dbd83'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='822e635587994817a76599ea1190f9ee'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
+		<created_date>2019-02-02T18:02:50.749+01:00</created_date>
+		<modified_date>2020-01-15T16:23:31.154+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='438b959414574b00a8f6efe509f7e857' log_type='electricity'>
+				<functionalities><interval_log id='48b9d347f0354a02a2f0585e18e8d00e'/><interval_log id='f6afdb791c604bf79e1e4ba52b4b4bfe'/></functionalities>
+			</electricity_interval_meter>
+			<relay id='b7c5e8bab49d47f48e34a8e6e00542f5' log_type='relay'>
+				<functionalities><point_log id='9985080895a141a18d29f2fffb07b394'/><relay_functionality id='e3c0707a31214a3880cc9827e7b6d39d'/></functionalities>
+			</relay>
+			<electricity_point_meter id='d4d8d53f3f2e4e92b5b433ed38a6f0af' log_type='electricity'>
+				<functionalities><point_log id='27388b64d1684da4b5b77740b3cddbca'/><point_log id='f7270545072c43f598e66d60cced992c'/></functionalities>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='2202545a9c764e56afead1f729f8b1de'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='e5f81fd832d844e5bd46219831468a62'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>158-01</vendor_model>
+		<hardware_version>255</hardware_version>
+		<firmware_version>2016-10-27T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-23T20:12:00.726+01:00</created_date>
+		<modified_date>2020-02-10T11:34:23.484+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<thermostat id='45427b97f4d54af2b7fb670da2209f59' log_type='thermostat'>
+				<functionalities><thermostat_functionality id='12b0ac0ed60141f5959bb6adb4f0e23e'/><point_log id='b2f0865b72144f58814a257ffe8b71ec'/></functionalities>
+			</thermostat>
+			<temperature_offset id='64d5b37141414981b2a96468c3bfe9e8' log_type='temperature_offset'>
+				<functionalities><offset_functionality id='66b7e6cd98e046fb9d4c0041a3374dc9'/><point_log id='c77b7e848a6c40f682d327d0ce8fb615'/></functionalities>
+			</temperature_offset>
+			<thermo_meter id='83768f161c274de18754e9756858ee84' log_type='temperature'>
+				<functionalities><point_log id='014fd7adaa944a83b2720b8222a4e174'/></functionalities>
+			</thermo_meter>
+			<battery_meter id='ee82523ad29944eba851140c3bfaa670' log_type='battery'>
+				<functionalities><point_log id='9f22a3c2b18643b59727880dcfc00412'/></functionalities>
+			</battery_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='6a5ccc5908ba4308996b79751aca45b2'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors/>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='5f1aa88e9c91466e8e7c9f37f9cfc90a'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2018-12-10T10:19:57.378+01:00</created_date>
+		<modified_date>2020-01-15T15:41:43.917+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<boiler_state id='118b066bb43a4a56840ddb163ac24a36' log_type='central_heating_state'>
+				<functionalities><point_log id='3bec6c0e6079478195fc99996d7664f6'/></functionalities>
+			</boiler_state>
+			<thermostat id='186ddfae633e44e8b912d5aabac75722' log_type='heating_curve_high_temperature'>
+				<functionalities><thermostat_functionality id='bb89142d3bd045078b0a415dcd9b58ef'/><point_log id='e3639c0afe464a5288241a1d8ce25601'/></functionalities>
+			</thermostat>
+			<thermostat id='26a134ca19cc4c66a00570725eaca06a' log_type='heating_curve_low_setpoint'>
+				<functionalities><point_log id='59474fd6a2444e6aa38a2017f6ae555a'/><thermostat_functionality id='9b6de1b4f3f74613a32ea8d9abe94b33'/></functionalities>
+			</thermostat>
+			<thermo_meter id='3ae1e212a44449218a3c900efc3b4e73' log_type='intended_boiler_temperature'>
+				<functionalities><point_log id='0f65d46731db40fb977fb089e918cf36'/></functionalities>
+			</thermo_meter>
+			<modulation_level id='5dab5280ff11437090d7ef37af31391e' log_type='modulation_level'>
+				<functionalities><point_log id='3d50bc9c2a0d4e538889978ede3265d7'/></functionalities>
+			</modulation_level>
+			<interval_chrono_meter id='68bfe20c97e742bea85bfdbada2d4516' log_type='burner_operation_time'>
+				<functionalities><interval_log id='a1ecf6ec388e4b23932e31a20cf3ab77'/></functionalities>
+			</interval_chrono_meter>
+			<boiler_state id='78fc6b89728e4ddb9240d9d78a9b93d5' log_type='intended_central_heating_state'>
+				<functionalities><point_log id='a13a7685115442febac99110442556f4'/></functionalities>
+			</boiler_state>
+			<thermostat id='c1a1d806d882491ebe6c54af026e3d94' log_type='heating_curve_high_setpoint'>
+				<functionalities><point_log id='502554ab2e88488799ba3117c286764d'/><thermostat_functionality id='9e657177146e4c4bb9aaf3794a236449'/></functionalities>
+			</thermostat>
+			<thermostat id='eed942fd2bff4fbe9f9d2d78ee30c383' log_type='heating_curve_low_temperature'>
+				<functionalities><thermostat_functionality id='f4b72272d94a492e9fc904a99c35511b'/><point_log id='f5fd8deb68644d12b3d8c1d6778faa27'/></functionalities>
+			</thermostat>
+			<thermo_meter id='f67d0098df6d48eb81f6a072becae593' log_type='boiler_temperature'>
+				<functionalities><point_log id='8d058117fa274c09b9204c2b8fd2f908'/></functionalities>
+			</thermo_meter>
+		</services>
+		<protocols>
+			<onoff_boiler id='c33e1cebe792480da5bd945e44a6998a'>
+				<open_therm_gateway id='9f6832594b3541b08652da968a35682a'/>
+			</onoff_boiler>
+		</protocols>
+	</module>
+	<module id='02d1299fdbab4f7b93765e0af1c250d8'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>106-03</vendor_model>
+		<hardware_version>1</hardware_version>
+		<firmware_version>2019-03-27T01:00:00+01:00</firmware_version>
+		<created_date>2019-01-14T16:45:47.254+01:00</created_date>
+		<modified_date>2020-01-15T15:42:41.152+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<thermo_meter id='010dbb10afe74e1193c0956010df0755' log_type='temperature_difference'>
+				<functionalities><point_log id='67d79a48b4074c30b788ba239737de3a'/></functionalities>
+			</thermo_meter>
+			<valve_position_meter id='1db7d08fabb24bdb8f5fdfd5d317cac5' log_type='valve_position'>
+				<functionalities><point_log id='270bb04d89844ad78c73436b50cd218d'/></functionalities>
+			</valve_position_meter>
+			<status_code id='3bdef9285c6647bd8def26a7810230c3' log_type='msp_status_code'><functionalities/></status_code>
+			<temperature_offset id='423f1509888c493a89e0119fed9ece5e' log_type='temperature_offset'>
+				<functionalities><offset_functionality id='aaf90cb6d28a47fca12d2d300ee5302f'/><point_log id='dae26417919543adaf2a51a273243224'/></functionalities>
+			</temperature_offset>
+			<thermo_meter id='538f59f02b56458daafe55ce40783101' log_type='temperature'>
+				<functionalities><point_log id='c397c84e3d684f87b29dd333f4518496'/></functionalities>
+			</thermo_meter>
+			<thermostat id='9e917d93330945089d48cb9b7235bf1b' log_type='thermostat'>
+				<functionalities><point_log id='83febef83d184e63b8fd0aefca9429b3'/><thermostat_functionality id='d5ce5ba7dc1045538e28f7f15a30c04b'/></functionalities>
+			</thermostat>
+			<thermo_meter id='de4637ad7adc448dafcf97d4dd41ccd5' log_type='uncorrected_temperature'>
+				<functionalities><point_log id='7a292a7b7c9a49e08a5fa0a84800ab60'/></functionalities>
+			</thermo_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='0af3463d7dec46408244e48c7df0914d'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='04ed662277f045b288312eb607b2c234'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='9f6a2117b2164257845422183d832caa'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='a03128e5e9334b088c724fd96947c765'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-29T17:49:50.327+01:00</created_date>
+		<modified_date>2020-01-15T15:59:49.050+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='18c763a6216e43fdbcda659e15815d1e' log_type='electricity'>
+				<functionalities><interval_log id='c77e9e7ab7f94db4be7fc039f208509b'/><interval_log id='d69334986baa4c8abc490b89c06908b5'/></functionalities>
+			</electricity_interval_meter>
+			<electricity_point_meter id='97f9fb8891634bdda397cd769432508a' log_type='electricity'>
+				<functionalities><point_log id='b2997357d3f74aa7abec3ca86d6870bd'/><point_log id='cc18327d06b144a5998f18db39e4a19b'/></functionalities>
+			</electricity_point_meter>
+			<relay id='cdc0ea8125b14c8e92310ff4f4b0fff4' log_type='relay'>
+				<functionalities><point_log id='18f1f9245e3246a89fb040fb6c20bf58'/><relay_functionality id='b4bad2da56b148a8998554a1bed91040'/></functionalities>
+			</relay>
+		</services>
+		<protocols>
+			<zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1314db193c454638940d8f9629f588ca'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='9468211aeaf340aab36c58624ce8abfe'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='5ccda7375b0f467e88499a636450dc91'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-07T15:49:36.217+01:00</created_date>
+		<modified_date>2020-01-15T16:31:40.849+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='4ec437d649d043f59ccbe2b92a1ae52b' log_type='relay'>
+				<functionalities><relay_functionality id='6e2460d2d1da458499a996a04c408123'/><point_log id='f0e38cc2e69145b0b86597c64c8ab6df'/></functionalities>
+			</relay>
+			<electricity_point_meter id='b2239dd41a3e4d03a568efc722b10c50' log_type='electricity'>
+				<functionalities><point_log id='a5bfce9d198d434eb059f99f007cdba0'/><point_log id='b0653768fe8e4cd0a4858194699811f6'/></functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='b83ccc2acc094517b53dfc9805e5f7a4' log_type='electricity'>
+				<functionalities><interval_log id='6056c8132dd14cde92cc17452212994d'/><interval_log id='a6f7c642109b42eba140cbeb8f4c8a89'/></functionalities>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='04ed662277f045b288312eb607b2c234'/><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='65dd9860b14b4813879658b5fcd8c236'/><zig_bee_node id='9f6a2117b2164257845422183d832caa'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='9216f37e07794561861d527485087937'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>Adam</vendor_model>
+		<hardware_version>6539-1601-4502</hardware_version>
+		<firmware_version>2018-10-30T10:12:41+01:00</firmware_version>
+		<created_date>2017-08-09T11:55:44.017+02:00</created_date>
+		<modified_date>2019-01-14T17:24:37.209+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<power_mode id='635d4e79863c4c41ac22d47a1f1c4124' log_type='open_therm_power_mode'>
+				<functionalities><point_log id='0c3cb0e2b9484625bea0115ff6f93d8b'/></functionalities>
+			</power_mode>
+			<override_mode id='d3a1f403e5534f3bb361c4cb88b0d5b3' log_type='override_mode'>
+				<functionalities><point_log id='75c39d331763462cb06e20463edda34c'/></functionalities>
+			</override_mode>
+		</services>
+		<protocols>
+			<open_therm_gateway id='9f6832594b3541b08652da968a35682a'>
+				<serial>17-11-001-948</serial>
+				<open_therm_thermostat id='b68b7068ba7f434c8803c224e681625d'/>
+				<onoff_boiler id='c33e1cebe792480da5bd945e44a6998a'/>
+			</open_therm_gateway>
+		</protocols>
+	</module>
+	<module id='b622e3c6a32544f8a4d83e3385592e36'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>106-03</vendor_model>
+		<hardware_version>1</hardware_version>
+		<firmware_version>2019-03-27T01:00:00+01:00</firmware_version>
+		<created_date>2018-12-10T10:52:44.276+01:00</created_date>
+		<modified_date>2020-01-15T15:42:32.931+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<battery_meter id='298fd7fca55b4f35a3c6402a9d0fa6fe' log_type='battery'>
+				<functionalities><point_log id='f60e6286b1c9448fac7221131f4006f4'/></functionalities>
+			</battery_meter>
+			<valve_position_meter id='4d5420979e7a4c769daa12a23843911a' log_type='valve_position'>
+				<functionalities><point_log id='90a5d56c4417454b89fd00b1fe1c996d'/></functionalities>
+			</valve_position_meter>
+			<thermo_meter id='51c59d4fc8234be5835c0d020913ba7a' log_type='uncorrected_temperature'>
+				<functionalities><point_log id='4c40a874f7b34f9caea6f7798b21c443'/></functionalities>
+			</thermo_meter>
+			<temperature_offset id='6e4f041352914cb0910071fc434f4c95' log_type='temperature_offset'>
+				<functionalities><point_log id='d2e7446e04294fb289ea330dbcea283d'/><offset_functionality id='d7f83a3fefb2409a9655b02f13e54139'/></functionalities>
+			</temperature_offset>
+			<status_code id='bde4d43e4387442eaaa2ac7fb35bb2af' log_type='msp_status_code'><functionalities/></status_code>
+			<thermostat id='c99540e434fe42fb97406352dcb769e4' log_type='thermostat'>
+				<functionalities><thermostat_functionality id='82a52c2b95bd45a39ff88d99ec84412b'/><point_log id='a4c8818d17d34d0f8bb5d313cf85ff4d'/></functionalities>
+			</thermostat>
+			<thermo_meter id='ca62368b00a542a18ca83d0067e26f05' log_type='temperature'>
+				<functionalities><point_log id='5bdd6b6d27c946bbb6f32f20dc5d7ce8'/></functionalities>
+			</thermo_meter>
+			<thermo_meter id='cca032cafc50460a85ce617e149718f7' log_type='temperature_difference'>
+				<functionalities><point_log id='0e1435d35fd94f908139f3967482d493'/></functionalities>
+			</thermo_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='9abefede88bf4ea9acc3ad0638cddfaf'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='dd68d0641eb04571be62b9940aae363a'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>158-01</vendor_model>
+		<hardware_version>255</hardware_version>
+		<firmware_version>2016-08-02T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-14T16:59:19.417+01:00</created_date>
+		<modified_date>2020-02-10T11:34:29.122+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<temperature_offset id='05593b51ddec40d7a25f49dc480af04d' log_type='temperature_offset'>
+				<functionalities><offset_functionality id='60c0f8ec4acd4098870240742a07cb88'/><point_log id='c098b5da321e4d9aa1588f50e1479e86'/></functionalities>
+			</temperature_offset>
+			<thermo_meter id='09fcd6de1f64418fb9443c3cc1e5df5e' log_type='temperature'>
+				<functionalities><point_log id='4b03993f2caa4bc0a2b91b3ea56132a0'/></functionalities>
+			</thermo_meter>
+			<thermostat id='335fbbfcc1c04a69bbb8a59fa03d0442' log_type='thermostat'>
+				<functionalities><point_log id='585033c4453048f08121de2d8a80d050'/><thermostat_functionality id='abdc621232674a99a4cbd37195deda78'/></functionalities>
+			</thermostat>
+			<battery_meter id='e17ac1250f2749818268b1952453ebeb' log_type='battery'>
+				<functionalities><point_log id='97387b77d6674e38bf0d89d8f62d2f49'/></functionalities>
+			</battery_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='b9425487affb4cf687461eb4be8ff15e'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='995070fcf3ea405c96b637ce430ccbec'>
+		<vendor_name>Telegesis</vendor_name>
+		<vendor_model>ETRX3USB</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2018-10-29T14:06:55.131+01:00</created_date>
+		<modified_date>2018-10-29T14:06:55.266+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services/>
+		<protocols>
+			<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'>
+				<mac_address>0123456789AB</mac_address>
+				<permit_joining>false</permit_joining>
+				<neighbors><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='416c77c0526149b1938bb6c4e67dbd83'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='9abefede88bf4ea9acc3ad0638cddfaf'/><zig_bee_node id='9f6a2117b2164257845422183d832caa'/><zig_bee_node id='b9425487affb4cf687461eb4be8ff15e'/></neighbors>
+				<zig_bee_nodes><zig_bee_node id='04ed662277f045b288312eb607b2c234'/><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1314db193c454638940d8f9629f588ca'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_node id='416c77c0526149b1938bb6c4e67dbd83'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='65dd9860b14b4813879658b5fcd8c236'/><zig_bee_node id='6a5ccc5908ba4308996b79751aca45b2'/><zig_bee_node id='9468211aeaf340aab36c58624ce8abfe'/><zig_bee_node id='9abefede88bf4ea9acc3ad0638cddfaf'/><zig_bee_node id='9f6a2117b2164257845422183d832caa'/><zig_bee_node id='b9425487affb4cf687461eb4be8ff15e'/><zig_bee_node id='d0ab902b286147b3a3aa130789e1fddd'/></zig_bee_nodes>
+			</zig_bee_coordinator>
+		</protocols>
+	</module>
+	<module id='4e1da90f22384bc691fe0282e02d272f'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-21T17:39:23.431+01:00</created_date>
+		<modified_date>2020-01-15T16:07:46.499+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='427d450a5dec4a3a8312833767f4cb88' log_type='electricity'>
+				<functionalities><point_log id='b4350295744f40ea98dc074603bcba65'/><point_log id='dbe795cdc03644e7a7190a4a13bccbdc'/></functionalities>
+			</electricity_point_meter>
+			<relay id='759176aeb34547f9a5faca5c139f2790' log_type='relay'>
+				<functionalities><relay_functionality id='73b1d39840e94f7f9eb219ba92aff6dc'/><point_log id='e7a58da04e2b4a848f31fc943adc25d5'/></functionalities>
+			</relay>
+			<electricity_interval_meter id='e97000b049484524be85fd02941dc12c' log_type='electricity'>
+				<functionalities><interval_log id='075466c308d04b2eb22d611b801703bd'/><interval_log id='8696653219714e0c83145a9d7cd2a1f1'/></functionalities>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='04ed662277f045b288312eb607b2c234'/><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='b9425487affb4cf687461eb4be8ff15e'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='a5a8713dd3f94f2a9d63db8a521af6b2'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>160-01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-30T08:12:34.679+01:00</created_date>
+		<modified_date>2020-01-15T15:51:20.214+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='827fed6574964c139c027d4e6333987e' log_type='relay'>
+				<functionalities><point_log id='18e5ee53da1b44f1a8da1b969b16b391'/><relay_functionality id='b816397d0ee8410fbe84f33e589beff0'/></functionalities>
+			</relay>
+			<electricity_point_meter id='c4f9e08e8b654e17bcc3f8aefdab67b8' log_type='electricity'>
+				<functionalities><point_log id='78df9bf17d694f53b1ae753adb0b6ab7'/><point_log id='bf7a62520ca14316ba5033b9d392a219'/></functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='f76236a77f14413c80b5fd2149e85057' log_type='electricity'>
+				<functionalities><interval_log id='0fd4431abe834a47ad22e0a6c28fdb3a'/><interval_log id='5b2a3a7be6634f67a43250b8cb24552f'/></functionalities>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='04ed662277f045b288312eb607b2c234'>
+				<mac_address>0123456789AB</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+	<module id='ebd9f53ab3894bee91e36350c1fbb6c7'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>158-01</vendor_model>
+		<hardware_version>255</hardware_version>
+		<firmware_version>2016-10-27T02:00:00+02:00</firmware_version>
+		<created_date>2019-01-23T18:15:08.710+01:00</created_date>
+		<modified_date>2020-02-10T11:34:32.225+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<battery_meter id='2dd3b2ada2074b0c892fbfe36fcee7b7' log_type='battery'>
+				<functionalities><point_log id='97df14301e1747e594bec4903e67d567'/></functionalities>
+			</battery_meter>
+			<temperature_offset id='722eb34d256f4986a360bdd51275f6c2' log_type='temperature_offset'>
+				<functionalities><point_log id='7dc11e291c624421b980cadebfc972db'/><offset_functionality id='ec7a0302398349e482b002ce69670a4e'/></functionalities>
+			</temperature_offset>
+			<thermostat id='f16bcae6ebf4415ca1420b8ca3000a60' log_type='thermostat'>
+				<functionalities><thermostat_functionality id='81f7224da70148b283569eb72fc8f3bb'/><point_log id='e867e21648a14735a957837b105aefb6'/></functionalities>
+			</thermostat>
+			<thermo_meter id='f886cf6bba7b45e892138653326835ae' log_type='temperature'>
+				<functionalities><point_log id='a55dc2cd098c4e2c81b4480cedf20867'/></functionalities>
+			</thermo_meter>
+		</services>
+		<protocols>
+			<zig_bee_node id='d0ab902b286147b3a3aa130789e1fddd'>
+				<mac_address>0123456789AB</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'/>
+				<neighbors><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/></neighbors>
+			</zig_bee_node>
+		</protocols>
+	</module>
+</modules>

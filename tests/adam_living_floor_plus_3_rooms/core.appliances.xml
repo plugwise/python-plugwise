@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appliances>
+	<appliance id='95395fb15c814a1f8bba88363e4a5833'>
+		<name>Zone Thermostat 000D6F000C860079</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2019-08-23T22:49:31.782+02:00</created_date>
+		<modified_date>2019-12-01T17:21:25.954+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='6d42c3e3fa384294ad76780120eb7a88'/>
+		<groups/>
+		<logs>
+			<point_log id='01520473081a447984bf6b3664310df9'>
+				<updated_date>2019-12-01T17:21:25.951+01:00</updated_date>
+				<type>temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:21:25.951+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:21:25.951+01:00" end_date="2019-12-01T17:21:25.951+01:00">
+					<measurement log_date="2019-12-01T17:21:25.951+01:00">19.80</measurement>
+				</period>
+				<thermo_meter id='c712f819c08d4719bdf08b5952c881d8'/>
+			</point_log>
+			<point_log id='022fec4ac26f44b5903b5893a7a0ecb2'>
+				<updated_date>2019-12-01T13:19:27.404+01:00</updated_date>
+				<type>battery</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-11-28T01:46:30.962+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T13:19:27.404+01:00" end_date="2019-12-01T13:19:27.404+01:00">
+					<measurement log_date="2019-12-01T13:19:27.404+01:00">0.84</measurement>
+				</period>
+				<battery_meter id='a3566d55e9ea496a88c250534c3ebcd6'/>
+			</point_log>
+			<point_log id='038b9109d4ef486ea25b1285420725ee'>
+				<updated_date>2019-11-17T18:19:43.382+01:00</updated_date>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-10-16T21:27:35.226+02:00</last_consecutive_log_date>
+				<period start_date="2019-11-17T18:19:43.382+01:00" end_date="2019-11-17T18:19:43.382+01:00">
+					<measurement log_date="2019-11-17T18:19:43.382+01:00">0.00</measurement>
+				</period>
+				<temperature_offset id='d4d2590d94b64e44b11bd99730e52ad6'/>
+			</point_log>
+			<point_log id='185831fc65a44cdeb7152d745bdf4de1'>
+				<updated_date>2019-12-01T09:00:05.993+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T09:00:05.942+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T09:00:05.993+01:00" end_date="2019-12-01T09:00:05.993+01:00">
+					<measurement log_date="2019-12-01T09:00:05.993+01:00">20.00</measurement>
+				</period>
+				<thermostat id='fca880ac38eb4aa7ae53f3344b687559'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='319f064857034a888443b7fa56d9bd27'>
+				<temperature_offset id='d4d2590d94b64e44b11bd99730e52ad6'/>
+				<updated_date>2019-11-17T18:19:43.382+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='404c840fc6864efdb26f1f2dda9300b9'>
+				<updated_date>2019-12-01T09:00:05.993+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>20</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='26177991b39f4ab0b141116cf24299e0'/></regulations>
+				<thermostat id='fca880ac38eb4aa7ae53f3344b687559'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='e4fe90f9b4c44887b09f8640e828eb3b'>
+		<name>Thermostatic Radiator Valve 000D6F000B213F30</name>
+		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
+		<type>thermostatic_radiator_valve</type>
+		<created_date>2019-08-24T14:38:18.617+02:00</created_date>
+		<modified_date>2019-12-01T17:20:23.121+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='75ab287de4194550bec50477f46525be'/>
+		<groups/>
+		<logs>
+			<point_log id='1da37a88c4404442ae46d69040621618'>
+				<updated_date>2019-12-01T17:20:23.114+01:00</updated_date>
+				<type>temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:20:23.114+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:20:23.114+01:00" end_date="2019-12-01T17:20:23.114+01:00">
+					<measurement log_date="2019-12-01T17:20:23.114+01:00">20.93</measurement>
+				</period>
+				<thermo_meter id='dd0ff73413654740bc9100f0366c8c4f'/>
+			</point_log>
+			<point_log id='3387a27bcb2f4084af30e193be86c35e'>
+				<updated_date>2019-12-01T17:20:23.114+01:00</updated_date>
+				<type>uncorrected_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:20:23.114+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:20:23.114+01:00" end_date="2019-12-01T17:20:23.114+01:00">
+					<measurement log_date="2019-12-01T17:20:23.114+01:00">20.93</measurement>
+				</period>
+				<thermo_meter id='a6be1b4c14654b8ba8580cb5012181db'/>
+			</point_log>
+			<point_log id='56a888ad4e5349a1a77d17eac89ca9d3'>
+				<updated_date>2019-12-01T17:13:37.272+01:00</updated_date>
+				<type>temperature_difference</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:13:37.272+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:13:37.272+01:00" end_date="2019-12-01T17:13:37.272+01:00">
+					<measurement log_date="2019-12-01T17:13:37.272+01:00">0.20</measurement>
+				</period>
+				<thermo_meter id='4b0569ca5d964d3d8df9af00e973030d'/>
+			</point_log>
+			<point_log id='5c160882bd824254b556abbe2eee39ed'>
+				<updated_date>2019-11-12T00:48:31.118+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-11-12T00:48:31.118+01:00</last_consecutive_log_date>
+				<period start_date="2019-11-12T00:48:31.118+01:00" end_date="2019-11-12T00:48:31.118+01:00">
+					<measurement log_date="2019-11-12T00:48:31.118+01:00">21.00</measurement>
+				</period>
+				<thermostat id='6d63021712f6465f805f5ba584b95a92'/>
+			</point_log>
+			<point_log id='a58f7900ebbc4c7390868e4d6a379126'>
+				<updated_date>2019-10-07T11:03:12.009+02:00</updated_date>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-24T14:54:21.268+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-07T11:03:12.009+02:00" end_date="2019-10-07T11:03:12.009+02:00">
+					<measurement log_date="2019-10-07T11:03:12.009+02:00">0.00</measurement>
+				</period>
+				<temperature_offset id='7c5b8cdd5d8b467f92fee0904be44ff3'/>
+			</point_log>
+			<point_log id='d9d137aa15c241558f3da60bff455c70'>
+				<updated_date>2019-12-01T17:13:07.556+01:00</updated_date>
+				<type>valve_position</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-01T16:15:42.945+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:13:07.556+01:00" end_date="2019-12-01T17:13:07.556+01:00">
+					<measurement log_date="2019-12-01T17:13:07.556+01:00">0.00</measurement>
+				</period>
+				<valve_position_meter id='c6028b8452074ba98fd9323812c8c96d'/>
+			</point_log>
+			<point_log id='ecd0b65e8c8f4c1abb241af4ca00f797'>
+				<updated_date>2019-12-01T08:36:20.120+01:00</updated_date>
+				<type>battery</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-01T08:36:20.120+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T08:36:20.120+01:00" end_date="2019-12-01T08:36:20.120+01:00">
+					<measurement log_date="2019-12-01T08:36:20.120+01:00">0.48</measurement>
+				</period>
+				<battery_meter id='1b0671726be44e2695e19cd72d7d1595'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='4afbfad8c6184913a258607cbc54317e'>
+				<temperature_offset id='7c5b8cdd5d8b467f92fee0904be44ff3'/>
+				<updated_date>2019-10-07T11:03:12.009+02:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='bbb4d4d6c97e404490e81f6e2100b97a'>
+				<updated_date>2019-11-12T00:48:31.119+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>21</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.99</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='26177991b39f4ab0b141116cf24299e0'/></regulations>
+				<thermostat id='6d63021712f6465f805f5ba584b95a92'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='450d49ef2e8942f78c1242cdd8dfecd0'>
+		<name>Thermostatic Radiator Valve 000D6F000B2142D0</name>
+		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
+		<type>thermostatic_radiator_valve</type>
+		<created_date>2019-08-24T14:24:28.256+02:00</created_date>
+		<modified_date>2019-12-01T17:18:49.650+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='fc8b90f96c76416a81fea1921e16827c'/>
+		<groups/>
+		<logs>
+			<point_log id='031a711519274df4b93c50cc83740b4c'>
+				<updated_date>2019-12-01T17:15:49.812+01:00</updated_date>
+				<type>temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:15:49.812+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:15:49.812+01:00" end_date="2019-12-01T17:15:49.812+01:00">
+					<measurement log_date="2019-12-01T17:15:49.812+01:00">20.18</measurement>
+				</period>
+				<thermo_meter id='ce0adcd3a6214ee2a8c4673999709400'/>
+			</point_log>
+			<point_log id='2dbb7411741a4fa09422ead007edc0b4'>
+				<updated_date>2019-12-01T17:15:49.812+01:00</updated_date>
+				<type>uncorrected_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:15:49.812+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:15:49.812+01:00" end_date="2019-12-01T17:15:49.812+01:00">
+					<measurement log_date="2019-12-01T17:15:49.812+01:00">20.18</measurement>
+				</period>
+				<thermo_meter id='f6d4dc3553134d6e97288ec886442fe7'/>
+			</point_log>
+			<point_log id='3ea3f443568746c3ae0a89dc1e116c87'>
+				<updated_date>2019-12-01T17:18:49.646+01:00</updated_date>
+				<type>temperature_difference</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:18:49.646+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:18:49.646+01:00" end_date="2019-12-01T17:18:49.646+01:00">
+					<measurement log_date="2019-12-01T17:18:49.646+01:00">0.60</measurement>
+				</period>
+				<thermo_meter id='e232e2a3ce0544edadb27522ad584b2a'/>
+			</point_log>
+			<point_log id='499403262407408ba4a6a55457b997f0'>
+				<updated_date>2019-10-05T01:43:16.560+02:00</updated_date>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-26T19:48:00.676+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:43:16.560+02:00" end_date="2019-10-05T01:43:16.560+02:00">
+					<measurement log_date="2019-10-05T01:43:16.560+02:00">0.00</measurement>
+				</period>
+				<temperature_offset id='8b9bacee305443c78d87f427864af124'/>
+			</point_log>
+			<point_log id='53b00e415f44475ab515ab9dec72c0d1'>
+				<updated_date>2019-12-01T17:13:40.546+01:00</updated_date>
+				<type>valve_position</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-01T16:15:43.877+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:13:40.546+01:00" end_date="2019-12-01T17:13:40.546+01:00">
+					<measurement log_date="2019-12-01T17:13:40.546+01:00">1.00</measurement>
+				</period>
+				<valve_position_meter id='c8462c8944f34f74a8179dc8a8635db9'/>
+			</point_log>
+			<point_log id='7f9124443d0d4440a15763dbe811d833'>
+				<updated_date>2019-12-01T11:27:12.542+01:00</updated_date>
+				<type>battery</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-01T11:27:12.542+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T11:27:12.542+01:00" end_date="2019-12-01T11:27:12.542+01:00">
+					<measurement log_date="2019-12-01T11:27:12.542+01:00">0.77</measurement>
+				</period>
+				<battery_meter id='04700cfd56ec46caa690365ae75657eb'/>
+			</point_log>
+			<point_log id='f6bef4100475482b92beb16b9d254c8f'>
+				<updated_date>2019-11-29T16:00:58.414+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-11-29T16:00:58.414+01:00</last_consecutive_log_date>
+				<period start_date="2019-11-29T16:00:58.414+01:00" end_date="2019-11-29T16:00:58.414+01:00">
+					<measurement log_date="2019-11-29T16:00:58.414+01:00">20.00</measurement>
+				</period>
+				<thermostat id='6c4bcf7d1b2448ccb211ca6c25a86a38'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='1e7b773dbb4f41b48c76b86dd13239d0'>
+				<temperature_offset id='8b9bacee305443c78d87f427864af124'/>
+				<updated_date>2019-10-05T01:43:16.560+02:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='a94bba2f38f64ba3bb4c8563f8d2e3c2'>
+				<updated_date>2019-11-29T16:00:58.415+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>20</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.99</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='26177991b39f4ab0b141116cf24299e0'/></regulations>
+				<thermostat id='6c4bcf7d1b2448ccb211ca6c25a86a38'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='bc9e18756ad04c3f9f35298cbe537c8e'>
+		<name>Thermostatic Radiator Valve 000D6F000C96A82F</name>
+		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
+		<type>thermostatic_radiator_valve</type>
+		<created_date>2019-08-24T12:57:33.457+02:00</created_date>
+		<modified_date>2019-12-01T17:21:24.412+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='6d42c3e3fa384294ad76780120eb7a88'/>
+		<groups/>
+		<logs>
+			<point_log id='295e04d9d6bb434b8416bcce3b626351'>
+				<updated_date>2019-12-01T17:12:16.587+01:00</updated_date>
+				<type>valve_position</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-01T13:16:04.846+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:12:16.587+01:00" end_date="2019-12-01T17:12:16.587+01:00">
+					<measurement log_date="2019-12-01T17:12:16.587+01:00">0.00</measurement>
+				</period>
+				<valve_position_meter id='1e25fdf33f3e419a93805824042f6af4'/>
+			</point_log>
+			<point_log id='4f4cb1cf1f144f199ba9aff29270332b'>
+				<updated_date>2019-12-01T17:09:00.085+01:00</updated_date>
+				<type>temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:09:00.085+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:09:00.085+01:00" end_date="2019-12-01T17:09:00.085+01:00">
+					<measurement log_date="2019-12-01T17:09:00.085+01:00">20.63</measurement>
+				</period>
+				<thermo_meter id='6178d9384d20425389ed42f17f55b6f1'/>
+			</point_log>
+			<point_log id='50257227a32d40c4a496a0217c77ba39'>
+				<updated_date>2019-12-01T17:21:24.408+01:00</updated_date>
+				<type>temperature_difference</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:21:24.408+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:21:24.408+01:00" end_date="2019-12-01T17:21:24.408+01:00">
+					<measurement log_date="2019-12-01T17:21:24.408+01:00">0.10</measurement>
+				</period>
+				<thermo_meter id='5040b5418ffa43658f7bea94670beaf1'/>
+			</point_log>
+			<point_log id='894f15066445453a896442b33311af77'>
+				<updated_date>2019-12-01T09:00:01.678+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T09:00:01.678+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T09:00:01.678+01:00" end_date="2019-12-01T09:00:01.678+01:00">
+					<measurement log_date="2019-12-01T09:00:01.678+01:00">20.00</measurement>
+				</period>
+				<thermostat id='4de864b4a40d4e09b50b308d41cd6e5c'/>
+			</point_log>
+			<point_log id='b729a2afc63945f1b21c36b9a470704b'>
+				<updated_date>2019-10-05T01:33:59.209+02:00</updated_date>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-24T12:57:39.689+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:33:59.209+02:00" end_date="2019-10-05T01:33:59.209+02:00">
+					<measurement log_date="2019-10-05T01:33:59.209+02:00">0.00</measurement>
+				</period>
+				<temperature_offset id='e529ab36f56e4c1f9ed0750463d715f0'/>
+			</point_log>
+			<point_log id='c3ab673a061447f39fcc369593cbf5f6'>
+				<updated_date>2019-12-01T17:09:00.085+01:00</updated_date>
+				<type>uncorrected_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:09:00.085+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:09:00.085+01:00" end_date="2019-12-01T17:09:00.085+01:00">
+					<measurement log_date="2019-12-01T17:09:00.085+01:00">20.63</measurement>
+				</period>
+				<thermo_meter id='84ce18cf5f574fe9870b7612373147c5'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='153f10d4df75480ab8db916c6750eb27'>
+				<temperature_offset id='e529ab36f56e4c1f9ed0750463d715f0'/>
+				<updated_date>2019-10-05T01:33:59.209+02:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='2c3026e9a1ec46cd9e16b9b484eb77cf'>
+				<updated_date>2019-12-01T09:00:01.679+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>20</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.99</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='26177991b39f4ab0b141116cf24299e0'/></regulations>
+				<thermostat id='4de864b4a40d4e09b50b308d41cd6e5c'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='77ad7c755e0b477ebb1dc1361252832b'>
+		<name>Thermostatic Radiator Valve 000D6F000B214828</name>
+		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
+		<type>thermostatic_radiator_valve</type>
+		<created_date>2019-10-05T01:32:54.452+02:00</created_date>
+		<modified_date>2019-12-01T17:15:46.020+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='01bc059aef734090bfad1d01c9145ca0'/>
+		<groups/>
+		<logs>
+			<point_log id='1f4e0fab42cf4bb2a01052cb30de6873'>
+				<updated_date>2019-12-01T11:00:21.013+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T11:00:21.013+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T11:00:21.013+01:00" end_date="2019-12-01T11:00:21.013+01:00">
+					<measurement log_date="2019-12-01T11:00:21.013+01:00">17.00</measurement>
+				</period>
+				<thermostat id='4863315f3ac1463c9b90f04ba9e6c3aa'/>
+			</point_log>
+			<point_log id='50040acd63df4be9a44d2a6a451f8126'>
+				<updated_date>2019-12-01T17:15:46.016+01:00</updated_date>
+				<type>temperature_difference</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:15:46.016+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:15:46.016+01:00" end_date="2019-12-01T17:15:46.016+01:00">
+					<measurement log_date="2019-12-01T17:15:46.016+01:00">0.00</measurement>
+				</period>
+				<thermo_meter id='64150f7081784319b168d5c50dbabaec'/>
+			</point_log>
+			<point_log id='8db1a1ad0df64625bf70e12342b12aeb'>
+				<updated_date>2019-12-01T17:07:39.209+01:00</updated_date>
+				<type>temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:07:39.209+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:07:39.209+01:00" end_date="2019-12-01T17:07:39.209+01:00">
+					<measurement log_date="2019-12-01T17:07:39.209+01:00">19.13</measurement>
+				</period>
+				<thermo_meter id='14485c81ebd944fca20001b34eac2b0c'/>
+			</point_log>
+			<point_log id='92b5dacc5de5407cbf291afc33e16a12'>
+				<updated_date>2019-12-01T17:13:36.819+01:00</updated_date>
+				<type>valve_position</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-01T10:01:27.447+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:13:36.819+01:00" end_date="2019-12-01T17:13:36.819+01:00">
+					<measurement log_date="2019-12-01T17:13:36.819+01:00">0.00</measurement>
+				</period>
+				<valve_position_meter id='1e54d9037f7041fda5f0d0f0515fb573'/>
+			</point_log>
+			<point_log id='b00ac00f9b67430881a3489c4a5d8a5a'>
+				<updated_date>2019-10-05T01:48:31.471+02:00</updated_date>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-10-05T01:40:20.138+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:48:31.471+02:00" end_date="2019-10-05T01:48:31.471+02:00">
+					<measurement log_date="2019-10-05T01:48:31.471+02:00">0.00</measurement>
+				</period>
+				<temperature_offset id='766f3ca88cca4a1d84b74b6d85350928'/>
+			</point_log>
+			<point_log id='e1d1e4774d344126ab772cdbaec0815f'>
+				<updated_date>2019-12-01T17:07:39.209+01:00</updated_date>
+				<type>uncorrected_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T17:07:39.209+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T17:07:39.209+01:00" end_date="2019-12-01T17:07:39.209+01:00">
+					<measurement log_date="2019-12-01T17:07:39.209+01:00">19.13</measurement>
+				</period>
+				<thermo_meter id='5c1c9bbca86340cb9433598f53bf265a'/>
+			</point_log>
+			<point_log id='e2189708642b460dad8f00770c6e8564'>
+				<updated_date>2019-12-01T16:53:26.005+01:00</updated_date>
+				<type>battery</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-11-26T17:39:21.072+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T16:53:26.005+01:00" end_date="2019-12-01T16:53:26.005+01:00">
+					<measurement log_date="2019-12-01T16:53:26.005+01:00">0.88</measurement>
+				</period>
+				<battery_meter id='7437d7b445524b6985a9238c9447d4a7'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='0b526feb447b4b5a9dbff716e2928076'>
+				<temperature_offset id='766f3ca88cca4a1d84b74b6d85350928'/>
+				<updated_date>2019-10-05T01:48:31.471+02:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='18fb24bca7804e4c9353a33afd312b89'>
+				<updated_date>2019-12-01T11:00:21.014+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>17</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.99</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='26177991b39f4ab0b141116cf24299e0'/></regulations>
+				<thermostat id='4863315f3ac1463c9b90f04ba9e6c3aa'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='0a636a4fc1704ab4a24e4f7e37fb187a'>
+		<name>Gateway D40FB201C486</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2018-11-16T11:01:51.093+01:00</created_date>
+		<modified_date>2019-10-05T01:30:42.439+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='0e141597e64243a682d4888993b10c98'>
+				<updated_date>2019-10-05T01:06:35.127+02:00</updated_date>
+				<type>link_quality</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-10-05T01:01:34.864+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:06:35.127+02:00" end_date="2019-10-05T01:06:35.127+02:00">
+					<measurement log_date="2019-10-05T01:06:35.127+02:00">66</measurement>
+				</period>
+				<link_quality id='12f34f6163f14fa4a9aeb128c3284722'/>
+			</point_log>
+			<point_log id='2cf54216e4604705b344ed73c2f6e84c'>
+				<updated_date>2019-10-05T01:30:48.063+02:00</updated_date>
+				<type>lan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-10-05T01:01:10.369+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:30:48.063+02:00" end_date="2019-10-05T01:30:48.063+02:00">
+					<measurement log_date="2019-10-05T01:30:48.063+02:00">up</measurement>
+				</period>
+				<network_state id='962bb4bf233a4546a68a091bb2eaba5c'/>
+			</point_log>
+			<point_log id='72135bbef0b44d3f8c3c6b67d8f3d84b'>
+				<updated_date>2019-10-05T01:30:39.480+02:00</updated_date>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-10-05T01:22:18+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:30:39.480+02:00" end_date="2019-10-05T01:30:39.480+02:00">
+					<measurement log_date="2019-10-05T01:30:39.480+02:00">0.0.0.0</measurement>
+				</period>
+				<network_address id='d5a71901f2054050abd78e9529247276'/>
+			</point_log>
+			<point_log id='898f720220cf4f7795f1fef5816960fa'>
+				<updated_date>2019-10-05T01:30:42.422+02:00</updated_date>
+				<type>wlan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-10-05T01:30:42.422+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:30:42.422+02:00" end_date="2019-10-05T01:30:42.422+02:00">
+					<measurement log_date="2019-10-05T01:30:42.422+02:00">down</measurement>
+				</period>
+				<network_state id='eaf2e46853f14bf9a74565e435cf3e94'/>
+			</point_log>
+			<point_log id='99f71ccaa29642e886edbf1ebb364bbd'>
+				<updated_date>2019-10-05T01:06:35.127+02:00</updated_date>
+				<type>signal_strength</type>
+				<unit>dBm</unit>
+				<last_consecutive_log_date>2019-10-05T01:01:34.864+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:06:35.127+02:00" end_date="2019-10-05T01:06:35.127+02:00">
+					<measurement log_date="2019-10-05T01:06:35.127+02:00">-44.00</measurement>
+				</period>
+				<signal_strength id='1bb80111d43c4429abc767cd8971d4b4'/>
+			</point_log>
+			<point_log id='d0693cc9bf104702bb8da84dcff2e12d'>
+				<updated_date>2019-10-05T01:30:48.063+02:00</updated_date>
+				<type>lan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-08-24T21:27:04+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:30:48.063+02:00" end_date="2019-10-05T01:30:48.063+02:00">
+					<measurement log_date="2019-10-05T01:30:48.063+02:00">127.0.0.1</measurement>
+				</period>
+				<network_address id='328000939283455c9b17ce44035fadfb'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+	<appliance id='412c73075c4040058118e65cde1f0be9'>
+		<name>Central heating boiler</name>
+		<description></description>
+		<type>heater_central</type>
+		<created_date>2019-08-23T16:01:45.503+02:00</created_date>
+		<modified_date>2019-12-01T16:35:22.710+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='21929d5f99e340c5a255c2fc48711043'>
+				<updated_date>2019-12-01T16:15:46+01:00</updated_date>
+				<type>burner_efficiency</type>
+				<unit>s</unit>
+				<last_consecutive_log_date>2019-12-01T16:15:46+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T16:15:46+01:00" end_date="2019-12-01T16:15:46+01:00">
+					<measurement log_date="2019-12-01T16:15:46+01:00">4780</measurement>
+				</period>
+				<point_chrono_meter id='32ffa9b694654ed99ff0d2508b88fe34'/>
+			</point_log>
+			<point_log id='30379bac307b4dd4b77dfedf9697b10a'>
+				<updated_date>2019-10-05T01:09:39.631+02:00</updated_date>
+				<type>modulation_level</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-10-05T01:09:39.631+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:09:39.631+02:00" end_date="2019-10-05T01:09:39.631+02:00">
+					<measurement log_date="2019-10-05T01:09:39.631+02:00">0.00</measurement>
+				</period>
+				<modulation_level id='3ea221d4cfca49faa4b3670ba79d4db2'/>
+			</point_log>
+			<interval_log id='47e9b13fd6b94d1296b9a843f8ac7135'>
+				<updated_date>2019-12-01T14:00:00+01:00</updated_date>
+				<type>burner_efficiency</type>
+				<unit>s</unit>
+				<last_consecutive_log_date>2019-12-01T14:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2019-12-01T14:00:00+01:00" end_date="2019-12-01T14:00:00+01:00" interval="PT1H">
+					<measurement log_date="2019-12-01T14:00:00+01:00">4758</measurement>
+				</period>
+				<interval_chrono_meter id='51dcbc827b2a4edeb9ebeaded9789d93'/>
+			</interval_log>
+			<point_log id='5524b6f67ee84662a9f269cc69c2e833'>
+				<updated_date>2019-08-23T16:01:52.608+02:00</updated_date>
+				<type>heating_curve_high_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-23T16:01:52.608+02:00</last_consecutive_log_date>
+				<period start_date="2019-08-23T16:01:52.608+02:00" end_date="2019-08-23T16:01:52.608+02:00">
+					<measurement log_date="2019-08-23T16:01:52.608+02:00">20.00</measurement>
+				</period>
+				<thermostat id='1f69a4d3e1894eedbf824fd401e9d47b'/>
+			</point_log>
+			<point_log id='8ffa69d943c5490a8f3148ca2e31d5f2'>
+				<updated_date></updated_date>
+				<type>intended_central_heating_state</type>
+				<unit></unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<boiler_state id='53c0b4b49be14031821335acafe6bb29'/>
+			</point_log>
+			<point_log id='9795cc1d4d9048fa8d28652b5e972c54'>
+				<updated_date>2019-12-01T16:35:22.691+01:00</updated_date>
+				<type>intended_boiler_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-01T16:35:22.691+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T16:35:22.691+01:00" end_date="2019-12-01T16:35:22.691+01:00">
+					<measurement log_date="2019-12-01T16:35:22.691+01:00">0.00</measurement>
+				</period>
+				<thermo_meter id='c825a391f78048f7a0d2aca9704ba528'/>
+			</point_log>
+			<point_log id='a92834c611eb480887be291b8bd728b0'>
+				<updated_date>2019-08-23T16:01:50.724+02:00</updated_date>
+				<type>heating_curve_low_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-23T16:01:50.724+02:00</last_consecutive_log_date>
+				<period start_date="2019-08-23T16:01:50.724+02:00" end_date="2019-08-23T16:01:50.724+02:00">
+					<measurement log_date="2019-08-23T16:01:50.724+02:00">-10.00</measurement>
+				</period>
+				<thermostat id='f40e19e3b3cd481cb4c9b159f9e8b92a'/>
+			</point_log>
+			<point_log id='db292a894c3849a9a748d7187b6750dd'>
+				<updated_date>2019-12-01T16:00:00+01:00</updated_date>
+				<type>boiler_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-12-05T01:00:00+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T16:00:00+01:00" end_date="2019-12-01T16:00:00+01:00">
+					<measurement log_date="2019-12-01T16:00:00+01:00">80.00</measurement>
+				</period>
+				<thermo_meter id='9b697231c2eb4546bf195c3812f187b9'/>
+			</point_log>
+			<point_log id='dbab8e25fea24e5ca82bd0ea427a6e9a'>
+				<updated_date>2019-08-24T14:59:03.941+02:00</updated_date>
+				<type>regulation_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-08-24T14:59:03.941+02:00</last_consecutive_log_date>
+				<period start_date="2019-08-24T14:59:03.941+02:00" end_date="2019-08-24T14:59:03.941+02:00">
+					<measurement log_date="2019-08-24T14:59:03.941+02:00">on</measurement>
+				</period>
+				<regulation_toggle id='a0c84e88a8bb45db9c01a03df30eb2fd'/>
+			</point_log>
+			<interval_log id='dcb5369ba2e0436cb8f9449e59e38567'>
+				<updated_date></updated_date>
+				<type>burner_operation_time</type>
+				<unit>s</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<interval_chrono_meter id='a8f79e26758642b9875141e74f957f78'/>
+			</interval_log>
+			<point_log id='de0f2768702d422ebb28da893da24b77'>
+				<updated_date>2019-12-01T16:35:22.707+01:00</updated_date>
+				<type>central_heating_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-01T16:35:22.707+01:00</last_consecutive_log_date>
+				<period start_date="2019-12-01T16:35:22.707+01:00" end_date="2019-12-01T16:35:22.707+01:00">
+					<measurement log_date="2019-12-01T16:35:22.707+01:00">off</measurement>
+				</period>
+				<boiler_state id='11908e586f9945f38df65844e425f0d8'/>
+			</point_log>
+			<point_log id='df83abb2ce824787808433e16b26b477'>
+				<updated_date>2019-08-23T16:01:53.606+02:00</updated_date>
+				<type>heating_curve_high_setpoint</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-23T16:01:53.606+02:00</last_consecutive_log_date>
+				<period start_date="2019-08-23T16:01:53.606+02:00" end_date="2019-08-23T16:01:53.606+02:00">
+					<measurement log_date="2019-08-23T16:01:53.606+02:00">80.00</measurement>
+				</period>
+				<thermostat id='959a63bc47f14d5da10dee4aaa4d2c64'/>
+			</point_log>
+			<point_log id='fa35cb1b273d45079abd97b9f9db79e1'>
+				<updated_date>2019-08-23T16:01:51.636+02:00</updated_date>
+				<type>heating_curve_low_setpoint</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-23T16:01:51.636+02:00</last_consecutive_log_date>
+				<period start_date="2019-08-23T16:01:51.636+02:00" end_date="2019-08-23T16:01:51.636+02:00">
+					<measurement log_date="2019-08-23T16:01:51.636+02:00">80.00</measurement>
+				</period>
+				<thermostat id='bd1a60f2989d4d9a8ec983ee3600dc1c'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='0ade052a33574829873f948ad2d6def6'>
+				<updated_date>2019-08-23T16:01:52.609+02:00</updated_date>
+				<type>heating_curve_high_temperature</type>
+				<setpoint>20</setpoint>
+				<lower_bound>10</lower_bound>
+				<upper_bound>40</upper_bound>
+				<resolution>1</resolution>
+				<regulations/>
+				<thermostat id='1f69a4d3e1894eedbf824fd401e9d47b'/>
+			</thermostat_functionality>
+			<thermostat_functionality id='47b627ee1a20426fa038da3ab66ef2b7'>
+				<updated_date>2019-08-23T16:01:50.725+02:00</updated_date>
+				<type>heating_curve_low_temperature</type>
+				<setpoint>-10</setpoint>
+				<lower_bound>-30</lower_bound>
+				<upper_bound>10</upper_bound>
+				<resolution>1</resolution>
+				<regulations/>
+				<thermostat id='f40e19e3b3cd481cb4c9b159f9e8b92a'/>
+			</thermostat_functionality>
+			<toggle_functionality id='4b5c1aafe2724713a3b608f0a9f3933f'>
+				<regulation_toggle id='a0c84e88a8bb45db9c01a03df30eb2fd'/>
+				<updated_date>2019-08-24T14:59:03.941+02:00</updated_date>
+				<type>regulation_state</type>
+				<state>on</state>
+			</toggle_functionality>
+			<thermostat_functionality id='70c7559888424e08b5efe1287ab37795'>
+				<updated_date>2019-08-23T16:01:51.637+02:00</updated_date>
+				<type>heating_curve_low_setpoint</type>
+				<setpoint>80</setpoint>
+				<lower_bound>10</lower_bound>
+				<upper_bound>90</upper_bound>
+				<resolution>1</resolution>
+				<regulations/>
+				<thermostat id='bd1a60f2989d4d9a8ec983ee3600dc1c'/>
+			</thermostat_functionality>
+			<thermostat_functionality id='ddea047302594eb49e9a1ba0ca4946d2'>
+				<updated_date>2019-08-23T16:01:53.607+02:00</updated_date>
+				<type>heating_curve_high_setpoint</type>
+				<setpoint>80</setpoint>
+				<lower_bound>20</lower_bound>
+				<upper_bound>90</upper_bound>
+				<resolution>1</resolution>
+				<regulations/>
+				<thermostat id='959a63bc47f14d5da10dee4aaa4d2c64'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='b24cfc5e7ba1482882349c035ce3761d'>
+		<name>OpenThermGateway</name>
+		<description>An OpenTherm Gateway</description>
+		<type>open_therm_gateway</type>
+		<created_date>2017-08-10T11:57:37.012+02:00</created_date>
+		<modified_date>2019-08-05T14:16:28.504+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='1b1091bfd4194b41b2c25d72907b0688'>
+				<updated_date>2019-10-05T01:30:50.083+02:00</updated_date>
+				<type>open_therm_power_mode</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-08-05T14:16:28.485+02:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:30:50.083+02:00" end_date="2019-10-05T01:30:50.083+02:00">
+					<measurement log_date="2019-10-05T01:30:50.083+02:00">0</measurement>
+				</period>
+				<power_mode id='687696a93bde45bc91f1a0c7b8dff343'/>
+			</point_log>
+			<point_log id='6946ab76a8db4d1ba63707931ce23f54'>
+				<updated_date>2019-10-05T01:30:45.187+02:00</updated_date>
+				<type>override_mode</type>
+				<unit></unit>
+				<last_consecutive_log_date>2018-11-16T11:01:47.010+01:00</last_consecutive_log_date>
+				<period start_date="2019-10-05T01:30:45.187+02:00" end_date="2019-10-05T01:30:45.187+02:00">
+					<measurement log_date="2019-10-05T01:30:45.187+02:00">on</measurement>
+				</period>
+				<override_mode id='4a5b3868115e4d7dbbbcad6ef008080d'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+</appliances>
+

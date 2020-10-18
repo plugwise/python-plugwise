@@ -1,0 +1,1 @@
+{"temperature": 20.5, "setpoint": 20.5, "active_preset": "home", "presets": {"vacation": [15.0, 28.0], "no_frost": [10.0, 30.0], "away": [17.5, 25.0], "asleep": [17.0, 24.0], "home": [20.5, 22.0]}, "schedule_temperature": 20.5, "available_schedules": ["Standaard", "Thuiswerken"], "selected_schedule": null, "last_used": "Standaard", "illuminance": 60.0}

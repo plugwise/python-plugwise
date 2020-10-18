@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<status>
+<system>
+<product>smile</product>
+<mode>p1</mode>
+<version>2.5.9</version>
+<short_id>abcdefgh</short_id>
+<kernel>Linux 4.4.92, Apr 4 07:25:22 2018</kernel>
+<date>2020-03-11T21:36:36+0100</date>
+<uptime>10 days, 16:46,  load average: 0.23, 0.51, 0.49</uptime>
+</system>
+<application>
+<p1_logger>running</p1_logger>
+<last_telegram>2020-03-11 21:36:35</last_telegram>
+<last_parse_time>2020-03-11 21:32:35</last_parse_time>
+</application>
+<network>
+<hostname>smile000000</hostname>
+<type>LAN (cable)</type>
+<ip_address>127.0.0.1</ip_address>
+<mac_address>0123456789AB</mac_address>
+</network>
+</status>

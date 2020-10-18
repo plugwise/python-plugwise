@@ -1,0 +1,984 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain_objects>
+	<appliance id='7ffbb3ab4b6c4ab2915d7510f7bf8fe9'>
+		<name>Anna</name>
+		<description>A thermostat</description>
+		<type>thermostat</type>
+		<created_date>2019-04-23T20:32:36.648+02:00</created_date>
+		<modified_date>2020-03-11T11:04:57.668+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='c34c6864216446528e95d88985e714cc'/>
+		<groups/>
+		<logs>
+			<point_log id='139424e07ef74dca84e288d34027f4a8'>
+				<updated_date>2020-03-10T22:59:35.107+01:00</updated_date>
+				<type>cpu_frequency</type>
+				<unit>Hz</unit>
+				<last_consecutive_log_date>2020-03-10T12:15:09+01:00</last_consecutive_log_date>
+				<frequency_meter id='356da2846d83410fbca988b3a8683c72'/>
+				<period start_date="2020-03-10T22:59:35.107+01:00" end_date="2020-03-10T22:59:35.107+01:00">
+					<measurement log_date="2020-03-10T22:59:35.107+01:00">8000000</measurement>
+				</period>
+			</point_log>
+			<point_log id='1957dc1946ec4cc2a6e0d2aa45466489'>
+				<updated_date>2020-03-10T22:59:35.240+01:00</updated_date>
+				<type>schedule_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-10T10:52:38.491+01:00</last_consecutive_log_date>
+				<schedule_state id='c80b26421e17408f990da913dc67a23b'/>
+				<period start_date="2020-03-10T22:59:35.240+01:00" end_date="2020-03-10T22:59:35.240+01:00">
+					<measurement log_date="2020-03-10T22:59:35.240+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='1aad05f82ba3409cbe5fbc179c9ce416'>
+				<updated_date>2020-03-11T11:04:00+01:00</updated_date>
+				<type>schedule_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-11T08:00:00+01:00</last_consecutive_log_date>
+				<thermo_meter id='00daa9f4a07647c18cbab4ffe4985b12'/>
+				<period start_date="2020-03-11T11:04:00+01:00" end_date="2020-03-11T11:04:00+01:00">
+					<measurement log_date="2020-03-11T11:04:00+01:00">16.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='1e4fce5ecc8b4d7faa3a4cebc374b86b'>
+				<updated_date>2020-02-29T13:11:30.187+01:00</updated_date>
+				<type>proximity_detection</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-02-29T13:11:30.187+01:00</last_consecutive_log_date>
+				<proximity_sensor id='11f12162bbfc4a0d9939c2e1815bb58b'/>
+				<period start_date="2020-02-29T13:11:30.187+01:00" end_date="2020-02-29T13:11:30.187+01:00">
+					<measurement log_date="2020-02-29T13:11:30.187+01:00">no_proximity_detected</measurement>
+				</period>
+			</point_log>
+			<point_log id='49114f82027f49e3abb12cf18d5c240c'>
+				<updated_date>2020-03-10T22:59:35.101+01:00</updated_date>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-04-23T20:33:09.579+02:00</last_consecutive_log_date>
+				<temperature_offset id='b93e9a0840894acca62c199319d139f1'/>
+				<period start_date="2020-03-10T22:59:35.101+01:00" end_date="2020-03-10T22:59:35.101+01:00">
+					<measurement log_date="2020-03-10T22:59:35.101+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='503fd771e8994ff58e6046d93c2229ee'>
+				<updated_date>2020-03-11T11:04:09.472+01:00</updated_date>
+				<type>temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-11T11:04:09.472+01:00</last_consecutive_log_date>
+				<thermo_meter id='dbb618e08abd4d148de6958364bd12e8'/>
+				<period start_date="2020-03-11T11:04:09.472+01:00" end_date="2020-03-11T11:04:09.472+01:00">
+					<measurement log_date="2020-03-11T11:04:09.472+01:00">20.62</measurement>
+				</period>
+			</point_log>
+			<point_log id='515d73905c4348f9aadc5199c2bc5d7b'>
+				<updated_date>2020-03-10T12:14:44.171+01:00</updated_date>
+				<type>button_right</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-10T12:14:44.171+01:00</last_consecutive_log_date>
+				<button id='fcec2aa88efc4d60bcf2db3fa830c877'/>
+				<period start_date="2020-03-10T12:14:44.171+01:00" end_date="2020-03-10T12:14:44.171+01:00">
+					<measurement log_date="2020-03-10T12:14:44.171+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='67a07f469f92472794ad7216dea3ec35'>
+				<updated_date>2020-03-10T22:59:35.245+01:00</updated_date>
+				<type>onoff_boiler_temperature_deadband</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-04-23T20:33:08.682+02:00</last_consecutive_log_date>
+				<temperature_offset_meter id='d9aab83f4be844d182a6ec53025a26b8'/>
+				<period start_date="2020-03-10T22:59:35.245+01:00" end_date="2020-03-10T22:59:35.245+01:00">
+					<measurement log_date="2020-03-10T22:59:35.245+01:00">0.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='7c7c181764b1400e94eda533d31d5216'>
+				<updated_date>2020-03-11T08:00:01.661+01:00</updated_date>
+				<type>preset_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-11T08:00:01.661+01:00</last_consecutive_log_date>
+				<preset_state id='d41526b30c014708bcc82ec2f36f1688'/>
+				<period start_date="2020-03-11T08:00:01.661+01:00" end_date="2020-03-11T08:00:01.661+01:00">
+					<measurement log_date="2020-03-11T08:00:01.661+01:00">away</measurement>
+				</period>
+			</point_log>
+			<point_log id='969795dd5e7545bbb307626d9855a860'>
+				<updated_date>2020-03-10T22:59:35.090+01:00</updated_date>
+				<type>open_therm_boiler_activation_threshold</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-04-23T20:33:10.006+02:00</last_consecutive_log_date>
+				<temperature_offset_meter id='df79431903254399ab721af901c4fed4'/>
+				<period start_date="2020-03-10T22:59:35.090+01:00" end_date="2020-03-10T22:59:35.090+01:00">
+					<measurement log_date="2020-03-10T22:59:35.090+01:00">10.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='9df5ad0db84f459b8d2861c86029e1b7'>
+				<updated_date>2019-12-30T10:57:39.685+01:00</updated_date>
+				<type>button_top</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-30T10:57:39.685+01:00</last_consecutive_log_date>
+				<button id='3e1ee37176aa4440ac62be3cdbb23f8e'/>
+				<period start_date="2019-12-30T10:57:39.685+01:00" end_date="2019-12-30T10:57:39.685+01:00">
+					<measurement log_date="2019-12-30T10:57:39.685+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='a383f6a1f2dd4a50a954bb188e442895'>
+				<updated_date>2020-03-10T22:59:35.331+01:00</updated_date>
+				<type>proximity_sensor_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-04-23T20:33:09.560+02:00</last_consecutive_log_date>
+				<proximity_sensor_toggle id='d71d20f8395a474fae14f5f9229a3ed4'/>
+				<period start_date="2020-03-10T22:59:35.331+01:00" end_date="2020-03-10T22:59:35.331+01:00">
+					<measurement log_date="2020-03-10T22:59:35.331+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='a87055a66ff7409b8dd0f036f87e7c06'>
+				<updated_date>2020-03-10T22:59:35.028+01:00</updated_date>
+				<type>preheating_target_temperature_rate</type>
+				<unit>C_hr</unit>
+				<last_consecutive_log_date>2019-04-23T20:33:06.023+02:00</last_consecutive_log_date>
+				<temperature_rate id='8a885732ced34a1fba377049b0f218c3'/>
+				<period start_date="2020-03-10T22:59:35.028+01:00" end_date="2020-03-10T22:59:35.028+01:00">
+					<measurement log_date="2020-03-10T22:59:35.028+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='aa2bb69bfbba41f38378b7f8d6ec46a3'>
+				<updated_date>2020-03-11T07:59:46.532+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-11T07:59:46.532+01:00</last_consecutive_log_date>
+				<thermostat id='4bad11ecf8ed40798a6128dd0f2110da'/>
+				<period start_date="2020-03-11T07:59:46.532+01:00" end_date="2020-03-11T07:59:46.532+01:00">
+					<measurement log_date="2020-03-11T07:59:46.532+01:00">16.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='c829ea0a2fbe49caa871f207aef874ac'>
+				<updated_date>2020-03-11T11:04:57.663+01:00</updated_date>
+				<type>illuminance</type>
+				<unit>lx</unit>
+				<last_consecutive_log_date>2020-03-11T11:04:57.663+01:00</last_consecutive_log_date>
+				<illuminance_meter id='39f7499fe29e4801ac50aae911871104'/>
+				<period start_date="2020-03-11T11:04:57.663+01:00" end_date="2020-03-11T11:04:57.663+01:00">
+					<measurement log_date="2020-03-11T11:04:57.663+01:00">35.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='cf6ff421eb5b4f2ea7cc7c048e0bf462'>
+				<updated_date>2020-03-10T22:59:35.248+01:00</updated_date>
+				<type>target_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-10T12:14:59.835+01:00</last_consecutive_log_date>
+				<thermo_meter id='43e22a304ea04ba88f665e1f896668a8'/>
+				<period start_date="2020-03-10T22:59:35.248+01:00" end_date="2020-03-10T22:59:35.248+01:00">
+					<measurement log_date="2020-03-10T22:59:35.248+01:00">21.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='ddcda4cc2698404aa270b36f3da5945b'>
+				<updated_date>2020-03-10T22:59:35.093+01:00</updated_date>
+				<type>derivative_coefficient</type>
+				<unit>s</unit>
+				<last_consecutive_log_date>2019-04-23T20:33:07.814+02:00</last_consecutive_log_date>
+				<coefficient id='ba0d19c45d3044afbe478e86f5e7d204'/>
+				<period start_date="2020-03-10T22:59:35.093+01:00" end_date="2020-03-10T22:59:35.093+01:00">
+					<measurement log_date="2020-03-10T22:59:35.093+01:00">0</measurement>
+				</period>
+			</point_log>
+			<point_log id='e0480e703bd14c37b6b2ade950542078'>
+				<updated_date>2020-01-13T12:22:22.716+01:00</updated_date>
+				<type>button_left</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-01-13T12:22:22.716+01:00</last_consecutive_log_date>
+				<button id='bc87a325c23448cd8c824b6f012f67ff'/>
+				<period start_date="2020-01-13T12:22:22.716+01:00" end_date="2020-01-13T12:22:22.716+01:00">
+					<measurement log_date="2020-01-13T12:22:22.716+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='ec0a99570cb940ddba11308a38917d71'>
+				<updated_date>2020-03-11T11:04:57.631+01:00</updated_date>
+				<type>decentral_heat_demand_offset</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-04-23T20:33:06.061+02:00</last_consecutive_log_date>
+				<temperature_offset_meter id='f46b5236f45b478db53c538c2e9f085a'/>
+				<period start_date="2020-03-11T11:04:57.631+01:00" end_date="2020-03-11T11:04:57.631+01:00">
+					<measurement log_date="2020-03-11T11:04:57.631+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='66f6277ea79243b3a4b728dd458a10d1'>
+				<updated_date>2020-03-11T07:59:46.533+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>16</setpoint>
+				<upper_bound>30</upper_bound>
+				<lower_bound>4</lower_bound>
+				<resolution>0.1</resolution>
+				<thermostat id='4bad11ecf8ed40798a6128dd0f2110da'/>
+				<regulations>
+					<ame_regulation id='9855830948a543f7a87b36ff206a07e7'/>
+				</regulations>
+			</thermostat_functionality>
+			<toggle_functionality id='907bc7cfe5a64d0393ad59dcaeb2ccb6'>
+				<updated_date>2020-03-10T22:59:35.331+01:00</updated_date>
+				<type>proximity_sensor_state</type>
+				<state>on</state>
+				<proximity_sensor_toggle id='d71d20f8395a474fae14f5f9229a3ed4'/>
+			</toggle_functionality>
+			<offset_functionality id='d4c4794fd8744edaa6360231800df353'>
+				<updated_date>2020-03-10T22:59:35.101+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+				<temperature_offset id='b93e9a0840894acca62c199319d139f1'/>
+			</offset_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<module id='511782ee1f6f453bb462e0259d78d588'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>ThermoExtension</vendor_model>
+		<hardware_version>6539-1301-2302</hardware_version>
+		<firmware_version>2018-02-08T11:15:57+01:00</firmware_version>
+		<upgrade/>
+		<created_date>2019-01-31T12:18:32.804+01:00</created_date>
+		<modified_date>2020-03-11T11:04:49.113+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+		</services>
+		<protocols>
+			<thermo_extension id='defb091a13454c29b4b03c52bcf24fca'>
+				<onoff_boiler id='3eae4708551b4433a0a6c52eb3f1d042'/>
+				<thermo_touch id='d9a63c6d68a84eddb9264f388e1efdd7'/>
+			</thermo_extension>
+		</protocols>
+	</module>
+	<template id='6d31575be8dc4507b7fa626bfec92c15' tag="relay_state_based_on_time">
+		<name>Relay schedule template</name>
+		<description>Template for scheduling relays on a time basis.</description>
+		<single_actor>true</single_actor>
+		<created_date>2019-01-31T12:18:31.802+01:00</created_date>
+		<modified_date>2020-03-10T22:59:26.259+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<objects>
+			<object name="direct_object" type="DirectObject"/>
+		</objects>
+		<parameters>
+			<parameter name="time" source="clock.weekTime" type="WeekTime"/>
+		</parameters>
+		<results>
+			<result name="state" type="OnOff" action="direct_object.iterateFunctionalities('RelayFunctionality')().state = state"/>
+		</results>
+	</template>
+	<module id='11e2525899534d359bc2288d52a77342'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<upgrade/>
+		<created_date>2019-01-31T12:18:29.355+01:00</created_date>
+		<modified_date>2019-04-23T20:58:57.163+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<irradiance_meter id='a60fd2a5218b4148bd1827fcff22098a' log_type='solar_irradiance'>
+				<functionalities>
+					<point_log id='d3854dcd2d3d473ea464ecb302c773a3'/>
+				</functionalities>
+			</irradiance_meter>
+			<thermo_meter id='af0831feffeb4b23bf8b711720367044' log_type='outdoor_temperature'>
+				<functionalities>
+					<point_log id='f34eb4dd6cb74973a6e77456061aec14'/>
+				</functionalities>
+			</thermo_meter>
+			<hygro_meter id='dd346ebc2d814dfb8b874203868d5798' log_type='humidity'>
+				<functionalities>
+					<point_log id='b180f2302fc5468586f7b6f47e18125a'/>
+				</functionalities>
+			</hygro_meter>
+			<wind_vector id='f1cfb407ee57464f87a88afc2d03dbdf' log_type='wind_vector'>
+				<functionalities>
+					<point_log id='eff38545568948d683d839f62e27e773'/>
+				</functionalities>
+			</wind_vector>
+		</services>
+		<protocols>
+			<weather_feed id='745b60554c824057aacfff7ad4c37cd0'>
+			</weather_feed>
+		</protocols>
+	</module>
+	<template id='b7ec76497c104b9689b7fc1876ddfa85' tag="zone_preset_based_on_time_and_presence_with_override">
+		<name>Zone preset schedule template</name>
+		<description>Template for scheduling presets on a presence or time basis with the option to override the preset&apos;s setpoint/state.</description>
+		<single_actor>true</single_actor>
+		<created_date>2019-01-31T12:18:31.936+01:00</created_date>
+		<modified_date>2020-03-10T22:59:26.276+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<objects>
+			<object name="zone" type="Location"/>
+		</objects>
+		<parameters>
+			<parameter name="presence" source="zone.presence" type="Boolean"/>
+			<parameter name="time" source="clock.weekTime" type="WeekTime"/>
+		</parameters>
+		<results>
+			<result name="state" type="OnOff" action="zone.iterateFunctionalities('RelayFunctionality')().switch(clock.addSeconds(null, 1), state)"/>
+			<result name="preset" type="Preset" action="zone.preset = preset"/>
+			<result name="setpoint" type="Number" action="zone.iterateFunctionalities('ThermostatFunctionality')().setSetpoint(clock.addSeconds(null, 1), setpoint)"/>
+			<result name="domestic_hot_water_state" type="OnOff" action="zone.iterateFunctionalities('ToggleFunctionality', 'domestic_hot_water_state')().switch(clock.addSeconds(null, 1), domestic_hot_water_state)"/>
+		</results>
+	</template>
+	<gateway id='cd2d602bb4554cb196f5927e7755ec9f'>
+		<created_date>2019-01-31T12:18:27.957+01:00</created_date>
+		<modified_date>2020-03-11T11:04:28.553+01:00</modified_date>
+		<deleted_date/>
+		<name></name>
+		<description></description>
+		<enabled>true</enabled>
+		<firmware_locked>false</firmware_locked>
+		<prevent_default_update>false</prevent_default_update>
+		<last_reset_date>2019-01-31T12:18:27.957+01:00</last_reset_date>
+		<last_boot_date>2020-02-21T04:54:47.290+01:00</last_boot_date>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>smile_thermo</vendor_model>
+		<hardware_version>AME Smile 2.0 board</hardware_version>
+		<firmware_version>3.1.11</firmware_version>
+		<mac_address>0123456789AB</mac_address>
+		<short_id>abcdefgh</short_id>
+		<send_data>false</send_data>
+		<anonymous>false</anonymous>
+		<lan_ip></lan_ip>
+		<wifi_ip>127.0.0.1</wifi_ip>
+		<hostname>smile000000</hostname>
+		<time>2020-03-11T11:04:47+01:00</time>
+		<timezone>Europe/Amsterdam</timezone>
+		<ssh_relay>disabled</ssh_relay>
+		<project id='123306def5eb4172ae74435aea21e753'>
+			<name>-- Stock</name>
+			<description>Stock which was previously called fulfillment</description>
+			<is_default>false</is_default>
+			<visible_in_production>true</visible_in_production>
+			<deleted_date></deleted_date>
+			<modified_date>2019-04-23T20:39:39.007+02:00</modified_date>
+			<created_date>2014-11-19T17:45:10+01:00</created_date>
+		</project>
+		<gateway_environment id='1b550e558f164c219a6962dd6efbcf53'>
+			<savings_result_value/>
+			<longitude>4.49</longitude>
+			<thermostat_model/>
+			<city>Sassenheim</city>
+			<country>NL</country>
+			<electricity_consumption_tariff_structure/>
+			<electricity_production_peak_tariff/>
+			<central_heating_model/>
+			<household_children>0</household_children>
+			<thermostat_brand/>
+			<electricity_production_off_peak_tariff/>
+			<central_heating_installation_date/>
+			<postal_code>2171</postal_code>
+			<electricity_consumption_off_peak_tariff/>
+			<latitude>52.21</latitude>
+			<gas_consumption_tariff/>
+			<modified_date>2019-04-23T20:58:57.163+02:00</modified_date>
+			<electricity_production_tariff_structure/>
+			<housing_construction_period>from_1960_to_1990</housing_construction_period>
+			<electricity_production_single_tariff/>
+			<electricity_consumption_peak_tariff/>
+			<electricity_consumption_single_tariff/>
+			<central_heating_brand/>
+			<housing_type>terraced</housing_type>
+			<currency>EUR</currency>
+			<savings_result_unit/>
+			<household_adults>2</household_adults>
+			<central_heating_year_of_manufacture/>
+			<deleted_date></deleted_date>
+			<modified_date>2019-04-23T20:58:57.163+02:00</modified_date>
+			<created_date>2020-03-09T20:01:50+01:00</created_date>
+		</gateway_environment>
+		<features>
+			<remote_control id='c6210f2b8cb04c0c9acc1c6c0f1da57f'>
+				<activation_date>2019-02-11T14:11:47+01:00</activation_date>
+				<validity_period/>
+				<valid_to></valid_to>
+				<valid_from></valid_from>
+				<grace_period/>
+				<deleted_date></deleted_date>
+				<modified_date>2019-04-23T20:39:39.066+02:00</modified_date>
+				<created_date>2019-02-11T14:11:47+01:00</created_date>
+			</remote_control>
+		</features>
+	</gateway>
+	<module id='2174b15978334867a3d634a16d14ada8'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>ThermoTouch</vendor_model>
+		<hardware_version>6539-1301-5002</hardware_version>
+		<firmware_version>2018-02-08T11:15:53+01:00</firmware_version>
+		<upgrade/>
+		<created_date>2019-04-23T20:32:36.476+02:00</created_date>
+		<modified_date>2020-03-11T11:04:57.674+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<thermo_meter id='00daa9f4a07647c18cbab4ffe4985b12' log_type='schedule_temperature'>
+				<functionalities>
+					<point_log id='1aad05f82ba3409cbe5fbc179c9ce416'/>
+				</functionalities>
+			</thermo_meter>
+			<proximity_sensor id='11f12162bbfc4a0d9939c2e1815bb58b' log_type='proximity_detection'>
+				<functionalities>
+					<point_log id='1e4fce5ecc8b4d7faa3a4cebc374b86b'/>
+				</functionalities>
+			</proximity_sensor>
+			<frequency_meter id='356da2846d83410fbca988b3a8683c72' log_type='cpu_frequency'>
+				<functionalities>
+					<point_log id='139424e07ef74dca84e288d34027f4a8'/>
+				</functionalities>
+			</frequency_meter>
+			<illuminance_meter id='39f7499fe29e4801ac50aae911871104' log_type='illuminance'>
+				<functionalities>
+					<point_log id='c829ea0a2fbe49caa871f207aef874ac'/>
+				</functionalities>
+			</illuminance_meter>
+			<button id='3e1ee37176aa4440ac62be3cdbb23f8e' log_type='button_top' position='top'>
+				<functionalities>
+					<point_log id='9df5ad0db84f459b8d2861c86029e1b7'/>
+				</functionalities>
+			</button>
+			<thermo_meter id='43e22a304ea04ba88f665e1f896668a8' log_type='target_temperature'>
+				<functionalities>
+					<point_log id='cf6ff421eb5b4f2ea7cc7c048e0bf462'/>
+				</functionalities>
+			</thermo_meter>
+			<thermostat id='4bad11ecf8ed40798a6128dd0f2110da' log_type='thermostat'>
+				<functionalities>
+					<thermostat_functionality id='66f6277ea79243b3a4b728dd458a10d1'/>
+					<point_log id='aa2bb69bfbba41f38378b7f8d6ec46a3'/>
+				</functionalities>
+			</thermostat>
+			<temperature_rate id='8a885732ced34a1fba377049b0f218c3' log_type='preheating_target_temperature_rate'>
+				<functionalities>
+					<point_log id='a87055a66ff7409b8dd0f036f87e7c06'/>
+				</functionalities>
+			</temperature_rate>
+			<temperature_offset id='b93e9a0840894acca62c199319d139f1' log_type='temperature_offset'>
+				<functionalities>
+					<point_log id='49114f82027f49e3abb12cf18d5c240c'/>
+					<offset_functionality id='d4c4794fd8744edaa6360231800df353'/>
+				</functionalities>
+			</temperature_offset>
+			<coefficient id='ba0d19c45d3044afbe478e86f5e7d204' log_type='derivative_coefficient'>
+				<functionalities>
+					<point_log id='ddcda4cc2698404aa270b36f3da5945b'/>
+				</functionalities>
+			</coefficient>
+			<button id='bc87a325c23448cd8c824b6f012f67ff' log_type='button_left' position='left'>
+				<functionalities>
+					<point_log id='e0480e703bd14c37b6b2ade950542078'/>
+				</functionalities>
+			</button>
+			<schedule_state id='c80b26421e17408f990da913dc67a23b' log_type='schedule_state'>
+				<functionalities>
+					<point_log id='1957dc1946ec4cc2a6e0d2aa45466489'/>
+				</functionalities>
+			</schedule_state>
+			<preset_state id='d41526b30c014708bcc82ec2f36f1688' log_type='preset_state'>
+				<functionalities>
+					<point_log id='7c7c181764b1400e94eda533d31d5216'/>
+				</functionalities>
+			</preset_state>
+			<proximity_sensor_toggle id='d71d20f8395a474fae14f5f9229a3ed4' log_type='proximity_sensor_state'>
+				<functionalities>
+					<toggle_functionality id='907bc7cfe5a64d0393ad59dcaeb2ccb6'/>
+					<point_log id='a383f6a1f2dd4a50a954bb188e442895'/>
+				</functionalities>
+			</proximity_sensor_toggle>
+			<temperature_offset_meter id='d9aab83f4be844d182a6ec53025a26b8' log_type='onoff_boiler_temperature_deadband'>
+				<functionalities>
+					<point_log id='67a07f469f92472794ad7216dea3ec35'/>
+				</functionalities>
+			</temperature_offset_meter>
+			<thermo_meter id='dbb618e08abd4d148de6958364bd12e8' log_type='temperature'>
+				<functionalities>
+					<point_log id='503fd771e8994ff58e6046d93c2229ee'/>
+				</functionalities>
+			</thermo_meter>
+			<temperature_offset_meter id='df79431903254399ab721af901c4fed4' log_type='open_therm_boiler_activation_threshold'>
+				<functionalities>
+					<point_log id='969795dd5e7545bbb307626d9855a860'/>
+				</functionalities>
+			</temperature_offset_meter>
+			<temperature_offset_meter id='f46b5236f45b478db53c538c2e9f085a' log_type='decentral_heat_demand_offset'>
+				<functionalities>
+					<point_log id='ec0a99570cb940ddba11308a38917d71'/>
+				</functionalities>
+			</temperature_offset_meter>
+			<button id='fcec2aa88efc4d60bcf2db3fa830c877' log_type='button_right' position='right'>
+				<functionalities>
+					<point_log id='515d73905c4348f9aadc5199c2bc5d7b'/>
+				</functionalities>
+			</button>
+		</services>
+		<protocols>
+			<thermo_touch id='d9a63c6d68a84eddb9264f388e1efdd7'>
+				<thermo_extension id='defb091a13454c29b4b03c52bcf24fca'/>
+			</thermo_touch>
+		</protocols>
+	</module>
+	<rule id='d28edc40489b436e80888fa1490c77a5'>
+		<name>Test</name>
+		<description></description>
+		<template id="b7ec76497c104b9689b7fc1876ddfa85" tag="zone_preset_based_on_time_and_presence_with_override"/>
+		<active>false</active>
+		<created_date>2019-07-21T23:01:19.294+02:00</created_date>
+		<modified_date>2020-03-09T17:15:15.271+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<directives>
+			<when time="[mo 02:00,mo 02:00)"><then preset="home"/></when>
+		</directives>
+		<contexts>
+			<context>
+				<zone><location id="c34c6864216446528e95d88985e714cc"/></zone>
+			</context>
+		</contexts>
+	</rule>
+	<module id='32e2edbd5b664b478563583283d0ed7f'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<upgrade/>
+		<created_date>2019-01-31T12:18:34.950+01:00</created_date>
+		<modified_date>2019-01-31T12:18:38.298+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<boiler_state id='22c7a570a10c4b95b99ac1880ee23c5e' log_type='central_heating_state'>
+				<functionalities>
+					<point_log id='8debe5ae23774ea8b9f8b01b5f3199e9'/>
+				</functionalities>
+			</boiler_state>
+			<interval_chrono_meter id='9eeb1d474ff341daa431d9e67e76bc19' log_type='burner_operation_time'>
+				<functionalities>
+					<interval_log id='dbb0790c78164aa09ba59c5dc0e302f0'/>
+				</functionalities>
+			</interval_chrono_meter>
+			<point_chrono_meter id='c4a68e03306b46488c28598ef34cd94a' log_type='burner_efficiency'>
+				<functionalities>
+					<point_log id='95f8629d68684f5b80f3f8f1c09ecafd'/>
+				</functionalities>
+			</point_chrono_meter>
+			<boiler_state id='d00211aa409c4b1bafd114b10bce1aaa' log_type='intended_central_heating_state'>
+				<functionalities>
+					<point_log id='97fbfb8102dd4b21892e567d770b2fbb'/>
+				</functionalities>
+			</boiler_state>
+			<interval_chrono_meter id='dd721d0e9b154901a3947be23325b14b' log_type='burner_efficiency'>
+				<functionalities>
+					<interval_log id='044fdccb72364b0f908b73a15db29df0'/>
+				</functionalities>
+			</interval_chrono_meter>
+		</services>
+		<protocols>
+			<onoff_boiler id='3eae4708551b4433a0a6c52eb3f1d042'>
+				<thermo_extension id='defb091a13454c29b4b03c52bcf24fca'/>
+			</onoff_boiler>
+		</protocols>
+	</module>
+	<template id='5829936884f14c85884f6026da3b6871' tag="default_client_presence_based_on_pointlog">
+		<name>Client, Pointlog presence template</name>
+		<description>Template for setting default client presence based on point_logs</description>
+		<single_actor>false</single_actor>
+		<created_date>2019-01-31T12:18:31.987+01:00</created_date>
+		<modified_date>2020-03-10T22:59:26.282+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<objects>
+			<object name="client" type="Client"/>
+			<object name="point_log" type="PointLogFunctionality"/>
+		</objects>
+		<parameters>
+			<parameter name="point_log_recently_used" source="point_log.wasRecentlyOn(null, 1800)" type="Boolean"/>
+		</parameters>
+		<results>
+			<result name="presence" type="Boolean" action="client.setPresence(presence, 'rule')"/>
+		</results>
+	</template>
+	<template id='8a8ff0c3b3604342a092517eec70b2f0' tag="relay_state_based_on_time_and_preset">
+		<name>Relay schedule template</name>
+		<description>Template for scheduling relays on a time and preset basis.</description>
+		<single_actor>false</single_actor>
+		<created_date>2019-01-31T12:18:31.754+01:00</created_date>
+		<modified_date>2020-03-10T22:59:26.256+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<objects>
+			<object name="direct_object" type="DirectObject"/>
+			<object name="zone" type="Location"/>
+		</objects>
+		<parameters>
+			<parameter name="preset" source="zone.preset" type="Preset"/>
+			<parameter name="time" source="clock.weekTime" type="WeekTime"/>
+		</parameters>
+		<results>
+			<result name="state" type="OnOff" action="direct_object.iterateFunctionalities('RelayFunctionality')().state = state"/>
+		</results>
+	</template>
+	<rule id='88ada4177d814433b3302f4eef6902f4'>
+		<name>Thermostat presets</name>
+		<description>Provides presets for a Location.</description>
+		<template id="1b027c50243c4c639f28eab6409d822d" tag="zone_setpoint_and_state_based_on_preset"/>
+		<active>true</active>
+		<created_date>2019-04-23T20:32:39.223+02:00</created_date>
+		<modified_date>2019-12-23T18:35:22.899+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<directives>
+			<when preset="vacation"><then setpoint="15"/></when>
+			<when preset="no_frost"><then setpoint="10"/></when>
+			<when preset="asleep"><then setpoint="16"/></when>
+			<when preset="away"><then setpoint="16"/></when>
+			<when preset="home"><then setpoint="21"/></when>
+		</directives>
+		<contexts>
+			<context>
+				<zone><location id="c34c6864216446528e95d88985e714cc"/></zone>
+			</context>
+		</contexts>
+	</rule>
+	<rule id='a36b5218575a42809dc3748377d160f9'>
+		<name>Normal</name>
+		<description></description>
+		<template id="b7ec76497c104b9689b7fc1876ddfa85" tag="zone_preset_based_on_time_and_presence_with_override"/>
+		<active>true</active>
+		<created_date>2019-04-23T21:36:02.911+02:00</created_date>
+		<modified_date>2020-03-10T10:52:35.181+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<directives>
+			<when time="[su 22:00,mo 06:00)"><then preset="asleep"/></when>
+			<when time="[mo 17:00,mo 22:00)"><then preset="home"/></when>
+			<when time="[mo 22:00,tu 06:00)"><then preset="asleep"/></when>
+			<when time="[tu 06:00,tu 08:00)"><then setpoint="18"/></when>
+			<when time="[tu 08:00,tu 17:00)"><then preset="away"/></when>
+			<when time="[tu 17:00,tu 22:00)"><then preset="home"/></when>
+			<when time="[tu 22:00,we 06:00)"><then preset="asleep"/></when>
+			<when time="[we 06:00,we 08:00)"><then setpoint="18"/></when>
+			<when time="[we 08:00,we 17:00)"><then preset="away"/></when>
+			<when time="[we 17:00,we 22:00)"><then preset="home"/></when>
+			<when time="[we 22:00,th 06:00)"><then preset="asleep"/></when>
+			<when time="[th 06:00,th 08:00)"><then setpoint="18"/></when>
+			<when time="[th 08:00,th 17:00)"><then preset="away"/></when>
+			<when time="[th 17:00,th 22:00)"><then preset="home"/></when>
+			<when time="[th 22:00,fr 06:00)"><then preset="asleep"/></when>
+			<when time="[fr 06:00,fr 08:00)"><then setpoint="18"/></when>
+			<when time="[fr 08:00,fr 17:00)"><then preset="away"/></when>
+			<when time="[fr 17:00,fr 22:00)"><then preset="home"/></when>
+			<when time="[mo 06:00,mo 08:00)"><then setpoint="18"/></when>
+			<when time="[mo 08:00,mo 17:00)"><then preset="home"/></when>
+			<when time="[su 08:00,su 22:00)"><then preset="home"/></when>
+			<when time="[sa 22:00,su 08:00)"><then preset="asleep"/></when>
+			<when time="[fr 22:00,sa 08:00)"><then preset="asleep"/></when>
+			<when time="[sa 08:00,sa 22:00)"><then preset="home"/></when>
+		</directives>
+		<contexts>
+			<context>
+				<zone><location id="c34c6864216446528e95d88985e714cc"/></zone>
+			</context>
+		</contexts>
+	</rule>
+	<template id='1b027c50243c4c639f28eab6409d822d' tag="zone_setpoint_and_state_based_on_preset">
+		<name>Zone temperature/state schedule template</name>
+		<description>Template for actuating thermostats and relays on a preset basis.</description>
+		<single_actor>true</single_actor>
+		<created_date>2019-01-31T12:18:31.874+01:00</created_date>
+		<modified_date>2020-03-10T22:59:26.265+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<objects>
+			<object name="zone" type="Location"/>
+		</objects>
+		<parameters>
+			<parameter name="preset" source="zone.preset" type="Preset"/>
+		</parameters>
+		<results>
+			<result name="state" type="OnOff" action="zone.iterateFunctionalities('RelayFunctionality')().state = state"/>
+			<result name="setpoint" type="Number" action="zone.iterateFunctionalities('ThermostatFunctionality')().setpoint = setpoint"/>
+			<result name="domestic_hot_water_state" type="OnOff" action="zone.iterateFunctionalities('ToggleFunctionality', 'domestic_hot_water_state')().state = domestic_hot_water_state"/>
+		</results>
+	</template>
+	<module id='68e6b6d16b784d26bc35516c4336415e'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>Gateway</vendor_model>
+		<hardware_version>AME Smile 2.0 board</hardware_version>
+		<firmware_version></firmware_version>
+		<upgrade/>
+		<created_date>2019-01-31T12:18:28.199+01:00</created_date>
+		<modified_date>2019-01-31T12:20:04.057+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<network_state id='148f48bc9ff0453ca7e88ce2f44fa9c0' log_type='wlan_state'>
+				<functionalities>
+					<point_log id='884aad2a3ed8460da76f54b7c3bc249d'/>
+				</functionalities>
+			</network_state>
+			<signal_strength id='2c67d0e7aa8644b9a97d4ac4109674f0' log_type='signal_strength'>
+				<functionalities>
+					<point_log id='786c5b6e8f394026959d5732095299fa'/>
+				</functionalities>
+			</signal_strength>
+			<network_address id='81bc43f4a6d54ff6aa0bbb2be90046fe' log_type='wlan_ip_address'>
+				<functionalities>
+					<point_log id='f9d43d7c89e846c8a91fa2c049bb1f91'/>
+				</functionalities>
+			</network_address>
+			<link_quality id='c8967c9002fc479cba65e814647f53ea' log_type='link_quality'>
+				<functionalities>
+					<point_log id='4f37a23dd52d4657bf0c654beba70afa'/>
+				</functionalities>
+			</link_quality>
+			<network_state id='e3279538bea4473297ffb20728eeda3f' log_type='lan_state'>
+				<functionalities>
+					<point_log id='078f744923844b7c9f0dbb55d5663f5f'/>
+				</functionalities>
+			</network_state>
+		</services>
+		<protocols>
+			<wireless_local_area_network id='211ba922e39944ec95e4946f0de3a092'>
+				<mac_address>0123456789AB</mac_address>
+			</wireless_local_area_network>
+			<local_area_network id='ed210cf90223496cade98773ad463798'>
+				<mac_address>0123456789AB</mac_address>
+			</local_area_network>
+		</protocols>
+	</module>
+	<location id='0f4f2ada20734a339fe353348fe87b96'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2019-01-31T12:18:30.065+01:00</created_date>
+		<modified_date>2020-03-11T11:00:22.646+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<appliances/>
+		<logs>
+			<point_log id='b180f2302fc5468586f7b6f47e18125a'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<hygro_meter id='dd346ebc2d814dfb8b874203868d5798'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">81.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='d3854dcd2d3d473ea464ecb302c773a3'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>solar_irradiance</type>
+				<unit>W_m2</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<irradiance_meter id='a60fd2a5218b4148bd1827fcff22098a'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">461.38</measurement>
+				</period>
+			</point_log>
+			<point_log id='eff38545568948d683d839f62e27e773'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>wind_vector</type>
+				<unit>m_s</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<wind_vector id='f1cfb407ee57464f87a88afc2d03dbdf'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">(6.70,0.00)</measurement>
+				</period>
+			</point_log>
+			<point_log id='f34eb4dd6cb74973a6e77456061aec14'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<thermo_meter id='af0831feffeb4b23bf8b711720367044'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">10.81</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+		<clients/>
+	</location>
+	<appliance id='c46b4794d28149699eacf053deedd003'>
+		<name>Central heating boiler</name>
+		<description></description>
+		<type>heater_central</type>
+		<created_date>2019-01-31T12:18:35.141+01:00</created_date>
+		<modified_date>2020-03-10T13:57:29.798+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<interval_log id='044fdccb72364b0f908b73a15db29df0'>
+				<updated_date>2020-03-10T10:00:00+01:00</updated_date>
+				<type>burner_efficiency</type>
+				<unit>s</unit>
+				<last_consecutive_log_date>2020-03-10T10:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<interval_chrono_meter id='dd721d0e9b154901a3947be23325b14b'/>
+				<period start_date="2020-03-10T10:00:00+01:00" end_date="2020-03-10T10:00:00+01:00" interval="PT1H">
+					<measurement log_date="2020-03-10T10:00:00+01:00">52828</measurement>
+				</period>
+			</interval_log>
+			<point_log id='8debe5ae23774ea8b9f8b01b5f3199e9'>
+				<updated_date>2020-03-10T22:59:34.989+01:00</updated_date>
+				<type>central_heating_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-10T13:57:28.670+01:00</last_consecutive_log_date>
+				<boiler_state id='22c7a570a10c4b95b99ac1880ee23c5e'/>
+				<period start_date="2020-03-10T22:59:34.989+01:00" end_date="2020-03-10T22:59:34.989+01:00">
+					<measurement log_date="2020-03-10T22:59:34.989+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='95f8629d68684f5b80f3f8f1c09ecafd'>
+				<updated_date>2020-03-10T11:54:27+01:00</updated_date>
+				<type>burner_efficiency</type>
+				<unit>s</unit>
+				<last_consecutive_log_date>2020-03-10T11:54:27+01:00</last_consecutive_log_date>
+				<point_chrono_meter id='c4a68e03306b46488c28598ef34cd94a'/>
+				<period start_date="2020-03-10T11:54:27+01:00" end_date="2020-03-10T11:54:27+01:00">
+					<measurement log_date="2020-03-10T11:54:27+01:00">52563</measurement>
+				</period>
+			</point_log>
+			<point_log id='97fbfb8102dd4b21892e567d770b2fbb'>
+				<updated_date>2020-03-10T13:57:29.795+01:00</updated_date>
+				<type>intended_central_heating_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-10T13:57:29.795+01:00</last_consecutive_log_date>
+				<boiler_state id='d00211aa409c4b1bafd114b10bce1aaa'/>
+				<period start_date="2020-03-10T13:57:29.795+01:00" end_date="2020-03-10T13:57:29.795+01:00">
+					<measurement log_date="2020-03-10T13:57:29.795+01:00">off</measurement>
+				</period>
+			</point_log>
+			<interval_log id='dbb0790c78164aa09ba59c5dc0e302f0'>
+				<updated_date></updated_date>
+				<type>burner_operation_time</type>
+				<unit>s</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<interval_chrono_meter id='9eeb1d474ff341daa431d9e67e76bc19'/>
+			</interval_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+	<ame_regulation id='9855830948a543f7a87b36ff206a07e7'>
+		<created_date>2019-04-23T20:32:37.407+02:00</created_date>
+		<modified_date>2020-03-10T22:59:49.394+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<thermostat_functionalities>
+			<thermostat_functionality id='66f6277ea79243b3a4b728dd458a10d1'/>
+		</thermostat_functionalities>
+		<heating_mode>economy</heating_mode>
+		<preheating>on</preheating>
+		<installation_size>medium</installation_size>
+		<heating_type>underfloor_and_radiator</heating_type>
+		<preheating_time_escalation_limit>120</preheating_time_escalation_limit>
+		<calculate_decentral_heat_demand>off</calculate_decentral_heat_demand>
+		<decentral_heat_demand_maximum_temperature>24</decentral_heat_demand_maximum_temperature>
+		<open_therm_boiler_activation_threshold>10</open_therm_boiler_activation_threshold>
+		<onoff_boiler_temperature_deadband>0.5</onoff_boiler_temperature_deadband>
+		<decentral_heat_demand_deadband>0.5</decentral_heat_demand_deadband>
+		<gradual_adhoc_heating_rate>1.5</gradual_adhoc_heating_rate>
+		<open_therm_low_outdoors_temperature_boiler_temperature_maximum>85</open_therm_low_outdoors_temperature_boiler_temperature_maximum>
+		<open_therm_high_outdoors_temperature_boiler_temperature_maximum>55</open_therm_high_outdoors_temperature_boiler_temperature_maximum>
+		<derivative_coefficient>0</derivative_coefficient>
+		<minimum_boiler_temperature>25</minimum_boiler_temperature>
+		<integral_coefficient_reduction_factor_during_preheating>7</integral_coefficient_reduction_factor_during_preheating>
+	</ame_regulation>
+	<appliance id='a270735e4ccd45239424badc0578a2b1'>
+		<name>Gateway</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2019-01-31T12:18:40.157+01:00</created_date>
+		<modified_date>2020-02-26T01:29:58.951+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='078f744923844b7c9f0dbb55d5663f5f'>
+				<updated_date>2020-03-10T22:59:48.011+01:00</updated_date>
+				<type>lan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-01-31T12:18:40.729+01:00</last_consecutive_log_date>
+				<network_state id='e3279538bea4473297ffb20728eeda3f'/>
+				<period start_date="2020-03-10T22:59:48.011+01:00" end_date="2020-03-10T22:59:48.011+01:00">
+					<measurement log_date="2020-03-10T22:59:48.011+01:00">down</measurement>
+				</period>
+			</point_log>
+			<point_log id='4f37a23dd52d4657bf0c654beba70afa'>
+				<updated_date>2020-02-26T01:29:18.848+01:00</updated_date>
+				<type>link_quality</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-02-26T01:29:18.848+01:00</last_consecutive_log_date>
+				<link_quality id='c8967c9002fc479cba65e814647f53ea'/>
+				<period start_date="2020-02-26T01:29:18.848+01:00" end_date="2020-02-26T01:29:18.848+01:00">
+					<measurement log_date="2020-02-26T01:29:18.848+01:00">42</measurement>
+				</period>
+			</point_log>
+			<point_log id='786c5b6e8f394026959d5732095299fa'>
+				<updated_date>2020-02-26T01:29:18.848+01:00</updated_date>
+				<type>signal_strength</type>
+				<unit>dBm</unit>
+				<last_consecutive_log_date>2020-02-26T01:29:18.848+01:00</last_consecutive_log_date>
+				<signal_strength id='2c67d0e7aa8644b9a97d4ac4109674f0'/>
+				<period start_date="2020-02-26T01:29:18.848+01:00" end_date="2020-02-26T01:29:18.848+01:00">
+					<measurement log_date="2020-02-26T01:29:18.848+01:00">-68.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='884aad2a3ed8460da76f54b7c3bc249d'>
+				<updated_date>2020-03-10T22:59:47.995+01:00</updated_date>
+				<type>wlan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-02-26T01:29:58.934+01:00</last_consecutive_log_date>
+				<network_state id='148f48bc9ff0453ca7e88ce2f44fa9c0'/>
+				<period start_date="2020-03-10T22:59:47.995+01:00" end_date="2020-03-10T22:59:47.995+01:00">
+					<measurement log_date="2020-03-10T22:59:47.995+01:00">down</measurement>
+				</period>
+			</point_log>
+			<point_log id='f9d43d7c89e846c8a91fa2c049bb1f91'>
+				<updated_date>2020-02-26T01:29:18.849+01:00</updated_date>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-02-26T01:25:09+01:00</last_consecutive_log_date>
+				<network_address id='81bc43f4a6d54ff6aa0bbb2be90046fe'/>
+				<period start_date="2020-02-26T01:29:18.849+01:00" end_date="2020-02-26T01:29:18.849+01:00">
+					<measurement log_date="2020-02-26T01:29:18.849+01:00">127.0.0.1</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+	<location id='c34c6864216446528e95d88985e714cc'>
+		<name>Living room</name>
+		<description>The room containing the (central) home thermostat.</description>
+		<type>livingroom</type>
+		<created_date>2019-04-23T20:32:38.621+02:00</created_date>
+		<modified_date>2020-03-11T11:04:09.489+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>away</preset>
+		<appliances>
+			<appliance id='7ffbb3ab4b6c4ab2915d7510f7bf8fe9'/>
+		</appliances>
+		<logs>
+			<point_log id='84ef17842ae14d9883bc3e933082785b'>
+				<updated_date>2020-03-11T11:04:09.472+01:00</updated_date>
+				<type>temperature</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-07T14:30:37.045+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-11T11:04:09.472+01:00" end_date="2020-03-11T11:04:09.472+01:00">
+					<measurement log_date="2020-03-11T11:04:09.472+01:00">20.62</measurement>
+				</period>
+			</point_log>
+			<point_log id='e4afd8487b5f408fb3d5fded029f5795'>
+				<updated_date>2020-03-11T08:00:01.695+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-08T07:59:31.807+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-11T08:00:01.695+01:00" end_date="2020-03-11T08:00:01.695+01:00">
+					<measurement log_date="2020-03-11T08:00:01.695+01:00">16.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='628c603ab6304413a9528054c2b7bd7c'>
+				<updated_date>2020-03-11T08:00:01.695+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>16</setpoint>
+				<upper_bound>30</upper_bound>
+				<lower_bound>4</lower_bound>
+				<resolution>0.1</resolution>
+				<regulations/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+		<clients/>
+	</location>
+</domain_objects>
