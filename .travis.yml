@@ -1,27 +1,24 @@
 language: python
 jobs:
   include:
-    - name: "Python 3.7"
-      python: 3.7
-    - name: "Python 3.8"
-      python: 3.8
+  - name: Python 3.8
+    python: 3.8
+  - name: Python 3.7
+    python: 3.7
 before_install:
 - python --version
 - pip install -U pip
 install:
-- pip install -r requirements.txt -r tests/requirements.txt
-script: 
+- pip install -r requirements.txt -r requirements_test.txt
+script:
 - PYTHONPATH=`pwd` pytest -rpP --log-level info tests/test_smile.py --cov='.'
-#- PYTHONPATH=`pwd` flake8 --config=.flake8 plugwise/*.py tests/*py
-#- PYTHONPATH=`pwd` pydocstyle plugwise/*.py tests/*py
-#- PYTHONPATH=`pwd` pylint --rcfile=pylintrc plugwise/*.py
 after_success:
 - codecov
 deploy:
   provider: pypi
-  user: "__token__"
+  username: __token__
   password:
-    secure: STugFJQydP2cD9f5cIF8tXabQLjuThD7jdlUDA6T6R0yqHa8rdre8ZwGpZSbpn2qHFNyZP91NKttlfmdz+nWNNIvQbBG4ZSMDVTKFbF2U/bt/LXVZUPl5ig51ywImWXugy5PR3c4RSPJLXAORJLDDkULqBeHPbVk61IY3G1Im28wYzjQOi9c6VtaMiMNzFJdcxvoA0Z/olT27whocADpdMl4QexR6qXenM/7FhEMi7JQQ5mFMGdlkujS3/oIm4h2AHvBZomvd36XWLfzdqoMelaybeLcs9oYIlH2FyFotA+zdopYdQSjmXqUdFEiXuodZ5UO7/meP9ary3A3KgwNoT0eGeDXB9YCurBY1YZ0vZ8skfkf2BfumMUujKhJkj+lcWbjimAl+55t+5L0D3Ri9Ug4f3F1BfdYbVfIWw+XJm24G4TIlPwpq+/pAhsqYdXJFRgw4GfhUpHk4J16jOflV+qB1c8Kx73rzaMNfbUtSbdBVlNrTWaiw9OOxKSRmzQ4qqSq1bx/XvKy82rJm8wqhhUmqZECc5W69UmJPdk4i/4qnXe9xjmX3REp0CGNY6kd57H+SfSXuWmNe3Y3jOIydcYZrDY0BBgEOGHVKKgdfXSIGFZd0UtI20dfQMj0ZESTjIj1BCr8LdxriW/iAn29LvEwS/t32gRvTVnT3Q0erhY=
+    secure: tIN5NHlNYXQfAi/2OkS5GaiG1tj5DqaG6xT2uiUZX0QKgncpvLIspcVMMQh26tOXq94/iShizmikXFJdEXDNISrv33Piwqs7XSdkHrcc55AoTqww6lZaUfNafgfe2ITh61hOBMlTZ914hAnhYKNxrNUrRLnX6el0dcWVJ62AJHGCCr49fq6tZz85yC+OP0C7BBJCuV4n7OqNlrKsZS4TF8Q/t3uUcwKpVzZWZwB8q7TRLv7S1NSGMAkKIKEXE5avIMHV8I/O2GieQAFHtX2yTcj1xyGAVBJPG9hK3M4prU4ifDtftPfWQF3rOKM77jdUWRNkH1f8JEkB0hJiMt01HEBV+f0vslEKXuKhodU1xjVfr0QCCXCxZEbhPCEG5IPTKVWMB33cVmR6SIA6f05oR3N48IiD7paQgmdxQX5o/saHAXf/GmnikHMP4CBxWg+3ArMtYaX6Nz5Ndoikn8ti3iXcJW0WRU4Fdhz3Qzn7WMTaf5WkMPk3cWxK6BJIcS5OH3Gb8bMKyVrD2/xtBHDEIMAc5ulQYlBv14lICMxkGYCCFAIq09uvKws5Oz37LjknpGc+3mrmvBtYa8AJ56y1ZB6/ndJh0H231EtJRuICBfEUcKTlawJKz5CcJRXIfT2dh6u8XdLIggFiX9wqH8kLVTd0VgbPVAawIGouR2/LXsg=
   on:
-    branch: master
+    branch: main
   skip_existing: true

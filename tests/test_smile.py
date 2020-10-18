@@ -12,9 +12,9 @@ import pytest
 import io
 import os
 
-import jsonpickle as json
+from plugwise.smile import Smile
 
-from Plugwise_Smile.Smile import Smile
+import jsonpickle as json
 
 pp = PrettyPrinter(indent=8)
 

@@ -2,4 +2,4 @@
 
 __version__ = "0.8.0a0"
 
-from plugwise import Smile
+from plugwise.smile import Smile
