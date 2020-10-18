@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain_objects>
+	<module id='1e4783850f4c4595b5be8c9cf3462f56'>
+		<vendor_name>Ene5\T210-DESMR5.0</vendor_name>
+		<vendor_model>Ene5\T210-DESMR5.0</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-03-15T14:24:43.239+01:00</created_date>
+		<modified_date>2020-03-11T21:31:54.422+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='5bf96af3657544c1b7d74602bebc11a5'>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='produced' tariff_indicator='nl_offpeak'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='produced' tariff_indicator='nl_peak'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='consumed' tariff_indicator='nl_offpeak'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='Wh' interval='PT5M' directionality='consumed' tariff_indicator='nl_peak'>250.000</measurement>
+			</electricity_interval_meter>
+			<electricity_cumulative_meter id='34494826ac91454b9a52565079816c42'>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='produced' tariff_indicator='nl_offpeak'>482598.000</measurement>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='produced' tariff_indicator='nl_peak'>1296136.000</measurement>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='consumed' tariff_indicator='nl_offpeak'>1642740.000</measurement>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='Wh' directionality='consumed' tariff_indicator='nl_peak'>1155195.000</measurement>
+			</electricity_cumulative_meter>
+			<electricity_point_meter id='954b543356184d3198616251130ea6fb'>
+				<measurement log_date='2020-03-11T21:31:44+01:00' unit='W' directionality='produced'>0.000</measurement>
+				<measurement log_date='2020-03-11T21:31:44+01:00' unit='W' directionality='consumed'>458.000</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<dsmrmain id='9a68dc0c267444ba8769b3fb5e2ad35e'>
+				<serial>E0000000000000001</serial>
+				<dsmrmbuses>
+					<dsmrgas id='971a1b3112c34ab795c4f0ef911b8ef4'/>
+				</dsmrmbuses>
+			</dsmrmain>
+		</protocols>
+	</module>
+	<module id='3582b41427e2417a8f6a10fe412cc95c'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-11-08T11:19:56.987+01:00</created_date>
+		<modified_date>2020-03-11T21:31:54.422+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<gas_interval_meter id='7df1571450814d8495e2d21a20f382ef'>
+				<measurement log_date='2020-03-11T21:00:00+01:00' unit='m3' interval='PT1H' directionality='consumed'>0.016</measurement>
+			</gas_interval_meter>
+			<gas_cumulative_meter id='18434cd441344195acad25d314c08121'>
+				<measurement log_date='2020-03-11T21:30:00+01:00' unit='m3' directionality='consumed'>584.433</measurement>
+			</gas_cumulative_meter>
+		</services>
+		<protocols>
+			<dsmrgas id='971a1b3112c34ab795c4f0ef911b8ef4'>
+				<serial>G0000000000000001</serial>
+					<dsmrmain id='9a68dc0c267444ba8769b3fb5e2ad35e'/>
+			</dsmrgas>
+		</protocols>
+	</module>
+	<location id='3e38f8df2fd84359b5df3e716376fb65'>
+		<name>WillSol</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2019-03-15T14:24:43.253+01:00</created_date>
+		<modified_date>2019-03-15T20:02:06.328+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<actuators/>
+		<locations/>
+		<appliances/>
+		<services>
+		</services>
+		<logs>
+			<cumulative_log id='5f72964f06754d52ac443c038f352429'>
+				<unit>Wh</unit>
+				<type>electricity_consumed</type>
+				<last_consecutive_log_date>2019-03-15T20:10:00+01:00</last_consecutive_log_date>
+				<updated_date>2019-03-15T20:10:00+01:00</updated_date>
+				<period start_date='2019-03-15T20:05:00+01:00' end_date='2019-03-15T20:10:00+01:00'>
+					<measurement log_date='2019-03-15T20:10:00+01:00' tariff_indicator='nl_offpeak'>39083.000</measurement>
+					<measurement log_date='2019-03-15T20:10:00+01:00' tariff_indicator='nl_peak'>37231.000</measurement>
+				</period>
+			</cumulative_log>
+			<interval_log id='78e5a5fb652a41e58ead2cdb8fbb93cc'>
+				<unit>Wh</unit>
+				<type>electricity_consumed</type>
+				<last_consecutive_log_date>2019-03-15T19:00:00+01:00</last_consecutive_log_date>
+				<updated_date>2019-03-15T20:00:00+01:00</updated_date>
+				<interval>PT5M</interval>
+				<period start_date='2019-03-15T20:00:00+01:00' end_date='2019-03-15T20:00:00+01:00' interval='PT1H' >
+					<measurement log_date='2019-03-15T20:00:00+01:00' tariff_indicator='nl_offpeak'>0.000</measurement>
+					<measurement log_date='2019-03-15T20:00:00+01:00' tariff_indicator='nl_peak'>107.000</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='843e46198c4e40dfb81184d351fd13f8'>
+				<unit>Wh</unit>
+				<type>electricity_produced</type>
+				<last_consecutive_log_date>2019-03-15T19:00:00+01:00</last_consecutive_log_date>
+				<updated_date>2019-03-15T20:00:00+01:00</updated_date>
+				<interval>PT5M</interval>
+				<period start_date='2019-03-15T20:00:00+01:00' end_date='2019-03-15T20:00:00+01:00' interval='PT1H' >
+					<measurement log_date='2019-03-15T20:00:00+01:00' tariff_indicator='nl_offpeak'>0.000</measurement>
+					<measurement log_date='2019-03-15T20:00:00+01:00' tariff_indicator='nl_peak'>0.000</measurement>
+				</period>
+			</interval_log>
+			<point_log id='fb68436fc2c8483f8359ddd150ba7d04'>
+				<unit>W</unit>
+				<type>electricity_consumed</type>
+				<last_consecutive_log_date>2019-03-15T20:11:28+01:00</last_consecutive_log_date>
+				<updated_date>2019-03-15T20:11:28+01:00</updated_date>
+				<period start_date='2019-03-15T14:24:41+01:00' end_date='2019-03-15T20:11:28+01:00'>
+					<measurement log_date='2019-03-15T20:11:28+01:00'>518.000</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='3ae3288b43f44e658116cc4e5ec5c15c'>
+				<unit>Wh</unit>
+				<type>electricity_produced</type>
+				<last_consecutive_log_date>2019-03-15T20:10:00+01:00</last_consecutive_log_date>
+				<updated_date>2019-03-15T20:10:00+01:00</updated_date>
+				<period start_date='2019-03-15T20:05:00+01:00' end_date='2019-03-15T20:10:00+01:00'>
+					<measurement log_date='2019-03-15T20:10:00+01:00' tariff_indicator='nl_offpeak'>1515.000</measurement>
+					<measurement log_date='2019-03-15T20:10:00+01:00' tariff_indicator='nl_peak'>17313.000</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='395427ecf5d7454a975e011e765f8d65'>
+				<unit>W</unit>
+				<type>electricity_produced</type>
+				<last_consecutive_log_date>2019-03-15T20:11:28+01:00</last_consecutive_log_date>
+				<updated_date>2019-03-15T20:11:28+01:00</updated_date>
+				<period start_date='2019-03-15T14:24:41+01:00' end_date='2019-03-15T20:11:28+01:00'>
+					<measurement log_date='2019-03-15T20:11:28+01:00'>0.000</measurement>
+				</period>
+			</point_log>
+		</logs>
+	</location>
+	<location id='938696c4bcdb4b8a9a595cb38ed43913'>
+		<name>WillSol</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2019-03-15T14:25:44.171+01:00</created_date>
+		<modified_date>2019-11-08T11:19:57+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<actuators/>
+		<locations/>
+		<appliances/>
+		<services>
+			<gas_interval_meter id='7df1571450814d8495e2d21a20f382ef'/>
+			<electricity_cumulative_meter id='34494826ac91454b9a52565079816c42'/>
+			<electricity_point_meter id='954b543356184d3198616251130ea6fb'/>
+			<gas_cumulative_meter id='18434cd441344195acad25d314c08121'/>
+			<electricity_interval_meter id='5bf96af3657544c1b7d74602bebc11a5'/>
+		</services>
+		<logs>
+			<cumulative_log id='a8c83ff40d5c498d908334a5e8ed1747'>
+				<unit>m3</unit>
+				<type>gas_consumed</type>
+				<last_consecutive_log_date>2020-03-11T21:30:00+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:30:00+01:00</updated_date>
+				<period start_date='2019-11-08T11:25:00+01:00' end_date='2020-03-11T21:30:00+01:00'>
+					<measurement log_date='2020-03-11T21:30:00+01:00'>584.433</measurement>
+				</period>
+			</cumulative_log>
+			<cumulative_log id='d97196ad4d2f45deb07cb93b566cda1d'>
+				<unit>Wh</unit>
+				<type>electricity_consumed</type>
+				<last_consecutive_log_date>2020-03-11T21:30:00+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:30:00+01:00</updated_date>
+				<period start_date='2019-03-15T14:25:00+01:00' end_date='2020-03-11T21:30:00+01:00'>
+					<measurement log_date='2020-03-11T21:30:00+01:00' tariff_indicator='nl_offpeak'>1642740.000</measurement>
+					<measurement log_date='2020-03-11T21:30:00+01:00' tariff_indicator='nl_peak'>1155195.000</measurement>
+				</period>
+			</cumulative_log>
+			<interval_log id='f5a7aa48e13947ab8d9dcd4dcaa339bc'>
+				<unit>m3</unit>
+				<type>gas_consumed</type>
+				<last_consecutive_log_date>2020-03-11T20:00:00+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:00:00+01:00</updated_date>
+				<interval>PT1H</interval>
+				<period start_date='2019-11-08T12:00:00+01:00' end_date='2020-03-11T21:00:00+01:00' interval='PT1H' >
+					<measurement log_date='2020-03-11T21:00:00+01:00'>0.016</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='11e9beed64a541309a138aa168b04ad5'>
+				<unit>Wh</unit>
+				<type>electricity_produced</type>
+				<last_consecutive_log_date>2020-03-11T20:00:00+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:00:00+01:00</updated_date>
+				<interval>PT5M</interval>
+				<period start_date='2019-03-15T15:00:00+01:00' end_date='2020-03-11T21:00:00+01:00' interval='PT1H' >
+					<measurement log_date='2020-03-11T21:00:00+01:00' tariff_indicator='nl_offpeak'>0.000</measurement>
+					<measurement log_date='2020-03-11T21:00:00+01:00' tariff_indicator='nl_peak'>0.000</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='9eb38db883324f10ba5a43c343604cb5'>
+				<unit>Wh</unit>
+				<type>electricity_consumed</type>
+				<last_consecutive_log_date>2020-03-11T20:00:00+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:00:00+01:00</updated_date>
+				<interval>PT5M</interval>
+				<period start_date='2019-03-15T15:00:00+01:00' end_date='2020-03-11T21:00:00+01:00' interval='PT1H' >
+					<measurement log_date='2020-03-11T21:00:00+01:00' tariff_indicator='nl_offpeak'>0.000</measurement>
+					<measurement log_date='2020-03-11T21:00:00+01:00' tariff_indicator='nl_peak'>250.000</measurement>
+				</period>
+			</interval_log>
+			<cumulative_log id='ad7ee8687a174a7181727c44dced0cd9'>
+				<unit>Wh</unit>
+				<type>electricity_produced</type>
+				<last_consecutive_log_date>2020-03-11T21:30:00+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:30:00+01:00</updated_date>
+				<period start_date='2019-03-15T14:25:00+01:00' end_date='2020-03-11T21:30:00+01:00'>
+					<measurement log_date='2020-03-11T21:30:00+01:00' tariff_indicator='nl_offpeak'>482598.000</measurement>
+					<measurement log_date='2020-03-11T21:30:00+01:00' tariff_indicator='nl_peak'>1296136.000</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='7698f3869b854a0a855a4edf0c7bfc2e'>
+				<unit>W</unit>
+				<type>electricity_produced</type>
+				<last_consecutive_log_date>2020-03-11T21:31:44+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:31:44+01:00</updated_date>
+				<period start_date='2019-03-15T14:25:43+01:00' end_date='2020-03-11T21:31:44+01:00'>
+					<measurement log_date='2020-03-11T21:31:44+01:00'>0.000</measurement>
+				</period>
+			</point_log>
+			<point_log id='c2c0ecc94ae34d9f8f9698312430b4a9'>
+				<unit>W</unit>
+				<type>electricity_consumed</type>
+				<last_consecutive_log_date>2020-03-11T21:31:44+01:00</last_consecutive_log_date>
+				<updated_date>2020-03-11T21:31:44+01:00</updated_date>
+				<period start_date='2019-03-15T14:25:43+01:00' end_date='2020-03-11T21:31:44+01:00'>
+					<measurement log_date='2020-03-11T21:31:44+01:00'>458.000</measurement>
+				</period>
+			</point_log>
+		</logs>
+	</location>
+</domain_objects>

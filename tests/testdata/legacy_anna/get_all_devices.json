@@ -1,0 +1,1 @@
+{"0d266432d64443e283b5d708ae98b455": {"name": "Anna", "types": {"py/set": ["temperature", "thermostat"]}, "class": "thermostat", "location": 0}, "04e4cbfe7f4340f090f85ec3b9e6a950": {"name": "Anna", "types": {"py/set": ["temperature", "thermostat"]}, "class": "heater_central", "location": 0}}

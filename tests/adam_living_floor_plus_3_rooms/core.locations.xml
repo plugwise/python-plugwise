@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='0f4f2ada20734a339fe353348fe87b96'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2019-01-31T12:18:30.065+01:00</created_date>
+		<modified_date>2020-03-11T11:00:22.646+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<appliances/>
+		<logs>
+			<point_log id='b180f2302fc5468586f7b6f47e18125a'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<hygro_meter id='dd346ebc2d814dfb8b874203868d5798'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">81.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='d3854dcd2d3d473ea464ecb302c773a3'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>solar_irradiance</type>
+				<unit>W_m2</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<irradiance_meter id='a60fd2a5218b4148bd1827fcff22098a'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">461.38</measurement>
+				</period>
+			</point_log>
+			<point_log id='eff38545568948d683d839f62e27e773'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>wind_vector</type>
+				<unit>m_s</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<wind_vector id='f1cfb407ee57464f87a88afc2d03dbdf'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">(6.70,0.00)</measurement>
+				</period>
+			</point_log>
+			<point_log id='f34eb4dd6cb74973a6e77456061aec14'>
+				<updated_date>2020-03-11T11:00:22+01:00</updated_date>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-11T11:00:22+01:00</last_consecutive_log_date>
+				<thermo_meter id='af0831feffeb4b23bf8b711720367044'/>
+				<period start_date="2020-03-11T11:00:22+01:00" end_date="2020-03-11T11:00:22+01:00">
+					<measurement log_date="2020-03-11T11:00:22+01:00">10.81</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+		<clients/>
+	</location>
+	<location id='c34c6864216446528e95d88985e714cc'>
+		<name>Living room</name>
+		<description>The room containing the (central) home thermostat.</description>
+		<type>livingroom</type>
+		<created_date>2019-04-23T20:32:38.621+02:00</created_date>
+		<modified_date>2020-03-11T11:04:09.489+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>away</preset>
+		<appliances>
+			<appliance id='7ffbb3ab4b6c4ab2915d7510f7bf8fe9'/>
+		</appliances>
+		<logs>
+			<point_log id='84ef17842ae14d9883bc3e933082785b'>
+				<updated_date>2020-03-11T11:04:09.472+01:00</updated_date>
+				<type>temperature</type>
+				<unit></unit>
+				<last_consecutive_log_date>2019-12-07T14:30:37.045+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-11T11:04:09.472+01:00" end_date="2020-03-11T11:04:09.472+01:00">
+					<measurement log_date="2020-03-11T11:04:09.472+01:00">20.62</measurement>
+				</period>
+			</point_log>
+			<point_log id='e4afd8487b5f408fb3d5fded029f5795'>
+				<updated_date>2020-03-11T08:00:01.695+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-03-08T07:59:31.807+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-11T08:00:01.695+01:00" end_date="2020-03-11T08:00:01.695+01:00">
+					<measurement log_date="2020-03-11T08:00:01.695+01:00">16.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='628c603ab6304413a9528054c2b7bd7c'>
+				<updated_date>2020-03-11T08:00:01.695+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>16</setpoint>
+				<upper_bound>30</upper_bound>
+				<lower_bound>4</lower_bound>
+				<resolution>0.1</resolution>
+				<regulations/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+		<clients/>
+	</location>
+</locations>

@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain_objects>
+	<module id='cd197a863b6b4f319fd03a9ed8cb8416'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0700-85' model_name='Stick'>MC</vendor_model>
+		<hardware_version>6539-0700-8514</hardware_version>
+		<firmware_version>2017-07-11T18:03:53+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2019-05-04T09:21:00.761+02:00</created_date>
+		<modified_date>2020-08-27T20:18:20.504+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+		</services>
+		<protocols>
+			<master_controller id='f0bcf042cad9418ea65ecf0bf6133250'>
+				<mac_address>0123456789AB</mac_address>
+				<network id='259882df3c05415b99c2d962534ce820'/><network id='259882df3c05415b99c2d962534ce820'/>
+			</master_controller>
+		</protocols>
+	</module>
+	<module id='7d29adfb8361415b877bfcd1d56d8de2'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0440-01' model_name='Circle'>NR</vendor_model>
+		<hardware_version>0000-0440-0107</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2020-08-27T13:25:18.941+02:00</created_date>
+		<modified_date>2020-08-27T20:18:20.504+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='831c88a189ba439cb97ce0fe2db44f10' log_type='electricity'>
+				<functionalities>
+					<point_log id='5633114b41ca44b8a3de3bdd46ccb809'/>
+					<point_log id='b81e52e6a97c4a7abdf073cb511b716d'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:18:20.497+02:00" unit="W" directionality="consumed">0.00</measurement>
+				<measurement log_date="2020-08-27T20:18:20.497+02:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<relay id='910973e4e86b4a99863a5d5beb0920cb' log_type='relay'>
+				<functionalities>
+					<point_log id='3d6b62ff759b4051ae9314aa86b7ceec'/>
+					<relay_functionality id='eed0efe44c3a4b9782d8a4e862714915'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:17:56.846+02:00">on</measurement>
+			</relay>
+			<electricity_interval_meter id='c49f750389d140b3be760bae79c3da2c' log_type='electricity'>
+				<functionalities>
+					<interval_log id='00ee2a7716ef478f97c50e523c1bc7b5'/>
+					<interval_log id='3c689589cf7e4b5c91b52bee5fb7038c'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:00:00+02:00" unit="Wh" directionality="consumed" interval="PT1H">1.06</measurement>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<network_router id='f323d992f1c44ec880386c568d809645'>
+				<mac_address>0123456789AB</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+			</network_router>
+		</protocols>
+	</module>
+	<module id='b7f5a95616cf450da237c008143ee062'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0440-01' model_name='Circle'>NR</vendor_model>
+		<hardware_version>0000-0440-0107</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2020-08-27T13:33:44.656+02:00</created_date>
+		<modified_date>2020-08-27T20:18:19.578+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='0896f3ccf45f4a478055ee0587105458' log_type='electricity'>
+				<functionalities>
+					<interval_log id='2cbc98743d2341f59759d89b4c1bb0ec'/>
+					<interval_log id='bace9baca78447b4a384e4157b6cb0fd'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T19:00:00+02:00" unit="Wh" directionality="consumed" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='7beee08f9e4a46cc8e7a7df399e693dd' log_type='relay'>
+				<functionalities>
+					<relay_functionality id='0eff576e00c245c288aa9492ff4a9115'/>
+					<point_log id='bfb530ed44bc4bb4be4994f2fc9267a1'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:17:56.781+02:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='93922bdbe6ad4f63b80f361365cde36a' log_type='electricity'>
+				<functionalities>
+					<point_log id='17fa51101034474498512445f69d6751'/>
+					<point_log id='495a4f00cc8647a3aa64af5e697ab958'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:18:19.571+02:00" unit="W" directionality="consumed">0.00</measurement>
+				<measurement log_date="2020-08-27T20:18:19.571+02:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_router id='51408e71a38745c98c9fe992412bc6e0'>
+				<mac_address>0123456789AB</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+			</network_router>
+		</protocols>
+	</module>
+	<network id='259882df3c05415b99c2d962534ce820'>
+		<master_controller id='f0bcf042cad9418ea65ecf0bf6133250'>
+			<mac_address>0123456789AB</mac_address>
+			<module id='cd197a863b6b4f319fd03a9ed8cb8416'/>
+			<upgrade/>
+		</master_controller>
+		<network_coordinator id='6f0db124f7c6429ea2721d61e5d62f93'>
+			<mac_address>0123456789AB</mac_address>
+			<module id='b09d787ee9a247ed9efcd9ad865b13ad'/>
+			<upgrade/>
+			<search_nodes>false</search_nodes>
+		</network_coordinator>
+		<nodes>
+			<network_router id='57b6184bdc5140898eb8c53462589097'>
+				<mac_address>0123456789AB</mac_address>
+				<module id='5db2e050da204f97a6a132e4267c6f7f'/>
+				<upgrade/>
+			</network_router>
+			<network_router id='51408e71a38745c98c9fe992412bc6e0'>
+				<mac_address>0123456789AB</mac_address>
+				<module id='b7f5a95616cf450da237c008143ee062'/>
+				<upgrade/>
+			</network_router>
+			<network_router id='f323d992f1c44ec880386c568d809645'>
+				<mac_address>0123456789AB</mac_address>
+				<module id='7d29adfb8361415b877bfcd1d56d8de2'/>
+				<upgrade/>
+			</network_router>
+			<network_router id='af7ebe75a9aa47d9b3ae26297be742d7'>
+				<mac_address>0123456789AB</mac_address>
+				<module id='3b52239a9160497ebeb2164d07d3d399'/>
+				<upgrade/>
+			</network_router>
+		</nodes>
+		<to_add>
+			<node><mac_address>0123456789AB</mac_address></node>
+		</to_add>
+		<to_remove/>
+		<available/>
+	</network>
+	<appliance id='cfe95cf3de1948c0b8955125bf754614'>
+		<name>Droger (52559)</name>
+		<description>Circle</description>
+		<type>dryer</type>
+		<created_date>2020-08-27T13:25:19.442+02:00</created_date>
+		<modified_date>2020-08-27T20:17:56.848+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='c49f750389d140b3be760bae79c3da2c' log_type='electricity'>
+				<functionalities>
+					<interval_log id='00ee2a7716ef478f97c50e523c1bc7b5'/>
+					<interval_log id='3c689589cf7e4b5c91b52bee5fb7038c'/>
+				</functionalities>
+			</electricity_interval_meter>
+			<relay id='910973e4e86b4a99863a5d5beb0920cb' log_type='relay'>
+				<functionalities>
+					<point_log id='3d6b62ff759b4051ae9314aa86b7ceec'/>
+					<relay_functionality id='eed0efe44c3a4b9782d8a4e862714915'/>
+				</functionalities>
+			</relay>
+			<electricity_point_meter id='831c88a189ba439cb97ce0fe2db44f10' log_type='electricity'>
+				<functionalities>
+					<point_log id='5633114b41ca44b8a3de3bdd46ccb809'/>
+					<point_log id='b81e52e6a97c4a7abdf073cb511b716d'/>
+				</functionalities>
+			</electricity_point_meter>
+		</services>
+		<logs>
+			<interval_log id='00ee2a7716ef478f97c50e523c1bc7b5'>
+				<updated_date></updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='c49f750389d140b3be760bae79c3da2c'/>
+			</interval_log>
+			<interval_log id='3c689589cf7e4b5c91b52bee5fb7038c'>
+				<updated_date>2020-08-27T20:00:00+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-08-27T16:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='c49f750389d140b3be760bae79c3da2c'/>
+				<period start_date="2020-08-27T20:00:00+02:00" end_date="2020-08-27T20:00:00+02:00" interval="PT1H">
+					<measurement log_date="2020-08-27T20:00:00+02:00">1.06</measurement>
+				</period>
+			</interval_log>
+			<point_log id='3d6b62ff759b4051ae9314aa86b7ceec'>
+				<updated_date>2020-08-27T20:17:56.846+02:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-08-27T14:17:40.308+02:00</last_consecutive_log_date>
+				<relay id='910973e4e86b4a99863a5d5beb0920cb'/>
+				<period start_date="2020-08-27T20:17:56.846+02:00" end_date="2020-08-27T20:17:56.846+02:00">
+					<measurement log_date="2020-08-27T20:17:56.846+02:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='5633114b41ca44b8a3de3bdd46ccb809'>
+				<updated_date>2020-08-27T20:18:20.497+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T19:08:16.239+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='831c88a189ba439cb97ce0fe2db44f10'/>
+				<period start_date="2020-08-27T20:18:20.497+02:00" end_date="2020-08-27T20:18:20.497+02:00">
+					<measurement log_date="2020-08-27T20:18:20.497+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='b81e52e6a97c4a7abdf073cb511b716d'>
+				<updated_date>2020-08-27T20:18:20.497+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T13:25:23.135+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='831c88a189ba439cb97ce0fe2db44f10'/>
+				<period start_date="2020-08-27T20:18:20.497+02:00" end_date="2020-08-27T20:18:20.497+02:00">
+					<measurement log_date="2020-08-27T20:18:20.497+02:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='eed0efe44c3a4b9782d8a4e862714915'>
+				<updated_date>2020-08-27T20:17:56.846+02:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+				<relay id='910973e4e86b4a99863a5d5beb0920cb'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<group id='d950b314e9d8499f968e6db8d82ef78c'>
+		<name>Stroomvreters</name>
+		<description>Stroomvreters</description>
+		<type>switching</type>
+		<created_date>2019-05-06T20:38:01.665+02:00</created_date>
+		<modified_date>2020-07-26T21:09:41.822+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+		</services>
+		<appliances>
+		</appliances>
+		<logs>
+			<interval_log id='2d7ca46e1e0346b79d9c1d982d1be029'>
+				<updated_date></updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+			</interval_log>
+			<point_log id='80185ceeb7f64708a6d834f2550e5282'>
+				<updated_date></updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+			</point_log>
+			<point_log id='e275dcd09f0a4fa0adbbdf76dc97c30b'>
+				<updated_date></updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+			</point_log>
+			<point_log id='ecf14be7ed5442deb414514982c63278'>
+				<updated_date></updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+			</point_log>
+			<interval_log id='fa25189ec0e74606a524cf20dbd2ea6c'>
+				<updated_date></updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+			</interval_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='2c9208a7ee9946839def46061afbe7ba'>
+				<updated_date></updated_date>
+				<state>off</state>
+				<lock>false</lock>
+				<delegation_strategy>single</delegation_strategy>
+			</relay_functionality>
+		</actuator_functionalities>
+	</group>
+	<appliance id='5871317346d045bc9f6b987ef25ee638'>
+		<name>Boiler (1EB31)</name>
+		<description>Circle</description>
+		<type>water_heater_vessel</type>
+		<created_date>2020-08-27T14:21:59.591+02:00</created_date>
+		<modified_date>2020-08-27T20:18:14.139+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='7d8c67d064b14134b287ea72ed9ffa08' log_type='electricity'>
+				<functionalities>
+					<point_log id='168967cf45954a8d8ab8300d6355c9aa'/>
+					<point_log id='d9e53a813e77496ea4e5aca366e559c7'/>
+				</functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='8bd7d604c9204b7eadbbb1304021fe7f' log_type='electricity'>
+				<functionalities>
+					<interval_log id='3ca803bd59a6498099d1b0db46615fbb'/>
+					<interval_log id='40a1f923280542279225e0d395882b5c'/>
+				</functionalities>
+			</electricity_interval_meter>
+			<relay id='cf98b4da8977490eab723e25dac88d5b' log_type='relay'>
+				<functionalities>
+					<point_log id='865ced94bfd846a5be4f2ede5807269c'/>
+					<relay_functionality id='92cf4999ca764bacb4d766f112083231'/>
+				</functionalities>
+			</relay>
+		</services>
+		<logs>
+			<point_log id='168967cf45954a8d8ab8300d6355c9aa'>
+				<updated_date>2020-08-27T20:18:18.740+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T19:45:50.679+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='7d8c67d064b14134b287ea72ed9ffa08'/>
+				<period start_date="2020-08-27T20:18:18.740+02:00" end_date="2020-08-27T20:18:18.740+02:00">
+					<measurement log_date="2020-08-27T20:18:18.740+02:00">1.19</measurement>
+				</period>
+			</point_log>
+			<interval_log id='3ca803bd59a6498099d1b0db46615fbb'>
+				<updated_date></updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='8bd7d604c9204b7eadbbb1304021fe7f'/>
+			</interval_log>
+			<interval_log id='40a1f923280542279225e0d395882b5c'>
+				<updated_date></updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='8bd7d604c9204b7eadbbb1304021fe7f'/>
+			</interval_log>
+			<point_log id='865ced94bfd846a5be4f2ede5807269c'>
+				<updated_date>2020-08-27T20:18:14.136+02:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-08-27T14:22:20.637+02:00</last_consecutive_log_date>
+				<relay id='cf98b4da8977490eab723e25dac88d5b'/>
+				<period start_date="2020-08-27T20:18:14.136+02:00" end_date="2020-08-27T20:18:14.136+02:00">
+					<measurement log_date="2020-08-27T20:18:14.136+02:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='d9e53a813e77496ea4e5aca366e559c7'>
+				<updated_date>2020-08-27T20:18:18.740+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T14:22:04.076+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='7d8c67d064b14134b287ea72ed9ffa08'/>
+				<period start_date="2020-08-27T20:18:18.740+02:00" end_date="2020-08-27T20:18:18.740+02:00">
+					<measurement log_date="2020-08-27T20:18:18.740+02:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='92cf4999ca764bacb4d766f112083231'>
+				<updated_date>2020-08-27T20:18:14.136+02:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+				<relay id='cf98b4da8977490eab723e25dac88d5b'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<module id='3b52239a9160497ebeb2164d07d3d399'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4028</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2019-05-06T19:53:39.316+02:00</created_date>
+		<modified_date>2020-08-27T20:18:18.746+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='7d8c67d064b14134b287ea72ed9ffa08' log_type='electricity'>
+				<functionalities>
+					<point_log id='168967cf45954a8d8ab8300d6355c9aa'/>
+					<point_log id='d9e53a813e77496ea4e5aca366e559c7'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:18:18.740+02:00" unit="W" directionality="consumed">1.20</measurement>
+				<measurement log_date="2020-08-27T20:18:18.740+02:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='8bd7d604c9204b7eadbbb1304021fe7f' log_type='electricity'>
+				<functionalities>
+					<interval_log id='3ca803bd59a6498099d1b0db46615fbb'/>
+					<interval_log id='40a1f923280542279225e0d395882b5c'/>
+				</functionalities>
+				<measurement log_date="2020-07-26T19:00:00+02:00" unit="Wh" directionality="consumed" interval="PT1H">0.00</measurement>
+				<measurement log_date="2020-07-26T19:00:00+02:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='cf98b4da8977490eab723e25dac88d5b' log_type='relay'>
+				<functionalities>
+					<point_log id='865ced94bfd846a5be4f2ede5807269c'/>
+					<relay_functionality id='92cf4999ca764bacb4d766f112083231'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:18:14.136+02:00">on</measurement>
+			</relay>
+		</services>
+		<protocols>
+			<network_router id='af7ebe75a9aa47d9b3ae26297be742d7'>
+				<mac_address>0123456789AB</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+			</network_router>
+		</protocols>
+	</module>
+	<network id='56de2443c34743c799353c3cedbff0eb'>
+		<master_controller id='fee80187abd54cc5982f7503b4c7c17f'>
+			<mac_address>0123456789AB</mac_address>
+			<module id='3a65097960694644ac8f56e192cbe980'/>
+			<upgrade/>
+		</master_controller>
+		<network_coordinator id='ffda6867864248a89dfa2f8e0c3e67e8'>
+			<mac_address>0123456789AB</mac_address>
+			<module id='5d0dfedb743447b0ada65b3c07185abe'/>
+			<upgrade/>
+			<search_nodes>false</search_nodes>
+		</network_coordinator>
+		<nodes>
+		</nodes>
+		<to_add/>
+		<to_remove/>
+		<available/>
+	</network>
+	<module id='5d0dfedb743447b0ada65b3c07185abe'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0473-00' model_name='Circle+'>NC</vendor_model>
+		<hardware_version>0000-0473-0007</hardware_version>
+		<firmware_version>2011-06-27T10:47:37+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2020-07-26T18:32:42.146+02:00</created_date>
+		<modified_date>2020-08-27T14:36:06.987+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='7823b65512cd44f3a13ea5429cdc1f35' log_type='electricity'>
+				<functionalities/>
+				<measurement log_date="2020-08-27T12:00:00+02:00" unit="Wh" directionality="consumed" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='7b2f084f084f43efbd1780ef4d19f9fb' log_type='relay'>
+				<functionalities/>
+				<measurement log_date="2020-08-27T13:21:13.496+02:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='91631e06bffe415d97e4ca9d88798b0d' log_type='electricity'>
+				<functionalities/>
+				<measurement log_date="2020-08-27T13:21:13.999+02:00" unit="W" directionality="consumed">1.91</measurement>
+				<measurement log_date="2020-08-27T13:21:13.999+02:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_coordinator id='ffda6867864248a89dfa2f8e0c3e67e8'>
+				<mac_address>0123456789AB</mac_address><network id='56de2443c34743c799353c3cedbff0eb'/>
+			</network_coordinator>
+		</protocols>
+	</module>
+	<module id='3a65097960694644ac8f56e192cbe980'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0385-00' model_name='Stick'>MC</vendor_model>
+		<hardware_version>0000-0385-0007</hardware_version>
+		<firmware_version>2011-06-27T10:43:39+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2020-07-26T18:32:41.861+02:00</created_date>
+		<modified_date>2020-08-27T13:21:14.408+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+		</services>
+		<protocols>
+			<master_controller id='fee80187abd54cc5982f7503b4c7c17f'>
+				<mac_address>0123456789AB</mac_address>
+				<network id='56de2443c34743c799353c3cedbff0eb'/><network id='56de2443c34743c799353c3cedbff0eb'/>
+			</master_controller>
+		</protocols>
+	</module>
+	<appliance id='aac7b735042c4832ac9ff33aae4f453b'>
+		<name>Vaatwasser (2a1ab)</name>
+		<description>Circle</description>
+		<type>dishwasher</type>
+		<created_date>2020-08-27T14:20:39.292+02:00</created_date>
+		<modified_date>2020-08-27T20:17:56.975+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='3559cbf27edd485895e683c8317eff04' log_type='electricity'>
+				<functionalities>
+					<point_log id='07e4f3a66ff14cdf94d502cb5fbc0a29'/>
+					<point_log id='818c30ebedde478f874e303696b8677d'/>
+				</functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='05f5f58c4a5a4c939bfbbbcd5144842e' log_type='electricity'>
+				<functionalities>
+					<interval_log id='513de6a2c2024df9b1beb27280b9a945'/>
+					<interval_log id='cdf56515336346e6bbfdbed8d0596f6a'/>
+				</functionalities>
+			</electricity_interval_meter>
+			<relay id='1d4c937af1454f2da5e3f165fb84d67e' log_type='relay'>
+				<functionalities>
+					<relay_functionality id='7775d580a620439f8519802942d99e3c'/>
+					<point_log id='aa819a65085247f687a93f53ae573719'/>
+				</functionalities>
+			</relay>
+		</services>
+		<logs>
+			<point_log id='07e4f3a66ff14cdf94d502cb5fbc0a29'>
+				<updated_date>2020-08-27T20:18:18.427+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T14:20:45.904+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='3559cbf27edd485895e683c8317eff04'/>
+				<period start_date="2020-08-27T20:18:18.427+02:00" end_date="2020-08-27T20:18:18.427+02:00">
+					<measurement log_date="2020-08-27T20:18:18.427+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='513de6a2c2024df9b1beb27280b9a945'>
+				<updated_date></updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='05f5f58c4a5a4c939bfbbbcd5144842e'/>
+			</interval_log>
+			<point_log id='818c30ebedde478f874e303696b8677d'>
+				<updated_date>2020-08-27T20:18:18.427+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T19:23:29.097+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='3559cbf27edd485895e683c8317eff04'/>
+				<period start_date="2020-08-27T20:18:18.427+02:00" end_date="2020-08-27T20:18:18.427+02:00">
+					<measurement log_date="2020-08-27T20:18:18.427+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='aa819a65085247f687a93f53ae573719'>
+				<updated_date>2020-08-27T20:17:56.973+02:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-08-27T14:21:07.007+02:00</last_consecutive_log_date>
+				<relay id='1d4c937af1454f2da5e3f165fb84d67e'/>
+				<period start_date="2020-08-27T20:17:56.973+02:00" end_date="2020-08-27T20:17:56.973+02:00">
+					<measurement log_date="2020-08-27T20:17:56.973+02:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='cdf56515336346e6bbfdbed8d0596f6a'>
+				<updated_date></updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='05f5f58c4a5a4c939bfbbbcd5144842e'/>
+			</interval_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='7775d580a620439f8519802942d99e3c'>
+				<updated_date>2020-08-27T20:17:56.973+02:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+				<relay id='1d4c937af1454f2da5e3f165fb84d67e'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<module id='b09d787ee9a247ed9efcd9ad865b13ad'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0700-73' model_name='Circle+ type F'>NC</vendor_model>
+		<hardware_version>6539-0700-7330</hardware_version>
+		<firmware_version>2011-06-27T10:47:37+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2019-05-06T19:50:35.529+02:00</created_date>
+		<modified_date>2020-08-27T20:18:13.636+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='5aa4714df14a42508fb1f3ccd58559d7' log_type='electricity'>
+				<functionalities>
+					<point_log id='4cfd0f7e64474226815f17efaaf01753'/>
+					<point_log id='88a00d3a0c0646e782060be68e8e1777'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:18:13.629+02:00" unit="W" directionality="consumed">53.16</measurement>
+				<measurement log_date="2020-08-27T20:18:13.629+02:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='b842f3e4ff204edfa2c598bbf468b0b7' log_type='electricity'>
+				<functionalities>
+					<interval_log id='34fc1e0a494241ebb83ec207ed8b4b6c'/>
+					<interval_log id='ddcff75f511d4ccb9b9854ced7418991'/>
+				</functionalities>
+				<measurement log_date="2020-07-26T19:00:00+02:00" unit="Wh" directionality="consumed" interval="PT1H">53.30</measurement>
+				<measurement log_date="2020-07-26T19:00:00+02:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='fabe6c3a2d124c7e94915cb259feed4d' log_type='relay'>
+				<functionalities>
+					<point_log id='33c53b5e24674f37807255a1d64bf37a'/>
+					<relay_functionality id='d8a4c97cc446436490cbfca09eabe4eb'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:17:56.611+02:00">on</measurement>
+			</relay>
+		</services>
+		<protocols>
+			<network_coordinator id='6f0db124f7c6429ea2721d61e5d62f93'>
+				<mac_address>0123456789AB</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+			</network_coordinator>
+		</protocols>
+	</module>
+	<appliance id='e1c884e7dede431dadee09506ec4f859'>
+		<name>Koelkast (92C4A)</name>
+		<description>Circle+</description>
+		<type>refrigerator</type>
+		<created_date>2020-08-27T14:31:15.313+02:00</created_date>
+		<modified_date>2020-08-27T20:17:56.614+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='fabe6c3a2d124c7e94915cb259feed4d' log_type='relay'>
+				<functionalities>
+					<point_log id='33c53b5e24674f37807255a1d64bf37a'/>
+					<relay_functionality id='d8a4c97cc446436490cbfca09eabe4eb'/>
+				</functionalities>
+			</relay>
+			<electricity_interval_meter id='b842f3e4ff204edfa2c598bbf468b0b7' log_type='electricity'>
+				<functionalities>
+					<interval_log id='34fc1e0a494241ebb83ec207ed8b4b6c'/>
+					<interval_log id='ddcff75f511d4ccb9b9854ced7418991'/>
+				</functionalities>
+			</electricity_interval_meter>
+			<electricity_point_meter id='5aa4714df14a42508fb1f3ccd58559d7' log_type='electricity'>
+				<functionalities>
+					<point_log id='4cfd0f7e64474226815f17efaaf01753'/>
+					<point_log id='88a00d3a0c0646e782060be68e8e1777'/>
+				</functionalities>
+			</electricity_point_meter>
+		</services>
+		<logs>
+			<point_log id='33c53b5e24674f37807255a1d64bf37a'>
+				<updated_date>2020-08-27T20:17:56.611+02:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-08-27T14:40:20.838+02:00</last_consecutive_log_date>
+				<relay id='fabe6c3a2d124c7e94915cb259feed4d'/>
+				<period start_date="2020-08-27T20:17:56.611+02:00" end_date="2020-08-27T20:17:56.611+02:00">
+					<measurement log_date="2020-08-27T20:17:56.611+02:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='34fc1e0a494241ebb83ec207ed8b4b6c'>
+				<updated_date></updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='b842f3e4ff204edfa2c598bbf468b0b7'/>
+			</interval_log>
+			<point_log id='4cfd0f7e64474226815f17efaaf01753'>
+				<updated_date>2020-08-27T20:18:13.629+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T14:34:43.329+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='5aa4714df14a42508fb1f3ccd58559d7'/>
+				<period start_date="2020-08-27T20:18:13.629+02:00" end_date="2020-08-27T20:18:13.629+02:00">
+					<measurement log_date="2020-08-27T20:18:13.629+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='88a00d3a0c0646e782060be68e8e1777'>
+				<updated_date>2020-08-27T20:18:13.629+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T20:12:05.060+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='5aa4714df14a42508fb1f3ccd58559d7'/>
+				<period start_date="2020-08-27T20:18:13.629+02:00" end_date="2020-08-27T20:18:13.629+02:00">
+					<measurement log_date="2020-08-27T20:18:13.629+02:00">53.19</measurement>
+				</period>
+			</point_log>
+			<interval_log id='ddcff75f511d4ccb9b9854ced7418991'>
+				<updated_date></updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='b842f3e4ff204edfa2c598bbf468b0b7'/>
+			</interval_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='d8a4c97cc446436490cbfca09eabe4eb'>
+				<updated_date>2020-08-27T20:17:56.611+02:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+				<relay id='fabe6c3a2d124c7e94915cb259feed4d'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='059e4d03c7a34d278add5c7a4a781d19'>
+		<name>Wasmachine (52AC1)</name>
+		<description>Circle</description>
+		<type>washingmachine</type>
+		<created_date>2020-08-27T13:33:45.153+02:00</created_date>
+		<modified_date>2020-08-27T20:17:56.783+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='7beee08f9e4a46cc8e7a7df399e693dd' log_type='relay'>
+				<functionalities>
+					<relay_functionality id='0eff576e00c245c288aa9492ff4a9115'/>
+					<point_log id='bfb530ed44bc4bb4be4994f2fc9267a1'/>
+				</functionalities>
+			</relay>
+			<electricity_point_meter id='93922bdbe6ad4f63b80f361365cde36a' log_type='electricity'>
+				<functionalities>
+					<point_log id='17fa51101034474498512445f69d6751'/>
+					<point_log id='495a4f00cc8647a3aa64af5e697ab958'/>
+				</functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='0896f3ccf45f4a478055ee0587105458' log_type='electricity'>
+				<functionalities>
+					<interval_log id='2cbc98743d2341f59759d89b4c1bb0ec'/>
+					<interval_log id='bace9baca78447b4a384e4157b6cb0fd'/>
+				</functionalities>
+			</electricity_interval_meter>
+		</services>
+		<logs>
+			<point_log id='17fa51101034474498512445f69d6751'>
+				<updated_date>2020-08-27T20:18:19.571+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T13:33:48.643+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='93922bdbe6ad4f63b80f361365cde36a'/>
+				<period start_date="2020-08-27T20:18:19.571+02:00" end_date="2020-08-27T20:18:19.571+02:00">
+					<measurement log_date="2020-08-27T20:18:19.571+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='2cbc98743d2341f59759d89b4c1bb0ec'>
+				<updated_date></updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='0896f3ccf45f4a478055ee0587105458'/>
+			</interval_log>
+			<point_log id='495a4f00cc8647a3aa64af5e697ab958'>
+				<updated_date>2020-08-27T20:18:19.571+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-08-27T13:33:48.643+02:00</last_consecutive_log_date>
+				<electricity_point_meter id='93922bdbe6ad4f63b80f361365cde36a'/>
+				<period start_date="2020-08-27T20:18:19.571+02:00" end_date="2020-08-27T20:18:19.571+02:00">
+					<measurement log_date="2020-08-27T20:18:19.571+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='bace9baca78447b4a384e4157b6cb0fd'>
+				<updated_date>2020-08-27T19:00:00+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-08-27T16:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='0896f3ccf45f4a478055ee0587105458'/>
+				<period start_date="2020-08-27T19:00:00+02:00" end_date="2020-08-27T19:00:00+02:00" interval="PT1H">
+					<measurement log_date="2020-08-27T19:00:00+02:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='bfb530ed44bc4bb4be4994f2fc9267a1'>
+				<updated_date>2020-08-27T20:17:56.781+02:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-08-27T14:18:26.163+02:00</last_consecutive_log_date>
+				<relay id='7beee08f9e4a46cc8e7a7df399e693dd'/>
+				<period start_date="2020-08-27T20:17:56.781+02:00" end_date="2020-08-27T20:17:56.781+02:00">
+					<measurement log_date="2020-08-27T20:17:56.781+02:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='0eff576e00c245c288aa9492ff4a9115'>
+				<updated_date>2020-08-27T20:17:56.781+02:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+				<relay id='7beee08f9e4a46cc8e7a7df399e693dd'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<module id='5db2e050da204f97a6a132e4267c6f7f'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4022</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2019-05-06T20:04:21.601+02:00</created_date>
+		<modified_date>2020-08-27T20:18:18.436+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='05f5f58c4a5a4c939bfbbbcd5144842e' log_type='electricity'>
+				<functionalities>
+					<interval_log id='513de6a2c2024df9b1beb27280b9a945'/>
+					<interval_log id='cdf56515336346e6bbfdbed8d0596f6a'/>
+				</functionalities>
+				<measurement log_date="2020-07-26T19:00:00+02:00" unit="Wh" directionality="consumed" interval="PT1H">789.49</measurement>
+				<measurement log_date="2020-07-26T19:00:00+02:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='1d4c937af1454f2da5e3f165fb84d67e' log_type='relay'>
+				<functionalities>
+					<relay_functionality id='7775d580a620439f8519802942d99e3c'/>
+					<point_log id='aa819a65085247f687a93f53ae573719'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:17:56.973+02:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='3559cbf27edd485895e683c8317eff04' log_type='electricity'>
+				<functionalities>
+					<point_log id='07e4f3a66ff14cdf94d502cb5fbc0a29'/>
+					<point_log id='818c30ebedde478f874e303696b8677d'/>
+				</functionalities>
+				<measurement log_date="2020-08-27T20:18:18.427+02:00" unit="W" directionality="consumed">0.00</measurement>
+				<measurement log_date="2020-08-27T20:18:18.427+02:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_router id='57b6184bdc5140898eb8c53462589097'>
+				<mac_address>0123456789AB</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+			</network_router>
+		</protocols>
+	</module>
+</domain_objects>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<direct_objects>
+	<location id='a455b61e52394b2db5081ce025a430f3'>
+		<name>Home</name>
+		<description>A building with a smart meter.</description>
+		<type>building</type>
+		<created_date>2020-03-12T16:41:36.227+01:00</created_date>
+		<modified_date>2020-03-12T21:14:17.280+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='104e84a3e0364545a889270deee21e94'>
+				<updated_date>2020-03-12T21:14:11+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-03-12T21:14:11+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:14:11+01:00" end_date="2020-03-12T21:14:11+01:00">
+					<measurement log_date="2020-03-12T21:14:11+01:00" tariff="nl_peak">644.00</measurement>
+					<measurement log_date="2020-03-12T21:14:11+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d'/>
+			</point_log>
+			<cumulative_log id='32b0afe1dd324aea87f46d2e699dbd56'>
+				<updated_date>2020-03-12T21:00:00+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T21:00:00+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:00:00+01:00" end_date="2020-03-12T21:00:00+01:00">
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
+			</cumulative_log>
+			<point_log id='6b58aa7f2cd0406bacdc53ac7ecae168'>
+				<updated_date>2020-03-12T21:14:11+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-03-12T16:54:42+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:14:11+01:00" end_date="2020-03-12T21:14:11+01:00">
+					<measurement log_date="2020-03-12T21:14:11+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d'/>
+			</point_log>
+			<cumulative_log id='7b7ad634b0b647f0bbf848ac5657ea8f'>
+				<updated_date>2020-03-12T21:00:00+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T21:00:00+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:00:00+01:00" end_date="2020-03-12T21:00:00+01:00">
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_peak">7702167.00</measurement>
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_offpeak">10263159.00</measurement>
+				</period>
+				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
+			</cumulative_log>
+			<interval_log id='859d091cb8e444b5bc084a41a9fd401c'>
+				<updated_date>2020-03-12T20:45:00+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T20:45:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<period start_date="2020-03-12T20:45:00+01:00" end_date="2020-03-12T20:45:00+01:00" interval="PT15M">
+					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
+			</interval_log>
+			<interval_log id='babf35c6d9c746179475a6c0ce086f37'>
+				<updated_date>2020-03-12T20:45:00+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T20:45:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<period start_date="2020-03-12T20:45:00+01:00" end_date="2020-03-12T20:45:00+01:00" interval="PT15M">
+					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_peak">179.00</measurement>
+				</period>
+				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
+			</interval_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+	<appliance id='ba4de7613517478da82dd9b6abea36af'>
+		<name>Gateway</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2019-11-19T10:21:26.199+01:00</created_date>
+		<modified_date>2020-03-12T21:13:34.290+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='400e04683dd94718ada7ff8a8c1d7466'>
+				<updated_date>2020-03-12T21:13:34.250+01:00</updated_date>
+				<type>signal_strength</type>
+				<unit>dBm</unit>
+				<last_consecutive_log_date>2020-03-12T21:13:34.250+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.250+01:00" end_date="2020-03-12T21:13:34.250+01:00">
+					<measurement log_date="2020-03-12T21:13:34.250+01:00">-49.00</measurement>
+				</period>
+				<signal_strength id='cb6934a63ceb43be9fb69db78f2065d0'/>
+			</point_log>
+			<point_log id='4de35aefb34f498caf5cc595fc6df60b'>
+				<updated_date>2020-03-12T21:13:34.250+01:00</updated_date>
+				<type>link_quality</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T21:13:34.250+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.250+01:00" end_date="2020-03-12T21:13:34.250+01:00">
+					<measurement log_date="2020-03-12T21:13:34.250+01:00">61</measurement>
+				</period>
+				<link_quality id='332138ddfe334e4397b9523d67c05a56'/>
+			</point_log>
+			<point_log id='7c4e66de4d234a3ab161280d8d7e9ab3'>
+				<updated_date>2020-03-12T21:13:34.251+01:00</updated_date>
+				<type>wlan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T21:13:34.251+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.251+01:00" end_date="2020-03-12T21:13:34.251+01:00">
+					<measurement log_date="2020-03-12T21:13:34.251+01:00">up</measurement>
+				</period>
+				<network_state id='4e078f2fae014cbab9f067ca66e80d55'/>
+			</point_log>
+			<point_log id='8032d845eee04dffab189be92589af0c'>
+				<updated_date>2020-03-12T21:13:34.294+01:00</updated_date>
+				<type>lan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T16:40:25.650+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.294+01:00" end_date="2020-03-12T21:13:34.294+01:00">
+					<measurement log_date="2020-03-12T21:13:34.294+01:00">down</measurement>
+				</period>
+				<network_state id='11622002070241b088be817459e6180f'/>
+			</point_log>
+			<point_log id='d4524db60fee4a13b70c8c29f3b04b92'>
+				<updated_date>2020-03-12T21:13:34.251+01:00</updated_date>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T21:12:25+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.251+01:00" end_date="2020-03-12T21:13:34.251+01:00">
+					<measurement log_date="2020-03-12T21:13:34.251+01:00">127.0.0.1</measurement>
+				</period>
+				<network_address id='cc36809b562c419686ebcaee95f36c7a'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+</direct_objects>
+
+

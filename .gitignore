@@ -1,0 +1,12 @@
+build.sh
+.DS_Store
+*.pyc
+__pycache__
+/dist/
+/*.egg-info
+/build/
+.idea
+tests/__pycache__
+.coverage
+.vscode
+venv

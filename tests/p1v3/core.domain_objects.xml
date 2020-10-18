@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain_objects>
+	<module id='f2f7c257a0c8405f9a56582d3a22982d'>
+		<vendor_name>SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.</vendor_name>
+		<vendor_model>KFM5KAIFA-METER</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2020-03-12T16:41:36.010+01:00</created_date>
+		<modified_date>2020-03-12T16:41:38.167+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5' log_type='electricity'>
+				<functionalities><cumulative_log id='32b0afe1dd324aea87f46d2e699dbd56'/><cumulative_log id='7b7ad634b0b647f0bbf848ac5657ea8f'/></functionalities>
+			</electricity_cumulative_meter>
+			<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d' log_type='electricity'>
+				<functionalities><point_log id='104e84a3e0364545a889270deee21e94'/><point_log id='6b58aa7f2cd0406bacdc53ac7ecae168'/></functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7' log_type='electricity'>
+				<functionalities><interval_log id='859d091cb8e444b5bc084a41a9fd401c'/><interval_log id='babf35c6d9c746179475a6c0ce086f37'/></functionalities>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<dsmr_main id='8bc4c6e311e44afcb1c6e2c1245545f1'>
+				<serial>E0025100029832815</serial>
+				<dsmr_mbuses/>
+			</dsmr_main>
+		</protocols>
+	</module>
+	<appliance id='ba4de7613517478da82dd9b6abea36af'>
+		<name>Gateway</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2019-11-19T10:21:26.199+01:00</created_date>
+		<modified_date>2020-03-12T21:13:34.290+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='400e04683dd94718ada7ff8a8c1d7466'>
+				<updated_date>2020-03-12T21:13:34.250+01:00</updated_date>
+				<type>signal_strength</type>
+				<unit>dBm</unit>
+				<last_consecutive_log_date>2020-03-12T21:13:34.250+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.250+01:00" end_date="2020-03-12T21:13:34.250+01:00">
+					<measurement log_date="2020-03-12T21:13:34.250+01:00">-49.00</measurement>
+				</period>
+				<signal_strength id='cb6934a63ceb43be9fb69db78f2065d0'/>
+			</point_log>
+			<point_log id='4de35aefb34f498caf5cc595fc6df60b'>
+				<updated_date>2020-03-12T21:13:34.250+01:00</updated_date>
+				<type>link_quality</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T21:13:34.250+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.250+01:00" end_date="2020-03-12T21:13:34.250+01:00">
+					<measurement log_date="2020-03-12T21:13:34.250+01:00">61</measurement>
+				</period>
+				<link_quality id='332138ddfe334e4397b9523d67c05a56'/>
+			</point_log>
+			<point_log id='7c4e66de4d234a3ab161280d8d7e9ab3'>
+				<updated_date>2020-03-12T21:13:34.251+01:00</updated_date>
+				<type>wlan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T21:13:34.251+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.251+01:00" end_date="2020-03-12T21:13:34.251+01:00">
+					<measurement log_date="2020-03-12T21:13:34.251+01:00">up</measurement>
+				</period>
+				<network_state id='4e078f2fae014cbab9f067ca66e80d55'/>
+			</point_log>
+			<point_log id='8032d845eee04dffab189be92589af0c'>
+				<updated_date>2020-03-12T21:13:34.294+01:00</updated_date>
+				<type>lan_state</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T16:40:25.650+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.294+01:00" end_date="2020-03-12T21:13:34.294+01:00">
+					<measurement log_date="2020-03-12T21:13:34.294+01:00">down</measurement>
+				</period>
+				<network_state id='11622002070241b088be817459e6180f'/>
+			</point_log>
+			<point_log id='d4524db60fee4a13b70c8c29f3b04b92'>
+				<updated_date>2020-03-12T21:13:34.251+01:00</updated_date>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-03-12T21:12:25+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:13:34.251+01:00" end_date="2020-03-12T21:13:34.251+01:00">
+					<measurement log_date="2020-03-12T21:13:34.251+01:00">127.0.0.1</measurement>
+				</period>
+				<network_address id='cc36809b562c419686ebcaee95f36c7a'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+	<location id='a455b61e52394b2db5081ce025a430f3'>
+		<name>Home</name>
+		<description>A building with a smart meter.</description>
+		<type>building</type>
+		<created_date>2020-03-12T16:41:36.227+01:00</created_date>
+		<modified_date>2020-03-12T21:14:07.552+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='104e84a3e0364545a889270deee21e94'>
+				<updated_date>2020-03-12T21:14:01+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-03-12T21:14:01+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:14:01+01:00" end_date="2020-03-12T21:14:01+01:00">
+					<measurement log_date="2020-03-12T21:14:01+01:00" tariff="nl_peak">650.00</measurement>
+					<measurement log_date="2020-03-12T21:14:01+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d'/>
+			</point_log>
+			<cumulative_log id='32b0afe1dd324aea87f46d2e699dbd56'>
+				<updated_date>2020-03-12T21:00:00+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T21:00:00+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:00:00+01:00" end_date="2020-03-12T21:00:00+01:00">
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
+			</cumulative_log>
+			<point_log id='6b58aa7f2cd0406bacdc53ac7ecae168'>
+				<updated_date>2020-03-12T21:14:01+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-03-12T16:54:42+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:14:01+01:00" end_date="2020-03-12T21:14:01+01:00">
+					<measurement log_date="2020-03-12T21:14:01+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d'/>
+			</point_log>
+			<cumulative_log id='7b7ad634b0b647f0bbf848ac5657ea8f'>
+				<updated_date>2020-03-12T21:00:00+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T21:00:00+01:00</last_consecutive_log_date>
+				<period start_date="2020-03-12T21:00:00+01:00" end_date="2020-03-12T21:00:00+01:00">
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_peak">7702167.00</measurement>
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_offpeak">10263159.00</measurement>
+				</period>
+				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
+			</cumulative_log>
+			<interval_log id='859d091cb8e444b5bc084a41a9fd401c'>
+				<updated_date>2020-03-12T20:45:00+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T20:45:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<period start_date="2020-03-12T20:45:00+01:00" end_date="2020-03-12T20:45:00+01:00" interval="PT15M">
+					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
+			</interval_log>
+			<interval_log id='babf35c6d9c746179475a6c0ce086f37'>
+				<updated_date>2020-03-12T20:45:00+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-03-12T20:45:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<period start_date="2020-03-12T20:45:00+01:00" end_date="2020-03-12T20:45:00+01:00" interval="PT15M">
+					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_peak">179.00</measurement>
+				</period>
+				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
+			</interval_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+	<gateway id='a45a31b78c9c40ca8361a0c7d210fc10'>
+		<created_date>2019-11-19T10:21:25.294+01:00</created_date>
+		<modified_date>2020-03-12T21:13:34.250+01:00</modified_date>
+		<deleted_date/>
+		<name></name>
+		<description></description>
+		<enabled>true</enabled>
+		<firmware_locked>false</firmware_locked>
+		<prevent_default_update>false</prevent_default_update>
+		<last_reset_date>2019-11-19T10:21:25.294+01:00</last_reset_date>
+		<last_boot_date>2020-03-12T16:50:52.166+01:00</last_boot_date>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>smile</vendor_model>
+		<hardware_version>AME Smile 2.0 board</hardware_version>
+		<firmware_version>3.3.6</firmware_version>
+		<mac_address>0123456789AB</mac_address>
+		<short_id>abcdefgh</short_id>
+		<send_data>true</send_data>
+		<anonymous>false</anonymous>
+		<lan_ip></lan_ip>
+		<wifi_ip>127.0.0.1</wifi_ip>
+		<hostname>smile000000</hostname>
+		<time>2020-03-12T21:13:35+01:00</time>
+		<timezone>Europe/Amsterdam</timezone>
+		<ssh_relay>disabled</ssh_relay>
+		<project id='123306def5eb4172ae74435aea21e753'>
+			<name>-- Stock</name>
+			<description>Stock which was previously called fulfillment</description>
+			<is_default>false</is_default>
+			<visible_in_production>true</visible_in_production>
+			<deleted_date></deleted_date>
+			<modified_date>2020-03-12T16:54:47.400+01:00</modified_date>
+			<created_date>2014-11-19T17:45:10+01:00</created_date>
+		</project>
+		<gateway_environment id='5147f51e11bd4ac9be35caadd0305057'>
+			<savings_result_value/>
+			<longitude/>
+			<thermostat_model/>
+			<city/>
+			<country/>
+			<electricity_consumption_tariff_structure>double</electricity_consumption_tariff_structure>
+			<electricity_production_peak_tariff>0.237</electricity_production_peak_tariff>
+			<central_heating_model/>
+			<household_children>0</household_children>
+			<thermostat_brand/>
+			<electricity_production_off_peak_tariff>0.222</electricity_production_off_peak_tariff>
+			<central_heating_installation_date/>
+			<postal_code/>
+			<electricity_consumption_off_peak_tariff>0.222</electricity_consumption_off_peak_tariff>
+			<latitude/>
+			<gas_consumption_tariff>0.24</gas_consumption_tariff>
+			<modified_date>2020-03-12T19:35:45.644+01:00</modified_date>
+			<electricity_production_tariff_structure>double</electricity_production_tariff_structure>
+			<housing_construction_period>unknown</housing_construction_period>
+			<electricity_production_single_tariff>0.22</electricity_production_single_tariff>
+			<electricity_consumption_peak_tariff>0.237</electricity_consumption_peak_tariff>
+			<electricity_consumption_single_tariff>0.24</electricity_consumption_single_tariff>
+			<central_heating_brand/>
+			<housing_type>apartment</housing_type>
+			<currency>EUR</currency>
+			<savings_result_unit/>
+			<household_adults>0</household_adults>
+			<central_heating_year_of_manufacture/>
+			<deleted_date></deleted_date>
+			<modified_date>2020-03-12T19:35:45.644+01:00</modified_date>
+			<created_date>2020-03-12T19:35:30+01:00</created_date>
+		</gateway_environment>
+		<features>
+			<remote_control id='5f89589ecee442b0b0410064d62f66a5'>
+				<activation_date>2019-11-21T16:49:43+01:00</activation_date>
+				<validity_period/>
+				<valid_to></valid_to>
+				<valid_from></valid_from>
+				<grace_period/>
+				<deleted_date></deleted_date>
+				<modified_date>2020-03-12T16:54:47.440+01:00</modified_date>
+				<created_date>2019-11-21T16:49:43+01:00</created_date>
+			</remote_control>
+		</features>
+		<update id='5276291cef0f44379e4c9967a430d816'>
+			<pre_upgrade_script_md5/>
+			<image_url>/firmwares/5276291cef0f44379e4c9967a430d816/image</image_url>
+			<post_upgrade_script_md5>55aefcfa488561d4ccf1fe3bcc697ba0</post_upgrade_script_md5>
+			<state>published</state>
+			<post_upgrade_script_url>/firmwares/5276291cef0f44379e4c9967a430d816/post_upgrade_script</post_upgrade_script_url>
+			<description>This release improves Smile connectivity and logging.</description>
+			<version>3.3.9</version>
+			<hardware_version>AME Smile 2.0 board</hardware_version>
+			<pre_upgrade_script_url/>
+			<vendor_model>smile</vendor_model>
+			<image_md5>2c6e2f1837713cc17713e4059c7cb19c</image_md5>
+			<vendor_name>plugwise</vendor_name>
+			<deleted_date></deleted_date>
+			<modified_date>2020-03-12T16:54:50.077+01:00</modified_date>
+			<created_date>2020-03-12T16:54:50.048+01:00</created_date>
+		</update>
+	</gateway>
+	<module id='84cbd085b6b74c3d8fe8881f22d23693'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>Gateway</vendor_model>
+		<hardware_version>AME Smile 2.0 board</hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-11-19T10:21:25.346+01:00</created_date>
+		<modified_date>2020-03-12T16:45:21.960+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<network_state id='11622002070241b088be817459e6180f' log_type='lan_state'>
+				<functionalities><point_log id='8032d845eee04dffab189be92589af0c'/></functionalities>
+			</network_state>
+			<link_quality id='332138ddfe334e4397b9523d67c05a56' log_type='link_quality'>
+				<functionalities><point_log id='4de35aefb34f498caf5cc595fc6df60b'/></functionalities>
+			</link_quality>
+			<network_state id='4e078f2fae014cbab9f067ca66e80d55' log_type='wlan_state'>
+				<functionalities><point_log id='7c4e66de4d234a3ab161280d8d7e9ab3'/></functionalities>
+			</network_state>
+			<signal_strength id='cb6934a63ceb43be9fb69db78f2065d0' log_type='signal_strength'>
+				<functionalities><point_log id='400e04683dd94718ada7ff8a8c1d7466'/></functionalities>
+			</signal_strength>
+			<network_address id='cc36809b562c419686ebcaee95f36c7a' log_type='wlan_ip_address'>
+				<functionalities><point_log id='d4524db60fee4a13b70c8c29f3b04b92'/></functionalities>
+			</network_address>
+		</services>
+		<protocols>
+			<local_area_network id='1c8ada11b4dd4d669a5752a6885c247f'/>
+			<wireless_local_area_network id='59d6797fe8bd436caa626f9c5387e3e3'/>
+		</protocols>
+	</module>
+</domain_objects>
+
+

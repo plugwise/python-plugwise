@@ -1,0 +1,14 @@
+pydocstyle
+codecov
+coverage
+pytest-cov
+pytest-coverage
+pytest-aiohttp
+pytest-asyncio
+pylint
+pytest>=5.4.0
+pytest-coverage
+pylint_strict_informational
+flake8-black
+black
+jsonpickle

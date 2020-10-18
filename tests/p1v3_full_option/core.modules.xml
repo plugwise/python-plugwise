@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module id='5c9f8e8913ca4e7d8089d6e2df1686ca'>
+		<vendor_name>ISKRAEMECO</vendor_name>
+		<vendor_model>2M550E-1012</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2020-03-16T20:51:10.248+01:00</created_date>
+		<modified_date>2020-03-16T20:51:12.404+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='199728709275469dabd60cff37fd908d' log_type='electricity'>
+				<functionalities><point_log id='c35294c5771541339bcd563eb8174099'/><point_log id='e8531fddbbb047218ac28380a3b65a9d'/></functionalities>
+			</electricity_point_meter>
+			<electricity_interval_meter id='24540350c98d4c1b93b873f55c1b2bfc' log_type='electricity'>
+				<functionalities><interval_log id='1d08b6877f514d00863f802bfa6c860a'/><interval_log id='b61cd85a98dd4e02a571c278a8945b2f'/></functionalities>
+			</electricity_interval_meter>
+			<electricity_cumulative_meter id='e0a0345611344d4bae927317fbc1b8c7' log_type='electricity'>
+				<functionalities><cumulative_log id='9cff4a96cabc4b35a0e0411e032bc1cf'/><cumulative_log id='cd516b1c631f48da9da6f6d63561df18'/></functionalities>
+			</electricity_cumulative_meter>
+		</services>
+		<protocols>
+			<dsmr_main id='f3da727805874736bf13f85c246d3560'>
+				<serial>E0049007469612019</serial>
+				<dsmr_mbuses/>
+			</dsmr_main>
+		</protocols>
+	</module>
+	<module id='547517fec3314e7d8e7b3cad150dc18a'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2020-03-16T20:51:12.410+01:00</created_date>
+		<modified_date>2020-03-16T20:51:13.022+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<gas_cumulative_meter id='1bda9cd3919943e3a52fbc6926ff91fa' log_type='gas'>
+				<functionalities><cumulative_log id='a319499a72d146f993bfa52c88f694f1'/></functionalities>
+			</gas_cumulative_meter>
+			<gas_interval_meter id='d28cd8b90b7643e38ef01780b12b6b5c' log_type='gas'>
+				<functionalities><interval_log id='4e0d78a9862e49d68531920f4d913dce'/></functionalities>
+			</gas_interval_meter>
+		</services>
+		<protocols>
+			<dsmr_gas id='ea4a9775d5ec41a1928cf1f56d9c2b06'>
+				<serial>G0064001947792719</serial>
+				<dsmr_main id='f3da727805874736bf13f85c246d3560'/>
+</dsmr_gas>
+		</protocols>
+	</module>
+	<module id='7b07ddbbc951478f81876f365285ff54'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>Gateway</vendor_model>
+		<hardware_version>AME Smile 2.0 board</hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-09-18T15:00:26.400+02:00</created_date>
+		<modified_date>2019-09-18T15:38:11.776+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<network_address id='93e8f9822a1741258e5c346f0a0e80fd' log_type='wlan_ip_address'>
+				<functionalities><point_log id='3de6ef20ae484579b997da2ba9971079'/></functionalities>
+			</network_address>
+			<network_state id='aa8193a634a34ca0b23624ec89a586bf' log_type='wlan_state'>
+				<functionalities><point_log id='8be3d3c330324824a1c186cb9a964da3'/></functionalities>
+			</network_state>
+			<network_address id='b4fd3d27e4554a699b1bf8487aa384b5' log_type='lan_ip_address'>
+				<functionalities><point_log id='af8bb16ab15145f9b76fea8239b49bd6'/></functionalities>
+			</network_address>
+			<network_state id='ed55e68d63a3430ca7303ae8d2129e83' log_type='lan_state'>
+				<functionalities><point_log id='0f949d720b2c446bb341ba6dff93ab9d'/></functionalities>
+			</network_state>
+		</services>
+		<protocols>
+			<local_area_network id='71c9d0e3ca0e42f9817103467642d26f'/>
+			<wireless_local_area_network id='d82207b7ac34413da14f43b1179d821b'/>
+		</protocols>
+	</module>
+</modules>

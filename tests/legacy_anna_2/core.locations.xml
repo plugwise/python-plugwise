@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='be81e3f8275b4129852c4d8d550ae2eb'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2018-03-13T09:44:10.048+01:00</created_date>
+		<modified_date>2019-08-16T14:35:35.148+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<thermo_meter id='9d393af74c3e4acdbccb133043ebac4e' log_type='outdoor_temperature'>
+				<functionalities>
+					<point_log id='e92f1c79dd6b4a28917dcec1023d69d1'/>
+				</functionalities>
+			</thermo_meter>
+		</services>
+		<appliances>
+		</appliances>
+		<logs>
+			<point_log id='e92f1c79dd6b4a28917dcec1023d69d1'>
+				<updated_date>2019-08-16T14:50:25+02:00</updated_date>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2019-08-16T14:35:35+02:00</last_consecutive_log_date>
+				<thermo_meter id='9d393af74c3e4acdbccb133043ebac4e'/>
+				<period start_date="2019-08-16T14:50:25+02:00" end_date="2019-08-16T14:50:25+02:00">
+					<measurement log_date="2019-08-16T14:50:25+02:00">21.01</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+</locations>
