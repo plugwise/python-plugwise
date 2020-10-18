@@ -37,7 +37,7 @@ If applicable, add screenshots to help explain your problem.
  - Installed plugwise version: [e.g. 'plugwise-beta or HA-core']
  - Installed through [e.g. 'HACS', 'Core' or manual custom_component]
 
-**Smile (please complete the following information):**
+**Smile/Stretch/USB (please complete the following information):**
  - Sort of Smile, Strech or used product: [e.g. Adam/Anna/P1/Stretch/Stick (Circle/Stealth/etc.)]
  - Firmware: [check through the app or the integrations page in Home Assistant]
 
