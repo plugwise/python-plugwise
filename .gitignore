@@ -10,3 +10,5 @@ tests/__pycache__
 .coverage
 .vscode
 venv
+fixtures/*
+!fixtures/.keep
