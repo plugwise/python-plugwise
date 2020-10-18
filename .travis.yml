@@ -9,7 +9,7 @@ before_install:
 - python --version
 - pip install -U pip
 install:
-- pip install -r requirements.txt -r requirements_test.txt
+- pip install -U -r requirements.txt -r requirements_test.txt
 script:
 - PYTHONPATH=`pwd` pytest -rpP --log-level info tests/test_smile.py --cov='.'
 after_success:
