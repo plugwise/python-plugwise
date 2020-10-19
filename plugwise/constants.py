@@ -265,7 +265,6 @@ HA_BINARY_SENSOR = "binary_sensor"
 ### Smile constants ###
 
 APPLIANCES = "/core/appliances"
-DIRECT_OBJECTS = "/core/direct_objects"
 DOMAIN_OBJECTS = "/core/domain_objects"
 LOCATIONS = "/core/locations"
 NOTIFICATIONS = "/core/notifications"
