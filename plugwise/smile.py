@@ -153,16 +153,18 @@ class Smile:
         # Work-around for Stretchv2-aiohttp-deflate-error, can be removed for aiohttp v3.7
         self._headers = {"Accept-Encoding": "gzip"}
 
-        self._timeout = timeout
-        self._endpoint = f"http://{host}:{str(port)}"
         self._appliances = None
+        self._available = False
         self._domain_objects = None
+        self._endpoint = f"http://{host}:{str(port)}"
         self._home_location = None
         self._locations = None
         self._smile_legacy = False
         self._thermo_master_id = None
+        self._timeout = timeout
 
         self.active_device_present = False
+        self.available = False
         self.gateway_id = None
         self.heater_id = None
         self.notifications = {}
@@ -346,6 +348,7 @@ class Smile:
         new_data = await self.request(APPLIANCES)
         if new_data is not None:
             self._appliances = new_data
+            self._available = True
 
     async def update_domain_objects(self):
         """Request domain_objects data."""
@@ -354,6 +357,7 @@ class Smile:
 
         if new_data is not None:
             self._domain_objects = new_data
+            self._available = True
 
         # If Plugwise notifications present:
         self.notifications = {}
@@ -376,9 +380,12 @@ class Smile:
         new_data = await self.request(LOCATIONS)
         if new_data is not None:
             self._locations = new_data
+            self._available = True
 
     async def full_update_device(self):
         """Update all XML data from device."""
+        self._available = False
+
         await self.update_appliances()
         # P1 legacy has no appliances
         if self._appliances is None and (
@@ -396,6 +403,10 @@ class Smile:
         if self._locations is None:
             _LOGGER.error("Locataion data missing")
             raise self.XMLDataMissingError
+
+        self.available = True        
+        if self._available == False:
+            self.available = False
 
     @staticmethod
     def _types_finder(data):
