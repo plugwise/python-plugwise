@@ -262,7 +262,20 @@ HA_SENSOR = "sensor"
 HA_BINARY_SENSOR = "binary_sensor"
 
 
-# Smile constants:
+### Smile constants ###
+
+APPLIANCES = "/core/appliances"
+DIRECT_OBJECTS = "/core/direct_objects"
+DOMAIN_OBJECTS = "/core/domain_objects"
+LOCATIONS = "/core/locations"
+NOTIFICATIONS = "/core/notifications"
+RULES = "/core/rules"
+SYSTEM = "/system"
+STATUS = "/system/status.xml"
+
+DEFAULT_TIMEOUT = 30
+DEFAULT_USERNAME = "smile"
+DEFAULT_PORT = 80
 
 SWITCH_GROUP_TYPES = ["switching", "report"]
 
