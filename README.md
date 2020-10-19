@@ -1,6 +1,6 @@
 # Plugwise python module
 
-This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain in Home Assistant Core. Alpha and beta version first undergo testing through our [`plugwise-beta` component]((https://github.com/plugwise/plugwise-beta)) available through HACS and a group of test users.
+This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain in Home Assistant Core. Alpha and beta versions can be installed using HACS as a custom repository. 
 
 Our main usage for this module is supporting [Home Assistant](https://www.home-assistant.io) / [home-assistant](http://github.com/home-assistant/core/)
 
@@ -22,7 +22,7 @@ Works out of the box with every Home Assistant installation
 
 ### Home-Assistant custom_component (beta)
 
-(use at your own risk)
+Intended for users helping us test new features (use at your own risk)
 
 [![Generic badge](https://img.shields.io/github/v/release/plugwise/plugwise-beta)](https://github.com/plugwise/plugwise-beta)
 [![Generic badge](https://img.shields.io/badge/HA%20custom_component-yes-green.svg)](https://github.com/plugwise/plugwise-beta)
