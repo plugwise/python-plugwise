@@ -68,4 +68,4 @@ Origins (from newest to oldest):
 
 # Thanks
 
-On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl)for their support and obviously all our users and testers who dealt our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.
+On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl)for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.
