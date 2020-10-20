@@ -1,3 +1,5 @@
+### Stick constants ###
+
 UTF8_DECODE = "utf-8"
 
 # Serial connection settings for plugwise USB stick
