@@ -811,26 +811,6 @@ class Smile:
 
         return data
 
-    @staticmethod
-    def _format_measure(measure):
-        """Format measure to correct type."""
-        try:
-            measure = int(measure)
-        except ValueError:
-            try:
-                if float(measure) < 10:
-                    measure = float(f"{round(float(measure), 2):.2f}")
-                elif float(measure) >= 10 and float(measure) < 100:
-                    measure = float(f"{round(float(measure), 1):.1f}")
-                elif float(measure) >= 100:
-                    measure = int(round(float(measure)))
-            except ValueError:
-                if measure == "on":
-                    measure = True
-                elif measure == "off":
-                    measure = False
-        return measure
-
     def get_power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
@@ -1034,23 +1014,6 @@ class Smile:
         available, selected = self.determine_selected(available, selected, schemas)
 
         return available, selected, schedule_temperature
-
-    @staticmethod
-    def determine_selected(available, selected, schemas):
-        """Determine selected schema from available schemas."""
-        for schema_a, schema_b in schemas.items():
-            available.append(schema_a)
-            if schema_b:
-                selected = schema_a
-
-        return available, selected
-
-    @staticmethod
-    def in_between(now, start, end):
-        """Determine timing for schedules."""
-        if start <= end:
-            return start <= now < end
-        return start <= now or now < end
 
     def get_last_active_schema(self, loc_id):
         """Determine the last active schema."""
