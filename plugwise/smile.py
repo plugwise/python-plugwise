@@ -32,6 +32,8 @@ from plugwise.constants import (
     SYSTEM,
 )
 
+from plugwise.util import escape_illegal_xml_characters
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -245,7 +247,7 @@ class Smile:
 
         try:
             # Encode to ensure utf8 parsing
-            xml = etree.XML(self.escape_illegal_xml_characters(result).encode())
+            xml = etree.XML(escape_illegal_xml_characters(result).encode())
         except etree.XMLSyntaxError:
             _LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
             raise self.InvalidXMLError
