@@ -32,7 +32,12 @@ from plugwise.constants import (
     SYSTEM,
 )
 
-from plugwise.util import escape_illegal_xml_characters
+from plugwise.util import (
+    escape_illegal_xml_characters,
+    format_measure,
+    determine_selected,
+    in_between,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -789,7 +794,7 @@ class Smile:
                     ):
                         self.active_device_present = True
 
-                    data[name] = self._format_measure(measure)
+                    data[name] = format_measure(measure)
 
                 i_locator = (
                     f'.//logs/interval_log[type="{measurement}"]/period/measurement'
@@ -798,7 +803,7 @@ class Smile:
                     name = f"{name}_interval"
                     measure = appliance.find(i_locator).text
 
-                    data[name] = self._format_measure(measure)
+                    data[name] = format_measure(measure)
 
                 c_locator = (
                     f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
@@ -807,7 +812,7 @@ class Smile:
                     name = f"{name}_cumulative"
                     measure = appliance.find(c_locator).text
 
-                    data[name] = self._format_measure(measure)
+                    data[name] = format_measure(measure)
 
         return data
 
@@ -855,7 +860,7 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = self._format_measure(val)
+                    f_val = format_measure(val)
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
@@ -950,7 +955,7 @@ class Smile:
             if name is not None:
                 schemas[name] = active
 
-            available, selected = self.determine_selected(available, selected, schemas)
+            available, selected = determine_selected(available, selected, schemas)
 
             return available, selected, schedule_temperature
 
@@ -1008,10 +1013,10 @@ class Smile:
                     result_1 == dt.datetime.now().weekday()
                     or result_2 == dt.datetime.now().weekday()
                 ):
-                    if self.in_between(now, start, end):
+                    if in_between(now, start, end):
                         schedule_temperature = temp
 
-        available, selected = self.determine_selected(available, selected, schemas)
+        available, selected = determine_selected(available, selected, schemas)
 
         return available, selected, schedule_temperature
 
@@ -1074,7 +1079,7 @@ class Smile:
             f'[type="{measurement}"]/period/measurement'
         )
         if search.find(locator) is not None:
-            val = self._format_measure(search.find(locator).text)
+            val = format_measure(search.find(locator).text)
             return val
 
         return None
