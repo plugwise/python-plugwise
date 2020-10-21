@@ -1,16 +1,16 @@
 """Plugwise Home Assistant module."""
 
+import aiohttp
 import asyncio
+import async_timeout
 import datetime as dt
 import logging
 
-# For XML corrections
-import re
-
-import aiohttp
-import async_timeout
 from dateutil.parser import parse
 from lxml import etree
+
+# For XML corrections
+import re
 
 # Time related
 import pytz
