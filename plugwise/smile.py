@@ -9,9 +9,6 @@ import logging
 from dateutil.parser import parse
 from lxml import etree
 
-# For XML corrections
-import re
-
 # Time related
 import pytz
 
@@ -1227,11 +1224,6 @@ class Smile:
 
         await self.request(uri, method="put", data=data)
         return True
-
-    @staticmethod
-    def escape_illegal_xml_characters(xmldata):
-        """Replace illegal &-characters."""
-        return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
     # LEGACY Anna functions
 

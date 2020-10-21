@@ -65,6 +65,10 @@ def int_to_uint(val, octals):
         val = val + (1 << bits)
     return val
 
+def escape_illegal_xml_characters(xmldata):
+    """Replace illegal &-characters."""
+    return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
+
 
 class BaseType(object):
     def __init__(self, value, length):
