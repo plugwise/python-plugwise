@@ -15,7 +15,7 @@ import pytz
 # Version detection
 import semver
 
-from plugwise.constants import (
+from .constants import (
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -32,7 +32,7 @@ from plugwise.constants import (
     SYSTEM,
 )
 
-from plugwise.util import (
+from .util import (
     escape_illegal_xml_characters,
     format_measure,
     determine_selected,
