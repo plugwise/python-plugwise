@@ -94,7 +94,6 @@ def determine_selected(available, selected, schemas):
         available.append(schema_a)
         if schema_b:
             selected = schema_a
-
     return available, selected
 
 def in_between(now, start, end):
