@@ -10,7 +10,7 @@ from plugwise.constants import (
 from plugwise.message import PlugwiseMessage
 from plugwise.util import (
     DateTime,
-    Int,
+    SInt,
     LogAddr,
     String,
     RealClockDate,
