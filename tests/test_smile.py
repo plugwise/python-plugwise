@@ -16,7 +16,11 @@ import pytest
 from plugwise.smile import Smile
 
 from plugwise.exceptions import (
-
+    ConnectionFailedError,
+    ErrorSendingCommandError,
+    DeviceTimeoutError,
+    ResponseError,
+    InvalidXMLError,
 )
 
 pp = PrettyPrinter(indent=8)
