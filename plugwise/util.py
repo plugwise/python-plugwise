@@ -65,6 +65,43 @@ def int_to_uint(val, octals):
         val = val + (1 << bits)
     return val
 
+def escape_illegal_xml_characters(xmldata):
+    """Replace illegal &-characters."""
+    return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
+
+def format_measure(measure):
+    """Format measure to correct type."""
+    try:
+        measure = int(measure)
+    except ValueError:
+        try:
+            if float(measure) < 10:
+                measure = float(f"{round(float(measure), 2):.2f}")
+            elif float(measure) >= 10 and float(measure) < 100:
+                measure = float(f"{round(float(measure), 1):.1f}")
+            elif float(measure) >= 100:
+                measure = int(round(float(measure)))
+        except ValueError:
+            if measure == "on":
+                measure = True
+            elif measure == "off":
+                measure = False
+    return measure
+
+def determine_selected(available, selected, schemas):
+    """Determine selected schema from available schemas."""
+    for schema_a, schema_b in schemas.items():
+        available.append(schema_a)
+        if schema_b:
+            selected = schema_a
+    return available, selected
+
+def in_between(now, start, end):
+    """Determine timing for schedules."""
+    if start <= end:
+        return start <= now < end
+    return start <= now or now < end
+
 
 class BaseType(object):
     def __init__(self, value, length):

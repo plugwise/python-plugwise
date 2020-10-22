@@ -1,14 +1,11 @@
 """Plugwise Home Assistant module."""
 
+import aiohttp
 import asyncio
+import async_timeout
 import datetime as dt
 import logging
 
-# For XML corrections
-import re
-
-import aiohttp
-import async_timeout
 from dateutil.parser import parse
 from lxml import etree
 
@@ -18,107 +15,42 @@ import pytz
 # Version detection
 import semver
 
-APPLIANCES = "/core/appliances"
-DIRECT_OBJECTS = "/core/direct_objects"
-DOMAIN_OBJECTS = "/core/domain_objects"
-LOCATIONS = "/core/locations"
-NOTIFICATIONS = "/core/notifications"
-RULES = "/core/rules"
-SYSTEM = "/system"
-STATUS = "/system/status.xml"
+from .constants import (
+    APPLIANCES,
+    DEFAULT_PORT,
+    DEFAULT_TIMEOUT,
+    DEFAULT_USERNAME,
+    DEVICE_MEASUREMENTS,
+    DOMAIN_OBJECTS,
+    HOME_MEASUREMENTS,
+    LOCATIONS,
+    NOTIFICATIONS,
+    RULES,
+    SMILES,
+    STATUS,
+    SWITCH_GROUP_TYPES,
+    SYSTEM,
+)
 
-DEFAULT_TIMEOUT = 30
-DEFAULT_USERNAME = "smile"
-DEFAULT_PORT = 80
+from .exceptions import (
+    ConnectionFailedError,
+    InvalidAuthentication,
+    UnsupportedDeviceError,
+    DeviceSetupError,
+    DeviceTimeoutError,
+    ResponseError,
+    InvalidXMLError,
+    XMLDataMissingError,
+)
+
+from .util import (
+    escape_illegal_xml_characters,
+    format_measure,
+    determine_selected,
+    in_between,
+)
 
 _LOGGER = logging.getLogger(__name__)
-
-SWITCH_GROUP_TYPES = ["switching", "report"]
-
-HOME_MEASUREMENTS = {
-    "electricity_consumed": "power",
-    "electricity_produced": "power",
-    "gas_consumed": "gas",
-    "outdoor_temperature": "temperature",
-}
-
-# Excluded:
-# zone_thermosstat 'temperature_offset'
-# radiator_valve 'uncorrected_temperature', 'temperature_offset'
-DEVICE_MEASUREMENTS = {
-    # HA Core current_temperature
-    "temperature": "temperature",
-    # HA Core setpoint
-    "thermostat": "setpoint",
-    # Anna/Adam
-    "boiler_temperature": "water_temperature",
-    "domestic_hot_water_state": "dhw_state",
-    "intended_boiler_temperature": "intended_boiler_temperature",  # non-zero when heating, zero when dhw-heating
-    "intended_central_heating_state": "heating_state",  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
-    "modulation_level": "modulation_level",
-    "return_water_temperature": "return_temperature",
-    # Used with the Elga heatpump - marcelveldt
-    "compressor_state": "compressor_state",
-    "cooling_state": "cooling_state",
-    # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
-    "slave_boiler_state": "slave_boiler_state",
-    "flame_state": "flame_state",  # also present when there is a single gas-heater
-    # Anna only
-    "central_heater_water_pressure": "water_pressure",
-    "outdoor_temperature": "outdoor_temperature",  # Outdoor temp as reported on the Anna, in the App
-    "schedule_temperature": "schedule_temperature",  # Only present on legacy Anna and Anna_v3
-    # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": "boiler_state",
-    # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably
-    "intended_boiler_state": "intended_boiler_state",
-    # Lisa and Tom
-    "battery": "battery",
-    "temperature_difference": "temperature_difference",
-    "valve_position": "valve_position",
-    # Plug
-    "electricity_consumed": "electricity_consumed",
-    "electricity_produced": "electricity_produced",
-    "relay": "relay",
-}
-
-SMILES = {
-    "smile_open_therm_v3": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_open_therm_v2": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_thermo_v4": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v3": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v1": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-        "legacy": True,
-    },
-    "smile_v4": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v3": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v2": {
-        "type": "power",
-        "friendly_name": "P1",
-        "legacy": True,
-    },
-    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
-    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
-}
 
 
 class Smile:
@@ -191,7 +123,7 @@ class Smile:
                               we got %s",
                     result,
                 )
-                raise self.ConnectionFailedError
+                raise ConnectionFailedError
 
         # TODO create this as another function NOT part of connect!
         # just using request to parse the data
@@ -218,8 +150,8 @@ class Smile:
                         version = status.find(".//system/version").text
                         model = status.find(".//system/product").text
                         self.smile_hostname = status.find(".//network/hostname").text
-                    except self.InvalidXMLError:
-                        raise self.ConnectionFailedError
+                    except InvalidXMLError:
+                        raise ConnectionFailedError
 
                 # Stretch:
                 elif network is not None:
@@ -229,11 +161,11 @@ class Smile:
                         model = system.find(".//gateway/product").text
                         self.smile_hostname = system.find(".//gateway/hostname").text
                         self.gateway_id = network.attrib["id"]
-                    except self.InvalidXMLError:
-                        raise self.ConnectionFailedError
+                    except InvalidXMLError:
+                        raise ConnectionFailedError
                 else:
                     _LOGGER.error("Connected but no gateway device information found")
-                    raise self.ConnectionFailedError
+                    raise ConnectionFailedError
 
         if not self._smile_legacy:
             model = result.find(".//gateway/vendor_model").text
@@ -241,7 +173,7 @@ class Smile:
 
         if model is None or version is None:
             _LOGGER.error("Unable to find model or version information")
-            raise self.UnsupportedDeviceError
+            raise UnsupportedDeviceError
 
         ver = semver.VersionInfo.parse(version)
         target_smile = f"{model}_v{ver.major}"
@@ -256,7 +188,7 @@ class Smile:
                           ',
                 target_smile,
             )
-            raise self.UnsupportedDeviceError
+            raise UnsupportedDeviceError
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
@@ -268,9 +200,9 @@ class Smile:
         # Update all endpoints on first connect
         try:
             await self.full_update_device()
-        except self.XMLDataMissingError:
+        except XMLDataMissingError:
             _LOGGER.error("Critical information not returned from device")
-            raise self.DeviceSetupError
+            raise DeviceSetupError
 
         return True
 
@@ -309,12 +241,12 @@ class Smile:
                 if method == "delete":
                     resp = await self.websession.delete(url, auth=self._auth)
             if resp.status == 401:
-                raise self.InvalidAuthentication
+                raise InvalidAuthentication
 
         except asyncio.TimeoutError:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
-                raise self.DeviceTimeoutError
+                raise DeviceTimeoutError
             return await self.request(command, retry - 1)
 
         # Command accepted gives empty body with status 202
@@ -327,14 +259,14 @@ class Smile:
         result = await resp.text()
         if not result or "<error>" in result:
             _LOGGER.error("Smile response empty or error in %s", result)
-            raise self.ResponseError
+            raise ResponseError
 
         try:
             # Encode to ensure utf8 parsing
-            xml = etree.XML(self.escape_illegal_xml_characters(result).encode())
+            xml = etree.XML(escape_illegal_xml_characters(result).encode())
         except etree.XMLSyntaxError:
             _LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
-            raise self.InvalidXMLError
+            raise InvalidXMLError
 
         return xml
 
@@ -385,17 +317,17 @@ class Smile:
             self.smile_type == "power" and not self._smile_legacy
         ):
             _LOGGER.error("Appliance data missing")
-            raise self.XMLDataMissingError
+            raise XMLDataMissingError
 
         await self.update_domain_objects()
         if self._domain_objects is None:
             _LOGGER.error("Domain_objects data missing")
-            raise self.XMLDataMissingError
+            raise XMLDataMissingError
 
         await self.update_locations()
         if self._locations is None:
             _LOGGER.error("Locataion data missing")
-            raise self.XMLDataMissingError
+            raise XMLDataMissingError
 
     @staticmethod
     def _types_finder(data):
@@ -873,7 +805,7 @@ class Smile:
                     ):
                         self.active_device_present = True
 
-                    data[name] = self._format_measure(measure)
+                    data[name] = format_measure(measure)
 
                 i_locator = (
                     f'.//logs/interval_log[type="{measurement}"]/period/measurement'
@@ -882,7 +814,7 @@ class Smile:
                     name = f"{name}_interval"
                     measure = appliance.find(i_locator).text
 
-                    data[name] = self._format_measure(measure)
+                    data[name] = format_measure(measure)
 
                 c_locator = (
                     f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
@@ -891,29 +823,9 @@ class Smile:
                     name = f"{name}_cumulative"
                     measure = appliance.find(c_locator).text
 
-                    data[name] = self._format_measure(measure)
+                    data[name] = format_measure(measure)
 
         return data
-
-    @staticmethod
-    def _format_measure(measure):
-        """Format measure to correct type."""
-        try:
-            measure = int(measure)
-        except ValueError:
-            try:
-                if float(measure) < 10:
-                    measure = float(f"{round(float(measure), 2):.2f}")
-                elif float(measure) >= 10 and float(measure) < 100:
-                    measure = float(f"{round(float(measure), 1):.1f}")
-                elif float(measure) >= 100:
-                    measure = int(round(float(measure)))
-            except ValueError:
-                if measure == "on":
-                    measure = True
-                elif measure == "off":
-                    measure = False
-        return measure
 
     def get_power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
@@ -959,7 +871,7 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = self._format_measure(val)
+                    f_val = format_measure(val)
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
@@ -1054,7 +966,7 @@ class Smile:
             if name is not None:
                 schemas[name] = active
 
-            available, selected = self.determine_selected(available, selected, schemas)
+            available, selected = determine_selected(available, selected, schemas)
 
             return available, selected, schedule_temperature
 
@@ -1112,29 +1024,12 @@ class Smile:
                     result_1 == dt.datetime.now().weekday()
                     or result_2 == dt.datetime.now().weekday()
                 ):
-                    if self.in_between(now, start, end):
+                    if in_between(now, start, end):
                         schedule_temperature = temp
 
-        available, selected = self.determine_selected(available, selected, schemas)
+        available, selected = determine_selected(available, selected, schemas)
 
         return available, selected, schedule_temperature
-
-    @staticmethod
-    def determine_selected(available, selected, schemas):
-        """Determine selected schema from available schemas."""
-        for schema_a, schema_b in schemas.items():
-            available.append(schema_a)
-            if schema_b:
-                selected = schema_a
-
-        return available, selected
-
-    @staticmethod
-    def in_between(now, start, end):
-        """Determine timing for schedules."""
-        if start <= end:
-            return start <= now < end
-        return start <= now or now < end
 
     def get_last_active_schema(self, loc_id):
         """Determine the last active schema."""
@@ -1195,7 +1090,7 @@ class Smile:
             f'[type="{measurement}"]/period/measurement'
         )
         if search.find(locator) is not None:
-            val = self._format_measure(search.find(locator).text)
+            val = format_measure(search.find(locator).text)
             return val
 
         return None
@@ -1311,11 +1206,6 @@ class Smile:
         await self.request(uri, method="put", data=data)
         return True
 
-    @staticmethod
-    def escape_illegal_xml_characters(xmldata):
-        """Replace illegal &-characters."""
-        return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
-
     # LEGACY Anna functions
 
     def __get_presets_legacy(self):
@@ -1383,33 +1273,3 @@ class Smile:
 
         await self.request(uri, method="delete")
         return True
-
-    class PlugwiseError(Exception):
-        """Plugwise exceptions class."""
-
-    class ConnectionFailedError(PlugwiseError):
-        """Raised when unable to connect."""
-
-    class InvalidAuthentication(PlugwiseError):
-        """Raised when unable to authenticate."""
-
-    class UnsupportedDeviceError(PlugwiseError):
-        """Raised when device is not supported."""
-
-    class DeviceSetupError(PlugwiseError):
-        """Raised when device is missing critical setup data."""
-
-    class DeviceTimeoutError(PlugwiseError):
-        """Raised when device is not supported."""
-
-    class ErrorSendingCommandError(PlugwiseError):
-        """Raised when device is not accepting the command."""
-
-    class ResponseError(PlugwiseError):
-        """Raised when empty or error in response returned."""
-
-    class InvalidXMLError(PlugwiseError):
-        """Raised when response holds incomplete or invalid XML data."""
-
-    class XMLDataMissingError(PlugwiseError):
-        """Raised when xml data is empty."""

@@ -15,6 +15,14 @@ import pytest
 
 from plugwise.smile import Smile
 
+from plugwise.exceptions import (
+    ConnectionFailedError,
+    ErrorSendingCommandError,
+    DeviceTimeoutError,
+    ResponseError,
+    InvalidXMLError,
+)
+
 pp = PrettyPrinter(indent=8)
 
 _LOGGER = logging.getLogger(__name__)
@@ -201,7 +209,7 @@ class TestPlugwise:
             assert connection_state
             assert smile.smile_type is not None
             return server, smile, client
-        except (Smile.DeviceTimeoutError, Smile.InvalidXMLError) as e:
+        except (DeviceTimeoutError, InvalidXMLError) as e:
             await self.disconnect(server, client)
             raise e
 
@@ -217,7 +225,7 @@ class TestPlugwise:
             await self.connect(timeout=True)
             _LOGGER.error(" - timeout not handled")
             raise self.ConnectError
-        except (Smile.DeviceTimeoutError, Smile.ResponseError):
+        except (DeviceTimeoutError, ResponseError):
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
@@ -225,7 +233,7 @@ class TestPlugwise:
             await self.connect(broken=True)
             _LOGGER.error(" - broken information not handled")
             raise self.ConnectError
-        except Smile.InvalidXMLError:
+        except InvalidXMLError:
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
@@ -333,7 +341,7 @@ class TestPlugwise:
                     relay_change = await smile.set_relay_state(dev_id, None, new_state)
                     assert relay_change
                     _LOGGER.info("  + worked as intended")
-                except (Smile.ErrorSendingCommandError, Smile.ResponseError):
+                except (ErrorSendingCommandError, ResponseError):
                     if unhappy:
                         _LOGGER.info("  + failed as expected")
                     else:
@@ -353,7 +361,7 @@ class TestPlugwise:
                 temp_change = await smile.set_temperature(loc_id, new_temp)
                 assert temp_change
                 _LOGGER.info("  + worked as intended")
-            except (Smile.ErrorSendingCommandError, Smile.ResponseError):
+            except (ErrorSendingCommandError, ResponseError):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
@@ -372,7 +380,7 @@ class TestPlugwise:
                 preset_change = await smile.set_preset(loc_id, new_preset)
                 assert preset_change == assert_state
                 _LOGGER.info("  + worked as intended")
-            except (Smile.ErrorSendingCommandError, Smile.ResponseError):
+            except (ErrorSendingCommandError, ResponseError):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
@@ -395,7 +403,7 @@ class TestPlugwise:
                     )
                     assert schema_change == assert_state
                     _LOGGER.info("  + failed as intended")
-                except (Smile.ErrorSendingCommandError, Smile.ResponseError):
+                except (ErrorSendingCommandError, ResponseError):
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
                     else:
@@ -1292,7 +1300,7 @@ class TestPlugwise:
         try:
             server, smile, client = await self.connect_wrapper()
             assert False
-        except Smile.ConnectionFailedError:
+        except ConnectionFailedError:
             assert True
 
     class PlugwiseTestError(Exception):
