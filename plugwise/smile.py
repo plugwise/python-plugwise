@@ -32,6 +32,18 @@ from .constants import (
     SYSTEM,
 )
 
+from .exceptions import (
+    ConnectionFailedError,
+    InvalidAuthentication,
+    UnsupportedDeviceError,
+    DeviceSetupError,
+    DeviceTimeoutError,
+    ErrorSendingCommandError,
+    ResponseError,
+    InvalidXMLError,
+    XMLDataMissingError,
+)
+
 from .util import (
     escape_illegal_xml_characters,
     format_measure,
@@ -1262,33 +1274,3 @@ class Smile:
 
         await self.request(uri, method="delete")
         return True
-
-    class PlugwiseError(Exception):
-        """Plugwise exceptions class."""
-
-    class ConnectionFailedError(PlugwiseError):
-        """Raised when unable to connect."""
-
-    class InvalidAuthentication(PlugwiseError):
-        """Raised when unable to authenticate."""
-
-    class UnsupportedDeviceError(PlugwiseError):
-        """Raised when device is not supported."""
-
-    class DeviceSetupError(PlugwiseError):
-        """Raised when device is missing critical setup data."""
-
-    class DeviceTimeoutError(PlugwiseError):
-        """Raised when device is not supported."""
-
-    class ErrorSendingCommandError(PlugwiseError):
-        """Raised when device is not accepting the command."""
-
-    class ResponseError(PlugwiseError):
-        """Raised when empty or error in response returned."""
-
-    class InvalidXMLError(PlugwiseError):
-        """Raised when response holds incomplete or invalid XML data."""
-
-    class XMLDataMissingError(PlugwiseError):
-        """Raised when xml data is empty."""
