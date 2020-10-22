@@ -15,7 +15,7 @@ import pytz
 # Version detection
 import semver
 
-from .constants import (
+from plugwise.constants import (
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -32,7 +32,7 @@ from .constants import (
     SYSTEM,
 )
 
-from .exceptions import (
+from plugwise.exceptions import (
     ConnectionFailedError,
     InvalidAuthentication,
     UnsupportedDeviceError,
@@ -43,7 +43,7 @@ from .exceptions import (
     XMLDataMissingError,
 )
 
-from .util import (
+from plugwise.util import (
     escape_illegal_xml_characters,
     format_measure,
     determine_selected,
