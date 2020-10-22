@@ -38,7 +38,6 @@ from .exceptions import (
     UnsupportedDeviceError,
     DeviceSetupError,
     DeviceTimeoutError,
-    ErrorSendingCommandError,
     ResponseError,
     InvalidXMLError,
     XMLDataMissingError,
@@ -124,7 +123,7 @@ class Smile:
                               we got %s",
                     result,
                 )
-                raise self.ConnectionFailedError
+                raise ConnectionFailedError
 
         # TODO create this as another function NOT part of connect!
         # just using request to parse the data
@@ -151,8 +150,8 @@ class Smile:
                         version = status.find(".//system/version").text
                         model = status.find(".//system/product").text
                         self.smile_hostname = status.find(".//network/hostname").text
-                    except self.InvalidXMLError:
-                        raise self.ConnectionFailedError
+                    except InvalidXMLError:
+                        raise ConnectionFailedError
 
                 # Stretch:
                 elif network is not None:
@@ -162,11 +161,11 @@ class Smile:
                         model = system.find(".//gateway/product").text
                         self.smile_hostname = system.find(".//gateway/hostname").text
                         self.gateway_id = network.attrib["id"]
-                    except self.InvalidXMLError:
-                        raise self.ConnectionFailedError
+                    except InvalidXMLError:
+                        raise ConnectionFailedError
                 else:
                     _LOGGER.error("Connected but no gateway device information found")
-                    raise self.ConnectionFailedError
+                    raise ConnectionFailedError
 
         if not self._smile_legacy:
             model = result.find(".//gateway/vendor_model").text
@@ -174,7 +173,7 @@ class Smile:
 
         if model is None or version is None:
             _LOGGER.error("Unable to find model or version information")
-            raise self.UnsupportedDeviceError
+            raise UnsupportedDeviceError
 
         ver = semver.VersionInfo.parse(version)
         target_smile = f"{model}_v{ver.major}"
@@ -189,7 +188,7 @@ class Smile:
                           ',
                 target_smile,
             )
-            raise self.UnsupportedDeviceError
+            raise UnsupportedDeviceError
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
@@ -201,9 +200,9 @@ class Smile:
         # Update all endpoints on first connect
         try:
             await self.full_update_device()
-        except self.XMLDataMissingError:
+        except XMLDataMissingError:
             _LOGGER.error("Critical information not returned from device")
-            raise self.DeviceSetupError
+            raise DeviceSetupError
 
         return True
 
@@ -242,12 +241,12 @@ class Smile:
                 if method == "delete":
                     resp = await self.websession.delete(url, auth=self._auth)
             if resp.status == 401:
-                raise self.InvalidAuthentication
+                raise InvalidAuthentication
 
         except asyncio.TimeoutError:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
-                raise self.DeviceTimeoutError
+                raise DeviceTimeoutError
             return await self.request(command, retry - 1)
 
         # Command accepted gives empty body with status 202
@@ -260,14 +259,14 @@ class Smile:
         result = await resp.text()
         if not result or "<error>" in result:
             _LOGGER.error("Smile response empty or error in %s", result)
-            raise self.ResponseError
+            raise ResponseError
 
         try:
             # Encode to ensure utf8 parsing
             xml = etree.XML(escape_illegal_xml_characters(result).encode())
         except etree.XMLSyntaxError:
             _LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
-            raise self.InvalidXMLError
+            raise InvalidXMLError
 
         return xml
 
@@ -318,17 +317,17 @@ class Smile:
             self.smile_type == "power" and not self._smile_legacy
         ):
             _LOGGER.error("Appliance data missing")
-            raise self.XMLDataMissingError
+            raise XMLDataMissingError
 
         await self.update_domain_objects()
         if self._domain_objects is None:
             _LOGGER.error("Domain_objects data missing")
-            raise self.XMLDataMissingError
+            raise XMLDataMissingError
 
         await self.update_locations()
         if self._locations is None:
             _LOGGER.error("Locataion data missing")
-            raise self.XMLDataMissingError
+            raise XMLDataMissingError
 
     @staticmethod
     def _types_finder(data):
