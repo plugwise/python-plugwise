@@ -1,7 +1,7 @@
 import codecs
 import os.path
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def read(rel_path):
@@ -34,7 +34,7 @@ setup(
     author="Plugwise-team",
     author_email="info@compa.nl",
     license="MIT",
-    packages=["plugwise"],
+    packages=find_packages(),
     install_requires=[
         "aiohttp",
         "async_timeout<4.0",

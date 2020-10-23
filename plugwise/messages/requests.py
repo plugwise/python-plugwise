@@ -12,9 +12,10 @@ from plugwise.util import (
     DateTime,
     Int,
     LogAddr,
-    String,
     RealClockDate,
     RealClockTime,
+    SInt,
+    String,
     Time,
 )
 
