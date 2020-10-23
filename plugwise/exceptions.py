@@ -1,12 +1,13 @@
 # Copyright (C) 2011 Sven Petai <hadara@bsd.ee>
 # Use of this source code is governed by the MIT license found in the LICENSE file.
 
-### Stick exceptions ###
 
 class PlugwiseException(Exception):
     """Base error class for this Plugwise library"""
 
     pass
+
+### Stick exceptions ###
 
 
 class PortError(PlugwiseException):
@@ -48,61 +49,55 @@ class TimeoutException(PlugwiseException):
 ### Smile exceptions ###
 
 
-class PlugwiseError(Exception):
-    """Plugwise exceptions class."""
-
-    pass
-
-
-class ConnectionFailedError(PlugwiseError):
+class ConnectionFailedError(PlugwiseException):
     """Raised when unable to connect."""
 
     pass
 
 
-class InvalidAuthentication(PlugwiseError):
+class InvalidAuthentication(PlugwiseException):
     """Raised when unable to authenticate."""
 
     pass
 
 
-class UnsupportedDeviceError(PlugwiseError):
+class UnsupportedDeviceError(PlugwiseException):
     """Raised when device is not supported."""
 
     pass
 
 
-class DeviceSetupError(PlugwiseError):
+class DeviceSetupError(PlugwiseException):
     """Raised when device is missing critical setup data."""
 
     pass
 
 
-class DeviceTimeoutError(PlugwiseError):
+class DeviceTimeoutError(PlugwiseException):
     """Raised when device is not supported."""
 
     pass
 
 
-class ErrorSendingCommandError(PlugwiseError):
+class ErrorSendingCommandError(PlugwiseException):
     """Raised when device is not accepting the command."""
 
     pass
 
 
-class ResponseError(PlugwiseError):
+class ResponseError(PlugwiseException):
     """Raised when empty or error in response returned."""
 
     pass
 
 
-class InvalidXMLError(PlugwiseError):
+class InvalidXMLError(PlugwiseException):
     """Raised when response holds incomplete or invalid XML data."""
 
     pass
 
 
-class XMLDataMissingError(PlugwiseError):
+class XMLDataMissingError(PlugwiseException):
     """Raised when xml data is empty."""
 
     pass
