@@ -1,3 +1,5 @@
+""" Plugwise Stick and Smile constants."""
+
 ### Stick constants ###
 
 UTF8_DECODE = "utf-8"
@@ -327,40 +329,14 @@ DEVICE_MEASUREMENTS = {
 }
 
 SMILES = {
-    "smile_open_therm_v3": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_open_therm_v2": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_thermo_v4": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v3": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v1": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-        "legacy": True,
-    },
-    "smile_v4": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v3": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v2": {
-        "type": "power",
-        "friendly_name": "P1",
-        "legacy": True,
-    },
+    "smile_open_therm_v3": {"type": "thermostat", "friendly_name": "Adam",},
+    "smile_open_therm_v2": {"type": "thermostat", "friendly_name": "Adam",},
+    "smile_thermo_v4": {"type": "thermostat", "friendly_name": "Anna",},
+    "smile_thermo_v3": {"type": "thermostat", "friendly_name": "Anna",},
+    "smile_thermo_v1": {"type": "thermostat", "friendly_name": "Anna", "legacy": True,},
+    "smile_v4": {"type": "power", "friendly_name": "P1",},
+    "smile_v3": {"type": "power", "friendly_name": "P1",},
+    "smile_v2": {"type": "power", "friendly_name": "P1", "legacy": True,},
     "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
     "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
 }

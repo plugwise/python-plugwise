@@ -65,9 +65,11 @@ def int_to_uint(val, octals):
         val = val + (1 << bits)
     return val
 
+
 def escape_illegal_xml_characters(xmldata):
     """Replace illegal &-characters."""
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
+
 
 def format_measure(measure):
     """Format measure to correct type."""
@@ -88,6 +90,7 @@ def format_measure(measure):
                 measure = False
     return measure
 
+
 def determine_selected(available, selected, schemas):
     """Determine selected schema from available schemas."""
     for schema_a, schema_b in schemas.items():
@@ -95,6 +98,7 @@ def determine_selected(available, selected, schemas):
         if schema_b:
             selected = schema_a
     return available, selected
+
 
 def in_between(now, start, end):
     """Determine timing for schedules."""
@@ -267,9 +271,7 @@ class RealClockTime(CompositeType):
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
         self.value = datetime.time(
-            int(self.hour.value),
-            int(self.minute.value),
-            int(self.second.value),
+            int(self.hour.value), int(self.minute.value), int(self.second.value),
         )
 
 
