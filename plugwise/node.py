@@ -3,7 +3,9 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 General node object to control associated plugwise nodes like: Circle+, Circle, Scan, Stealth
 """
+import logging
 from datetime import datetime
+
 from plugwise.constants import (
     HA_SWITCH,
     HW_MODELS,
@@ -27,6 +29,8 @@ from plugwise.messages.requests import (
 )
 from plugwise.util import validate_mac
 
+_LOGGER = logging.getLogger(__name__)
+
 
 class PlugwiseNode(object):
     """ Base class for a Plugwise node """
@@ -34,7 +38,7 @@ class PlugwiseNode(object):
     def __init__(self, mac, address, stick):
         mac = mac.upper()
         if validate_mac(mac) == False:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "MAC address is in unexpected format: %s",
                 str(mac),
             )
@@ -103,7 +107,7 @@ class PlugwiseNode(object):
         if state == True:
             if self._available == False:
                 self._available = True
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Mark node %s available",
                     self.get_mac(),
                 )
@@ -113,7 +117,7 @@ class PlugwiseNode(object):
         else:
             if self._available == True:
                 self._available = False
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Mark node %s unavailable",
                     self.get_mac(),
                 )
@@ -189,7 +193,7 @@ class PlugwiseNode(object):
         assert isinstance(message, PlugwiseMessage)
         if message.mac == self.mac:
             if message.timestamp != None:
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Last update %s of node %s, last message %s",
                     str(self.last_update),
                     self.get_mac(),
@@ -206,7 +210,7 @@ class PlugwiseNode(object):
                 self._on_message(message)
                 self.set_available(True)
         else:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Skip message, mac of node (%s) != mac at message (%s)",
                 message.mac.decode(UTF8_DECODE),
                 self.get_mac(),
@@ -236,7 +240,7 @@ class PlugwiseNode(object):
                 try:
                     callback(None)
                 except Exception as e:
-                    self.stick.logger.error(
+                    _LOGGER.error(
                         "Error while executing all callback : %s",
                         e,
                     )
@@ -256,7 +260,7 @@ class PlugwiseNode(object):
 
     def _process_info_response(self, message):
         """ Process info response message"""
-        self.stick.logger.debug("Response info message for node %s", self.get_mac())
+        _LOGGER.debug("Response info message for node %s", self.get_mac())
         self.set_available(True)
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
@@ -273,15 +277,15 @@ class PlugwiseNode(object):
         if self._last_log_address != message.last_logaddr.value:
             self._last_log_address = message.last_logaddr.value
             self._last_log_collected = False
-        self.stick.logger.debug("Node type        = %s", self.get_node_type())
+        _LOGGER.debug("Node type        = %s", self.get_node_type())
         if not self.is_sed:
-            self.stick.logger.debug("Relay state      = %s", str(self._relay_state))
-        self.stick.logger.debug("Hardware version = %s", str(self._hardware_version))
-        self.stick.logger.debug("Firmware version = %s", str(self._firmware_version))
+            _LOGGER.debug("Relay state      = %s", str(self._relay_state))
+        _LOGGER.debug("Hardware version = %s", str(self._hardware_version))
+        _LOGGER.debug("Firmware version = %s", str(self._firmware_version))
 
     def _process_features_response(self, message):
         """ Process features message """
-        self.stick.logger.info(
+        _LOGGER.info(
             "Node %s supports features %s", self.get_mac(), str(message.features.value)
         )
         self._features = message.features.value

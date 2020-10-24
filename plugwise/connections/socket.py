@@ -5,10 +5,13 @@ Socket connection
 """
 import logging
 import socket
+
 from plugwise.constants import SLEEP_TIME
 from plugwise.connections.connection import StickConnection
 from plugwise.exceptions import PortError
 from plugwise.message import PlugwiseMessage
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class SocketConnection(StickConnection):
@@ -26,7 +29,7 @@ class SocketConnection(StickConnection):
 
     def _open_connection(self):
         """Open socket"""
-        self.stick.logger.debug(
+        _LOGGER.debug(
             "Open socket to host '%s' at port %s",
             self._socket_host,
             str(self._socket_port),
@@ -35,7 +38,7 @@ class SocketConnection(StickConnection):
             self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self._socket.connect(self._socket_address)
         except Exception as err:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Failed to connect to host %s at port %s, %s",
                 self._socket_host,
                 str(self._socket_port),
@@ -46,7 +49,7 @@ class SocketConnection(StickConnection):
             self._reader_start("socket_reader_thread")
             self._writer_start("socket_writer_thread")
             self._is_connected = True
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Successfully connected to host '%s' at port %s",
                 self._socket_host,
                 str(self._socket_port),
@@ -57,7 +60,7 @@ class SocketConnection(StickConnection):
         try:
             self._socket.close()
         except Exception as err:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Failed to close socket to host %s at port %s, %s",
                 self._socket_host,
                 str(self._socket_port),
@@ -71,7 +74,7 @@ class SocketConnection(StickConnection):
             try:
                 socket_data = self._socket.recv(9999)
             except Exception as err:
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Error while reading data from host %s at port %s : %s",
                     self._socket_host,
                     str(self._socket_port),
@@ -88,6 +91,6 @@ class SocketConnection(StickConnection):
         try:
             self._socket.send(data)
         except Exception as err:
-            self.stick.logger.debug("Error while writing data to socket port : %s", err)
+            _LOGGER.debug("Error while writing data to socket port : %s", err)
             self._is_connected = False
             raise PortError(err)

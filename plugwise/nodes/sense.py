@@ -3,6 +3,8 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Plugwise Sense node object
 """
+import logging
+
 from plugwise.constants import (
     HA_BINARY_SENSOR,
     HA_SENSOR,
@@ -19,6 +21,8 @@ from plugwise.constants import (
 from plugwise.nodes.sed import NodeSED
 from plugwise.message import PlugwiseMessage
 from plugwise.messages.responses import SenseReportResponse
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseSense(NodeSED):
@@ -52,7 +56,7 @@ class PlugwiseSense(NodeSED):
         if isinstance(message, SenseReportResponse):
             self._process_sense_report(message)
         else:
-            self.stick.logger.info(
+            _LOGGER.info(
                 "Unsupported message %s received from %s",
                 message.__class__.__name__,
                 self.get_mac(),
@@ -67,7 +71,7 @@ class PlugwiseSense(NodeSED):
             )
             if self._temperature != new_temperature:
                 self._temperature = new_temperature
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Sense report received from %s with new temperature level of %s",
                     self.get_mac(),
                     str(self._temperature),
@@ -80,7 +84,7 @@ class PlugwiseSense(NodeSED):
             )
             if self._humidity != new_humidity:
                 self._humidity = new_humidity
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Sense report received from %s with new humidity level of %s",
                     self.get_mac(),
                     str(self._humidity),

@@ -3,6 +3,8 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Plugwise switch node object
 """
+import logging
+
 from plugwise.constants import (
     HA_BINARY_SENSOR,
     HA_SENSOR,
@@ -10,6 +12,8 @@ from plugwise.constants import (
 )
 from plugwise.nodes.sed import NodeSED
 from plugwise.messages.responses import NodeSwitchGroupResponse
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseSwitch(NodeSED):
@@ -29,7 +33,7 @@ class PlugwiseSwitch(NodeSED):
         Process received message
         """
         if isinstance(message, NodeSwitchGroupResponse):
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Switch group request %s received from %s for group id %s",
                 str(message.power_state),
                 self.get_mac(),
@@ -51,7 +55,7 @@ class PlugwiseSwitch(NodeSED):
                 self._switch_state = True
                 self.do_callback(SENSOR_SWITCH["id"])
         else:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Unknown power_state (%s) received from %s",
                 str(message.power_state),
                 self.get_mac(),
