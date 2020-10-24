@@ -8,6 +8,7 @@ TODO:
 - Set available state after 2 missed awake messages
 
 """
+import logging
 
 from plugwise.constants import (
     ACK_SLEEP_SET,
@@ -35,6 +36,8 @@ from plugwise.messages.requests import (
     NodePingRequest,
     NodeSleepConfigRequest,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class NodeSED(PlugwiseNode):
@@ -69,7 +72,7 @@ class NodeSED(PlugwiseNode):
 
     def _process_awake_response(self, message):
         """" Process awake message"""
-        self.stick.logger.debug(
+        _LOGGER.debug(
             "Awake message type '%s' received from %s",
             str(message.awake_type.value),
             self.get_mac(),
@@ -82,7 +85,7 @@ class NodeSED(PlugwiseNode):
         ):
             for request in self._SED_requests:
                 (request_message, callback) = self._SED_requests[request]
-                self.stick.logger.info(
+                _LOGGER.info(
                     "Send queued %s message to SED node %s",
                     request_message.__class__.__name__,
                     self.get_mac(),
@@ -91,11 +94,11 @@ class NodeSED(PlugwiseNode):
             self._SED_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Node %s awake for state change", self.get_mac()
                 )
             else:
-                self.stick.logger.info(
+                _LOGGER.info(
                     "Unknown awake message type (%s) received for node %s",
                     str(message.awake_type.value),
                     self.get_mac(),
@@ -127,7 +130,7 @@ class NodeSED(PlugwiseNode):
                 callback,
             )
         else:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Drop ping request for SED %s because no callback is registered",
                 self.get_mac(),
             )
@@ -155,7 +158,7 @@ class NodeSED(PlugwiseNode):
         )
         self._queue_request(message, self._wake_up_interval_accepted)
         self._new_maintenance_interval = maintenance_interval
-        self.stick.logger.info(
+        _LOGGER.info(
             "Queue %s message to be send at next awake of SED node %s",
             message.__class__.__name__,
             self.get_mac(),

@@ -3,6 +3,8 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Plugwise Scan node object
 """
+import logging
+
 from plugwise.constants import (
     ACK_SCAN_PARAMETERS_SET,
     HA_BINARY_SENSOR,
@@ -27,6 +29,8 @@ from plugwise.messages.requests import (
     ScanConfigureRequest,
     ScanLightCalibrateRequest,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseScan(NodeSED):
@@ -59,7 +63,7 @@ class PlugwiseScan(NodeSED):
         Process received message
         """
         if isinstance(message, NodeSwitchGroupResponse):
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Switch group %s to state %s received from %s",
                 str(message.group.value),
                 str(message.power_state.value),
@@ -69,7 +73,7 @@ class PlugwiseScan(NodeSED):
         elif isinstance(message, NodeAckResponse):
             self._process_ack_message(message)
         else:
-            self.stick.logger.info(
+            _LOGGER.info(
                 "Unsupported message %s received from %s",
                 message.__class__.__name__,
                 self.get_mac(),
@@ -82,7 +86,7 @@ class PlugwiseScan(NodeSED):
             self._daylight_mode = self._new_daylight_mode
             self._sensitivity = self._new_sensitivity
         else:
-            self.stick.logger.info(
+            _LOGGER.info(
                 "Unsupported ack message %s received for %s",
                 str(message.ack_id),
                 self.get_mac(),
@@ -101,7 +105,7 @@ class PlugwiseScan(NodeSED):
                 self._motion_state = True
                 self.do_callback(SENSOR_MOTION["id"])
         else:
-            self.stick.logger.warning(
+            _LOGGER.warning(
                 "Unknown power_state (%s) received from %s",
                 str(message.power_state.value),
                 self.get_mac(),

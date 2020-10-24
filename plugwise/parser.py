@@ -1,6 +1,7 @@
 # Use of this source code is governed by the MIT license found in the LICENSE file.
 
 import logging
+
 from plugwise.constants import (
     MESSAGE_FOOTER,
     MESSAGE_HEADER,
@@ -31,6 +32,8 @@ from plugwise.messages.responses import (
     StickInitResponse,  # 0011
 )
 
+_LOGGER = logging.getLogger(__name__)
+
 
 class PlugwiseParser(object):
     """
@@ -47,7 +50,7 @@ class PlugwiseParser(object):
         """
         Add new incoming data to buffer and try to process
         """
-        self.stick.logger.debug("Feed data: %s", str(data))
+        _LOGGER.debug("Feed data: %s", str(data))
         self._buffer += data
         if len(self._buffer) >= 8:
             if not self._parsing:
@@ -60,7 +63,7 @@ class PlugwiseParser(object):
         try:
             self.stick.new_message(message)
         except Exception as e:
-            self.stick.logger.error(
+            _LOGGER.error(
                 "Error while processing %s message : %s",
                 self._message.__class__.__name__,
                 e,
@@ -70,36 +73,36 @@ class PlugwiseParser(object):
         """
         Process next set of packet data
         """
-        self.stick.logger.debug("Parse data: %s ", str(self._buffer))
+        _LOGGER.debug("Parse data: %s ", str(self._buffer))
         if self._parsing == False:
             self._parsing = True
 
             # Lookup header of message in buffer
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Lookup message header (%s) in (%s)",
                 str(MESSAGE_HEADER),
                 str(self._buffer),
             )
             header_index = self._buffer.find(MESSAGE_HEADER)
             if header_index == -1:
-                self.stick.logger.debug("No valid message header found yet")
+                _LOGGER.debug("No valid message header found yet")
             else:
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Valid message header found at index %s", str(header_index)
                 )
                 self._buffer = self._buffer[header_index:]
 
                 # Header available, lookup footer of message in buffer
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Lookup message footer (%s) in (%s)",
                     str(MESSAGE_FOOTER),
                     str(self._buffer),
                 )
                 footer_index = self._buffer.find(MESSAGE_FOOTER)
                 if footer_index == -1:
-                    self.stick.logger.debug("No valid message footer found yet")
+                    _LOGGER.debug("No valid message footer found yet")
                 else:
-                    self.stick.logger.debug(
+                    _LOGGER.debug(
                         "Valid message footer found at index %s", str(footer_index)
                     )
                     seq_id = self._buffer[8:12]
@@ -121,7 +124,7 @@ class PlugwiseParser(object):
                                 # Large ack message with a MAC
                                 self._message = NodeAckLargeResponse()
                             else:
-                                self.stick.logger.error(
+                                _LOGGER.error(
                                     "Skip unknown ACK message size of %s : %s",
                                     str(footer_index + 2),
                                     str(self._buffer[: footer_index + 2]),
@@ -161,36 +164,36 @@ class PlugwiseParser(object):
                         elif message_id == b"0105":
                             self._message = SenseReportResponse()
                         elif footer_index < 28:
-                            self.stick.logger.error(
+                            _LOGGER.error(
                                 "Received message %s to small, skip parsing",
                                 self._buffer[: footer_index + 2],
                             )
                         else:
                             # Lookup expected message based on request
-                            self.stick.logger.info(
+                            _LOGGER.info(
                                 "Unknown message received, id=%s, data=%s",
                                 str(message_id),
                                 str(self._buffer[: footer_index + 2]),
                             )
                             if message_id != b"0000":
-                                self.stick.logger.debug(
+                                _LOGGER.debug(
                                     "Message id %s",
                                     str(message_id),
                                 )
                             if seq_id in self.stick.expected_responses:
                                 self._message = self.stick.expected_responses[seq_id][0]
-                                self.stick.logger.debug(
+                                _LOGGER.debug(
                                     "Expected %s for message id %s",
                                     self._message.__class__.__name__,
                                     str(message_id),
                                 )
                             else:
-                                self.stick.logger.debug(
+                                _LOGGER.debug(
                                     "No expected message type found for sequence id %s in %s",
                                     str(seq_id),
                                     self.stick.expected_responses.keys(),
                                 )
-                                self.stick.logger.debug(
+                                _LOGGER.debug(
                                     "Message %s",
                                     str(self._buffer[: footer_index + 2]),
                                 )
@@ -204,17 +207,17 @@ class PlugwiseParser(object):
                                 )
                                 valid_message = True
                             except Exception as e:
-                                self.stick.logger.error(
+                                _LOGGER.error(
                                     "Error while decoding received %s message (%s)",
                                     self._message.__class__.__name__,
                                     str(self._buffer[: footer_index + 2]),
                                 )
-                                self.stick.logger.error(e)
+                                _LOGGER.error(e)
                             # Submit message
                             if valid_message:
                                 self.next_message(self._message)
                         else:
-                            self.stick.logger.error(
+                            _LOGGER.error(
                                 "Skip message, received %s bytes of expected %s bytes for message %s",
                                 len(self._buffer[: footer_index + 2]),
                                 len(self._message),
@@ -227,10 +230,10 @@ class PlugwiseParser(object):
                         self.reset_parser(self._buffer[6:])
             self._parsing = False
         else:
-            self.stick.logger.debug("Skip parsing session")
+            _LOGGER.debug("Skip parsing session")
 
     def reset_parser(self, new_buffer=bytes([])):
-        self.stick.logger.debug("Reset parser : %s", new_buffer)
+        _LOGGER.debug("Reset parser : %s", new_buffer)
         if new_buffer == b"\x83":
             # Skip additional byte sometimes appended after footer
             self._buffer = bytes([])

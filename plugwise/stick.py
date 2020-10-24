@@ -8,7 +8,9 @@ import time
 import serial
 import sys
 import threading
+import queue
 from datetime import datetime, timedelta
+
 from plugwise.constants import (
     ACCEPT_JOIN_REQUESTS,
     ACK_CLOCK_SET,
@@ -98,7 +100,8 @@ from plugwise.nodes.sense import PlugwiseSense
 from plugwise.nodes.stealth import PlugwiseStealth
 from plugwise.nodes.switch import PlugwiseSwitch
 from plugwise.util import inc_seq_id, validate_mac
-import queue
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class stick(object):
@@ -107,7 +110,6 @@ class stick(object):
     """
 
     def __init__(self, port, callback=None, print_progress=False):
-        self.logger = logging.getLogger("python-plugwise")
         self._mac_stick = None
         self.port = port
         self.network_online = False
@@ -144,7 +146,7 @@ class stick(object):
 
         def init_finished():
             if not self.network_online:
-                self.logger.Error("plugwise Zigbee network down")
+                _LOGGER.Error("plugwise Zigbee network down")
             else:
                 if self.print_progress:
                     print("Scan Plugwise network")
@@ -158,29 +160,29 @@ class stick(object):
                 print("Initialize Plugwise USBstick")
             self.initialize_stick(init_finished)
         except PortError as e:
-            self.logger.error("Failed to connect: '%s'", e)
+            _LOGGER.error("Failed to connect: '%s'", e)
         except StickInitError as e:
-            self.logger.error("Failed to initialize USBstick: '%s'", e)
+            _LOGGER.error("Failed to initialize USBstick: '%s'", e)
         except NetworkDown as e:
-            self.logger.error("Failed to communicated: Plugwise Zigbee network")
+            _LOGGER.error("Failed to communicated: Plugwise Zigbee network")
         except TimeoutException as e:
-            self.logger.error("Timeout exception while initializing USBstick")
+            _LOGGER.error("Timeout exception while initializing USBstick")
         except Exception as e:
-            self.logger.error("Unknown error : %s", e)
+            _LOGGER.error("Unknown error : %s", e)
 
     def connect(self, callback=None):
         """ Connect to stick and raise error if it fails"""
         self.init_callback = callback
         # Open connection to USB Stick
         if ":" in self.port:
-            self.logger.debug("Open socket connection to Plugwise Zigbee stick")
+            _LOGGER.debug("Open socket connection to Plugwise Zigbee stick")
             self.connection = SocketConnection(self.port, self)
         else:
-            self.logger.debug("Open USB serial connection to Plugwise Zigbee stick")
+            _LOGGER.debug("Open USB serial connection to Plugwise Zigbee stick")
             self.connection = PlugwiseUSBConnection(self.port, self)
         self.connection.connect()
 
-        self.logger.debug("Starting threads...")
+        _LOGGER.debug("Starting threads...")
         # receive timeout deamon
         self._run_receive_timeout_thread = True
         self._receive_timeout_thread = threading.Thread(
@@ -203,7 +205,7 @@ class stick(object):
             None, self._update_loop, "update_thread", (), {}
         )
         self._update_thread.daemon = True
-        self.logger.debug("All threads started")
+        _LOGGER.debug("All threads started")
 
     def initialize_stick(self, callback=None, timeout=MESSAGE_TIME_OUT):
         # Initialize USBstick
@@ -228,7 +230,7 @@ class stick(object):
             if callback:
                 callback()
 
-        self.logger.debug("Send init request to Plugwise Zigbee stick")
+        _LOGGER.debug("Send init request to Plugwise Zigbee stick")
         self.send(StickInitRequest(), cb_stick_initialized)
         time_counter = 0
         while not self._stick_initialized and (time_counter < timeout):
@@ -287,7 +289,7 @@ class stick(object):
                     else:
                         callback(callback_arg)
                 except Exception as e:
-                    self.logger.error("Error while executing callback : %s", e)
+                    _LOGGER.error("Error while executing callback : %s", e)
 
     def _discover_after_scan(self):
         """ Helper to do callback for new node """
@@ -354,7 +356,7 @@ class stick(object):
         def scan_finished(nodes_to_discover):
             """ Callback when scan is finished """
             time.sleep(1)
-            self.logger.debug("Scan plugwise network finished")
+            _LOGGER.debug("Scan plugwise network finished")
             self._nodes_discovered = 0
             self._nodes_to_discover = nodes_to_discover
             self._nodes_registered = len(nodes_to_discover)
@@ -364,7 +366,7 @@ class stick(object):
                 if nodes_off_line:
                     self._nodes_off_line += 1
                 self._nodes_discovered += 1
-                self.logger.debug(
+                _LOGGER.debug(
                     "Discovered Plugwise node %s (%s off-line) of %s",
                     str(len(self._plugwise_nodes)),
                     str(self._nodes_off_line),
@@ -379,7 +381,7 @@ class stick(object):
                     else:
                         for mac in self._nodes_to_discover:
                             if mac not in self._plugwise_nodes.keys():
-                                self.logger.info(
+                                _LOGGER.info(
                                     "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
                                     str(mac),
                                 )
@@ -394,7 +396,7 @@ class stick(object):
                 if not self._discovery_finished:
                     for mac in self._nodes_to_discover:
                         if mac not in self._plugwise_nodes.keys():
-                            self.logger.info(
+                            _LOGGER.info(
                                 "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
                                 str(mac),
                             )
@@ -411,7 +413,7 @@ class stick(object):
             self.discover_timeout = threading.Timer(
                 discover_timeout, timeout_expired
             ).start()
-            self.logger.debug("Start discovery of linked node types...")
+            _LOGGER.debug("Start discovery of linked node types...")
             for mac in nodes_to_discover:
                 self.discover_node(mac, node_discovered)
 
@@ -420,12 +422,10 @@ class stick(object):
             if self._plugwise_nodes.get(self.circle_plus_mac):
                 if self.print_progress:
                     print("Scan Circle+ for linked nodes")
-                self.logger.debug("Scan Circle+ for linked nodes...")
+                _LOGGER.debug("Scan Circle+ for linked nodes...")
                 self._plugwise_nodes[self.circle_plus_mac].scan_for_nodes(scan_finished)
             else:
-                self.logger.error(
-                    "Circle+ is not discovered in %s", self._plugwise_nodes
-                )
+                _LOGGER.error("Circle+ is not discovered in %s", self._plugwise_nodes)
 
         # Discover Circle+
         if self.circle_plus_mac:
@@ -434,10 +434,10 @@ class stick(object):
             else:
                 if self.print_progress:
                     print("Discover Circle+")
-                self.logger.debug("Discover Circle+ at %s", self.circle_plus_mac)
+                _LOGGER.debug("Discover Circle+ at %s", self.circle_plus_mac)
                 self.discover_node(self.circle_plus_mac, scan_circle_plus)
         else:
-            self.logger.error(
+            _LOGGER.error(
                 "Plugwise stick not properly initialized, Circle+ MAC is missing."
             )
 
@@ -464,7 +464,7 @@ class stick(object):
             self.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback)
             return True
         else:
-            self.logger.warning(
+            _LOGGER.warning(
                 "Invalid mac '%s' address, unable to join node manually.", mac
             )
         return False
@@ -478,14 +478,14 @@ class stick(object):
             )
             return True
         else:
-            self.logger.warning(
+            _LOGGER.warning(
                 "Invalid mac '%s' address, unable to unjoin node manually.", mac
             )
         return False
 
     def _append_node(self, mac, address, node_type):
         """ Add Plugwise node to be controlled """
-        self.logger.debug(
+        _LOGGER.debug(
             "Add new node type (%s) with mac %s",
             str(node_type),
             mac,
@@ -523,7 +523,7 @@ class stick(object):
                 print("Stealth node found using mac " + mac)
             self._plugwise_nodes[mac] = PlugwiseStealth(mac, address, self)
         else:
-            self.logger.warning("Unsupported node type '%s'", str(node_type))
+            _LOGGER.warning("Unsupported node type '%s'", str(node_type))
             self._plugwise_nodes[mac] = None
 
         # process previous missed messages
@@ -602,7 +602,7 @@ class stick(object):
                     and not isinstance(request_set[1], NodeAddRequest)
                 ):
                     mac = request_set[1].mac.decode(UTF8_DECODE)
-                    self.logger.info(
+                    _LOGGER.info(
                         "send %s to %s using seq_id %s",
                         request_set[1].__class__.__name__,
                         mac,
@@ -611,7 +611,7 @@ class stick(object):
                     if self._plugwise_nodes.get(mac):
                         self._plugwise_nodes[mac].last_request = datetime.now()
                     if self.expected_responses[seq_id][3] > 0:
-                        self.logger.debug(
+                        _LOGGER.debug(
                             "Retry %s for message %s to %s",
                             str(self.expected_responses[seq_id][3]),
                             str(self.expected_responses[seq_id][1].__class__.__name__),
@@ -619,7 +619,7 @@ class stick(object):
                         )
                 else:
                     mac = ""
-                    self.logger.info(
+                    _LOGGER.info(
                         "send %s using seq_id %s",
                         request_set[1].__class__.__name__,
                         str(seq_id),
@@ -640,7 +640,7 @@ class stick(object):
                 if timeout_counter > 10 and self._run_send_message_thread:
                     if seq_id in self.expected_responses:
                         if self.expected_responses[seq_id][3] <= MESSAGE_RETRY:
-                            self.logger.info(
+                            _LOGGER.info(
                                 "Resend %s for %s because stick did not acknowledge request (%s), last seq_id=%s",
                                 str(
                                     self.expected_responses[seq_id][
@@ -657,7 +657,7 @@ class stick(object):
                                 self.expected_responses[seq_id][3] + 1,
                             )
                         else:
-                            self.logger.info(
+                            _LOGGER.info(
                                 "Drop %s request with seq_id %s for mac %s because max (%s) retries reached, last seq_id=%s",
                                 self.expected_responses[seq_id][1].__class__.__name__,
                                 str(seq_id),
@@ -666,7 +666,7 @@ class stick(object):
                                 str(self.last_ack_seq_id),
                             )
                         del self.expected_responses[seq_id]
-        self.logger.debug("Send message loop stopped")
+        _LOGGER.debug("Send message loop stopped")
 
     def _receive_timeout_loop(self):
         """ deamon to time out requests without any (n)ack response message """
@@ -676,12 +676,12 @@ class stick(object):
                     if self.expected_responses[seq_id][4] < (
                         datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
                     ):
-                        self.logger.debug(
+                        _LOGGER.debug(
                             "Timeout expired for message with sequence ID %s",
                             str(seq_id),
                         )
                         if self.expected_responses[seq_id][3] <= MESSAGE_RETRY:
-                            self.logger.debug(
+                            _LOGGER.debug(
                                 "Resend request %s",
                                 str(
                                     self.expected_responses[seq_id][
@@ -700,7 +700,7 @@ class stick(object):
                             ) or isinstance(
                                 self.expected_responses[seq_id][1], StickInitRequest
                             ):
-                                self.logger.info(
+                                _LOGGER.info(
                                     "Drop %s request because max (%s) retries reached for seq id %s",
                                     self.expected_responses[seq_id][
                                         1
@@ -715,7 +715,7 @@ class stick(object):
                                     mac = self.expected_responses[seq_id][1].mac.decode(
                                         UTF8_DECODE
                                     )
-                                self.logger.info(
+                                _LOGGER.info(
                                     "Drop %s request for mac %s because max (%s) retries reached for seq id %s",
                                     self.expected_responses[seq_id][
                                         1
@@ -732,7 +732,7 @@ class stick(object):
             ):
                 time.sleep(1)
                 receive_timeout_checker += 1
-        self.logger.debug("Receive timeout loop stopped")
+        _LOGGER.debug("Receive timeout loop stopped")
 
     def new_message(self, message: NodeResponse):
         """ Received message from Plugwise Zigbee network """
@@ -747,7 +747,7 @@ class stick(object):
         if not isinstance(message, NodeAckSmallResponse):
             mac = message.mac.decode(UTF8_DECODE)
             if not isinstance(message, NodeAckLargeResponse):
-                self.logger.info(
+                _LOGGER.info(
                     "Received %s from %s with seq_id %s",
                     message.__class__.__name__,
                     mac,
@@ -756,26 +756,26 @@ class stick(object):
 
         if isinstance(message, NodeAckSmallResponse):
             if message.ack_id == ACK_SUCCESS:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Received success response for request with sequence id %s",
                     str(message.seq_id),
                 )
                 self.message_processed(message.seq_id, message.ack_id, True)
             elif message.ack_id == ACK_TIMEOUT:
-                self.logger.info(
+                _LOGGER.info(
                     "Received timeout response for request with sequence id %s",
                     str(message.seq_id),
                 )
                 self.message_processed(message.seq_id, message.ack_id, True)
             elif message.ack_id == ACK_ERROR:
-                self.logger.info(
+                _LOGGER.info(
                     "Received error response for request with sequence id %s",
                     str(message.seq_id),
                 )
                 self.message_processed(message.seq_id, message.ack_id, True)
             else:
                 if self.expected_responses.get(message.seq_id):
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received unmanaged NodeAckSmallResponse %s message for request %s with sequence id %s",
                         str(message.ack_id),
                         str(
@@ -786,7 +786,7 @@ class stick(object):
                         str(message.seq_id),
                     )
                 else:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received unmanaged NodeAckSmallResponse %s message for unknown request with sequence id %s",
                         str(message.ack_id),
                         str(message.seq_id),
@@ -794,7 +794,7 @@ class stick(object):
         elif isinstance(message, NodeAckLargeResponse):
             if self._plugwise_nodes.get(mac):
                 if message.ack_id == ACK_ON:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received relay switched on in response for CircleSwitchRelayRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
@@ -802,7 +802,7 @@ class stick(object):
                     self._plugwise_nodes[mac].on_message(message)
                     self.message_processed(message.seq_id, message.ack_id)
                 elif message.ack_id == ACK_OFF:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received relay switched off in response for CircleSwitchRelayRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
@@ -810,14 +810,14 @@ class stick(object):
                     self._plugwise_nodes[mac].on_message(message)
                     self.message_processed(message.seq_id, message.ack_id)
                 elif message.ack_id == NACK_ON_OFF:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received failed response for CircleSwitchRelayRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
                     )
                     self.message_processed(message.seq_id, message.ack_id)
                 elif message.ack_id == ACK_SLEEP_SET:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received success sleep configuration response for NodeSleepConfigRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
@@ -825,7 +825,7 @@ class stick(object):
                     self._plugwise_nodes[mac].on_message(message)
                     self.message_processed(message.seq_id, message.ack_id)
                 elif message.ack_id == NACK_SLEEP_SET:
-                    self.logger.warning(
+                    _LOGGER.warning(
                         "Received failed sleep configuration response for NodeSleepConfigRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
@@ -833,14 +833,14 @@ class stick(object):
                     self._plugwise_nodes[mac].on_message(message)
                     self.message_processed(message.seq_id, message.ack_id)
                 elif message.ack_id == ACK_ACCEPT_JOINING_REQUEST:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received success response for NodeAllowJoiningRequest from (circle+) %s with sequence id %s",
                         mac,
                         str(message.seq_id),
                     )
                     self.message_processed(message.seq_id, message.ack_id)
                 elif message.ack_id == ACK_CLOCK_SET:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received success response for CircleClockSetRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
@@ -848,7 +848,7 @@ class stick(object):
                     self.message_processed(message.seq_id, message.ack_id)
                 else:
                     if self.expected_responses.get(message.seq_id):
-                        self.logger.info(
+                        _LOGGER.info(
                             "Received unmanaged NodeAckLargeResponse %s message from %s for request %s with sequence id %s",
                             str(message.ack_id),
                             mac,
@@ -860,14 +860,14 @@ class stick(object):
                             str(message.seq_id),
                         )
                     else:
-                        self.logger.info(
+                        _LOGGER.info(
                             "Received unmanaged NodeAckLargeResponse %s message from %s for unknown request with sequence id %s",
                             str(message.ack_id),
                             mac,
                             str(message.seq_id),
                         )
             else:
-                self.logger.info(
+                _LOGGER.info(
                     "Received NodeAckLargeResponse %s message from unknown node %s with sequence id %s",
                     str(message.ack_id),
                     mac,
@@ -876,7 +876,7 @@ class stick(object):
         elif isinstance(message, NodeAckResponse):
             if self._plugwise_nodes.get(mac):
                 if message.ack_id == ACK_SCAN_PARAMETERS_SET:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received success response for ScanConfigureRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
@@ -884,7 +884,7 @@ class stick(object):
                     self._plugwise_nodes[mac].on_message(message)
                     self.message_processed(message.seq_id, message.ack_id)
                 elif message.ack_id == NACK_SCAN_PARAMETERS_SET:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received failed response for ScanConfigureRequest from %s with sequence id %s",
                         mac,
                         str(message.seq_id),
@@ -892,7 +892,7 @@ class stick(object):
                     self.message_processed(message.seq_id, message.ack_id)
                 else:
                     if self.expected_responses.get(message.seq_id):
-                        self.logger.info(
+                        _LOGGER.info(
                             "Received unmanaged NodeAckResponse %s message from %s for request %s with sequence id %s",
                             str(message.ack_id),
                             mac,
@@ -904,14 +904,14 @@ class stick(object):
                             str(message.seq_id),
                         )
                     else:
-                        self.logger.info(
+                        _LOGGER.info(
                             "Received unmanaged NodeAckResponse %s message from %s for unknown request with sequence id %s",
                             str(message.ack_id),
                             mac,
                             str(message.seq_id),
                         )
             else:
-                self.logger.info(
+                _LOGGER.info(
                     "Received NodeAckResponse %s message from unknown node %s with sequence id %s",
                     str(message.ack_id),
                     mac,
@@ -935,7 +935,7 @@ class stick(object):
                 seq_id = message.seq_id
             self.message_processed(seq_id)
         elif isinstance(message, NodeInfoResponse):
-            self.logger.debug(
+            _LOGGER.debug(
                 "Received node info (%s) for NodeInfoRequest from %s with sequence id %s",
                 str(message.node_type.value),
                 mac,
@@ -961,7 +961,7 @@ class stick(object):
         elif isinstance(message, NodeAwakeResponse):
             # Message from SED node notifying it is currently awake.
             # If node is not known do discovery first.
-            self.logger.info(
+            _LOGGER.info(
                 "Received NodeAwakeResponse message (%s) from %s with sequence id %s",
                 str(message.awake_type.value),
                 mac,
@@ -970,7 +970,7 @@ class stick(object):
             if self._plugwise_nodes.get(mac):
                 self._plugwise_nodes[mac].on_message(message)
             else:
-                self.logger.info(
+                _LOGGER.info(
                     "Received NodeAwakeResponse message from unknown node with mac %s with sequence id %s, do discovery now",
                     mac,
                     str(message.seq_id),
@@ -978,34 +978,34 @@ class stick(object):
                 self.discover_node(mac, self._discover_after_scan, True)
         elif isinstance(message, NodeJoinAvailableResponse):
             # Message from node that is not part of a plugwise network yet and wants to join
-            self.logger.info(
+            _LOGGER.info(
                 "Received NodeJoinAvailableResponse from node with mac %s",
                 mac,
             )
             if not self._plugwise_nodes.get(mac):
                 if self._accept_join_requests:
                     # Send accept join request
-                    self.logger.info(
+                    _LOGGER.info(
                         "Accepting network join request for node with mac %s",
                         mac,
                     )
                     self.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True))
                     self.discover_node(mac, self._discover_after_scan)
                 else:
-                    self.logger.debug(
+                    _LOGGER.debug(
                         "New node with mac %s requesting to join Plugwise network, do callback",
                         mac,
                     )
                     self.do_callback(CB_JOIN_REQUEST, mac)
             else:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Received node available message for node %s which is already joined.",
                     mac,
                 )
         elif isinstance(message, NodeJoinAckResponse):
             # Notification mesage when node (re)joined existing network again.
             # Received when a SED (re)joins the network e.g. when you reinsert the battery of a Scan
-            self.logger.info(
+            _LOGGER.info(
                 "Received NodeJoinAckResponse from %s which has accepted or (re)joined this Plugwise network",
                 mac,
             )
@@ -1017,17 +1017,17 @@ class stick(object):
             if message.status.value == 1:
                 if self._plugwise_nodes.get(unjoined_mac):
                     del self._plugwise_nodes[unjoined_mac]
-                    self.logger.info(
+                    _LOGGER.info(
                         "Received NodeRemoveResponse from node %s it has been unjoined from Plugwise network",
                         unjoined_mac,
                     )
                 else:
-                    self.logger.debug(
+                    _LOGGER.debug(
                         "Unknown node with mac %s has been unjoined from Plugwise network",
                         unjoined_mac,
                     )
             else:
-                self.logger.warning(
+                _LOGGER.warning(
                     "Node with mac %s failed to unjoin from Plugwise network ",
                     unjoined_mac,
                 )
@@ -1036,7 +1036,7 @@ class stick(object):
                 self._plugwise_nodes[mac].on_message(message)
                 self.message_processed(message.seq_id)
             else:
-                self.logger.info(
+                _LOGGER.info(
                     "Queue %s message because node with mac %s is not discovered yet.",
                     message.__class__.__name__,
                     mac,
@@ -1049,7 +1049,7 @@ class stick(object):
         do_callback = False
         do_resend = False
         if seq_id in self.expected_responses:
-            self.logger.debug(
+            _LOGGER.debug(
                 "Process response to %s with seq id %s",
                 self.expected_responses[seq_id][0].__class__.__name__,
                 str(seq_id),
@@ -1063,13 +1063,13 @@ class stick(object):
                 do_callback = True
             elif ack_response == ACK_SUCCESS:
                 if ack_small:
-                    self.logger.debug(
+                    _LOGGER.debug(
                         "Process small ACK_SUCCESS acknowledge for %s with seq_id %s",
                         str(self.expected_responses[seq_id][1].__class__.__name__),
                         str(seq_id),
                     )
                 else:
-                    self.logger.debug(
+                    _LOGGER.debug(
                         "Process large ACK_SUCCESS acknowledge for %s from %s with seq_id %s",
                         str(self.expected_responses[seq_id][1].__class__.__name__),
                         mac,
@@ -1077,21 +1077,21 @@ class stick(object):
                     )
                     do_callback = True
             elif ack_response == ACK_TIMEOUT:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_TIMEOUT for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_resend = True
             elif ack_response == ACK_ERROR:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_ERROR for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_resend = True
             elif ack_response == ACK_ON:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_ON response for %s from %s with seq_id %s",
                     self.expected_responses[seq_id][0].__class__.__name__,
                     mac,
@@ -1099,7 +1099,7 @@ class stick(object):
                 )
                 do_callback = True
             elif ack_response == ACK_OFF:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_OFF response for %s from %s with seq_id %s",
                     self.expected_responses[seq_id][0].__class__.__name__,
                     mac,
@@ -1107,7 +1107,7 @@ class stick(object):
                 )
                 do_callback = True
             elif ack_response == ACK_ACCEPT_JOINING_REQUEST:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_ACCEPT_JOINING_REQUEST for %s from %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     mac,
@@ -1115,56 +1115,56 @@ class stick(object):
                 )
                 do_callback = True
             elif ack_response == ACK_SLEEP_SET:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_SLEEP_SET for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_callback = True
             elif ack_response == ACK_CLOCK_SET:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_CLOCK_SET for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_callback = True
             elif ack_response == NACK_SLEEP_SET:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process NACK_SLEEP_SET for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_resend = True
             elif ack_response == ACK_SCAN_PARAMETERS_SET:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process ACK_SCAN_PARAMETERS_SET for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_callback = True
             elif ack_response == NACK_SCAN_PARAMETERS_SET:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process NACK_SCAN_PARAMETERS_SET for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_resend = True
             elif ack_response == NACK_ON_OFF:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process NACK_ON_OFF for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_resend = True
             elif ack_response == NACK_REAL_TIME_CLOCK_SET:
-                self.logger.debug(
+                _LOGGER.debug(
                     "Process NACK_REAL_TIME_CLOCK_SET for %s with seq_id %s",
                     str(self.expected_responses[seq_id][1].__class__.__name__),
                     str(seq_id),
                 )
                 do_resend = True
             else:
-                self.logger.warning(
+                _LOGGER.warning(
                     "Unknown ack_response %s for %s with seq_id %s",
                     str(ack_response),
                     str(self.expected_responses[seq_id][1].__class__.__name__),
@@ -1182,7 +1182,7 @@ class stick(object):
                     ):
                         # Time out for node which is not discovered yet
                         # to speedup the initial discover phase skip retries and mark node as not discovered.
-                        self.logger.debug(
+                        _LOGGER.debug(
                             "Skip retries for %s to speedup discover process",
                             mac,
                         )
@@ -1192,7 +1192,7 @@ class stick(object):
                     ) or isinstance(
                         self.expected_responses[seq_id][1], NodePingRequest
                     ):
-                        self.logger.info(
+                        _LOGGER.info(
                             "Resend request %s for %s, retry %s of %s",
                             str(self.expected_responses[seq_id][1].__class__.__name__),
                             mac,
@@ -1209,7 +1209,7 @@ class stick(object):
                             self._plugwise_nodes.get(mac)
                             and self._plugwise_nodes[mac].get_available()
                         ):
-                            self.logger.info(
+                            _LOGGER.info(
                                 "Resend request %s for %s, retry %s of %s",
                                 str(
                                     self.expected_responses[seq_id][
@@ -1226,7 +1226,7 @@ class stick(object):
                                 self.expected_responses[seq_id][3] + 1,
                             )
                         else:
-                            self.logger.debug(
+                            _LOGGER.debug(
                                 "Do not resend request %s for %s, node is off-line",
                                 str(
                                     self.expected_responses[seq_id][
@@ -1236,7 +1236,7 @@ class stick(object):
                                 mac,
                             )
                 else:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Drop request for %s for %s because max retries %s reached",
                         str(self.expected_responses[seq_id][1].__class__.__name__),
                         mac,
@@ -1253,7 +1253,7 @@ class stick(object):
                                 self._plugwise_nodes[mac].get_available()
                                 and not self._plugwise_nodes[mac].is_sed()
                             ):
-                                self.logger.info(
+                                _LOGGER.info(
                                     "Mark %s as unavailabe because no response after %s retries",
                                     mac,
                                     str(MESSAGE_RETRY + 1),
@@ -1271,7 +1271,7 @@ class stick(object):
                     try:
                         self.expected_responses[seq_id][2]()
                     except Exception as e:
-                        self.logger.error(
+                        _LOGGER.error(
                             "Error while executing callback after processing message : %s",
                             e,
                         )
@@ -1284,7 +1284,7 @@ class stick(object):
                     del self.expected_responses[b"0000"]
                 self.last_ack_seq_id = seq_id
             else:
-                self.logger.info(
+                _LOGGER.info(
                     "Response %s for unknown seq_id %s",
                     str(ack_response),
                     str(seq_id),
@@ -1301,14 +1301,14 @@ class stick(object):
             if self.connection.is_connected():
                 # Connection reader daemon
                 if not self.connection.read_thread_alive():
-                    self.logger.warning("Unexpected halt of connection reader thread")
+                    _LOGGER.warning("Unexpected halt of connection reader thread")
                 # Connection writer daemon
                 if not self.connection.write_thread_alive():
-                    self.logger.warning("Unexpected halt of connection writer thread")
+                    _LOGGER.warning("Unexpected halt of connection writer thread")
             # receive timeout daemon
             if self._run_receive_timeout_thread:
                 if not self._receive_timeout_thread.isAlive():
-                    self.logger.warning(
+                    _LOGGER.warning(
                         "Unexpected halt of receive thread, restart thread",
                     )
                     self._receive_timeout_thread = threading.Thread(
@@ -1323,7 +1323,7 @@ class stick(object):
             # send message deamon
             if self._run_send_message_thread:
                 if not self._send_message_thread.isAlive():
-                    self.logger.warning(
+                    _LOGGER.warning(
                         "Unexpected halt of send thread, restart thread",
                     )
                     self._send_message_thread = threading.Thread(
@@ -1334,7 +1334,7 @@ class stick(object):
             # Update daemon
             if self._run_update_thread:
                 if not self._update_thread.isAlive():
-                    self.logger.warning(
+                    _LOGGER.warning(
                         "Unexpected halt of update thread, restart thread",
                     )
                     self._run_update_thread = True
@@ -1347,7 +1347,7 @@ class stick(object):
             if self._circle_plus_discovered == False:
                 # First hour every once an hour
                 if self._circle_plus_retries < 60 or circle_plus_retry_counter > 60:
-                    self.logger.info(
+                    _LOGGER.info(
                         "Circle+ not yet discovered, resubmit discovery request",
                     )
                     self.discover_node(self.circle_plus_mac, self.scan)
@@ -1358,7 +1358,7 @@ class stick(object):
             while watchdog_loop_checker < WATCHDOG_DEAMON and self._run_watchdog:
                 time.sleep(1)
                 watchdog_loop_checker += 1
-        self.logger.debug("watchdog loop stopped")
+        _LOGGER.debug("watchdog loop stopped")
 
     def _update_loop(self):
         """
@@ -1386,7 +1386,7 @@ class stick(object):
                                         )
                                     )
                                 ):
-                                    self.logger.info(
+                                    _LOGGER.info(
                                         "No messages received within (%s minutes) of expected maintenance interval from node %s, mark as unavailable [%s > %s]",
                                         str(
                                             self._plugwise_nodes[
@@ -1410,7 +1410,7 @@ class stick(object):
                                     self._plugwise_nodes[mac].set_available(False)
                         else:
                             # Do ping request
-                            self.logger.debug(
+                            _LOGGER.debug(
                                 "Send ping to node %s",
                                 mac,
                             )
@@ -1423,13 +1423,11 @@ class stick(object):
                         or isinstance(self._plugwise_nodes[mac], PlugwiseStealth)
                     ):
                         # Don't check at first time
-                        self.logger.debug(
-                            "Request current power usage for node %s", mac
-                        )
+                        _LOGGER.debug("Request current power usage for node %s", mac)
                         if not self._auto_update_first_run and self._run_update_thread:
                             # Only request update if node is available
                             if self._plugwise_nodes[mac].get_available():
-                                self.logger.debug(
+                                _LOGGER.debug(
                                     "Node '%s' is available for update request, last update (%s)",
                                     mac,
                                     str(self._plugwise_nodes[mac].get_last_update()),
@@ -1466,7 +1464,7 @@ class stick(object):
                                     self._plugwise_nodes[mac]._request_power_buffer()
                         else:
                             if self._run_update_thread:
-                                self.logger.debug(
+                                _LOGGER.debug(
                                     "First request for current power usage for node %s",
                                     mac,
                                 )
@@ -1486,7 +1484,7 @@ class stick(object):
                     if firstrequest and lastrequest:
                         if (firstrequest + timedelta(hours=1)) > datetime.now():
                             # first hour, so do every update a request
-                            self.logger.debug(
+                            _LOGGER.debug(
                                 "Try rediscovery of node %s",
                                 mac,
                             )
@@ -1497,7 +1495,7 @@ class stick(object):
                             )
                         else:
                             if (lastrequest + timedelta(hours=1)) < datetime.now():
-                                self.logger.debug(
+                                _LOGGER.debug(
                                     "Try rediscovery of node %s",
                                     mac,
                                 )
@@ -1507,7 +1505,7 @@ class stick(object):
                                     datetime.now(),
                                 )
                     else:
-                        self.logger.debug(
+                        _LOGGER.debug(
                             "Try rediscovery of node %s",
                             mac,
                         )
@@ -1527,10 +1525,8 @@ class stick(object):
 
         except Exception as e:
             exc_type, exc_obj, exc_tb = sys.exc_info()
-            self.logger.error(
-                "Error at line %s of _update_loop : %s", exc_tb.tb_lineno, e
-            )
-        self.logger.debug("Update loop stopped")
+            _LOGGER.error("Error at line %s of _update_loop : %s", exc_tb.tb_lineno, e)
+        _LOGGER.debug("Update loop stopped")
 
     def auto_update(self, timer=None):
         """

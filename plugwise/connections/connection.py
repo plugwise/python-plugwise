@@ -3,11 +3,15 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Base for serial or socket connections
 """
-from plugwise.constants import SLEEP_TIME
-from plugwise.message import PlugwiseMessage
+import logging
 import queue
 import threading
 import time
+
+from plugwise.constants import SLEEP_TIME
+from plugwise.message import PlugwiseMessage
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class StickConnection(object):
@@ -51,7 +55,7 @@ class StickConnection(object):
             if data:
                 self.stick.feed_parser(data)
             time.sleep(0.01)
-        self.stick.logger.debug("Reader deamon stopped")
+        _LOGGER.debug("Reader deamon stopped")
 
     def _read_data(self):
         """Placeholder to receive message from the connection"""
@@ -77,7 +81,7 @@ class StickConnection(object):
             except queue.Empty:
                 time.sleep(SLEEP_TIME)
             else:
-                self.stick.logger.debug(
+                _LOGGER.debug(
                     "Sending %s to plugwise stick (%s)",
                     message.__class__.__name__,
                     message.serialize(),
@@ -86,7 +90,7 @@ class StickConnection(object):
                 time.sleep(SLEEP_TIME)
                 if callback:
                     callback()
-        self.stick.logger.debug("Writer deamon stopped")
+        _LOGGER.debug("Writer deamon stopped")
 
     def _write_data(self, data):
         """Placeholder to write message to the connection"""

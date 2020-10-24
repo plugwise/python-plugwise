@@ -4,6 +4,8 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 Plugwise Circle+ node object
 """
 from datetime import datetime
+import logging
+
 from plugwise.constants import MAX_TIME_DRIFT, UTF8_DECODE
 from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
@@ -16,6 +18,8 @@ from plugwise.messages.responses import (
     CirclePlusScanResponse,
 )
 from plugwise.nodes.circle import PlugwiseCircle
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseCirclePlus(PlugwiseCircle):
@@ -39,7 +43,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         elif isinstance(message, CirclePlusScanResponse):
             self._process_scan_response(message)
         else:
-            self.stick.logger.waning(
+            _LOGGER.waning(
                 "Unsupported message type '%s' received from circle with mac %s",
                 str(message.__class__.__name__),
                 self.get_mac(),
@@ -54,7 +58,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
 
     def _process_scan_response(self, message):
         """ Process scan response message """
-        self.stick.logger.debug(
+        _LOGGER.debug(
             "Process scan response for address %s", message.node_address.value
         )
         if message.node_mac.value != b"FFFFFFFFFFFFFFFF":
@@ -65,7 +69,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                     + " => node found with mac "
                     + message.node_mac.value.decode(UTF8_DECODE)
                 )
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Linked plugwise node with mac %s found",
                 message.node_mac.value.decode(UTF8_DECODE),
             )
@@ -98,7 +102,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                                     request_not_in_queue = False
                                     break
                         if request_not_in_queue:
-                            self.stick.logger.debug(
+                            _LOGGER.debug(
                                 "Resend missing scan request for address %s",
                                 str(node_address),
                             )
@@ -136,7 +140,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             self._realtime_clock_offset = realtime_clock_offset.seconds - 86400
         else:
             self._realtime_clock_offset = realtime_clock_offset.seconds
-        self.stick.logger.debug(
+        _LOGGER.debug(
             "Realtime clock of node %s has drifted %s sec",
             self.get_mac(),
             str(self._clock_offset),
@@ -157,7 +161,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             if (self._realtime_clock_offset > max_drift) or (
                 self._realtime_clock_offset < -(max_drift)
             ):
-                self.stick.logger.info(
+                _LOGGER.info(
                     "Reset realtime clock of node %s because time has drifted %s sec",
                     self.get_mac(),
                     str(self._clock_offset),

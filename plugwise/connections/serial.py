@@ -3,7 +3,9 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Serial connection
 """
+import logging
 import serial
+
 from plugwise.constants import (
     BAUD_RATE,
     BYTE_SIZE,
@@ -14,6 +16,8 @@ from plugwise.constants import (
 from plugwise.connections.connection import StickConnection
 from plugwise.exceptions import PortError
 from plugwise.message import PlugwiseMessage
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseUSBConnection(StickConnection):
@@ -28,7 +32,7 @@ class PlugwiseUSBConnection(StickConnection):
 
     def _open_connection(self):
         """Open serial port"""
-        self.stick.logger.debug("Open serial port %s", self.port)
+        _LOGGER.debug("Open serial port %s", self.port)
         try:
             self._serial = serial.Serial(
                 port=self.port,
@@ -39,7 +43,7 @@ class PlugwiseUSBConnection(StickConnection):
                 timeout=1,
             )
         except serial.serialutil.SerialException as err:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Failed to connect to serial port %s, %s",
                 self.port,
                 err,
@@ -49,11 +53,9 @@ class PlugwiseUSBConnection(StickConnection):
         if self._is_connected:
             self._reader_start("serial_reader_thread")
             self._writer_start("serial_writer_thread")
-            self.stick.logger.debug(
-                "Successfully connected to serial port %s", self.port
-            )
+            _LOGGER.debug("Successfully connected to serial port %s", self.port)
         else:
-            self.stick.logger.error(
+            _LOGGER.error(
                 "Failed to open serial port %s",
                 self.port,
             )
@@ -63,7 +65,7 @@ class PlugwiseUSBConnection(StickConnection):
         try:
             self._serial.close()
         except serial.serialutil.SerialException as err:
-            self.stick.logger.debug(
+            _LOGGER.debug(
                 "Failed to close serial port %s, %s",
                 self.port,
                 err,
@@ -76,13 +78,11 @@ class PlugwiseUSBConnection(StickConnection):
             try:
                 serial_data = self._serial.read_all()
             except serial.serialutil.SerialException as err:
-                self.stick.logger.debug(
-                    "Error while reading data from serial port : %s", err
-                )
+                _LOGGER.debug("Error while reading data from serial port : %s", err)
                 self._is_connected = False
                 raise PortError(err)
             except Exception as e:
-                self.stick.logger.debug("Error _read_data : %s", err)
+                _LOGGER.debug("Error _read_data : %s", err)
             return serial_data
         return None
 
@@ -91,6 +91,6 @@ class PlugwiseUSBConnection(StickConnection):
         try:
             self._serial.write(data)
         except serial.serialutil.SerialException as err:
-            self.stick.logger.debug("Error while writing data to serial port : %s", err)
+            _LOGGER.debug("Error while writing data to serial port : %s", err)
             self._is_connected = False
             raise PortError(err)
