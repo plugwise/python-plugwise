@@ -48,6 +48,7 @@ Module providing interfacing with the Plugwise devices:
   - [x]  - Tom
   - [x] Anna 
   - [x] Smile P1
+  - [x] Stick
   - [x] Stretch
   - [x] [Home-Assistant](https://home-assistant.io) via 
   - [x]  - Native supporting networked Plugwise products
