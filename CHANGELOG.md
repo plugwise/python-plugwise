@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.8.1 - Standardize logging for stick
+
 ## 0.8.0 - Merged Smile/USB module
   - Merge of the former network and former USB module to a single python module
   - Improved commit/test/CI&CD
