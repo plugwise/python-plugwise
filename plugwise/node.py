@@ -3,41 +3,41 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 General node object to control associated plugwise nodes like: Circle+, Circle, Scan, Stealth
 """
-import logging
 from datetime import datetime
+import logging
 
 from plugwise.constants import (
     HA_SWITCH,
     HW_MODELS,
     SENSOR_AVAILABLE,
+    SENSOR_PING,
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
-    SENSOR_PING,
     SWITCH_RELAY,
     UTF8_DECODE,
 )
 from plugwise.message import PlugwiseMessage
-from plugwise.messages.responses import (
-    NodeFeaturesResponse,
-    NodeInfoResponse,
-    NodePingResponse,
-)
 from plugwise.messages.requests import (
     NodeFeaturesRequest,
     NodeInfoRequest,
     NodePingRequest,
+)
+from plugwise.messages.responses import (
+    NodeFeaturesResponse,
+    NodeInfoResponse,
+    NodePingResponse,
 )
 from plugwise.util import validate_mac
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class PlugwiseNode(object):
+class PlugwiseNode:
     """ Base class for a Plugwise node """
 
     def __init__(self, mac, address, stick):
         mac = mac.upper()
-        if validate_mac(mac) == False:
+        if validate_mac(mac) is False:
             _LOGGER.debug(
                 "MAC address is in unexpected format: %s",
                 str(mac),
@@ -87,7 +87,7 @@ class PlugwiseNode(object):
         return False
 
     def get_categories(self) -> tuple:
-        """ Return Home Assistant catagories supported by plugwise node """
+        """ Return Home Assistant categories supported by plugwise node """
         return self.categories
 
     def get_sensors(self) -> tuple:
@@ -104,8 +104,8 @@ class PlugwiseNode(object):
 
     def set_available(self, state, request_info=False):
         """ Set current network state of plugwise node """
-        if state == True:
-            if self._available == False:
+        if state is True:
+            if self._available is False:
                 self._available = True
                 _LOGGER.debug(
                     "Mark node %s available",
@@ -115,7 +115,7 @@ class PlugwiseNode(object):
                 if request_info:
                     self._request_info()
         else:
-            if self._available == True:
+            if self._available is True:
                 self._available = False
                 _LOGGER.debug(
                     "Mark node %s unavailable",
@@ -133,13 +133,13 @@ class PlugwiseNode(object):
 
     def get_hardware_version(self) -> str:
         """Return hardware version"""
-        if self._hardware_version != None:
+        if self._hardware_version is not None:
             return self._hardware_version
         return "Unknown"
 
     def get_firmware_version(self) -> str:
         """Return firmware version"""
-        if self._firmware_version != None:
+        if self._firmware_version is not None:
             return str(self._firmware_version)
         return "Unknown"
 
@@ -149,19 +149,19 @@ class PlugwiseNode(object):
 
     def get_in_RSSI(self) -> int:
         """Return inbound RSSI level"""
-        if self.in_RSSI != None:
+        if self.in_RSSI is not None:
             return self.in_RSSI
         return 0
 
     def get_out_RSSI(self) -> int:
         """Return outbound RSSI level"""
-        if self.out_RSSI != None:
+        if self.out_RSSI is not None:
             return self.out_RSSI
         return 0
 
     def get_ping(self) -> int:
         """Return ping roundtrip"""
-        if self.ping_ms != None:
+        if self.ping_ms is not None:
             return self.ping_ms
         return 0
 
@@ -192,7 +192,7 @@ class PlugwiseNode(object):
         """
         assert isinstance(message, PlugwiseMessage)
         if message.mac == self.mac:
-            if message.timestamp != None:
+            if message.timestamp is not None:
                 _LOGGER.debug(
                     "Last update %s of node %s, last message %s",
                     str(self.last_update),

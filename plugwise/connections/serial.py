@@ -4,16 +4,11 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 Serial connection
 """
 import logging
+
 import serial
 
-from plugwise.constants import (
-    BAUD_RATE,
-    BYTE_SIZE,
-    PARITY,
-    SLEEP_TIME,
-    STOPBITS,
-)
 from plugwise.connections.connection import StickConnection
+from plugwise.constants import BAUD_RATE, BYTE_SIZE, PARITY, SLEEP_TIME, STOPBITS
 from plugwise.exceptions import PortError
 from plugwise.message import PlugwiseMessage
 
@@ -81,7 +76,7 @@ class PlugwiseUSBConnection(StickConnection):
                 _LOGGER.debug("Error while reading data from serial port : %s", err)
                 self._is_connected = False
                 raise PortError(err)
-            except Exception as e:
+            except Exception as err:
                 _LOGGER.debug("Error _read_data : %s", err)
             return serial_data
         return None

@@ -3,31 +3,30 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Plugwise Circle node object
 """
-import logging
 from datetime import date, datetime, timedelta
+import logging
 
 from plugwise.constants import (
     ACK_OFF,
     ACK_ON,
+    HA_SENSOR,
+    HA_SWITCH,
     MAX_TIME_DRIFT,
+    PULSES_PER_KW_SECOND,
     SENSOR_AVAILABLE,
     SENSOR_PING,
-    SENSOR_POWER_USE,
-    SENSOR_POWER_USE_LAST_8_SEC,
     SENSOR_POWER_CONSUMPTION_CURRENT_HOUR,
     SENSOR_POWER_CONSUMPTION_PREVIOUS_HOUR,
     SENSOR_POWER_CONSUMPTION_TODAY,
     SENSOR_POWER_CONSUMPTION_YESTERDAY,
     SENSOR_POWER_PRODUCTION_CURRENT_HOUR,
     SENSOR_POWER_PRODUCTION_PREVIOUS_HOUR,
+    SENSOR_POWER_USE,
+    SENSOR_POWER_USE_LAST_8_SEC,
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
     SWITCH_RELAY,
-    HA_SWITCH,
-    HA_SENSOR,
-    PULSES_PER_KW_SECOND,
 )
-from plugwise.node import PlugwiseNode
 from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
     CircleCalibrationRequest,
@@ -40,11 +39,12 @@ from plugwise.messages.requests import (
 from plugwise.messages.responses import (
     CircleCalibrationResponse,
     CircleClockResponse,
+    CirclePlusScanResponse,
     CirclePowerBufferResponse,
     CirclePowerUsageResponse,
-    CirclePlusScanResponse,
     NodeAckLargeResponse,
 )
+from plugwise.node import PlugwiseNode
 from plugwise.util import Int
 
 _LOGGER = logging.getLogger(__name__)
@@ -325,9 +325,9 @@ class PlugwiseCircle(PlugwiseNode):
 
     def _request_power_buffer(self, log_address=None, callback=None):
         """Request power log of specified address"""
-        if log_address == None:
+        if log_address is None:
             log_address = self._last_log_address
-        if log_address != None:
+        if log_address is not None:
             if bool(self.power_history):
                 # Only request last 2 power buffer logs
                 self.stick.send(
@@ -357,7 +357,7 @@ class PlugwiseCircle(PlugwiseNode):
             self._last_log_collected = True
         # Collect logged power usage
         for i in range(1, 5):
-            if getattr(message, "logdate%d" % (i,)).value != None:
+            if getattr(message, "logdate%d" % (i,)).value is not None:
                 dt = getattr(message, "logdate%d" % (i,)).value
                 if getattr(message, "pulses%d" % (i,)).value == 0:
                     self.power_history[dt] = 0.0
@@ -437,7 +437,7 @@ class PlugwiseCircle(PlugwiseNode):
 
     def sync_clock(self, max_drift=0):
         """Resync clock of node if time has drifted more than MAX_TIME_DRIFT"""
-        if self._clock_offset != None:
+        if self._clock_offset is not None:
             if max_drift == 0:
                 max_drift = MAX_TIME_DRIFT
             if (self._clock_offset > max_drift) or (self._clock_offset < -(max_drift)):

@@ -4,19 +4,16 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 Plugwise protocol helpers
 """
 import binascii
-import crcmod
 import datetime
 import logging
 import re
 import struct
 import sys
-from .exceptions import *
-from .constants import (
-    PLUGWISE_EPOCH,
-    LOGADDR_OFFSET,
-    UTF8_DECODE,
-)
 
+import crcmod
+
+from .constants import LOGADDR_OFFSET, PLUGWISE_EPOCH, UTF8_DECODE
+from .exceptions import *
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
 
@@ -107,7 +104,7 @@ def in_between(now, start, end):
     return start <= now or now < end
 
 
-class BaseType(object):
+class BaseType:
     def __init__(self, value, length):
         self.value = value
         self.length = length
@@ -271,7 +268,9 @@ class RealClockTime(CompositeType):
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
         self.value = datetime.time(
-            int(self.hour.value), int(self.minute.value), int(self.second.value),
+            int(self.hour.value),
+            int(self.minute.value),
+            int(self.second.value),
         )
 
 

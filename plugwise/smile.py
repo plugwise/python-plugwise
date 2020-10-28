@@ -1,11 +1,11 @@
 """Plugwise Home Assistant module."""
 
-import aiohttp
 import asyncio
-import async_timeout
 import datetime as dt
 import logging
 
+import aiohttp
+import async_timeout
 from dateutil.parser import parse
 from lxml import etree
 
@@ -31,22 +31,20 @@ from plugwise.constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
 )
-
 from plugwise.exceptions import (
     ConnectionFailedError,
-    InvalidAuthentication,
-    UnsupportedDeviceError,
     DeviceSetupError,
     DeviceTimeoutError,
-    ResponseError,
+    InvalidAuthentication,
     InvalidXMLError,
+    ResponseError,
+    UnsupportedDeviceError,
     XMLDataMissingError,
 )
-
 from plugwise.util import (
+    determine_selected,
     escape_illegal_xml_characters,
     format_measure,
-    determine_selected,
     in_between,
 )
 
@@ -210,7 +208,12 @@ class Smile:
         await self.websession.close()
 
     async def request(
-        self, command, retry=3, method="get", data=None, headers=None,
+        self,
+        command,
+        retry=3,
+        method="get",
+        data=None,
+        headers=None,
     ):
         """Request data."""
         resp = None

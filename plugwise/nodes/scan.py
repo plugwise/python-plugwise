@@ -11,24 +11,21 @@ from plugwise.constants import (
     HA_SENSOR,
     NACK_SCAN_PARAMETERS_SET,
     SCAN_DAYLIGHT_MODE,
+    SCAN_MOTION_RESET_TIMER,
+    SCAN_SENSITIVITY,
     SCAN_SENSITIVITY_HIGH,
     SCAN_SENSITIVITY_MEDIUM,
     SCAN_SENSITIVITY_OFF,
-    SCAN_MOTION_RESET_TIMER,
-    SCAN_SENSITIVITY,
     SENSOR_AVAILABLE,
+    SENSOR_MOTION,
     SENSOR_PING,
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
-    SENSOR_MOTION,
 )
-from plugwise.nodes.sed import NodeSED
 from plugwise.message import PlugwiseMessage
+from plugwise.messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
 from plugwise.messages.responses import NodeAckResponse, NodeSwitchGroupResponse
-from plugwise.messages.requests import (
-    ScanConfigureRequest,
-    ScanLightCalibrateRequest,
-)
+from plugwise.nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 

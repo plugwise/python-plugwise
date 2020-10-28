@@ -13,15 +13,14 @@ import aiohttp
 import jsonpickle as json
 import pytest
 
-from plugwise.smile import Smile
-
 from plugwise.exceptions import (
     ConnectionFailedError,
-    ErrorSendingCommandError,
     DeviceTimeoutError,
-    ResponseError,
+    ErrorSendingCommandError,
     InvalidXMLError,
+    ResponseError,
 )
+from plugwise.smile import Smile
 
 pp = PrettyPrinter(indent=8)
 

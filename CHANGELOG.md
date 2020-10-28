@@ -149,7 +149,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
   - Testing improvements
   - `dhw`-handling
   
-## formerSmile#0.1.24 - Add handling erronous XML and/or timeouts
+## formerSmile#0.1.24 - Add handling erroneous XML and/or timeouts
   - Favour exception raises above returning `False`
   - Restructure full device update accordingly
   - Add Plugwise Exceptions

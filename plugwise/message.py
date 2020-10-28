@@ -4,11 +4,7 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 Base for Plugwise messages
 """
 
-from plugwise.constants import (
-    MESSAGE_FOOTER,
-    MESSAGE_HEADER,
-    UTF8_DECODE,
-)
+from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER, UTF8_DECODE
 from plugwise.util import crc_fun
 
 
@@ -20,7 +16,7 @@ class ParserError(Exception):
     pass
 
 
-class PlugwiseMessage(object):
+class PlugwiseMessage:
     def serialize(self):
         """
         return message in a serialized format that can be sent out on wire

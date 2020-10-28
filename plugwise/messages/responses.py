@@ -4,6 +4,7 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 All known response messages to be received from plugwise devices
 """
 from datetime import datetime
+
 from plugwise.constants import (
     MESSAGE_FOOTER,
     MESSAGE_HEADER,
@@ -20,8 +21,8 @@ from plugwise.util import (
     RealClockDate,
     RealClockTime,
     String,
-    UnixTimestamp,
     Time,
+    UnixTimestamp,
 )
 
 
@@ -65,7 +66,8 @@ class NodeResponse(PlugwiseMessage):
             response = response[16:]
 
         response = self._parse_params(response)
-        crc = response[:4]
+        # TODO: unused crc
+        # crc = response[:4]
 
         if response[4:] != MESSAGE_FOOTER:
             raise ProtocolError("Invalid message footer")
@@ -491,7 +493,7 @@ class NodeFeaturesResponse(NodeResponse):
 
 class NodeJoinAckResponse(NodeResponse):
     """
-    Notification mesage when node (re)joined existing network again.
+    Notification message when node (re)joined existing network again.
     Sent when a SED (re)joins the network e.g. when you reinsert the battery of a Scan
 
     Response to: <nothing> or NodeAddRequest

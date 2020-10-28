@@ -14,7 +14,7 @@ from plugwise.message import PlugwiseMessage
 _LOGGER = logging.getLogger(__name__)
 
 
-class StickConnection(object):
+class StickConnection:
     """ Generic Plugwise stick connection"""
 
     def __init__(self, port, stick=None):
@@ -44,18 +44,18 @@ class StickConnection(object):
 
     def _reader_start(self, name):
         """Start the reader thread to receive data"""
-        self._reader_thread = threading.Thread(None, self._reader_deamon, name, (), {})
+        self._reader_thread = threading.Thread(None, self._reader_daemon, name, (), {})
         self.run_reader_thread = True
         self._reader_thread.start()
 
-    def _reader_deamon(self):
+    def _reader_daemon(self):
         """Thread to collect available data from connection"""
         while self.run_reader_thread:
             data = self._read_data()
             if data:
                 self.stick.feed_parser(data)
             time.sleep(0.01)
-        _LOGGER.debug("Reader deamon stopped")
+        _LOGGER.debug("Reader daemon stopped")
 
     def _read_data(self):
         """Placeholder to receive message from the connection"""
@@ -68,12 +68,12 @@ class StickConnection(object):
     def _writer_start(self, name: str):
         """Start the writer thread to send data"""
         self._write_queue = queue.Queue()
-        self._writer_thread = threading.Thread(None, self._writer_deamon, name, (), {})
+        self._writer_thread = threading.Thread(None, self._writer_daemon, name, (), {})
         self._writer_thread.daemon = True
         self.run_writer_thread = True
         self._writer_thread.start()
 
-    def _writer_deamon(self):
+    def _writer_daemon(self):
         """Thread to write data from queue to existing connection."""
         while self.run_writer_thread:
             try:
@@ -90,7 +90,7 @@ class StickConnection(object):
                 time.sleep(SLEEP_TIME)
                 if callback:
                     callback()
-        _LOGGER.debug("Writer deamon stopped")
+        _LOGGER.debug("Writer daemon stopped")
 
     def _write_data(self, data):
         """Placeholder to write message to the connection"""

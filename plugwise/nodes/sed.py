@@ -3,7 +3,7 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Plugwise SED (Sleeping Endpoint Device) base object
 
-TODO: 
+TODO:
 - Expose awake state as sensor
 - Set available state after 2 missed awake messages
 
@@ -28,14 +28,14 @@ from plugwise.constants import (
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
 )
-from plugwise.node import PlugwiseNode
 from plugwise.message import PlugwiseMessage
-from plugwise.messages.responses import NodeAckLargeResponse, NodeAwakeResponse
 from plugwise.messages.requests import (
     NodeInfoRequest,
     NodePingRequest,
     NodeSleepConfigRequest,
 )
+from plugwise.messages.responses import NodeAckLargeResponse, NodeAwakeResponse
+from plugwise.node import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -94,9 +94,7 @@ class NodeSED(PlugwiseNode):
             self._SED_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:
-                _LOGGER.debug(
-                    "Node %s awake for state change", self.get_mac()
-                )
+                _LOGGER.debug("Node %s awake for state change", self.get_mac())
             else:
                 _LOGGER.info(
                     "Unknown awake message type (%s) received for node %s",

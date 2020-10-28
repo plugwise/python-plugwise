@@ -44,7 +44,7 @@ Then reconfigure your tokens on the pypi website accordingly (only allowing proj
 
 ## Travis
 
-Go to [travis repositories](https://travis-ci.org/account/repositories) and click on the 'organisations' to view whats in our organisation.
+Go to [travis repositories](https://travis-ci.org/account/repositories) and click on the 'organisations' to view what's in our organisation.
 
 Travis needs the PYPI production token for [PyPI deployment](https://docs.travis-ci.com/user/deployment/pypi/)
 

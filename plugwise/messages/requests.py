@@ -3,10 +3,7 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 All known request messages to be send to plugwise devices
 """
-from plugwise.constants import (
-    MESSAGE_FOOTER,
-    MESSAGE_HEADER,
-)
+from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
 from plugwise.message import PlugwiseMessage
 from plugwise.util import (
     DateTime,
@@ -73,7 +70,7 @@ class NodeAddRequest(NodeRequest):
 
     def __init__(self, mac, accept: bool):
         super().__init__(mac)
-        accept_value = 1 if accept == True else 0
+        accept_value = 1 if accept is True else 0
         self.args.append(Int(accept_value, length=2))
 
     # This message has an exceptional format (MAC at end of message)
@@ -98,7 +95,7 @@ class NodeAllowJoiningRequest(NodeRequest):
     def __init__(self, accept: bool):
         super().__init__("")
         # TODO: Make sure that '01' means enable, and '00' disable joining
-        val = 1 if accept == True else 0
+        val = 1 if accept is True else 0
         self.args.append(Int(val, length=2))
 
 
@@ -196,7 +193,7 @@ class CircleSwitchRelayRequest(NodeRequest):
 
     def __init__(self, mac, on):
         super().__init__(mac)
-        val = 1 if on == True else 0
+        val = 1 if on is True else 0
         self.args.append(Int(val, length=2))
 
 
@@ -299,7 +296,7 @@ class CircleEnableScheduleRequest(NodeRequest):
 
     def __init__(self, mac, on):
         super().__init__(mac)
-        val = 1 if on == True else 0
+        val = 1 if on is True else 0
         self.args.append(Int(val, length=2))
         # the second parameter is always 0x01
         self.args.append(Int(1, length=2))
@@ -348,7 +345,7 @@ class NodeBroadcastGroupSwitchRequest(NodeRequest):
 
     def __init__(self, group_mac, switch_state: bool):
         super().__init__(group_mac)
-        val = 1 if switch_state == True else 0
+        val = 1 if switch_state is True else 0
         self.args.append(Int(val, length=2))
 
 
@@ -395,7 +392,7 @@ class NodeSleepConfigRequest(NodeRequest):
         stay_active_val = Int(stay_active, length=2)
         sleep_for_val = Int(sleep_for, length=4)
         maintenance_interval_val = Int(maintenance_interval, length=4)
-        val = 1 if sync_clock == True else 0
+        val = 1 if sync_clock is True else 0
         clock_sync_val = Int(val, length=2)
         clock_interval_val = Int(clock_interval, length=4)
         self.args += [
@@ -492,7 +489,7 @@ class ScanConfigureRequest(NodeRequest):
         reset_timer_value = Int(reset_timer, length=2)
         # Sensitivity: HIGH(0x14),  MEDIUM(0x1E),  OFF(0xFF)
         sensitivity_value = Int(sensitivity, length=2)
-        light_temp = 1 if light == True else 0
+        light_temp = 1 if light is True else 0
         light_value = Int(light_temp, length=2)
         self.args += [
             sensitivity_value,
@@ -537,6 +534,6 @@ class CircleInitialRelaisStateRequest(NodeRequest):
 
     def __init__(self, mac, configure: bool, relais_state: bool):
         super().__init__(mac)
-        set_or_get = Int(1 if configure == True else 0, length=2)
-        relais = Int(1 if relais_state == True else 0, length=2)
+        set_or_get = Int(1 if configure is True else 0, length=2)
+        relais = Int(1 if relais_state is True else 0, length=2)
         self.args += [set_or_get, relais]
