@@ -231,7 +231,7 @@ jobs:
   test-publishing:
     name: Build and publish Python 🐍 distributions 📦 to TestPyPI
     runs-on: ubuntu-latest
-    needs: pytest
+    needs: coverage
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v2
@@ -263,5 +263,5 @@ jobs:
         with:
           password: ${{ secrets.testpypi_token }}
           repository_url: https://test.pypi.org/legacy/
-          skip_existing: false
+          skip_existing: true
 

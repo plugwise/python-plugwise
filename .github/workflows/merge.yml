@@ -100,4 +100,4 @@ jobs:
 #      with:
 #        password: ${{ secrets.pypi_token }}
 #        repository_url: https://pypi.org/legacy/
-#        skip_existing: true
+#        skip_existing: false
