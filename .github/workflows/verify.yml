@@ -9,10 +9,10 @@ env:
   PRE_COMMIT_HOME: ~/.cache/pre-commit
 
 on: 
-  push:
   schedule:
     - cron: '0 0 * * 0' # weekly
-#  pull_request:
+  push:
+  pull_request:
 
 jobs:
   # Prepare default python version environment
