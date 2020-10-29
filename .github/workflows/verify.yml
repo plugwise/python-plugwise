@@ -268,7 +268,7 @@ jobs:
   publishing:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
-    needs: [pytest, coverage]
+    needs: coverage
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v2
