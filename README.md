@@ -6,7 +6,6 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/plugwise)
 [![Build Status](https://github.com/plugwise/python-plugwise/workflows/Python%20Plugwise%20CI%20verification/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
-[![Build Status](https://travis-ci.org/plugwise/python-plugwise.svg?branch=main)](https://travis-ci.org/plugwise/python-plugwise)
 [![codecov](https://codecov.io/gh/plugwise/python-plugwise/branch/main/graph/badge.svg)](https://codecov.io/gh/plugwise/python-plugwise)
 [![PyPI version fury.io](https://badge.fury.io/py/plugwise.svg)](https://pypi.python.org/pypi/plugwise/)
 
