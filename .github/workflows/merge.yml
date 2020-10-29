@@ -99,5 +99,5 @@ jobs:
 #      uses: pypa/gh-action-pypi-publish@master
 #      with:
 #        password: ${{ secrets.pypi_token }}
-#        repository_url: https://test.pypi.org/legacy/
+#        repository_url: https://pypi.org/legacy/
 #        skip_existing: true
