@@ -92,12 +92,12 @@ jobs:
         run: |
           echo "Failed to restore Python virtual environment from cache"
           exit 1
-    - name: Build a distribution
-      run: >-
-        python setup.py sdist
-    - name: Publish distribution 📦 to Test PyPI
-      uses: pypa/gh-action-pypi-publish@master
-      with:
-        password: ${{ secrets.pypi_token }}
-        repository_url: https://pypi.org/legacy/
-        skip_existing: true
+      - name: Build a distribution
+        run: >-
+          python setup.py sdist
+      - name: Publish distribution 📦 to Test PyPI
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.pypi_token }}
+          repository_url: https://pypi.org/legacy/
+          skip_existing: true
