@@ -1,4 +1,4 @@
-"""Plugwise Circle node object. """
+"""Plugwise Circle node object."""
 from datetime import datetime, timedelta
 import logging
 
@@ -43,7 +43,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseCircle(PlugwiseNode):
-    """Provides interface to the Plugwise Circle nodes and base class for Circle+ nodes"""
+    """Provides interface to the Plugwise Circle nodes and base class for Circle+ nodes."""
 
     def __init__(self, mac, address, stick):
         super().__init__(mac, address, stick)
@@ -81,30 +81,28 @@ class PlugwiseCircle(PlugwiseNode):
         self._request_calibration()
 
     def _request_calibration(self, callback=None):
-        """Request calibration info"""
+        """Request calibration info."""
         self.stick.send(
             CircleCalibrationRequest(self.mac),
             callback,
         )
 
     def _request_switch(self, state, callback=None):
-        """Request to switch relay state and request state info"""
+        """Request to switch relay state and request state info."""
         self.stick.send(
             CircleSwitchRelayRequest(self.mac, state),
             callback,
         )
 
     def update_power_usage(self, callback=None):
-        """Request power usage"""
+        """Request power usage."""
         self.stick.send(
             CirclePowerUsageRequest(self.mac),
             callback,
         )
 
     def _on_message(self, message):
-        """
-        Process received message
-        """
+        """Process received message."""
         if isinstance(message, CirclePowerUsageResponse):
             if self.calibration:
                 self._response_power_usage(message)
@@ -144,7 +142,7 @@ class PlugwiseCircle(PlugwiseNode):
         pass
 
     def get_relay_state(self) -> bool:
-        """Return last known relay state """
+        """Return last known relay state."""
         return self._relay_state
 
     def set_relay_state(self, state: bool, callback=None):
@@ -153,8 +151,8 @@ class PlugwiseCircle(PlugwiseNode):
 
     def get_power_usage(self):
         """
-        Returns power usage during the last second in Watts
-        Based on last received power usage information
+        Returns power usage during the last second in Watts.
+        Based on last received power usage information.
         """
         if self.pulses_1s is not None:
             return self.pulses_to_kWs(self.pulses_1s) * 1000
@@ -162,8 +160,8 @@ class PlugwiseCircle(PlugwiseNode):
 
     def get_power_usage_8_sec(self):
         """
-        Returns power usage during the last 8 second in Watts
-        Based on last received power usage information
+        Returns power usage during the last 8 second in Watts.
+        Based on last received power usage information.
         """
         if self.pulses_8s is not None:
             return self.pulses_to_kWs(self.pulses_8s, 8) * 1000
@@ -171,8 +169,8 @@ class PlugwiseCircle(PlugwiseNode):
 
     def get_power_consumption_current_hour(self):
         """
-        Returns the power usage during this running hour in kWh
-        Based on last received power usage information
+        Returns the power usage during this running hour in kWh.
+        Based on last received power usage information.
         """
         if self.pulses_consumed_1h is not None:
             return self.pulses_to_kWs(self.pulses_consumed_1h, 3600)
@@ -180,8 +178,8 @@ class PlugwiseCircle(PlugwiseNode):
 
     def get_power_production_current_hour(self):
         """
-        Returns the power production during this running hour in kWh
-        Based on last received power usage information
+        Returns the power production during this running hour in kWh.
+        Based on last received power usage information.
         """
         if self.pulses_produced_1h is not None:
             return self.pulses_to_kWs(self.pulses_produced_1h, 3600)

@@ -1,10 +1,8 @@
 """Plugwise protocol helpers."""
 import binascii
 import datetime
-import logging
 import re
 import struct
-import sys
 
 import crcmod
 
@@ -25,11 +23,7 @@ def validate_mac(mac):
 
 
 def inc_seq_id(seq_id, value=1):
-    """
-    Increment sequence id by value
-
-    :return: 4 bytes
-    """
+    """Increment sequence id by value returning 4 bytes."""
     temp_int = int(seq_id, 16) + value
     # Max seq_id = b'FFFC'
     # b'FFFD' reserved for 'NodeJoinAckResponse' message
@@ -158,7 +152,7 @@ class SInt(BaseType):
         self.length = length
 
     def negative(self, val, octals):
-        """compute the 2's compliment of int value val for negative values"""
+        """Compute the 2's compliment of int value val for negative values."""
         bits = octals << 2
         if (val & (1 << (bits - 1))) != 0:
             val = val - (1 << bits)
@@ -182,7 +176,7 @@ class UnixTimestamp(Int):
 
 
 class Year2k(Int):
-    """year value that is offset from the year 2000"""
+    """Year value that is offset from the year 2000."""
 
     def deserialize(self, val):
         Int.deserialize(self, val)
@@ -190,9 +184,9 @@ class Year2k(Int):
 
 
 class DateTime(CompositeType):
-    """datetime value as used in the general info response
-    format is: YYMMmmmm
-    where year is offset value from the epoch which is Y2K
+    """Datetime value as used in the general info response.
+    Format is: YYMMmmmm
+    Where year is offset value from the epoch which is Y2K
     and last four bytes are offset from the beginning of the month in minutes
     """
 
@@ -222,7 +216,7 @@ class DateTime(CompositeType):
 
 
 class Time(CompositeType):
-    """time value as used in the clock info response"""
+    """Time value as used in the clock info response."""
 
     def __init__(self, hour=0, minute=0, second=0):
         CompositeType.__init__(self)
@@ -252,7 +246,7 @@ class IntDec(BaseType):
 
 
 class RealClockTime(CompositeType):
-    """time value as used in the realtime clock info response"""
+    """Time value as used in the realtime clock info response."""
 
     def __init__(self, hour=0, minute=0, second=0):
         CompositeType.__init__(self)
@@ -271,7 +265,7 @@ class RealClockTime(CompositeType):
 
 
 class RealClockDate(CompositeType):
-    """date value as used in the realtime clock info response"""
+    """Date value as used in the realtime clock info response."""
 
     def __init__(self, day=0, month=0, year=0):
         CompositeType.__init__(self)

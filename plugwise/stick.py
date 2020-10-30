@@ -10,8 +10,6 @@ import sys
 import threading
 import time
 
-import serial
-
 from plugwise.connections.serial import PlugwiseUSBConnection
 from plugwise.connections.socket import SocketConnection
 from plugwise.constants import (
@@ -27,7 +25,6 @@ from plugwise.constants import (
     ACK_TIMEOUT,
     CB_JOIN_REQUEST,
     CB_NEW_NODE,
-    MAX_TIME_DRIFT,
     MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
     NACK_ON_OFF,
@@ -41,7 +38,6 @@ from plugwise.constants import (
     NODE_TYPE_SCAN,
     NODE_TYPE_SENSE,
     NODE_TYPE_STEALTH,
-    NODE_TYPE_STICK,
     NODE_TYPE_SWITCH,
     SLEEP_TIME,
     UTF8_DECODE,
@@ -54,13 +50,10 @@ from plugwise.exceptions import (
     StickInitError,
     TimeoutException,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
     CircleCalibrationRequest,
     CircleClockGetRequest,
-    CircleClockSetRequest,
     CirclePlusRealTimeClockGetRequest,
-    CirclePlusRealTimeClockSetRequest,
     CirclePlusScanRequest,
     CirclePowerUsageRequest,
     CircleSwitchRelayRequest,
@@ -94,10 +87,8 @@ from plugwise.node import PlugwiseNode
 from plugwise.nodes.circle import PlugwiseCircle
 from plugwise.nodes.circle_plus import PlugwiseCirclePlus
 from plugwise.nodes.scan import PlugwiseScan
-from plugwise.nodes.sed import NodeSED
 from plugwise.nodes.sense import PlugwiseSense
 from plugwise.nodes.stealth import PlugwiseStealth
-from plugwise.nodes.switch import PlugwiseSwitch
 from plugwise.parser import PlugwiseParser
 from plugwise.util import inc_seq_id, validate_mac
 
@@ -136,6 +127,17 @@ class stick:
         self._run_send_message_thread = False
         self._run_update_thread = False
 
+        self._auto_update_timer = None
+        self._nodes_discovered = None
+        self._receive_timeout_thread = None
+        self._send_message_queue = None
+        self._send_message_thread = None
+        self._run_watchdog = None
+        self._update_thread = None
+        self._watchdog_thread = None
+        self.connection = None
+        self.init_callback = None
+
         if callback:
             self.auto_initialize(callback)
 
@@ -169,7 +171,7 @@ class stick:
             _LOGGER.error("Unknown error : %s", e)
 
     def connect(self, callback=None):
-        """Connect to stick and raise error if it fails"""
+        """Connect to stick and raise error if it fails."""
         self.init_callback = callback
         # Open connection to USB Stick
         if ":" in self.port:
@@ -206,7 +208,7 @@ class stick:
         _LOGGER.debug("All threads started")
 
     def initialize_stick(self, callback=None, timeout=MESSAGE_TIME_OUT):
-        # Initialize USBstick
+        """Initialize USBstick."""
         if not self.connection.is_connected():
             raise StickInitError
 
@@ -240,7 +242,7 @@ class stick:
             raise NetworkDown
 
     def initialize_circle_plus(self, callback=None, timeout=MESSAGE_TIME_OUT):
-        # Initialize Circle+
+        """Initialize Circle+."""
         if (
             not self.connection.is_connected()
             or not self._stick_initialized
@@ -258,7 +260,7 @@ class stick:
             raise CirclePlusError
 
     def disconnect(self):
-        """Disconnect from stick and raise error if it fails"""
+        """Disconnect from stick and raise error if it fails."""
         self._run_watchdog = False
         self._run_update_thread = False
         self._auto_update_timer = 0
@@ -314,7 +316,7 @@ class stick:
         )
 
     def node(self, mac: str) -> PlugwiseNode:
-        """Return specific Plugwise node object"""
+        """Return specific Plugwise node object."""
         return self._plugwise_nodes.get(mac, None)
 
     def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
@@ -343,10 +345,8 @@ class stick:
                             callback,
                         )
                 return True
-            else:
-                return False
-        else:
             return False
+        return False
 
     def scan(self, callback=None):  # noqa: C901
         """Scan for connected plugwise nodes."""
@@ -409,15 +409,13 @@ class stick:
             discover_timeout = (
                 10 + (len(nodes_to_discover) * 2) + (MESSAGE_TIME_OUT * MESSAGE_RETRY)
             )
-            self.discover_timeout = threading.Timer(
-                discover_timeout, timeout_expired
-            ).start()
+            threading.Timer(discover_timeout, timeout_expired).start()
             _LOGGER.debug("Start discovery of linked node types...")
             for mac in nodes_to_discover:
                 self.discover_node(mac, node_discovered)
 
         def scan_circle_plus():
-            """Callback when Circle+ is discovered"""
+            """Callback when Circle+ is discovered."""
             if self._plugwise_nodes.get(self.circle_plus_mac):
                 if self.print_progress:
                     print("Scan Circle+ for linked nodes")
@@ -441,7 +439,7 @@ class stick:
             )
 
     def get_mac_stick(self) -> str:
-        """Return mac address of USB-Stick"""
+        """Return mac address of USB-Stick."""
         if self._mac_stick:
             return self._mac_stick.decode(UTF8_DECODE)
         return None
@@ -458,28 +456,24 @@ class stick:
             self._accept_join_requests = False
 
     def node_join(self, mac: str, callback=None) -> bool:
-        """Accept node to join Plugwise network by adding it in Circle+ memory"""
+        """Accept node to join Plugwise network by adding it in Circle+ memory."""
         if validate_mac(mac) is True:
             self.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback)
             return True
-        else:
-            _LOGGER.warning(
-                "Invalid mac '%s' address, unable to join node manually.", mac
-            )
+        _LOGGER.warning("Invalid mac '%s' address, unable to join node manually.", mac)
         return False
 
     def node_unjoin(self, mac: str, callback=None) -> bool:
-        """Remove node from the Plugwise network by deleting it from the Circle+ memory"""
+        """Remove node from the Plugwise network by deleting it from the Circle+ memory."""
         if validate_mac(mac) is True:
             self.send(
                 NodeRemoveRequest(bytes(self.circle_plus_mac, UTF8_DECODE), mac),
                 callback,
             )
             return True
-        else:
-            _LOGGER.warning(
-                "Invalid mac '%s' address, unable to unjoin node manually.", mac
-            )
+        _LOGGER.warning(
+            "Invalid mac '%s' address, unable to unjoin node manually.", mac
+        )
         return False
 
     def _append_node(self, mac, address, node_type):

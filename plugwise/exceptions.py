@@ -2,7 +2,7 @@
 
 
 class PlugwiseException(Exception):
-    """Base error class for this Plugwise library"""
+    """Base error class for this Plugwise library."""
 
 
 ### Stick exceptions ###
