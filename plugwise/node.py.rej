@@ -1,0 +1,16 @@
+***************
+*** 34,40 ****
+  
+  class PlugwiseNode:
+      """Base class for a Plugwise node."""
+- 
+      def __init__(self, mac, address, stick):
+          mac = mac.upper()
+          if validate_mac(mac) is False:
+--- 33,38 ----
+  
+  class PlugwiseNode:
+      """Base class for a Plugwise node."""
+      def __init__(self, mac, address, stick):
+          mac = mac.upper()
+          if validate_mac(mac) is False:

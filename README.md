@@ -10,7 +10,6 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 [![PyPI version fury.io](https://badge.fury.io/py/plugwise.svg)](https://pypi.python.org/pypi/plugwise/)
 [![Newest commit](https://github.com/plugwise/python-plugwise/workflows/Newest%20commit/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
 
-
 ## Integration
 
 ### Home-Assistant Integration
@@ -41,20 +40,20 @@ Please make sure you at least ran `scripts/setup.sh` before attempting to `git c
 
 Module providing interfacing with the Plugwise devices:
 
-  - [x] Adam
-  - [x]  - Floor
-  - [x]  - Koen (a Koen always comes with a Plug, the Plug is the active part)
-  - [x]  - Lisa
-  - [x]  - Plug
-  - [x]  - Tom
-  - [x] Anna 
-  - [x] Smile P1
-  - [x] Stick
-  - [x] Stretch
-  - [x] [Home-Assistant](https://home-assistant.io) via 
-  - [x]  - Native supporting networked Plugwise products
-  - [ ]  - Native supporting USB Plugwise products
-  - [x]  - (HACS)[https://hacs.xyz] and `custom_component` [Plugwise-HA](https://github.com/plugwise/plugwise-beta/] (supporting all devices)
+- [x] Adam
+  - [x] Floor
+  - [x] Koen (a Koen always comes with a Plug, the Plug is the active part)
+  - [x] Lisa
+  - [x] Plug
+  - [x] Tom
+- [x] Anna 
+- [x] Smile P1
+- [x] Stick
+- [x] Stretch
+- [x] [Home-Assistant](https://home-assistant.io) via 
+  - [x] Native supporting networked Plugwise products
+  - [ ] Native supporting USB Plugwise products
+- [x]  - [HACS](https://hacs.xyz) and `custom_component` [Plugwise-HA](https://github.com/plugwise/plugwise-beta/) (supporting all devices)
 
 ## License, origins and contributors
 
@@ -62,11 +61,11 @@ As per the origins we have retained the appropriate licensing and including the 
 
 Origins (from newest to oldest):
 
-  - 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
-  - Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
-  - Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via https://github.com/laetificat (Kevin)
-  - USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
-  - USB-plugwise module - `plugwise` by https://github.com/cyberjunky/python-plugwise (Ron) originally by https://github.com/aequitas/python-plugwise (Johan) (with reference only in license to Sven)
+- 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
+- Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
+- Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via https://github.com/laetificat (Kevin)
+- USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
+- USB-plugwise module - `plugwise` by https://github.com/cyberjunky/python-plugwise (Ron) originally by https://github.com/aequitas/python-plugwise (Johan) (with reference only in license to Sven)
 
 # Thanks
 

@@ -6,10 +6,12 @@ Plugwise-Smile has to be in working and functioning condition on all circumstanc
 From the above list of setups a number of values is selected to be asserted. Currently we have the following asserts in place:
 
 Information gathering: (negative)
+
 - Check handling against a Smile that 'times out' during request
 - Check handling against a Smile refusing contact (`internal server error`)
 
 Service handling (i.e. changing setpoint or switching a relay)
+
 - Check against a Smile not accepting change (`internal server error`) (negative)
 - Switch a relay, change a setpoint or change a schema/preset (positive)
 
