@@ -28,7 +28,16 @@ Once the project is ready for upload to test (i.e. version number ending in `a0`
 
 Prepare:
 
-- [ ] `python3.8 -m venv venv ; source venv/bin/activate ; pip install --upgrade pip; pip install -r requirements.txt ; pip install -r requirements_test.txt ; pip install --upgrade setuptools wheel twine`
+- [ ] Run 
+
+      ```bash
+      python3.8 -m venv venv
+      source venv/bin/activate
+      pip install --upgrade pip
+      pip install -r requirements.txt
+      pip install -r requirements_test.txt
+      pip install --upgrade setuptools wheel twine
+      ```
 
 Package: (**ensure you are in your venv**)
 

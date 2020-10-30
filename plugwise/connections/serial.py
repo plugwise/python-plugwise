@@ -8,9 +8,8 @@ import logging
 import serial
 
 from plugwise.connections.connection import StickConnection
-from plugwise.constants import BAUD_RATE, BYTE_SIZE, PARITY, SLEEP_TIME, STOPBITS
+from plugwise.constants import BAUD_RATE, BYTE_SIZE, STOPBITS
 from plugwise.exceptions import PortError
-from plugwise.message import PlugwiseMessage
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,6 +23,8 @@ class PlugwiseUSBConnection(StickConnection):
         self._byte_size = BYTE_SIZE
         self._stopbits = STOPBITS
         self._parity = serial.PARITY_NONE
+
+        self._serial = None
 
     def _open_connection(self):
         """Open serial port"""

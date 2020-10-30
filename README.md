@@ -1,6 +1,6 @@
 # Plugwise python module
 
-This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain in Home Assistant Core. 
+This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain in Home Assistant Core.
 
 Our main usage for this module is supporting [Home Assistant](https://www.home-assistant.io) / [home-assistant](http://github.com/home-assistant/core/)
 
@@ -46,11 +46,11 @@ Module providing interfacing with the Plugwise devices:
   - [x] Lisa
   - [x] Plug
   - [x] Tom
-- [x] Anna 
+- [x] Anna
 - [x] Smile P1
 - [x] Stick
 - [x] Stretch
-- [x] [Home-Assistant](https://home-assistant.io) via 
+- [x] [Home-Assistant](https://home-assistant.io) via
   - [x] Native supporting networked Plugwise products
   - [ ] Native supporting USB Plugwise products
 - [x]  - [HACS](https://hacs.xyz) and `custom_component` [Plugwise-HA](https://github.com/plugwise/plugwise-beta/) (supporting all devices)
@@ -63,10 +63,11 @@ Origins (from newest to oldest):
 
 - 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
 - Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
-- Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via https://github.com/laetificat (Kevin)
+- Networked Plugwise Anna module with custom_module - [`haanna/anna-ha`](https://github.com/laetificat) (Kevin)
 - USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
-- USB-plugwise module - `plugwise` by https://github.com/cyberjunky/python-plugwise (Ron) originally by https://github.com/aequitas/python-plugwise (Johan) (with reference only in license to Sven)
+- USB-plugwise module - [`plugwise`](https://github.com/cyberjunky/python-plugwise) (Ron) [originally](https://github.com/aequitas/python-plugwise) by (Johan) (with reference only in license to Sven)
 
-# Thanks
+## Thanks
 
-On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl)for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.
+On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl)for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant
+

@@ -13,8 +13,8 @@ A clear and concise description of what the bug is.
 
 ## Evidence
 
- 1. Look for Errors related to plugwise-beta in Developer Tools --> Logs
- 2. If nothing found add the below to your `configuration.yaml` and restart HA
+1. Look for Errors related to plugwise-beta in Developer Tools --> Logs
+2. If nothing found add the below to your `configuration.yaml` and restart HA
 
     ```yaml
     # Add/modify configuration.yaml
@@ -24,8 +24,8 @@ A clear and concise description of what the bug is.
         custom_components.plugwise-beta: debug
     ```
 
- 3. After the restart, at Developer Tools --> Logs, load the FULL HA LOG.
- 4. Upload relevant issues to a site like pastebin and copy the link here
+3. After the restart, at Developer Tools --> Logs, load the FULL HA LOG.
+4. Upload relevant issues to a site like pastebin and copy the link here
 
 ## Expected behavior
 
@@ -50,4 +50,3 @@ If applicable, add screenshots to help explain your problem.
 ## Additional context
 
 Add any other context about the problem here.
-

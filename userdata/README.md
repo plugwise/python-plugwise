@@ -6,11 +6,11 @@ Below you'll find a list of setups we have (green) and are still looking for (ye
 
 Intended: (yellow ones means, please submit yours)
 
-- [![Generic badge](https://img.shields.io/badge/Adam-v3-yellow.svg)]() setup with a boiler, Floor, Koen, Plug, Tom and Lisa (i.e. the whole shebang) (`adam_full_option`)
+- [](https://img.shields.io/badge/Adam-v3-yellow.svg) setup with a boiler, Floor, Koen, Plug, Tom and Lisa (i.e. the whole shebang) (`adam_full_option`)
 - [![Generic badge](https://img.shields.io/badge/Adam-v3-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/adam_living_floor_plus_3_rooms) setup with a boiler, Floor, Lisa and 3x Toms (riemers)
 - [![Generic badge](https://img.shields.io/badge/Adam-v3-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/adam_multiple_devices_per_zone) setup with everything but Koen and Anna, multiple devices per zone (tane)
 - [![Generic badge](https://img.shields.io/badge/Adam-v3-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/adam_zone_per_device) setup with everything but Koen and Anna, device per zone (tane)
-- [![Generic badge](https://img.shields.io/badge/Adam-v3-yellow.svg)]() setup without a boiler, but with Lisa and either a Plug or a Tom (`adam_without_boiler`) 
+- [](https://img.shields.io/badge/Adam-v3-yellow.svg) setup without a boiler, but with Lisa and either a Plug or a Tom (`adam_without_boiler`)
 
 - [![Generic badge](https://img.shields.io/badge/Adam_Anna-v3-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/adam_plus_anna) a boiler, Adam, Anna and Tom (bouwew)
 
@@ -23,7 +23,7 @@ Intended: (yellow ones means, please submit yours)
 - [![Generic badge](https://img.shields.io/badge/P1-v3-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/p1v3) electricity only (compatech)
 - [![Generic badge](https://img.shields.io/badge/P1-v3-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/p1v3solarfake) electricity only - just the above with added data, please submit **yours** (from above)
 - [![Generic badge](https://img.shields.io/badge/P1-v3-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/p1v3_full_option) electricity, solar and gas ()
-- [![Generic badge](https://img.shields.io/badge/P1-v3-yellow.svg)]() electricity and gas (`p1v3_gas_nosolar`)
+- [](https://img.shields.io/badge/P1-v3-yellow.svg) electricity and gas (`p1v3_gas_nosolar`)
 - [![Generic badge](https://img.shields.io/badge/P1-v2-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/smile_p1_v2) electricity and gas ()
 - [![Generic badge](https://img.shields.io/badge/P1-v2-green.svg)](https://github.com/plugwise/Plugwise-Smile/tree/docs/tests/smile_p1_v2_2) another electricity and gas ()
 
@@ -33,8 +33,8 @@ If you see a yellow item and feel your setup fits in, please **MAIL** one of the
 
 They should al start with `<xml` and copied as plain text (i.e. not preformatted like Chrome and Safari do).
 Either use wget/curl or use your 'developer view' from your browser to copy the source text
- 
-```
+
+```text
 http://{ip_of_your_smile}/core/appliances
 http://{ip_of_your_smile}/core/direct_objects
 http://{ip_of_your_smile}/core/domain_objects
@@ -60,3 +60,4 @@ Excerpt:
 - [ ] modify `domain_objects` and set `latitude` to `52.21`
 - [ ] modify `domain_objects` and set `city` to `Sassenheim`
 - [ ] modify `domain_objects` and set `postal_code` to `2171`
+
