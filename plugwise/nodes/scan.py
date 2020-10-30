@@ -1,18 +1,12 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise Scan node object
-"""
+"""Plugwise Scan node object."""
 import logging
 
 from plugwise.constants import (
     ACK_SCAN_PARAMETERS_SET,
     HA_BINARY_SENSOR,
     HA_SENSOR,
-    NACK_SCAN_PARAMETERS_SET,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
-    SCAN_SENSITIVITY,
     SCAN_SENSITIVITY_HIGH,
     SCAN_SENSITIVITY_MEDIUM,
     SCAN_SENSITIVITY_OFF,
@@ -22,7 +16,6 @@ from plugwise.constants import (
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
 from plugwise.messages.responses import NodeAckResponse, NodeSwitchGroupResponse
 from plugwise.nodes.sed import NodeSED
@@ -31,7 +24,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseScan(NodeSED):
-    """provides interface to the Plugwise Scan nodes"""
+    """Provides interface to the Plugwise Scan nodes."""
 
     def __init__(self, mac, address, stick):
         super().__init__(mac, address, stick)
@@ -52,12 +45,12 @@ class PlugwiseScan(NodeSED):
         self._new_sensitivity = None
 
     def get_motion(self) -> bool:
-        """ Return motion state"""
+        """Return motion state."""
         return self._motion_state
 
     def _on_SED_message(self, message):
         """
-        Process received message
+        Process received message.
         """
         if isinstance(message, NodeSwitchGroupResponse):
             _LOGGER.debug(
@@ -77,7 +70,7 @@ class PlugwiseScan(NodeSED):
             )
 
     def _process_ack_message(self, message):
-        """Process acknowledge message"""
+        """Process acknowledge message."""
         if message.ack_id == ACK_SCAN_PARAMETERS_SET:
             self._motion_reset_timer = self._new_motion_reset_timer
             self._daylight_mode = self._new_daylight_mode
@@ -90,7 +83,7 @@ class PlugwiseScan(NodeSED):
             )
 
     def _process_switch_group(self, message):
-        """Switch group request from Scan"""
+        """Switch group request from Scan."""
         if message.power_state.value == 0:
             # turn off => clear motion
             if self._motion_state:
@@ -109,7 +102,7 @@ class PlugwiseScan(NodeSED):
             )
 
     def CalibrateLight(self, callback=None):
-        """Queue request to calibration light sensitivity"""
+        """Queue request to calibration light sensitivity."""
         self._queue_request(ScanLightCalibrateRequest(self.mac), callback)
 
     def Configure_scan(
@@ -119,7 +112,7 @@ class PlugwiseScan(NodeSED):
         daylight_mode=SCAN_DAYLIGHT_MODE,
         callback=None,
     ):
-        """Queue request to set motion reporting settings"""
+        """Queue request to set motion reporting settings."""
         self._new_motion_reset_timer = motion_reset_timer
         self._new_daylight_mode = daylight_mode
         if sensitivity_level == SCAN_SENSITIVITY_HIGH:
@@ -137,7 +130,7 @@ class PlugwiseScan(NodeSED):
         )
 
     def SetMotionAction(self, callback=None):
-        """Queue Configure Scan to signal motion"""
+        """Queue Configure Scan to signal motion."""
         # TODO:
 
         # self._queue_request(NodeSwitchGroupRequest(self.mac), callback)

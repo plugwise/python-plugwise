@@ -3,7 +3,6 @@
 import asyncio
 
 # Fixture writing
-import io
 import logging
 import os
 from pprint import PrettyPrinter

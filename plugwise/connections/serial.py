@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Serial connection
-"""
+"""Serial connection."""
 import logging
 
 import serial
@@ -15,7 +11,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseUSBConnection(StickConnection):
-    """simple wrapper around serial module"""
+    """Simple wrapper around serial module."""
 
     def __init__(self, port, stick=None):
         super().__init__(port, stick)
@@ -27,7 +23,7 @@ class PlugwiseUSBConnection(StickConnection):
         self._serial = None
 
     def _open_connection(self):
-        """Open serial port"""
+        """Open serial port."""
         _LOGGER.debug("Open serial port %s", self.port)
         try:
             self._serial = serial.Serial(
@@ -83,7 +79,7 @@ class PlugwiseUSBConnection(StickConnection):
         return None
 
     def _write_data(self, data):
-        """Write data to serial port"""
+        """Write data to serial port."""
         try:
             self._serial.write(data)
         except serial.serialutil.SerialException as err:

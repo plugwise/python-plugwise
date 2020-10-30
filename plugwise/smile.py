@@ -55,7 +55,6 @@ class Smile:
     """Define the Plugwise object."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
-
     def __init__(
         self,
         host,
@@ -794,10 +793,7 @@ class Smile:
                     ):
                         continue
                     # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-                    if (
-                        measurement == "compressor_state"
-                        or measurement == "flame_state"
-                    ):
+                    if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
                     data[name] = format_measure(measure)
