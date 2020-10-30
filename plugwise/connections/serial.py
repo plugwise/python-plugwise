@@ -8,9 +8,10 @@ import logging
 import serial
 
 from plugwise.connections.connection import StickConnection
-from plugwise.constants import BAUD_RATE, BYTE_SIZE, PARITY, SLEEP_TIME, STOPBITS
+from plugwise.constants import BAUD_RATE, BYTE_SIZE, STOPBITS
 from plugwise.exceptions import PortError
-from plugwise.message import PlugwiseMessage
+
+#  from plugwise.message import PlugwiseMessage
 
 _LOGGER = logging.getLogger(__name__)
 

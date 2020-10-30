@@ -584,7 +584,7 @@ class stick:
         )
 
     def _send_message_loop(self):
-        """ daemon to send messages waiting in queue """
+        """Daemon to send messages waiting in queue."""
         while self._run_send_message_thread:
             try:
                 request_set = self._send_message_queue.get(block=True, timeout=1)
@@ -671,7 +671,7 @@ class stick:
         _LOGGER.debug("Send message loop stopped")
 
     def _receive_timeout_loop(self):
-        """ daemon to time out requests without any (n)ack response message """
+        """Daemon to time out requests without any (n)ack response message."""
         while self._run_receive_timeout_thread:
             for seq_id in list(self.expected_responses.keys()):
                 if self.expected_responses[seq_id][4] is not None:
