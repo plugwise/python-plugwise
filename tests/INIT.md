@@ -30,14 +30,14 @@ Prepare:
 
   - Run 
 
-      ```bash
-      python3.8 -m venv venv
-      source venv/bin/activate
-      pip install --upgrade pip
-      pip install -r requirements.txt
-      pip install -r requirements_test.txt
-      pip install --upgrade setuptools wheel twine
-      ```
+    ```bash
+    python3.8 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    pip install -r requirements_test.txt
+    pip install --upgrade setuptools wheel twine
+    ```
 
 Package: (**ensure you are in your venv**)
 
@@ -58,7 +58,7 @@ Travis needs the PYPI production token for [PyPI deployment](https://docs.travis
 
 Todo: (** ensure you are in your venv**)
 
-  - `gem install travis`
+  - Run `gem install travis`
   - Edit '.travis.yml` and make sure it looks like:
 
     ```text
