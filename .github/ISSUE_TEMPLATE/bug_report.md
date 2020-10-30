@@ -16,7 +16,7 @@ A clear and concise description of what the bug is.
 1. Look for Errors related to plugwise-beta in Developer Tools --> Logs
 2. If nothing found add the below to your `configuration.yaml` and restart HA
 
-    ``` yaml
+    ```yaml
     # Add/modify configuration.yaml
     logger:
       default: warn
