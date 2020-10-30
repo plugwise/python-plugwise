@@ -7,21 +7,20 @@ From the above list of setups a number of values is selected to be asserted. Cur
 
 Information gathering: (negative)
 
-- Check handling against a Smile that 'times out' during request
-- Check handling against a Smile refusing contact (`internal server error`)
+  - Check handling against a Smile that 'times out' during request
+  - Check handling against a Smile refusing contact (`internal server error`)
 
 Service handling (i.e. changing setpoint or switching a relay)
 
-- Check against a Smile not accepting change (`internal server error`) (negative)
-- Switch a relay, change a setpoint or change a schema/preset (positive)
+  - Check against a Smile not accepting change (`internal server error`) (negative)
+  - Switch a relay, change a setpoint or change a schema/preset (positive)
 
 Data processing (positive)
-- Includes checking various `measures` and settings for each device / location / combination of both
+  - Includes checking various `measures` and settings for each device / location / combination of both
 
 ## Running tests against Plugwise Smile
 
 Our tests are mainly conducted locally by the contributors and Travis CI. You can always look up the latest (hopefully successful) build at (Travis for Plugwise-Smile)[https://travis-ci.org/github/plugwise/Plugwise-Smile].
-
 
 Ensure you have python(3) with virtualenv installed. For ubuntu based systems `apt install python3-pip python3-dev python3-venv`
 
