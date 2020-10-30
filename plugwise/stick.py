@@ -21,7 +21,6 @@ from plugwise.constants import (
     ACK_ERROR,
     ACK_OFF,
     ACK_ON,
-    ACK_REAL_TIME_CLOCK_SET,
     ACK_SCAN_PARAMETERS_SET,
     ACK_SLEEP_SET,
     ACK_SUCCESS,
@@ -106,9 +105,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class stick:
-    """
-    Plugwise connection stick
-    """
+    """Plugwise connection stick."""
 
     def __init__(self, port, callback=None, print_progress=False):
         self._mac_stick = None
@@ -143,7 +140,7 @@ class stick:
             self.auto_initialize(callback)
 
     def auto_initialize(self, callback=None):
-        """ automatic initialization """
+        """Automatic initialization."""
 
         def init_finished():
             if not self.network_online:
@@ -172,7 +169,7 @@ class stick:
             _LOGGER.error("Unknown error : %s", e)
 
     def connect(self, callback=None):
-        """ Connect to stick and raise error if it fails"""
+        """Connect to stick and raise error if it fails"""
         self.init_callback = callback
         # Open connection to USB Stick
         if ":" in self.port:
@@ -214,7 +211,7 @@ class stick:
             raise StickInitError
 
         def cb_stick_initialized():
-            """ Callback when initialization of Plugwise USBstick is finished """
+            """Callback when initialization of Plugwise USBstick is finished."""
             self._stick_initialized = True
 
             # Start watchdog daemon
@@ -261,7 +258,7 @@ class stick:
             raise CirclePlusError
 
     def disconnect(self):
-        """ Disconnect from stick and raise error if it fails"""
+        """Disconnect from stick and raise error if it fails"""
         self._run_watchdog = False
         self._run_update_thread = False
         self._auto_update_timer = 0
@@ -270,18 +267,18 @@ class stick:
         self.connection.disconnect()
 
     def subscribe_stick_callback(self, callback, callback_type):
-        """ Subscribe callback to execute """
+        """Subscribe callback to execute."""
         if callback_type not in self._stick_callbacks:
             self._stick_callbacks[callback_type] = []
         self._stick_callbacks[callback_type].append(callback)
 
     def unsubscribe_stick_callback(self, callback, callback_type):
-        """ Register callback to execute """
+        """Register callback to execute."""
         if callback_type in self._stick_callbacks:
             self._stick_callbacks[callback_type].remove(callback)
 
     def do_callback(self, callback_type, callback_arg=None):
-        """ Execute callbacks registered for specified callback type """
+        """Execute callbacks registered for specified callback type."""
         if callback_type in self._stick_callbacks:
             for callback in self._stick_callbacks[callback_type]:
                 try:
@@ -293,7 +290,7 @@ class stick:
                     _LOGGER.error("Error while executing callback : %s", e)
 
     def _discover_after_scan(self):
-        """ Helper to do callback for new node """
+        """Helper to do callback for new node."""
         node_discovered = None
         for mac in self._nodes_not_discovered.keys():
             if self._plugwise_nodes.get(mac, None):
@@ -304,12 +301,12 @@ class stick:
             self.do_callback(CB_NEW_NODE, node_discovered)
 
     def registered_nodes(self) -> int:
-        """ Return number of nodes registered in Circle+ """
+        """Return number of nodes registered in Circle+."""
         # Include Circle+ too
         return self._nodes_registered + 1
 
     def nodes(self) -> list:
-        """ Return list of mac addresses of discovered and supported plugwise nodes """
+        """Return list of mac addresses of discovered and supported plugwise nodes."""
         return list(
             dict(
                 filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
@@ -317,11 +314,11 @@ class stick:
         )
 
     def node(self, mac: str) -> PlugwiseNode:
-        """ Return specific Plugwise node object"""
+        """Return specific Plugwise node object"""
         return self._plugwise_nodes.get(mac, None)
 
     def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
-        """ Discovery of plugwise node """
+        """Discovery of plugwise node."""
         if validate_mac(mac) is True:
             if not self._plugwise_nodes.get(mac):
                 if mac not in self._nodes_not_discovered.keys():
@@ -352,11 +349,11 @@ class stick:
             return False
 
     def scan(self, callback=None):  # noqa: C901
-        """ scan for connected plugwise nodes """
+        """Scan for connected plugwise nodes."""
         # TODO: flake8 indicates scan is too complex, level 23 indenting is indeed complex
 
         def scan_finished(nodes_to_discover):
-            """ Callback when scan is finished """
+            """Callback when scan is finished."""
             time.sleep(1)
             _LOGGER.debug("Scan plugwise network finished")
             self._nodes_discovered = 0
@@ -486,7 +483,7 @@ class stick:
         return False
 
     def _append_node(self, mac, address, node_type):
-        """ Add Plugwise node to be controlled """
+        """Add Plugwise node to be controlled."""
         _LOGGER.debug(
             "Add new node type (%s) with mac %s",
             str(node_type),
@@ -535,23 +532,17 @@ class stick:
             self.new_message(msg)
 
     def _remove_node(self, mac):
-        """
-        remove circle from stick
-
-        :return: None
-        """
+        """Remove circle from stick."""
         if mac in self._plugwise_nodes:
             del self._plugwise_nodes[mac]
 
     def feed_parser(self, data):
-        """ Feed parser with new data """
+        """Feed parser with new data."""
         assert isinstance(data, bytes)
         self.parser.feed(data)
 
     def send(self, request, callback=None, retry_counter=0):
-        """
-        Submit request message into Plugwise Zigbee network and queue expected response
-        """
+        """Submit request message into Plugwise Zigbee network and queue expected response."""
         assert isinstance(request, NodeRequest)
         if isinstance(request, CirclePowerUsageRequest):
             response_message = CirclePowerUsageResponse()
@@ -1050,7 +1041,7 @@ class stick:
     def message_processed(  # noqa: C901
         self, seq_id, ack_response=None, ack_small=False
     ):
-        """ Execute callback of received messages """
+        """Execute callback of received messages."""
         # TODO: flake8 indicates scan is too complex, level 34! indenting is indeed too complex
         do_callback = False
         do_resend = False
@@ -1297,9 +1288,7 @@ class stick:
                 )
 
     def _watchdog_loop(self):
-        """
-        Main worker loop to watch all other worker threads
-        """
+        """Main worker loop to watch all other worker threads."""
         time.sleep(5)
         circle_plus_retry_counter = 0
         while self._run_watchdog:
@@ -1539,9 +1528,7 @@ class stick:
         _LOGGER.debug("Update loop stopped")
 
     def auto_update(self, timer=None):
-        """
-        setup auto update polling for power usage.
-        """
+        """Setup auto update polling for power usage."""
         if timer == 0:
             self._run_update_thread = False
             self._auto_update_timer = 0

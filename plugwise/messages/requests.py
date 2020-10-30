@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-All known request messages to be send to plugwise devices
-"""
+"""All known request messages to be send to plugwise devices."""
 from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
 from plugwise.message import PlugwiseMessage
 from plugwise.util import (
@@ -23,6 +19,7 @@ class NodeRequest(PlugwiseMessage):
     """
 
     def __init__(self, mac):
+        """Initialize class."""
         PlugwiseMessage.__init__(self)
         self.args = []
         self.mac = mac
@@ -48,7 +45,8 @@ class CirclePlusConnectRequest(NodeRequest):
     ID = b"0004"
 
     def __init__(self, mac):
-        super().__init__(self, mac)
+        """Initialize class."""
+        super().__init__(mac)
 
     # This message has an exceptional format and therefore need to override the serialize method
     def serialize(self):
@@ -93,6 +91,7 @@ class NodeAllowJoiningRequest(NodeRequest):
     ID = b"0008"
 
     def __init__(self, accept: bool):
+        """Initialize class."""
         super().__init__("")
         # TODO: Make sure that '01' means enable, and '00' disable joining
         val = 1 if accept is True else 0
@@ -109,6 +108,7 @@ class NodeResetRequest(NodeRequest):
     ID = b"0009"
 
     def __init__(self, mac, moduletype, timeout):
+        """Initialize class."""
         super().__init__(mac)
         self.args += [
             Int(moduletype, length=2),
@@ -171,6 +171,7 @@ class CircleClockSetRequest(NodeRequest):
     ID = b"0016"
 
     def __init__(self, mac, dt):
+        """Initialize class."""
         super().__init__(mac)
         passed_days = dt.day - 1
         month_minutes = (passed_days * 24 * 60) + (dt.hour * 60) + dt.minute
@@ -192,6 +193,7 @@ class CircleSwitchRelayRequest(NodeRequest):
     ID = b"0017"
 
     def __init__(self, mac, on):
+        """Initialize class."""
         super().__init__(mac)
         val = 1 if on is True else 0
         self.args.append(Int(val, length=2))
@@ -208,6 +210,7 @@ class CirclePlusScanRequest(NodeRequest):
     ID = b"0018"
 
     def __init__(self, mac, node_address):
+        """Initialize class."""
         super().__init__(mac)
         self.args.append(Int(node_address, length=2))
         self.node_address = node_address
@@ -224,6 +227,7 @@ class NodeRemoveRequest(NodeRequest):
     ID = b"001C"
 
     def __init__(self, mac_circle_plus, mac_to_unjoined):
+        """Initialize class."""
         super().__init__(mac_circle_plus)
         self.args.append(String(mac_to_unjoined, length=16))
 
@@ -258,6 +262,7 @@ class CirclePlusRealTimeClockSetRequest(NodeRequest):
     ID = b"0028"
 
     def __init__(self, mac, dt):
+        """Initialize class."""
         super().__init__(mac)
         t = RealClockTime(dt.hour, dt.minute, dt.second)
         day_of_week = Int(dt.weekday(), 2)
@@ -295,6 +300,7 @@ class CircleEnableScheduleRequest(NodeRequest):
     ID = b"0040"
 
     def __init__(self, mac, on):
+        """Initialize class."""
         super().__init__(mac)
         val = 1 if on is True else 0
         self.args.append(Int(val, length=2))
@@ -312,6 +318,7 @@ class NodeAddToGroupRequest(NodeRequest):
     ID = b"0045"
 
     def __init__(self, mac, group_mac, task_id, port_mask):
+        """Initialize class."""
         super().__init__(mac)
         group_mac_val = String(group_mac, length=16)
         task_id_val = String(task_id, length=16)
@@ -329,6 +336,7 @@ class NodeRemoveFromGroupRequest(NodeRequest):
     ID = b"0046"
 
     def __init__(self, mac, group_mac):
+        """Initialize class."""
         super().__init__(mac)
         group_mac_val = String(group_mac, length=16)
         self.args += [group_mac_val]
@@ -344,6 +352,7 @@ class NodeBroadcastGroupSwitchRequest(NodeRequest):
     ID = b"0047"
 
     def __init__(self, group_mac, switch_state: bool):
+        """Initialize class."""
         super().__init__(group_mac)
         val = 1 if switch_state is True else 0
         self.args.append(Int(val, length=2))
@@ -359,6 +368,7 @@ class CirclePowerBufferRequest(NodeRequest):
     ID = b"0048"
 
     def __init__(self, mac, log_address):
+        """Initialize class."""
         super().__init__(mac)
         self.args.append(LogAddr(log_address, 8))
 
@@ -387,6 +397,7 @@ class NodeSleepConfigRequest(NodeRequest):
         sync_clock: bool,
         clock_interval: int,
     ):
+        """Initialize class."""
         super().__init__(mac)
 
         stay_active_val = Int(stay_active, length=2)
@@ -427,6 +438,7 @@ class NodeMeasureIntervalRequest(NodeRequest):
     ID = b"0057"
 
     def __init__(self, mac, usage, production):
+        """Initialize class."""
         super().__init__(mac)
         self.args.append(Int(usage, length=4))
         self.args.append(Int(production, length=4))
@@ -442,6 +454,7 @@ class NodeClearGroupMacRequest(NodeRequest):
     ID = b"0058"
 
     def __init__(self, mac, taskId):
+        """Initialize class."""
         super().__init__(mac)
         self.args.append(Int(taskId, length=2))
 
@@ -456,6 +469,7 @@ class CircleSetScheduleValueRequest(NodeRequest):
     ID = b"0059"
 
     def __init__(self, mac, val):
+        """Initialize class."""
         super().__init__(mac)
         self.args.append(SInt(val, length=4))
 
@@ -484,6 +498,7 @@ class ScanConfigureRequest(NodeRequest):
     ID = b"0101"
 
     def __init__(self, mac, reset_timer: int, sensitivity: int, light: bool):
+        """Initialize class."""
         super().__init__(mac)
 
         reset_timer_value = Int(reset_timer, length=2)
@@ -519,6 +534,7 @@ class SenseReportIntervalRequest(NodeRequest):
     ID = b"0102"
 
     def __init__(self, mac, interval):
+        """Initialize class."""
         super().__init__(mac)
         self.args.append(Int(interval, length=2))
 
@@ -533,6 +549,7 @@ class CircleInitialRelaisStateRequest(NodeRequest):
     ID = b"0138"
 
     def __init__(self, mac, configure: bool, relais_state: bool):
+        """Initialize class."""
         super().__init__(mac)
         set_or_get = Int(1 if configure is True else 0, length=2)
         relais = Int(1 if relais_state is True else 0, length=2)

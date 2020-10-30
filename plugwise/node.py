@@ -35,6 +35,7 @@ class PlugwiseNode:
     """Base class for a Plugwise node."""
 
     def __init__(self, mac, address, stick):
+        """Initialize class."""
         mac = mac.upper()
         if validate_mac(mac) is False:
             _LOGGER.debug(

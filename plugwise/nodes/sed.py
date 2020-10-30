@@ -1,24 +1,18 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
+"""Plugwise SED (Sleeping Endpoint Device) base object."""
 
-Plugwise SED (Sleeping Endpoint Device) base object
+# TODO:
+# - Expose awake state as sensor
+# - Set available state after 2 missed awake messages
 
-TODO:
-- Expose awake state as sensor
-- Set available state after 2 missed awake messages
-
-"""
 import logging
 
 from plugwise.constants import (
     ACK_SLEEP_SET,
-    NACK_SLEEP_SET,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
     SED_AWAKE_STARTUP,
     SED_AWAKE_STATE,
-    SED_AWAKE_UNKNOWN,
     SED_CLOCK_INTERVAL,
     SED_CLOCK_SYNC,
     SED_MAINTENANCE_INTERVAL,
@@ -28,7 +22,6 @@ from plugwise.constants import (
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
     NodeInfoRequest,
     NodePingRequest,
@@ -48,6 +41,7 @@ class NodeSED(PlugwiseNode):
         self._SED_requests = {}
         self._maintenance_interval = SED_MAINTENANCE_INTERVAL
         self._new_maintenance_interval = None
+        self._wake_up_interval = None
 
     def is_sed(self) -> bool:
         """ Return if True if node SED (battery powered)"""

@@ -52,12 +52,13 @@ Module providing interfacing with the Plugwise devices:
 - [x] Smile P1
 - [x] Stick
 - [x] Stretch
+
 - [x] [Home-Assistant](https://home-assistant.io) via
 
   - [x] Native supporting networked Plugwise products
   - [ ] Native supporting USB Plugwise products
 
-- [x]  - [HACS](https://hacs.xyz) and `custom_component` [Plugwise-HA](https://github.com/plugwise/plugwise-beta/) (supporting all devices)
+- [x] [HACS](https://hacs.xyz) and `custom_component` [plugwise-beat](https://github.com/plugwise/plugwise-beta/) (supporting all devices)
 
 ## License, origins and contributors
 

@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise protocol helpers
-"""
+"""Plugwise protocol helpers."""
 import binascii
 import datetime
 import logging
@@ -48,7 +44,7 @@ def inc_seq_id(seq_id, value=1):
 
 
 def uint_to_int(val, octals):
-    """compute the 2's compliment of int value val for negative values"""
+    """Compute the 2's compliment of int value val for negative values."""
     bits = octals << 2
     if (val & (1 << (bits - 1))) != 0:
         val = val - (1 << bits)
@@ -56,7 +52,7 @@ def uint_to_int(val, octals):
 
 
 def int_to_uint(val, octals):
-    """compute the 2's compliment of int value val for negative values"""
+    """Compute the 2's compliment of int value val for negative values."""
     bits = octals << 2
     if val < 0:
         val = val + (1 << bits)

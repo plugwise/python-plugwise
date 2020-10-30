@@ -1,4 +1,4 @@
-""" Copyright (C) 2011 Sven Petai <hadara@bsd.ee>, use of this source code is governed by the MIT license found in the LICENSE file."""
+"""Plugwise exceptions."""
 
 
 class PlugwiseException(Exception):
@@ -9,27 +9,27 @@ class PlugwiseException(Exception):
 
 
 class PortError(PlugwiseException):
-    """Connection to USBstick failed"""
+    """Connection to USBstick failed."""
 
 
 class StickInitError(PlugwiseException):
-    """Initialization of USBstick failed"""
+    """Initialization of USBstick failed."""
 
 
 class NetworkDown(PlugwiseException):
-    """Zigbee network not online"""
+    """Zigbee network not online."""
 
 
 class CirclePlusError(PlugwiseException):
-    """Connection to Circle+ node failed"""
+    """Connection to Circle+ node failed."""
 
 
 class ProtocolError(PlugwiseException):
-    """Error while decode received data"""
+    """Error while decode received data."""
 
 
 class TimeoutException(PlugwiseException):
-    """Timeout expired while waiting for response from node"""
+    """Timeout expired while waiting for response from node."""
 
 
 ### Smile exceptions ###

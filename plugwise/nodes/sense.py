@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise Sense node object
-"""
+"""Plugwise Sense node object."""
 import logging
 
 from plugwise.constants import (
@@ -18,7 +14,6 @@ from plugwise.constants import (
     SENSOR_RSSI_OUT,
     SENSOR_TEMPERATURE,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.responses import SenseReportResponse
 from plugwise.nodes.sed import NodeSED
 
@@ -26,7 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseSense(NodeSED):
-    """provides interface to the Plugwise Sense nodes"""
+    """Provides interface to the Plugwise Sense nodes"""
 
     def __init__(self, mac, address, stick):
         super().__init__(mac, address, stick)
@@ -42,17 +37,15 @@ class PlugwiseSense(NodeSED):
         self._humidity = None
 
     def get_temperature(self) -> int:
-        """ Return the current temperature """
+        """Return the current temperature."""
         return self._temperature
 
     def get_humidity(self) -> int:
-        """ Return the current humidity """
+        """Return the current humidity."""
         return self._humidity
 
     def _on_SED_message(self, message):
-        """
-        Process received message
-        """
+        """Process received message."""
         if isinstance(message, SenseReportResponse):
             self._process_sense_report(message)
         else:
@@ -63,7 +56,7 @@ class PlugwiseSense(NodeSED):
             )
 
     def _process_sense_report(self, message):
-        """ process sense report message to extract current temperature and humidity values """
+        """Process sense report message to extract current temperature and humidity values."""
         if message.temperature.value != 65535:
             new_temperature = int(
                 SENSE_TEMPERATURE_MULTIPLIER * (message.temperature.value / 65536)

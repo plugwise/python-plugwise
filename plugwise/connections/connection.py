@@ -15,7 +15,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class StickConnection:
-    """ Generic Plugwise stick connection"""
+    """ Generic Plugwise stick connection."""
 
     def __init__(self, port, stick=None):
         self.port = port
@@ -30,12 +30,12 @@ class StickConnection:
     ################################################
 
     def connect(self):
-        """Open the connection"""
+        """Open the connection."""
         if not self._is_connected:
             self._open_connection()
 
     def _open_connection(self):
-        """Placeholder to initialize the connection"""
+        """Placeholder to initialize the connection."""
         raise NotImplementedError
 
     ################################################
@@ -43,13 +43,13 @@ class StickConnection:
     ################################################
 
     def _reader_start(self, name):
-        """Start the reader thread to receive data"""
+        """Start the reader thread to receive data."""
         self._reader_thread = threading.Thread(None, self._reader_daemon, name, (), {})
         self.run_reader_thread = True
         self._reader_thread.start()
 
     def _reader_daemon(self):
-        """Thread to collect available data from connection"""
+        """Thread to collect available data from connection."""
         while self.run_reader_thread:
             data = self._read_data()
             if data:
@@ -58,7 +58,7 @@ class StickConnection:
         _LOGGER.debug("Reader daemon stopped")
 
     def _read_data(self):
-        """Placeholder to receive message from the connection"""
+        """Placeholder to receive message from the connection."""
         raise NotImplementedError
 
     ################################################
@@ -66,7 +66,7 @@ class StickConnection:
     ################################################
 
     def _writer_start(self, name: str):
-        """Start the writer thread to send data"""
+        """Start the writer thread to send data."""
         self._write_queue = queue.Queue()
         self._writer_thread = threading.Thread(None, self._writer_daemon, name, (), {})
         self._writer_thread.daemon = True
@@ -93,7 +93,7 @@ class StickConnection:
         _LOGGER.debug("Writer daemon stopped")
 
     def _write_data(self, data):
-        """Placeholder to write message to the connection"""
+        """Placeholder to write message to the connection."""
         raise NotImplementedError
 
     def send(self, message: PlugwiseMessage, callback=None):
@@ -105,15 +105,15 @@ class StickConnection:
     ################################################
 
     def is_connected(self):
-        """Return connection state"""
+        """Return connection state."""
         return self._is_connected
 
     def read_thread_alive(self):
-        """Return state of write thread"""
+        """Return state of write thread."""
         return self._reader_thread.isAlive() if self.run_reader_thread else False
 
     def write_thread_alive(self):
-        """Return state of write thread"""
+        """Return state of write thread."""
         return self._writer_thread.isAlive() if self.run_writer_thread else False
 
     ################################################
@@ -121,7 +121,7 @@ class StickConnection:
     ################################################
 
     def disconnect(self):
-        """Close the connection"""
+        """Close the connection."""
         if self._is_connected:
             self._is_connected = False
             self.run_writer_thread = False
@@ -133,5 +133,5 @@ class StickConnection:
             self._close_connection()
 
     def _close_connection(self):
-        """Placeholder to close the port"""
+        """Placeholder to close the port."""
         raise NotImplementedError

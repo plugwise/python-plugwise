@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise switch node object
-"""
+"""Plugwise switch node object."""
 import logging
 
 from plugwise.constants import HA_BINARY_SENSOR, HA_SENSOR, SENSOR_SWITCH
@@ -13,7 +9,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseSwitch(NodeSED):
-    """provides interface to the Plugwise Switch nodes"""
+    """Provides interface to the Plugwise Switch nodes."""
 
     def __init__(self, mac, address, stick):
         super().__init__(mac, address, stick)
@@ -21,13 +17,11 @@ class PlugwiseSwitch(NodeSED):
         self._switch_state = False
 
     def get_switch_state(self):
-        """ Return state of switch"""
+        """Return state of switch."""
         return self._switch_state
 
     def _on_SED_message(self, message):
-        """
-        Process received message
-        """
+        """Process received message."""
         if isinstance(message, NodeSwitchGroupResponse):
             _LOGGER.debug(
                 "Switch group request %s received from %s for group id %s",
@@ -39,7 +33,7 @@ class PlugwiseSwitch(NodeSED):
             self.stick.message_processed(message.seq_id)
 
     def _process_switch_group(self, message):
-        """Switch group request from Scan"""
+        """Switch group request from Scan."""
         if message.power_state == 0:
             # turn off => clear motion
             if self._switch_state:
