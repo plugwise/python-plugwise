@@ -1,2 +1,2 @@
 [bandit]
-skips: B106
+exclude: tests/
