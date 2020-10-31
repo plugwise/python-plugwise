@@ -2,6 +2,7 @@
 source = plugwise
 omit=
     */venv/*
+    setup.py
     plugwise/connections/*
     plugwise/message.py
     plugwise/messages/*
