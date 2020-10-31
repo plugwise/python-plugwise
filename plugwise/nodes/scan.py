@@ -1,18 +1,12 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise Scan node object
-"""
+"""Plugwise Scan node object."""
 import logging
 
 from plugwise.constants import (
     ACK_SCAN_PARAMETERS_SET,
     HA_BINARY_SENSOR,
     HA_SENSOR,
-    NACK_SCAN_PARAMETERS_SET,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
-    SCAN_SENSITIVITY,
     SCAN_SENSITIVITY_HIGH,
     SCAN_SENSITIVITY_MEDIUM,
     SCAN_SENSITIVITY_OFF,
@@ -22,7 +16,6 @@ from plugwise.constants import (
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
 from plugwise.messages.responses import NodeAckResponse, NodeSwitchGroupResponse
 from plugwise.nodes.sed import NodeSED

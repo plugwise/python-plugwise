@@ -1,9 +1,5 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise Circle node object
-"""
-from datetime import date, datetime, timedelta
+"""Plugwise Circle node object."""
+from datetime import datetime, timedelta
 import logging
 
 from plugwise.constants import (
@@ -20,14 +16,12 @@ from plugwise.constants import (
     SENSOR_POWER_CONSUMPTION_TODAY,
     SENSOR_POWER_CONSUMPTION_YESTERDAY,
     SENSOR_POWER_PRODUCTION_CURRENT_HOUR,
-    SENSOR_POWER_PRODUCTION_PREVIOUS_HOUR,
     SENSOR_POWER_USE,
     SENSOR_POWER_USE_LAST_8_SEC,
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
     SWITCH_RELAY,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
     CircleCalibrationRequest,
     CircleClockGetRequest,
@@ -39,13 +33,11 @@ from plugwise.messages.requests import (
 from plugwise.messages.responses import (
     CircleCalibrationResponse,
     CircleClockResponse,
-    CirclePlusScanResponse,
     CirclePowerBufferResponse,
     CirclePowerUsageResponse,
     NodeAckLargeResponse,
 )
 from plugwise.node import PlugwiseNode
-from plugwise.util import Int
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -319,11 +311,11 @@ class PlugwiseCircle(PlugwiseNode):
         )
         calc_value = corrected_pulses / PULSES_PER_KW_SECOND / seconds
         # Fix minor miscalculations
-        if calc_value < 0.001 and calc_value > -0.001:
+        if -0.001 < calc_value < 0.001:
             calc_value = 0.0
         return calc_value
 
-    def _request_power_buffer(self, log_address=None, callback=None):
+    def request_power_buffer(self, log_address=None, callback=None):
         """Request power log of specified address"""
         if log_address is None:
             log_address = self._last_log_address
@@ -354,7 +346,7 @@ class PlugwiseCircle(PlugwiseNode):
         each response contains 4 log buffers and each log buffer contains data for 1 hour
         """
         if message.logaddr.value == self._last_log_address:
-            self._last_log_collected = True
+            self.last_log_collected = True
         # Collect logged power usage
         for i in range(1, 5):
             if getattr(message, "logdate%d" % (i,)).value is not None:

@@ -39,7 +39,7 @@ setup(
         "aiohttp",
         "async_timeout<4.0",
         "crcmod",
-        "lxml",
+        "defusedxml",
         "pyserial",
         "pytz",
         "python-dateutil",

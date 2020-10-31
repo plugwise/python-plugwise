@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise Sense node object
-"""
+"""Plugwise Sense node object."""
 import logging
 
 from plugwise.constants import (
@@ -18,7 +14,6 @@ from plugwise.constants import (
     SENSOR_RSSI_OUT,
     SENSOR_TEMPERATURE,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.responses import SenseReportResponse
 from plugwise.nodes.sed import NodeSED
 

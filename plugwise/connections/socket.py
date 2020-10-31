@@ -1,23 +1,15 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Socket connection
-"""
+"""Socket connection."""
 import logging
 import socket
 
 from plugwise.connections.connection import StickConnection
-from plugwise.constants import SLEEP_TIME
 from plugwise.exceptions import PortError
-from plugwise.message import PlugwiseMessage
 
 _LOGGER = logging.getLogger(__name__)
 
 
 class SocketConnection(StickConnection):
-    """
-    Wrapper for Socket connection configuration
-    """
+    """Wrapper for Socket connection configuration."""
 
     def __init__(self, port, stick=None):
         super().__init__(port, stick)
@@ -27,8 +19,10 @@ class SocketConnection(StickConnection):
         self._socket_port = int(port_split[1])
         self._socket_address = (self._socket_host, self._socket_port)
 
+        self._socket = None
+
     def _open_connection(self):
-        """Open socket"""
+        """Open socket."""
         _LOGGER.debug(
             "Open socket to host '%s' at port %s",
             self._socket_host,
@@ -87,7 +81,7 @@ class SocketConnection(StickConnection):
         return None
 
     def _write_data(self, data):
-        """Write data to socket"""
+        """Write data to socket."""
         try:
             self._socket.send(data)
         except Exception as err:

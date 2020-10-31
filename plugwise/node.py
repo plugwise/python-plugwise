@@ -1,13 +1,8 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-General node object to control associated plugwise nodes like: Circle+, Circle, Scan, Stealth
-"""
+"""General node object to control associated plugwise nodes like: Circle+, Circle, Scan, Stealth."""
 from datetime import datetime
 import logging
 
 from plugwise.constants import (
-    HA_SWITCH,
     HW_MODELS,
     SENSOR_AVAILABLE,
     SENSOR_PING,
@@ -33,11 +28,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseNode:
-    """Base class for a Plugwise node."""
+    """ Base class for a Plugwise node """
 
     def __init__(self, mac, address, stick):
         mac = mac.upper()
-        if validate_mac(mac) is False:
+        if not validate_mac(mac):
             _LOGGER.debug(
                 "MAC address is in unexpected format: %s",
                 str(mac),
@@ -60,8 +55,8 @@ class PlugwiseNode:
         self._firmware_version = None
         self._relay_state = False
         self._last_log_address = None
-        self._last_log_collected = False
-        self._last_info_message = None
+        self.last_log_collected = False
+        self.last_info_message = None
         self._features = None
 
     def get_node_type(self) -> str:
@@ -70,16 +65,16 @@ class PlugwiseNode:
             hw_model = HW_MODELS.get(self._hardware_version[4:10], None)
             if hw_model:
                 return hw_model
-            else:
-                # Try again with reversed order
-                hw_model = HW_MODELS.get(
-                    self._hardware_version[-2:]
-                    + self._hardware_version[-4:-2]
-                    + self._hardware_version[-6:-4],
-                    None,
-                )
-                if hw_model:
-                    return hw_model
+
+            # Try again with reversed order
+            hw_model = HW_MODELS.get(
+                self._hardware_version[-2:]
+                + self._hardware_version[-4:-2]
+                + self._hardware_version[-6:-4],
+                None,
+            )
+            if hw_model:
+                return hw_model
         return "Unknown"
 
     def is_sed(self) -> bool:
@@ -104,8 +99,8 @@ class PlugwiseNode:
 
     def set_available(self, state, request_info=False):
         """Set current network state of plugwise node."""
-        if state is True:
-            if self._available is False:
+        if state:
+            if not self._available:
                 self._available = True
                 _LOGGER.debug(
                     "Mark node %s available",
@@ -113,9 +108,9 @@ class PlugwiseNode:
                 )
                 self.do_callback(SENSOR_AVAILABLE["id"])
                 if request_info:
-                    self._request_info()
+                    self.request_info()
         else:
-            if self._available is True:
+            if self._available:
                 self._available = False
                 _LOGGER.debug(
                     "Mark node %s unavailable",
@@ -165,7 +160,7 @@ class PlugwiseNode:
             return self.ping_ms
         return 0
 
-    def _request_info(self, callback=None):
+    def request_info(self, callback=None):
         """Request info from node"""
         self.stick.send(
             NodeInfoRequest(self.mac),
@@ -271,10 +266,10 @@ class PlugwiseNode:
         self._hardware_version = message.hw_ver.value.decode(UTF8_DECODE)
         self._firmware_version = message.fw_ver.value
         self._node_type = message.node_type.value
-        self._last_info_message = message.timestamp
+        self.last_info_message = message.timestamp
         if self._last_log_address != message.last_logaddr.value:
             self._last_log_address = message.last_logaddr.value
-            self._last_log_collected = False
+            self.last_log_collected = False
         _LOGGER.debug("Node type        = %s", self.get_node_type())
         if not self.is_sed:
             _LOGGER.debug("Relay state      = %s", str(self._relay_state))

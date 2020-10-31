@@ -5,15 +5,12 @@ Plugwise protocol helpers
 """
 import binascii
 import datetime
-import logging
 import re
 import struct
-import sys
 
 import crcmod
 
 from .constants import LOGADDR_OFFSET, PLUGWISE_EPOCH, UTF8_DECODE
-from .exceptions import *
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
 

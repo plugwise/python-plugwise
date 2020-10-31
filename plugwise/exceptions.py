@@ -1,4 +1,4 @@
-""" Copyright (C) 2011 Sven Petai <hadara@bsd.ee>, use of this source code is governed by the MIT license found in the LICENSE file."""
+"""Plugwise Exceptions."""
 
 
 class PlugwiseException(Exception):

@@ -1,13 +1,8 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise Circle+ node object
-"""
+"""Plugwise Circle+ node object."""
 from datetime import datetime
 import logging
 
 from plugwise.constants import MAX_TIME_DRIFT, UTF8_DECODE
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
@@ -110,7 +105,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                                 CirclePlusScanRequest(self.mac, node_address)
                             )
                     break
-                elif node_address == 63:
+                if node_address == 63:
                     scan_complete = True
             if scan_complete and self._scan_for_nodes_callback:
                 self._scan_for_nodes_callback(self._plugwise_nodes)
