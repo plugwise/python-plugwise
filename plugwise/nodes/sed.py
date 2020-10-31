@@ -22,7 +22,6 @@ from plugwise.constants import (
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
     NodeInfoRequest,
     NodePingRequest,

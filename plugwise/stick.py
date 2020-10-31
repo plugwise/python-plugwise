@@ -87,7 +87,6 @@ from plugwise.node import PlugwiseNode
 from plugwise.nodes.circle import PlugwiseCircle
 from plugwise.nodes.circle_plus import PlugwiseCirclePlus
 from plugwise.nodes.scan import PlugwiseScan
-from plugwise.nodes.sed import NodeSED
 from plugwise.nodes.sense import PlugwiseSense
 from plugwise.nodes.stealth import PlugwiseStealth
 from plugwise.parser import PlugwiseParser

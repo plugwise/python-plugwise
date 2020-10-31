@@ -3,7 +3,6 @@ import logging
 import socket
 
 from plugwise.connections.connection import StickConnection
-from plugwise.constants import SLEEP_TIME
 from plugwise.exceptions import PortError
 
 _LOGGER = logging.getLogger(__name__)
