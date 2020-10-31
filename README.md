@@ -9,7 +9,7 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 [![Latest release](https://github.com/plugwise/python-plugwise/workflows/Latest%20release/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
 [![codecov](https://codecov.io/gh/plugwise/python-plugwise/branch/main/graph/badge.svg)](https://codecov.io/gh/plugwise/python-plugwise)
 [![PyPI version fury.io](https://badge.fury.io/py/plugwise.svg)](https://pypi.python.org/pypi/plugwise/)
-[![Newest commit](https://github.com/plugwise/python-plugwise/workflows/Newest%20commit/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
+[![Newest commit](https://github.com/plugwise/python-plugwise/workflows/Latest%20commit/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
 
 
 ## Integration
