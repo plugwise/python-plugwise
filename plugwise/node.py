@@ -108,7 +108,7 @@ class PlugwiseNode:
                 )
                 self.do_callback(SENSOR_AVAILABLE["id"])
                 if request_info:
-                    self._request_info()
+                    self.request_info()
         else:
             if self._available:
                 self._available = False
@@ -160,7 +160,7 @@ class PlugwiseNode:
             return self.ping_ms
         return 0
 
-    def _request_info(self, callback=None):
+    def request_info(self, callback=None):
         """Request info from node"""
         self.stick.send(
             NodeInfoRequest(self.mac),
