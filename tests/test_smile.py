@@ -35,10 +35,6 @@ _LOGGER.setLevel(logging.DEBUG)
 class TestPlugwise:
     """Tests for Plugwise Smile."""
 
-    def __init__(self):
-        """Initialize tests."""
-        self.smile_setup = None
-
     def _write_json(self, call, data):
         """Store JSON data to per-setup files for HA component testing."""
         path = os.path.join(
