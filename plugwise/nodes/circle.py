@@ -319,26 +319,27 @@ class PlugwiseCircle(PlugwiseNode):
         """Request power log of specified address"""
         if log_address is None:
             log_address = self._last_log_address
-        if bool(self.power_history):
-            # Only request last 2 power buffer logs
-            self.stick.send(
-                CirclePowerBufferRequest(self.mac, log_address - 1),
-            )
-            self.stick.send(
-                CirclePowerBufferRequest(self.mac, log_address),
-                callback,
-            )
-        else:
-            # Collect power history info of today and yesterday
-            # Each request contains 4 hours except last request
-            for req_log_address in range(log_address - 13, log_address):
+        if log_address is not None:
+            if bool(self.power_history):
+                # Only request last 2 power buffer logs
                 self.stick.send(
-                    CirclePowerBufferRequest(self.mac, req_log_address),
+                    CirclePowerBufferRequest(self.mac, log_address - 1),
                 )
-            self.stick.send(
-                CirclePowerBufferRequest(self.mac, log_address),
-                callback,
-            )
+                self.stick.send(
+                    CirclePowerBufferRequest(self.mac, log_address),
+                    callback,
+                )
+            else:
+                # Collect power history info of today and yesterday
+                # Each request contains 4 hours except last request
+                for req_log_address in range(log_address - 13, log_address):
+                    self.stick.send(
+                        CirclePowerBufferRequest(self.mac, req_log_address),
+                    )
+                self.stick.send(
+                    CirclePowerBufferRequest(self.mac, log_address),
+                    callback,
+                )
 
     def _response_power_buffer(self, message):
         """returns information about historical power usage
