@@ -6,7 +6,6 @@ name: Latest release
 env:
   CACHE_VERSION: 1
   DEFAULT_PYTHON: 3.9
-  PRE_COMMIT_HOME: ~/.cache/pre-commit
 
 # Only run on merges
 on: 
@@ -16,55 +15,6 @@ on:
       - main
 
 jobs:
-  # Prepare default python version environment
-  prepare:
-    runs-on: ubuntu-latest
-    name: Prepare
-    steps:
-    - name: Check out committed code
-      uses: actions/checkout@v2
-    - name: Set up Python ${{ env.DEFAULT_PYTHON }}
-      id: python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ env.DEFAULT_PYTHON }}
-    - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-      id: cache-venv
-      uses: actions/cache@v2
-      with:
-        path: venv
-        key: >-
-          ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-          steps.python.outputs.python-version }}-${{
-          hashFiles('requirements_test.txt') }}-${{
-          hashFiles('setup.py') }}
-        restore-keys: |
-          ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{ steps.python.outputs.python-version }}-${{ hashFiles('requirements_test.txt') }}-${{ hashFiles('setup.py') }}-
-          ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{ steps.python.outputs.python-version }}-${{ hashFiles('requirements_test.txt') }}
-          ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{ steps.python.outputs.python-version }}-
-    - name: Create Python virtual environment
-      if: steps.cache-venv.outputs.cache-hit != 'true'
-      run: |
-        python -m venv venv
-        . venv/bin/activate
-        pip install -U pip setuptools
-        pip install -e .
-        pip install -r requirements_test.txt
-    - name: Restore pre-commit environment from cache
-      id: cache-precommit
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.PRE_COMMIT_HOME }}
-        key: |
-          ${{ env.CACHE_VERSION}}-${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
-        restore-keys: |
-          ${{ env.CACHE_VERSION}}-${{ runner.os }}-pre-commit-
-    - name: Install pre-commit dependencies
-      if: steps.cache-precommit.outputs.cache-hit != 'true'
-      run: |
-        . venv/bin/activate
-        pre-commit install-hooks
-
   publishing:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
@@ -79,25 +29,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
-        id: cache-venv
-        uses: actions/cache@v2
-        with:
-          path: venv
-          key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
-            steps.python.outputs.python-version }}-${{
-            hashFiles('requirements_test.txt') }}-${{
-            hashFiles('setup.py') }}
-      - name: Fail job if Python cache restore failed
-        if: steps.cache-venv.outputs.cache-hit != 'true'
-        run: |
-          echo "Failed to restore Python virtual environment from cache"
-          exit 1
       - name: Build a distribution
         run: >-
           python setup.py sdist
-      - name: Publish distribution 📦 to Test PyPI
+      - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.pypi_token }}
