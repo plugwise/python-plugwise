@@ -98,7 +98,7 @@ _LOGGER = logging.getLogger(__name__)
 class stick:
     """Plugwise connection stick."""
 
-    def __init__(self, port, callback=None, print_progress=False):
+    def __init__(self, port, callback=None):
         self._mac_stick = None
         self.port = port
         self.network_online = False
@@ -119,7 +119,6 @@ class stick:
         self._stick_callbacks = {}
         self.last_ack_seq_id = None
         self.expected_responses = {}
-        self.print_progress = print_progress
         self.timezone_delta = datetime.now().replace(
             minute=0, second=0, microsecond=0
         ) - datetime.utcnow().replace(minute=0, second=0, microsecond=0)
@@ -148,16 +147,10 @@ class stick:
             if not self.network_online:
                 _LOGGER.Error("plugwise Zigbee network down")
             else:
-                if self.print_progress:
-                    print("Scan Plugwise network")
                 self.scan(callback)
 
         try:
-            if self.print_progress:
-                print("Open port")
             self.connect()
-            if self.print_progress:
-                print("Initialize Plugwise USBstick")
             self.initialize_stick(init_finished)
         except PortError as e:
             _LOGGER.error("Failed to connect: '%s'", e)
@@ -417,8 +410,6 @@ class stick:
         def scan_circle_plus():
             """Callback when Circle+ is discovered"""
             if self._plugwise_nodes.get(self.circle_plus_mac):
-                if self.print_progress:
-                    print("Scan Circle+ for linked nodes")
                 _LOGGER.debug("Scan Circle+ for linked nodes...")
                 self._plugwise_nodes[self.circle_plus_mac].scan_for_nodes(scan_finished)
             else:
@@ -429,8 +420,6 @@ class stick:
             if self._plugwise_nodes.get(self.circle_plus_mac):
                 scan_circle_plus()
             else:
-                if self.print_progress:
-                    print("Discover Circle+")
                 _LOGGER.debug("Discover Circle+ at %s", self.circle_plus_mac)
                 self.discover_node(self.circle_plus_mac, scan_circle_plus)
         else:
@@ -486,36 +475,20 @@ class stick:
             mac,
         )
         if node_type == NODE_TYPE_CIRCLE_PLUS:
-            if self.print_progress:
-                print("Circle+ node found using mac " + mac)
             self._plugwise_nodes[mac] = PlugwiseCirclePlus(mac, address, self)
         elif node_type == NODE_TYPE_CIRCLE:
-            if self.print_progress:
-                print("Circle node found using mac " + mac)
             self._plugwise_nodes[mac] = PlugwiseCircle(mac, address, self)
         elif node_type == NODE_TYPE_SWITCH:
-            if self.print_progress:
-                print("Unsupported switch node found using mac " + mac)
             self._plugwise_nodes[mac] = None
         elif node_type == NODE_TYPE_SENSE:
-            if self.print_progress:
-                print("Sense node found using mac " + mac)
             self._plugwise_nodes[mac] = PlugwiseSense(mac, address, self)
         elif node_type == NODE_TYPE_SCAN:
-            if self.print_progress:
-                print("Scan node found using mac " + mac)
             self._plugwise_nodes[mac] = PlugwiseScan(mac, address, self)
         elif node_type == NODE_TYPE_CELSIUS_SED:
-            if self.print_progress:
-                print("Unsupported Celsius SED node found using mac " + mac)
             self._plugwise_nodes[mac] = None
         elif node_type == NODE_TYPE_CELSIUS_NR:
-            if self.print_progress:
-                print("Unsupported Celsius NR found using mac " + mac)
             self._plugwise_nodes[mac] = None
         elif node_type == NODE_TYPE_STEALTH:
-            if self.print_progress:
-                print("Stealth node found using mac " + mac)
             self._plugwise_nodes[mac] = PlugwiseStealth(mac, address, self)
         else:
             _LOGGER.warning("Unsupported node type '%s'", str(node_type))

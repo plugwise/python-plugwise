@@ -25,7 +25,6 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         self._plugwise_nodes = {}
         self._scan_response = {}
         self._scan_for_nodes_callback = None
-        self._print_progress = False
         self._realtime_clock_offset = None
         self.get_real_time_clock(self.sync_realtime_clock)
 
@@ -57,13 +56,6 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             "Process scan response for address %s", message.node_address.value
         )
         if message.node_mac.value != b"FFFFFFFFFFFFFFFF":
-            if self.stick.print_progress:
-                print(
-                    "Scan at address "
-                    + str(message.node_address.value)
-                    + " => node found with mac "
-                    + message.node_mac.value.decode(UTF8_DECODE)
-                )
             _LOGGER.debug(
                 "Linked plugwise node with mac %s found",
                 message.node_mac.value.decode(UTF8_DECODE),
@@ -75,13 +67,6 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                 self._plugwise_nodes[
                     message.node_mac.value.decode(UTF8_DECODE)
                 ] = message.node_address.value
-        else:
-            if self.stick.print_progress:
-                print(
-                    "Scan at address "
-                    + str(message.node_address.value)
-                    + " => no node found"
-                )
         if self._scan_for_nodes_callback:
             # Check if scan is complete before execute callback
             scan_complete = False
