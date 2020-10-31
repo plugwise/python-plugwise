@@ -83,22 +83,19 @@ class PlugwiseCircle(PlugwiseNode):
     def _request_calibration(self, callback=None):
         """Request calibration info"""
         self.stick.send(
-            CircleCalibrationRequest(self.mac),
-            callback,
+            CircleCalibrationRequest(self.mac), callback,
         )
 
     def _request_switch(self, state, callback=None):
         """Request to switch relay state and request state info"""
         self.stick.send(
-            CircleSwitchRelayRequest(self.mac, state),
-            callback,
+            CircleSwitchRelayRequest(self.mac, state), callback,
         )
 
     def update_power_usage(self, callback=None):
         """Request power usage"""
         self.stick.send(
-            CirclePowerUsageRequest(self.mac),
-            callback,
+            CirclePowerUsageRequest(self.mac), callback,
         )
 
     def _on_message(self, message):
@@ -204,16 +201,14 @@ class PlugwiseCircle(PlugwiseNode):
         if message.ack_id == ACK_ON:
             if not self._relay_state:
                 _LOGGER.debug(
-                    "Switch relay on for %s",
-                    self.get_mac(),
+                    "Switch relay on for %s", self.get_mac(),
                 )
                 self._relay_state = True
                 self.do_callback(SWITCH_RELAY["id"])
         elif message.ack_id == ACK_OFF:
             if self._relay_state:
                 _LOGGER.debug(
-                    "Switch relay off for %s",
-                    self.get_mac(),
+                    "Switch relay off for %s", self.get_mac(),
                 )
                 self._relay_state = False
                 self.do_callback(SWITCH_RELAY["id"])
@@ -321,23 +316,17 @@ class PlugwiseCircle(PlugwiseNode):
             log_address = self._last_log_address
         if bool(self.power_history):
             # Only request last 2 power buffer logs
+            self.stick.send(CirclePowerBufferRequest(self.mac, log_address - 1),)
             self.stick.send(
-                CirclePowerBufferRequest(self.mac, log_address - 1),
-            )
-            self.stick.send(
-                CirclePowerBufferRequest(self.mac, log_address),
-                callback,
+                CirclePowerBufferRequest(self.mac, log_address), callback,
             )
         else:
             # Collect power history info of today and yesterday
             # Each request contains 4 hours except last request
             for req_log_address in range(log_address - 13, log_address):
-                self.stick.send(
-                    CirclePowerBufferRequest(self.mac, req_log_address),
-                )
+                self.stick.send(CirclePowerBufferRequest(self.mac, req_log_address),)
             self.stick.send(
-                CirclePowerBufferRequest(self.mac, log_address),
-                callback,
+                CirclePowerBufferRequest(self.mac, log_address), callback,
             )
 
     def _response_power_buffer(self, message):
@@ -415,15 +404,13 @@ class PlugwiseCircle(PlugwiseNode):
     def get_clock(self, callback=None):
         """ get current datetime of internal clock of Circle """
         self.stick.send(
-            CircleClockGetRequest(self.mac),
-            callback,
+            CircleClockGetRequest(self.mac), callback,
         )
 
     def set_clock(self, callback=None):
         """ set internal clock of CirclePlus """
         self.stick.send(
-            CircleClockSetRequest(self.mac, datetime.utcnow()),
-            callback,
+            CircleClockSetRequest(self.mac, datetime.utcnow()), callback,
         )
 
     def sync_clock(self, max_drift=0):
