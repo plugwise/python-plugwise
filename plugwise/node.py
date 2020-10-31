@@ -32,7 +32,7 @@ class PlugwiseNode:
 
     def __init__(self, mac, address, stick):
         mac = mac.upper()
-        if validate_mac(mac) is False:
+        if not validate_mac(mac):
             _LOGGER.debug(
                 "MAC address is in unexpected format: %s",
                 str(mac),
@@ -99,8 +99,8 @@ class PlugwiseNode:
 
     def set_available(self, state, request_info=False):
         """Set current network state of plugwise node."""
-        if state is True:
-            if self._available is False:
+        if state:
+            if not self._available:
                 self._available = True
                 _LOGGER.debug(
                     "Mark node %s available",
@@ -110,7 +110,7 @@ class PlugwiseNode:
                 if request_info:
                     self._request_info()
         else:
-            if self._available is True:
+            if self._available:
                 self._available = False
                 _LOGGER.debug(
                     "Mark node %s unavailable",

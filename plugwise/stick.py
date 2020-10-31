@@ -322,7 +322,7 @@ class stick:
 
     def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
         """ Discovery of plugwise node """
-        if validate_mac(mac) is True:
+        if validate_mac(mac):
             if not self._plugwise_nodes.get(mac):
                 if mac not in self._nodes_not_discovered.keys():
                     self._nodes_not_discovered[mac] = (
@@ -458,7 +458,7 @@ class stick:
 
     def node_join(self, mac: str, callback=None) -> bool:
         """Accept node to join Plugwise network by adding it in Circle+ memory"""
-        if validate_mac(mac) is True:
+        if validate_mac(mac):
             self.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback)
             return True
 
@@ -467,7 +467,7 @@ class stick:
 
     def node_unjoin(self, mac: str, callback=None) -> bool:
         """Remove node from the Plugwise network by deleting it from the Circle+ memory"""
-        if validate_mac(mac) is True:
+        if validate_mac(mac):
             self.send(
                 NodeRemoveRequest(bytes(self.circle_plus_mac, UTF8_DECODE), mac),
                 callback,
@@ -1344,7 +1344,7 @@ class stick:
                     self._update_thread.daemon = True
                     self._update_thread.start()
             # Circle+ discovery
-            if self._circle_plus_discovered is False:
+            if not self._circle_plus_discovered:
                 # First hour every once an hour
                 if self._circle_plus_retries < 60 or circle_plus_retry_counter > 60:
                     _LOGGER.info(

@@ -68,7 +68,7 @@ class PlugwiseParser:
         """
         # TODO: flake8 indicates scan is too complex, level 35 indenting is indeed too complex
         _LOGGER.debug("Parse data: %s ", str(self._buffer))
-        if self._parsing is False:
+        if not self._parsing:
             self._parsing = True
 
             # Lookup header of message in buffer
