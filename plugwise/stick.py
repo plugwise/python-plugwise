@@ -127,7 +127,7 @@ class stick:
         self._run_send_message_thread = False
         self._run_update_thread = False
 
-        self._auto_update_timer = None
+        self._auto_update_timer = 0
         self._nodes_discovered = None
         self._receive_timeout_thread = None
         self._run_watchdog = None
@@ -1532,18 +1532,14 @@ class stick:
         _LOGGER.debug("Update loop stopped")
 
     def auto_update(self, timer=None):
-        """
-        setup auto update polling for power usage.
-        """
-        if timer == 0:
-            self._run_update_thread = False
+        """ Configure auto update polling daemon for power usage and availability state. """
+        if timer:
+            self._auto_update_timer = timer
+        elif timer == 0:
             self._auto_update_timer = 0
+            self._run_update_thread = False
         else:
-            self._auto_update_timer = 5
-            if timer is None:
-                # Timer based on number of nodes and 3 seconds per node
-                self._auto_update_timer = len(self._plugwise_nodes) * 3
-            elif timer > 5:
-                self._auto_update_timer = timer
-            if not self._run_update_thread:
-                self._update_thread.start()
+            # Timer based on number of nodes and 3 seconds per node
+            self._auto_update_timer = len(self._plugwise_nodes) * 3
+        if not self._run_update_thread:
+            self._update_thread.start()
