@@ -102,12 +102,8 @@ jobs:
     - name: Fail job if cache restore failed
       if: steps.cache-venv.outputs.cache-hit != 'true'
       run: |
-        echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
+        echo "Failed to restore pre-commit environment from cache"
         exit 1
-    - name: Install dependencies
-      run: |
-        . venv/bin/activate
-        if [ -f requirements_commit.txt ]; then pip install -r requirements_commit.txt; fi
     - name: Verify commit
       run: |
         . venv/bin/activate
