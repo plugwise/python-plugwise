@@ -3,50 +3,51 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Main stick object to control associated plugwise plugs
 """
+from datetime import datetime, timedelta
 import logging
-import time
-import serial
+import queue
 import sys
 import threading
-import queue
-from datetime import datetime, timedelta
+import time
 
+import serial
+
+from plugwise.connections.serial import PlugwiseUSBConnection
+from plugwise.connections.socket import SocketConnection
 from plugwise.constants import (
     ACCEPT_JOIN_REQUESTS,
+    ACK_ACCEPT_JOINING_REQUEST,
     ACK_CLOCK_SET,
     ACK_ERROR,
-    ACK_ACCEPT_JOINING_REQUEST,
-    ACK_ON,
     ACK_OFF,
-    ACK_SLEEP_SET,
-    ACK_SUCCESS,
+    ACK_ON,
     ACK_REAL_TIME_CLOCK_SET,
     ACK_SCAN_PARAMETERS_SET,
+    ACK_SLEEP_SET,
+    ACK_SUCCESS,
     ACK_TIMEOUT,
     CB_JOIN_REQUEST,
     CB_NEW_NODE,
     MAX_TIME_DRIFT,
-    MESSAGE_TIME_OUT,
     MESSAGE_RETRY,
+    MESSAGE_TIME_OUT,
     NACK_ON_OFF,
     NACK_REAL_TIME_CLOCK_SET,
     NACK_SCAN_PARAMETERS_SET,
     NACK_SLEEP_SET,
-    NODE_TYPE_STICK,
-    NODE_TYPE_CELSIUS_SED,
     NODE_TYPE_CELSIUS_NR,
-    NODE_TYPE_CIRCLE_PLUS,
+    NODE_TYPE_CELSIUS_SED,
     NODE_TYPE_CIRCLE,
-    NODE_TYPE_SWITCH,
-    NODE_TYPE_SENSE,
+    NODE_TYPE_CIRCLE_PLUS,
     NODE_TYPE_SCAN,
+    NODE_TYPE_SENSE,
     NODE_TYPE_STEALTH,
+    NODE_TYPE_STICK,
+    NODE_TYPE_SWITCH,
     SLEEP_TIME,
-    WATCHDOG_DEAMON,
     UTF8_DECODE,
+    WATCHDOG_DEAMON,
 )
-from plugwise.connections.socket import SocketConnection
-from plugwise.connections.serial import PlugwiseUSBConnection
 from plugwise.exceptions import (
     CirclePlusError,
     NetworkDown,
@@ -56,20 +57,20 @@ from plugwise.exceptions import (
 )
 from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
+    CircleCalibrationRequest,
     CircleClockGetRequest,
     CircleClockSetRequest,
-    CirclePlusScanRequest,
-    CircleCalibrationRequest,
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
+    CirclePlusScanRequest,
     CirclePowerUsageRequest,
     CircleSwitchRelayRequest,
-    NodeAllowJoiningRequest,
     NodeAddRequest,
+    NodeAllowJoiningRequest,
     NodeInfoRequest,
     NodePingRequest,
-    NodeRequest,
     NodeRemoveRequest,
+    NodeRequest,
     StickInitRequest,
 )
 from plugwise.messages.responses import (
@@ -90,21 +91,21 @@ from plugwise.messages.responses import (
     NodeResponse,
     StickInitResponse,
 )
-from plugwise.parser import PlugwiseParser
 from plugwise.node import PlugwiseNode
 from plugwise.nodes.circle import PlugwiseCircle
 from plugwise.nodes.circle_plus import PlugwiseCirclePlus
-from plugwise.nodes.sed import NodeSED
 from plugwise.nodes.scan import PlugwiseScan
+from plugwise.nodes.sed import NodeSED
 from plugwise.nodes.sense import PlugwiseSense
 from plugwise.nodes.stealth import PlugwiseStealth
 from plugwise.nodes.switch import PlugwiseSwitch
+from plugwise.parser import PlugwiseParser
 from plugwise.util import inc_seq_id, validate_mac
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class stick(object):
+class stick:
     """
     Plugwise connection stick
     """
@@ -163,9 +164,9 @@ class stick(object):
             _LOGGER.error("Failed to connect: '%s'", e)
         except StickInitError as e:
             _LOGGER.error("Failed to initialize USBstick: '%s'", e)
-        except NetworkDown as e:
+        except NetworkDown:
             _LOGGER.error("Failed to communicated: Plugwise Zigbee network")
-        except TimeoutException as e:
+        except TimeoutException:
             _LOGGER.error("Timeout exception while initializing USBstick")
         except Exception as e:
             _LOGGER.error("Unknown error : %s", e)
@@ -183,14 +184,14 @@ class stick(object):
         self.connection.connect()
 
         _LOGGER.debug("Starting threads...")
-        # receive timeout deamon
+        # receive timeout daemon
         self._run_receive_timeout_thread = True
         self._receive_timeout_thread = threading.Thread(
             None, self._receive_timeout_loop, "receive_timeout_thread", (), {}
         )
         self._receive_timeout_thread.daemon = True
         self._receive_timeout_thread.start()
-        # send deamon
+        # send daemon
         self._send_message_queue = queue.Queue()
         self._run_send_message_thread = True
         self._send_message_thread = threading.Thread(
@@ -198,7 +199,7 @@ class stick(object):
         )
         self._send_message_thread.daemon = True
         self._send_message_thread.start()
-        # update deamon
+        # update daemon
         self._run_update_thread = False
         self._auto_update_timer = 0
         self._update_thread = threading.Thread(
@@ -216,7 +217,7 @@ class stick(object):
             """ Callback when initialization of Plugwise USBstick is finished """
             self._stick_initialized = True
 
-            # Start watchdog deamon
+            # Start watchdog daemon
             self._run_watchdog = True
             self._watchdog_thread = threading.Thread(
                 None, self._watchdog_loop, "watchdog_thread", (), {}
@@ -321,7 +322,7 @@ class stick(object):
 
     def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
         """ Discovery of plugwise node """
-        if validate_mac(mac) == True:
+        if validate_mac(mac) is True:
             if not self._plugwise_nodes.get(mac):
                 if mac not in self._nodes_not_discovered.keys():
                     self._nodes_not_discovered[mac] = (
@@ -350,8 +351,9 @@ class stick(object):
         else:
             return False
 
-    def scan(self, callback=None):
+    def scan(self, callback=None):  # noqa: C901
         """ scan for connected plugwise nodes """
+        # TODO: flake8 indicates scan is too complex, level 23 indenting is indeed complex
 
         def scan_finished(nodes_to_discover):
             """ Callback when scan is finished """
@@ -460,7 +462,7 @@ class stick(object):
 
     def node_join(self, mac: str, callback=None) -> bool:
         """Accept node to join Plugwise network by adding it in Circle+ memory"""
-        if validate_mac(mac) == True:
+        if validate_mac(mac) is True:
             self.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback)
             return True
         else:
@@ -471,7 +473,7 @@ class stick(object):
 
     def node_unjoin(self, mac: str, callback=None) -> bool:
         """Remove node from the Plugwise network by deleting it from the Circle+ memory"""
-        if validate_mac(mac) == True:
+        if validate_mac(mac) is True:
             self.send(
                 NodeRemoveRequest(bytes(self.circle_plus_mac, UTF8_DECODE), mac),
                 callback,
@@ -582,7 +584,7 @@ class stick(object):
         )
 
     def _send_message_loop(self):
-        """ deamon to send messages waiting in queue """
+        """Daemon to send messages waiting in queue."""
         while self._run_send_message_thread:
             try:
                 request_set = self._send_message_queue.get(block=True, timeout=1)
@@ -590,7 +592,7 @@ class stick(object):
                 time.sleep(SLEEP_TIME)
             else:
                 if self.last_ack_seq_id:
-                    # Calc new seq_id based last received ack messsage
+                    # Calc new seq_id based last received ack message
                     seq_id = inc_seq_id(self.last_ack_seq_id)
                 else:
                     # first message, so use a fake seq_id
@@ -633,7 +635,7 @@ class stick(object):
                     self.last_ack_seq_id != seq_id
                     and timeout_counter <= 10
                     and seq_id != b"0000"
-                    and self.last_ack_seq_id != None
+                    and self.last_ack_seq_id is not None
                 ):
                     time.sleep(0.1)
                     timeout_counter += 1
@@ -669,10 +671,10 @@ class stick(object):
         _LOGGER.debug("Send message loop stopped")
 
     def _receive_timeout_loop(self):
-        """ deamon to time out requests without any (n)ack response message """
+        """Daemon to time out requests without any (n)ack response message."""
         while self._run_receive_timeout_thread:
             for seq_id in list(self.expected_responses.keys()):
-                if self.expected_responses[seq_id][4] != None:
+                if self.expected_responses[seq_id][4] is not None:
                     if self.expected_responses[seq_id][4] < (
                         datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
                     ):
@@ -734,8 +736,9 @@ class stick(object):
                 receive_timeout_checker += 1
         _LOGGER.debug("Receive timeout loop stopped")
 
-    def new_message(self, message: NodeResponse):
+    def new_message(self, message: NodeResponse):  # noqa: C901
         """ Received message from Plugwise Zigbee network """
+        # TODO: flake8 indicates scan is too complex, level 47! indenting is indeed overly complex
 
         # only save last seq_id and skip special ID's FFFD, FFFE, FFFF
         if self.last_ack_seq_id:
@@ -923,7 +926,7 @@ class stick(object):
                 self.network_online = True
             else:
                 self.network_online = False
-            # Replace first 2 charactors by 00 for mac of circle+ node
+            # Replace first 2 characters by 00 for mac of circle+ node
             self.circle_plus_mac = "00" + message.circle_plus_mac.value[2:].decode(
                 UTF8_DECODE
             )
@@ -941,7 +944,7 @@ class stick(object):
                 mac,
                 str(message.seq_id),
             )
-            if not mac in self._plugwise_nodes:
+            if mac not in self._plugwise_nodes:
                 if message.node_type.value == NODE_TYPE_CIRCLE_PLUS:
                     self._circle_plus_discovered = True
                     self._append_node(mac, 0, message.node_type.value)
@@ -1003,7 +1006,7 @@ class stick(object):
                     mac,
                 )
         elif isinstance(message, NodeJoinAckResponse):
-            # Notification mesage when node (re)joined existing network again.
+            # Notification message when node (re)joined existing network again.
             # Received when a SED (re)joins the network e.g. when you reinsert the battery of a Scan
             _LOGGER.info(
                 "Received NodeJoinAckResponse from %s which has accepted or (re)joined this Plugwise network",
@@ -1044,8 +1047,11 @@ class stick(object):
                 self._messages_for_undiscovered_nodes.append(message)
                 self.discover_node(mac)
 
-    def message_processed(self, seq_id, ack_response=None, ack_small=False):
+    def message_processed(  # noqa: C901
+        self, seq_id, ack_response=None, ack_small=False
+    ):
         """ Execute callback of received messages """
+        # TODO: flake8 indicates scan is too complex, level 34! indenting is indeed too complex
         do_callback = False
         do_resend = False
         if seq_id in self.expected_responses:
@@ -1320,7 +1326,7 @@ class stick(object):
                     )
                     self._receive_timeout_thread.daemon = True
                     self._receive_timeout_thread.start()
-            # send message deamon
+            # send message daemon
             if self._run_send_message_thread:
                 if not self._send_message_thread.isAlive():
                     _LOGGER.warning(
@@ -1344,7 +1350,7 @@ class stick(object):
                     self._update_thread.daemon = True
                     self._update_thread.start()
             # Circle+ discovery
-            if self._circle_plus_discovered == False:
+            if self._circle_plus_discovered is False:
                 # First hour every once an hour
                 if self._circle_plus_retries < 60 or circle_plus_retry_counter > 60:
                     _LOGGER.info(
@@ -1360,11 +1366,12 @@ class stick(object):
                 watchdog_loop_checker += 1
         _LOGGER.debug("watchdog loop stopped")
 
-    def _update_loop(self):
+    def _update_loop(self):  # noqa: C901
         """
         When node has not received any message during
         last 2 update polls, reset availability
         """
+        # TODO: flake8 indicates scan is too complex, level 28 indenting is indeed complex
         self._run_update_thread = True
         self._auto_update_first_run = True
         day_of_month = datetime.now().day
@@ -1447,7 +1454,10 @@ class stick(object):
                                 if not open_requests_found:
                                     self._plugwise_nodes[mac].update_power_usage()
                                 # Refresh node info once per hour and request power use afterwards
-                                if self._plugwise_nodes[mac]._last_info_message != None:
+                                if (
+                                    self._plugwise_nodes[mac]._last_info_message
+                                    is not None
+                                ):
                                     if self._plugwise_nodes[mac]._last_info_message < (
                                         datetime.now().replace(
                                             minute=0,
@@ -1537,7 +1547,7 @@ class stick(object):
             self._auto_update_timer = 0
         else:
             self._auto_update_timer = 5
-            if timer == None:
+            if timer is not None:
                 # Timer based on number of nodes and 3 seconds per node
                 self._auto_update_timer = len(self._plugwise_nodes) * 3
             elif timer > 5:

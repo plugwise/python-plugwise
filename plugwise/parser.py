@@ -2,40 +2,35 @@
 
 import logging
 
-from plugwise.constants import (
-    MESSAGE_FOOTER,
-    MESSAGE_HEADER,
-)
+from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
 from plugwise.message import PlugwiseMessage
-from plugwise.messages.responses import (
-    CircleCalibrationResponse,  # 0027
-    CirclePlusConnectResponse,  # 0005
-    CirclePlusQueryEndResponse,  # 0003
-    CirclePlusQueryResponse,  # 0002
-    CirclePlusRealTimeClockResponse,  # 003A
-    CirclePlusScanResponse,  # 0019
-    CirclePowerBufferResponse,  # 0049
-    CirclePowerUsageResponse,  # 0013
-    CircleClockResponse,  # 003F
-    NodeAckLargeResponse,  # 0000
-    NodeAckResponse,  # 0100
-    NodeAckSmallResponse,  # 0000
-    NodeFeaturesResponse,  # 0060
-    NodeInfoResponse,  # 0024
-    NodeJoinAvailableResponse,  # 0006
-    NodeJoinAckResponse,  # 0061
-    NodePingResponse,  # 000E
-    NodeSwitchGroupResponse,  # 0056
-    NodeRemoveResponse,  # 001D
-    NodeAwakeResponse,  # 004F
-    SenseReportResponse,  # 0105
-    StickInitResponse,  # 0011
-)
+from plugwise.messages.responses import CircleCalibrationResponse  # 0027
+from plugwise.messages.responses import CircleClockResponse  # 003F
+from plugwise.messages.responses import CirclePlusConnectResponse  # 0005
+from plugwise.messages.responses import CirclePlusQueryEndResponse  # 0003
+from plugwise.messages.responses import CirclePlusQueryResponse  # 0002
+from plugwise.messages.responses import CirclePlusRealTimeClockResponse  # 003A
+from plugwise.messages.responses import CirclePlusScanResponse  # 0019
+from plugwise.messages.responses import CirclePowerBufferResponse  # 0049
+from plugwise.messages.responses import CirclePowerUsageResponse  # 0013
+from plugwise.messages.responses import NodeAckLargeResponse  # 0000
+from plugwise.messages.responses import NodeAckResponse  # 0100
+from plugwise.messages.responses import NodeAckSmallResponse  # 0000
+from plugwise.messages.responses import NodeAwakeResponse  # 004F
+from plugwise.messages.responses import NodeFeaturesResponse  # 0060
+from plugwise.messages.responses import NodeInfoResponse  # 0024
+from plugwise.messages.responses import NodeJoinAckResponse  # 0061
+from plugwise.messages.responses import NodeJoinAvailableResponse  # 0006
+from plugwise.messages.responses import NodePingResponse  # 000E
+from plugwise.messages.responses import NodeRemoveResponse  # 001D
+from plugwise.messages.responses import NodeSwitchGroupResponse  # 0056
+from plugwise.messages.responses import SenseReportResponse  # 0105
+from plugwise.messages.responses import StickInitResponse  # 0011
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class PlugwiseParser(object):
+class PlugwiseParser:
     """
     Transform Plugwise message from wire format to response message object
     """
@@ -69,12 +64,13 @@ class PlugwiseParser(object):
                 e,
             )
 
-    def parse_data(self):
+    def parse_data(self):  # noqa: C901
         """
         Process next set of packet data
         """
+        # TODO: flake8 indicates scan is too complex, level 35 indenting is indeed too complex
         _LOGGER.debug("Parse data: %s ", str(self._buffer))
-        if self._parsing == False:
+        if self._parsing is False:
             self._parsing = True
 
             # Lookup header of message in buffer

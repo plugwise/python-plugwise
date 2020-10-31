@@ -3,41 +3,41 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 General node object to control associated plugwise nodes like: Circle+, Circle, Scan, Stealth
 """
-import logging
 from datetime import datetime
+import logging
 
 from plugwise.constants import (
     HA_SWITCH,
     HW_MODELS,
     SENSOR_AVAILABLE,
+    SENSOR_PING,
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
-    SENSOR_PING,
     SWITCH_RELAY,
     UTF8_DECODE,
 )
 from plugwise.message import PlugwiseMessage
-from plugwise.messages.responses import (
-    NodeFeaturesResponse,
-    NodeInfoResponse,
-    NodePingResponse,
-)
 from plugwise.messages.requests import (
     NodeFeaturesRequest,
     NodeInfoRequest,
     NodePingRequest,
+)
+from plugwise.messages.responses import (
+    NodeFeaturesResponse,
+    NodeInfoResponse,
+    NodePingResponse,
 )
 from plugwise.util import validate_mac
 
 _LOGGER = logging.getLogger(__name__)
 
 
-class PlugwiseNode(object):
-    """ Base class for a Plugwise node """
+class PlugwiseNode:
+    """Base class for a Plugwise node."""
 
     def __init__(self, mac, address, stick):
         mac = mac.upper()
-        if validate_mac(mac) == False:
+        if validate_mac(mac) is False:
             _LOGGER.debug(
                 "MAC address is in unexpected format: %s",
                 str(mac),
@@ -65,7 +65,7 @@ class PlugwiseNode(object):
         self._features = None
 
     def get_node_type(self) -> str:
-        """Return hardware model"""
+        """Return hardware model."""
         if self._hardware_version:
             hw_model = HW_MODELS.get(self._hardware_version[4:10], None)
             if hw_model:
@@ -83,29 +83,29 @@ class PlugwiseNode(object):
         return "Unknown"
 
     def is_sed(self) -> bool:
-        """ Return True if node SED (battery powered)"""
+        """Return True if node SED (battery powered)."""
         return False
 
     def get_categories(self) -> tuple:
-        """ Return Home Assistant catagories supported by plugwise node """
+        """Return Home Assistant categories supported by plugwise node."""
         return self.categories
 
     def get_sensors(self) -> tuple:
-        """ Return sensors supported by plugwise node """
+        """Return sensors supported by plugwise node."""
         return self.sensors
 
     def get_switches(self) -> tuple:
-        """ Return switches supported by plugwise node """
+        """Return switches supported by plugwise node."""
         return self.switches
 
     def get_available(self) -> bool:
-        """ Return current network state of plugwise node """
+        """Return current network state of plugwise node."""
         return self._available
 
     def set_available(self, state, request_info=False):
-        """ Set current network state of plugwise node """
-        if state == True:
-            if self._available == False:
+        """Set current network state of plugwise node."""
+        if state is True:
+            if self._available is False:
                 self._available = True
                 _LOGGER.debug(
                     "Mark node %s available",
@@ -115,7 +115,7 @@ class PlugwiseNode(object):
                 if request_info:
                     self._request_info()
         else:
-            if self._available == True:
+            if self._available is True:
                 self._available = False
                 _LOGGER.debug(
                     "Mark node %s unavailable",
@@ -124,75 +124,73 @@ class PlugwiseNode(object):
                 self.do_callback(SENSOR_AVAILABLE["id"])
 
     def get_mac(self) -> str:
-        """Return mac address"""
+        """Return mac address."""
         return self.mac.decode(UTF8_DECODE)
 
     def get_name(self) -> str:
-        """Return unique name"""
+        """Return unique name."""
         return self.get_node_type() + " (" + str(self._address) + ")"
 
     def get_hardware_version(self) -> str:
-        """Return hardware version"""
-        if self._hardware_version != None:
+        """Return hardware version."""
+        if self._hardware_version is not None:
             return self._hardware_version
         return "Unknown"
 
     def get_firmware_version(self) -> str:
-        """Return firmware version"""
-        if self._firmware_version != None:
+        """Return firmware version."""
+        if self._firmware_version is not None:
             return str(self._firmware_version)
         return "Unknown"
 
     def get_last_update(self) -> datetime:
-        """Return  version"""
+        """Return  version."""
         return self.last_update
 
     def get_in_RSSI(self) -> int:
-        """Return inbound RSSI level"""
-        if self.in_RSSI != None:
+        """Return inbound RSSI level."""
+        if self.in_RSSI is not None:
             return self.in_RSSI
         return 0
 
     def get_out_RSSI(self) -> int:
-        """Return outbound RSSI level"""
-        if self.out_RSSI != None:
+        """Return outbound RSSI level."""
+        if self.out_RSSI is not None:
             return self.out_RSSI
         return 0
 
     def get_ping(self) -> int:
-        """Return ping roundtrip"""
-        if self.ping_ms != None:
+        """Return ping roundtrip."""
+        if self.ping_ms is not None:
             return self.ping_ms
         return 0
 
     def _request_info(self, callback=None):
-        """ Request info from node"""
+        """Request info from node"""
         self.stick.send(
             NodeInfoRequest(self.mac),
             callback,
         )
 
     def _request_features(self, callback=None):
-        """ Request supported features for this node"""
+        """Request supported features for this node."""
         self.stick.send(
             NodeFeaturesRequest(self.mac),
             callback,
         )
 
     def ping(self, callback=None):
-        """ Ping node"""
+        """Ping node."""
         self.stick.send(
             NodePingRequest(self.mac),
             callback,
         )
 
     def on_message(self, message):
-        """
-        Process received message
-        """
+        """Process received message."""
         assert isinstance(message, PlugwiseMessage)
         if message.mac == self.mac:
-            if message.timestamp != None:
+            if message.timestamp is not None:
                 _LOGGER.debug(
                     "Last update %s of node %s, last message %s",
                     str(self.last_update),
@@ -220,7 +218,7 @@ class PlugwiseNode(object):
         pass
 
     def subscribe_callback(self, callback, sensor) -> bool:
-        """ Subscribe callback to execute when state change happens """
+        """Subscribe callback to execute when state change happens."""
         if sensor in self.sensors:
             if sensor not in self._callbacks:
                 self._callbacks[sensor] = []
@@ -229,12 +227,12 @@ class PlugwiseNode(object):
         return False
 
     def unsubscribe_callback(self, callback, sensor):
-        """ Unsubscribe callback to execute when state change happens """
+        """Unsubscribe callback to execute when state change happens."""
         if sensor in self._callbacks:
             self._callbacks[sensor].remove(callback)
 
     def do_callback(self, sensor):
-        """ Execute callbacks registered for specified callback type """
+        """Execute callbacks registered for specified callback type."""
         if sensor in self._callbacks:
             for callback in self._callbacks[sensor]:
                 try:
@@ -246,7 +244,7 @@ class PlugwiseNode(object):
                     )
 
     def _process_ping_response(self, message):
-        """ Process ping response message"""
+        """Process ping response message."""
         self.set_available(True, True)
         if self.in_RSSI != message.in_RSSI.value:
             self.in_RSSI = message.in_RSSI.value
@@ -259,7 +257,7 @@ class PlugwiseNode(object):
             self.do_callback(SENSOR_PING["id"])
 
     def _process_info_response(self, message):
-        """ Process info response message"""
+        """Process info response message."""
         _LOGGER.debug("Response info message for node %s", self.get_mac())
         self.set_available(True)
         if message.relay_state.serialize() == b"01":
@@ -284,7 +282,7 @@ class PlugwiseNode(object):
         _LOGGER.debug("Firmware version = %s", str(self._firmware_version))
 
     def _process_features_response(self, message):
-        """ Process features message """
+        """Process features message."""
         _LOGGER.info(
             "Node %s supports features %s", self.get_mac(), str(message.features.value)
         )

@@ -6,8 +6,8 @@ Socket connection
 import logging
 import socket
 
-from plugwise.constants import SLEEP_TIME
 from plugwise.connections.connection import StickConnection
+from plugwise.constants import SLEEP_TIME
 from plugwise.exceptions import PortError
 from plugwise.message import PlugwiseMessage
 

@@ -18,9 +18,9 @@ from plugwise.constants import (
     SENSOR_RSSI_OUT,
     SENSOR_TEMPERATURE,
 )
-from plugwise.nodes.sed import NodeSED
 from plugwise.message import PlugwiseMessage
 from plugwise.messages.responses import SenseReportResponse
+from plugwise.nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 
