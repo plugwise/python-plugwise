@@ -64,7 +64,7 @@ class NodeResponse(PlugwiseMessage):
         response = self._parse_params(response)
         crc = response[:4]
 
-        if crc != MESSAGE_FOOTER:
+        if response[4:] != MESSAGE_FOOTER:
             raise ProtocolError("Invalid message footer")
 
     def _parse_params(self, response):
