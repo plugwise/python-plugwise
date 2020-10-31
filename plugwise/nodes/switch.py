@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise switch node object
-"""
+"""Plugwise switch node object."""
 import logging
 
 from plugwise.constants import HA_BINARY_SENSOR, HA_SENSOR, SENSOR_SWITCH

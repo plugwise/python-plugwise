@@ -10,8 +10,6 @@ import sys
 import threading
 import time
 
-import serial
-
 from plugwise.connections.serial import PlugwiseUSBConnection
 from plugwise.connections.socket import SocketConnection
 from plugwise.constants import (
@@ -21,14 +19,12 @@ from plugwise.constants import (
     ACK_ERROR,
     ACK_OFF,
     ACK_ON,
-    ACK_REAL_TIME_CLOCK_SET,
     ACK_SCAN_PARAMETERS_SET,
     ACK_SLEEP_SET,
     ACK_SUCCESS,
     ACK_TIMEOUT,
     CB_JOIN_REQUEST,
     CB_NEW_NODE,
-    MAX_TIME_DRIFT,
     MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
     NACK_ON_OFF,
@@ -42,7 +38,6 @@ from plugwise.constants import (
     NODE_TYPE_SCAN,
     NODE_TYPE_SENSE,
     NODE_TYPE_STEALTH,
-    NODE_TYPE_STICK,
     NODE_TYPE_SWITCH,
     SLEEP_TIME,
     UTF8_DECODE,
@@ -55,13 +50,10 @@ from plugwise.exceptions import (
     StickInitError,
     TimeoutException,
 )
-from plugwise.message import PlugwiseMessage
 from plugwise.messages.requests import (
     CircleCalibrationRequest,
     CircleClockGetRequest,
-    CircleClockSetRequest,
     CirclePlusRealTimeClockGetRequest,
-    CirclePlusRealTimeClockSetRequest,
     CirclePlusScanRequest,
     CirclePowerUsageRequest,
     CircleSwitchRelayRequest,
@@ -98,7 +90,6 @@ from plugwise.nodes.scan import PlugwiseScan
 from plugwise.nodes.sed import NodeSED
 from plugwise.nodes.sense import PlugwiseSense
 from plugwise.nodes.stealth import PlugwiseStealth
-from plugwise.nodes.switch import PlugwiseSwitch
 from plugwise.parser import PlugwiseParser
 from plugwise.util import inc_seq_id, validate_mac
 
@@ -106,9 +97,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class stick:
-    """
-    Plugwise connection stick
-    """
+    """Plugwise connection stick."""
 
     def __init__(self, port, callback=None, print_progress=False):
         self._mac_stick = None
@@ -138,6 +127,18 @@ class stick:
         self._run_receive_timeout_thread = False
         self._run_send_message_thread = False
         self._run_update_thread = False
+
+        self._auto_update_timer = None
+        self._auto_update_first_run = None
+        self._nodes_discovered = None
+        self._receive_timeout_thread = None
+        self._run_watchdog = None
+        self._send_message_queue = None
+        self._send_message_thread = None
+        self._update_thread = None
+        self._watchdog_thread = None
+        self.init_callback = None
+        self.connection = None
 
         if callback:
             self.auto_initialize(callback)
@@ -295,7 +296,7 @@ class stick:
     def _discover_after_scan(self):
         """ Helper to do callback for new node """
         node_discovered = None
-        for mac in self._nodes_not_discovered.keys():
+        for mac, _values in self._nodes_not_discovered:
             if self._plugwise_nodes.get(mac, None):
                 node_discovered = mac
                 break
@@ -346,10 +347,8 @@ class stick:
                             callback,
                         )
                 return True
-            else:
-                return False
-        else:
             return False
+        return False
 
     def scan(self, callback=None):  # noqa: C901
         """ scan for connected plugwise nodes """
@@ -412,9 +411,7 @@ class stick:
             discover_timeout = (
                 10 + (len(nodes_to_discover) * 2) + (MESSAGE_TIME_OUT * MESSAGE_RETRY)
             )
-            self.discover_timeout = threading.Timer(
-                discover_timeout, timeout_expired
-            ).start()
+            threading.Timer(discover_timeout, timeout_expired).start()
             _LOGGER.debug("Start discovery of linked node types...")
             for mac in nodes_to_discover:
                 self.discover_node(mac, node_discovered)
@@ -465,10 +462,8 @@ class stick:
         if validate_mac(mac) is True:
             self.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback)
             return True
-        else:
-            _LOGGER.warning(
-                "Invalid mac '%s' address, unable to join node manually.", mac
-            )
+
+        _LOGGER.warning("Invalid mac '%s' address, unable to join node manually.", mac)
         return False
 
     def node_unjoin(self, mac: str, callback=None) -> bool:
@@ -479,10 +474,10 @@ class stick:
                 callback,
             )
             return True
-        else:
-            _LOGGER.warning(
-                "Invalid mac '%s' address, unable to unjoin node manually.", mac
-            )
+
+        _LOGGER.warning(
+            "Invalid mac '%s' address, unable to unjoin node manually.", mac
+        )
         return False
 
     def _append_node(self, mac, address, node_type):
@@ -1388,7 +1383,7 @@ class stick:
                                         minutes=(
                                             self._plugwise_nodes[
                                                 mac
-                                            ]._maintenance_interval
+                                            ].maintenance_interval
                                             + 1
                                         )
                                     )
@@ -1398,7 +1393,7 @@ class stick:
                                         str(
                                             self._plugwise_nodes[
                                                 mac
-                                            ]._maintenance_interval
+                                            ].maintenance_interval
                                         ),
                                         mac,
                                         str(self._plugwise_nodes[mac].last_update),
@@ -1408,7 +1403,7 @@ class stick:
                                                 minutes=(
                                                     self._plugwise_nodes[
                                                         mac
-                                                    ]._maintenance_interval
+                                                    ].maintenance_interval
                                                     + 1
                                                 )
                                             )
@@ -1455,23 +1450,23 @@ class stick:
                                     self._plugwise_nodes[mac].update_power_usage()
                                 # Refresh node info once per hour and request power use afterwards
                                 if (
-                                    self._plugwise_nodes[mac]._last_info_message
+                                    self._plugwise_nodes[mac].last_info_message
                                     is not None
                                 ):
-                                    if self._plugwise_nodes[mac]._last_info_message < (
+                                    if self._plugwise_nodes[mac].last_info_message < (
                                         datetime.now().replace(
                                             minute=0,
                                             second=0,
                                             microsecond=0,
                                         )
                                     ):
-                                        self._plugwise_nodes[mac]._request_info(
+                                        self._plugwise_nodes[mac].request_info(
                                             self._plugwise_nodes[
                                                 mac
-                                            ]._request_power_buffer
+                                            ].request_power_buffer
                                         )
-                                if not self._plugwise_nodes[mac]._last_log_collected:
-                                    self._plugwise_nodes[mac]._request_power_buffer()
+                                if not self._plugwise_nodes[mac].last_log_collected:
+                                    self._plugwise_nodes[mac].request_power_buffer()
                         else:
                             if self._run_update_thread:
                                 _LOGGER.debug(
@@ -1534,7 +1529,7 @@ class stick:
                         update_loop_checker += 1
 
         except Exception as e:
-            exc_type, exc_obj, exc_tb = sys.exc_info()
+            _exc_type, _exc_obj, exc_tb = sys.exc_info()
             _LOGGER.error("Error at line %s of _update_loop : %s", exc_tb.tb_lineno, e)
         _LOGGER.debug("Update loop stopped")
 

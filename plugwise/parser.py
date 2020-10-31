@@ -1,4 +1,4 @@
-# Use of this source code is governed by the MIT license found in the LICENSE file.
+"""Transform Plugwise message from wire format to response message object."""
 
 import logging
 
@@ -31,9 +31,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class PlugwiseParser:
-    """
-    Transform Plugwise message from wire format to response message object
-    """
+    """Transform Plugwise message from wire format to response message object."""
 
     def __init__(self, stick):
         self.stick = stick

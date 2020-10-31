@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-All known request messages to be send to plugwise devices
-"""
+"""All known request messages to be send to plugwise devices."""
 from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
 from plugwise.message import PlugwiseMessage
 from plugwise.util import (
@@ -18,9 +14,7 @@ from plugwise.util import (
 
 
 class NodeRequest(PlugwiseMessage):
-    """
-    Base class for request messages to be send from by USB-Stick.
-    """
+    """Base class for request messages to be send from by USB-Stick."""
 
     def __init__(self, mac):
         PlugwiseMessage.__init__(self)
@@ -29,8 +23,7 @@ class NodeRequest(PlugwiseMessage):
 
 
 class NodeNetworkInfoRequest(NodeRequest):
-    """
-    TODO: PublicNetworkInfoRequest
+    """TODO: PublicNetworkInfoRequest
 
     No arguments
     """
@@ -46,9 +39,6 @@ class CirclePlusConnectRequest(NodeRequest):
     """
 
     ID = b"0004"
-
-    def __init__(self, mac):
-        super().__init__(self, mac)
 
     # This message has an exceptional format and therefore need to override the serialize method
     def serialize(self):

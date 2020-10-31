@@ -1,24 +1,18 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
+"""Plugwise SED (Sleeping Endpoint Device) base object."""
 
-Plugwise SED (Sleeping Endpoint Device) base object
+# TODO:
+# - Expose awake state as sensor
+# - Set available state after 2 missed awake messages
 
-TODO:
-- Expose awake state as sensor
-- Set available state after 2 missed awake messages
-
-"""
 import logging
 
 from plugwise.constants import (
     ACK_SLEEP_SET,
-    NACK_SLEEP_SET,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
     SED_AWAKE_STARTUP,
     SED_AWAKE_STATE,
-    SED_AWAKE_UNKNOWN,
     SED_CLOCK_INTERVAL,
     SED_CLOCK_SYNC,
     SED_MAINTENANCE_INTERVAL,
@@ -46,8 +40,10 @@ class NodeSED(PlugwiseNode):
     def __init__(self, mac, address, stick):
         super().__init__(mac, address, stick)
         self._SED_requests = {}
-        self._maintenance_interval = SED_MAINTENANCE_INTERVAL
+        self.maintenance_interval = SED_MAINTENANCE_INTERVAL
         self._new_maintenance_interval = None
+
+        self._wake_up_interval = None
 
     def is_sed(self) -> bool:
         """ Return if True if node SED (battery powered)"""
@@ -61,7 +57,7 @@ class NodeSED(PlugwiseNode):
             self._process_awake_response(message)
         elif isinstance(message, NodeAckLargeResponse):
             if message.ack_id == ACK_SLEEP_SET:
-                self._maintenance_interval = self._new_maintenance_interval
+                self.maintenance_interval = self._new_maintenance_interval
             else:
                 self._on_SED_message(message)
         else:
@@ -109,7 +105,7 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
-    def _request_info(self, callback=None):
+    def request_info(self, callback=None):
         """ Request info from node"""
         self._queue_request(
             NodeInfoRequest(self.mac),

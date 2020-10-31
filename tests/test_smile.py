@@ -1,9 +1,8 @@
-"""Test Plugwise Home Assistant module and generate test JSONs."""
+"""Test Plugwise Home Assistant module and generate test JSON fixtures."""
 
 import asyncio
 
 # Fixture writing
-import io
 import logging
 import os
 from pprint import PrettyPrinter
@@ -35,6 +34,10 @@ _LOGGER.setLevel(logging.DEBUG)
 
 class TestPlugwise:
     """Tests for Plugwise Smile."""
+
+    def __init__(self):
+        """Initialize tests."""
+        self.smile_setup = None
 
     def _write_json(self, call, data):
         """Store JSON data to per-setup files for HA component testing."""
@@ -782,14 +785,13 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-    """
-
     # TODO: This device setup needs work - doesn't seem to work straightforard
     # currently breaks on setting thermostat setpoint
 
     # Actual test for directory 'Adam'
     # living room floor radiator valve and separate zone thermostat
     # an three rooms with conventional radiators
+    """
     @pytest.mark.asyncio
     async def test_connect_adam(self):
         testdata = {
@@ -1297,7 +1299,7 @@ class TestPlugwise:
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
         try:
-            server, smile, client = await self.connect_wrapper()
+            _server, _smile, _client = await self.connect_wrapper()
             assert False
         except ConnectionFailedError:
             assert True

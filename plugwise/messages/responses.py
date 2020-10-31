@@ -1,8 +1,4 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-All known response messages to be received from plugwise devices
-"""
+"""All known response messages to be received from plugwise devices."""
 from datetime import datetime
 
 from plugwise.constants import (
@@ -66,10 +62,9 @@ class NodeResponse(PlugwiseMessage):
             response = response[16:]
 
         response = self._parse_params(response)
-        # TODO: unused crc
-        # crc = response[:4]
+        crc = response[:4]
 
-        if response[4:] != MESSAGE_FOOTER:
+        if crc != MESSAGE_FOOTER:
             raise ProtocolError("Invalid message footer")
 
     def _parse_params(self, response):
@@ -143,7 +138,7 @@ class CirclePlusQueryResponse(NodeResponse):
         return 18 + arglen
 
     def deserialize(self, response):
-        super().deserialize(self, response)
+        super().deserialize(response)
         # Clear first two characters of mac ID, as they contain part of the short PAN-ID
         self.new_node_mac_id.value = b"00" + self.new_node_mac_id.value[2:]
 

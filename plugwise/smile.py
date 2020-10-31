@@ -746,7 +746,7 @@ class Smile:
             if power_data is not None:
                 device_data.update(power_data)
 
-        ## Switching Groups
+        # Switching Groups
         if details["class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
@@ -794,10 +794,7 @@ class Smile:
                     ):
                         continue
                     # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-                    if (
-                        measurement == "compressor_state"
-                        or measurement == "flame_state"
-                    ):
+                    if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
                     data[name] = format_measure(measure)
