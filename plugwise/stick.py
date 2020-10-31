@@ -1541,7 +1541,7 @@ class stick:
             self._auto_update_timer = 0
         else:
             self._auto_update_timer = 5
-            if timer is not None:
+            if timer is None:
                 # Timer based on number of nodes and 3 seconds per node
                 self._auto_update_timer = len(self._plugwise_nodes) * 3
             elif timer > 5:
