@@ -19,7 +19,6 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     name: Prepare
-    if: github.event.pull_request.merged == false
     steps:
     - name: Check out committed code
       uses: actions/checkout@v2
@@ -110,7 +109,14 @@ jobs:
     - name: Verify commit
       run: |
         . venv/bin/activate
-        pre-commit run --show-diff-on-failure --color=always --all-files
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual bandit
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual black
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual codespell
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual flake8
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual isort
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual mypy
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual userdata
+        pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual yamllint
 
   prepare-test-cache:
     runs-on: ubuntu-latest
