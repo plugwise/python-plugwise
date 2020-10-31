@@ -19,6 +19,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     name: Prepare
+    if: github.event.pull_request.merged == false
     steps:
     - name: Check out committed code
       uses: actions/checkout@v2
