@@ -7,7 +7,7 @@ import logging
 import aiohttp
 import async_timeout
 from dateutil.parser import parse
-from lxml import etree
+from defusedxml import ElementTree as etree
 
 # Time related
 import pytz
