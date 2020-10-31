@@ -128,7 +128,6 @@ class stick:
         self._run_update_thread = False
 
         self._auto_update_timer = None
-        self._auto_update_first_run = None
         self._nodes_discovered = None
         self._receive_timeout_thread = None
         self._run_watchdog = None
@@ -1367,7 +1366,7 @@ class stick:
         """
         # TODO: flake8 indicates scan is too complex, level 28 indenting is indeed complex
         self._run_update_thread = True
-        self._auto_update_first_run = True
+        _auto_update_first_run = True
         day_of_month = datetime.now().day
         try:
             while self._run_update_thread:
@@ -1425,7 +1424,7 @@ class stick:
                     ):
                         # Don't check at first time
                         _LOGGER.debug("Request current power usage for node %s", mac)
-                        if not self._auto_update_first_run and self._run_update_thread:
+                        if not _auto_update_first_run and self._run_update_thread:
                             # Only request update if node is available
                             if self._plugwise_nodes[mac].get_available():
                                 _LOGGER.debug(
@@ -1473,7 +1472,7 @@ class stick:
                                     mac,
                                 )
                                 self._plugwise_nodes[mac].update_power_usage()
-                        self._auto_update_first_run = False
+                        _auto_update_first_run = False
 
                         # Sync internal clock of all available Circle and Circle+ nodes once a day
                         if datetime.now().day != day_of_month:
