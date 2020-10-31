@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.2 - Code quality improvements
+  - Switch Smile to defusedxml from lxml (improving security)
+  - Lint and flake recommendations fixed
+  - Project CI changes 
+
 ## 0.8.1 - Standardize logging for stick
 
 ## 0.8.0 - Merged Smile/USB module
