@@ -18,7 +18,6 @@ jobs:
   publishing:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
-    needs: prepare
     # Only trigger on merges, not just closes
     if: github.event.pull_request.merged == true
     steps:
