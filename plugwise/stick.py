@@ -294,7 +294,7 @@ class stick:
     def _discover_after_scan(self):
         """ Helper to do callback for new node """
         node_discovered = None
-        for mac, _values in self._nodes_not_discovered:
+        for mac in self._nodes_not_discovered:
             if self._plugwise_nodes.get(mac, None):
                 node_discovered = mac
                 break
