@@ -50,6 +50,16 @@
    too-many-boolean-expressions,
    unused-argument,
    wrong-import-order,
+   raise-missing-from,
+   missing-class-docstring,
+   missing-function-docstring,
+   missing-module-docstring,
+   too-many-nested-blocks,
+# for now (20201031) added the below while we are codemerging/-improving
+# missing-class-docstring
+# missing-function-docstring
+# missing-module-docstring
+# too-many-nested-blocks => inherent with fixing complexity
  enable=
    use-symbolic-message-instead
 
