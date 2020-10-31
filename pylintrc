@@ -5,7 +5,7 @@
  jobs=2
  load-plugins=pylint_strict_informational
  persistent=no
- extension-pkg-whitelist=ciso8601,lxml
+ extension-pkg-whitelist=ciso8601,defusedxml
 
  [BASIC]
  good-names=id,i,j,k,ex,Run,_,fp
