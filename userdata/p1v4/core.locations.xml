@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='a455b61e52394b2db5081ce025a430f3'>
+		<name>Home</name>
+		<description>A building with a smart meter.</description>
+		<type>building</type>
+		<created_date>2020-03-12T16:41:36.227+01:00</created_date>
+		<modified_date>2020-11-03T18:35:52.740+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='104e84a3e0364545a889270deee21e94'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2020-11-03T18:35:48+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T18:35:48+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d'/>
+				<period start_date="2020-11-03T18:35:48+01:00" end_date="2020-11-03T18:35:48+01:00">
+					<measurement log_date="2020-11-03T18:35:48+01:00" tariff="nl_offpeak">0.00</measurement>
+					<measurement log_date="2020-11-03T18:35:48+01:00" tariff="nl_peak">548.00</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='32b0afe1dd324aea87f46d2e699dbd56'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2020-11-03T18:35:00+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T18:35:00+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
+				<period start_date="2020-11-03T18:35:00+01:00" end_date="2020-11-03T18:35:00+01:00">
+					<measurement log_date="2020-11-03T18:35:00+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-11-03T18:35:00+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='6b58aa7f2cd0406bacdc53ac7ecae168'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2020-11-03T18:35:48+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T07:00:00+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d'/>
+				<period start_date="2020-11-03T18:35:48+01:00" end_date="2020-11-03T18:35:48+01:00">
+					<measurement log_date="2020-11-03T18:35:48+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-11-03T18:35:48+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='7b7ad634b0b647f0bbf848ac5657ea8f'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2020-11-03T18:35:00+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T18:35:00+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
+				<period start_date="2020-11-03T18:35:00+01:00" end_date="2020-11-03T18:35:00+01:00">
+					<measurement log_date="2020-11-03T18:35:00+01:00" tariff="nl_peak">9067554.00</measurement>
+					<measurement log_date="2020-11-03T18:35:00+01:00" tariff="nl_offpeak">11915899.00</measurement>
+				</period>
+			</cumulative_log>
+			<interval_log id='859d091cb8e444b5bc084a41a9fd401c'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2020-11-03T18:00:00+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T17:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
+				<period start_date="2020-11-03T18:00:00+01:00" end_date="2020-11-03T18:00:00+01:00" interval="PT1H">
+					<measurement log_date="2020-11-03T18:00:00+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2020-11-03T18:00:00+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='babf35c6d9c746179475a6c0ce086f37'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2020-11-03T18:00:00+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T17:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
+				<period start_date="2020-11-03T18:00:00+01:00" end_date="2020-11-03T18:00:00+01:00" interval="PT1H">
+					<measurement log_date="2020-11-03T18:00:00+01:00" tariff="nl_peak">335.00</measurement>
+					<measurement log_date="2020-11-03T18:00:00+01:00" tariff="nl_offpeak">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+</locations>
+
+
