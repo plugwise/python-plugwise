@@ -65,7 +65,7 @@ def escape_illegal_xml_characters(xmldata):
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure):
+def format_measure(measure, unit):
     """Format measure to correct type."""
     try:
         measure = int(measure)
