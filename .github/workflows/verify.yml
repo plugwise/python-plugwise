@@ -64,11 +64,55 @@ jobs:
         . venv/bin/activate
         pre-commit install-hooks
 
+  black:
+    runs-on: ubuntu-latest
+    name: Black check and force
+    needs: prepare
+    steps:
+    - name: Check out committed code
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+    - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      id: python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.DEFAULT_PYTHON }}
+    - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
+      id: cache-venv
+      uses: actions/cache@v2
+      with:
+        path: venv
+        key: >-
+          ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
+          steps.python.outputs.python-version }}-${{
+          hashFiles('requirements_test.txt') }}-${{
+          hashFiles('setup.py') }}
+    - name: Fail job if Python cache restore failed
+      if: steps.cache-venv.outputs.cache-hit != 'true'
+      run: |
+        echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
+        exit 1
+    - name: Run black --check .
+      run: |
+        . venv/bin/activate
+        black --check .
+    - name: If needed, commit black changes to the pull request
+      if: failure()
+      run: |
+        . venv/bin/activate
+        black .
+        git config --global user.name 'autoblack'
+        git config --global user.email 'plugwise@users.noreply.github.com'
+        git remote set-url origin https://x-access-token:${{ secrets.PAT_CT }}@github.com/$GITHUB_REPOSITORY
+        git checkout $GITHUB_HEAD_REF
+        git commit -am "fixup: ${GITHUB_REF##*/} Python code reformatted using Black"
+        git push origin ${GITHUB_REF##*/}
 
   commitcheck:
     runs-on: ubuntu-latest
     name: Check commit
-    needs: prepare
+    needs: black
     steps:
     - name: Check out committed code
       uses: actions/checkout@v2
@@ -77,8 +121,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ env.DEFAULT_PYTHON }}
-    - name: Pre-black
-      uses: psf/black@stable
     - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
       id: cache-venv
       uses: actions/cache@v2
