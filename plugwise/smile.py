@@ -15,6 +15,12 @@ import pytz
 # Version detection
 import semver
 
+from homeassistant.const import (
+    ATTR_NAME,
+    ATTR_UNIT_OF_MEASUREMENT,
+    ENERGY_KILO_WATT_HOUR,
+    ENERGY_WATT_HOUR,
+)
 from plugwise.constants import (
     APPLIANCES,
     DEFAULT_PORT,
@@ -775,7 +781,7 @@ class Smile:
         appliances = search.findall(f'.//appliance[@id="{dev_id}"]')
 
         for appliance in appliances:
-            for measurement, name in DEVICE_MEASUREMENTS.items():
+            for measurement, attrs in DEVICE_MEASUREMENTS.items():
 
                 p_locator = (
                     f'.//logs/point_log[type="{measurement}"]/period/measurement'
@@ -797,25 +803,25 @@ class Smile:
                     if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
-                    data[name] = format_measure(measure)
+                    data[attrs[ATTR_NAME]] = format_measure(measure, attrs[ATTR_UNIT_OF_MEASUREMENT])
 
                 i_locator = (
                     f'.//logs/interval_log[type="{measurement}"]/period/measurement'
                 )
                 if appliance.find(i_locator) is not None:
-                    name = f"{name}_interval"
+                    name = f"{attrs[ATTR_NAME]}_interval"
                     measure = appliance.find(i_locator).text
 
-                    data[name] = format_measure(measure)
+                    data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
                 c_locator = (
                     f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
                 )
                 if appliance.find(c_locator) is not None:
-                    name = f"{name}_cumulative"
+                    name = f"{attrs[ATTR_NAME]}_cumulative"
                     measure = appliance.find(c_locator).text
 
-                    data[name] = format_measure(measure)
+                    data[name] = format_measure(measure, ENERGY_KILO_WATT_HOUR)
 
         return data
 
