@@ -869,7 +869,7 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = format_measure(val)
+                    f_val = format_measure(val, None)
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
@@ -1088,7 +1088,7 @@ class Smile:
             f'[type="{measurement}"]/period/measurement'
         )
         if search.find(locator) is not None:
-            val = format_measure(search.find(locator).text)
+            val = format_measure(search.find(locator).text, None)
             return val
 
         return None
