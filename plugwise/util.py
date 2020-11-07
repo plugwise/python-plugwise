@@ -73,10 +73,10 @@ def escape_illegal_xml_characters(xmldata):
 
 def format_measure(measure, unit):
     """Format measure to correct type."""
-    if unit == PERCENTAGE and measure > 0:
-        measure = int(measure * 100)
+    if unit == PERCENTAGE and float(measure) > 0:
+        measure = int(float(measure) * 100)
     if unit == ENERGY_KILO_WATT_HOUR:
-        measure = measure / 1000
+        measure = float(measure) / 1000
     try:
         measure = int(measure)
     except ValueError:
