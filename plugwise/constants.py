@@ -327,7 +327,7 @@ DEVICE_MEASUREMENTS = {
     # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably
     "intended_boiler_state": {ATTR_NAME: "intended_boiler_state", ATTR_UNIT_OF_MEASUREMENT: None},
     # Lisa and Tom
-    "battery": [ATTR_NAME: "battery", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    "battery": {ATTR_NAME: "battery", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "temperature_difference": {ATTR_NAME: "temperature_difference", ATTR_UNIT_OF_MEASUREMENT: DEGREE},
     "valve_position": {ATTR_NAME: "valve_position", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     # Plug
