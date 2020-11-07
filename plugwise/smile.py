@@ -842,7 +842,7 @@ class Smile:
         peak_list = ["nl_peak", "nl_offpeak"]
 
         # meter_string = ".//{}[type='{}']/"
-        for measurement in HOME_MEASUREMENTS:
+        for measurement, attrs in HOME_MEASUREMENTS.items():
             for log_type in log_list:
                 for peak_select in peak_list:
                     locator = (
@@ -869,7 +869,13 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = format_measure(val, None)
+                    if all(
+                        item in key_string 
+                        for item in ['electricity', 'cumulative']
+                    ):
+                        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
+                    else:
+                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
