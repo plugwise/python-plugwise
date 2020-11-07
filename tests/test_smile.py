@@ -316,8 +316,8 @@ class TestPlugwise:
                         )
                         if isinstance(data[measure_key], float):
                             if all(
-                                item in measure_key 
-                                for item in ['electricity', 'cumulative']
+                                item in measure_key
+                                for item in ["electricity", "cumulative"]
                             ):
                                 measure = float(
                                     "{:.1f}".format(
