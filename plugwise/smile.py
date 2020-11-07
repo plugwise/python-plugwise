@@ -332,18 +332,18 @@ class Smile:
     def _types_finder(data):
         """Detect types within locations from logs."""
         types = set()
-        for measure, measure_type in HOME_MEASUREMENTS.items():
+        for measure, attrs in HOME_MEASUREMENTS.items():
             locator = f".//logs/point_log[type='{measure}']"
             if data.find(locator) is not None:
                 log = data.find(locator)
 
                 if measure == "outdoor_temperature":
-                    types.add(measure_type)
+                    types.add(attrs[ATTR_NAME])
 
                 p_locator = ".//electricity_point_meter"
                 if log.find(p_locator) is not None:
                     if log.find(p_locator).get("id"):
-                        types.add(measure_type)
+                        types.add(attrs[ATTR_NAME])
 
         return types
 
