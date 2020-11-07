@@ -106,8 +106,8 @@ jobs:
         git config --global user.email 'plugwise@users.noreply.github.com'
         git remote set-url origin https://x-access-token:${{ secrets.PAT_CT }}@github.com/$GITHUB_REPOSITORY
         git checkout $GITHUB_HEAD_REF
-        git commit -am "fixup: Format Python code with Black"
-        git push
+        git commit -am "fixup: ${GITHUB_REF##*/} Python code reformatted using Black"
+        git push origin ${GITHUB_REF##*/}
 
   commitcheck:
     runs-on: ubuntu-latest
@@ -306,7 +306,7 @@ jobs:
         run: >-
           python setup.py sdist
       - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@main
         with:
           password: ${{ secrets.testpypi_token }}
           repository_url: https://test.pypi.org/legacy/
