@@ -15,7 +15,22 @@ import pytz
 # Version detection
 import semver
 
-from plugwise.constants import ( APPLIANCES, DEFAULT_PORT, DEFAULT_TIMEOUT, DEFAULT_USERNAME, DEVICE_MEASUREMENTS, DOMAIN_OBJECTS, HOME_MEASUREMENTS, LOCATIONS, NOTIFICATIONS, RULES, SMILES, STATUS, SWITCH_GROUP_TYPES, SYSTEM,)
+from plugwise.constants import (
+    APPLIANCES,
+    DEFAULT_PORT,
+    DEFAULT_TIMEOUT,
+    DEFAULT_USERNAME,
+    DEVICE_MEASUREMENTS,
+    DOMAIN_OBJECTS,
+    HOME_MEASUREMENTS,
+    LOCATIONS,
+    NOTIFICATIONS,
+    RULES,
+    SMILES,
+    STATUS,
+    SWITCH_GROUP_TYPES,
+    SYSTEM,
+)
 from plugwise.exceptions import (
     ConnectionFailedError,
     DeviceSetupError,
