@@ -306,7 +306,7 @@ jobs:
         run: >-
           python setup.py sdist
       - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@main
+        uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.testpypi_token }}
           repository_url: https://test.pypi.org/legacy/

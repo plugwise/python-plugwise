@@ -31,16 +31,7 @@ from plugwise.constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
 )
-from plugwise.exceptions import (
-    ConnectionFailedError,
-    DeviceSetupError,
-    DeviceTimeoutError,
-    InvalidAuthentication,
-    InvalidXMLError,
-    ResponseError,
-    UnsupportedDeviceError,
-    XMLDataMissingError,
-)
+from plugwise.exceptions import ( ConnectionFailedError, DeviceSetupError, DeviceTimeoutError, InvalidAuthentication, InvalidXMLError, ResponseError, UnsupportedDeviceError, XMLDataMissingError,)
 from plugwise.util import (
     determine_selected,
     escape_illegal_xml_characters,
