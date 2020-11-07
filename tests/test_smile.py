@@ -554,7 +554,7 @@ class TestPlugwise:
                 "electricity_consumed_peak_point": 458.0,
                 "net_electricity_point": 458.0,
                 "gas_consumed_cumulative": 584.4,
-                "electricity_produced_peak_cumulative": 1296.0,
+                "electricity_produced_peak_cumulative": 1296.1,
                 "electricity_produced_off_peak_cumulative": 483.0,
             }
         }
@@ -1065,7 +1065,7 @@ class TestPlugwise:
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 650.0,
                 "electricity_produced_peak_cumulative": 0.0,
-                "electricity_consumed_off_peak_cumulative": 10263.0,
+                "electricity_consumed_off_peak_cumulative": 10263.2,
             }
         }
 
@@ -1097,7 +1097,7 @@ class TestPlugwise:
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 644.0,
                 "electricity_produced_peak_cumulative": 20.0,
-                "electricity_consumed_off_peak_cumulative": 10263.0,
+                "electricity_consumed_off_peak_cumulative": 10263.2,
                 "net_electricity_point": 244,
             }
         }
@@ -1130,7 +1130,7 @@ class TestPlugwise:
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
                 "electricity_consumed_peak_point": 0.0,
-                "electricity_produced_peak_cumulative": 397.0,
+                "electricity_produced_peak_cumulative": 396.6,
                 "electricity_consumed_off_peak_cumulative": 551.0,
                 "electricity_produced_peak_point": 2761.0,
                 "net_electricity_point": -2761.0,
