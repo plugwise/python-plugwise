@@ -306,71 +306,93 @@ DEVICE_MEASUREMENTS = {
     # HA Core setpoint
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna/Adam
-    "boiler_temperature": {ATTR_NAME: "water_temperature", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "domestic_hot_water_state": {ATTR_NAME: "dhw_state", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "intended_boiler_temperature": {ATTR_NAME: "intended_boiler_temperature", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS}, # non-zero when heating, zero when dhw-heating
-    "intended_central_heating_state": {ATTR_NAME: "heating_state", ATTR_UNIT_OF_MEASUREMENT: None}, # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
-    "modulation_level": {ATTR_NAME: "modulation_level", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    "return_water_temperature": {ATTR_NAME: "return_temperature", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "boiler_temperature": {
+        ATTR_NAME: "water_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
+    "domestic_hot_water_state": {
+        ATTR_NAME: "dhw_state",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
+    "intended_boiler_temperature": {
+        ATTR_NAME: "intended_boiler_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },  # non-zero when heating, zero when dhw-heating
+    "intended_central_heating_state": {
+        ATTR_NAME: "heating_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
+    "modulation_level": {
+        ATTR_NAME: "modulation_level",
+        ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
+    },
+    "return_water_temperature": {
+        ATTR_NAME: "return_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
     # Used with the Elga heatpump - marcelveldt
     "compressor_state": {ATTR_NAME: "compressor_state", ATTR_UNIT_OF_MEASUREMENT: None},
     "cooling_state": {ATTR_NAME: "cooling_state", ATTR_UNIT_OF_MEASUREMENT: None},
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
-    "slave_boiler_state": {ATTR_NAME: "slave_boiler_state", ATTR_UNIT_OF_MEASUREMENT: None},
-    "flame_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: None}, # also present when there is a single gas-heater
+    "slave_boiler_state": {
+        ATTR_NAME: "slave_boiler_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },
+    "flame_state": {
+        ATTR_NAME: "flame_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },  # also present when there is a single gas-heater
     # Anna only
-    "central_heater_water_pressure": {ATTR_NAME: "water_pressure", ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR},
-    "outdoor_temperature": {ATTR_NAME: "outdoor_temperature", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS}, # Outdoor temp as reported on the Anna, in the App
-    "schedule_temperature":{ATTR_NAME: "schedule_temperature", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS}, # Only present on legacy Anna and Anna_v3
+    "central_heater_water_pressure": {
+        ATTR_NAME: "water_pressure",
+        ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
+    },
+    "outdoor_temperature": {
+        ATTR_NAME: "outdoor_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },  # Outdoor temp as reported on the Anna, in the App
+    "schedule_temperature": {
+        ATTR_NAME: "schedule_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },  # Only present on legacy Anna and Anna_v3
     # Legacy Anna: similar to flame-state on Anna/Adam
     "boiler_state": {ATTR_NAME: "boiler_state", ATTR_UNIT_OF_MEASUREMENT: None},
     # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably
-    "intended_boiler_state": {ATTR_NAME: "intended_boiler_state", ATTR_UNIT_OF_MEASUREMENT: None},
+    "intended_boiler_state": {
+        ATTR_NAME: "intended_boiler_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },
     # Lisa and Tom
     "battery": {ATTR_NAME: "battery", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    "temperature_difference": {ATTR_NAME: "temperature_difference", ATTR_UNIT_OF_MEASUREMENT: DEGREE},
-    "valve_position": {ATTR_NAME: "valve_position", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    "temperature_difference": {
+        ATTR_NAME: "temperature_difference",
+        ATTR_UNIT_OF_MEASUREMENT: DEGREE,
+    },
+    "valve_position": {
+        ATTR_NAME: "valve_position",
+        ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
+    },
     # Plug
-    "electricity_consumed": {ATTR_NAME: "electricity_consumed", ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "electricity_produced": {ATTR_NAME: "electricity_produced", ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
+    "electricity_consumed": {
+        ATTR_NAME: "electricity_consumed",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "electricity_produced": {
+        ATTR_NAME: "electricity_produced",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
     "relay": {ATTR_NAME: "relay", ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
 SMILES = {
-    "smile_open_therm_v3": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_open_therm_v2": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_thermo_v4": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v3": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v1": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-        "legacy": True,
-    },
-    "smile_v4": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v3": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v2": {
-        "type": "power",
-        "friendly_name": "P1",
-        "legacy": True,
-    },
+    "smile_open_therm_v3": {"type": "thermostat", "friendly_name": "Adam",},
+    "smile_open_therm_v2": {"type": "thermostat", "friendly_name": "Adam",},
+    "smile_thermo_v4": {"type": "thermostat", "friendly_name": "Anna",},
+    "smile_thermo_v3": {"type": "thermostat", "friendly_name": "Anna",},
+    "smile_thermo_v1": {"type": "thermostat", "friendly_name": "Anna", "legacy": True,},
+    "smile_v4": {"type": "power", "friendly_name": "P1",},
+    "smile_v3": {"type": "power", "friendly_name": "P1",},
+    "smile_v2": {"type": "power", "friendly_name": "P1", "legacy": True,},
     "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
     "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
 }

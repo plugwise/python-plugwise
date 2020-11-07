@@ -214,12 +214,7 @@ class Smile:
         await self.websession.close()
 
     async def request(
-        self,
-        command,
-        retry=3,
-        method="get",
-        data=None,
-        headers=None,
+        self, command, retry=3, method="get", data=None, headers=None,
     ):
         """Request data."""
         resp = None
@@ -803,7 +798,9 @@ class Smile:
                     if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
-                    data[attrs[ATTR_NAME]] = format_measure(measure, attrs[ATTR_UNIT_OF_MEASUREMENT])
+                    data[attrs[ATTR_NAME]] = format_measure(
+                        measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    )
 
                 i_locator = (
                     f'.//logs/interval_log[type="{measurement}"]/period/measurement'
