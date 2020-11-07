@@ -1,19 +1,18 @@
 """ Plugwise Stick and Smile constants."""
 
-from homeassistant.const import (
-    ATTR_NAME,
-    ATTR_UNIT_OF_MEASUREMENT,
-    DEGREE,
-    ENERGY_KILO_WATT_HOUR,
-    ENERGY_WATT_HOUR,
-    PERCENTAGE,
-    POWER_WATT,
-    PRESSURE_BAR,
-    SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
-    TEMP_CELSIUS,
-    TIME_MILLISECONDS,
-    VOLUME_CUBIC_METERS,
-)
+# Copied homeassistant.consts: 
+ATTR_NAME = "name"
+ATTR_UNIT_OF_MEASUREMENT = "unit_of_measurement"
+DEGREE = "°"
+ENERGY_KILO_WATT_HOUR = f"k{ENERGY_WATT_HOUR}"
+ENERGY_WATT_HOUR = f"{POWER_WATT}h"
+PERCENTAGE = "%"
+POWER_WATT = "W"
+PRESSURE_BAR = "bar"
+SIGNAL_STRENGTH_DECIBELS_MILLIWATT = "dBm"
+TEMP_CELSIUS = f"{DEGREE}C"
+TIME_MILLISECONDS = "ms"
+VOLUME_CUBIC_METERS = "m³"
 
 ### Stick constants ###
 

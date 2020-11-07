@@ -15,19 +15,17 @@ import pytz
 # Version detection
 import semver
 
-from homeassistant.const import (
+from plugwise.constants import (
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
-    ENERGY_KILO_WATT_HOUR,
-    ENERGY_WATT_HOUR,
-)
-from plugwise.constants import (
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DEVICE_MEASUREMENTS,
     DOMAIN_OBJECTS,
+    ENERGY_KILO_WATT_HOUR,
+    ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
     LOCATIONS,
     NOTIFICATIONS,
