@@ -315,7 +315,11 @@ class TestPlugwise:
                             ),
                         )
                         if isinstance(data[measure_key], float):
-                            if float(data[measure_key]) < 10:
+                            if "cumulative" in measure_key:
+                                measure = float(
+                                    "{:.1f}".format(round(float(data[measure_key]), 1))
+                                    )
+                            elif float(data[measure_key]) < 10:
                                 measure = float(
                                     "{:.2f}".format(round(float(data[measure_key]), 2))
                                 )
