@@ -331,8 +331,8 @@ DEVICE_MEASUREMENTS = {
     "temperature_difference": {ATTR_NAME: "temperature_difference", ATTR_UNIT_OF_MEASUREMENT: DEGREE},
     "valve_position": {ATTR_NAME: "valve_position", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     # Plug
-    "electricity_consumed": {ATTR_NAME: "electricity_consumed", ATTR_UNIT_OF_MEASUREMENT: None},
-    "electricity_produced": {ATTR_NAME: "electricity_produced", ATTR_UNIT_OF_MEASUREMENT: None},
+    "electricity_consumed": {ATTR_NAME: "electricity_consumed", ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
+    "electricity_produced": {ATTR_NAME: "electricity_produced", ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "relay": {ATTR_NAME: "relay", ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
