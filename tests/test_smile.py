@@ -429,7 +429,7 @@ class TestPlugwise:
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
                 "water_temperature": 23.6,
                 "water_pressure": 1.2,
-                "modulation_level": 0.0,
+                "modulation_level": 0,
                 "heating_state": True,
             },
         }
@@ -545,8 +545,8 @@ class TestPlugwise:
                 "electricity_consumed_peak_point": 458.0,
                 "net_electricity_point": 458.0,
                 "gas_consumed_cumulative": 584.4,
-                "electricity_produced_peak_cumulative": 1296136.0,
-                "electricity_produced_off_peak_cumulative": 482598.0,
+                "electricity_produced_peak_cumulative": 1296.0,
+                "electricity_produced_off_peak_cumulative": 483.0,
             }
         }
 
@@ -890,13 +890,13 @@ class TestPlugwise:
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "setpoint": 21.5,
                 "temperature": 21.1,
-                "battery": 0.34,
+                "battery": 34,
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
                 "setpoint": 21.5,
                 "temperature": 26.2,
-                "valve_position": 1.0,
+                "valve_position": 100,
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
@@ -907,7 +907,7 @@ class TestPlugwise:
             "df4a4a8169904cdb9c03d61a21f42140": {
                 "setpoint": 13.0,
                 "temperature": 16.5,
-                "battery": 0.67,
+                "battery": 67,
             },
             # Adam
             "90986d591dcd426cae3ec3e8111ff730": {"intended_boiler_temperature": 70.0},
@@ -973,13 +973,13 @@ class TestPlugwise:
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "setpoint": 21.5,
                 "temperature": 20.9,
-                "battery": 0.34,
+                "battery": 34,
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
                 "setpoint": 21.5,
                 "temperature": 26.0,
-                "valve_position": 1.0,
+                "valve_position": 100,
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
@@ -990,7 +990,7 @@ class TestPlugwise:
             "df4a4a8169904cdb9c03d61a21f42140": {
                 "setpoint": 13.0,
                 "temperature": 16.5,
-                "battery": 0.67,
+                "battery": 67,
             },
             # Adam
             "90986d591dcd426cae3ec3e8111ff730": {"intended_boiler_temperature": 70.0},
@@ -1056,7 +1056,7 @@ class TestPlugwise:
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 650.0,
                 "electricity_produced_peak_cumulative": 0.0,
-                "electricity_consumed_off_peak_cumulative": 10263159.0,
+                "electricity_consumed_off_peak_cumulative": 10263.0,
             }
         }
 
@@ -1087,8 +1087,8 @@ class TestPlugwise:
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 644.0,
-                "electricity_produced_peak_cumulative": 20000.0,
-                "electricity_consumed_off_peak_cumulative": 10263159.0,
+                "electricity_produced_peak_cumulative": 20.0,
+                "electricity_consumed_off_peak_cumulative": 10263.0,
                 "net_electricity_point": 244,
             }
         }
@@ -1121,8 +1121,8 @@ class TestPlugwise:
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
                 "electricity_consumed_peak_point": 0.0,
-                "electricity_produced_peak_cumulative": 396559.0,
-                "electricity_consumed_off_peak_cumulative": 551090.0,
+                "electricity_produced_peak_cumulative": 397.0,
+                "electricity_consumed_off_peak_cumulative": 551.0,
                 "electricity_produced_peak_point": 2761.0,
                 "net_electricity_point": -2761.0,
                 "gas_consumed_cumulative": 584.9,
