@@ -16,9 +16,9 @@ import pytz
 import semver
 
 from plugwise.constants import (
+    APPLIANCES,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
-    APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
