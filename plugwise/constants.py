@@ -13,6 +13,7 @@ SIGNAL_STRENGTH_DECIBELS_MILLIWATT = "dBm"
 TEMP_CELSIUS = "°C"
 TIME_MILLISECONDS = "ms"
 VOLUME_CUBIC_METERS = "m³"
+VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
 
 ### Stick constants ###
 
@@ -290,10 +291,22 @@ DEFAULT_PORT = 80
 SWITCH_GROUP_TYPES = ["switching", "report"]
 
 HOME_MEASUREMENTS = {
-    "electricity_consumed": "power",
-    "electricity_produced": "power",
-    "gas_consumed": "gas",
-    "outdoor_temperature": "temperature",
+    "electricity_consumed": {
+        ATTR_NAME: "power",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "electricity_produced": {
+        ATTR_NAME: "power",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "gas_consumed": {
+        ATTR_NAME: "gas",
+        ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
+    },
+    "outdoor_temperature": {
+        ATTR_NAME: "temperature", 
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
+    },
 }
 
 # Excluded:
