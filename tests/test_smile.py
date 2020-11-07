@@ -318,10 +318,10 @@ class TestPlugwise:
                             if all(
                                 item in measure_key 
                                 for item in ['electricity', 'cumulative']
-                                ):
+                            ):
                                 measure = float(
                                     "{:.1f}".format(
-                                        round(float(data[measure_key])/1000, 1)
+                                        round(float(data[measure_key]) / 1000, 1)
                                     )
                                 )
                             elif float(data[measure_key]) < 10:
