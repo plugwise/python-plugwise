@@ -419,14 +419,6 @@ SMILES = {
         "friendly_name": "P1",
         "legacy": True,
     },
-    "stretch_v3": {
-        "type": "stretch",
-        "friendly_name": "Stretch",
-        "legacy": True
-    },
-    "stretch_v2": {
-        "type": "stretch",
-        "friendly_name": "Stretch",
-        "legacy": True
-    },
+    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
+    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
 }
