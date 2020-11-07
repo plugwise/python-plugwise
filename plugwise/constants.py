@@ -304,8 +304,8 @@ HOME_MEASUREMENTS = {
         ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
     },
     "outdoor_temperature": {
-        ATTR_NAME: "temperature", 
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
+        ATTR_NAME: "temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
 }
 

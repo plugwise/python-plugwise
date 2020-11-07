@@ -870,8 +870,7 @@ class Smile:
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
                     if all(
-                        item in key_string 
-                        for item in ['electricity', 'cumulative']
+                        item in key_string for item in ["electricity", "cumulative"]
                     ):
                         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
                     else:
