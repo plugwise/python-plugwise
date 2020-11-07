@@ -15,38 +15,9 @@ import pytz
 # Version detection
 import semver
 
-from plugwise.constants import (
-    APPLIANCES,
-    DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
-    DEFAULT_USERNAME,
-    DEVICE_MEASUREMENTS,
-    DOMAIN_OBJECTS,
-    HOME_MEASUREMENTS,
-    LOCATIONS,
-    NOTIFICATIONS,
-    RULES,
-    SMILES,
-    STATUS,
-    SWITCH_GROUP_TYPES,
-    SYSTEM,
-)
-from plugwise.exceptions import (
-    ConnectionFailedError,
-    DeviceSetupError,
-    DeviceTimeoutError,
-    InvalidAuthentication,
-    InvalidXMLError,
-    ResponseError,
-    UnsupportedDeviceError,
-    XMLDataMissingError,
-)
-from plugwise.util import (
-    determine_selected,
-    escape_illegal_xml_characters,
-    format_measure,
-    in_between,
-)
+from plugwise.constants import ( APPLIANCES, DEFAULT_PORT, DEFAULT_TIMEOUT, DEFAULT_USERNAME, DEVICE_MEASUREMENTS, DOMAIN_OBJECTS, HOME_MEASUREMENTS, LOCATIONS, NOTIFICATIONS, RULES, SMILES, STATUS, SWITCH_GROUP_TYPES, SYSTEM,)
+from plugwise.exceptions import ( ConnectionFailedError, DeviceSetupError, DeviceTimeoutError, InvalidAuthentication, InvalidXMLError, ResponseError, UnsupportedDeviceError, XMLDataMissingError,)
+from plugwise.util import ( determine_selected, escape_illegal_xml_characters, format_measure, in_between,)
 
 _LOGGER = logging.getLogger(__name__)
 
