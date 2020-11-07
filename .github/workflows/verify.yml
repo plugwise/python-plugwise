@@ -99,6 +99,7 @@ jobs:
     - name: If needed, commit black changes to the pull request
       if: failure()
       run: |
+        pip install black
         black .
         git config --global user.name 'autoblack'
         git config --global user.email 'plugwise@users.noreply.github.com'
