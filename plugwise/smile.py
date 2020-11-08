@@ -17,11 +17,15 @@ import semver
 
 from plugwise.constants import (
     APPLIANCES,
+    ATTR_NAME,
+    ATTR_UNIT_OF_MEASUREMENT,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DEVICE_MEASUREMENTS,
     DOMAIN_OBJECTS,
+    ENERGY_KILO_WATT_HOUR,
+    ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
     LOCATIONS,
     NOTIFICATIONS,
@@ -328,18 +332,18 @@ class Smile:
     def _types_finder(data):
         """Detect types within locations from logs."""
         types = set()
-        for measure, measure_type in HOME_MEASUREMENTS.items():
+        for measure, attrs in HOME_MEASUREMENTS.items():
             locator = f".//logs/point_log[type='{measure}']"
             if data.find(locator) is not None:
                 log = data.find(locator)
 
                 if measure == "outdoor_temperature":
-                    types.add(measure_type)
+                    types.add(attrs[ATTR_NAME])
 
                 p_locator = ".//electricity_point_meter"
                 if log.find(p_locator) is not None:
                     if log.find(p_locator).get("id"):
-                        types.add(measure_type)
+                        types.add(attrs[ATTR_NAME])
 
         return types
 
@@ -775,7 +779,7 @@ class Smile:
         appliances = search.findall(f'.//appliance[@id="{dev_id}"]')
 
         for appliance in appliances:
-            for measurement, name in DEVICE_MEASUREMENTS.items():
+            for measurement, attrs in DEVICE_MEASUREMENTS.items():
 
                 p_locator = (
                     f'.//logs/point_log[type="{measurement}"]/period/measurement'
@@ -797,25 +801,27 @@ class Smile:
                     if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
-                    data[name] = format_measure(measure)
+                    data[attrs[ATTR_NAME]] = format_measure(
+                        measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    )
 
                 i_locator = (
                     f'.//logs/interval_log[type="{measurement}"]/period/measurement'
                 )
                 if appliance.find(i_locator) is not None:
-                    name = f"{name}_interval"
+                    name = f"{attrs[ATTR_NAME]}_interval"
                     measure = appliance.find(i_locator).text
 
-                    data[name] = format_measure(measure)
+                    data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
                 c_locator = (
                     f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
                 )
                 if appliance.find(c_locator) is not None:
-                    name = f"{name}_cumulative"
+                    name = f"{attrs[ATTR_NAME]}_cumulative"
                     measure = appliance.find(c_locator).text
 
-                    data[name] = format_measure(measure)
+                    data[name] = format_measure(measure, ENERGY_KILO_WATT_HOUR)
 
         return data
 
@@ -836,7 +842,7 @@ class Smile:
         peak_list = ["nl_peak", "nl_offpeak"]
 
         # meter_string = ".//{}[type='{}']/"
-        for measurement in HOME_MEASUREMENTS:
+        for measurement, attrs in HOME_MEASUREMENTS.items():
             for log_type in log_list:
                 for peak_select in peak_list:
                     locator = (
@@ -863,7 +869,12 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = format_measure(val)
+                    if all(
+                        item in key_string for item in ["electricity", "cumulative"]
+                    ):
+                        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
+                    else:
+                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
@@ -1082,7 +1093,7 @@ class Smile:
             f'[type="{measurement}"]/period/measurement'
         )
         if search.find(locator) is not None:
-            val = format_measure(search.find(locator).text)
+            val = format_measure(search.find(locator).text, None)
             return val
 
         return None

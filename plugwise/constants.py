@@ -1,5 +1,20 @@
 """ Plugwise Stick and Smile constants."""
 
+# Copied homeassistant.consts
+ATTR_NAME = "name"
+ATTR_UNIT_OF_MEASUREMENT = "unit_of_measurement"
+DEGREE = "°"
+ENERGY_KILO_WATT_HOUR = "kWh"
+ENERGY_WATT_HOUR = "Wh"
+PERCENTAGE = "%"
+POWER_WATT = "W"
+PRESSURE_BAR = "bar"
+SIGNAL_STRENGTH_DECIBELS_MILLIWATT = "dBm"
+TEMP_CELSIUS = "°C"
+TIME_MILLISECONDS = "ms"
+VOLUME_CUBIC_METERS = "m³"
+VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
+
 ### Stick constants ###
 
 UTF8_DECODE = "utf-8"
@@ -145,13 +160,6 @@ SENSE_TEMPERATURE_OFFSET = 46.85
 CB_NEW_NODE = "NEW_NODE"
 CB_JOIN_REQUEST = "JOIN_REQUEST"
 
-# Unit of measurement
-TIME_MILLISECONDS = "ms"
-POWER_WATT = "W"
-ENERGY_KILO_WATT_HOUR = "kWh"
-ENERGY_WATT_HOUR = "Wh"
-CELSIUS = "°C"
-
 # Sensors
 SENSOR_AVAILABLE = {
     "id": "available",
@@ -235,7 +243,7 @@ SENSOR_TEMPERATURE = {
     "id": "temperature",
     "name": "Temperature",
     "state": "get_temperature",
-    "unit": CELSIUS,
+    "unit": TEMP_CELSIUS,
 }
 
 # TODO: Need to validate RSSI sensors
@@ -283,10 +291,22 @@ DEFAULT_PORT = 80
 SWITCH_GROUP_TYPES = ["switching", "report"]
 
 HOME_MEASUREMENTS = {
-    "electricity_consumed": "power",
-    "electricity_produced": "power",
-    "gas_consumed": "gas",
-    "outdoor_temperature": "temperature",
+    "electricity_consumed": {
+        ATTR_NAME: "power",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "electricity_produced": {
+        ATTR_NAME: "power",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "gas_consumed": {
+        ATTR_NAME: "gas",
+        ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
+    },
+    "outdoor_temperature": {
+        ATTR_NAME: "temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
 }
 
 # Excluded:
@@ -294,38 +314,86 @@ HOME_MEASUREMENTS = {
 # radiator_valve 'uncorrected_temperature', 'temperature_offset'
 DEVICE_MEASUREMENTS = {
     # HA Core current_temperature
-    "temperature": "temperature",
+    "temperature": {ATTR_NAME: "temperature", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core setpoint
-    "thermostat": "setpoint",
+    "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna/Adam
-    "boiler_temperature": "water_temperature",
-    "domestic_hot_water_state": "dhw_state",
-    "intended_boiler_temperature": "intended_boiler_temperature",  # non-zero when heating, zero when dhw-heating
-    "intended_central_heating_state": "heating_state",  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
-    "modulation_level": "modulation_level",
-    "return_water_temperature": "return_temperature",
+    "boiler_temperature": {
+        ATTR_NAME: "water_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
+    "domestic_hot_water_state": {
+        ATTR_NAME: "dhw_state",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
+    "intended_boiler_temperature": {
+        ATTR_NAME: "intended_boiler_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },  # non-zero when heating, zero when dhw-heating
+    "intended_central_heating_state": {
+        ATTR_NAME: "heating_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
+    "modulation_level": {
+        ATTR_NAME: "modulation_level",
+        ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
+    },
+    "return_water_temperature": {
+        ATTR_NAME: "return_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
     # Used with the Elga heatpump - marcelveldt
-    "compressor_state": "compressor_state",
-    "cooling_state": "cooling_state",
+    "compressor_state": {ATTR_NAME: "compressor_state", ATTR_UNIT_OF_MEASUREMENT: None},
+    "cooling_state": {ATTR_NAME: "cooling_state", ATTR_UNIT_OF_MEASUREMENT: None},
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
-    "slave_boiler_state": "slave_boiler_state",
-    "flame_state": "flame_state",  # also present when there is a single gas-heater
+    "slave_boiler_state": {
+        ATTR_NAME: "slave_boiler_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },
+    "flame_state": {
+        ATTR_NAME: "flame_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },  # also present when there is a single gas-heater
     # Anna only
-    "central_heater_water_pressure": "water_pressure",
-    "outdoor_temperature": "outdoor_temperature",  # Outdoor temp as reported on the Anna, in the App
-    "schedule_temperature": "schedule_temperature",  # Only present on legacy Anna and Anna_v3
+    "central_heater_water_pressure": {
+        ATTR_NAME: "water_pressure",
+        ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
+    },
+    "outdoor_temperature": {
+        ATTR_NAME: "outdoor_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },  # Outdoor temp as reported on the Anna, in the App
+    "schedule_temperature": {
+        ATTR_NAME: "schedule_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },  # Only present on legacy Anna and Anna_v3
     # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": "boiler_state",
+    "boiler_state": {ATTR_NAME: "boiler_state", ATTR_UNIT_OF_MEASUREMENT: None},
     # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably
-    "intended_boiler_state": "intended_boiler_state",
+    "intended_boiler_state": {
+        ATTR_NAME: "intended_boiler_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },
     # Lisa and Tom
-    "battery": "battery",
-    "temperature_difference": "temperature_difference",
-    "valve_position": "valve_position",
+    "battery": {ATTR_NAME: "battery", ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    "temperature_difference": {
+        ATTR_NAME: "temperature_difference",
+        ATTR_UNIT_OF_MEASUREMENT: DEGREE,
+    },
+    "valve_position": {
+        ATTR_NAME: "valve_position",
+        ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
+    },
     # Plug
-    "electricity_consumed": "electricity_consumed",
-    "electricity_produced": "electricity_produced",
-    "relay": "relay",
+    "electricity_consumed": {
+        ATTR_NAME: "electricity_consumed",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "electricity_produced": {
+        ATTR_NAME: "electricity_produced",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "relay": {ATTR_NAME: "relay", ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
 SMILES = {

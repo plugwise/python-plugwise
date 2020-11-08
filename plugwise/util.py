@@ -10,7 +10,13 @@ import struct
 
 import crcmod
 
-from .constants import LOGADDR_OFFSET, PLUGWISE_EPOCH, UTF8_DECODE
+from plugwise.constants import (
+    ENERGY_KILO_WATT_HOUR,
+    LOGADDR_OFFSET,
+    PERCENTAGE,
+    PLUGWISE_EPOCH,
+    UTF8_DECODE,
+)
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
 
@@ -65,8 +71,12 @@ def escape_illegal_xml_characters(xmldata):
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure):
+def format_measure(measure, unit):
     """Format measure to correct type."""
+    if unit == PERCENTAGE and float(measure) > 0:
+        measure = int(float(measure) * 100)
+    if unit == ENERGY_KILO_WATT_HOUR:
+        measure = float(measure) / 1000
     try:
         measure = int(measure)
     except ValueError:
