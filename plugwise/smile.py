@@ -358,6 +358,7 @@ class Smile:
             # get_appliance_data can use loc_id for dev_id.
             appliances[self._home_location] = {
                 "name": "P1",
+                "model": "P1 DSMR",
                 "types": {"power", "home"},
                 "class": "gateway",
                 "location": home_location,
@@ -388,6 +389,7 @@ class Smile:
 
             appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
+            appliance_model = appliance_class
             appliance_name = appliance.find("name").text
 
             # Nothing useful in opentherm so skip it
@@ -423,8 +425,12 @@ class Smile:
             ):
                 appliance_types.add("thermostat")
 
+            if "plug" in appliance_types:
+                appliance_model = "plug"
+
             appliances[appliance_id] = {
                 "name": appliance_name,
+                "model": appliance_model,
                 "types": appliance_types,
                 "class": appliance_class,
                 "location": appliance_location,
@@ -655,6 +661,7 @@ class Smile:
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl[group_id] = {
                     "name": group_name,
+                    "model": "group_switch",
                     "types": {"switch_group"},
                     "class": group_type,
                     "members": members,
