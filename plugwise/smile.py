@@ -351,7 +351,7 @@ class Smile:
         """Determine available appliances from inventory."""
         appliances = {}
         stretch_v3 = (
-            self.smile_type == "stretch" and self.smile_version[1]["major"] == 3
+            self.smile_type == "stretch" and self.smile_version[1].major == 3
         )
 
         locations, home_location = self.get_all_locations()
@@ -1192,7 +1192,7 @@ class Smile:
         actuator = "actuator_functionalities"
         relay = "relay_functionality"
         stretch_v2 = (
-            self.smile_type == "stretch" and self.smile_version[1]["major"] == 2
+            self.smile_type == "stretch" and self.smile_version[1].major == 2
         )
         if stretch_v2:
             actuator = "actuators"
