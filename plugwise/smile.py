@@ -414,7 +414,8 @@ class Smile:
                     module = self._modules.find(
                         f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
                     )
-                    appliance_model = module.find("vendor_model").text
+                    appliance_model = module.find("hardware_version").text
+                    # ToDo: translate HW-version to model name
             if stretch_v3:
                 appliance_model = appliance_descr
 
