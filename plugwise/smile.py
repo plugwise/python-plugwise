@@ -28,6 +28,7 @@ from plugwise.constants import (
     ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
     LOCATIONS,
+    MODULES,
     NOTIFICATIONS,
     RULES,
     SMILES,
@@ -308,15 +309,20 @@ class Smile:
         if new_data is not None:
             self._locations = new_data
 
+    async def update_modules(self):
+        """Request modules data."""
+        new_data = await self.request(MODULES)
+        if new_data is not None:
+            self._modules = new_data
+
     async def full_update_device(self):
         """Update all XML data from device."""
-        await self.update_appliances()
         # P1 legacy has no appliances
-        if self._appliances is None and (
-            self.smile_type == "power" and not self._smile_legacy
-        ):
-            _LOGGER.error("Appliance data missing")
-            raise XMLDataMissingError
+        if not (self.smile_type == "power" and self._smile_legacy):
+            await self.update_appliances()
+            if self._appliances is None:
+                _LOGGER.error("Appliance data missing")
+                raise XMLDataMissingError
 
         await self.update_domain_objects()
         if self._domain_objects is None:
@@ -327,6 +333,13 @@ class Smile:
         if self._locations is None:
             _LOGGER.error("Locataion data missing")
             raise XMLDataMissingError
+
+        # Stretch_v2 only uses modules
+        if self.smile_type == "stretch" and self.smile_version[1].major == 2:
+            await self.update_modules()
+            if self._modules is None:
+                _LOGGER.error("Modules data missing")
+                raise XMLDataMissingError
 
     @staticmethod
     def _types_finder(data):
@@ -350,6 +363,7 @@ class Smile:
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
         appliances = {}
+        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
         locations, home_location = self.get_all_locations()
@@ -391,10 +405,16 @@ class Smile:
             appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
             appliance_descr = appliance.find("description").text
+            appliance_name = appliance.find("name").text
             appliance_model = appliance_class
+            if stretch_v2:
+                appl_search = appliance.find(".//services/electricity_point_meter")
+                if appl_search is not None:
+                    appl_serv_epm_id = appl_search.attrib["id"]
+                    module = self._modules.find(f".//electricity_point_meter[@id='{appl_serv_epm_id}']....")
+                    appliance_model = module.find("vendor_model").text  
             if stretch_v3:
                 appliance_model = appliance_descr
-            appliance_name = appliance.find("name").text
 
             # Nothing useful in opentherm so skip it
             if appliance_class == "open_therm_gateway":
