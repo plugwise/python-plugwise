@@ -350,6 +350,9 @@ class Smile:
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
         appliances = {}
+        stretch_v3 = (
+            self.smile_type == "stretch" and self.smile_version[1]["major"] == 3
+        )
 
         locations, home_location = self.get_all_locations()
 
@@ -389,7 +392,10 @@ class Smile:
 
             appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
+            appliance_descr = appliance.find("description").text
             appliance_model = appliance_class
+            if stretch_v3:
+                appliance_model = appliance_descr
             appliance_name = appliance.find("name").text
 
             # Nothing useful in opentherm so skip it
