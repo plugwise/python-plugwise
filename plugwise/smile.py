@@ -350,9 +350,7 @@ class Smile:
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
         appliances = {}
-        stretch_v3 = (
-            self.smile_type == "stretch" and self.smile_version[1].major == 3
-        )
+        stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
         locations, home_location = self.get_all_locations()
 
@@ -1191,9 +1189,7 @@ class Smile:
         """Switch the Plug off/on."""
         actuator = "actuator_functionalities"
         relay = "relay_functionality"
-        stretch_v2 = (
-            self.smile_type == "stretch" and self.smile_version[1].major == 2
-        )
+        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         if stretch_v2:
             actuator = "actuators"
             relay = "relay"
