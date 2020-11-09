@@ -411,8 +411,10 @@ class Smile:
                 appl_search = appliance.find(".//services/electricity_point_meter")
                 if appl_search is not None:
                     appl_serv_epm_id = appl_search.attrib["id"]
-                    module = self._modules.find(f".//electricity_point_meter[@id='{appl_serv_epm_id}']....")
-                    appliance_model = module.find("vendor_model").text  
+                    module = self._modules.find(
+                        f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
+                    )
+                    appliance_model = module.find("vendor_model").text
             if stretch_v3:
                 appliance_model = appliance_descr
 
