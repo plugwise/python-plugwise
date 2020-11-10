@@ -1369,6 +1369,8 @@ class TestPlugwise:
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy  # pylint: disable=protected-access
 
+        await self.tinker_relay(smile, ["2587a7fcdd7e482dab03fda256076b4b"])
+
         await self.device_test(smile, testdata)
 
         await smile.close_connection()
