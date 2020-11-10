@@ -175,7 +175,7 @@
 				<interval/>
 				<network_address id='863b10fc324c41e5a6d56890c7a79048'/>
 				<period start_date="2020-11-10T15:57:15.155+01:00" end_date="2020-11-10T15:57:15.155+01:00">
-					<measurement log_date="2020-11-10T15:57:15.155+01:00">192.168.1.212</measurement>
+					<measurement log_date="2020-11-10T15:57:15.155+01:00">127.0.0.1</measurement>
 				</period>
 			</point_log>
 			<point_log id='aebd1598cb3c48bdaa75af147e03f5ca'>
@@ -230,7 +230,7 @@
 				<interval/>
 				<network_address id='cbf5fd20c1124b7a9e079709d5f7c2c2'/>
 				<period start_date="2020-11-10T15:53:59.518+01:00" end_date="2020-11-10T15:53:59.518+01:00">
-					<measurement log_date="2020-11-10T15:53:59.518+01:00">0.0.0.0</measurement>
+					<measurement log_date="2020-11-10T15:53:59.518+01:00">127.0.0.1</measurement>
 				</period>
 			</point_log>
 		</logs>
