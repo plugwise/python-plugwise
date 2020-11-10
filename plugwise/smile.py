@@ -470,7 +470,7 @@ class Smile:
                 appliance_model = "Plug"
 
             if appliance_model == "Gateway":
-                appliance_model = f"Smile {self._smile_name}"
+                appliance_model = f"Smile {self.smile_name}"
                 if self.smile_type == "stretch":
                     appliance_model = "Stretch"
 
