@@ -471,7 +471,7 @@ class Smile:
 
             if appliance_model == "Gateway":
                 appliance_model = "Smile"
-                if self.smile_type == "stretch:
+                if self.smile_type == "stretch":
                     appliance_model = "Stretch"
 
             appliances[appliance_id] = {
