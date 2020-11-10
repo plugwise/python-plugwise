@@ -421,9 +421,9 @@ class Smile:
                         appliance_model = hw_model
                     else: # Try again with reversed order
                         hw_model = HW_MODELS.get(
-                            self._hardware_version[-2:]
-                            + self._hardware_version[-4:-2]
-                            + self._hardware_version[-6:-4],
+                            hw_version[-2:]
+                            + hw_version[-4:-2]
+                            + hw_version[-6:-4],
                             None,
                         )
                         if hw_model:
