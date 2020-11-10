@@ -112,7 +112,7 @@
 			</relay>
 		</services>
 		<protocols>
-			<network_router id='0e369c55ace04c128c11c327c96127fb'><mac_address>000D6F000043B016</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='0e369c55ace04c128c11c327c96127fb'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='8a20c9776dd24f668c332234d31bedfe'>
@@ -136,7 +136,7 @@
 			</relay>
 		</services>
 		<protocols>
-			<network_router id='42412df9d7df4a64b40a9f46d1a4d761'><mac_address>000D6F000043AEC7</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='42412df9d7df4a64b40a9f46d1a4d761'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<appliance id='a28e6f5afc0e4fc68498c1f03e82a052'>
@@ -254,7 +254,7 @@
 			</electricity_point_meter>
 		</services>
 		<protocols>
-			<network_router id='230c70a7b4544591946472d99584863b'><mac_address>000D6F000043AECA</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='230c70a7b4544591946472d99584863b'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='cc871bd95e4f49469f9fdcec6fb7f31b'>
@@ -279,7 +279,7 @@
 			</electricity_interval_meter>
 		</services>
 		<protocols>
-			<network_router id='9e2033f74def4a8a84c196d7f85c105d'><mac_address>000D6F00025F6819</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='9e2033f74def4a8a84c196d7f85c105d'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<schedule_rule id='dc6fb98420ea420db1fe5daa4594f125'>
@@ -464,7 +464,7 @@
 			</relay>
 		</services>
 		<protocols>
-			<network_router id='2cb47d68a15f484185bc8dbb80c835f5'><mac_address>000D6F00025F6789</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='2cb47d68a15f484185bc8dbb80c835f5'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='5108f2e1e07d46d5a4cfc46b330b8ab4'>
@@ -488,7 +488,7 @@
 			</electricity_point_meter>
 		</services>
 		<protocols>
-			<network_router id='61e55886728f4c36a321758ec97b47f9'><mac_address>000D6F000043AF7F</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='61e55886728f4c36a321758ec97b47f9'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<appliance id='199fd4b2caa44197aaf5b3128f6464ed'>
@@ -574,7 +574,7 @@
 			</motion_trigger>
 		</services>
 		<protocols>
-			<sleeping_end_device id='30354ea3c74a49fa9cf8d1bb59ec63ed'><mac_address>000D6F00019DA5F0</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></sleeping_end_device>
+			<sleeping_end_device id='30354ea3c74a49fa9cf8d1bb59ec63ed'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></sleeping_end_device>
 		</protocols>
 	</module>
 	<module id='125b5479079a48999f8e911a6e0bf131'>
@@ -599,7 +599,7 @@
 			</electricity_point_meter>
 		</services>
 		<protocols>
-			<network_coordinator id='cb012d6fbc5445dcb5f125fea49fc14e'><mac_address>000D6F0001A4455E</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_coordinator>
+			<network_coordinator id='cb012d6fbc5445dcb5f125fea49fc14e'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_coordinator>
 		</protocols>
 	</module>
 	<module id='bad45d134db04e60874b444f9f57d612'>
@@ -613,7 +613,7 @@
 		<services>
 		</services>
 		<protocols>
-			<master_controller id='a0861f26d34b465f89a9ab77b105eb4f'><mac_address>000D6F00025F65DF</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></master_controller>
+			<master_controller id='a0861f26d34b465f89a9ab77b105eb4f'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></master_controller>
 		</protocols>
 	</module>
 	<group id='f7b145c8492f4dd7a4de760456fdef3e'>
@@ -792,7 +792,7 @@
 			</relay>
 		</services>
 		<protocols>
-			<network_router id='b06442aee20646f9bf6cec7589e82fcd'><mac_address>000D6F000043AEC6</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='b06442aee20646f9bf6cec7589e82fcd'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<appliance id='2587a7fcdd7e482dab03fda256076b4b'>
@@ -882,7 +882,7 @@
 			</electricity_point_meter>
 		</services>
 		<protocols>
-			<network_router id='58dbcce4a2794a39bf7f18178d508e33'><mac_address>000D6F000043B013</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='58dbcce4a2794a39bf7f18178d508e33'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='288b03e358cd436f892ac804295e2ac4'>
@@ -907,7 +907,7 @@
 			</relay>
 		</services>
 		<protocols>
-			<network_router id='17500b080b204a2c9cbae4a10ee1a7ba'><mac_address>000D6F00025F69E3</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='17500b080b204a2c9cbae4a10ee1a7ba'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<appliance id='305452ce97c243c0a7b4ab2a4ebfe6e3'>
@@ -1293,7 +1293,7 @@
 			</electricity_interval_meter>
 		</services>
 		<protocols>
-			<network_router id='9940d76caaa44328ab05f8c5429f6736'><mac_address>000D6F00025F6790</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='9940d76caaa44328ab05f8c5429f6736'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<appliance id='24b2ed37c8964c73897db6340a39c129'>
@@ -1386,7 +1386,7 @@
 			</electricity_interval_meter>
 		</services>
 		<protocols>
-			<network_router id='59a798969b874d1793fbf6515f75470c'><mac_address>000D6F000043220D</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='59a798969b874d1793fbf6515f75470c'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='22aab1363ca94842b7d6058dec130da1'>
@@ -1411,7 +1411,7 @@
 			</electricity_interval_meter>
 		</services>
 		<protocols>
-			<network_router id='0c2096fe64e94836bcd0b21ba7bfc208'><mac_address>000D6F00025F6811</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='0c2096fe64e94836bcd0b21ba7bfc208'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='7df158f1e7cc4c5db53de409c1d84c1e'>
@@ -1436,7 +1436,7 @@
 			</electricity_point_meter>
 		</services>
 		<protocols>
-			<network_router id='4d6ec2327a864c14b5aff7d01fed77f9'><mac_address>000D6F00025F6768</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='4d6ec2327a864c14b5aff7d01fed77f9'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<motion_rule id='5a075e55afee404d9562df83221f4506'>
@@ -1678,7 +1678,7 @@
 			</relay>
 		</services>
 		<protocols>
-			<network_router id='4769551535434cdc98f0a01a8b0d0c8c'><mac_address>000D6F00025F698F</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='4769551535434cdc98f0a01a8b0d0c8c'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<appliance id='6518f3f72a82486c97b91e26f2e9bd1d'>
@@ -1771,7 +1771,7 @@
 			</electricity_point_meter>
 		</services>
 		<protocols>
-			<network_router id='08189c78b5ae4a6b9ac271c1380d03e9'><mac_address>000D6F0000469CA1</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='08189c78b5ae4a6b9ac271c1380d03e9'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 </domain_objects>
