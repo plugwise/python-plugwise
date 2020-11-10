@@ -27,6 +27,7 @@ from plugwise.constants import (
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
+    HW_MODELS,
     LOCATIONS,
     MODULES,
     NOTIFICATIONS,
@@ -414,8 +415,21 @@ class Smile:
                     module = self._modules.find(
                         f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
                     )
-                    appliance_model = module.find("hardware_version").text
-                    # ToDo: translate HW-version to model name
+                    hw_version = module.find("hardware_version").text
+                    hw_model = HW_MODELS.get(hw_version[4:10], None)
+                    if hw_model:
+                        appliance_model = hw_model
+                    else: # Try again with reversed order
+                        hw_model = HW_MODELS.get(
+                            self._hardware_version[-2:]
+                            + self._hardware_version[-4:-2]
+                            + self._hardware_version[-6:-4],
+                            None,
+                        )
+                        if hw_model:
+                            appliance_model = hw_model
+                        else: 
+                            appliance_model = "Unknown"
             if stretch_v3:
                 appliance_model = appliance_descr
 
