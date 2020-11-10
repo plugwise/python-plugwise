@@ -1329,7 +1329,7 @@ class TestPlugwise:
 
         self.smile_setup = "stretch_v23"
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "stretch000123"
+        assert smile.smile_hostname == "stretch000000"
 
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert type = thermostat")

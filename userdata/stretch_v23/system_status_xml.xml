@@ -2,7 +2,7 @@
 <system>
 	<gateway>
 		<product>stretch</product>
-		<hostname>stretch000123</hostname>
+		<hostname>stretch000000</hostname>
 		<firmware>2.3.12</firmware>
 		<upgrade/>
 	</gateway>
