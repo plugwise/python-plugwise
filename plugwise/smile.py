@@ -361,7 +361,7 @@ class Smile:
 
         return types
 
-    def get_all_appliances(self):
+    def get_all_appliances(self): # noqa: C901
         """Determine available appliances from inventory."""
         appliances = {}
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
