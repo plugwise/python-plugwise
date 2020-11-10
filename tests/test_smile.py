@@ -903,6 +903,28 @@ class TestPlugwise:
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new(self):
+        """Test Adam with Anna and a switch-group setup."""
+        testdata = {
+            # Test Switch
+            "b83f9f9758064c0fab4af6578cba4c6d": {
+                "relay": True,
+            },
+        }
+
+        self.smile_setup = "adam_plus_anna_new"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "3.2.4"
+
+        await self.device_test(smile, testdata)
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
