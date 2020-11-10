@@ -407,7 +407,7 @@ class Smile:
             appliance_class = appliance.find("type").text
             appliance_descr = appliance.find("description").text
             appliance_name = appliance.find("name").text
-            appliance_model = appliance_class
+            appliance_model = appliance_class.title()
             if stretch_v2:
                 appl_search = appliance.find(".//services/electricity_point_meter")
                 if appl_search is not None:
@@ -467,7 +467,7 @@ class Smile:
                 appliance_types.add("thermostat")
 
             if self.smile_type != "stretch" and "plug" in appliance_types:
-                appliance_model = "plug"
+                appliance_model = "Plug"
 
             appliances[appliance_id] = {
                 "name": appliance_name,
