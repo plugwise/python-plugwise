@@ -12,6 +12,7 @@ import crcmod
 
 from plugwise.constants import (
     ENERGY_KILO_WATT_HOUR,
+    HW_MODELS,
     LOGADDR_OFFSET,
     PERCENTAGE,
     PLUGWISE_EPOCH,
@@ -30,6 +31,15 @@ def validate_mac(mac):
         return False
     return True
 
+def version_to_model(version):
+    """ Translate hardware_version to device type."""
+    model = HW_MODELS.get(version[4:10], None)
+    if model is not None:
+        # Try again with reversed order
+        model = HW_MODELS.get(
+            version[-2:] + version[-4:-2] + version[-6:-4], None,
+        )
+    return model if model is not None else "Unknown"
 
 def inc_seq_id(seq_id, value=1):
     """
