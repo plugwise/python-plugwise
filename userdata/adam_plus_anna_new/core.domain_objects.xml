@@ -1800,7 +1800,7 @@
 		<hardware_version>AME Smile 2.0 board</hardware_version>
 		<firmware_version>3.2.4</firmware_version>
 		<mac_address>0123456789AB</mac_address>
-		<short_id>cnbljxgd</short_id>
+		<short_id>abcdefgh</short_id>
 		<send_data>true</send_data>
 		<anonymous>false</anonymous>
 		<lan_ip></lan_ip>
