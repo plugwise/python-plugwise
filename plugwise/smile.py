@@ -417,17 +417,14 @@ class Smile:
                     )
                     hw_version = module.find("hardware_version").text.replace("-", "")
                     hw_model = HW_MODELS.get(hw_version[4:10], None)
-                    if hw_model:
-                        appliance_model = hw_model
-                    else:  # Try again with reversed order
+                    if not hw_model:
+                        # Try again with reversed order
                         hw_model = HW_MODELS.get(
                             hw_version[-2:] + hw_version[-4:-2] + hw_version[-6:-4],
                             None,
                         )
-                        if hw_model:
-                            appliance_model = hw_model
-                        else:
-                            appliance_model = "Unknown"
+                    appliance_model = hw_model if hw_model else "Unknown"
+                        
             if stretch_v3:
                 appliance_model = appliance_descr
 
