@@ -59,6 +59,7 @@ class TestPlugwise:
         app = aiohttp.web.Application()
         app.router.add_get("/core/appliances", self.smile_appliances)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
+        app.router.add_get("/core/modules", self.smile_modules)
         app.router.add_get("/system/status.xml", self.smile_status)
         app.router.add_get("/system", self.smile_status)
 
@@ -114,6 +115,17 @@ class TestPlugwise:
         userdata = os.path.join(
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.locations.xml",
+        )
+        f = open(userdata)
+        data = f.read()
+        f.close()
+        return aiohttp.web.Response(text=data)
+
+    async def smile_modules(self, request):
+        """Render setup specific modules endpoint."""
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.modules.xml",
         )
         f = open(userdata)
         data = f.read()
