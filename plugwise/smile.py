@@ -415,20 +415,18 @@ class Smile:
                     module = self._modules.find(
                         f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
                     )
-                    hw_version = module.find("hardware_version").text.replace("-","")
+                    hw_version = module.find("hardware_version").text.replace("-", "")
                     hw_model = HW_MODELS.get(hw_version[4:10], None)
                     if hw_model:
                         appliance_model = hw_model
-                    else: # Try again with reversed order
+                    else:  # Try again with reversed order
                         hw_model = HW_MODELS.get(
-                            hw_version[-2:]
-                            + hw_version[-4:-2]
-                            + hw_version[-6:-4],
+                            hw_version[-2:] + hw_version[-4:-2] + hw_version[-6:-4],
                             None,
                         )
                         if hw_model:
                             appliance_model = hw_model
-                        else: 
+                        else:
                             appliance_model = "Unknown"
             if stretch_v3:
                 appliance_model = appliance_descr
