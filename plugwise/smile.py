@@ -826,7 +826,7 @@ class Smile:
         data = {}
         search = self._appliances
 
-        if self._smile_legacy:
+        if self._smile_legacy and self.smile_type != "stretch":
             search = self._domain_objects
 
         appliances = search.findall(f'.//appliance[@id="{dev_id}"]')
