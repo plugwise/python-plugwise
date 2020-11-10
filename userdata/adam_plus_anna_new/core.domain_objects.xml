@@ -1804,7 +1804,7 @@
 		<send_data>true</send_data>
 		<anonymous>false</anonymous>
 		<lan_ip></lan_ip>
-		<wifi_ip>192.168.1.212</wifi_ip>
+		<wifi_ip>127.0.0.1</wifi_ip>
 		<hostname>smile000000</hostname>
 		<time>2020-11-10T16:02:09+01:00</time>
 		<timezone>Europe/Amsterdam</timezone>
@@ -1820,9 +1820,9 @@
 		</project>
 		<gateway_environment id='d85c8e52b9d94a9ab14f9d6b348bd215'>
 			<savings_result_value/>
-			<longitude>6.3</longitude>
+			<longitude>4.49</longitude>
 			<thermostat_model/>
-			<city>Doetinchem</city>
+			<city>Sassenheim</city>
 			<country>NL</country>
 			<electricity_consumption_tariff_structure/>
 			<electricity_production_peak_tariff/>
@@ -1833,7 +1833,7 @@
 			<central_heating_installation_date/>
 			<postal_code/>
 			<electricity_consumption_off_peak_tariff/>
-			<latitude>51.97</latitude>
+			<latitude>52.21</latitude>
 			<gas_consumption_tariff/>
 			<modified_date>2020-03-30T20:09:38.172+02:00</modified_date>
 			<electricity_production_tariff_structure/>
