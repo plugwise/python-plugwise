@@ -424,7 +424,7 @@ class Smile:
                             None,
                         )
                     appliance_model = hw_model if hw_model else "Unknown"
-                        
+
             if stretch_v3:
                 appliance_model = appliance_descr
 
