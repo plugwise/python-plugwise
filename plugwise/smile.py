@@ -374,7 +374,7 @@ class Smile:
             # get_appliance_data can use loc_id for dev_id.
             appliances[self._home_location] = {
                 "name": "P1",
-                "model": "P1 DSMR",
+                "model": "Smile P1",
                 "types": {"power", "home"},
                 "class": "gateway",
                 "location": home_location,
@@ -470,7 +470,7 @@ class Smile:
                 appliance_model = "Plug"
 
             if appliance_model == "Gateway":
-                appliance_model = "Smile"
+                appliance_model = f"Smile {self._smile_name}"
                 if self.smile_type == "stretch":
                     appliance_model = "Stretch"
 
