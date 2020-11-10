@@ -349,7 +349,7 @@ class TestPlugwise:
                             assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
-    async def tinker_relay(self, smile, dev_ids=None, unhappy=False):
+    async def tinker_relay(self, smile, dev_ids=None, members=None, unhappy=False):
         """Switch a relay on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for relay devices:")
         for dev_id in dev_ids:
@@ -357,7 +357,7 @@ class TestPlugwise:
             for new_state in [False, True, False]:
                 _LOGGER.info("- Switching %s", new_state)
                 try:
-                    relay_change = await smile.set_relay_state(dev_id, None, new_state)
+                    relay_change = await smile.set_relay_state(dev_id, members, new_state)
                     assert relay_change
                     _LOGGER.info("  + worked as intended")
                 except (ErrorSendingCommandError, ResponseError):
