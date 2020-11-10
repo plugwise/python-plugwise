@@ -466,7 +466,7 @@ class Smile:
             ):
                 appliance_types.add("thermostat")
 
-            if "plug" in appliance_types:
+            if self.smile_type != "stretch" and "plug" in appliance_types:
                 appliance_model = "plug"
 
             appliances[appliance_id] = {
