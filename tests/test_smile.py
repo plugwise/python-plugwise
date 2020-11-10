@@ -357,7 +357,9 @@ class TestPlugwise:
             for new_state in [False, True, False]:
                 _LOGGER.info("- Switching %s", new_state)
                 try:
-                    relay_change = await smile.set_relay_state(dev_id, members, new_state)
+                    relay_change = await smile.set_relay_state(
+                        dev_id, members, new_state
+                    )
                     assert relay_change
                     _LOGGER.info("  + worked as intended")
                 except (ErrorSendingCommandError, ResponseError):
@@ -921,8 +923,9 @@ class TestPlugwise:
         assert smile.smile_version[0] == "3.2.4"
 
         await self.tinker_relay(
-            smile, ["b83f9f9758064c0fab4af6578cba4c6d"], 
-            ['aa6b0002df0a46e1b1eb94beb61eddfe', 'f2be121e4a9345ac83c6e99ed89a98be']
+            smile,
+            ["b83f9f9758064c0fab4af6578cba4c6d"],
+            ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
         )
 
         await self.device_test(smile, testdata)
