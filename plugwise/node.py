@@ -62,7 +62,7 @@ class PlugwiseNode:
         """Return hardware model."""
         if self._hardware_version:
             return version_to_model(self._hardware_version)
-        return "Unknown"
+        return None
 
     def is_sed(self) -> bool:
         """Return True if node SED (battery powered)."""
