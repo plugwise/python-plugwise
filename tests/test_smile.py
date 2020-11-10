@@ -920,7 +920,10 @@ class TestPlugwise:
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.2.4"
 
-        await self.tinker_relay(smile, ["b83f9f9758064c0fab4af6578cba4c6d"])
+        await self.tinker_relay(
+            smile, ["b83f9f9758064c0fab4af6578cba4c6d"], 
+            ['aa6b0002df0a46e1b1eb94beb61eddfe', 'f2be121e4a9345ac83c6e99ed89a98be']
+        )
 
         await self.device_test(smile, testdata)
         await smile.close_connection()
