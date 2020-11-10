@@ -273,9 +273,6 @@ class Smile:
 
     async def update_appliances(self):
         """Request appliance data."""
-        if self._smile_legacy and self.smile_type == "power":
-            return True
-
         new_data = await self.request(APPLIANCES)
         if new_data is not None:
             self._appliances = new_data
