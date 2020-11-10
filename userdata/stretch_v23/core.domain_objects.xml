@@ -230,7 +230,7 @@
 			</electricity_interval_meter>
 		</services>
 		<protocols>
-			<network_router id='f525a27f849d4b3eaca1f6cf21d9249a'><mac_address>000D6F00025F67F8</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='f525a27f849d4b3eaca1f6cf21d9249a'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='cddc90ac963b4ace974551d195ec0784'>

@@ -71,7 +71,7 @@
 			</relay>
 		</services>
 		<protocols>
-			<network_router id='17500b080b204a2c9cbae4a10ee1a7ba'><mac_address>000D6F00025F69E3</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
+			<network_router id='17500b080b204a2c9cbae4a10ee1a7ba'><mac_address>0123456789AB</mac_address><network id='6e3e708b07ca4648964795a582c90ad1'/></network_router>
 		</protocols>
 	</module>
 	<module id='cddc90ac963b4ace974551d195ec0784'>
