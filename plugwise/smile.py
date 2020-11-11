@@ -1039,9 +1039,6 @@ class Smile:
                 "su": 6,
             }
             locator = f'rule[@id="{rule_id}"]/directives'
-            if self._domain_objects.find(locator) is None:
-                return available, selected, schedule_temperature
-
             directives = self._domain_objects.find(locator)
             for directive in directives:
                 schedule = directive.find("then").attrib
