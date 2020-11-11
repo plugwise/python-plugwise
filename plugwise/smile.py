@@ -18,6 +18,7 @@ import semver
 from plugwise.constants import (
     APPLIANCES,
     ATTR_NAME,
+    ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
