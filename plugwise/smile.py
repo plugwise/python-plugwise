@@ -349,12 +349,12 @@ class Smile:
                 log = data.find(locator)
 
                 if measure == "outdoor_temperature":
-                    types.add(attrs[ATTR_NAME])
+                    types.add(attrs[ATTR_TYPE])
 
                 p_locator = ".//electricity_point_meter"
                 if log.find(p_locator) is not None:
                     if log.find(p_locator).get("id"):
-                        types.add(attrs[ATTR_NAME])
+                        types.add(attrs[ATTR_TYPE])
 
         return types
 

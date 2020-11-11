@@ -285,6 +285,7 @@ RULES = "/core/rules"
 SYSTEM = "/system"
 STATUS = "/system/status.xml"
 
+ATTR_TYPE = "type"
 DEFAULT_TIMEOUT = 30
 DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80
@@ -293,19 +294,19 @@ SWITCH_GROUP_TYPES = ["switching", "report"]
 
 HOME_MEASUREMENTS = {
     "electricity_consumed": {
-        ATTR_NAME: "power",
+        ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
     },
     "electricity_produced": {
-        ATTR_NAME: "power",
+        ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
     },
     "gas_consumed": {
-        ATTR_NAME: "gas",
+        ATTR_TYPE: "gas",
         ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
     },
     "outdoor_temperature": {
-        ATTR_NAME: "temperature",
+        ATTR_TYPE: "temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
 }
