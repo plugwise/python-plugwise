@@ -838,7 +838,7 @@ class Smile:
                     if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
-                    data[attrs[ATTR_NAME]] = format_measure(
+                    data[measurement] = format_measure(
                         measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
                     )
 
@@ -846,7 +846,7 @@ class Smile:
                     f'.//logs/interval_log[type="{measurement}"]/period/measurement'
                 )
                 if appliance.find(i_locator) is not None:
-                    name = f"{attrs[ATTR_NAME]}_interval"
+                    name = f"{measurement}_interval"
                     measure = appliance.find(i_locator).text
 
                     data[name] = format_measure(measure, ENERGY_WATT_HOUR)
@@ -855,7 +855,7 @@ class Smile:
                     f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
                 )
                 if appliance.find(c_locator) is not None:
-                    name = f"{attrs[ATTR_NAME]}_cumulative"
+                    name = f"{measurement}_cumulative"
                     measure = appliance.find(c_locator).text
 
                     data[name] = format_measure(measure, ENERGY_KILO_WATT_HOUR)
