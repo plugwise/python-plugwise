@@ -322,8 +322,12 @@ DEVICE_MEASUREMENTS = {
     # Anna/Adam
     "boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "domestic_hot_water_state": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "intended_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},  # non-zero when heating, zero when dhw-heating
-    "intended_central_heating_state": {ATTR_UNIT_OF_MEASUREMENT: None},  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
+    "intended_boiler_temperature": {
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
+    },  # non-zero when heating, zero when dhw-heating
+    "intended_central_heating_state": {
+        ATTR_UNIT_OF_MEASUREMENT: None
+    },  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
     "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "return_water_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Used with the Elga heatpump - marcelveldt
@@ -331,11 +335,17 @@ DEVICE_MEASUREMENTS = {
     "cooling_state": {ATTR_UNIT_OF_MEASUREMENT: None},
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
     "slave_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
-    "flame_state": {ATTR_UNIT_OF_MEASUREMENT: None},  # also present when there is a single gas-heater
+    "flame_state": {
+        ATTR_UNIT_OF_MEASUREMENT: None
+    },  # also present when there is a single gas-heater
     # Anna only
     "central_heater_water_pressure": {ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR},
-    "outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},  # Outdoor temp as reported on the Anna, in the App
-    "schedule_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},  # Only present on legacy Anna and Anna_v3
+    "outdoor_temperature": {
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
+    },  # Outdoor temp as reported on the Anna, in the App
+    "schedule_temperature": {
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
+    },  # Only present on legacy Anna and Anna_v3
     # Legacy Anna: similar to flame-state on Anna/Adam
     "boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
     # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably

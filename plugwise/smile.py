@@ -731,7 +731,9 @@ class Smile:
 
         # Legacy_anna: create intended_central_heating_state and leave out domestic_hot_water_state
         if "boiler_state" in device_data:
-            device_data["intended_central_heating_state"] = device_data["intended_boiler_state"]
+            device_data["intended_central_heating_state"] = device_data[
+                "intended_boiler_state"
+            ]
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
