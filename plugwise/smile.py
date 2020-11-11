@@ -853,15 +853,6 @@ class Smile:
 
                     data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
-                c_locator = (
-                    f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
-                )
-                if appliance.find(c_locator) is not None:
-                    name = f"{measurement}_cumulative"
-                    measure = appliance.find(c_locator).text
-
-                    data[name] = format_measure(measure, ENERGY_KILO_WATT_HOUR)
-
         return data
 
     def get_power_data_from_location(self, loc_id):
