@@ -729,23 +729,23 @@ class Smile:
 
         device_data = self.get_appliance_data(dev_id)
 
-        # Legacy_anna: create  heating_state and leave out dhw_state
+        # Legacy_anna: create intended_central_heating_state and leave out domestic_hot_water_state
         if "boiler_state" in device_data:
-            device_data["heating_state"] = device_data["intended_boiler_state"]
+            device_data["intended_central_heating_state"] = device_data["intended_boiler_state"]
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
         # Fix for Adam + Anna: intended_central_heating_state also present under Anna, remove
-        if "setpoint" in device_data:
-            device_data.pop("heating_state", None)
+        if "thermostat" in device_data:
+            device_data.pop("intended_central_heating_state", None)
 
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
+        # Adam: indicate intended_central_heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
             if details["class"] == "heater_central":
                 if not self.active_device_present:
-                    device_data["heating_state"] = True
+                    device_data["intended_central_heating_state"] = True
                     if self.get_open_valves() == 0:
-                        device_data["heating_state"] = False
+                        device_data["intended_central_heating_state"] = False
 
         # Anna, Lisa, Tom/Floor
         if details["class"] in thermostat_classes:
