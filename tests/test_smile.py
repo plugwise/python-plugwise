@@ -1315,12 +1315,12 @@ class TestPlugwise:
         testdata = {
             # Koelkast
             "e1c884e7dede431dadee09506ec4f859": {
-                "electricity_consumed": 53.2,
+                "electricity_consumed": 50.5,
                 "relay": True,
             },
-            # Droger
-            "cfe95cf3de1948c0b8955125bf754614": {
-                "electricity_consumed_interval": 1.06,
+            # Vaatwasser
+            "aac7b735042c4832ac9ff33aae4f453b": {
+                "electricity_consumed_interval": 0.71,
             },
         }
 
