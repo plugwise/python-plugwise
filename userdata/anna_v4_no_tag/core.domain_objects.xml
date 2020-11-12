@@ -31,6 +31,27 @@
 			<thermo_extension id='d8ade33622cf4f72a862dfde7ac32e8b'><thermo_touch id='a82b0c5dc4094286a10c6f8f231d2145'/><open_therm_boiler id='d0c69c8c5f674adda8a499b7737feaaf'/></thermo_extension>
 		</protocols>
 	</module>
+	<rule id='7ae00df1c01c491ba25ce79e7e8ff7e4'>
+		<name>Thermostat presets</name>
+		<description>Provides presets for a Location.</description>
+		<template id="7e5effe0dd13404d865f30be993bd6e5"/>
+		<active>true</active>
+		<created_date>2019-01-31T10:06:54.800+01:00</created_date>
+		<modified_date>2020-04-01T05:19:36.412+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<directives>
+			<when preset="vacation"><then heating_setpoint="15" cooling_setpoint="28"/></when>
+			<when preset="no_frost"><then heating_setpoint="10" cooling_setpoint="30"/></when>
+			<when preset="away"><then heating_setpoint="17.5" cooling_setpoint="25"/></when>
+			<when preset="asleep"><then heating_setpoint="17" cooling_setpoint="24"/></when>
+			<when preset="home"><then heating_setpoint="20.5" cooling_setpoint="22"/></when>
+		</directives>
+		<contexts>
+			<context>
+				<zone><location id="eb5309212bf5407bb143e5bfa3b18aee"/></zone>
+			</context>
+		</contexts>
+	</rule>
 	<rule id='51a1ee93578f426e9077933150816c9c'>
 		<name>Standaard</name>
 		<description></description>
