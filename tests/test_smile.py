@@ -691,9 +691,9 @@ class TestPlugwise:
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_anna_v4_no_presets(self):
+    async def test_connect_anna_v4_no_tag(self):
         """Test an Anna firmware 4 setup without a boiler - no presets."""
-        self.smile_setup = "anna_v4_no_presets"
+        self.smile_setup = "anna_v4_no_tag"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
