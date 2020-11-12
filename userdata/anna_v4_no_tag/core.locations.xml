@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='eb5309212bf5407bb143e5bfa3b18aee'>
+		<name>Living room</name>
+		<description>The room containing the (central) home thermostat.</description>
+		<type>livingroom</type>
+		<created_date>2019-01-31T10:06:54.312+01:00</created_date>
+		<modified_date>2020-04-02T10:39:56.824+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances>
+			<appliance id='01b85360fdd243d0aaad4d6ac2a5ba7e'/>
+		</appliances>
+		<logs>
+			<point_log id='2ef744ae02914d8faf4fafcd815e3d54'>
+				<updated_date>2020-04-02T08:33:05.127+02:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-04-01T08:04:13.351+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-02T08:33:05.127+02:00" end_date="2020-04-02T08:33:05.127+02:00">
+					<measurement log_date="2020-04-02T08:33:05.127+02:00">20.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='beae032e4725428796d58f609805c299'>
+				<updated_date>2020-04-02T10:39:56.810+02:00</updated_date>
+				<type>temperature</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-01T09:48:43.257+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-02T10:39:56.810+02:00" end_date="2020-04-02T10:39:56.810+02:00">
+					<measurement log_date="2020-04-02T10:39:56.810+02:00">20.64</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='50be63f8ab7641e89b90fd64a097c3b5'>
+				<updated_date>2020-04-02T08:33:05.069+02:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>20.5</setpoint>
+				<lower_bound>4</lower_bound>
+				<upper_bound>30</upper_bound>
+				<resolution>0.1</resolution>
+				<regulations><ame_regulation id='b2b57364e34f4d86a2d62f8fefc085c6'/></regulations>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='94c107dc6ac84ed98e9f68c0dd06bf71'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2019-01-31T10:06:30.023+01:00</created_date>
+		<modified_date>2020-04-02T10:30:45.917+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='1f3e3a4729fb4339a0e8dcea0b41a71f'>
+				<updated_date>2020-04-02T10:15:53+02:00</updated_date>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<last_consecutive_log_date>2020-04-02T10:30:52+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-02T10:15:53+02:00" end_date="2020-04-02T10:15:53+02:00">
+					<measurement log_date="2020-04-02T10:15:53+02:00">81.00</measurement>
+				</period>
+				<hygro_meter id='28e1e7ec19eb4f89a21f1a25acf737c7'/>
+			</point_log>
+			<point_log id='4316e58b707a4526a88e54b64b3d5cac'>
+				<updated_date>2020-04-02T10:15:53+02:00</updated_date>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-04-02T10:30:52+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-02T10:15:53+02:00" end_date="2020-04-02T10:15:53+02:00">
+					<measurement log_date="2020-04-02T10:15:53+02:00">7.44</measurement>
+				</period>
+				<thermo_meter id='44e85a52350b4ff2befe01f4856d7d9e'/>
+			</point_log>
+			<point_log id='4b547120a3854d7e8d00ef6bc1d8703c'>
+				<updated_date>2020-04-02T10:15:53+02:00</updated_date>
+				<type>weather_description</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-02T10:30:52+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-02T10:15:53+02:00" end_date="2020-04-02T10:15:53+02:00">
+					<measurement log_date="2020-04-02T10:15:53+02:00">clear</measurement>
+				</period>
+				<weather_descriptor id='2cee5b91d17e40e38acfbb93988a5b5e'/>
+			</point_log>
+			<point_log id='a2970830f8e8447ba6b12dbe8e506193'>
+				<updated_date>2020-04-02T10:15:53+02:00</updated_date>
+				<type>wind_vector</type>
+				<unit>m_s</unit>
+				<last_consecutive_log_date>2020-04-02T10:30:52+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-02T10:15:53+02:00" end_date="2020-04-02T10:15:53+02:00">
+					<measurement log_date="2020-04-02T10:15:53+02:00">(3.60,240.00)</measurement>
+				</period>
+				<wind_vector id='14c1bfef965f401eb5a82f9831eb8b6b'/>
+			</point_log>
+			<point_log id='af9337f554e34909884aa48fe1770c52'>
+				<updated_date>2020-04-02T10:15:53+02:00</updated_date>
+				<type>solar_irradiance</type>
+				<unit>W_m2</unit>
+				<last_consecutive_log_date>2020-04-02T10:30:52+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-02T10:15:53+02:00" end_date="2020-04-02T10:15:53+02:00">
+					<measurement log_date="2020-04-02T10:15:53+02:00">449.38</measurement>
+				</period>
+				<irradiance_meter id='cc06ea07c5194981b5963f949f5f2086'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+</locations>

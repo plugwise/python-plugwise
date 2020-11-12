@@ -18,6 +18,7 @@ import semver
 from plugwise.constants import (
     APPLIANCES,
     ATTR_NAME,
+    ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -28,6 +29,7 @@ from plugwise.constants import (
     ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
     LOCATIONS,
+    MODULES,
     NOTIFICATIONS,
     RULES,
     SMILES,
@@ -50,6 +52,7 @@ from plugwise.util import (
     escape_illegal_xml_characters,
     format_measure,
     in_between,
+    version_to_model,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -63,7 +66,7 @@ class Smile:
     def __init__(
         self,
         host,
-        password,
+        smile_id,
         username=DEFAULT_USERNAME,
         port=DEFAULT_PORT,
         timeout=DEFAULT_TIMEOUT,
@@ -83,7 +86,7 @@ class Smile:
         else:
             self.websession = websession
 
-        self._auth = aiohttp.BasicAuth(username, password=password)
+        self._auth = aiohttp.BasicAuth(username, password=smile_id)
         # Work-around for Stretchv2-aiohttp-deflate-error, can be removed for aiohttp v3.7
         self._headers = {"Accept-Encoding": "gzip"}
 
@@ -271,9 +274,6 @@ class Smile:
 
     async def update_appliances(self):
         """Request appliance data."""
-        if self._smile_legacy and self.smile_type == "power":
-            return True
-
         new_data = await self.request(APPLIANCES)
         if new_data is not None:
             self._appliances = new_data
@@ -308,15 +308,20 @@ class Smile:
         if new_data is not None:
             self._locations = new_data
 
+    async def update_modules(self):
+        """Request modules data."""
+        new_data = await self.request(MODULES)
+        if new_data is not None:
+            self._modules = new_data
+
     async def full_update_device(self):
         """Update all XML data from device."""
-        await self.update_appliances()
         # P1 legacy has no appliances
-        if self._appliances is None and (
-            self.smile_type == "power" and not self._smile_legacy
-        ):
-            _LOGGER.error("Appliance data missing")
-            raise XMLDataMissingError
+        if not (self.smile_type == "power" and self._smile_legacy):
+            await self.update_appliances()
+            if self._appliances is None:
+                _LOGGER.error("Appliance data missing")
+                raise XMLDataMissingError
 
         await self.update_domain_objects()
         if self._domain_objects is None:
@@ -328,6 +333,13 @@ class Smile:
             _LOGGER.error("Locataion data missing")
             raise XMLDataMissingError
 
+        # Stretch_v2 only uses modules
+        if self.smile_type == "stretch" and self.smile_version[1].major == 2:
+            await self.update_modules()
+            if self._modules is None:
+                _LOGGER.error("Modules data missing")
+                raise XMLDataMissingError
+
     @staticmethod
     def _types_finder(data):
         """Detect types within locations from logs."""
@@ -338,18 +350,20 @@ class Smile:
                 log = data.find(locator)
 
                 if measure == "outdoor_temperature":
-                    types.add(attrs[ATTR_NAME])
+                    types.add(attrs[ATTR_TYPE])
 
                 p_locator = ".//electricity_point_meter"
                 if log.find(p_locator) is not None:
                     if log.find(p_locator).get("id"):
-                        types.add(attrs[ATTR_NAME])
+                        types.add(attrs[ATTR_TYPE])
 
         return types
 
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
         appliances = {}
+        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
+        stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
         locations, home_location = self.get_all_locations()
 
@@ -358,6 +372,7 @@ class Smile:
             # get_appliance_data can use loc_id for dev_id.
             appliances[self._home_location] = {
                 "name": "P1",
+                "model": "Smile P1",
                 "types": {"power", "home"},
                 "class": "gateway",
                 "location": home_location,
@@ -388,7 +403,21 @@ class Smile:
 
             appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
+            appliance_descr = appliance.find("description").text
             appliance_name = appliance.find("name").text
+            appliance_model = appliance_class.replace("_", " ").title()
+            if stretch_v2:
+                appl_search = appliance.find(".//services/electricity_point_meter")
+                if appl_search is not None:
+                    appl_serv_epm_id = appl_search.attrib["id"]
+                    module = self._modules.find(
+                        f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
+                    )
+                    hw_version = module.find("hardware_version").text.replace("-", "")
+                    appliance_model = version_to_model(hw_version)
+
+            if stretch_v3:
+                appliance_model = appliance_descr
 
             # Nothing useful in opentherm so skip it
             if appliance_class == "open_therm_gateway":
@@ -423,8 +452,15 @@ class Smile:
             ):
                 appliance_types.add("thermostat")
 
+            if self.smile_type != "stretch" and "plug" in appliance_types:
+                appliance_model = "Plug"
+
+            if appliance_model == "Gateway":
+                appliance_model = f"Smile {self.smile_name}"
+
             appliances[appliance_id] = {
                 "name": appliance_name,
+                "model": appliance_model,
                 "types": appliance_types,
                 "class": appliance_class,
                 "location": appliance_location,
@@ -655,6 +691,7 @@ class Smile:
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl[group_id] = {
                     "name": group_name,
+                    "model": "group_switch",
                     "types": {"switch_group"},
                     "class": group_type,
                     "members": members,
@@ -692,23 +729,25 @@ class Smile:
 
         device_data = self.get_appliance_data(dev_id)
 
-        # Legacy_anna: create  heating_state and leave out dhw_state
+        # Legacy_anna: create intended_central_heating_state and leave out domestic_hot_water_state
         if "boiler_state" in device_data:
-            device_data["heating_state"] = device_data["intended_boiler_state"]
+            device_data["intended_central_heating_state"] = device_data[
+                "intended_boiler_state"
+            ]
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
         # Fix for Adam + Anna: intended_central_heating_state also present under Anna, remove
-        if "setpoint" in device_data:
-            device_data.pop("heating_state", None)
+        if "thermostat" in device_data:
+            device_data.pop("intended_central_heating_state", None)
 
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
+        # Adam: indicate intended_central_heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
             if details["class"] == "heater_central":
                 if not self.active_device_present:
-                    device_data["heating_state"] = True
+                    device_data["intended_central_heating_state"] = True
                     if self.get_open_valves() == 0:
-                        device_data["heating_state"] = False
+                        device_data["intended_central_heating_state"] = False
 
         # Anna, Lisa, Tom/Floor
         if details["class"] in thermostat_classes:
@@ -773,7 +812,7 @@ class Smile:
         data = {}
         search = self._appliances
 
-        if self._smile_legacy:
+        if self._smile_legacy and self.smile_type != "stretch":
             search = self._domain_objects
 
         appliances = search.findall(f'.//appliance[@id="{dev_id}"]')
@@ -801,7 +840,7 @@ class Smile:
                     if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
-                    data[attrs[ATTR_NAME]] = format_measure(
+                    data[measurement] = format_measure(
                         measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
                     )
 
@@ -809,19 +848,10 @@ class Smile:
                     f'.//logs/interval_log[type="{measurement}"]/period/measurement'
                 )
                 if appliance.find(i_locator) is not None:
-                    name = f"{attrs[ATTR_NAME]}_interval"
+                    name = f"{measurement}_interval"
                     measure = appliance.find(i_locator).text
 
                     data[name] = format_measure(measure, ENERGY_WATT_HOUR)
-
-                c_locator = (
-                    f'.//logs/cumulative_log[type="{measurement}"]/period/measurement'
-                )
-                if appliance.find(c_locator) is not None:
-                    name = f"{attrs[ATTR_NAME]}_cumulative"
-                    measure = appliance.find(c_locator).text
-
-                    data[name] = format_measure(measure, ENERGY_KILO_WATT_HOUR)
 
         return data
 
@@ -1000,9 +1030,6 @@ class Smile:
                 "su": 6,
             }
             locator = f'rule[@id="{rule_id}"]/directives'
-            if self._domain_objects.find(locator) is None:
-                return available, selected, schedule_temperature
-
             directives = self._domain_objects.find(locator)
             for directive in directives:
                 schedule = directive.find("then").attrib
@@ -1178,9 +1205,7 @@ class Smile:
         """Switch the Plug off/on."""
         actuator = "actuator_functionalities"
         relay = "relay_functionality"
-        stretch_v2 = (
-            self.smile_type == "stretch" and self.smile_version[1]["major"] == 2
-        )
+        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         if stretch_v2:
             actuator = "actuators"
             relay = "relay"

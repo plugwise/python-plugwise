@@ -59,6 +59,7 @@ class TestPlugwise:
         app = aiohttp.web.Application()
         app.router.add_get("/core/appliances", self.smile_appliances)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
+        app.router.add_get("/core/modules", self.smile_modules)
         app.router.add_get("/system/status.xml", self.smile_status)
         app.router.add_get("/system", self.smile_status)
 
@@ -114,6 +115,17 @@ class TestPlugwise:
         userdata = os.path.join(
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.locations.xml",
+        )
+        f = open(userdata)
+        data = f.read()
+        f.close()
+        return aiohttp.web.Response(text=data)
+
+    async def smile_modules(self, request):
+        """Render setup specific modules endpoint."""
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.modules.xml",
         )
         f = open(userdata)
         data = f.read()
@@ -191,7 +203,7 @@ class TestPlugwise:
         smile = Smile(
             host=server.host,
             username="smile",
-            password="abcdefgh",
+            smile_id="abcdefgh",
             port=server.port,
             websession=websession,
         )
@@ -337,7 +349,7 @@ class TestPlugwise:
                             assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
-    async def tinker_relay(self, smile, dev_ids=None, unhappy=False):
+    async def tinker_relay(self, smile, dev_ids=None, members=None, unhappy=False):
         """Switch a relay on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for relay devices:")
         for dev_id in dev_ids:
@@ -345,7 +357,9 @@ class TestPlugwise:
             for new_state in [False, True, False]:
                 _LOGGER.info("- Switching %s", new_state)
                 try:
-                    relay_change = await smile.set_relay_state(dev_id, None, new_state)
+                    relay_change = await smile.set_relay_state(
+                        dev_id, members, new_state
+                    )
                     assert relay_change
                     _LOGGER.info("  + worked as intended")
                 except (ErrorSendingCommandError, ResponseError):
@@ -430,16 +444,16 @@ class TestPlugwise:
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
-                "setpoint": 20.5,
+                "thermostat": 20.5,
                 "temperature": 20.4,
                 "illuminance": 151,
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
-                "water_temperature": 23.6,
-                "water_pressure": 1.2,
+                "boiler_temperature": 23.6,
+                "central_heater_water_pressure": 1.2,
                 "modulation_level": 0,
-                "heating_state": True,
+                "intended_central_heating_state": True,
             },
         }
 
@@ -494,13 +508,13 @@ class TestPlugwise:
         testdata = {
             # Anna
             "9e7377867dc24e51b8098a5ba02bd89d": {
-                "setpoint": 15.0,
+                "thermostat": 15.0,
                 "temperature": 21.4,
                 "illuminance": 19.5,
             },
             # Central
             "ea5d8a7177e541b0a4b52da815166de4": {
-                "water_pressure": 1.7,
+                "central_heater_water_pressure": 1.7,
             },
         }
 
@@ -632,9 +646,9 @@ class TestPlugwise:
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
-                "heating_state": True,
-                "water_pressure": 2.1,
-                "water_temperature": 52.0,
+                "intended_central_heating_state": True,
+                "central_heater_water_pressure": 2.1,
+                "boiler_temperature": 52.0,
             },
             "0466eae8520144c78afb29628384edeb": {
                 "outdoor_temperature": 7.44,
@@ -677,6 +691,41 @@ class TestPlugwise:
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_v4_no_tag(self):
+        """Test an Anna firmware 4 setup without a boiler - no presets."""
+        self.smile_setup = "anna_v4_no_tag"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.0.15"
+        _LOGGER.info(" # Assert no legacy")
+        assert not smile._smile_legacy  # pylint: disable=protected-access
+        _LOGGER.info(" # Assert master thermostat")
+        assert smile.single_master_thermostat()
+
+        await self.tinker_thermostat(
+            smile,
+            "eb5309212bf5407bb143e5bfa3b18aee",
+            good_schemas=["Standaard", "Thuiswerken"],
+        )
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        await self.tinker_thermostat(
+            smile,
+            "eb5309212bf5407bb143e5bfa3b18aee",
+            good_schemas=["Standaard", "Thuiswerken"],
+            unhappy=True,
+        )
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw3(self):
         """Test an Anna firmware 3 without a boiler."""
         # testdata is a dictionary with key ctrl_id_dev_id => keys:values
@@ -696,7 +745,7 @@ class TestPlugwise:
             },
             # Central
             "c46b4794d28149699eacf053deedd003": {
-                "heating_state": False,
+                "intended_central_heating_state": False,
             },
         }
 
@@ -753,7 +802,7 @@ class TestPlugwise:
             },
             # Central
             "c46b4794d28149699eacf053deedd003": {
-                "heating_state": True,
+                "intended_central_heating_state": True,
             },
         }
 
@@ -836,12 +885,12 @@ class TestPlugwise:
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
                 "active_preset": "home",
-                "setpoint": 20.5,  # HA setpoint_temp
+                "thermostat": 20.5,  # HA setpoint_temp
                 "temperature": 20.5,  # HA current_temp
             },
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "heating_state": False,
+                "intended_central_heating_state": False,
             },
             "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
                 "outdoor_temperature": 11.9,
@@ -891,19 +940,47 @@ class TestPlugwise:
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new(self):
+        """Test Adam with Anna and a switch-group setup."""
+        testdata = {
+            # Test Switch
+            "b83f9f9758064c0fab4af6578cba4c6d": {
+                "relay": True,
+            },
+        }
+
+        self.smile_setup = "adam_plus_anna_new"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "3.2.4"
+
+        await self.tinker_relay(
+            smile,
+            ["b83f9f9758064c0fab4af6578cba4c6d"],
+            ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
+        )
+
+        await self.device_test(smile, testdata)
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
-                "setpoint": 21.5,
+                "thermostat": 21.5,
                 "temperature": 21.1,
                 "battery": 34,
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
-                "setpoint": 21.5,
+                "thermostat": 21.5,
                 "temperature": 26.2,
                 "valve_position": 100,
             },
@@ -914,7 +991,7 @@ class TestPlugwise:
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
-                "setpoint": 13.0,
+                "thermostat": 13.0,
                 "temperature": 16.5,
                 "battery": 67,
             },
@@ -980,13 +1057,13 @@ class TestPlugwise:
         testdata = {
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
-                "setpoint": 21.5,
+                "thermostat": 21.5,
                 "temperature": 20.9,
                 "battery": 34,
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
-                "setpoint": 21.5,
+                "thermostat": 21.5,
                 "temperature": 26.0,
                 "valve_position": 100,
             },
@@ -997,7 +1074,7 @@ class TestPlugwise:
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
-                "setpoint": 13.0,
+                "thermostat": 13.0,
                 "temperature": 16.5,
                 "battery": 67,
             },
@@ -1171,9 +1248,9 @@ class TestPlugwise:
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "dhw_state": False,
-                "water_temperature": 29.1,
-                "water_pressure": 1.57,
+                "domestic_hot_water_state": False,
+                "boiler_temperature": 29.1,
+                "central_heater_water_pressure": 1.57,
             },
             "015ae9ea3f964e668e490fa39da3870b": {
                 "outdoor_temperature": 20.2,
@@ -1213,9 +1290,9 @@ class TestPlugwise:
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "dhw_state": False,
-                "water_temperature": 24.7,
-                "water_pressure": 1.61,
+                "domestic_hot_water_state": False,
+                "boiler_temperature": 24.7,
+                "central_heater_water_pressure": 1.61,
             },
             "015ae9ea3f964e668e490fa39da3870b": {
                 "outdoor_temperature": 22.0,
@@ -1273,12 +1350,12 @@ class TestPlugwise:
         testdata = {
             # Koelkast
             "e1c884e7dede431dadee09506ec4f859": {
-                "electricity_consumed": 53.2,
+                "electricity_consumed": 50.5,
                 "relay": True,
             },
-            # Droger
-            "cfe95cf3de1948c0b8955125bf754614": {
-                "electricity_consumed_interval": 1.06,
+            # Vaatwasser
+            "aac7b735042c4832ac9ff33aae4f453b": {
+                "electricity_consumed_interval": 0.71,
             },
         }
 
@@ -1293,6 +1370,41 @@ class TestPlugwise:
         assert smile.smile_version[0] == "3.1.11"
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy  # pylint: disable=protected-access
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_stretch_v23(self):
+        """Test erroneous domain_objects file from user."""
+        # testdata dictionary with key ctrl_id_dev_id => keys:values
+        testdata = {
+            # Tv hoek 25F6790
+            "c71f1cb2100b42ca942f056dcb7eb01f": {
+                "electricity_consumed": 33.3,
+                "relay": True,
+            },
+            # Wasdroger 043AECA
+            "fd1b74f59e234a9dae4e23b2b5cf07ed": {
+                "electricity_consumed_interval": 0.21,
+            },
+        }
+
+        self.smile_setup = "stretch_v23"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "stretch000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "stretch"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "2.3.12"
+        _LOGGER.info(" # Assert legacy")
+        assert smile._smile_legacy  # pylint: disable=protected-access
+
+        await self.tinker_relay(smile, ["2587a7fcdd7e482dab03fda256076b4b"])
 
         await self.device_test(smile, testdata)
 

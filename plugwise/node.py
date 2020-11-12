@@ -3,7 +3,6 @@ from datetime import datetime
 import logging
 
 from plugwise.constants import (
-    HW_MODELS,
     SENSOR_AVAILABLE,
     SENSOR_PING,
     SENSOR_RSSI_IN,
@@ -22,7 +21,7 @@ from plugwise.messages.responses import (
     NodeInfoResponse,
     NodePingResponse,
 )
-from plugwise.util import validate_mac
+from plugwise.util import validate_mac, version_to_model
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -62,20 +61,8 @@ class PlugwiseNode:
     def get_node_type(self) -> str:
         """Return hardware model."""
         if self._hardware_version:
-            hw_model = HW_MODELS.get(self._hardware_version[4:10], None)
-            if hw_model:
-                return hw_model
-
-            # Try again with reversed order
-            hw_model = HW_MODELS.get(
-                self._hardware_version[-2:]
-                + self._hardware_version[-4:-2]
-                + self._hardware_version[-6:-4],
-                None,
-            )
-            if hw_model:
-                return hw_model
-        return "Unknown"
+            return version_to_model(self._hardware_version)
+        return None
 
     def is_sed(self) -> bool:
         """Return True if node SED (battery powered)."""
