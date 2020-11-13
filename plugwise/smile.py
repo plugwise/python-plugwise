@@ -654,6 +654,9 @@ class Smile:
                     if appliance in thermo_locations[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
+            if details["name"] == "Anna" and not self.single_master_thermostat():
+                details["model"] = "Zone Thermostat"
+
             devices[appliance] = details
 
         group_data = self.get_group_switches()
