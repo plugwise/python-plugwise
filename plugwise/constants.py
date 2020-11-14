@@ -316,15 +316,16 @@ HOME_MEASUREMENTS = {
 # radiator_valve 'uncorrected_temperature', 'temperature_offset'
 
 
-
-
 DEVICE_MEASUREMENTS = {
     # HA Core current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core setpoint
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna/Adam
-    "boiler_temperature": {ATTR_NAME: "water_temperature", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "boiler_temperature": {
+        ATTR_NAME: "water_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
     "domestic_hot_water_state": {
         ATTR_NAME: "dhw_state",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
