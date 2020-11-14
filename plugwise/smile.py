@@ -843,6 +843,11 @@ class Smile:
                     if measurement in ["compressor_state", "flame_state"]:
                         self.active_device_present = True
 
+                    try:
+                        measurement = attrs[ATTR_NAME]
+                    except KeyError:
+                        measurement = measurement
+
                     data[measurement] = format_measure(
                         measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
                     )
