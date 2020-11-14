@@ -314,22 +314,34 @@ HOME_MEASUREMENTS = {
 # Excluded:
 # zone_thermosstat 'temperature_offset'
 # radiator_valve 'uncorrected_temperature', 'temperature_offset'
+
+
 DEVICE_MEASUREMENTS = {
     # HA Core current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core setpoint
-    "thermostat": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna/Adam
-    "boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "domestic_hot_water_state": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "boiler_temperature": {
+        ATTR_NAME: "water_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
+    "domestic_hot_water_state": {
+        ATTR_NAME: "dhw_state",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
     "intended_boiler_temperature": {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
     },  # non-zero when heating, zero when dhw-heating
     "intended_central_heating_state": {
-        ATTR_UNIT_OF_MEASUREMENT: None
+        ATTR_NAME: "heating_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
     },  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
     "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    "return_water_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "return_water_temperature": {
+        ATTR_NAME: "return_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
+    },
     # Used with the Elga heatpump - marcelveldt
     "compressor_state": {ATTR_UNIT_OF_MEASUREMENT: None},
     "cooling_state": {ATTR_UNIT_OF_MEASUREMENT: None},
@@ -339,7 +351,10 @@ DEVICE_MEASUREMENTS = {
         ATTR_UNIT_OF_MEASUREMENT: None
     },  # also present when there is a single gas-heater
     # Anna only
-    "central_heater_water_pressure": {ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR},
+    "central_heater_water_pressure": {
+        ATTR_NAME: "water_pressure",
+        ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
+    },
     "outdoor_temperature": {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
     },  # Outdoor temp as reported on the Anna, in the App
