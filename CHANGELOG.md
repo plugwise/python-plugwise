@@ -3,7 +3,10 @@
 ## 0.8.2 - Code quality improvements
   - Switch Smile to defusedxml from lxml (improving security)
   - Lint and flake recommendations fixed
-  - Project CI changes 
+  - Project CI changes
+  - Bug-fix: fix use of major due to change of using semver.VersionInfo.
+  - Add model-info: to be used in Core to provide a more correct model-name for each device.
+  - Code improvements and increase in test-coverage.
 
 ## 0.8.1 - Standardize logging for stick
 
