@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.2 - Code quality improvements
+## 0.8.2/0.8.3 - Code quality improvements
   - Switch Smile to defusedxml from lxml (improving security)
   - Lint and flake recommendations fixed
   - Project CI changes
