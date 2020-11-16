@@ -7,6 +7,10 @@ import logging
 import os
 from pprint import PrettyPrinter
 
+# String generation
+import random
+import string
+
 # Testing
 import aiohttp
 import jsonpickle as json
@@ -203,7 +207,7 @@ class TestPlugwise:
         smile = Smile(
             host=server.host,
             username="smile",
-            smile_id="abcdefgh",
+            password="".join(random.choice(string.ascii_lowercase) for i in range(8)),
             port=server.port,
             websession=websession,
         )
