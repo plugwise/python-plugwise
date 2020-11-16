@@ -200,10 +200,11 @@ class TestPlugwise:
             text = await resp.text()
             assert "xml" in text
 
+        fake_pass="abcdefh"
         smile = Smile(
             host=server.host,
             username="smile",
-            smile_id="abcdefgh",
+            password=fake_pass,
             port=server.port,
             websession=websession,
         )

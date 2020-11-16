@@ -66,7 +66,7 @@ class Smile:
     def __init__(
         self,
         host,
-        smile_id,
+        password,
         username=DEFAULT_USERNAME,
         port=DEFAULT_PORT,
         timeout=DEFAULT_TIMEOUT,
@@ -86,7 +86,7 @@ class Smile:
         else:
             self.websession = websession
 
-        self._auth = aiohttp.BasicAuth(username, password=smile_id)
+        self._auth = aiohttp.BasicAuth(username, password=password)
         # Work-around for Stretchv2-aiohttp-deflate-error, can be removed for aiohttp v3.7
         self._headers = {"Accept-Encoding": "gzip"}
 
