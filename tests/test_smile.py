@@ -12,6 +12,10 @@ import aiohttp
 import jsonpickle as json
 import pytest
 
+# String genration
+import random
+import string
+
 from plugwise.exceptions import (
     ConnectionFailedError,
     DeviceTimeoutError,
@@ -200,11 +204,10 @@ class TestPlugwise:
             text = await resp.text()
             assert "xml" in text
 
-        fake_pass="abcdefh"
         smile = Smile(
             host=server.host,
             username="smile",
-            password=fake_pass,
+            password=''.join(random.choice(string.ascii_lowercase) for i in range(8)),
             port=server.port,
             websession=websession,
         )
