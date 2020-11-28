@@ -215,12 +215,7 @@ class Smile:
         await self.websession.close()
 
     async def request(
-        self,
-        command,
-        retry=3,
-        method="get",
-        data=None,
-        headers=None,
+        self, command, retry=3, method="get", data=None, headers=None,
     ):
         """Request data."""
         resp = None
@@ -1146,7 +1141,7 @@ class Smile:
             data_loc = f".//measurement/[@log_date='{last_log_date}']"
             if result.find(data_loc) is not None:
                 graph_data = result.find(data_loc).text
-        
+
         return graph_data
 
     async def set_schedule_state(self, loc_id, name, state):
