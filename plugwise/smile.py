@@ -917,7 +917,7 @@ class Smile:
                         key_string = f"{measurement}_{log_found}"
                         if val is not None:
                             f_val = float(f"{round(float(val), 3):.3f}")
-                        else: 
+                        else:
                             f_val = None
 
                     # Energy differential
