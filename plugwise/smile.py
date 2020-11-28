@@ -253,10 +253,10 @@ class Smile:
 
         # Command accepted gives empty body with status 202
         if resp.status == 202 or resp.status == 404:
-            return
+            return None
         # Cornercase for stretch not responding with 202
         if method == "put" and resp.status == 200:
-            return
+            return None
 
         result = await resp.text()
         if not result or "<error>" in result:
@@ -1140,12 +1140,13 @@ class Smile:
         yester_date = (dt.datetime.now() + dt.timedelta(days=-1)).strftime("%Y-%m-%d")
         url = f"/core/direct_objects;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z"
         result = await self.request(url)
-        locator = f".//logs/point_log[type='{measurement}']/period"
-        if result.find(locator) is not None:
-            last_log_date = result.find(locator).attrib["end_date"]
-            data_loc = f".//measurement/[@log_date='{last_log_date}']"
-            if result.find(data_loc) is not None:
-                graph_data = result.find(data_loc).text
+        if result is not None:
+            locator = f".//logs/point_log[type='{measurement}']/period"
+            if result.find(locator) is not None:
+                last_log_date = result.find(locator).attrib["end_date"]
+                data_loc = f".//measurement/[@log_date='{last_log_date}']"
+                if result.find(data_loc) is not None:
+                    graph_data = result.find(data_loc).text
 
         return graph_data
 
