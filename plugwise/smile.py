@@ -719,7 +719,7 @@ class Smile:
 
         return open_valve_count
 
-    def get_device_data(self, dev_id):
+    async def get_device_data(self, dev_id):
         """Provide device-data, based on location_id, from APPLIANCES."""
         devices = self.get_all_devices()
         details = devices.get(dev_id)
@@ -786,7 +786,7 @@ class Smile:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
             # Try to get P1 data and 2nd outdoor_temperature, when present
-            power_data = self.get_power_data_from_location(details["location"])
+            power_data = await self.get_power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
 
@@ -913,9 +913,7 @@ class Smile:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
                         if log_found == "interval":
-                            val = asyncio.run(
-                                self.get_last_graph_data(loc_id, measurement)
-                            )
+                            val = await self.get_last_graph_data(loc_id, measurement)
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
 
