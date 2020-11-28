@@ -912,6 +912,8 @@ class Smile:
                     else:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
+                        if log_found == "interval":
+                            val = self.get_last_graph_data(loc_id, measurement)
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
 
@@ -1130,6 +1132,22 @@ class Smile:
             return val
 
         return None
+
+    async def get_last_graph_data(self, meas_id, measurement):
+        """Obtain the cumulative graph-data for a measurement."""
+        graph_data = result = last_log_date = None
+        now_date = dt.datetime.now().strftime("%Y-%m-%d")
+        yester_date = (dt.datetime.now() + dt.timedelta(days=-1)).strftime("%Y-%m-%d")
+        url = f"/core/direct_objects;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z"
+        result = await self.request(url)
+        locator = f".//logs/point_log[type='{measurement}']/period"
+        if result.find(locator) is not None:
+            last_log_date = result.find(locator).attrib["end_date"]
+            data_loc = f".//measurement/[@log_date='{last_log_date}']"
+            if result.find(data_loc) is not None:
+                graph_data = result.find(data_loc).text
+        
+        return graph_data
 
     async def set_schedule_state(self, loc_id, name, state):
         """
