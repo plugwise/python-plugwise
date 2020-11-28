@@ -412,7 +412,7 @@ class TestPlugwise:
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
-        if good_schemas is not []:
+        if good_schemas != []:
             good_schemas.append("!VeryBogusSchemaNameThatNobodyEverUsesOrShouldUse")
             for new_schema in good_schemas:
                 assert_state = True
@@ -849,36 +849,35 @@ class TestPlugwise:
     # Actual test for directory 'Adam'
     # living room floor radiator valve and separate zone thermostat
     # an three rooms with conventional radiators
-    """
-    @pytest.mark.asyncio
-    async def test_connect_adam(self):
-        testdata = {
-            "95395fb15c814a1f8bba88363e4a5833": { "temperature": 19.8, 'active_preset': 'home',},
-            "450d49ef2e8942f78c1242cdd8dfecd0": { "temperature": 20.18, 'battery':  0.77, 'selected_schedule': 'Kira' },
-            "bc9e18756ad04c3f9f35298cbe537c8e": { "temperature": 20.63, 'thermostat': 20.0 },
-        }
 
-        self.smile_setup = 'adam_living_floor_plus_3_rooms'
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_type == "thermostat"
-        assert smile.smile_version[0] == "2.3.35"
-        assert not smile._smile_legacy
-        await self.device_test(smile, testdata)
-        await self.tinker_thermostat(
-            smile, "95395fb15c814a1f8bba88363e4a5833", good_schemas=["Living room"]
-        )
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
-        await self.tinker_thermostat(
-            smile, "95395fb15c814a1f8bba88363e4a5833", good_schemas=["Living room"],
-            unhappy=True,
-        )
-        await smile.close_connection()
-        await self.disconnect(server, client)
-    """
-
+    #@pytest.mark.asyncio
+    #async def test_connect_adam(self):
+    #    testdata = {
+    #        "95395fb15c814a1f8bba88363e4a5833": { "temperature": 19.8, 'active_preset': 'home',},
+    #        "450d49ef2e8942f78c1242cdd8dfecd0": { "temperature": 20.18, 'battery':  0.77, 'selected_schedule': 'Kira' },
+    #        "bc9e18756ad04c3f9f35298cbe537c8e": { "temperature": 20.63, 'thermostat': 20.0 },
+    #    }
+    #
+    #    self.smile_setup = 'adam_living_floor_plus_3_rooms'
+    #    server, smile, client = await self.connect_wrapper()
+    #    assert smile.smile_type == "thermostat"
+    #    assert smile.smile_version[0] == "2.3.35"
+    #    assert not smile._smile_legacy
+    #    await self.device_test(smile, testdata)
+    #    await self.tinker_thermostat(
+    #        smile, "95395fb15c814a1f8bba88363e4a5833", good_schemas=["Living room"]
+    #    )
+    #    await smile.close_connection()
+    #    await self.disconnect(server, client)
+    #
+    #    server, smile, client = await self.connect_wrapper(put_timeout=True)
+    #    await self.tinker_thermostat(
+    #        smile, "95395fb15c814a1f8bba88363e4a5833", good_schemas=["Living room"],
+    #        unhappy=True,
+    #    )
+    #    await smile.close_connection()
+    #    await self.disconnect(server, client)
+    
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna(self):
         """Test outdated information for Adam with Anna setup."""
