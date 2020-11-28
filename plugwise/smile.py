@@ -861,7 +861,7 @@ class Smile:
 
         return data
 
-    def get_power_data_from_location(self, loc_id):
+    async def get_power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
         search = self._domain_objects
@@ -913,7 +913,7 @@ class Smile:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
                         if log_found == "interval":
-                            val = self.get_last_graph_data(loc_id, measurement)
+                            val = await self.get_last_graph_data(loc_id, measurement)
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
 
