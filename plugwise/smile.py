@@ -913,7 +913,7 @@ class Smile:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
                         if log_found == "interval":
-                            val = await self.get_last_graph_data(loc_id, measurement)
+                            val = asyncio.run(self.get_last_graph_data(loc_id, measurement))
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
 
