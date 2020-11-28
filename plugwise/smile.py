@@ -915,7 +915,10 @@ class Smile:
                         if log_found == "interval":
                             val = await self.get_last_graph_data(loc_id, measurement)
                         key_string = f"{measurement}_{log_found}"
-                        f_val = float(f"{round(float(val), 3):.3f}")
+                        if val is not None:
+                            f_val = float(f"{round(float(val), 3):.3f}")
+                        else: 
+                            f_val = None
 
                     # Energy differential
                     if "electricity" in measurement:
