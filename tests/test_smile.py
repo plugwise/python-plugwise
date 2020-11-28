@@ -298,7 +298,7 @@ class TestPlugwise:
         pp8 = PrettyPrinter(indent=8)
         _LOGGER.debug("Device list:\n%s", pp4.pformat(device_list))
         for dev_id, details in device_list.items():
-            data = smile.get_device_data(dev_id)
+            data = await smile.get_device_data(dev_id)
             self._write_json("get_device_data/" + dev_id, data)
             _LOGGER.debug(
                 "%s",
@@ -315,7 +315,7 @@ class TestPlugwise:
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
-                    data = smile.get_device_data(dev_id)
+                    data = await smile.get_device_data(dev_id)
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
