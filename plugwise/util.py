@@ -162,9 +162,10 @@ class String(BaseType):
 
 
 class Int(BaseType):
-    def __init__(self, value, length=2):
+    def __init__(self, value, length=2, negative=True):
         self.value = value
         self.length = length
+        self.negative = negative
 
     def serialize(self):
         fmt = "%%0%dX" % self.length
@@ -172,8 +173,9 @@ class Int(BaseType):
 
     def deserialize(self, val):
         self.value = int(val, 16)
-        mask = 1 << (self.length * 4 - 1)
-        self.value = -(self.value & mask) + (self.value & ~mask)
+        if self.negative:
+            mask = 1 << (self.length * 4 - 1)
+            self.value = -(self.value & mask) + (self.value & ~mask)
 
 
 class SInt(BaseType):
@@ -223,26 +225,23 @@ class DateTime(CompositeType):
     def __init__(self, year=0, month=0, minutes=0):
         CompositeType.__init__(self)
         self.year = Year2k(year - PLUGWISE_EPOCH, 2)
-        self.month = Int(month, 2)
-        self.minutes = Int(minutes, 4)
+        self.month = Int(month, 2, False)
+        self.minutes = Int(minutes, 4, False)
         self.contents += [self.year, self.month, self.minutes]
 
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
         minutes = self.minutes.value
-        hours = minutes // 60
-        days = hours // 24
-        hours -= days * 24
-        minutes -= (days * 24 * 60) + (hours * 60)
-        try:
+        if minutes == 65535:
+            self.value = None
+        else:
+            hours = minutes // 60
+            days = hours // 24
+            hours -= days * 24
+            minutes -= (days * 24 * 60) + (hours * 60)
             self.value = datetime.datetime(
                 self.year.value, self.month.value, days + 1, hours, minutes
             )
-        except ValueError:
-            # debug(
-            #    "encountered value error while attempting to construct datetime object"
-            # )
-            self.value = None
 
 
 class Time(CompositeType):
@@ -250,9 +249,9 @@ class Time(CompositeType):
 
     def __init__(self, hour=0, minute=0, second=0):
         CompositeType.__init__(self)
-        self.hour = Int(hour, 2)
-        self.minute = Int(minute, 2)
-        self.second = Int(second, 2)
+        self.hour = Int(hour, 2, False)
+        self.minute = Int(minute, 2, False)
+        self.second = Int(second, 2, False)
         self.contents += [self.hour, self.minute, self.second]
 
     def deserialize(self, val):

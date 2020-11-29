@@ -217,7 +217,7 @@ class StickInitResponse(NodeResponse):
         self.unknown1 = Int(0, length=2)
         self.network_is_online = Int(0, length=2)
         self.circle_plus_mac = String(None, length=16)
-        self.network_id = Int(0, length=4)
+        self.network_id = Int(0, 4, False)
         self.unknown2 = Int(0, length=2)
         self.params += [
             self.unknown1,
@@ -245,7 +245,7 @@ class NodePingResponse(NodeResponse):
         super().__init__()
         self.in_RSSI = Int(0, length=2)
         self.out_RSSI = Int(0, length=2)
-        self.ping_ms = Int(0, length=4)
+        self.ping_ms = Int(0, 4, False)
         self.params += [
             self.in_RSSI,
             self.out_RSSI,
@@ -290,7 +290,7 @@ class CirclePlusScanResponse(NodeResponse):
     def __init__(self):
         super().__init__()
         self.node_mac = String(None, length=16)
-        self.node_address = Int(0, length=2)
+        self.node_address = Int(0, 2, False)
         self.params += [self.node_mac, self.node_address]
 
 
@@ -371,7 +371,7 @@ class CirclePlusRealTimeClockResponse(NodeResponse):
         super().__init__()
 
         self.time = RealClockTime()
-        self.day_of_week = Int(0, length=2)
+        self.day_of_week = Int(0, 2, False)
         self.date = RealClockDate()
         self.params += [self.time, self.day_of_week, self.date]
 
@@ -388,7 +388,7 @@ class CircleClockResponse(NodeResponse):
     def __init__(self):
         super().__init__()
         self.time = Time()
-        self.day_of_week = Int(0, 2)
+        self.day_of_week = Int(0, 2, False)
         self.unknown = Int(0, 2)
         self.unknown2 = Int(0, 4)
         self.params += [self.time, self.day_of_week, self.unknown, self.unknown2]
@@ -446,7 +446,7 @@ class NodeAwakeResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.awake_type = Int(0, length=2)
+        self.awake_type = Int(0, 2, False)
         self.params += [self.awake_type]
 
 
@@ -463,7 +463,7 @@ class NodeSwitchGroupResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.group = Int(0, length=2)
+        self.group = Int(0, 2, False)
         self.power_state = Int(0, length=2)
         self.params += [
             self.group,
@@ -514,7 +514,7 @@ class NodeAckResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.ack_id = Int(0, length=2)
+        self.ack_id = Int(0, 2, False)
 
 
 class SenseReportResponse(NodeResponse):
