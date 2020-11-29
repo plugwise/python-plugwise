@@ -358,7 +358,9 @@ class Smile:
                 _LOGGER.debug(
                     f"Getting graph-data from {self._graph_meas_id} for {self._graph_measurement}."
                 )
-                await self.update_graph_data(self._graph_meas_id, self._graph_measurement)
+                await self.update_graph_data(
+                    self._graph_meas_id, self._graph_measurement
+                )
                 if self._graph_data is None:
                     _LOGGER.error("Graph data missing")
                     raise XMLDataMissingError
@@ -937,11 +939,11 @@ class Smile:
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
                         if log_found == "interval":
-                                self._graph_meas_id = loc_id
-                                self._graph_measurement = measurement
-                                value = self.get_last_graph_data(self._graph_measurement)
-                                if self._graph_present:
-                                    val = value
+                            self._graph_meas_id = loc_id
+                            self._graph_measurement = measurement
+                            value = self.get_last_graph_data(self._graph_measurement)
+                            if self._graph_present:
+                                val = value
 
                         f_val = float(f"{round(float(val), 3):.3f}")
 
