@@ -94,6 +94,9 @@ class Smile:
         self._endpoint = f"http://{host}:{str(port)}"
         self._appliances = None
         self._domain_objects = None
+        self._graph_data = None
+        self._graph_meas_id = None
+        self._graph_measurement = None
         self._home_location = None
         self._locations = None
         self._smile_legacy = False
@@ -314,6 +317,15 @@ class Smile:
         if new_data is not None:
             self._modules = new_data
 
+    async def update_graph_data(self, meas_id, measurement):
+        """Request data from a graph."""
+        now_date = dt.datetime.now().strftime("%Y-%m-%d")
+        yester_date = (dt.datetime.now() + dt.timedelta(days=-1)).strftime("%Y-%m-%d")
+        url = f"/core/direct_objects;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z"
+        new_data = await self.request(url)
+        if result is not None:
+            self._graph_data = new_data
+
     async def full_update_device(self):
         """Update all XML data from device."""
         # P1 legacy has no appliances
@@ -338,6 +350,14 @@ class Smile:
             await self.update_modules()
             if self._modules is None:
                 _LOGGER.error("Modules data missing")
+                raise XMLDataMissingError
+
+        if self._graph_meas_id is not None:
+            await self.update_graph_data(
+                self._graph_meas_id, self._graph_measurement
+            )
+            if self._graph_data is None:
+                _LOGGER.error("Graph data missing")
                 raise XMLDataMissingError
 
     @staticmethod
@@ -719,7 +739,7 @@ class Smile:
 
         return open_valve_count
 
-    async def get_device_data(self, dev_id):
+    def get_device_data(self, dev_id):
         """Provide device-data, based on location_id, from APPLIANCES."""
         devices = self.get_all_devices()
         details = devices.get(dev_id)
@@ -786,7 +806,7 @@ class Smile:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
             # Try to get P1 data and 2nd outdoor_temperature, when present
-            power_data = await self.get_power_data_from_location(details["location"])
+            power_data = self.get_power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
 
@@ -861,7 +881,7 @@ class Smile:
 
         return data
 
-    async def get_power_data_from_location(self, loc_id):
+    def get_power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
         search = self._domain_objects
@@ -913,7 +933,11 @@ class Smile:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
                         if log_found == "interval":
-                            val = await self.get_last_graph_data(loc_id, measurement)
+                            self._graph_meas_id = loc_id
+                            self._graph_measurement = measurement
+                            val = self.get_last_graph_data(
+                                self._graph_meas_id, self._graph_measurement
+                            )
                         key_string = f"{measurement}_{log_found}"
                         if val is not None:
                             f_val = float(f"{round(float(val), 3):.3f}")
@@ -1138,18 +1162,17 @@ class Smile:
 
     async def get_last_graph_data(self, meas_id, measurement):
         """Obtain the cumulative graph-data for a measurement."""
-        graph_data = result = last_log_date = None
-        now_date = dt.datetime.now().strftime("%Y-%m-%d")
-        yester_date = (dt.datetime.now() + dt.timedelta(days=-1)).strftime("%Y-%m-%d")
-        url = f"/core/direct_objects;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z"
-        result = await self.request(url)
-        if result is not None:
-            locator = f".//logs/point_log[type='{measurement}']/period"
-            if result.find(locator) is not None:
-                last_log_date = result.find(locator).attrib["end_date"]
-                data_loc = f".//measurement/[@log_date='{last_log_date}']"
-                if result.find(data_loc) is not None:
-                    graph_data = result.find(data_loc).text
+        graph_data = None
+        search = self._graph_data
+        if search is None:
+            return None
+
+        locator = f".//logs/point_log[type='{measurement}']/period"
+        if search.find(locator) is not None:
+            last_log_date = result.find(locator).attrib["end_date"]
+            data_loc = f".//measurement/[@log_date='{last_log_date}']"
+            if result.find(data_loc) is not None:
+                graph_data = result.find(data_loc).text
 
         return graph_data
 
