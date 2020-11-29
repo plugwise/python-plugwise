@@ -933,9 +933,7 @@ class Smile:
                         if log_found == "interval":
                             self._graph_meas_id = loc_id
                             self._graph_measurement = measurement
-                            val = self.get_last_graph_data(
-                                self._graph_meas_id, self._graph_measurement
-                            )
+                            val = self.get_last_graph_data(self._graph_measurement)
                         key_string = f"{measurement}_{log_found}"
                         if val is not None:
                             f_val = float(f"{round(float(val), 3):.3f}")
@@ -1158,7 +1156,7 @@ class Smile:
 
         return None
 
-    async def get_last_graph_data(self, meas_id, measurement):
+    async def get_last_graph_data(self, measurement):
         """Obtain the cumulative graph-data for a measurement."""
         graph_data = None
         search = self._graph_data
