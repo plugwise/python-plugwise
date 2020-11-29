@@ -1156,7 +1156,7 @@ class Smile:
 
         return None
 
-    async def get_last_graph_data(self, measurement):
+    def get_last_graph_data(self, measurement):
         """Obtain the cumulative graph-data for a measurement."""
         graph_data = None
         search = self._graph_data
