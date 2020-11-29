@@ -1164,7 +1164,7 @@ class Smile:
         graph_data = None
         search = self._graph_data
         if search is None:
-            _LOGGER.debug(f"No graph-data found")
+            _LOGGER.debug("No graph-data found")
             return None
 
         locator = f".//logs/point_log[type='{measurement}']/period"
