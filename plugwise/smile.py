@@ -323,7 +323,7 @@ class Smile:
         yester_date = (dt.datetime.now() + dt.timedelta(days=-1)).strftime("%Y-%m-%d")
         url = f"/core/direct_objects;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z"
         new_data = await self.request(url)
-        if result is not None:
+        if new_data is not None:
             self._graph_data = new_data
 
     async def full_update_device(self):
@@ -1167,10 +1167,10 @@ class Smile:
 
         locator = f".//logs/point_log[type='{measurement}']/period"
         if search.find(locator) is not None:
-            last_log_date = result.find(locator).attrib["end_date"]
+            last_log_date = search.find(locator).attrib["end_date"]
             data_loc = f".//measurement/[@log_date='{last_log_date}']"
-            if result.find(data_loc) is not None:
-                graph_data = result.find(data_loc).text
+            if search.find(data_loc) is not None:
+                graph_data = search.find(data_loc).text
 
         return graph_data
 
