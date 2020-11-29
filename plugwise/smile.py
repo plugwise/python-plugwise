@@ -97,6 +97,7 @@ class Smile:
         self._graph_data = None
         self._graph_meas_id = None
         self._graph_measurement = None
+        self._graph_present = False
         self._home_location = None
         self._locations = None
         self._smile_legacy = False
@@ -352,14 +353,15 @@ class Smile:
                 _LOGGER.error("Modules data missing")
                 raise XMLDataMissingError
 
-        if self._graph_meas_id is not None:
-            _LOGGER.debug(
-                f"Getting graph-data from {self._graph_meas_id} for {self._graph_measurement}."
-            )
-            await self.update_graph_data(self._graph_meas_id, self._graph_measurement)
-            if self._graph_data is None:
-                _LOGGER.error("Graph data missing")
-                raise XMLDataMissingError
+        if self.smile_type == "power" and self.smile_version[1].major > 2:
+            if self._graph_meas_id is not None:
+                _LOGGER.debug(
+                    f"Getting graph-data from {self._graph_meas_id} for {self._graph_measurement}."
+                )
+                await self.update_graph_data(self._graph_meas_id, self._graph_measurement)
+                if self._graph_data is None:
+                    _LOGGER.error("Graph data missing")
+                    raise XMLDataMissingError
 
     @staticmethod
     def _types_finder(data):
@@ -933,15 +935,15 @@ class Smile:
                     else:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
-                        if log_found == "interval":
-                            self._graph_meas_id = loc_id
-                            self._graph_measurement = measurement
-                            val = self.get_last_graph_data(self._graph_measurement)
                         key_string = f"{measurement}_{log_found}"
-                        if val is not None:
-                            f_val = float(f"{round(float(val), 3):.3f}")
-                        else:
-                            f_val = None
+                        if log_found == "interval":
+                                self._graph_meas_id = loc_id
+                                self._graph_measurement = measurement
+                                value = self.get_last_graph_data(self._graph_measurement)
+                                if self._graph_present:
+                                    val = value
+
+                        f_val = float(f"{round(float(val), 3):.3f}")
 
                     # Energy differential
                     if "electricity" in measurement:
@@ -1167,6 +1169,7 @@ class Smile:
             _LOGGER.debug("No graph-data found")
             return None
 
+        self._graph_present = True
         locator = f".//logs/point_log[type='{measurement}']/period"
         if search.find(locator) is not None:
             last_log_date = search.find(locator).attrib["end_date"]
