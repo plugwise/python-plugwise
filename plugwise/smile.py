@@ -353,6 +353,7 @@ class Smile:
                 raise XMLDataMissingError
 
         if self._graph_meas_id is not None:
+            _LOGGER.debug(" Getting graph-data...")
             await self.update_graph_data(self._graph_meas_id, self._graph_measurement)
             if self._graph_data is None:
                 _LOGGER.error("Graph data missing")
@@ -1161,6 +1162,7 @@ class Smile:
         graph_data = None
         search = self._graph_data
         if search is None:
+            _LOGGER.debug(f"No graph-data found")
             return None
 
         locator = f".//logs/point_log[type='{measurement}']/period"
@@ -1169,6 +1171,7 @@ class Smile:
             data_loc = f".//measurement/[@log_date='{last_log_date}']"
             if search.find(data_loc) is not None:
                 graph_data = search.find(data_loc).text
+                _LOGGER.debug(f"Graph-data found: {graph_data}")
 
         return graph_data
 
