@@ -322,7 +322,7 @@ class Smile:
         """Request data from a graph."""
         now_date = dt.datetime.now().strftime("%Y-%m-%d")
         yester_date = (dt.datetime.now() + dt.timedelta(days=-1)).strftime("%Y-%m-%d")
-        url = f"/core/locations;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z;@interval=PT1H "
+        url = f"/core/locations;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z;@interval=PT1H"
         new_data = await self.request(url)
         if new_data is not None:
             self._graph_data = new_data
