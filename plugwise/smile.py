@@ -256,7 +256,7 @@ class Smile:
             return await self.request(command, retry - 1)
 
         # Command accepted gives empty body with status 202
-        if resp.status == 202 or resp.status == 404:
+        if resp.status == 202:
             return None
         # Cornercase for stretch not responding with 202
         if method == "put" and resp.status == 200:
