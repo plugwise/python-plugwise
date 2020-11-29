@@ -353,7 +353,9 @@ class Smile:
                 raise XMLDataMissingError
 
         if self._graph_meas_id is not None:
-            _LOGGER.debug(f"Getting graph-data from {self._graph_meas_id} for {self._graph_measurement}.")
+            _LOGGER.debug(
+                f"Getting graph-data from {self._graph_meas_id} for {self._graph_measurement}."
+            )
             await self.update_graph_data(self._graph_meas_id, self._graph_measurement)
             if self._graph_data is None:
                 _LOGGER.error("Graph data missing")
