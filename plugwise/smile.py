@@ -1174,7 +1174,7 @@ class Smile:
         locator = f".//logs/interval_log[type='{measurement}']/period"
         if search.find(locator) is not None:
             last_log_date = search.find(locator).attrib["end_date"]
-            data_loc = f".//measurement/[@log_date='{last_log_date}']"
+            data_loc = f".//measurement[@log_date='{last_log_date}']"
             if search.find(data_loc) is not None:
                 self._graph_present = True
                 graph_data = search.find(data_loc).text
