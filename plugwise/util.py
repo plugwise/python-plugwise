@@ -209,7 +209,7 @@ class SInt(BaseType):
 
 class UnixTimestamp(Int):
     def __init__(self, value, length=8):
-        Int.__init__(self, value, length=length)
+        Int.__init__(self, value, length, False)
 
     def deserialize(self, val):
         Int.deserialize(self, val)
