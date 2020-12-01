@@ -941,7 +941,7 @@ class Smile:
                         if log_found == "interval":
                             self._graph_meas_id = loc_id
                             self._graph_measurement = measurement
-                            value = self.get_last_graph_data(self._graph_measurement)
+                            value = self.get_last_graph_data()
                             if self._graph_present:
                                 val = value
 
@@ -1163,7 +1163,7 @@ class Smile:
 
         return None
 
-    def get_last_graph_data(self, measurement):
+    def get_last_graph_data(self):
         """Obtain the cumulative graph-data for a measurement."""
         graph_data = None
         search = self._graph_data
@@ -1171,7 +1171,7 @@ class Smile:
             _LOGGER.debug("No graph-data found")
             return None
 
-        locator = f".//logs/interval_log[type='{measurement}']/period"
+        locator = f".//logs/interval_log/period"
         if search.find(locator) is not None:
             last_log_date = search.find(locator).attrib["end_date"]
             data_loc = f".//measurement[@log_date='{last_log_date}']"
