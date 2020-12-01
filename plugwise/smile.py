@@ -356,7 +356,7 @@ class Smile:
 
         if self.smile_type == "power" and self.smile_version[1].major > 2:
             if self._graph_meas_id is not None:
-                 await self.update_graph_data(
+                await self.update_graph_data(
                     self._graph_meas_id, self._graph_measurement
                 )
                 if self._graph_data is None:
