@@ -222,7 +222,7 @@ class DateTime(CompositeType):
     and last four bytes are offset from the beginning of the month in minutes
     """
 
-    def __init__(self, year=0, month=0, minutes=0):
+    def __init__(self, year=0, month=1, minutes=0):
         CompositeType.__init__(self)
         self.year = Year2k(year - PLUGWISE_EPOCH, 2)
         self.month = Int(month, 2, False)
@@ -232,16 +232,21 @@ class DateTime(CompositeType):
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
         minutes = self.minutes.value
-        if minutes == 65535:
+        if minutes == 0:
+            self.value = datetime.datetime(PLUGWISE_EPOCH, 1, 1, 0, 0)
+        elif minutes == 65535:
             self.value = None
         else:
             hours = minutes // 60
             days = hours // 24
             hours -= days * 24
             minutes -= (days * 24 * 60) + (hours * 60)
-            self.value = datetime.datetime(
-                self.year.value, self.month.value, days + 1, hours, minutes
-            )
+            try:
+                self.value = datetime.datetime(
+                    self.year.value, self.month.value, days + 1, hours, minutes
+                )
+            except:
+                self.value = None
 
 
 class Time(CompositeType):
