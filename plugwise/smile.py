@@ -325,6 +325,7 @@ class Smile:
         url = f"/core/locations;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z;@interval=PT1H"
         new_data = await self.request(url)
         if new_data is not None:
+            _LOGGER.debug(f"Getting graph-data from {meas_id} for {measurement}.")
             self._graph_data = new_data
 
     async def full_update_device(self):
@@ -355,10 +356,7 @@ class Smile:
 
         if self.smile_type == "power" and self.smile_version[1].major > 2:
             if self._graph_meas_id is not None:
-                _LOGGER.debug(
-                    f"Getting graph-data from {self._graph_meas_id} for {self._graph_measurement}."
-                )
-                await self.update_graph_data(
+                 await self.update_graph_data(
                     self._graph_meas_id, self._graph_measurement
                 )
                 if self._graph_data is None:
@@ -1174,11 +1172,12 @@ class Smile:
         locator = ".//logs/interval_log/period"
         if search.find(locator) is not None:
             last_log_date = search.find(locator).attrib["end_date"]
+            _LOGGER.debug(f"Time stamp: {last_log_date}")
             data_loc = f".//measurement[@log_date='{last_log_date}']"
             if search.find(data_loc) is not None:
                 self._graph_present = True
                 graph_data = search.find(data_loc).text
-                _LOGGER.debug(f"Graph-data found: {graph_data}")
+                _LOGGER.debug(f"Graph-data: {graph_data}")
 
         return graph_data
 
