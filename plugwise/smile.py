@@ -1171,7 +1171,7 @@ class Smile:
             _LOGGER.debug("No graph-data found")
             return None
 
-        locator = f".//logs/interval_log/period"
+        locator = ".//logs/interval_log/period"
         if search.find(locator) is not None:
             last_log_date = search.find(locator).attrib["end_date"]
             data_loc = f".//measurement[@log_date='{last_log_date}']"
