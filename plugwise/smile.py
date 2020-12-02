@@ -1162,7 +1162,7 @@ class Smile:
 
     def get_graph_data(self):
         """Obtain the cumulative graph-data for a measurement."""
-        graph_data = time_stamp = split_time None
+        graph_data = split_time = time_stamp = None
         search = self._graph_data
         if search is None:
             _LOGGER.debug("No graph-data found")
