@@ -325,7 +325,6 @@ class Smile:
         url = f"/core/locations;id={meas_id}/logs;class:neq:CumulativeLogFunctionality;type={measurement};@from={yester_date}T23:00:00.000Z;@to={now_date}T23:00:00.000Z;@interval=PT1H"
         new_data = await self.request(url)
         if new_data is not None:
-            _LOGGER.debug(f"Getting graph-data from {meas_id} for {measurement}.")
             self._graph_data = new_data
 
     async def full_update_device(self):
@@ -939,7 +938,7 @@ class Smile:
                         if log_found == "interval":
                             self._graph_meas_id = loc_id
                             self._graph_measurement = measurement
-                            value = self.get_last_graph_data()
+                            value = self.get_graph_data()
                             if self._graph_present:
                                 val = value
 
@@ -1161,19 +1160,20 @@ class Smile:
 
         return None
 
-    def get_last_graph_data(self):
+    def get_graph_data(self):
         """Obtain the cumulative graph-data for a measurement."""
-        graph_data = None
+        graph_data = time_stamp = split_time None
         search = self._graph_data
         if search is None:
             _LOGGER.debug("No graph-data found")
             return None
 
-        locator = ".//logs/interval_log/period"
+        locator = ".//logs/interval_log/last_consecutive_log_date"
         if search.find(locator) is not None:
-            last_log_date = search.find(locator).attrib["end_date"]
-            _LOGGER.debug(f"Time stamp: {last_log_date}")
-            data_loc = f".//measurement[@log_date='{last_log_date}']"
+            time_stamp = search.find(locator).text
+            split_time = time_stamp.split("+")
+            new_stamp = split_time[0] + ".000+" + split_time[1]
+            data_loc = f".//period/measurement[@log_date='{new_stamp}']"
             if search.find(data_loc) is not None:
                 self._graph_present = True
                 graph_data = search.find(data_loc).text
