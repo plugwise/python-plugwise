@@ -254,7 +254,7 @@ class DateTime(CompositeType):
                 self.value = datetime.datetime(
                     self.year.value, self.month.value, days + 1, hours, minutes
                 )
-            except:
+            except datetime.datetime.ValueError:
                 self.value = None
 
 
