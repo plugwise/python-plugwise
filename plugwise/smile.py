@@ -87,6 +87,8 @@ class Smile:
             self.websession = websession
 
         self._auth = aiohttp.BasicAuth(username, password=password)
+        # Work-around for Stretchv2-aiohttp-deflate-error, can be removed for aiohttp v3.7
+        self._headers = {"Accept-Encoding": "gzip"}
 
         self._timeout = timeout
         self._endpoint = f"http://{host}:{str(port)}"
@@ -230,7 +232,10 @@ class Smile:
         try:
             with async_timeout.timeout(self._timeout):
                 if method == "get":
-                    resp = await self.websession.get(url, auth=self._auth)
+                    # Work-around, see above, can be removed for aiohttp v3.7:
+                    resp = await self.websession.get(
+                        url, auth=self._auth, headers=self._headers
+                    )
                 if method == "put":
                     resp = await self.websession.put(
                         url, data=data, headers=headers, auth=self._auth
