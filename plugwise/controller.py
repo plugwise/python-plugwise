@@ -11,16 +11,16 @@ from plugwise.connections.socket import SocketConnection
 from plugwise.constants import (
     MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
-    SLEEP_TIME,
-    STATUS_RESPONSES,
     REQUEST_FAILED,
     REQUEST_SUCCESS,
+    SLEEP_TIME,
+    STATUS_RESPONSES,
     UTF8_DECODE,
 )
 from plugwise.messages.requests import (
-    NodeRequest,
     NodeInfoRequest,
     NodePingRequest,
+    NodeRequest,
 )
 from plugwise.messages.responses import NodeAckSmallResponse
 from plugwise.parser import PlugwiseParser

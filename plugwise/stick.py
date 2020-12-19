@@ -27,6 +27,7 @@ from plugwise.constants import (
     UTF8_DECODE,
     WATCHDOG_DEAMON,
 )
+from plugwise.controller import StickMessageController
 from plugwise.exceptions import (
     CirclePlusError,
     NetworkDown,
@@ -34,7 +35,6 @@ from plugwise.exceptions import (
     StickInitError,
     TimeoutException,
 )
-from plugwise.controller import StickMessageController
 from plugwise.messages.requests import (
     NodeAddRequest,
     NodeAllowJoiningRequest,

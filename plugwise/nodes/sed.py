@@ -8,7 +8,6 @@ import logging
 
 from plugwise.constants import (
     MESSAGE_RETRY,
-    SLEEP_SET,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
@@ -22,6 +21,7 @@ from plugwise.constants import (
     SENSOR_PING,
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
+    SLEEP_SET,
 )
 from plugwise.messages.requests import (
     NodeInfoRequest,

@@ -1,10 +1,6 @@
 """Plugwise messages."""
 
-from plugwise.constants import (
-    MESSAGE_FOOTER,
-    MESSAGE_HEADER,
-    UTF8_DECODE,
-)
+from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER, UTF8_DECODE
 from plugwise.util import crc_fun
 
 

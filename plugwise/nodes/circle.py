@@ -3,12 +3,12 @@ from datetime import datetime, timedelta
 import logging
 
 from plugwise.constants import (
-    RELAY_SWITCHED_OFF,
-    RELAY_SWITCHED_ON,
     HA_SENSOR,
     HA_SWITCH,
     MAX_TIME_DRIFT,
     PULSES_PER_KW_SECOND,
+    RELAY_SWITCHED_OFF,
+    RELAY_SWITCHED_ON,
     SENSOR_AVAILABLE,
     SENSOR_PING,
     SENSOR_POWER_CONSUMPTION_CURRENT_HOUR,
