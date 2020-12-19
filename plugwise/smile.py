@@ -900,9 +900,7 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    if all(
-                        item in key_string for item in ["electricity", "cumulative"]
-                    ):
+                    if all(item in key_string for item in ["electricity", "cumulative"]):
                         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
                     else:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
@@ -910,8 +908,8 @@ class Smile:
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
 
-                    # Energy differential
-                    if "electricity" in measurement:
+                    # Energy differential ####CONTINUE WITH THIS, THIS OVERWRITES THE PREVIOUS RESULT FVAL#######
+                    if "electricity" in measurement: 
                         f_val = float(f"{round(float(val), 1):.1f}")
                         diff = 1
                         if "produced" in measurement:
