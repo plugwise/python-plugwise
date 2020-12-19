@@ -454,22 +454,54 @@ class stick:
                     )
             self._pass_message_to_node(node_info_response, mac)
 
+    def _process_node_join_request(self, node_join_request, mac):
+        """
+        Process NodeJoinAvailableResponse message from a node that
+        is not part of a plugwise network yet and wants to join
+        """
+        if not self._plugwise_nodes.get(mac):
+            if self._accept_join_requests:
+                # Send accept join request
                 _LOGGER.info(
+                    "Accepting network join request for node with mac %s",
                     mac,
                 )
+                self.msg_controller.send(NodeAddRequest(node_join_request.mac, True))
+                self.discover_node(mac, self._discover_after_scan)
             else:
+                _LOGGER.debug(
+                    "New node with mac %s requesting to join Plugwise network, do callback",
                     mac,
                 )
+                self.do_callback(CB_JOIN_REQUEST, mac)
+        else:
             _LOGGER.debug(
+                "Received node available message for node %s which is already joined.",
                 mac,
             )
+
+    def _process_node_remove(self, node_remove_response):
+        """
+        Process NodeRemoveResponse message with confirmation
+        if node is is removed from the Plugwise network.
+        """
+        unjoined_mac = node_remove_response.node_mac_id.value
+        if node_remove_response.status.value == 1:
+            if self._plugwise_nodes.get(unjoined_mac):
+                del self._plugwise_nodes[unjoined_mac]
                 _LOGGER.info(
+                    "Received NodeRemoveResponse from node %s it has been unjoined from Plugwise network",
+                    unjoined_mac,
                 )
             else:
                 _LOGGER.debug(
+                    "Unknown node with mac %s has been unjoined from Plugwise network",
                     unjoined_mac,
                 )
         else:
+            _LOGGER.warning(
+                "Node with mac %s failed to unjoin from Plugwise network ",
+                unjoined_mac,
             )
 
     def _pass_message_to_node(self, message, mac, discover=True):
