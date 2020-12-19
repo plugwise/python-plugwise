@@ -17,11 +17,7 @@ from plugwise.constants import (
     STATUS_RESPONSES,
     UTF8_DECODE,
 )
-from plugwise.messages.requests import (
-    NodeInfoRequest,
-    NodePingRequest,
-    NodeRequest,
-)
+from plugwise.messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
 from plugwise.messages.responses import NodeAckSmallResponse
 from plugwise.parser import PlugwiseParser
 from plugwise.util import inc_seq_id
