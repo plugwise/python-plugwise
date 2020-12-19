@@ -15,7 +15,7 @@ import pytz
 # Version detection
 import semver
 
-from plugwise.constants import (
+from .constants import (
     APPLIANCES,
     ATTR_NAME,
     ATTR_TYPE,
@@ -37,7 +37,7 @@ from plugwise.constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
 )
-from plugwise.exceptions import (
+from .exceptions import (
     ConnectionFailedError,
     DeviceSetupError,
     DeviceTimeoutError,
@@ -47,7 +47,7 @@ from plugwise.exceptions import (
     UnsupportedDeviceError,
     XMLDataMissingError,
 )
-from plugwise.util import (
+from .util import (
     determine_selected,
     escape_illegal_xml_characters,
     format_measure,
