@@ -1,6 +1,6 @@
 """All known request messages to be send to plugwise devices."""
 from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
-from plugwise.message import PlugwiseMessage
+from plugwise.messages import PlugwiseMessage
 from plugwise.util import (
     DateTime,
     Int,
