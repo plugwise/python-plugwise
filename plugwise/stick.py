@@ -561,164 +561,46 @@ class stick:
                 watchdog_loop_checker += 1
         _LOGGER.debug("watchdog loop stopped")
 
-    def _update_loop(self):  # noqa: C901
+    def _update_loop(self):
         """
         When node has not received any message during
         last 2 update polls, reset availability
         """
-        # TODO: flake8 indicates scan is too complex, level 28 indenting is indeed complex
         self._run_update_thread = True
-        _auto_update_first_run = True
+        _discover_counter = 0
         day_of_month = datetime.now().day
         try:
             while self._run_update_thread:
                 for mac in self._plugwise_nodes:
                     if self._plugwise_nodes[mac]:
-                        # Check availability state of SED's
                         if self._plugwise_nodes[mac].is_sed():
-                            if self._plugwise_nodes[mac].get_available():
-                                if self._plugwise_nodes[mac].last_update < (
-                                    datetime.now()
-                                    - timedelta(
-                                        minutes=(
-                                            self._plugwise_nodes[
-                                                mac
-                                            ].maintenance_interval
-                                            + 1
-                                        )
-                                    )
-                                ):
-                                    _LOGGER.info(
-                                        "No messages received within (%s minutes) of expected maintenance interval from node %s, mark as unavailable [%s > %s]",
-                                        str(
-                                            self._plugwise_nodes[
-                                                mac
-                                            ].maintenance_interval
-                                        ),
-                                        mac,
-                                        str(self._plugwise_nodes[mac].last_update),
-                                        str(
-                                            datetime.now()
-                                            - timedelta(
-                                                minutes=(
-                                                    self._plugwise_nodes[
-                                                        mac
-                                                    ].maintenance_interval
-                                                    + 1
-                                                )
-                                            )
-                                        ),
-                                    )
-                                    self._plugwise_nodes[mac].set_available(False)
+                            # Check availability state of SED's
+                            self._check_availability_of_seds(mac)
                         else:
-                            # Do ping request
-                            _LOGGER.debug(
-                                "Send ping to node %s",
-                                mac,
-                            )
-                            self._plugwise_nodes[mac].ping()
+                            # Do ping request for all non SED's
+                            self._plugwise_nodes[mac].ping(None, False)
 
-                    # Only power use updates for supported nodes
-                    if (
-                        isinstance(self._plugwise_nodes[mac], PlugwiseCircle)
-                        or isinstance(self._plugwise_nodes[mac], PlugwiseCirclePlus)
-                        or isinstance(self._plugwise_nodes[mac], PlugwiseStealth)
-                    ):
-                        # Don't check at first time
-                        _LOGGER.debug("Request current power usage for node %s", mac)
-                        if not _auto_update_first_run and self._run_update_thread:
-                            # Only request update if node is available
-                            if self._plugwise_nodes[mac].get_available():
-                                _LOGGER.debug(
-                                    "Node '%s' is available for update request, last update (%s)",
-                                    mac,
-                                    str(self._plugwise_nodes[mac].get_last_update()),
-                                )
-                                # Skip update request if there is still an request expected to be received
-                                open_requests_found = False
-                                for seq_id in list(self.expected_responses.keys()):
-                                    if isinstance(
-                                        self.expected_responses[seq_id][1],
-                                        CirclePowerUsageRequest,
-                                    ):
-                                        if mac == self.expected_responses[seq_id][
-                                            1
-                                        ].mac.decode(UTF8_DECODE):
-                                            open_requests_found = True
-                                            break
-                                if not open_requests_found:
-                                    self._plugwise_nodes[mac].update_power_usage()
-                                # Refresh node info once per hour and request power use afterwards
-                                if (
-                                    self._plugwise_nodes[mac].last_info_message
-                                    is not None
-                                ):
-                                    if self._plugwise_nodes[mac].last_info_message < (
-                                        datetime.now().replace(
-                                            minute=0,
-                                            second=0,
-                                            microsecond=0,
-                                        )
-                                    ):
-                                        self._plugwise_nodes[mac].request_info(
-                                            self._plugwise_nodes[
-                                                mac
-                                            ].request_power_buffer
-                                        )
-                                if not self._plugwise_nodes[mac].last_log_collected:
-                                    self._plugwise_nodes[mac].request_power_buffer()
-                        else:
-                            if self._run_update_thread:
-                                _LOGGER.debug(
-                                    "First request for current power usage for node %s",
-                                    mac,
-                                )
-                                self._plugwise_nodes[mac].update_power_usage()
-                        _auto_update_first_run = False
+                        if self._plugwise_nodes[mac].measure_power():
+                            # Request current power usage
+                            self._plugwise_nodes[mac].update_power_usage()
 
-                        # Sync internal clock of all available Circle and Circle+ nodes once a day
-                        if datetime.now().day != day_of_month:
-                            day_of_month = datetime.now().day
-                            if self._plugwise_nodes[mac].get_available():
+                            # Sync internal clock of power measure nodes once a day
+                            if datetime.now().day != day_of_month:
+                                day_of_month = datetime.now().day
                                 self._plugwise_nodes[mac].sync_clock()
 
-                # Try to rediscover node(s) which where not available at initial scan
-                # Do this the first hour at every update, there after only once an hour
-                for mac in self._nodes_not_discovered:
-                    (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
-                    if firstrequest and lastrequest:
-                        if (firstrequest + timedelta(hours=1)) > datetime.now():
-                            # first hour, so do every update a request
-                            _LOGGER.debug(
-                                "Try rediscovery of node %s",
-                                mac,
-                            )
-                            self.discover_node(mac, self._discover_after_scan, True)
-                            self._nodes_not_discovered[mac] = (
-                                firstrequest,
-                                datetime.now(),
-                            )
-                        else:
-                            if (lastrequest + timedelta(hours=1)) < datetime.now():
-                                _LOGGER.debug(
-                                    "Try rediscovery of node %s",
-                                    mac,
-                                )
-                                self.discover_node(mac, self._discover_after_scan, True)
-                                self._nodes_not_discovered[mac] = (
-                                    firstrequest,
-                                    datetime.now(),
-                                )
-                    else:
-                        _LOGGER.debug(
-                            "Try rediscovery of node %s",
-                            mac,
+                # Do a single ping for undiscovered nodes onces per 10 update cycles
+                if _discover_counter == 10:
+                    for mac in self._nodes_not_discovered:
+                        self.msg_controller.send(
+                            NodePingRequest(bytes(mac, UTF8_DECODE)),
+                            None,
+                            MESSAGE_RETRY + 1,
                         )
-                        self.discover_node(mac, self._discover_after_scan, True)
-                        self._nodes_not_discovered[mac] = (
-                            datetime.now(),
-                            datetime.now(),
-                        )
+                    _discover_counter = 0
+                else:
+                    _discover_counter += 1
+
                 if self._auto_update_timer and self._run_update_thread:
                     update_loop_checker = 0
                     while (
@@ -758,6 +640,29 @@ class stick:
                         callback(callback_arg)
                 except Exception as e:
                     _LOGGER.error("Error while executing callback : %s", e)
+
+    def _check_availability_of_seds(self, mac):
+        """Helper to check if SED device is still sending its hartbeat."""
+        if self._plugwise_nodes[mac].get_available():
+            if self._plugwise_nodes[mac].last_update < (
+                datetime.now()
+                - timedelta(
+                    minutes=(self._plugwise_nodes[mac].maintenance_interval + 1)
+                )
+            ):
+                _LOGGER.info(
+                    "No messages received within (%s minutes) of expected maintenance interval from node %s, mark as unavailable [%s > %s]",
+                    str(self._plugwise_nodes[mac].maintenance_interval),
+                    mac,
+                    str(self._plugwise_nodes[mac].last_update),
+                    str(
+                        datetime.now()
+                        - timedelta(
+                            minutes=(self._plugwise_nodes[mac].maintenance_interval + 1)
+                        )
+                    ),
+                )
+                self._plugwise_nodes[mac].set_available(False)
 
     def _discover_after_scan(self):
         """Helper to do callback for new node."""

@@ -76,6 +76,7 @@ class PlugwiseCircle(PlugwiseNode):
         self.power_consumption_prev_hour = None
         self.power_consumption_today = None
         self.power_consumption_yesterday = None
+        self.last_log_collected = False
         self.timezone_delta = datetime.now().replace(
             minute=0, second=0, microsecond=0
         ) - datetime.utcnow().replace(minute=0, second=0, microsecond=0)
@@ -104,6 +105,17 @@ class PlugwiseCircle(PlugwiseNode):
                 CirclePowerUsageRequest(self.mac),
                 callback,
             )
+        # Refresh node info once an hour and request last hour power use afterwards
+        if self.last_info_message < (
+            datetime.now().replace(
+                minute=0,
+                second=0,
+                microsecond=0,
+            )
+        ):
+            self.request_info(self.request_power_buffer)
+        if not self.last_log_collected:
+            self.request_power_buffer()
 
     def _on_message(self, message):
         """
