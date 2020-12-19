@@ -37,7 +37,7 @@ from plugwise.messages.responses import (
     CirclePowerUsageResponse,
     NodeAckLargeResponse,
 )
-from plugwise.node import PlugwiseNode
+from plugwise.nodes import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
 

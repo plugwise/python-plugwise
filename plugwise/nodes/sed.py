@@ -28,7 +28,7 @@ from plugwise.messages.requests import (
     NodeSleepConfigRequest,
 )
 from plugwise.messages.responses import NodeAckLargeResponse, NodeAwakeResponse
-from plugwise.node import PlugwiseNode
+from plugwise.nodes import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -83,7 +83,7 @@ from plugwise.messages.responses import (
     NodeResponse,
     StickInitResponse,
 )
-from plugwise.node import PlugwiseNode
+from plugwise.nodes import PlugwiseNode
 from plugwise.nodes.circle import PlugwiseCircle
 from plugwise.nodes.circle_plus import PlugwiseCirclePlus
 from plugwise.nodes.scan import PlugwiseScan
