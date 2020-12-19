@@ -2,9 +2,9 @@
 import logging
 
 from plugwise.constants import (
-    ACK_SCAN_PARAMETERS_SET,
     HA_BINARY_SENSOR,
     HA_SENSOR,
+    SCAN_CONFIGURE_ACCEPTED,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
     SCAN_SENSITIVITY_HIGH,
@@ -71,7 +71,7 @@ class PlugwiseScan(NodeSED):
 
     def _process_ack_message(self, message):
         """Process acknowledge message"""
-        if message.ack_id == ACK_SCAN_PARAMETERS_SET:
+        if message.ack_id == SCAN_CONFIGURE_ACCEPTED:
             self._motion_reset_timer = self._new_motion_reset_timer
             self._daylight_mode = self._new_daylight_mode
             self._sensitivity = self._new_sensitivity

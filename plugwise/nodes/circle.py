@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 import logging
 
 from plugwise.constants import (
-    ACK_OFF,
-    ACK_ON,
+    RELAY_SWITCHED_OFF,
+    RELAY_SWITCHED_ON,
     HA_SENSOR,
     HA_SWITCH,
     MAX_TIME_DRIFT,
@@ -201,7 +201,7 @@ class PlugwiseCircle(PlugwiseNode):
 
     def _node_ack_response(self, message):
         """Process switch response message"""
-        if message.ack_id == ACK_ON:
+        if message.ack_id == RELAY_SWITCHED_ON:
             if not self._relay_state:
                 _LOGGER.debug(
                     "Switch relay on for %s",
@@ -209,7 +209,7 @@ class PlugwiseCircle(PlugwiseNode):
                 )
                 self._relay_state = True
                 self.do_callback(SWITCH_RELAY["id"])
-        elif message.ack_id == ACK_OFF:
+        elif message.ack_id == RELAY_SWITCHED_OFF:
             if self._relay_state:
                 _LOGGER.debug(
                     "Switch relay off for %s",

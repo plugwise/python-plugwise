@@ -7,7 +7,7 @@
 import logging
 
 from plugwise.constants import (
-    ACK_SLEEP_SET,
+    SLEEP_SET,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
@@ -55,7 +55,7 @@ class NodeSED(PlugwiseNode):
         if isinstance(message, NodeAwakeResponse):
             self._process_awake_response(message)
         elif isinstance(message, NodeAckLargeResponse):
-            if message.ack_id == ACK_SLEEP_SET:
+            if message.ack_id == SLEEP_SET:
                 self.maintenance_interval = self._new_maintenance_interval
             else:
                 self._on_SED_message(message)
