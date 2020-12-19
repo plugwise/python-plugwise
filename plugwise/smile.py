@@ -15,7 +15,7 @@ import pytz
 # Version detection
 import semver
 
-from .constants import (
+from constants import (
     APPLIANCES,
     ATTR_NAME,
     ATTR_TYPE,
@@ -37,7 +37,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
 )
-from .exceptions import (
+from exceptions import (
     ConnectionFailedError,
     DeviceSetupError,
     DeviceTimeoutError,
@@ -47,7 +47,7 @@ from .exceptions import (
     UnsupportedDeviceError,
     XMLDataMissingError,
 )
-from .util import (
+from util import (
     determine_selected,
     escape_illegal_xml_characters,
     format_measure,
