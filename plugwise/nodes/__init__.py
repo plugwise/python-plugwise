@@ -54,7 +54,6 @@ class PlugwiseNode:
         self._firmware_version = None
         self._relay_state = False
         self._last_log_address = None
-        self.last_log_collected = False
         self.last_info_message = None
         self._features = None
 
@@ -263,7 +262,6 @@ class PlugwiseNode:
         self.last_info_message = message.timestamp
         if self._last_log_address != message.last_logaddr.value:
             self._last_log_address = message.last_logaddr.value
-            self.last_log_collected = False
         _LOGGER.debug("Node type        = %s", self.get_node_type())
         if not self.is_sed:
             _LOGGER.debug("Relay state      = %s", str(self._relay_state))
