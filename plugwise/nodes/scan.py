@@ -117,10 +117,11 @@ class PlugwiseScan(NodeSED):
         self._new_daylight_mode = daylight_mode
         if sensitivity_level == SCAN_SENSITIVITY_HIGH:
             sensitivity_value = 20  # b'14'
-        elif sensitivity_level == SCAN_SENSITIVITY_MEDIUM:
-            sensitivity_value = 30  # b'1E'
         elif sensitivity_level == SCAN_SENSITIVITY_OFF:
             sensitivity_value = 255  # b'FF'
+        else:
+            # Default to medium:
+            sensitivity_value = 30  # b'1E'
         self._new_sensitivity = sensitivity_level
         self._queue_request(
             ScanConfigureRequest(
