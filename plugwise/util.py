@@ -10,7 +10,7 @@ import struct
 
 import crcmod
 
-from plugwise.constants import (
+from .constants import (
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
     LOGADDR_OFFSET,
