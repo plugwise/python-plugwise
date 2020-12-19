@@ -87,7 +87,6 @@ class stick:
         self._run_update_thread = False
         self._auto_update_timer = 0
         self._nodes_discovered = None
-        self._receive_timeout_thread = None
         self._run_watchdog = None
         self._update_thread = None
         self._watchdog_thread = None
@@ -538,31 +537,35 @@ class stick:
                 if not self.msg_controller.connection.write_thread_alive():
                     _LOGGER.warning("Unexpected halt of connection writer thread")
             # receive timeout daemon
-            if self._run_receive_timeout_thread:
-                if not self._receive_timeout_thread.isAlive():
+            if self.msg_controller._run_receive_timeout_thread:
+                if not self.msg_controller._receive_timeout_thread.isAlive():
                     _LOGGER.warning(
                         "Unexpected halt of receive thread, restart thread",
                     )
-                    self._receive_timeout_thread = threading.Thread(
+                    self.msg_controller._receive_timeout_thread = threading.Thread(
                         None,
                         self._receive_timeout_loop,
                         "receive_timeout_thread",
                         (),
                         {},
                     )
-                    self._receive_timeout_thread.daemon = True
-                    self._receive_timeout_thread.start()
+                    self.msg_controller._receive_timeout_thread.daemon = True
+                    self.msg_controller._receive_timeout_thread.start()
             # send message daemon
-            if self._run_send_message_thread:
-                if not self._send_message_thread.isAlive():
+            if self.msg_controller._run_send_message_thread:
+                if not self.msg_controller._send_message_thread.isAlive():
                     _LOGGER.warning(
                         "Unexpected halt of send thread, restart thread",
                     )
-                    self._send_message_thread = threading.Thread(
-                        None, self._send_message_loop, "send_messages_thread", (), {}
+                    self.msg_controller._send_message_thread = threading.Thread(
+                        None,
+                        self.msg_controller._send_message_loop,
+                        "send_messages_thread",
+                        (),
+                        {},
                     )
-                    self._send_message_thread.daemon = True
-                    self._send_message_thread.start()
+                    self.msg_controller._send_message_thread.daemon = True
+                    self.msg_controller._send_message_thread.start()
             # Update daemon
             if self._run_update_thread:
                 if not self._update_thread.isAlive():
