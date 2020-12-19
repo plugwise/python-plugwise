@@ -124,7 +124,7 @@ class stick:
             _LOGGER.error("Unknown error : %s", e)
 
     def connect(self, callback=None):
-        """Startup messsage controller and connect to stick."""
+        """Startup message controller and connect to stick."""
         if not self.msg_controller:
             self.msg_controller = StickMessageController(
                 self.port, self.message_processor, self.node_state_updates
@@ -228,7 +228,7 @@ class stick:
             )
 
     def discover_nodes(self, nodes_to_discover):
-        """Helper to discover all registed nodes."""
+        """Helper to discover all registered nodes."""
         _LOGGER.debug("Scan plugwise network finished")
         self._nodes_discovered = 0
         self._nodes_to_discover = nodes_to_discover
@@ -620,7 +620,7 @@ class stick:
                                 day_of_month = datetime.now().day
                                 self._plugwise_nodes[mac].sync_clock()
 
-                # Do a single ping for undiscovered nodes onces per 10 update cycles
+                # Do a single ping for undiscovered nodes once per 10 update cycles
                 if _discover_counter == 10:
                     for mac in self._nodes_not_discovered:
                         self.msg_controller.send(
