@@ -188,17 +188,6 @@ class stick:
         if callback_type in self._stick_callbacks:
             self._stick_callbacks[callback_type].remove(callback)
 
-    def _discover_after_scan(self):
-        """ Helper to do callback for new node """
-        node_discovered = None
-        for mac in self._nodes_not_discovered:
-            if self._plugwise_nodes.get(mac, None):
-                node_discovered = mac
-                break
-        if node_discovered:
-            del self._nodes_not_discovered[node_discovered]
-            self.do_callback(CB_NEW_NODE, node_discovered)
-
     def registered_nodes(self) -> int:
         """ Return number of nodes registered in Circle+ """
         # Include Circle+ too
@@ -216,120 +205,97 @@ class stick:
         """ Return specific Plugwise node object"""
         return self._plugwise_nodes.get(mac, None)
 
-    def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
-        """ Discovery of plugwise node """
-        if validate_mac(mac):
-            if not self._plugwise_nodes.get(mac):
-                if mac not in self._nodes_not_discovered.keys():
-                    self._nodes_not_discovered[mac] = (
-                        None,
-                        None,
-                    )
-                    self.send(
-                        NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                        callback,
-                    )
-                else:
-                    (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
-                    if not (firstrequest and lastrequest):
-                        self.send(
-                            NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                            callback,
-                        )
-                    elif force_discover:
-                        self.send(
-                            NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                            callback,
-                        )
-                return True
-            return False
-        return False
-
-    def scan(self, callback=None):  # noqa: C901
-        """ scan for connected plugwise nodes """
-        # TODO: flake8 indicates scan is too complex, level 23 indenting is indeed complex
-
-        def scan_finished(nodes_to_discover):
-            """ Callback when scan is finished """
-            time.sleep(1)
-            _LOGGER.debug("Scan plugwise network finished")
-            self._nodes_discovered = 0
-            self._nodes_to_discover = nodes_to_discover
-            self._nodes_registered = len(nodes_to_discover)
-            self._discovery_finished = False
-
-            def node_discovered(nodes_off_line=False):
-                if nodes_off_line:
-                    self._nodes_off_line += 1
-                self._nodes_discovered += 1
-                _LOGGER.debug(
-                    "Discovered Plugwise node %s (%s off-line) of %s",
-                    str(len(self._plugwise_nodes)),
-                    str(self._nodes_off_line),
-                    str(len(self._nodes_to_discover)),
-                )
-                if (len(self._plugwise_nodes) - 1 + self._nodes_off_line) >= len(
-                    self._nodes_to_discover
-                ):
-                    if self._nodes_off_line == 0:
-                        self._nodes_to_discover = {}
-                        self._nodes_not_discovered = {}
-                    else:
-                        for mac in self._nodes_to_discover:
-                            if mac not in self._plugwise_nodes.keys():
-                                _LOGGER.info(
-                                    "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
-                                    str(mac),
-                                )
-                            else:
-                                if mac in self._nodes_not_discovered:
-                                    del self._nodes_not_discovered[mac]
-                    self._discovery_finished = True
-                    if callback:
-                        callback()
-
-            def timeout_expired():
-                if not self._discovery_finished:
-                    for mac in self._nodes_to_discover:
-                        if mac not in self._plugwise_nodes.keys():
-                            _LOGGER.info(
-                                "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
-                                str(mac),
-                            )
-                        else:
-                            if mac in self._nodes_not_discovered:
-                                del self._nodes_not_discovered[mac]
-                    if callback:
-                        callback()
 
             # setup timeout for loading nodes
-            discover_timeout = (
-                10 + (len(nodes_to_discover) * 2) + (MESSAGE_TIME_OUT * MESSAGE_RETRY)
+    def scan(self, callback=None):
+        """Scan and try to detect all registered nodes."""
+        self.scan_callback = callback
+        self.scan_for_registered_nodes()
+
+    def scan_circle_plus(self):
+        """Scan the Circle+ memory for registered nodes."""
+        if self._plugwise_nodes.get(self.circle_plus_mac):
+            _LOGGER.debug("Scan Circle+ for linked nodes...")
+            self._plugwise_nodes[self.circle_plus_mac].scan_for_nodes(
+                self.discover_nodes
             )
-            threading.Timer(discover_timeout, timeout_expired).start()
-            _LOGGER.debug("Start discovery of linked node types...")
-            for mac in nodes_to_discover:
-                self.discover_node(mac, node_discovered)
+        else:
+            _LOGGER.error("Circle+ is not discovered yet")
 
-        def scan_circle_plus():
-            """Callback when Circle+ is discovered"""
-            if self._plugwise_nodes.get(self.circle_plus_mac):
-                _LOGGER.debug("Scan Circle+ for linked nodes...")
-                self._plugwise_nodes[self.circle_plus_mac].scan_for_nodes(scan_finished)
-            else:
-                _LOGGER.error("Circle+ is not discovered in %s", self._plugwise_nodes)
-
-        # Discover Circle+
+    def scan_for_registered_nodes(self):
+        """Discover Circle+ and all registered nodes at Circle+."""
         if self.circle_plus_mac:
             if self._plugwise_nodes.get(self.circle_plus_mac):
-                scan_circle_plus()
+                self.scan_circle_plus()
             else:
                 _LOGGER.debug("Discover Circle+ at %s", self.circle_plus_mac)
-                self.discover_node(self.circle_plus_mac, scan_circle_plus)
+                self.discover_node(self.circle_plus_mac, self.scan_circle_plus)
         else:
             _LOGGER.error(
                 "Plugwise stick not properly initialized, Circle+ MAC is missing."
             )
+
+    def discover_nodes(self, nodes_to_discover):
+        """Helper to discover all registed nodes."""
+        _LOGGER.debug("Scan plugwise network finished")
+        self._nodes_discovered = 0
+        self._nodes_to_discover = nodes_to_discover
+        self._nodes_registered = len(nodes_to_discover)
+
+        # setup timeout for node discovery
+        discover_timeout = (
+            10 + (len(nodes_to_discover) * 2) + (MESSAGE_TIME_OUT * MESSAGE_RETRY)
+        )
+        threading.Timer(discover_timeout, self.scan_timeout_expired).start()
+        _LOGGER.debug("Start discovery of linked node types...")
+        for mac in nodes_to_discover:
+            self.discover_node(mac, self.node_discovered_by_scan)
+
+    def node_discovered_by_scan(self, nodes_off_line=False):
+        """Node discovered by initial scan."""
+        if nodes_off_line:
+            self._nodes_off_line += 1
+        self._nodes_discovered += 1
+        _LOGGER.debug(
+            "Discovered Plugwise node %s (%s off-line) of %s",
+            str(len(self._plugwise_nodes)),
+            str(self._nodes_off_line),
+            str(len(self._nodes_to_discover)),
+        )
+        if (len(self._plugwise_nodes) - 1 + self._nodes_off_line) >= len(
+            self._nodes_to_discover
+        ):
+            if self._nodes_off_line == 0:
+                self._nodes_to_discover = {}
+                self._nodes_not_discovered = {}
+            else:
+                for mac in self._nodes_to_discover:
+                    if mac not in self._plugwise_nodes.keys():
+                        _LOGGER.info(
+                            "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
+                            str(mac),
+                        )
+                    else:
+                        if mac in self._nodes_not_discovered:
+                            del self._nodes_not_discovered[mac]
+            self.msg_controller.discovery_finished = True
+            if self.scan_callback:
+                self.scan_callback()
+
+    def scan_timeout_expired(self):
+        """Timeout for initial scan."""
+        if not self.msg_controller.discovery_finished:
+            for mac in self._nodes_to_discover:
+                if mac not in self._plugwise_nodes.keys():
+                    _LOGGER.info(
+                        "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
+                        str(mac),
+                    )
+                else:
+                    if mac in self._nodes_not_discovered:
+                        del self._nodes_not_discovered[mac]
+            if self.scan_callback:
+                self.scan_callback()
 
     def get_mac_stick(self) -> str:
         """Return mac address of USB-Stick"""
@@ -784,3 +750,56 @@ class stick:
             self._auto_update_timer = len(self._plugwise_nodes) * 3
         if not self._run_update_thread:
             self._update_thread.start()
+
+    ### Helper functions ###
+    def do_callback(self, callback_type, callback_arg=None):
+        """Helper to execute registered callbacks for specified callback type."""
+        if callback_type in self._stick_callbacks:
+            for callback in self._stick_callbacks[callback_type]:
+                try:
+                    if callback_arg is None:
+                        callback()
+                    else:
+                        callback(callback_arg)
+                except Exception as e:
+                    _LOGGER.error("Error while executing callback : %s", e)
+
+    def _discover_after_scan(self):
+        """Helper to do callback for new node."""
+        node_discovered = None
+        for mac in self._nodes_not_discovered:
+            if self._plugwise_nodes.get(mac):
+                node_discovered = mac
+                break
+        if node_discovered:
+            del self._nodes_not_discovered[node_discovered]
+            self.do_callback(CB_NEW_NODE, node_discovered)
+
+    def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
+        """Helper to try to discovery the node (type) based on mac."""
+        if validate_mac(mac):
+            if not self._plugwise_nodes.get(mac):
+                if mac not in self._nodes_not_discovered:
+                    self._nodes_not_discovered[mac] = (
+                        None,
+                        None,
+                    )
+                    self.msg_controller.send(
+                        NodeInfoRequest(bytes(mac, UTF8_DECODE)),
+                        callback,
+                    )
+                else:
+                    (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
+                    if not (firstrequest and lastrequest):
+                        self.msg_controller.send(
+                            NodeInfoRequest(bytes(mac, UTF8_DECODE)),
+                            callback,
+                        )
+                    elif force_discover:
+                        self.msg_controller.send(
+                            NodeInfoRequest(bytes(mac, UTF8_DECODE)),
+                            callback,
+                        )
+                return True
+            return False
+        return False
