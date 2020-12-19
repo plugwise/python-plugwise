@@ -296,8 +296,9 @@ class PlugwiseCircle(PlugwiseNode):
                 "1 hour consumption power pulse counter for node %s has value of -1, corrected to 0",
                 self.get_mac(),
             )
-        self.pulses_consumed_1h = message.pulse_hour_consumed.value
-        self.do_callback(SENSOR_POWER_CONSUMPTION_CURRENT_HOUR["id"])
+        if self.pulses_consumed_1h != message.pulse_hour_consumed.value:
+            self.pulses_consumed_1h = message.pulse_hour_consumed.value
+            self.do_callback(SENSOR_POWER_CONSUMPTION_CURRENT_HOUR["id"])
         # Power produced current hour
         if message.pulse_hour_produced.value == -1:
             message.pulse_hour_produced.value = 0
@@ -305,8 +306,9 @@ class PlugwiseCircle(PlugwiseNode):
                 "1 hour power production pulse counter for node %s has value of -1, corrected to 0",
                 self.get_mac(),
             )
-        self.pulses_produced_1h = message.pulse_hour_produced.value
-        self.do_callback(SENSOR_POWER_PRODUCTION_CURRENT_HOUR["id"])
+        if self.pulses_produced_1h != message.pulse_hour_produced.value:
+            self.pulses_produced_1h = message.pulse_hour_produced.value
+            self.do_callback(SENSOR_POWER_PRODUCTION_CURRENT_HOUR["id"])
 
     def _response_calibration(self, message):
         """Store calibration properties"""
