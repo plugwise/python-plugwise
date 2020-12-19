@@ -97,7 +97,7 @@ class stick:
             self.auto_initialize(callback)
 
     def auto_initialize(self, callback=None):
-        """ automatic initialization """
+        """Automatic initialization of USB-stick and discovery of all registered nodes."""
 
         def init_finished():
             if not self.network_online:
@@ -154,7 +154,7 @@ class stick:
             raise NetworkDown
 
     def initialize_circle_plus(self, callback=None, timeout=MESSAGE_TIME_OUT):
-        # Initialize Circle+
+        """Initialize connection from USB-Stick to the Circle+/Stealth+ node and raise an error if this fails."""
         if (
             not self.msg_controller.connection.is_connected()
             or not self._stick_initialized
@@ -171,20 +171,20 @@ class stick:
             raise CirclePlusError
 
     def disconnect(self):
-        """ Disconnect from stick and raise error if it fails"""
+        """Disconnect from stick and raise error if it fails"""
         self._run_watchdog = False
         self._run_update_thread = False
         self._auto_update_timer = 0
         self.msg_controller.disconnect_from_stick()
 
     def subscribe_stick_callback(self, callback, callback_type):
-        """ Subscribe callback to execute """
+        """Subscribe callback to execute."""
         if callback_type not in self._stick_callbacks:
             self._stick_callbacks[callback_type] = []
         self._stick_callbacks[callback_type].append(callback)
 
     def unsubscribe_stick_callback(self, callback, callback_type):
-        """ Register callback to execute """
+        """Register callback to execute."""
         if callback_type in self._stick_callbacks:
             self._stick_callbacks[callback_type].remove(callback)
 
@@ -296,7 +296,7 @@ class stick:
         return None
 
     def _append_node(self, mac, address, node_type):
-        """ Add Plugwise node to be controlled """
+        """Add node to list of controllable nodes"""
         _LOGGER.debug(
             "Add new node type (%s) with mac %s",
             str(node_type),
@@ -389,7 +389,6 @@ class stick:
         if mac in self._plugwise_nodes:
             del self._plugwise_nodes[mac]
 
-    ### Message processing ###
     def message_processor(self, message: NodeResponse):
         """Received message from Plugwise network."""
         mac = message.mac.decode(UTF8_DECODE)
@@ -648,7 +647,7 @@ class stick:
         _LOGGER.debug("Update loop stopped")
 
     def auto_update(self, timer=None):
-        """ Configure auto update polling daemon for power usage and availability state. """
+        """Configure auto update polling daemon for power usage and availability state."""
         if timer:
             self._auto_update_timer = timer
         elif timer == 0:

@@ -45,7 +45,7 @@ class PlugwiseScan(NodeSED):
         self._new_sensitivity = None
 
     def get_motion(self) -> bool:
-        """ Return motion state"""
+        """Return motion state"""
         return self._motion_state
 
     def _on_SED_message(self, message):

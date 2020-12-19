@@ -1,4 +1,4 @@
-""" Plugwise Stick and Smile constants."""
+"""Plugwise Stick and Smile constants."""
 
 # Copied homeassistant.consts
 ATTR_NAME = "name"

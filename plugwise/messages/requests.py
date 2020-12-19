@@ -108,7 +108,7 @@ class NodeResetRequest(NodeRequest):
 
 class StickInitRequest(NodeRequest):
     """
-    initialize USB-Stick
+    Initialize USB-Stick
 
     Response message: StickInitResponse
     """
@@ -363,7 +363,7 @@ class NodeSleepConfigRequest(NodeRequest):
     clock_sync              : Enable/disable clock sync
     clock_interval          : Duration in minutes the node synchronize its clock
 
-    Response message: Ack message with ACK_SLEEP_SET
+    Response message: Ack message with SLEEP_SET
     """
 
     ID = b"0050"

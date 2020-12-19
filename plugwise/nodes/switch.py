@@ -17,7 +17,7 @@ class PlugwiseSwitch(NodeSED):
         self._switch_state = False
 
     def get_switch_state(self):
-        """ Return state of switch"""
+        """Return state of switch"""
         return self._switch_state
 
     def _on_SED_message(self, message):

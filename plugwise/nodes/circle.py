@@ -164,11 +164,11 @@ class PlugwiseCircle(PlugwiseNode):
         pass
 
     def get_relay_state(self) -> bool:
-        """ Return last known relay state """
+        """Return last known relay state."""
         return self._relay_state
 
     def set_relay_state(self, state: bool, callback=None):
-        """ Switch relay """
+        """Switch relay."""
         self._request_switch(state, callback)
 
     def get_power_usage(self):
@@ -380,7 +380,7 @@ class PlugwiseCircle(PlugwiseNode):
         # Cleanup history for more than 2 day's ago
         if len(self.power_history.keys()) > 48:
             for dt in list(self.power_history.keys()):
-                if (dt + self.stick.timezone_delta - timedelta(hours=1)).date() < (
+                if (dt + self.timezone_delta - timedelta(hours=1)).date() < (
                     datetime.now().today().date() - timedelta(days=1)
                 ):
                     del self.power_history[dt]
@@ -389,15 +389,15 @@ class PlugwiseCircle(PlugwiseNode):
         today_power = 0
         yesterday_power = 0
         for dt in self.power_history:
-            if (dt + self.stick.timezone_delta) == datetime.now().today().replace(
+            if (dt + self.timezone_delta) == datetime.now().today().replace(
                 minute=0, second=0, microsecond=0
             ):
                 last_hour_usage = self.power_history[dt]
             if (
-                dt + self.stick.timezone_delta - timedelta(hours=1)
+                dt + self.timezone_delta - timedelta(hours=1)
             ).date() == datetime.now().today().date():
                 today_power += self.power_history[dt]
-            if (dt + self.stick.timezone_delta - timedelta(hours=1)).date() == (
+            if (dt + self.timezone_delta - timedelta(hours=1)).date() == (
                 datetime.now().today().date() - timedelta(days=1)
             ):
                 yesterday_power += self.power_history[dt]
@@ -421,7 +421,7 @@ class PlugwiseCircle(PlugwiseNode):
             message.time.value.second,
         )
         clock_offset = message.timestamp.replace(microsecond=0) - (
-            dt + self.stick.timezone_delta
+            dt + self.timezone_delta
         )
         if clock_offset.days == -1:
             self._clock_offset = clock_offset.seconds - 86400
@@ -434,14 +434,14 @@ class PlugwiseCircle(PlugwiseNode):
         )
 
     def get_clock(self, callback=None):
-        """ get current datetime of internal clock of Circle """
+        """get current datetime of internal clock of Circle."""
         self.message_sender(
             CircleClockGetRequest(self.mac),
             callback,
         )
 
     def set_clock(self, callback=None):
-        """ set internal clock of CirclePlus """
+        """set internal clock of CirclePlus."""
         self.message_sender(
             CircleClockSetRequest(self.mac, datetime.utcnow()),
             callback,

@@ -44,14 +44,14 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             )
 
     def scan_for_nodes(self, callback=None):
-        """ Scan for registered nodes """
+        """Scan for registered nodes."""
         self._scan_for_nodes_callback = callback
         for node_address in range(0, 64):
             self.message_sender(CirclePlusScanRequest(self.mac, node_address))
             self._scan_response[node_address] = False
 
     def _process_scan_response(self, message):
-        """ Process scan response message """
+        """Process scan response message."""
         _LOGGER.debug(
             "Process scan response for address %s", message.node_address.value
         )
@@ -91,7 +91,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                 self._plugwise_nodes = {}
 
     def get_real_time_clock(self, callback=None):
-        """ get current datetime of internal clock of CirclePlus """
+        """get current datetime of internal clock of CirclePlus."""
         self.message_sender(
             CirclePlusRealTimeClockGetRequest(self.mac),
             callback,
@@ -120,7 +120,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         )
 
     def set_real_time_clock(self, callback=None):
-        """ set internal clock of CirclePlus """
+        """set internal clock of CirclePlus."""
         self.message_sender(
             CirclePlusRealTimeClockSetRequest(self.mac, datetime.utcnow()),
             callback,

@@ -37,11 +37,11 @@ class PlugwiseSense(NodeSED):
         self._humidity = None
 
     def get_temperature(self) -> int:
-        """ Return the current temperature """
+        """Return the current temperature."""
         return self._temperature
 
     def get_humidity(self) -> int:
-        """ Return the current humidity """
+        """Return the current humidity."""
         return self._humidity
 
     def _on_SED_message(self, message):
@@ -58,7 +58,7 @@ class PlugwiseSense(NodeSED):
             )
 
     def _process_sense_report(self, message):
-        """ process sense report message to extract current temperature and humidity values """
+        """process sense report message to extract current temperature and humidity values."""
         if message.temperature.value != 65535:
             new_temperature = int(
                 SENSE_TEMPERATURE_MULTIPLIER * (message.temperature.value / 65536)
