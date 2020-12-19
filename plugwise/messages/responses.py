@@ -548,3 +548,47 @@ class CircleInitialRelaisStateResponse(NodeResponse):
         set_or_get = Int(0, length=2)
         relais = Int(0, length=2)
         self.params += [set_or_get, relais]
+
+
+id_to_message = {
+    b"0002": CirclePlusQueryResponse(),
+    b"0003": CirclePlusQueryEndResponse(),
+    b"0005": CirclePlusConnectResponse(),
+    b"0006": NodeJoinAvailableResponse(),
+    b"000E": NodePingResponse(),
+    b"0011": StickInitResponse(),
+    b"0013": CirclePowerUsageResponse(),
+    b"0019": CirclePlusScanResponse(),
+    b"001D": NodeRemoveResponse(),
+    b"0024": NodeInfoResponse(),
+    b"0027": CircleCalibrationResponse(),
+    b"003A": CirclePlusRealTimeClockResponse(),
+    b"003F": CircleClockResponse(),
+    b"0049": CirclePowerBufferResponse(),
+    b"0060": NodeFeaturesResponse(),
+    b"0100": NodeAckResponse(),
+    b"0105": SenseReportResponse(),
+}
+
+
+def get_message_response(message_id, length, seq_id):
+    """
+    Return message class based on sequence ID, Length of message or message ID.
+    """
+    # First check for known sequence ID's
+    if seq_id == b"FFFD":
+        return NodeJoinAckResponse()
+    elif seq_id == b"FFFE":
+        return NodeAwakeResponse()
+    elif seq_id == b"FFFF":
+        return NodeSwitchGroupResponse()
+    else:
+        # No fixed sequence ID, continue at message ID
+        if message_id == b"0000":
+            if length == 20:
+                return NodeAckSmallResponse()
+            elif length == 36:
+                return NodeAckLargeResponse()
+        else:
+            return id_to_message.get(message_id, None)
+    return None
