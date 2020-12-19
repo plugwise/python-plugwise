@@ -188,25 +188,17 @@ class stick:
         if callback_type in self._stick_callbacks:
             self._stick_callbacks[callback_type].remove(callback)
 
-    def registered_nodes(self) -> int:
-        """ Return number of nodes registered in Circle+ """
-        # Include Circle+ too
-        return self._nodes_registered + 1
+    def allow_join_requests(self, enable: bool, accept: bool):
+        """
+        Enable or disable Plugwise network
+        Automatically accept new join request
+        """
+        self.msg_controller.send(NodeAllowJoiningRequest(enable))
+        if enable:
+            self._accept_join_requests = accept
+        else:
+            self._accept_join_requests = False
 
-    def nodes(self) -> list:
-        """ Return list of mac addresses of discovered and supported plugwise nodes """
-        return list(
-            dict(
-                filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
-            ).keys()
-        )
-
-    def node(self, mac: str) -> PlugwiseNode:
-        """ Return specific Plugwise node object"""
-        return self._plugwise_nodes.get(mac, None)
-
-
-            # setup timeout for loading nodes
     def scan(self, callback=None):
         """Scan and try to detect all registered nodes."""
         self.scan_callback = callback
@@ -303,40 +295,6 @@ class stick:
             return self._mac_stick.decode(UTF8_DECODE)
         return None
 
-    def allow_join_requests(self, enable: bool, accept: bool):
-        """
-        Enable or disable Plugwise network
-        Automatically accept new join request
-        """
-        self.send(NodeAllowJoiningRequest(enable))
-        if enable:
-            self._accept_join_requests = accept
-        else:
-            self._accept_join_requests = False
-
-    def node_join(self, mac: str, callback=None) -> bool:
-        """Accept node to join Plugwise network by adding it in Circle+ memory"""
-        if validate_mac(mac):
-            self.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback)
-            return True
-
-        _LOGGER.warning("Invalid mac '%s' address, unable to join node manually.", mac)
-        return False
-
-    def node_unjoin(self, mac: str, callback=None) -> bool:
-        """Remove node from the Plugwise network by deleting it from the Circle+ memory"""
-        if validate_mac(mac):
-            self.send(
-                NodeRemoveRequest(bytes(self.circle_plus_mac, UTF8_DECODE), mac),
-                callback,
-            )
-            return True
-
-        _LOGGER.warning(
-            "Invalid mac '%s' address, unable to unjoin node manually.", mac
-        )
-        return False
-
     def _append_node(self, mac, address, node_type):
         """ Add Plugwise node to be controlled """
         _LOGGER.debug(
@@ -380,19 +338,56 @@ class stick:
         for msg in msg_to_process:
             self.message_processor(msg)
 
-    def _remove_node(self, mac):
-        """
-        remove circle from stick
+    def registered_nodes(self) -> int:
+        """Return total number of nodes registered to Circle+ including Circle+ itself"""
+        return self._nodes_registered + 1
 
-        :return: None
-        """
+    def nodes(self) -> list:
+        """Return list of mac addresses of discovered and supported plugwise nodes."""
+        return list(
+            dict(
+                filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
+            ).keys()
+        )
+
+    def node(self, mac: str) -> PlugwiseNode:
+        """Return a specific node object"""
+        return self._plugwise_nodes.get(mac)
+
+    def node_state_updates(self, mac, state: bool):
+        """Update availability state of a node"""
+        if mac in self._plugwise_nodes:
+            if not self._plugwise_nodes[mac].is_sed():
+                self._plugwise_nodes[mac].set_available(state)
+
+    def node_join(self, mac: str, callback=None) -> bool:
+        """Accept node to join Plugwise network by register mac in Circle+ memory"""
+        if validate_mac(mac):
+            self.msg_controller.send(
+                NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback
+            )
+            return True
+        _LOGGER.warning("Invalid mac '%s' address, unable to join node manually.", mac)
+        return False
+
+    def node_unjoin(self, mac: str, callback=None) -> bool:
+        """Remove node from the Plugwise network by deleting mac from the Circle+ memory"""
+        if validate_mac(mac):
+            self.msg_controller.send(
+                NodeRemoveRequest(bytes(self.circle_plus_mac, UTF8_DECODE), mac),
+                callback,
+            )
+            return True
+
+        _LOGGER.warning(
+            "Invalid mac '%s' address, unable to unjoin node manually.", mac
+        )
+        return False
+
+    def _remove_node(self, mac):
+        """Remove node from list of controllable nodes."""
         if mac in self._plugwise_nodes:
             del self._plugwise_nodes[mac]
-
-
-                callback,
-
-
 
     ### Message processing ###
     def message_processor(self, message: NodeResponse):
