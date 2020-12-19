@@ -7,6 +7,7 @@
 import logging
 
 from plugwise.constants import (
+    MESSAGE_RETRY,
     SLEEP_SET,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
@@ -36,8 +37,8 @@ _LOGGER = logging.getLogger(__name__)
 class NodeSED(PlugwiseNode):
     """provides base class for SED based nodes like Scan, Sense & Switch"""
 
-    def __init__(self, mac, address, stick):
-        super().__init__(mac, address, stick)
+    def __init__(self, mac, address, message_sender):
+        super().__init__(mac, address, message_sender)
         self._SED_requests = {}
         self.maintenance_interval = SED_MAINTENANCE_INTERVAL
         self._new_maintenance_interval = None
@@ -85,7 +86,7 @@ class NodeSED(PlugwiseNode):
                     request_message.__class__.__name__,
                     self.get_mac(),
                 )
-                self.stick.send(request_message, callback)
+                self.message_sender(request_message, callback, MESSAGE_RETRY)
             self._SED_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:

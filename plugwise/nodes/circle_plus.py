@@ -20,8 +20,8 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseCirclePlus(PlugwiseCircle):
     """provides interface to the Plugwise Circle+ nodes"""
 
-    def __init__(self, mac, address, stick):
-        super().__init__(mac, address, stick)
+    def __init__(self, mac, address, message_sender):
+        super().__init__(mac, address, message_sender)
         self._plugwise_nodes = {}
         self._scan_response = {}
         self._scan_for_nodes_callback = None
@@ -47,7 +47,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         """ Scan for registered nodes """
         self._scan_for_nodes_callback = callback
         for node_address in range(0, 64):
-            self.stick.send(CirclePlusScanRequest(self.mac, node_address))
+            self.message_sender(CirclePlusScanRequest(self.mac, node_address))
             self._scan_response[node_address] = False
 
     def _process_scan_response(self, message):
@@ -75,20 +75,13 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                 if not self._scan_response[node_address]:
                     if node_address < message.node_address.value:
                         # Apparently missed response so send new scan request if it's not in queue yet
-                        request_not_in_queue = True
-                        for msg_request in list(self.stick.expected_responses.values()):
-                            if isinstance(msg_request[1], CirclePlusScanRequest):
-                                if msg_request[1].node_address == node_address:
-                                    request_not_in_queue = False
-                                    break
-                        if request_not_in_queue:
-                            _LOGGER.debug(
-                                "Resend missing scan request for address %s",
-                                str(node_address),
-                            )
-                            self.stick.send(
-                                CirclePlusScanRequest(self.mac, node_address)
-                            )
+                        _LOGGER.debug(
+                            "Resend missing scan request for address %s",
+                            str(node_address),
+                        )
+                        self.message_sender(
+                            CirclePlusScanRequest(self.mac, node_address)
+                        )
                     break
                 if node_address == 63:
                     scan_complete = True
@@ -99,7 +92,6 @@ class PlugwiseCirclePlus(PlugwiseCircle):
 
     def get_real_time_clock(self, callback=None):
         """ get current datetime of internal clock of CirclePlus """
-        self.stick.send(
             CirclePlusRealTimeClockGetRequest(self.mac),
             callback,
         )
@@ -128,7 +120,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
 
     def set_real_time_clock(self, callback=None):
         """ set internal clock of CirclePlus """
-        self.stick.send(
+        self.message_sender(
             CirclePlusRealTimeClockSetRequest(self.mac, datetime.utcnow()),
             callback,
         )

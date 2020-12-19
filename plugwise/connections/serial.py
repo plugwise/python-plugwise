@@ -13,8 +13,8 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseUSBConnection(StickConnection):
     """Simple wrapper around serial module."""
 
-    def __init__(self, port, stick=None):
-        super().__init__(port, stick)
+    def __init__(self, port, parser):
+        super().__init__(port, parser)
         self._baud = BAUD_RATE
         self._byte_size = BYTE_SIZE
         self._stopbits = STOPBITS

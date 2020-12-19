@@ -12,8 +12,8 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseParser:
     """Transform Plugwise message from wire format to response message object."""
 
-    def __init__(self, stick):
-        self.stick = stick
+    def __init__(self, message_processor):
+        self.message_processor = message_processor
         self._buffer = bytes([])
         self._parsing = False
         self._message = None
@@ -33,7 +33,7 @@ class PlugwiseParser:
         Process next packet if present
         """
         try:
-            self.stick.new_message(message)
+            self.message_processor(message)
         except Exception as e:
             _LOGGER.error(
                 "Error while processing %s : %s",

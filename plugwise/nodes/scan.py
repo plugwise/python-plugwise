@@ -26,8 +26,8 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseScan(NodeSED):
     """provides interface to the Plugwise Scan nodes"""
 
-    def __init__(self, mac, address, stick):
-        super().__init__(mac, address, stick)
+    def __init__(self, mac, address, message_sender):
+        super().__init__(mac, address, message_sender)
         self.categories = (HA_SENSOR, HA_BINARY_SENSOR)
         self.sensors = (
             SENSOR_AVAILABLE["id"],
