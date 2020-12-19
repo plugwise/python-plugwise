@@ -5,7 +5,6 @@ import logging
 from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
 from plugwise.messages.responses import get_message_response
 
-
 _LOGGER = logging.getLogger(__name__)
 
 
