@@ -84,6 +84,10 @@ class PlugwiseCircle(PlugwiseNode):
         self.get_clock(self.sync_clock)
         self._request_calibration()
 
+    def measure_power(self) -> bool:
+        """Return True if node can measure power usage."""
+        return True
+
     def _request_calibration(self, callback=None):
         """Request calibration info"""
         self.message_sender(
@@ -99,7 +103,7 @@ class PlugwiseCircle(PlugwiseNode):
         )
 
     def update_power_usage(self, callback=None):
-        """Request power usage"""
+        """Request power usage and power logs of last hour"""
         if self.get_available():
             self.message_sender(
                 CirclePowerUsageRequest(self.mac),
@@ -134,7 +138,7 @@ class PlugwiseCircle(PlugwiseNode):
                     "Received power update for %s before calibration information is known",
                     self.get_mac(),
                 )
-                self._request_calibration()
+                self._request_calibration(self.update_power_usage)
         elif isinstance(message, NodeAckLargeResponse):
             self._node_ack_response(message)
         elif isinstance(message, CircleCalibrationResponse):
@@ -147,7 +151,7 @@ class PlugwiseCircle(PlugwiseNode):
                     "Received power buffer log for %s before calibration information is known",
                     self.get_mac(),
                 )
-                self._request_calibration()
+                self._request_calibration(self.request_power_buffer)
         elif isinstance(message, CircleClockResponse):
             self._response_clock(message)
         else:

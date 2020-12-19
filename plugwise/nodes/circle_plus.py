@@ -92,6 +92,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
 
     def get_real_time_clock(self, callback=None):
         """ get current datetime of internal clock of CirclePlus """
+        self.message_sender(
             CirclePlusRealTimeClockGetRequest(self.mac),
             callback,
         )
@@ -106,7 +107,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             message.time.value.second,
         )
         realtime_clock_offset = message.timestamp.replace(microsecond=0) - (
-            dt + self.stick.timezone_delta
+            dt + self.timezone_delta
         )
         if realtime_clock_offset.days == -1:
             self._realtime_clock_offset = realtime_clock_offset.seconds - 86400

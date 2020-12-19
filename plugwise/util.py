@@ -46,12 +46,14 @@ def version_to_model(version):
     return model if model is not None else "Unknown"
 
 
-def inc_seq_id(seq_id, value=1):
+def inc_seq_id(seq_id, value=1) -> bytearray:
     """
     Increment sequence id by value
 
     :return: 4 bytes
     """
+    if seq_id is None:
+        return b"0000"
     temp_int = int(seq_id, 16) + value
     # Max seq_id = b'FFFC'
     # b'FFFD' reserved for 'NodeJoinAckResponse' message
