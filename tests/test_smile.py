@@ -16,14 +16,19 @@ import aiohttp
 import jsonpickle as json
 import pytest
 
-from plugwise.exceptions import (
+import sys, os.path
+pw_dir = (os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
++ '/plugwise/')
+sys.path.append(pw_dir)
+
+from exceptions import (
     ConnectionFailedError,
     DeviceTimeoutError,
     ErrorSendingCommandError,
     InvalidXMLError,
     ResponseError,
 )
-from plugwise.smile import Smile
+from smile import Smile
 
 pp = PrettyPrinter(indent=8)
 
