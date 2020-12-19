@@ -18,7 +18,11 @@ from plugwise.constants import (
     UTF8_DECODE,
 )
 from plugwise.messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
-from plugwise.messages.responses import NodeAckSmallResponse
+from plugwise.messages.responses import (
+    NodeAckResponse,
+    NodeAckSmallResponse,
+    NodeAckLargeResponse,
+)
 from plugwise.parser import PlugwiseParser
 from plugwise.util import inc_seq_id
 
@@ -224,6 +228,10 @@ class StickMessageController:
                 message.seq_id, message.ack_id, message.__class__.__name__
             )
         else:
+            if isinstance(message, (NodeAckResponse, NodeAckLargeResponse)):
+                self._log_status_message(message, message.ack_id)
+            else:
+                self._log_status_message(message)
             self.message_processor(message)
             if (
                 message.seq_id != b"FFFF"
