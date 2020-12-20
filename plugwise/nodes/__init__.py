@@ -2,7 +2,7 @@
 from datetime import datetime
 import logging
 
-from plugwise.constants import (
+from ..constants import (
     SENSOR_AVAILABLE,
     SENSOR_PING,
     SENSOR_RSSI_IN,
@@ -10,19 +10,19 @@ from plugwise.constants import (
     SWITCH_RELAY,
     UTF8_DECODE,
 )
-from plugwise.messages import PlugwiseMessage
-from plugwise.messages.requests import (
+from ..messages.requests import (
     NodeFeaturesRequest,
     NodeInfoRequest,
     NodePingRequest,
 )
-from plugwise.messages.responses import (
+from ..messages.responses import (
     NodeFeaturesResponse,
     NodeInfoResponse,
     NodeJoinAckResponse,
     NodePingResponse,
+    NodeResponse,
 )
-from plugwise.util import validate_mac, version_to_model
+from ..util import validate_mac, version_to_model
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -174,7 +174,7 @@ class PlugwiseNode:
 
     def on_message(self, message):
         """Process received message."""
-        assert isinstance(message, PlugwiseMessage)
+        assert isinstance(message, NodeResponse)
         if message.mac == self.mac:
             if message.timestamp is not None:
                 _LOGGER.debug(

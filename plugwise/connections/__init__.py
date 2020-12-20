@@ -4,8 +4,8 @@ import queue
 import threading
 import time
 
-from plugwise.constants import SLEEP_TIME
-from plugwise.messages import PlugwiseMessage
+from ..constants import SLEEP_TIME
+from ..messages.requests import NodeRequest
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -86,7 +86,7 @@ class StickConnection:
                     callback()
         _LOGGER.debug("Writer daemon stopped")
 
-    def send(self, message: PlugwiseMessage, callback=None):
+    def send(self, message: NodeRequest, callback=None):
         """Add message to write queue."""
         self._write_queue.put_nowait((message, callback))
 

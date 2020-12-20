@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 import logging
 
-from plugwise.constants import (
+from ..constants import (
     HA_SENSOR,
     HA_SWITCH,
     MAX_TIME_DRIFT,
@@ -22,7 +22,7 @@ from plugwise.constants import (
     SENSOR_RSSI_OUT,
     SWITCH_RELAY,
 )
-from plugwise.messages.requests import (
+from ..messages.requests import (
     CircleCalibrationRequest,
     CircleClockGetRequest,
     CircleClockSetRequest,
@@ -30,14 +30,14 @@ from plugwise.messages.requests import (
     CirclePowerUsageRequest,
     CircleSwitchRelayRequest,
 )
-from plugwise.messages.responses import (
+from ..messages.responses import (
     CircleCalibrationResponse,
     CircleClockResponse,
     CirclePowerBufferResponse,
     CirclePowerUsageResponse,
     NodeAckLargeResponse,
 )
-from plugwise.nodes import PlugwiseNode
+from ..nodes import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
 

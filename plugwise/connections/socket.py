@@ -2,8 +2,8 @@
 import logging
 import socket
 
-from plugwise.connections import StickConnection
-from plugwise.exceptions import PortError
+from ..connections import StickConnection
+from ..exceptions import PortError
 
 _LOGGER = logging.getLogger(__name__)
 

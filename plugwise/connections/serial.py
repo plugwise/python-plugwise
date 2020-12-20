@@ -3,9 +3,9 @@ import logging
 
 import serial
 
-from plugwise.connections import StickConnection
-from plugwise.constants import BAUD_RATE, BYTE_SIZE, STOPBITS
-from plugwise.exceptions import PortError
+from ..connections import StickConnection
+from ..constants import BAUD_RATE, BYTE_SIZE, STOPBITS
+from ..exceptions import PortError
 
 _LOGGER = logging.getLogger(__name__)
 

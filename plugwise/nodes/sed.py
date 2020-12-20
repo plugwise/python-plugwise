@@ -6,7 +6,7 @@
 
 import logging
 
-from plugwise.constants import (
+from ..constants import (
     MESSAGE_RETRY,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
@@ -23,13 +23,13 @@ from plugwise.constants import (
     SENSOR_RSSI_OUT,
     SLEEP_SET,
 )
-from plugwise.messages.requests import (
+from ..messages.requests import (
     NodeInfoRequest,
     NodePingRequest,
     NodeSleepConfigRequest,
 )
-from plugwise.messages.responses import NodeAckLargeResponse, NodeAwakeResponse
-from plugwise.nodes import PlugwiseNode
+from ..messages.responses import NodeAckLargeResponse, NodeAwakeResponse
+from ..nodes import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
 

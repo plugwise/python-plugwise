@@ -6,9 +6,9 @@ import queue
 import threading
 import time
 
-from plugwise.connections.serial import PlugwiseUSBConnection
-from plugwise.connections.socket import SocketConnection
-from plugwise.constants import (
+from .connections.serial import PlugwiseUSBConnection
+from .connections.socket import SocketConnection
+from .constants import (
     MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
     REQUEST_FAILED,
@@ -17,14 +17,14 @@ from plugwise.constants import (
     STATUS_RESPONSES,
     UTF8_DECODE,
 )
-from plugwise.messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
-from plugwise.messages.responses import (
+from .messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
+from .messages.responses import (
     NodeAckLargeResponse,
     NodeAckResponse,
     NodeAckSmallResponse,
 )
-from plugwise.parser import PlugwiseParser
-from plugwise.util import inc_seq_id
+from .parser import PlugwiseParser
+from .util import inc_seq_id
 
 _LOGGER = logging.getLogger(__name__)
 

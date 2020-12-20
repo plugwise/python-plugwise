@@ -2,14 +2,14 @@
 
 import logging
 
-from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
-from plugwise.exceptions import (
+from .constants import MESSAGE_FOOTER, MESSAGE_HEADER
+from .exceptions import (
     InvalidMessageChecksum,
     InvalidMessageFooter,
     InvalidMessageHeader,
     InvalidMessageLength,
 )
-from plugwise.messages.responses import get_message_response
+from .messages.responses import get_message_response
 
 _LOGGER = logging.getLogger(__name__)
 

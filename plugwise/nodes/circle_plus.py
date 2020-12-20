@@ -2,17 +2,17 @@
 from datetime import datetime
 import logging
 
-from plugwise.constants import MAX_TIME_DRIFT, UTF8_DECODE
-from plugwise.messages.requests import (
+from ..constants import MAX_TIME_DRIFT, UTF8_DECODE
+from ..messages.requests import (
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
     CirclePlusScanRequest,
 )
-from plugwise.messages.responses import (
+from ..messages.responses import (
     CirclePlusRealTimeClockResponse,
     CirclePlusScanResponse,
 )
-from plugwise.nodes.circle import PlugwiseCircle
+from ..nodes.circle import PlugwiseCircle
 
 _LOGGER = logging.getLogger(__name__)
 

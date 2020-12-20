@@ -1,9 +1,9 @@
 """Plugwise switch node object."""
 import logging
 
-from plugwise.constants import HA_BINARY_SENSOR, HA_SENSOR, SENSOR_SWITCH
-from plugwise.messages.responses import NodeSwitchGroupResponse
-from plugwise.nodes.sed import NodeSED
+from ..constants import HA_BINARY_SENSOR, HA_SENSOR, SENSOR_SWITCH
+from ..messages.responses import NodeSwitchGroupResponse
+from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 

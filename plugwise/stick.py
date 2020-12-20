@@ -9,7 +9,7 @@ import sys
 import threading
 import time
 
-from plugwise.constants import (
+from .constants import (
     ACCEPT_JOIN_REQUESTS,
     CB_JOIN_REQUEST,
     CB_NEW_NODE,
@@ -27,15 +27,15 @@ from plugwise.constants import (
     UTF8_DECODE,
     WATCHDOG_DEAMON,
 )
-from plugwise.controller import StickMessageController
-from plugwise.exceptions import (
+from .controller import StickMessageController
+from .exceptions import (
     CirclePlusError,
     NetworkDown,
     PortError,
     StickInitError,
     TimeoutException,
 )
-from plugwise.messages.requests import (
+from .messages.requests import (
     NodeAddRequest,
     NodeAllowJoiningRequest,
     NodeInfoRequest,
@@ -43,7 +43,7 @@ from plugwise.messages.requests import (
     NodeRemoveRequest,
     StickInitRequest,
 )
-from plugwise.messages.responses import (
+from .messages.responses import (
     NodeAckLargeResponse,
     NodeAckResponse,
     NodeInfoResponse,
@@ -52,13 +52,13 @@ from plugwise.messages.responses import (
     NodeResponse,
     StickInitResponse,
 )
-from plugwise.nodes import PlugwiseNode
-from plugwise.nodes.circle import PlugwiseCircle
-from plugwise.nodes.circle_plus import PlugwiseCirclePlus
-from plugwise.nodes.scan import PlugwiseScan
-from plugwise.nodes.sense import PlugwiseSense
-from plugwise.nodes.stealth import PlugwiseStealth
-from plugwise.util import validate_mac
+from .nodes import PlugwiseNode
+from .nodes.circle import PlugwiseCircle
+from .nodes.circle_plus import PlugwiseCirclePlus
+from .nodes.scan import PlugwiseScan
+from .nodes.sense import PlugwiseSense
+from .nodes.stealth import PlugwiseStealth
+from .util import validate_mac
 
 _LOGGER = logging.getLogger(__name__)
 

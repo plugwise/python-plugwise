@@ -1,7 +1,7 @@
 """Plugwise Sense node object."""
 import logging
 
-from plugwise.constants import (
+from ..constants import (
     HA_BINARY_SENSOR,
     HA_SENSOR,
     SENSE_HUMIDITY_MULTIPLIER,
@@ -14,8 +14,8 @@ from plugwise.constants import (
     SENSOR_RSSI_OUT,
     SENSOR_TEMPERATURE,
 )
-from plugwise.messages.responses import SenseReportResponse
-from plugwise.nodes.sed import NodeSED
+from ..messages.responses import SenseReportResponse
+from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 

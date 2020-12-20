@@ -1,7 +1,7 @@
 """Plugwise Scan node object."""
 import logging
 
-from plugwise.constants import (
+from ..constants import (
     HA_BINARY_SENSOR,
     HA_SENSOR,
     SCAN_CONFIGURE_ACCEPTED,
@@ -16,9 +16,9 @@ from plugwise.constants import (
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
 )
-from plugwise.messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
-from plugwise.messages.responses import NodeAckResponse, NodeSwitchGroupResponse
-from plugwise.nodes.sed import NodeSED
+from ..messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
+from ..messages.responses import NodeAckResponse, NodeSwitchGroupResponse
+from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 
