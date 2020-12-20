@@ -123,9 +123,9 @@ class StickInitRequest(NodeRequest):
 
 class NodeImagePrepareRequest(NodeRequest):
     """
-        TODO: PWEswImagePrepareRequestV1_0
-    s
-        Response message: TODO:
+    TODO: PWEswImagePrepareRequestV1_0
+
+    Response message: TODO:
     """
 
     ID = b"000B"

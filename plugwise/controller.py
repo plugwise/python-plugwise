@@ -149,7 +149,6 @@ class StickMessageController:
                         _mac,
                         str(MESSAGE_RETRY + 1),
                     )
-                    # TODO: Only if no req in queue for node
                     # Report node as unavailable for missing NodePingRequest
                     if isinstance(self.expected_responses[seq_id][0], NodePingRequest):
                         self.node_state(_mac, False)
@@ -271,8 +270,8 @@ class StickMessageController:
                     del self.expected_responses[b"0000"]
                 self.last_seq_id = seq_id
             else:
-                _LOGGER.warning(
-                    "Unexpected %s%s using seq_id %s",
+                _LOGGER.info(
+                    "Drop unexpected %s%s using seq_id %s",
                     STATUS_RESPONSES.get(ack_response, "") + " ",
                     request,
                     str(seq_id),

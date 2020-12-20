@@ -42,7 +42,6 @@ class NodeSED(PlugwiseNode):
         self._SED_requests = {}
         self.maintenance_interval = SED_MAINTENANCE_INTERVAL
         self._new_maintenance_interval = None
-
         self._wake_up_interval = None
 
     def is_sed(self) -> bool:
