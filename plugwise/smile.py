@@ -901,13 +901,8 @@ class Smile:
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
                     if all(item in key_string for item in ["electricity", "cumulative"]):
-                        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
-                    else:
-                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
-                    if "gas" in measurement:
-                        key_string = f"{measurement}_{log_found}"
-                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
-
+                        attrs[ATTR_UNIT_OF_MEASUREMENT] = ENERGY_KILO_WATT_HOUR
+                    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     # Energy differential
                     if "electricity" in measurement: 
                         diff = 1
@@ -919,6 +914,9 @@ class Smile:
                         direct_data[net_string] = format_measure(
                             str(direct_data[net_string]), attrs[ATTR_UNIT_OF_MEASUREMENT]
                         )
+
+                    if "gas" in measurement:
+                        key_string = f"{measurement}_{log_found}"
 
                     direct_data[key_string] = f_val
 
