@@ -913,7 +913,7 @@ class Smile:
                         if "produced" in measurement:
                             diff = -1
                         if net_string not in direct_data:
-                            direct_data[net_string] = float()
+                            direct_data[net_string] = 0
                         if f_val != 0:
                             if isinstance(f_val, int):
                                 is_int = True
