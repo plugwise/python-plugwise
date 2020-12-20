@@ -906,7 +906,7 @@ class Smile:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
-                        f_val = float(f"{round(float(val), 3):.3f}")
+                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
 
                     # Energy differential
                     if "electricity" in measurement: 
@@ -914,8 +914,11 @@ class Smile:
                         if "produced" in measurement:
                             diff = -1
                         if net_string not in direct_data:
-                            direct_data[net_string] = 0
-                        direct_data[net_string] += f_val * diff
+                            direct_data[net_string] = float()
+                        direct_data[net_string] += float(f_val * diff)
+                        direct_data[net_string] = format_measure(
+                            str(direct_data[net_string]), attrs[ATTR_UNIT_OF_MEASUREMENT]
+                        )
 
                     direct_data[key_string] = f_val
 
