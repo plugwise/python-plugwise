@@ -93,7 +93,8 @@ def format_measure(measure, unit):
         measure = int(measure)
     except ValueError:
         if unit == PERCENTAGE and float(measure) > 0:
-            measure = int(float(measure) * 100)
+            return = int(float(measure) * 100)
+
         if unit == ENERGY_KILO_WATT_HOUR:
             measure = float(measure) / 1000
         try:
