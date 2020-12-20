@@ -355,7 +355,7 @@ class TestPlugwise:
                         #        )
                         #    assert measure == measure_assert
                         #else:
-                            assert data[measure_key] == measure_assert
+                        assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
     async def tinker_relay(self, smile, dev_ids=None, members=None, unhappy=False):
