@@ -87,35 +87,25 @@ class PlugwiseParser:
                         self._buffer[4:8], footer_index, self._buffer[8:12]
                     )
                     if self._message:
-                        if len(self._buffer[: footer_index + 2]) == len(self._message):
-                            try:
-                                self._message.deserialize(
-                                    self._buffer[: footer_index + 2]
-                                )
-                            except (
-                                InvalidMessageChecksum,
-                                InvalidMessageFooter,
-                                InvalidMessageHeader,
-                                InvalidMessageLength,
-                            ) as e:
-                                _LOGGER.warning(e)
-                            except Exception as e:
-                                _LOGGER.error(
-                                    "Failed to parse %s message (%s)",
-                                    self._message.__class__.__name__,
-                                    str(self._buffer[: footer_index + 2]),
-                                )
-                                _LOGGER.error(e)
-                            else:
-                                # Submit message
-                                self.next_message(self._message)
-                        else:
+                        try:
+                            self._message.deserialize(self._buffer[: footer_index + 2])
+                        except (
+                            InvalidMessageChecksum,
+                            InvalidMessageFooter,
+                            InvalidMessageHeader,
+                            InvalidMessageLength,
+                        ) as e:
+                            _LOGGER.warning(e)
+                        except Exception as e:
                             _LOGGER.error(
-                                "Skip message, received %s bytes of expected %s bytes for message %s",
-                                len(self._buffer[: footer_index + 2]),
-                                len(self._message),
+                                "Failed to parse %s message (%s)",
                                 self._message.__class__.__name__,
+                                str(self._buffer[: footer_index + 2]),
                             )
+                            _LOGGER.error(e)
+                        else:
+                            # Submit message
+                            self.next_message(self._message)
                         # Parse remaining buffer
                         self.reset_parser(self._buffer[footer_index + 2 :])
                     else:
