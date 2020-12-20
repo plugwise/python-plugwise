@@ -159,11 +159,18 @@ class StickMessageController:
                         )
                         self.send(NodePingRequest(_mac))
                 else:
-                    _LOGGER.warning(
-                        "Drop single %s to %s ",
-                        _request,
-                        _mac,
-                    )
+                    if isinstance(self.expected_responses[seq_id][0], NodePingRequest):
+                        _LOGGER.info(
+                            "Drop single %s to %s ",
+                            _request,
+                            _mac,
+                        )
+                    else:
+                        _LOGGER.warning(
+                            "Drop single %s to %s ",
+                            _request,
+                            _mac,
+                        )
             del self.expected_responses[seq_id]
 
     def _send_message_loop(self):
