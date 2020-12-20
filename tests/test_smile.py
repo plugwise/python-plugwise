@@ -330,27 +330,7 @@ class TestPlugwise:
                                 measure_key, measure_assert
                             ),
                         )
-                        if isinstance(data[measure_key], float):
-                            if all(
-                                item in measure_key
-                                for item in ["electricity", "cumulative"]
-                            ):
-                                measure = float(
-                                    "{:.1f}".format(
-                                        round(float(data[measure_key]) / 1000, 1)
-                                    )
-                                )
-                            elif float(data[measure_key]) < 10:
-                                measure = float(
-                                    "{:.2f}".format(round(float(data[measure_key]), 2))
-                                )
-                            else:
-                                measure = float(
-                                    "{:.1f}".format(round(float(data[measure_key]), 1))
-                                )
-                            assert measure == measure_assert
-                        else:
-                            assert data[measure_key] == measure_assert
+                        assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
     async def tinker_relay(self, smile, dev_ids=None, members=None, unhappy=False):
@@ -571,9 +551,9 @@ class TestPlugwise:
             "938696c4bcdb4b8a9a595cb38ed43913": {
                 "electricity_consumed_peak_point": 458.0,
                 "net_electricity_point": 458.0,
-                "gas_consumed_cumulative": 584.4,
-                "electricity_produced_peak_cumulative": 1296.1,
-                "electricity_produced_off_peak_cumulative": 482.6,
+                "gas_consumed_cumulative": 584.433,
+                "electricity_produced_peak_cumulative": 1296.136,
+                "electricity_produced_off_peak_cumulative": 482.598,
             }
         }
 
@@ -608,7 +588,7 @@ class TestPlugwise:
             "199aa40f126840f392983d171374ab0b": {
                 "electricity_consumed_peak_point": 368.0,
                 "net_electricity_point": 368.0,
-                "gas_consumed_cumulative": 2638.0,
+                "gas_consumed_cumulative": 2637.993,
                 "electricity_produced_peak_cumulative": 0.0,
             }
         }
@@ -1146,7 +1126,7 @@ class TestPlugwise:
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 650.0,
                 "electricity_produced_peak_cumulative": 0.0,
-                "electricity_consumed_off_peak_cumulative": 10263.2,
+                "electricity_consumed_off_peak_cumulative": 10263.159,
             }
         }
 
@@ -1178,7 +1158,7 @@ class TestPlugwise:
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 644.0,
                 "electricity_produced_peak_cumulative": 20.0,
-                "electricity_consumed_off_peak_cumulative": 10263.2,
+                "electricity_consumed_off_peak_cumulative": 10263.159,
                 "net_electricity_point": 244,
             }
         }
@@ -1211,11 +1191,11 @@ class TestPlugwise:
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
                 "electricity_consumed_peak_point": 0.0,
-                "electricity_produced_peak_cumulative": 396.6,
-                "electricity_consumed_off_peak_cumulative": 551.1,
-                "electricity_produced_peak_point": 2761.0,
-                "net_electricity_point": -2761.0,
-                "gas_consumed_cumulative": 584.9,
+                "electricity_produced_peak_cumulative": 396.559,
+                "electricity_consumed_off_peak_cumulative": 551.09,
+                "electricity_produced_peak_point": 2761,
+                "net_electricity_point": -2761,
+                "gas_consumed_cumulative": 584.85,
             }
         }
 
