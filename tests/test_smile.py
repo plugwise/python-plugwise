@@ -335,26 +335,26 @@ class TestPlugwise:
                                 measure_key, measure_assert
                             ),
                         )
-                        if isinstance(data[measure_key], float):
-                            if all(
-                                item in measure_key
-                                for item in ["electricity", "cumulative"]
-                            ):
-                                measure = float(
-                                    "{:.1f}".format(
-                                        round(float(data[measure_key]) / 1000, 1)
-                                    )
-                                )
-                            elif float(data[measure_key]) < 10:
-                                measure = float(
-                                    "{:.2f}".format(round(float(data[measure_key]), 2))
-                                )
-                            else:
-                                measure = float(
-                                    "{:.1f}".format(round(float(data[measure_key]), 1))
-                                )
-                            assert measure == measure_assert
-                        else:
+                        #if isinstance(data[measure_key], float):
+                        #    if all(
+                        #        item in measure_key
+                        #        for item in ["electricity", "cumulative"]
+                        #    ):
+                        #        measure = float(
+                        #            "{:.1f}".format(
+                        #                round(float(data[measure_key]) / 1000, 1)
+                        #            )
+                        #        )
+                        #    elif float(data[measure_key]) < 10:
+                        #        measure = float(
+                        #            "{:.2f}".format(round(float(data[measure_key]), 2))
+                        #        )
+                        #    else:
+                        #        measure = float(
+                        #            "{:.1f}".format(round(float(data[measure_key]), 1))
+                        #        )
+                        #    assert measure == measure_assert
+                        #else:
                             assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
