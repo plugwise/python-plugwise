@@ -908,9 +908,8 @@ class Smile:
                         key_string = f"{measurement}_{log_found}"
                         f_val = float(f"{round(float(val), 3):.3f}")
 
-                    # Energy differential ####CONTINUE WITH THIS, THIS OVERWRITES THE PREVIOUS RESULT FVAL#######
+                    # Energy differential
                     if "electricity" in measurement: 
-                        f_val = float(f"{round(float(val), 1):.1f}")
                         diff = 1
                         if "produced" in measurement:
                             diff = -1
