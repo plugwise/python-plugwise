@@ -16,6 +16,7 @@ from constants import (
     LOGADDR_OFFSET,
     PERCENTAGE,
     PLUGWISE_EPOCH,
+    POWER_WATT,
     UTF8_DECODE,
     VOLUME_CUBIC_METERS,
 )
@@ -95,6 +96,8 @@ def format_measure(measure, unit):
         try:
             if unit in SPECIAL_FORMAT:
                 measure = float(f"{round(float(measure), 3):.3f}")
+            elif: unit == POWER_WATT and float(measure) > 0:
+                measure = int(round(float(measure)))
             else:
                 if abs(float(measure)) < 10:
                     measure = float(f"{round(float(measure), 2):.2f}")
