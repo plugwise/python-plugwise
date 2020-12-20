@@ -39,7 +39,10 @@ def version_to_model(version):
     model = HW_MODELS.get(version[4:10], None)
     if model is None:
         # Try again with reversed order
-        model = HW_MODELS.get(version[-2:] + version[-4:-2] + version[-6:-4], None,)
+        model = HW_MODELS.get(
+            version[-2:] + version[-4:-2] + version[-6:-4],
+            None,
+        )
     return model if model is not None else "Unknown"
 
 
@@ -291,7 +294,9 @@ class RealClockTime(CompositeType):
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
         self.value = datetime.time(
-            int(self.hour.value), int(self.minute.value), int(self.second.value),
+            int(self.hour.value),
+            int(self.minute.value),
+            int(self.second.value),
         )
 
 

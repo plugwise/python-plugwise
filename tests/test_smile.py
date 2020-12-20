@@ -17,8 +17,8 @@ import jsonpickle as json
 import pytest
 
 import sys, os.path
-pw_dir = (os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-+ '/plugwise/')
+
+pw_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..")) + "/plugwise/"
 sys.path.append(pw_dir)
 
 from exceptions import (

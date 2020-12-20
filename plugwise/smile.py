@@ -905,10 +905,12 @@ class Smile:
                         f_val = int(round(float(val)))
                     else:
                         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
-                    if all(item in key_string for item in ["electricity", "cumulative"]):
-                        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR) 
+                    if all(
+                        item in key_string for item in ["electricity", "cumulative"]
+                    ):
+                        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
                     # Energy differential
-                    if "electricity" in measurement: 
+                    if "electricity" in measurement:
                         diff = 1
                         if "produced" in measurement:
                             diff = -1
@@ -917,11 +919,15 @@ class Smile:
                         if f_val != 0:
                             if isinstance(f_val, int):
                                 is_int = True
-                                direct_data[net_string] += int(round(float(f_val * diff)))
+                                direct_data[net_string] += int(
+                                    round(float(f_val * diff))
+                                )
                             else:
                                 is_int = False
                                 direct_data[net_string] += float(f_val * diff)
-                            _LOGGER.debug(f"{f_val}: int={is_int}, {net_string}: {direct_data[net_string]}")
+                            _LOGGER.debug(
+                                f"{f_val}: int={is_int}, {net_string}: {direct_data[net_string]}"
+                            )
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
