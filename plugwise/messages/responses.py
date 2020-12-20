@@ -7,7 +7,12 @@ from plugwise.constants import (
     MESSAGE_LARGE,
     MESSAGE_SMALL,
 )
-from plugwise.exceptions import ProtocolError
+from plugwise.exceptions import (
+    InvalidMessageChecksum,
+    InvalidMessageFooter,
+    InvalidMessageHeader,
+    InvalidMessageLength,
+)
 from plugwise.messages import PlugwiseMessage
 from plugwise.util import (
     DateTime,
@@ -31,7 +36,6 @@ class NodeResponse(PlugwiseMessage):
         super().__init__()
         self.format_size = format_size
         self.params = []
-        self.mac = None
         self.timestamp = None
         self.seq_id = None
         self.msg_id = None
@@ -45,13 +49,36 @@ class NodeResponse(PlugwiseMessage):
 
     def deserialize(self, response):
         self.timestamp = datetime.now()
-        if len(response) != len(self):
-            raise ProtocolError(
-                "message doesn't have expected length, expected %d bytes got %d"
-                % (len(self), len(response))
+        _msg_length = len(response)
+        if _msg_length != len(self):
+            raise InvalidMessageLength(
+                "Invalid message length received for %s, expected %s bytes got %s",
+                self.__class__.__name__,
+                str(len(self)),
+                str(_msg_length),
             )
         if response[:4] != MESSAGE_HEADER:
-            raise ProtocolError("Invalid message header")
+            raise InvalidMessageHeader(
+                "Invalid message header %s for %s",
+                str(response[:4]),
+                self.__class__.__name__,
+            )
+        if response[_msg_length - 2 :] != MESSAGE_FOOTER:
+            raise InvalidMessageFooter(
+                "Invalid message footer %s for %s",
+                str(response[_msg_length - 2 :]),
+                self.__class__.__name__,
+            )
+        _calculated_checksum = self.calculate_checksum(response[4 : _msg_length - 6])
+        _message_checksum = response[_msg_length - 6 : _msg_length - 2]
+        if _calculated_checksum != _message_checksum:
+            raise InvalidMessageChecksum(
+                "Invalid checksum for %s, expected %s got %s",
+                self.__class__.__name__,
+                str(_calculated_checksum),
+                str(_message_checksum),
+            )
+
         self.msg_id = response[4:8]
         self.seq_id = response[8:12]
         response = response[12:]
@@ -61,13 +88,13 @@ class NodeResponse(PlugwiseMessage):
         if self.format_size != MESSAGE_SMALL:
             self.mac = response[:16]
             response = response[16:]
-
         response = self._parse_params(response)
-        # TODO: unused crc
-        # crc = response[:4]
 
-        if response[4:] != MESSAGE_FOOTER:
-            raise ProtocolError("Invalid message footer")
+        _args = b"".join(a.serialize() for a in self.args)
+        msg = self.ID
+        if self.mac != "":
+            msg += self.mac
+        msg += _args
 
     def _parse_params(self, response):
         for p in self.params:

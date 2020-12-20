@@ -24,8 +24,20 @@ class CirclePlusError(PlugwiseException):
     """Connection to Circle+ node failed"""
 
 
-class ProtocolError(PlugwiseException):
-    """Error while decode received data"""
+class InvalidMessageLength(PlugwiseException):
+    """Invalid message length"""
+
+
+class InvalidMessageHeader(PlugwiseException):
+    """Invalid message header"""
+
+
+class InvalidMessageFooter(PlugwiseException):
+    """Invalid message footer"""
+
+
+class InvalidMessageChecksum(PlugwiseException):
+    """Invalid data checksum"""
 
 
 class TimeoutException(PlugwiseException):

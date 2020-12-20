@@ -3,6 +3,12 @@
 import logging
 
 from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
+from plugwise.exceptions import (
+    InvalidMessageChecksum,
+    InvalidMessageFooter,
+    InvalidMessageHeader,
+    InvalidMessageLength,
+)
 from plugwise.messages.responses import get_message_response
 
 _LOGGER = logging.getLogger(__name__)
@@ -86,9 +92,16 @@ class PlugwiseParser:
                                 self._message.deserialize(
                                     self._buffer[: footer_index + 2]
                                 )
+                            except (
+                                InvalidMessageChecksum,
+                                InvalidMessageFooter,
+                                InvalidMessageHeader,
+                                InvalidMessageLength,
+                            ) as e:
+                                _LOGGER.warning(e)
                             except Exception as e:
                                 _LOGGER.error(
-                                    "Error while decoding %s message (%s)",
+                                    "Failed to parse %s message (%s)",
                                     self._message.__class__.__name__,
                                     str(self._buffer[: footer_index + 2]),
                                 )
