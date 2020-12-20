@@ -94,9 +94,9 @@ def format_measure(measure, unit):
         if unit == ENERGY_KILO_WATT_HOUR:
             measure = float(measure) / 1000
         try:
-            if float(abs(measure) < 10:
+            if float(abs(measure)) < 10:
                 measure = float(f"{round(float(measure), 2):.2f}")
-            elif float(abs(measure) >= 10 and float(abs(measure)) < 100:
+            elif float(abs(measure)) >= 10 and float(abs(measure)) < 100:
                 measure = float(f"{round(float(measure), 1):.1f}")
             elif float(abs(measure)) >= 100:
                 measure = int(round(float(measure)))
