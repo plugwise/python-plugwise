@@ -94,7 +94,7 @@ def format_measure(measure, unit):
             measure = float(measure) / 1000
         try:
             if unit in SPECIAL_FORMAT:
-                measure = float(f"{round(float(val), 3):.3f}")
+                measure = float(f"{round(float(measure), 3):.3f}")
             else:
                 if abs(float(measure)) < 10:
                     measure = float(f"{round(float(measure), 2):.2f}")
