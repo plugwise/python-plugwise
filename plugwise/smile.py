@@ -5,6 +5,15 @@ import logging
 
 import aiohttp
 import async_timeout
+from dateutil.parser import parse
+from defusedxml import ElementTree as etree
+
+# Time related
+import pytz
+
+# Version detection
+import semver
+
 from .constants import (
     APPLIANCES,
     ATTR_NAME,
@@ -28,8 +37,6 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
 )
-from dateutil.parser import parse
-from defusedxml import ElementTree as etree
 from .exceptions import (
     ConnectionFailedError,
     DeviceSetupError,
@@ -40,12 +47,6 @@ from .exceptions import (
     UnsupportedDeviceError,
     XMLDataMissingError,
 )
-
-# Time related
-import pytz
-
-# Version detection
-import semver
 from .util import (
     determine_selected,
     escape_illegal_xml_characters,
