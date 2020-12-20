@@ -914,8 +914,8 @@ class Smile:
                         if "produced" in measurement:
                             diff = -1
                         if net_string not in direct_data:
-                            direct_data[net_string] = float()
-                        direct_data[net_string] += float(f_val * diff)
+                            direct_data[net_string] = 0
+                        direct_data[net_string] += f_val * diff
 
                     direct_data[key_string] = f_val
 
