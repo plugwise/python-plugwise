@@ -919,6 +919,7 @@ class Smile:
                                 direct_data[net_string] += int(round(float(f_val * diff)))
                             else:
                                 direct_data[net_string] += float(f_val * diff)
+                        _LOGGER.debug(f"{f_val}, {net_string}: {direct_data[net_string]}")
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
