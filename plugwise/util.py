@@ -86,6 +86,7 @@ def escape_illegal_xml_characters(xmldata):
 
 def format_measure(measure, unit):
     """Format measure to correct type."""
+    SPECIAL_FORMAT = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
     try:
         measure = int(measure)
     except ValueError:
@@ -94,12 +95,15 @@ def format_measure(measure, unit):
         if unit == ENERGY_KILO_WATT_HOUR:
             measure = float(measure) / 1000
         try:
-            if abs(float(measure)) < 10:
-                measure = float(f"{round(float(measure), 2):.2f}")
-            elif abs(float(measure)) >= 10 and abs(float(measure)) < 100:
-                measure = float(f"{round(float(measure), 1):.1f}")
-            elif abs(float(measure)) >= 100:
-                measure = int(round(float(measure)))
+            if unit in SPECIAL_FORMAT:
+                measure = float(f"{round(float(val), 3):.3f}")
+            else:
+                if abs(float(measure)) < 10:
+                    measure = float(f"{round(float(measure), 2):.2f}")
+                elif abs(float(measure)) >= 10 and abs(float(measure)) < 100:
+                    measure = float(f"{round(float(measure), 1):.1f}")
+                elif abs(float(measure)) >= 100:
+                    measure = int(round(float(measure)))
         except ValueError:
             if measure == "on":
                 measure = True
