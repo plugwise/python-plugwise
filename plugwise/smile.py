@@ -914,10 +914,11 @@ class Smile:
                             diff = -1
                         if net_string not in direct_data:
                             direct_data[net_string] = float()
-                        if isinstance(f_val, int):
-                            direct_data[net_string] += int(float(f_val * diff))
-                        else:
-                            direct_data[net_string] += float(f_val * diff)
+                        if f_val != 0:
+                            if isinstance(f_val, int):
+                                direct_data[net_string] += int(round(float(f_val * diff)))
+                            else:
+                                direct_data[net_string] += float(f_val * diff)
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
