@@ -32,7 +32,7 @@ class NodeResponse(PlugwiseMessage):
         self.format_size = format_size
         self.params = []
         self.mac = None
-        self.timestamp = datetime.now()
+        self.timestamp = None
         self.seq_id = None
         self.msg_id = None
         self.ack_id = None
@@ -44,6 +44,7 @@ class NodeResponse(PlugwiseMessage):
             self.len_correction = 0
 
     def deserialize(self, response):
+        self.timestamp = datetime.now()
         if len(response) != len(self):
             raise ProtocolError(
                 "message doesn't have expected length, expected %d bytes got %d"
