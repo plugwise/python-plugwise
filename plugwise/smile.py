@@ -31,6 +31,7 @@ from constants import (
     LOCATIONS,
     MODULES,
     NOTIFICATIONS,
+    POWER_WATT,
     RULES,
     SMILES,
     STATUS,
@@ -902,7 +903,10 @@ class Smile:
                     val = loc_logs.find(locator).text
                     if all(item in key_string for item in ["electricity", "cumulative"]):
                         attrs[ATTR_UNIT_OF_MEASUREMENT] = ENERGY_KILO_WATT_HOUR
-                    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+                    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
+                        f_val = int(round(float(val)))
+                    else:
+                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     # Energy differential
                     if "electricity" in measurement: 
                         diff = 1
