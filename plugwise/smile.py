@@ -911,9 +911,9 @@ class Smile:
                         if net_string not in direct_data:
                             direct_data[net_string] = float()
                         direct_data[net_string] += float(f_val * diff)
-                        direct_data[net_string] = format_measure(
-                            str(direct_data[net_string]), attrs[ATTR_UNIT_OF_MEASUREMENT]
-                        )
+                        #direct_data[net_string] = format_measure(
+                        #    str(direct_data[net_string]), attrs[ATTR_UNIT_OF_MEASUREMENT]
+                        #)
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
