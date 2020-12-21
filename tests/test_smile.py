@@ -829,9 +829,9 @@ class TestPlugwise:
     # Actual test for directory 'Adam'
     # living room floor radiator valve and separate zone thermostat
     # an three rooms with conventional radiators
-    
-    #@pytest.mark.asyncio
-    #async def test_connect_adam(self):
+
+    # @pytest.mark.asyncio
+    # async def test_connect_adam(self):
     #    testdata = {
     #        "95395fb15c814a1f8bba88363e4a5833": { "temperature": 19.8, 'active_preset': 'home',},
     #        "450d49ef2e8942f78c1242cdd8dfecd0": { "temperature": 20.18, 'battery':  0.77, 'selected_schedule': 'Kira' },
