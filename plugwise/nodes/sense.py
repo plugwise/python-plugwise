@@ -41,7 +41,8 @@ class PlugwiseSense(NodeSED):
         """Return the current temperature."""
         return self._temperature
 
-    def get_humidity(self) -> int:
+    @property
+    def humidity(self) -> int:
         """Return the current humidity."""
         return self._humidity
 
@@ -94,3 +95,10 @@ class PlugwiseSense(NodeSED):
             "Function 'get_temperature' will be removed in future, use the 'temperature' property instead !",
         )
         return self._temperature
+
+    def get_humidity(self) -> int:
+        """Return the current humidity."""
+        _LOGGER.warning(
+            "Function 'get_humidity' will be removed in future, use the 'humidity' property instead !",
+        )
+        return self._humidity
