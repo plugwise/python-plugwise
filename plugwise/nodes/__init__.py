@@ -40,7 +40,7 @@ class PlugwiseNode:
         self.switches = ()
         self._address = address
         self._callbacks = {}
-        self.last_update = None
+        self._last_update = None
         self._available = False
         self.in_RSSI = None
         self.out_RSSI = None
@@ -108,6 +108,11 @@ class PlugwiseNode:
                     self.get_mac(),
                 )
                 self.do_callback(SENSOR_AVAILABLE["id"])
+
+    @property
+    def last_update(self) -> datetime:
+        """Return datetime of last received update."""
+        return self._last_update
 
     def get_node_type(self) -> str:
         """Return hardware model."""
@@ -193,7 +198,11 @@ class PlugwiseNode:
 
     def get_last_update(self) -> datetime:
         """Return  version."""
-        return self.last_update
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_last_update' will be removed in future, use the 'last_update' property instead !",
+        )
+        return self._last_update
 
     def get_in_RSSI(self) -> int:
         """Return inbound RSSI level."""
@@ -241,12 +250,12 @@ class PlugwiseNode:
         if message.mac == self._mac:
             if message.timestamp is not None:
                 _LOGGER.debug(
-                    "Last update %s of node %s, last message %s",
-                    str(self.last_update),
+                    "Previous update %s of node %s, last message %s",
+                    str(self._last_update),
                     self.get_mac(),
                     str(message.timestamp),
                 )
-                self.last_update = message.timestamp
+                self._last_update = message.timestamp
             if not self._available:
                 self.available = True
                 self.request_info()

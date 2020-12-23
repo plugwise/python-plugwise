@@ -155,7 +155,7 @@ class PlugwiseCircle(PlugwiseNode):
                 _LOGGER.debug(
                     "Power update for %s, last update %s",
                     self.get_mac(),
-                    str(self.last_update),
+                    str(self._last_update),
                 )
             else:
                 _LOGGER.info(
