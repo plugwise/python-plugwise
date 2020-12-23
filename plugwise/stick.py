@@ -399,7 +399,7 @@ class stick:
         elif isinstance(message, StickInitResponse):
             self._process_stick_init_response(message)
         elif isinstance(message, NodeJoinAvailableResponse):
-            self._process_node_join_request(message)
+            self._process_node_join_request(message, mac)
         elif isinstance(message, NodeRemoveResponse):
             self._process_node_remove(message)
         else:
