@@ -254,7 +254,7 @@ SENSOR_POWER_USE = {
 SENSOR_POWER_USE_LAST_8_SEC = {
     "id": "power_8s",
     "name": "Power usage 8 seconds",
-    "state": "get_power_usage_8_sec",
+    "state": "current_power_usage_8_sec",
     "unit": POWER_WATT,
 }
 SENSOR_POWER_CONSUMPTION_CURRENT_HOUR = {

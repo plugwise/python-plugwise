@@ -67,7 +67,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now()
         self._pulses_1s = None
-        self.pulses_8s = None
+        self._pulses_8s = None
         self.pulses_consumed_1h = None
         self.pulses_produced_1h = None
         self.calibration = False
@@ -117,6 +117,16 @@ class PlugwiseCircle(PlugwiseNode):
         """
         if self._pulses_1s is not None:
             return self.pulses_to_kWs(self._pulses_1s) * 1000
+        return None
+
+    @property
+    def current_power_usage_8_sec(self):
+        """
+        Returns power usage during the last 8 second in Watts
+        Based on last received power usage information
+        """
+        if self._pulses_8s is not None:
+            return self.pulses_to_kWs(self._pulses_8s, 8) * 1000
         return None
 
     def _request_calibration(self, callback=None):
@@ -226,8 +236,12 @@ class PlugwiseCircle(PlugwiseNode):
         Returns power usage during the last 8 second in Watts
         Based on last received power usage information
         """
-        if self.pulses_8s is not None:
-            return self.pulses_to_kWs(self.pulses_8s, 8) * 1000
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_power_usage_8_sec' will be removed in future, use the 'current_power_usage_8_sec' property instead !",
+        )
+        if self._pulses_8s is not None:
+            return self.pulses_to_kWs(self._pulses_8s, 8) * 1000
         return None
 
     def get_power_consumption_current_hour(self):
@@ -326,9 +340,9 @@ class PlugwiseCircle(PlugwiseNode):
                 ) / 1000000000
             else:
                 pulses_8s = message.pulse_8s.value
-            self.pulses_8s = pulses_8s
+            self._pulses_8s = pulses_8s
         else:
-            self.pulses_8s = 0
+            self._pulses_8s = 0
         self.do_callback(SENSOR_POWER_USE_LAST_8_SEC["id"])
         # Power consumption current hour
         if message.pulse_hour_consumed.value == -1:
