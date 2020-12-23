@@ -316,7 +316,7 @@ SENSOR_RSSI_IN = {
 SENSOR_RSSI_OUT = {
     "id": "RSSI_out",
     "name": "RSSI out",
-    "state": "get_rssi_out",
+    "state": "rssi_out",
     "unit": "Unknown",
 }
 
