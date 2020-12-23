@@ -69,7 +69,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._pulses_1s = None
         self._pulses_8s = None
         self._pulses_consumed_1h = None
-        self.pulses_produced_1h = None
+        self._pulses_produced_1h = None
         self.calibration = False
         self._gain_a = None
         self._gain_b = None
@@ -137,6 +137,16 @@ class PlugwiseCircle(PlugwiseNode):
         """
         if self._pulses_consumed_1h is not None:
             return self.pulses_to_kWs(self._pulses_consumed_1h, 3600)
+        return None
+
+    @property
+    def power_production_current_hour(self):
+        """
+        Returns the power production during this running hour in kWh
+        Based on last received power usage information
+        """
+        if self._pulses_produced_1h is not None:
+            return self.pulses_to_kWs(self._pulses_produced_1h, 3600)
         return None
 
     def _request_calibration(self, callback=None):
@@ -272,8 +282,12 @@ class PlugwiseCircle(PlugwiseNode):
         Returns the power production during this running hour in kWh
         Based on last received power usage information
         """
-        if self.pulses_produced_1h is not None:
-            return self.pulses_to_kWs(self.pulses_produced_1h, 3600)
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_power_production_current_hour' will be removed in future, use the 'power_production_current_hour' property instead !",
+        )
+        if self._pulses_produced_1h is not None:
+            return self.pulses_to_kWs(self._pulses_produced_1h, 3600)
         return None
 
     def get_power_consumption_prev_hour(self):
@@ -375,8 +389,8 @@ class PlugwiseCircle(PlugwiseNode):
                 "1 hour power production pulse counter for node %s has value of -1, corrected to 0",
                 self.get_mac(),
             )
-        if self.pulses_produced_1h != message.pulse_hour_produced.value:
-            self.pulses_produced_1h = message.pulse_hour_produced.value
+        if self._pulses_produced_1h != message.pulse_hour_produced.value:
+            self._pulses_produced_1h = message.pulse_hour_produced.value
             self.do_callback(SENSOR_POWER_PRODUCTION_CURRENT_HOUR["id"])
 
     def _response_calibration(self, message):
