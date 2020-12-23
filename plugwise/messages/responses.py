@@ -1,12 +1,7 @@
 """All known response messages to be received from plugwise devices."""
 from datetime import datetime
 
-from ..constants import (
-    MESSAGE_FOOTER,
-    MESSAGE_HEADER,
-    MESSAGE_LARGE,
-    MESSAGE_SMALL,
-)
+from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER, MESSAGE_LARGE, MESSAGE_SMALL
 from ..exceptions import (
     InvalidMessageChecksum,
     InvalidMessageFooter,

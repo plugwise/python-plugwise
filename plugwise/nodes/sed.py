@@ -23,11 +23,7 @@ from ..constants import (
     SENSOR_RSSI_OUT,
     SLEEP_SET,
 )
-from ..messages.requests import (
-    NodeInfoRequest,
-    NodePingRequest,
-    NodeSleepConfigRequest,
-)
+from ..messages.requests import NodeInfoRequest, NodePingRequest, NodeSleepConfigRequest
 from ..messages.responses import NodeAckLargeResponse, NodeAwakeResponse
 from ..nodes import PlugwiseNode
 

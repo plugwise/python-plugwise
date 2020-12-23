@@ -8,10 +8,7 @@ from ..messages.requests import (
     CirclePlusRealTimeClockSetRequest,
     CirclePlusScanRequest,
 )
-from ..messages.responses import (
-    CirclePlusRealTimeClockResponse,
-    CirclePlusScanResponse,
-)
+from ..messages.responses import CirclePlusRealTimeClockResponse, CirclePlusScanResponse
 from ..nodes.circle import PlugwiseCircle
 
 _LOGGER = logging.getLogger(__name__)

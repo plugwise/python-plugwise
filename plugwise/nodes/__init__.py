@@ -10,11 +10,7 @@ from ..constants import (
     SWITCH_RELAY,
     UTF8_DECODE,
 )
-from ..messages.requests import (
-    NodeFeaturesRequest,
-    NodeInfoRequest,
-    NodePingRequest,
-)
+from ..messages.requests import NodeFeaturesRequest, NodeInfoRequest, NodePingRequest
 from ..messages.responses import (
     NodeFeaturesResponse,
     NodeInfoResponse,
