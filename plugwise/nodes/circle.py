@@ -206,13 +206,13 @@ class PlugwiseCircle(PlugwiseNode):
                 self._response_power_usage(message)
                 _LOGGER.debug(
                     "Power update for %s, last update %s",
-                    self.get_mac(),
+                    self.mac,
                     str(self._last_update),
                 )
             else:
                 _LOGGER.info(
                     "Received power update for %s before calibration information is known",
-                    self.get_mac(),
+                    self.mac,
                 )
                 self._request_calibration(self.update_power_usage)
         elif isinstance(message, NodeAckLargeResponse):
@@ -225,7 +225,7 @@ class PlugwiseCircle(PlugwiseNode):
             else:
                 _LOGGER.debug(
                     "Received power buffer log for %s before calibration information is known",
-                    self.get_mac(),
+                    self.mac,
                 )
                 self._request_calibration(self.request_power_buffer)
         elif isinstance(message, CircleClockResponse):
@@ -335,7 +335,7 @@ class PlugwiseCircle(PlugwiseNode):
             if not self._relay_state:
                 _LOGGER.debug(
                     "Switch relay on for %s",
-                    self.get_mac(),
+                    self.mac,
                 )
                 self._relay_state = True
                 self.do_callback(SWITCH_RELAY["id"])
@@ -343,7 +343,7 @@ class PlugwiseCircle(PlugwiseNode):
             if self._relay_state:
                 _LOGGER.debug(
                     "Switch relay off for %s",
-                    self.get_mac(),
+                    self.mac,
                 )
                 self._relay_state = False
                 self.do_callback(SWITCH_RELAY["id"])
@@ -351,7 +351,7 @@ class PlugwiseCircle(PlugwiseNode):
             _LOGGER.debug(
                 "Unmanaged _node_ack_response %s received for %s",
                 str(message.ack_id),
-                self.get_mac(),
+                self.mac,
             )
 
     def _response_power_usage(self, message):
@@ -365,7 +365,7 @@ class PlugwiseCircle(PlugwiseNode):
             message.pulse_1s.value = 0
             _LOGGER.debug(
                 "1 sec power pulse counter for node %s has value of -1, corrected to 0",
-                self.get_mac(),
+                self.mac,
             )
         self._pulses_1s = message.pulse_1s.value
         if message.pulse_1s.value != 0:
@@ -385,7 +385,7 @@ class PlugwiseCircle(PlugwiseNode):
             message.pulse_8s.value = 0
             _LOGGER.debug(
                 "8 sec power pulse counter for node %s has value of -1, corrected to 0",
-                self.get_mac(),
+                self.mac,
             )
         if message.pulse_8s.value != 0:
             if message.nanosecond_offset.value != 0:
@@ -404,7 +404,7 @@ class PlugwiseCircle(PlugwiseNode):
             message.pulse_hour_consumed.value = 0
             _LOGGER.debug(
                 "1 hour consumption power pulse counter for node %s has value of -1, corrected to 0",
-                self.get_mac(),
+                self.mac,
             )
         if self._pulses_consumed_1h != message.pulse_hour_consumed.value:
             self._pulses_consumed_1h = message.pulse_hour_consumed.value
@@ -414,7 +414,7 @@ class PlugwiseCircle(PlugwiseNode):
             message.pulse_hour_produced.value = 0
             _LOGGER.debug(
                 "1 hour power production pulse counter for node %s has value of -1, corrected to 0",
-                self.get_mac(),
+                self.mac,
             )
         if self._pulses_produced_1h != message.pulse_hour_produced.value:
             self._pulses_produced_1h = message.pulse_hour_produced.value
@@ -541,7 +541,7 @@ class PlugwiseCircle(PlugwiseNode):
             self._clock_offset = clock_offset.seconds
         _LOGGER.debug(
             "Clock of node %s has drifted %s sec",
-            self.get_mac(),
+            self.mac,
             str(self._clock_offset),
         )
 
@@ -567,7 +567,7 @@ class PlugwiseCircle(PlugwiseNode):
             if (self._clock_offset > max_drift) or (self._clock_offset < -(max_drift)):
                 _LOGGER.info(
                     "Reset clock of node %s because time has drifted %s sec",
-                    self.get_mac(),
+                    self.mac,
                     str(self._clock_offset),
                 )
                 self.set_clock()

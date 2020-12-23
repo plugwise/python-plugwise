@@ -37,7 +37,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             _LOGGER.waning(
                 "Unsupported message type '%s' received from circle with mac %s",
                 str(message.__class__.__name__),
-                self.get_mac(),
+                self.mac,
             )
 
     def scan_for_nodes(self, callback=None):
@@ -112,7 +112,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             self._realtime_clock_offset = realtime_clock_offset.seconds
         _LOGGER.debug(
             "Realtime clock of node %s has drifted %s sec",
-            self.get_mac(),
+            self.mac,
             str(self._clock_offset),
         )
 
@@ -133,7 +133,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             ):
                 _LOGGER.info(
                     "Reset realtime clock of node %s because time has drifted %s sec",
-                    self.get_mac(),
+                    self.mac,
                     str(self._clock_offset),
                 )
                 self.set_real_time_clock()

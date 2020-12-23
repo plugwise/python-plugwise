@@ -99,7 +99,7 @@ class PlugwiseNode:
                 self._available = True
                 _LOGGER.debug(
                     "Mark node %s available",
-                    self.get_mac(),
+                    self.mac,
                 )
                 self.do_callback(SENSOR_AVAILABLE["id"])
         else:
@@ -107,7 +107,7 @@ class PlugwiseNode:
                 self._available = False
                 _LOGGER.debug(
                     "Mark node %s unavailable",
-                    self.get_mac(),
+                    self.mac,
                 )
                 self.do_callback(SENSOR_AVAILABLE["id"])
 
@@ -332,7 +332,7 @@ class PlugwiseNode:
                 _LOGGER.debug(
                     "Previous update %s of node %s, last message %s",
                     str(self._last_update),
-                    self.get_mac(),
+                    self.mac,
                     str(message.timestamp),
                 )
                 self._last_update = message.timestamp
@@ -354,7 +354,7 @@ class PlugwiseNode:
             _LOGGER.debug(
                 "Skip message, mac of node (%s) != mac at message (%s)",
                 message.mac.decode(UTF8_DECODE),
-                self.get_mac(),
+                self.mac,
             )
 
     def message_for_circle(self, message):
@@ -395,7 +395,7 @@ class PlugwiseNode:
         """Process join acknowledge response message"""
         _LOGGER.info(
             "Node %s has (re)joined plugwise network",
-            self.get_mac(),
+            self.mac,
         )
 
     def _process_ping_response(self, message):
@@ -412,7 +412,7 @@ class PlugwiseNode:
 
     def _process_info_response(self, message):
         """Process info response message."""
-        _LOGGER.debug("Response info message for node %s", self.get_mac())
+        _LOGGER.debug("Response info message for node %s", self.mac)
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
                 self._relay_state = True
@@ -436,6 +436,6 @@ class PlugwiseNode:
     def _process_features_response(self, message):
         """Process features message."""
         _LOGGER.info(
-            "Node %s supports features %s", self.get_mac(), str(message.features.value)
+            "Node %s supports features %s", self.mac, str(message.features.value)
         )
         self._features = message.features.value

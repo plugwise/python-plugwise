@@ -54,7 +54,7 @@ class PlugwiseSense(NodeSED):
             _LOGGER.info(
                 "Unsupported message %s received from %s",
                 message.__class__.__name__,
-                self.get_mac(),
+                self.mac,
             )
 
     def _process_sense_report(self, message):
@@ -68,7 +68,7 @@ class PlugwiseSense(NodeSED):
                 self._temperature = new_temperature
                 _LOGGER.debug(
                     "Sense report received from %s with new temperature level of %s",
-                    self.get_mac(),
+                    self.mac,
                     str(self._temperature),
                 )
                 self.do_callback(SENSOR_TEMPERATURE["id"])
@@ -81,7 +81,7 @@ class PlugwiseSense(NodeSED):
                 self._humidity = new_humidity
                 _LOGGER.debug(
                     "Sense report received from %s with new humidity level of %s",
-                    self.get_mac(),
+                    self.mac,
                     str(self._humidity),
                 )
                 self.do_callback(SENSOR_HUMIDITY["id"])

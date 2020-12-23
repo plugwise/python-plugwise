@@ -57,7 +57,7 @@ class PlugwiseScan(NodeSED):
                 "Switch group %s to state %s received from %s",
                 str(message.group.value),
                 str(message.power_state.value),
-                self.get_mac(),
+                self.mac,
             )
             self._process_switch_group(message)
         elif isinstance(message, NodeAckResponse):
@@ -66,7 +66,7 @@ class PlugwiseScan(NodeSED):
             _LOGGER.info(
                 "Unsupported message %s received from %s",
                 message.__class__.__name__,
-                self.get_mac(),
+                self.mac,
             )
 
     def _process_ack_message(self, message):
@@ -79,7 +79,7 @@ class PlugwiseScan(NodeSED):
             _LOGGER.info(
                 "Unsupported ack message %s received for %s",
                 str(message.ack_id),
-                self.get_mac(),
+                self.mac,
             )
 
     def _process_switch_group(self, message):
@@ -98,7 +98,7 @@ class PlugwiseScan(NodeSED):
             _LOGGER.warning(
                 "Unknown power_state (%s) received from %s",
                 str(message.power_state.value),
-                self.get_mac(),
+                self.mac,
             )
 
     def CalibrateLight(self, callback=None):

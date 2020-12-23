@@ -75,7 +75,7 @@ class NodeSED(PlugwiseNode):
         _LOGGER.debug(
             "Awake message type '%s' received from %s",
             str(message.awake_type.value),
-            self.get_mac(),
+            self.mac,
         )
         if (
             message.awake_type.value == SED_AWAKE_MAINTENANCE
@@ -88,18 +88,18 @@ class NodeSED(PlugwiseNode):
                 _LOGGER.info(
                     "Send queued %s message to SED node %s",
                     request_message.__class__.__name__,
-                    self.get_mac(),
+                    self.mac,
                 )
                 self.message_sender(request_message, callback, -1)
             self._SED_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:
-                _LOGGER.debug("Node %s awake for state change", self.get_mac())
+                _LOGGER.debug("Node %s awake for state change", self.mac)
             else:
                 _LOGGER.info(
                     "Unknown awake message type (%s) received for node %s",
                     str(message.awake_type.value),
-                    self.get_mac(),
+                    self.mac,
                 )
 
     def _queue_request(self, request_message, callback=None):
@@ -131,7 +131,7 @@ class NodeSED(PlugwiseNode):
         else:
             _LOGGER.debug(
                 "Drop ping request for SED %s because no callback is registered",
-                self.get_mac(),
+                self.mac,
             )
 
     def _wake_up_interval_accepted(self):
@@ -160,5 +160,5 @@ class NodeSED(PlugwiseNode):
         _LOGGER.info(
             "Queue %s message to be send at next awake of SED node %s",
             message.__class__.__name__,
-            self.get_mac(),
+            self.mac,
         )

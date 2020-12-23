@@ -28,7 +28,7 @@ class PlugwiseSwitch(NodeSED):
             _LOGGER.debug(
                 "Switch group request %s received from %s for group id %s",
                 str(message.power_state),
-                self.get_mac(),
+                self.mac,
                 str(message.group),
             )
             self._process_switch_group(message)
@@ -49,5 +49,5 @@ class PlugwiseSwitch(NodeSED):
             _LOGGER.debug(
                 "Unknown power_state (%s) received from %s",
                 str(message.power_state),
-                self.get_mac(),
+                self.mac,
             )
