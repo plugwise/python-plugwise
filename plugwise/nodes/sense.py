@@ -36,7 +36,8 @@ class PlugwiseSense(NodeSED):
         self._temperature = None
         self._humidity = None
 
-    def get_temperature(self) -> int:
+    @property
+    def temperature(self) -> int:
         """Return the current temperature."""
         return self._temperature
 
@@ -85,3 +86,11 @@ class PlugwiseSense(NodeSED):
                     str(self._humidity),
                 )
                 self.do_callback(SENSOR_HUMIDITY["id"])
+
+    ## TODO: All functions below can be removed when HA component is changed to use the property values ##
+    def get_temperature(self) -> int:
+        """Return the current temperature."""
+        _LOGGER.warning(
+            "Function 'get_temperature' will be removed in future, use the 'temperature' property instead !",
+        )
+        return self._temperature
