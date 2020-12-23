@@ -193,9 +193,8 @@ class PlugwiseNode:
             elif isinstance(message, NodeJoinAckResponse):
                 self.set_available(True, True)
             else:
-                self.process_messages_at_circles(message)
-                self.process_messages_at_sed(message)
-                self.set_available(True)
+                self.message_for_circle(message)
+                self.message_for_sed(message)
         else:
             _LOGGER.debug(
                 "Skip message, mac of node (%s) != mac at message (%s)",

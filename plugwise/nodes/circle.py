@@ -155,7 +155,7 @@ class PlugwiseCircle(PlugwiseNode):
         elif isinstance(message, CircleClockResponse):
             self._response_clock(message)
         else:
-            self._circle_plus_message(message)
+            self.message_for_circle_plus(message)
 
     def message_for_circle_plus(self, message):
         """Pass messages to PlugwiseCirclePlus class"""
