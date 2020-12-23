@@ -260,7 +260,7 @@ SENSOR_POWER_USE_LAST_8_SEC = {
 SENSOR_POWER_CONSUMPTION_CURRENT_HOUR = {
     "id": "power_con_cur_hour",
     "name": "Power consumption current hour",
-    "state": "get_power_consumption_current_hour",
+    "state": "power_consumption_current_hour",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
 SENSOR_POWER_CONSUMPTION_PREVIOUS_HOUR = {
