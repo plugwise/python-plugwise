@@ -44,7 +44,7 @@ class PlugwiseSense(NodeSED):
         """Return the current humidity."""
         return self._humidity
 
-    def _on_SED_message(self, message):
+    def message_for_sense(self, message):
         """
         Process received message
         """
