@@ -607,12 +607,12 @@ class stick:
             while self._run_update_thread:
                 for mac in self._plugwise_nodes:
                     if self._plugwise_nodes[mac]:
-                        # Do ping request for all nodes if listener is registered for sensor
-                        self._plugwise_nodes[mac].do_ping(None, True)
-
                         if self._plugwise_nodes[mac].battery_powered:
                             # Check availability state of SED's
                             self._check_availability_of_seds(mac)
+                        else:
+                            # Do ping request for all non SED's
+                            self._plugwise_nodes[mac]._request_ping(None, True)
 
                         if self._plugwise_nodes[mac].measures_power:
                             # Request current power usage

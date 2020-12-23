@@ -116,7 +116,7 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
-    def do_ping(self, callback=None, sensor=True):
+    def _request_ping(self, callback=None, sensor=True):
         """Ping node"""
         if (
             sensor
