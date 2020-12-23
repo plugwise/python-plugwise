@@ -4,9 +4,8 @@ omit=
     */venv/*
     setup.py
     plugwise/connections/*
-    plugwise/message.py
+    plugwise/controller.py
     plugwise/messages/*
-    plugwise/node.py
     plugwise/nodes/*
     plugwise/parser.py
     plugwise/stick.py
