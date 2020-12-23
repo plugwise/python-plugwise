@@ -59,6 +59,13 @@ class PlugwiseNode:
         return self._mac.decode(UTF8_DECODE)
 
     @property
+    def hardware_model(self) -> str:
+        """Return hardware model."""
+        if self._hardware_version:
+            return version_to_model(self._hardware_version)
+        return None
+
+    @property
     def available(self) -> bool:
         """Current network state of plugwise node."""
         return self._available
@@ -85,6 +92,10 @@ class PlugwiseNode:
 
     def get_node_type(self) -> str:
         """Return hardware model."""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_node_type' will be removed in future, use the 'hardware_model' property instead !",
+        )
         if self._hardware_version:
             return version_to_model(self._hardware_version)
         return None
@@ -296,7 +307,7 @@ class PlugwiseNode:
         self.last_info_message = message.timestamp
         if self._last_log_address != message.last_logaddr.value:
             self._last_log_address = message.last_logaddr.value
-        _LOGGER.debug("Node type        = %s", self.get_node_type())
+        _LOGGER.debug("Node type        = %s", self.hardware_model())
         if not self.is_sed:
             _LOGGER.debug("Relay state      = %s", str(self._relay_state))
         _LOGGER.debug("Hardware version = %s", str(self._hardware_version))
