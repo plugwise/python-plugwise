@@ -26,7 +26,7 @@ class PlugwiseSense(NodeSED):
     def __init__(self, mac, address, message_sender):
         super().__init__(mac, address, message_sender)
         self.categories = (HA_SENSOR, HA_BINARY_SENSOR)
-        self.sensors = (
+        self._sensors = (
             SENSOR_AVAILABLE["id"],
             SENSOR_TEMPERATURE["id"],
             SENSOR_HUMIDITY["id"],

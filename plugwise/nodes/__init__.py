@@ -36,7 +36,7 @@ class PlugwiseNode:
         self._mac = bytes(mac, encoding=UTF8_DECODE)
         self.message_sender = message_sender
         self.categories = ()
-        self.sensors = ()
+        self._sensors = ()
         self._switches = ()
         self._address = address
         self._callbacks = {}
@@ -140,6 +140,11 @@ class PlugwiseNode:
         """Return switches supported by plugwise node."""
         return self._switches
 
+    @property
+    def sensors(self) -> tuple:
+        """Return sensors supported by plugwise node."""
+        return self._sensors
+
     def get_node_type(self) -> str:
         """Return hardware model."""
         # TODO: Can be removed when HA component is changed to use property
@@ -164,7 +169,11 @@ class PlugwiseNode:
 
     def get_sensors(self) -> tuple:
         """Return sensors supported by plugwise node."""
-        return self.sensors
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_sensors' will be removed in future, use the 'sensors' property instead !",
+        )
+        return self._sensors
 
     def get_switches(self) -> tuple:
         """Return switches supported by plugwise node."""
@@ -329,7 +338,7 @@ class PlugwiseNode:
 
     def subscribe_callback(self, callback, sensor) -> bool:
         """Subscribe callback to execute when state change happens."""
-        if sensor in self.sensors:
+        if sensor in self._sensors:
             if sensor not in self._callbacks:
                 self._callbacks[sensor] = []
             self._callbacks[sensor].append(callback)

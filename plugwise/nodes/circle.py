@@ -49,7 +49,7 @@ class PlugwiseCircle(PlugwiseNode):
     def __init__(self, mac, address, message_sender):
         super().__init__(mac, address, message_sender)
         self.categories = (HA_SWITCH, HA_SENSOR)
-        self.sensors = (
+        self._sensors = (
             SENSOR_AVAILABLE["id"],
             SENSOR_PING["id"],
             SENSOR_POWER_USE["id"],
