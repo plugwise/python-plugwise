@@ -69,7 +69,7 @@ class stick:
     def __init__(self, port, callback=None):
         self.port = port
         self._mac_stick = None
-        self.network_online = False
+        self._network_online = False
         self.circle_plus_mac = None
         self._circle_plus_discovered = False
         self._circle_plus_retries = 0
@@ -103,6 +103,11 @@ class stick:
         return None
 
     @property
+    def network_state(self) -> bool:
+        """Return the state of the plugwise network"""
+        return self._network_online
+
+    @property
     def joined_nodes(self) -> int:
         """Return total number of nodes registered to Circle+ including Circle+ itself"""
         return self._joined_nodes + 1
@@ -120,7 +125,7 @@ class stick:
         """Automatic initialization of USB-stick and discovery of all registered nodes."""
 
         def init_finished():
-            if not self.network_online:
+            if not self._network_online:
                 _LOGGER.Error("plugwise Zigbee network down")
             else:
                 self.scan(callback)
@@ -170,7 +175,7 @@ class stick:
             time.sleep(0.1)
         if not self._stick_initialized:
             raise StickInitError
-        if not self.network_online:
+        if not self._network_online:
             raise NetworkDown
 
     def initialize_circle_plus(self, callback=None, timeout=MESSAGE_TIME_OUT):
@@ -412,9 +417,9 @@ class stick:
         """Process StickInitResponse message."""
         self._mac_stick = stick_init_response.mac
         if stick_init_response.network_is_online.value == 1:
-            self.network_online = True
+            self._network_online = True
         else:
-            self.network_online = False
+            self._network_online = False
         # Replace first 2 characters by 00 for mac of circle+ node
         self.circle_plus_mac = "00" + stick_init_response.circle_plus_mac.value[
             2:
