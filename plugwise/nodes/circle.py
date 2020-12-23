@@ -79,7 +79,7 @@ class PlugwiseCircle(PlugwiseNode):
         self.power_history = {}
         self._power_consumption_prev_hour = None
         self._power_consumption_today = None
-        self.power_consumption_yesterday = None
+        self._power_consumption_yesterday = None
         self.last_log_collected = False
         self.timezone_delta = datetime.now().replace(
             minute=0, second=0, microsecond=0
@@ -158,6 +158,11 @@ class PlugwiseCircle(PlugwiseNode):
     def power_consumption_today(self):
         """Total power consumption during today in kWh"""
         return self._power_consumption_today
+
+    @property
+    def power_consumption_yesterday(self):
+        """Total power consumption of yesterday in kWh"""
+        return self._power_consumption_yesterday
 
     def _request_calibration(self, callback=None):
         """Request calibration info"""
@@ -318,7 +323,11 @@ class PlugwiseCircle(PlugwiseNode):
 
     def get_power_consumption_yesterday(self):
         """Total power consumption of yesterday in kWh"""
-        return self.power_consumption_yesterday
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_power_consumption_yesterday' will be removed in future, use the 'power_consumption_yesterday' property instead !",
+        )
+        return self._power_consumption_yesterday
 
     def _node_ack_response(self, message):
         """Process switch response message"""
@@ -510,8 +519,8 @@ class PlugwiseCircle(PlugwiseNode):
         if self._power_consumption_today != today_power:
             self._power_consumption_today = today_power
             self.do_callback(SENSOR_POWER_CONSUMPTION_TODAY["id"])
-        if self.power_consumption_yesterday != yesterday_power:
-            self.power_consumption_yesterday = yesterday_power
+        if self._power_consumption_yesterday != yesterday_power:
+            self._power_consumption_yesterday = yesterday_power
             self.do_callback(SENSOR_POWER_CONSUMPTION_YESTERDAY["id"])
 
     def _response_clock(self, message):

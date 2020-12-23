@@ -278,7 +278,7 @@ SENSOR_POWER_CONSUMPTION_TODAY = {
 SENSOR_POWER_CONSUMPTION_YESTERDAY = {
     "id": "power_con_yesterday",
     "name": "Power consumption yesterday",
-    "state": "get_power_consumption_yesterday",
+    "state": "power_consumption_yesterday",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
 SENSOR_POWER_PRODUCTION_CURRENT_HOUR = {
