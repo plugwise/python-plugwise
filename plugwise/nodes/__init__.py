@@ -73,6 +73,13 @@ class PlugwiseNode:
         return "Unknown"
 
     @property
+    def firmware_version(self) -> str:
+        """Return firmware version."""
+        if self._firmware_version is not None:
+            return str(self._firmware_version)
+        return "Unknown"
+
+    @property
     def name(self) -> str:
         """Return unique name."""
         return self.hardware_model + " (" + str(self._address) + ")"
@@ -176,6 +183,10 @@ class PlugwiseNode:
 
     def get_firmware_version(self) -> str:
         """Return firmware version."""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_firmware_version' will be removed in future, use the 'firmware_version' property instead !",
+        )
         if self._firmware_version is not None:
             return str(self._firmware_version)
         return "Unknown"
