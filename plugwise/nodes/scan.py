@@ -49,14 +49,6 @@ class PlugwiseScan(NodeSED):
         """Return the last known motion state"""
         return self._motion_state
 
-    def get_motion(self) -> bool:
-        """Return motion state"""
-        # TODO: Can be removed when HA component is changed to use property
-        _LOGGER.warning(
-            "Function 'get_motion' will be removed in future, use the 'motion' property instead !",
-        )
-        return self._motion_state
-
     def message_for_scan(self, message):
         """
         Process received message
@@ -144,3 +136,12 @@ class PlugwiseScan(NodeSED):
         # TODO:
 
         # self._queue_request(NodeSwitchGroupRequest(self._mac), callback)
+
+    ## TODO: All functions below can be removed when HA component is changed to use the property values ##
+    def get_motion(self) -> bool:
+        """Return motion state"""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_motion' will be removed in future, use the 'motion' property instead !",
+        )
+        return self._motion_state
