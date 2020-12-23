@@ -356,7 +356,7 @@ class stick:
     def node_state_updates(self, mac, state: bool):
         """Update availability state of a node"""
         if mac in self._plugwise_nodes:
-            if not self._plugwise_nodes[mac].is_sed():
+            if not self._plugwise_nodes[mac].battery_powered:
                 self._plugwise_nodes[mac].available = state
 
     def node_join(self, mac: str, callback=None) -> bool:
@@ -609,8 +609,9 @@ class stick:
                     if self._plugwise_nodes[mac]:
                         # Do ping request for all nodes if listener is registered for sensor
                         self._plugwise_nodes[mac].do_ping(None, True)
-                        # Check availability state of SED's
-                        if self._plugwise_nodes[mac].is_sed():
+
+                        if self._plugwise_nodes[mac].battery_powered:
+                            # Check availability state of SED's
                             self._check_availability_of_seds(mac)
 
                         if self._plugwise_nodes[mac].measure_power():

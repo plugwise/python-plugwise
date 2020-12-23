@@ -42,6 +42,7 @@ class PlugwiseNode:
         self._callbacks = {}
         self._last_update = None
         self._available = False
+        self._battery_powered = False
         self._RSSI_in = None
         self._RSSI_out = None
         self._ping = None
@@ -150,6 +151,11 @@ class PlugwiseNode:
         """Return Home Assistant categories supported by plugwise node."""
         return self._categories
 
+    @property
+    def battery_powered(self) -> bool:
+        """Return True if node is a SED (battery powered) device."""
+        return self._battery_powered
+
     def get_node_type(self) -> str:
         """Return hardware model."""
         # TODO: Can be removed when HA component is changed to use property
@@ -162,6 +168,10 @@ class PlugwiseNode:
 
     def is_sed(self) -> bool:
         """Return True if node SED (battery powered)."""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'is_sed' will be removed in future, use the 'battery_powered' property instead !",
+        )
         return False
 
     def measure_power(self) -> bool:
