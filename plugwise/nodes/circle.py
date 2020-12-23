@@ -66,7 +66,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._switches = (SWITCH_RELAY["id"],)
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now()
-        self.pulses_1s = None
+        self._pulses_1s = None
         self.pulses_8s = None
         self.pulses_consumed_1h = None
         self.pulses_produced_1h = None
@@ -108,6 +108,16 @@ class PlugwiseCircle(PlugwiseNode):
         # Predict new state
         self._new_relay_state = state
         self._new_relay_stamp = datetime.now()
+
+    @property
+    def current_power_usage(self):
+        """
+        Returns power usage during the last second in Watts
+        Based on last received power usage information
+        """
+        if self._pulses_1s is not None:
+            return self.pulses_to_kWs(self._pulses_1s) * 1000
+        return None
 
     def _request_calibration(self, callback=None):
         """Request calibration info"""
@@ -203,8 +213,12 @@ class PlugwiseCircle(PlugwiseNode):
         Returns power usage during the last second in Watts
         Based on last received power usage information
         """
-        if self.pulses_1s is not None:
-            return self.pulses_to_kWs(self.pulses_1s) * 1000
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_power_usage' will be removed in future, use the 'current_power_usage' property instead !",
+        )
+        if self._pulses_1s is not None:
+            return self.pulses_to_kWs(self._pulses_1s) * 1000
         return None
 
     def get_power_usage_8_sec(self):
@@ -284,7 +298,7 @@ class PlugwiseCircle(PlugwiseNode):
                 "1 sec power pulse counter for node %s has value of -1, corrected to 0",
                 self.get_mac(),
             )
-        self.pulses_1s = message.pulse_1s.value
+        self._pulses_1s = message.pulse_1s.value
         if message.pulse_1s.value != 0:
             if message.nanosecond_offset.value != 0:
                 pulses_1s = (
@@ -293,9 +307,9 @@ class PlugwiseCircle(PlugwiseNode):
                 ) / 1000000000
             else:
                 pulses_1s = message.pulse_1s.value
-            self.pulses_1s = pulses_1s
+            self._pulses_1s = pulses_1s
         else:
-            self.pulses_1s = 0
+            self._pulses_1s = 0
         self.do_callback(SENSOR_POWER_USE["id"])
         # Power consumption last 8 seconds
         if message.pulse_8s.value == -1:

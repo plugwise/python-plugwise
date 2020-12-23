@@ -248,7 +248,7 @@ SENSOR_PING = {
 SENSOR_POWER_USE = {
     "id": "power_1s",
     "name": "Power usage",
-    "state": "get_power_usage",
+    "state": "current_power_usage",
     "unit": POWER_WATT,
 }
 SENSOR_POWER_USE_LAST_8_SEC = {
