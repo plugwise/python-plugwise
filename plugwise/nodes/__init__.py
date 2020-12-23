@@ -35,7 +35,7 @@ class PlugwiseNode:
             )
         self._mac = bytes(mac, encoding=UTF8_DECODE)
         self.message_sender = message_sender
-        self.categories = ()
+        self._categories = ()
         self._sensors = ()
         self._switches = ()
         self._address = address
@@ -145,6 +145,11 @@ class PlugwiseNode:
         """Return sensors supported by plugwise node."""
         return self._sensors
 
+    @property
+    def categories(self) -> tuple:
+        """Return Home Assistant categories supported by plugwise node."""
+        return self._categories
+
     def get_node_type(self) -> str:
         """Return hardware model."""
         # TODO: Can be removed when HA component is changed to use property
@@ -165,7 +170,11 @@ class PlugwiseNode:
 
     def get_categories(self) -> tuple:
         """Return Home Assistant categories supported by plugwise node."""
-        return self.categories
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_categories' will be removed in future, use the 'categories' property instead !",
+        )
+        return self._categories
 
     def get_sensors(self) -> tuple:
         """Return sensors supported by plugwise node."""
