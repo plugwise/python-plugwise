@@ -50,33 +50,23 @@ class NodeResponse(PlugwiseMessage):
     def deserialize(self, response):
         self.timestamp = datetime.now()
         _msg_length = len(response)
-        if _msg_length != len(self):
-            raise InvalidMessageLength(
-                "Invalid message length received for %s, expected %s bytes got %s",
-                self.__class__.__name__,
-                str(len(self)),
-                str(_msg_length),
-            )
         if response[:4] != MESSAGE_HEADER:
             raise InvalidMessageHeader(
-                "Invalid message header %s for %s",
-                str(response[:4]),
-                self.__class__.__name__,
+                f"Invalid message header {str(response[:4])} for {self.__class__.__name__}"
             )
         if response[_msg_length - 2 :] != MESSAGE_FOOTER:
             raise InvalidMessageFooter(
-                "Invalid message footer %s for %s",
-                str(response[_msg_length - 2 :]),
-                self.__class__.__name__,
+                f"Invalid message footer {str(response[_msg_length - 2 :])} for {self.__class__.__name__}"
             )
         _calculated_checksum = self.calculate_checksum(response[4 : _msg_length - 6])
         _message_checksum = response[_msg_length - 6 : _msg_length - 2]
         if _calculated_checksum != _message_checksum:
             raise InvalidMessageChecksum(
-                "Invalid checksum for %s, expected %s got %s",
-                self.__class__.__name__,
-                str(_calculated_checksum),
-                str(_message_checksum),
+                f"Invalid checksum for {self.__class__.__name__}, expected {str(_calculated_checksum)} got {str(_message_checksum)}",
+            )
+        if _msg_length != len(self):
+            raise InvalidMessageLength(
+                f"Invalid message length received for {self.__class__.__name__}, expected {str(len(self))} bytes got {str(_msg_length)}"
             )
 
         self.msg_id = response[4:8]
