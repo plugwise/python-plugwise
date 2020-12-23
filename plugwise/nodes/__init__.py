@@ -42,7 +42,7 @@ class PlugwiseNode:
         self._callbacks = {}
         self._last_update = None
         self._available = False
-        self.in_RSSI = None
+        self._RSSI_in = None
         self.out_RSSI = None
         self._ping = None
         self._node_type = None
@@ -119,6 +119,13 @@ class PlugwiseNode:
         """Return ping roundtrip in ms."""
         if self._ping is not None:
             return self._ping
+        return 0
+
+    @property
+    def rssi_in(self) -> int:
+        """Return inbound RSSI level."""
+        if self._RSSI_in is not None:
+            return self._RSSI_in
         return 0
 
     def get_node_type(self) -> str:
@@ -213,8 +220,12 @@ class PlugwiseNode:
 
     def get_in_RSSI(self) -> int:
         """Return inbound RSSI level."""
-        if self.in_RSSI is not None:
-            return self.in_RSSI
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_in_RSSI' will be removed in future, use the 'rssi_in' property instead !",
+        )
+        if self._RSSI_in is not None:
+            return self._RSSI_in
         return 0
 
     def get_out_RSSI(self) -> int:
@@ -331,8 +342,8 @@ class PlugwiseNode:
 
     def _process_ping_response(self, message):
         """Process ping response message."""
-        if self.in_RSSI != message.in_RSSI.value:
-            self.in_RSSI = message.in_RSSI.value
+        if self._RSSI_in != message.in_RSSI.value:
+            self._RSSI_in = message.in_RSSI.value
             self.do_callback(SENSOR_RSSI_IN["id"])
         if self.out_RSSI != message.out_RSSI.value:
             self.out_RSSI = message.out_RSSI.value

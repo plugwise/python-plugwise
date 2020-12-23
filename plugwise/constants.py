@@ -310,7 +310,7 @@ SENSOR_TEMPERATURE = {
 SENSOR_RSSI_IN = {
     "id": "RSSI_in",
     "name": "RSSI in",
-    "state": "get_rssi_in",
+    "state": "rssi_in",
     "unit": "Unknown",
 }
 SENSOR_RSSI_OUT = {
