@@ -66,6 +66,11 @@ class PlugwiseNode:
         return None
 
     @property
+    def name(self) -> str:
+        """Return unique name."""
+        return self.hardware_model + " (" + str(self._address) + ")"
+
+    @property
     def available(self) -> bool:
         """Current network state of plugwise node."""
         return self._available
@@ -146,7 +151,11 @@ class PlugwiseNode:
 
     def get_name(self) -> str:
         """Return unique name."""
-        return self.get_node_type() + " (" + str(self._address) + ")"
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_name' will be removed in future, use the 'name' property instead !",
+        )
+        return self.self.hardware_model + " (" + str(self._address) + ")"
 
     def get_hardware_version(self) -> str:
         """Return hardware version."""
