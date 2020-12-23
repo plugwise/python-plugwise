@@ -290,13 +290,13 @@ SENSOR_POWER_PRODUCTION_CURRENT_HOUR = {
 SENSOR_POWER_PRODUCTION_PREVIOUS_HOUR = {
     "id": "power_prod_prev_hour",
     "name": "Power production previous hour",
-    "state": "get_power_production_previous_hour",
+    "state": "power_production_previous_hour",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
 SENSOR_SWITCH = {
     "id": "switch",
     "name": "switch",
-    "state": "get_switch_state",
+    "state": "switch_state",
     "unit": "state",
 }
 SENSOR_TEMPERATURE = {
