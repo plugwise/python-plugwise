@@ -242,7 +242,7 @@ SENSOR_MOTION = {
 SENSOR_PING = {
     "id": "ping",
     "name": "Ping roundtrip",
-    "state": "get_ping",
+    "state": "ping",
     "unit": TIME_MILLISECONDS,
 }
 SENSOR_POWER_USE = {

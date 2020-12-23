@@ -44,7 +44,7 @@ class PlugwiseNode:
         self._available = False
         self.in_RSSI = None
         self.out_RSSI = None
-        self.ping_ms = None
+        self._ping = None
         self._node_type = None
         self._hardware_version = None
         self._firmware_version = None
@@ -113,6 +113,13 @@ class PlugwiseNode:
     def last_update(self) -> datetime:
         """Return datetime of last received update."""
         return self._last_update
+
+    @property
+    def ping(self) -> int:
+        """Return ping roundtrip in ms."""
+        if self._ping is not None:
+            return self._ping
+        return 0
 
     def get_node_type(self) -> str:
         """Return hardware model."""
@@ -218,8 +225,12 @@ class PlugwiseNode:
 
     def get_ping(self) -> int:
         """Return ping roundtrip."""
-        if self.ping_ms is not None:
-            return self.ping_ms
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_ping' will be removed in future, use the 'ping' property instead !",
+        )
+        if self._ping is not None:
+            return self._ping
         return 0
 
     def request_info(self, callback=None):
@@ -326,8 +337,8 @@ class PlugwiseNode:
         if self.out_RSSI != message.out_RSSI.value:
             self.out_RSSI = message.out_RSSI.value
             self.do_callback(SENSOR_RSSI_OUT["id"])
-        if self.ping_ms != message.ping_ms.value:
-            self.ping_ms = message.ping_ms.value
+        if self._ping != message.ping_ms.value:
+            self._ping = message.ping_ms.value
             self.do_callback(SENSOR_PING["id"])
 
     def _process_info_response(self, message):
