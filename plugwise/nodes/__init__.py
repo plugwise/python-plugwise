@@ -172,7 +172,7 @@ class PlugwiseNode:
                 callback,
             )
 
-    def on_message(self, message):
+    def message_for_node(self, message):
         """Process received message."""
         assert isinstance(message, NodeResponse)
         if message.mac == self.mac:
@@ -193,7 +193,8 @@ class PlugwiseNode:
             elif isinstance(message, NodeJoinAckResponse):
                 self.set_available(True, True)
             else:
-                self._on_message(message)
+                self.process_messages_at_circles(message)
+                self.process_messages_at_sed(message)
                 self.set_available(True)
         else:
             _LOGGER.debug(
@@ -202,7 +203,12 @@ class PlugwiseNode:
                 self.get_mac(),
             )
 
-    def _on_message(self, message):
+    def message_for_circle(self, message):
+        """Pass messages to PlugwiseCircle class"""
+        pass
+
+    def message_for_sed(self, message):
+        """Pass messages to NodeSED class"""
         pass
 
     def subscribe_callback(self, callback, sensor) -> bool:

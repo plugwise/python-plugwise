@@ -48,7 +48,7 @@ class PlugwiseScan(NodeSED):
         """Return motion state"""
         return self._motion_state
 
-    def _on_SED_message(self, message):
+    def message_for_scan(self, message):
         """
         Process received message
         """

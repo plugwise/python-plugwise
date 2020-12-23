@@ -28,7 +28,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         self._realtime_clock_offset = None
         self.get_real_time_clock(self.sync_realtime_clock)
 
-    def _circle_plus_message(self, message):
+    def message_for_circle_plus(self, message):
         """
         Process received message
         """

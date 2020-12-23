@@ -509,7 +509,7 @@ class stick:
         Returns True if message has passed onto existing known node
         """
         if self._plugwise_nodes.get(mac):
-            self._plugwise_nodes[mac].on_message(message)
+            self._plugwise_nodes[mac].message_for_node(message)
             return True
         if discover:
             _LOGGER.info(

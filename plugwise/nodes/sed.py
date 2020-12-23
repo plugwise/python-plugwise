@@ -48,7 +48,7 @@ class NodeSED(PlugwiseNode):
         """Return if True if node SED (battery powered)"""
         return True
 
-    def _on_message(self, message):
+    def process_messages_at_sed(self, message):
         """
         Process received message
         """
@@ -58,11 +58,24 @@ class NodeSED(PlugwiseNode):
             if message.ack_id == SLEEP_SET:
                 self.maintenance_interval = self._new_maintenance_interval
             else:
-                self._on_SED_message(message)
+                self.message_for_scan(message)
+                self.message_for_switch(message)
+                self.message_for_sense(message)
         else:
-            self._on_SED_message(message)
+            self.message_for_scan(message)
+            self.message_for_switch(message)
+            self.message_for_sense(message)
 
-    def _on_SED_message(self, message):
+    def message_for_scan(self, message):
+        """Pass messages to PlugwiseScan class"""
+        pass
+
+    def message_for_switch(self, message):
+        """Pass messages to PlugwiseSwitch class"""
+        pass
+
+    def message_for_sense(self, message):
+        """Pass messages to PlugwiseSense class"""
         pass
 
     def _process_awake_response(self, message):

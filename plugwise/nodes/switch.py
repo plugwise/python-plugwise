@@ -20,7 +20,7 @@ class PlugwiseSwitch(NodeSED):
         """Return state of switch"""
         return self._switch_state
 
-    def _on_SED_message(self, message):
+    def message_for_switch(self, message):
         """
         Process received message
         """

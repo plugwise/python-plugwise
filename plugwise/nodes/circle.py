@@ -121,7 +121,7 @@ class PlugwiseCircle(PlugwiseNode):
             if not self.last_log_collected:
                 self.request_power_buffer()
 
-    def _on_message(self, message):
+    def message_for_circle(self, message):
         """
         Process received message
         """
@@ -157,10 +157,8 @@ class PlugwiseCircle(PlugwiseNode):
         else:
             self._circle_plus_message(message)
 
-    def _circle_plus_message(self, message):
-        pass
-
-    def _process_scan_response(self, message):
+    def message_for_circle_plus(self, message):
+        """Pass messages to PlugwiseCirclePlus class"""
         pass
 
     def get_relay_state(self) -> bool:
