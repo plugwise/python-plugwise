@@ -107,6 +107,15 @@ class stick:
         """Return total number of nodes registered to Circle+ including Circle+ itself"""
         return self._joined_nodes + 1
 
+    @property
+    def discovered_nodes(self) -> list:
+        """Return a list of mac addresses of all discovered and supported plugwise nodes."""
+        return list(
+            dict(
+                filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
+            ).keys()
+        )
+
     def auto_initialize(self, callback=None):
         """Automatic initialization of USB-stick and discovery of all registered nodes."""
 
@@ -363,6 +372,10 @@ class stick:
 
     def nodes(self) -> list:
         """Return list of mac addresses of discovered and supported plugwise nodes."""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'nodes' will be removed in future, use the 'discovered_nodes' property instead !",
+        )
         return list(
             dict(
                 filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
