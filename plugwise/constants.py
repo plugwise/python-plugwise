@@ -224,7 +224,7 @@ CB_JOIN_REQUEST = "JOIN_REQUEST"
 SENSOR_AVAILABLE = {
     "id": "available",
     "name": "Available",
-    "state": "get_available",
+    "state": "available",
     "unit": "state",
 }
 SENSOR_HUMIDITY = {

@@ -357,7 +357,7 @@ class stick:
         """Update availability state of a node"""
         if mac in self._plugwise_nodes:
             if not self._plugwise_nodes[mac].is_sed():
-                self._plugwise_nodes[mac].set_available(state)
+                self._plugwise_nodes[mac].available = state
 
     def node_join(self, mac: str, callback=None) -> bool:
         """Accept node to join Plugwise network by register mac in Circle+ memory"""
@@ -674,7 +674,7 @@ class stick:
 
     def _check_availability_of_seds(self, mac):
         """Helper to check if SED device is still sending its hartbeat."""
-        if self._plugwise_nodes[mac].get_available():
+        if self._plugwise_nodes[mac].available:
             if self._plugwise_nodes[mac].last_update < (
                 datetime.now()
                 - timedelta(
@@ -693,7 +693,7 @@ class stick:
                         )
                     ),
                 )
-                self._plugwise_nodes[mac].set_available(False)
+                self._plugwise_nodes[mac].available = False
 
     def _discover_after_scan(self):
         """Helper to do callback for new node."""

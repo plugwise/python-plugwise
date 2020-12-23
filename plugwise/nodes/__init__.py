@@ -53,6 +53,31 @@ class PlugwiseNode:
         self.last_info_message = None
         self._features = None
 
+    @property
+    def available(self) -> bool:
+        """Current network state of plugwise node."""
+        return self._available
+
+    @available.setter
+    def available(self, state: bool):
+        """Set current network availability state of plugwise node."""
+        if state:
+            if not self._available:
+                self._available = True
+                _LOGGER.debug(
+                    "Mark node %s available",
+                    self.get_mac(),
+                )
+                self.do_callback(SENSOR_AVAILABLE["id"])
+        else:
+            if self._available:
+                self._available = False
+                _LOGGER.debug(
+                    "Mark node %s unavailable",
+                    self.get_mac(),
+                )
+                self.do_callback(SENSOR_AVAILABLE["id"])
+
     def get_node_type(self) -> str:
         """Return hardware model."""
         if self._hardware_version:
@@ -81,28 +106,19 @@ class PlugwiseNode:
 
     def get_available(self) -> bool:
         """Return current network state of plugwise node."""
-        return self._available
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_available' will be removed in future, use the 'available' property instead !",
+        )
+        return self.available
 
     def set_available(self, state, request_info=False):
         """Set current network availability state of plugwise node."""
-        if state:
-            if not self._available:
-                self._available = True
-                _LOGGER.debug(
-                    "Mark node %s available",
-                    self.get_mac(),
-                )
-                self.do_callback(SENSOR_AVAILABLE["id"])
-                if request_info:
-                    self.request_info()
-        else:
-            if self._available:
-                self._available = False
-                _LOGGER.debug(
-                    "Mark node %s unavailable",
-                    self.get_mac(),
-                )
-                self.do_callback(SENSOR_AVAILABLE["id"])
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'set_available' will be removed in future, use the 'available' property instead !",
+        )
+        self.available = state
 
     def get_mac(self) -> str:
         """Return mac address."""
@@ -180,6 +196,9 @@ class PlugwiseNode:
                     str(message.timestamp),
                 )
                 self.last_update = message.timestamp
+            if not self._available:
+                self.available = True
+                self.request_info()
             if isinstance(message, NodePingResponse):
                 self._process_ping_response(message)
             elif isinstance(message, NodeInfoResponse):
@@ -187,7 +206,7 @@ class PlugwiseNode:
             elif isinstance(message, NodeFeaturesResponse):
                 self._process_features_response(message)
             elif isinstance(message, NodeJoinAckResponse):
-                self.set_available(True, True)
+                self._process_join_ack_response(message)
             else:
                 self.message_for_circle(message)
                 self.message_for_sed(message)
@@ -232,9 +251,15 @@ class PlugwiseNode:
                         e,
                     )
 
+    def _process_join_ack_response(self, message):
+        """Process join acknowledge response message"""
+        _LOGGER.info(
+            "Node %s has (re)joined plugwise network",
+            self.get_mac(),
+        )
+
     def _process_ping_response(self, message):
         """Process ping response message."""
-        self.set_available(True, True)
         if self.in_RSSI != message.in_RSSI.value:
             self.in_RSSI = message.in_RSSI.value
             self.do_callback(SENSOR_RSSI_IN["id"])
@@ -248,7 +273,6 @@ class PlugwiseNode:
     def _process_info_response(self, message):
         """Process info response message."""
         _LOGGER.debug("Response info message for node %s", self.get_mac())
-        self.set_available(True)
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
                 self._relay_state = True

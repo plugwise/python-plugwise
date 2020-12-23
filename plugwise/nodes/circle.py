@@ -104,7 +104,7 @@ class PlugwiseCircle(PlugwiseNode):
 
     def update_power_usage(self, callback=None):
         """Request power usage and power logs of last hour"""
-        if self.get_available():
+        if self._available:
             self.message_sender(
                 CirclePowerUsageRequest(self.mac),
                 callback,
