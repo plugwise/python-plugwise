@@ -74,7 +74,7 @@ class stick:
         self._circle_plus_discovered = False
         self._circle_plus_retries = 0
         self.scan_callback = None
-        self.network_id = None
+        self._network_id = None
         self._plugwise_nodes = {}
         self._joined_nodes = 0
         self._nodes_to_discover = {}
@@ -106,6 +106,11 @@ class stick:
     def network_state(self) -> bool:
         """Return the state of the plugwise network"""
         return self._network_online
+
+    @property
+    def network_id(self) -> int:
+        """Return the id of the Plugwise network."""
+        return self._network_id
 
     @property
     def joined_nodes(self) -> int:
@@ -424,7 +429,7 @@ class stick:
         self.circle_plus_mac = "00" + stick_init_response.circle_plus_mac.value[
             2:
         ].decode(UTF8_DECODE)
-        self.network_id = stick_init_response.network_id.value
+        self._network_id = stick_init_response.network_id.value
         self._stick_initialized = True
         if not self._run_watchdog:
             self._run_watchdog = True
