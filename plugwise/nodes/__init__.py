@@ -37,7 +37,7 @@ class PlugwiseNode:
         self.message_sender = message_sender
         self.categories = ()
         self.sensors = ()
-        self.switches = ()
+        self._switches = ()
         self._address = address
         self._callbacks = {}
         self._last_update = None
@@ -135,6 +135,11 @@ class PlugwiseNode:
             return self._RSSI_out
         return 0
 
+    @property
+    def switches(self) -> tuple:
+        """Return switches supported by plugwise node."""
+        return self._switches
+
     def get_node_type(self) -> str:
         """Return hardware model."""
         # TODO: Can be removed when HA component is changed to use property
@@ -163,7 +168,11 @@ class PlugwiseNode:
 
     def get_switches(self) -> tuple:
         """Return switches supported by plugwise node."""
-        return self.switches
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_switches' will be removed in future, use the 'switches' property instead !",
+        )
+        return self._switches
 
     def get_available(self) -> bool:
         """Return current network state of plugwise node."""

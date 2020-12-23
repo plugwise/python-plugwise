@@ -63,7 +63,7 @@ class PlugwiseCircle(PlugwiseNode):
             SENSOR_RSSI_IN["id"],
             SENSOR_RSSI_OUT["id"],
         )
-        self.switches = (SWITCH_RELAY["id"],)
+        self._switches = (SWITCH_RELAY["id"],)
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now()
         self.pulses_1s = None
