@@ -97,14 +97,14 @@ class stick:
 
     @property
     def mac(self) -> str:
-        """Return the MAC address of theUSB-Stick"""
+        """Return the MAC address of the USB-Stick."""
         if self._mac_stick:
             return self._mac_stick.decode(UTF8_DECODE)
         return None
 
     @property
     def network_state(self) -> bool:
-        """Return the state of the plugwise network"""
+        """Return the state of the Plugwise network."""
         return self._network_online
 
     @property
@@ -114,7 +114,7 @@ class stick:
 
     @property
     def joined_nodes(self) -> int:
-        """Return total number of nodes registered to Circle+ including Circle+ itself"""
+        """Return total number of nodes registered to Circle+ including Circle+ itself."""
         return self._joined_nodes + 1
 
     @property
