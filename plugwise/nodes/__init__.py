@@ -287,7 +287,7 @@ class PlugwiseNode:
             callback,
         )
 
-    def ping(self, callback=None, sensor=True):
+    def do_ping(self, callback=None, sensor=True):
         """Ping node."""
         if sensor or SENSOR_PING["id"] in self._callbacks:
             self.message_sender(

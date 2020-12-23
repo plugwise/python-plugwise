@@ -608,12 +608,13 @@ class stick:
                 for mac in self._plugwise_nodes:
                     if self._plugwise_nodes[mac]:
                         # Do ping request for all nodes if listener is registered for sensor
-                        self._plugwise_nodes[mac].ping(None, True)
+                        self._plugwise_nodes[mac].do_ping(None, True)
                         # Check availability state of SED's
                         if self._plugwise_nodes[mac].is_sed():
                             self._check_availability_of_seds(mac)
-                        # Request current power usage for all nodes supporting power measurement
+
                         if self._plugwise_nodes[mac].measure_power():
+                            # Request current power usage
                             self._plugwise_nodes[mac].update_power_usage()
                             # Sync internal clock of power measure nodes once a day
                             if datetime.now().day != day_of_month:
