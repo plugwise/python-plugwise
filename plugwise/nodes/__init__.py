@@ -33,7 +33,7 @@ class PlugwiseNode:
                 "MAC address is in unexpected format: %s",
                 str(mac),
             )
-        self.mac = bytes(mac, encoding=UTF8_DECODE)
+        self._mac = bytes(mac, encoding=UTF8_DECODE)
         self.message_sender = message_sender
         self.categories = ()
         self.sensors = ()
@@ -52,6 +52,11 @@ class PlugwiseNode:
         self._last_log_address = None
         self.last_info_message = None
         self._features = None
+
+    @property
+    def mac(self) -> str:
+        """Return the MAC address in string."""
+        return self._mac.decode(UTF8_DECODE)
 
     @property
     def available(self) -> bool:
@@ -122,7 +127,11 @@ class PlugwiseNode:
 
     def get_mac(self) -> str:
         """Return mac address."""
-        return self.mac.decode(UTF8_DECODE)
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_mac' will be removed in future, use the 'mac' property instead !",
+        )
+        return self._mac.decode(UTF8_DECODE)
 
     def get_name(self) -> str:
         """Return unique name."""
@@ -165,14 +174,14 @@ class PlugwiseNode:
     def request_info(self, callback=None):
         """Request info from node."""
         self.message_sender(
-            NodeInfoRequest(self.mac),
+            NodeInfoRequest(self._mac),
             callback,
         )
 
     def _request_features(self, callback=None):
         """Request supported features for this node."""
         self.message_sender(
-            NodeFeaturesRequest(self.mac),
+            NodeFeaturesRequest(self._mac),
             callback,
         )
 
@@ -180,14 +189,14 @@ class PlugwiseNode:
         """Ping node."""
         if sensor or SENSOR_PING["id"] in self._callbacks:
             self.message_sender(
-                NodePingRequest(self.mac),
+                NodePingRequest(self._mac),
                 callback,
             )
 
     def message_for_node(self, message):
         """Process received message."""
         assert isinstance(message, NodeResponse)
-        if message.mac == self.mac:
+        if message.mac == self._mac:
             if message.timestamp is not None:
                 _LOGGER.debug(
                     "Last update %s of node %s, last message %s",

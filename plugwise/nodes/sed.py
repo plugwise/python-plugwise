@@ -115,7 +115,7 @@ class NodeSED(PlugwiseNode):
     def request_info(self, callback=None):
         """Request info from node"""
         self._queue_request(
-            NodeInfoRequest(self.mac),
+            NodeInfoRequest(self._mac),
             callback,
         )
 
@@ -128,7 +128,7 @@ class NodeSED(PlugwiseNode):
             or self._callbacks.get(SENSOR_RSSI_OUT["id"])
         ):
             self._queue_request(
-                NodePingRequest(self.mac),
+                NodePingRequest(self._mac),
                 callback,
             )
         else:
@@ -151,7 +151,7 @@ class NodeSED(PlugwiseNode):
     ):
         """Reconfigure the sleep/awake settings for a SED send at next awake of SED"""
         message = NodeSleepConfigRequest(
-            self.mac,
+            self._mac,
             stay_active,
             maintenance_interval,
             sleep_for,

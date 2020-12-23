@@ -103,7 +103,7 @@ class PlugwiseScan(NodeSED):
 
     def CalibrateLight(self, callback=None):
         """Queue request to calibration light sensitivity"""
-        self._queue_request(ScanLightCalibrateRequest(self.mac), callback)
+        self._queue_request(ScanLightCalibrateRequest(self._mac), callback)
 
     def Configure_scan(
         self,
@@ -125,7 +125,7 @@ class PlugwiseScan(NodeSED):
         self._new_sensitivity = sensitivity_level
         self._queue_request(
             ScanConfigureRequest(
-                self.mac, motion_reset_timer, sensitivity_value, daylight_mode
+                self._mac, motion_reset_timer, sensitivity_value, daylight_mode
             ),
             callback,
         )
@@ -134,4 +134,4 @@ class PlugwiseScan(NodeSED):
         """Queue Configure Scan to signal motion"""
         # TODO:
 
-        # self._queue_request(NodeSwitchGroupRequest(self.mac), callback)
+        # self._queue_request(NodeSwitchGroupRequest(self._mac), callback)
