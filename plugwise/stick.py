@@ -614,7 +614,7 @@ class stick:
                             # Check availability state of SED's
                             self._check_availability_of_seds(mac)
 
-                        if self._plugwise_nodes[mac].measure_power():
+                        if self._plugwise_nodes[mac].measures_power:
                             # Request current power usage
                             self._plugwise_nodes[mac].update_power_usage()
                             # Sync internal clock of power measure nodes once a day

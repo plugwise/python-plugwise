@@ -75,6 +75,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._gain_b = None
         self._off_noise = None
         self._off_tot = None
+        self._measures_power = True
         self.power_history = {}
         self.power_consumption_prev_hour = None
         self.power_consumption_today = None
@@ -107,10 +108,6 @@ class PlugwiseCircle(PlugwiseNode):
         # Predict new state
         self._new_relay_state = state
         self._new_relay_stamp = datetime.now()
-
-    def measure_power(self) -> bool:
-        """Return True if node can measure power usage."""
-        return True
 
     def _request_calibration(self, callback=None):
         """Request calibration info"""

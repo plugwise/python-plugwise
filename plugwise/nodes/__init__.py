@@ -43,6 +43,7 @@ class PlugwiseNode:
         self._last_update = None
         self._available = False
         self._battery_powered = False
+        self._measures_power = False
         self._RSSI_in = None
         self._RSSI_out = None
         self._ping = None
@@ -156,6 +157,11 @@ class PlugwiseNode:
         """Return True if node is a SED (battery powered) device."""
         return self._battery_powered
 
+    @property
+    def measures_power(self) -> bool:
+        """Return True if node can measure power usage."""
+        return self._measures_power
+
     def get_node_type(self) -> str:
         """Return hardware model."""
         # TODO: Can be removed when HA component is changed to use property
@@ -176,7 +182,11 @@ class PlugwiseNode:
 
     def measure_power(self) -> bool:
         """Return True if node can measure power usage."""
-        return False
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'measure_power' will be removed in future, use the 'measures_power' property instead !",
+        )
+        return self._measures_power
 
     def get_categories(self) -> tuple:
         """Return Home Assistant categories supported by plugwise node."""
