@@ -66,6 +66,13 @@ class PlugwiseNode:
         return None
 
     @property
+    def hardware_version(self) -> str:
+        """Return hardware version."""
+        if self._hardware_version is not None:
+            return self._hardware_version
+        return "Unknown"
+
+    @property
     def name(self) -> str:
         """Return unique name."""
         return self.hardware_model + " (" + str(self._address) + ")"
@@ -159,6 +166,10 @@ class PlugwiseNode:
 
     def get_hardware_version(self) -> str:
         """Return hardware version."""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_hardware_version' will be removed in future, use the 'hardware_version' property instead !",
+        )
         if self._hardware_version is not None:
             return self._hardware_version
         return "Unknown"
