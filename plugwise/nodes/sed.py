@@ -44,7 +44,7 @@ class NodeSED(PlugwiseNode):
         """Return if True if node SED (battery powered)"""
         return True
 
-    def process_messages_at_sed(self, message):
+    def message_for_sed(self, message):
         """
         Process received message
         """
