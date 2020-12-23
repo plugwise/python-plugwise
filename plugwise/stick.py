@@ -95,6 +95,13 @@ class stick:
         if callback:
             self.auto_initialize(callback)
 
+    @property
+    def mac(self) -> str:
+        """Return the MAC address of theUSB-Stick"""
+        if self._mac_stick:
+            return self._mac_stick.decode(UTF8_DECODE)
+        return None
+
     def auto_initialize(self, callback=None):
         """Automatic initialization of USB-stick and discovery of all registered nodes."""
 
@@ -290,6 +297,10 @@ class stick:
 
     def get_mac_stick(self) -> str:
         """Return mac address of USB-Stick"""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_mac_stick' will be removed in future, use the 'mac' property instead !",
+        )
         if self._mac_stick:
             return self._mac_stick.decode(UTF8_DECODE)
         return None
