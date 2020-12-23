@@ -77,7 +77,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._off_tot = None
         self._measures_power = True
         self.power_history = {}
-        self.power_consumption_prev_hour = None
+        self._power_consumption_prev_hour = None
         self.power_consumption_today = None
         self.power_consumption_yesterday = None
         self.last_log_collected = False
@@ -148,6 +148,11 @@ class PlugwiseCircle(PlugwiseNode):
         if self._pulses_produced_1h is not None:
             return self.pulses_to_kWs(self._pulses_produced_1h, 3600)
         return None
+
+    @property
+    def power_consumption_previous_hour(self):
+        """Returns power consumption during the previous hour in kWh"""
+        return self._power_consumption_prev_hour
 
     def _request_calibration(self, callback=None):
         """Request calibration info"""
@@ -292,7 +297,11 @@ class PlugwiseCircle(PlugwiseNode):
 
     def get_power_consumption_prev_hour(self):
         """Returns power consumption during the previous hour in kWh"""
-        return self.power_consumption_prev_hour
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_power_consumption_prev_hour' will be removed in future, use the 'power_consumption_previous_hour' property instead !",
+        )
+        return self._power_consumption_prev_hour
 
     def get_power_consumption_today(self):
         """Total power consumption during today in kWh"""
@@ -486,8 +495,8 @@ class PlugwiseCircle(PlugwiseNode):
                 datetime.now().today().date() - timedelta(days=1)
             ):
                 yesterday_power += self.power_history[dt]
-        if self.power_consumption_prev_hour != last_hour_usage:
-            self.power_consumption_prev_hour = last_hour_usage
+        if self._power_consumption_prev_hour != last_hour_usage:
+            self._power_consumption_prev_hour = last_hour_usage
             self.do_callback(SENSOR_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
         if self.power_consumption_today != today_power:
             self.power_consumption_today = today_power
