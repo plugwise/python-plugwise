@@ -76,7 +76,7 @@ class stick:
         self.scan_callback = None
         self.network_id = None
         self._plugwise_nodes = {}
-        self._nodes_registered = 0
+        self._joined_nodes = 0
         self._nodes_to_discover = {}
         self._nodes_not_discovered = {}
         self._nodes_off_line = 0
@@ -101,6 +101,11 @@ class stick:
         if self._mac_stick:
             return self._mac_stick.decode(UTF8_DECODE)
         return None
+
+    @property
+    def joined_nodes(self) -> int:
+        """Return total number of nodes registered to Circle+ including Circle+ itself"""
+        return self._joined_nodes + 1
 
     def auto_initialize(self, callback=None):
         """Automatic initialization of USB-stick and discovery of all registered nodes."""
@@ -238,7 +243,7 @@ class stick:
         _LOGGER.debug("Scan plugwise network finished")
         self._nodes_discovered = 0
         self._nodes_to_discover = nodes_to_discover
-        self._nodes_registered = len(nodes_to_discover)
+        self._joined_nodes = len(nodes_to_discover)
 
         # setup timeout for node discovery
         discover_timeout = (
@@ -350,7 +355,11 @@ class stick:
 
     def registered_nodes(self) -> int:
         """Return total number of nodes registered to Circle+ including Circle+ itself"""
-        return self._nodes_registered + 1
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'registered_nodes' will be removed in future, use the 'joined_nodes' property instead !",
+        )
+        return self._joined_nodes + 1
 
     def nodes(self) -> list:
         """Return list of mac addresses of discovered and supported plugwise nodes."""
