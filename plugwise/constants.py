@@ -236,7 +236,7 @@ SENSOR_HUMIDITY = {
 SENSOR_MOTION = {
     "id": "motion",
     "name": "Motion",
-    "state": "get_motion",
+    "state": "motion",
     "unit": "state",
 }
 SENSOR_PING = {

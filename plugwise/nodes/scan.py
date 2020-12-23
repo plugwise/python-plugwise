@@ -44,8 +44,17 @@ class PlugwiseScan(NodeSED):
         self._new_daylight_mode = None
         self._new_sensitivity = None
 
+    @property
+    def motion(self) -> bool:
+        """Return the last known motion state"""
+        return self._motion_state
+
     def get_motion(self) -> bool:
         """Return motion state"""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_motion' will be removed in future, use the 'motion' property instead !",
+        )
         return self._motion_state
 
     def message_for_scan(self, message):
