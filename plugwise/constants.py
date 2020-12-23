@@ -324,8 +324,8 @@ SENSOR_RSSI_OUT = {
 SWITCH_RELAY = {
     "id": "relay",
     "name": "Relay state",
-    "state": "get_relay_state",
-    "switch": "set_relay_state",
+    "state": "relay_state",
+    "switch": "relay_state",
 }
 
 # Home Assistant entities

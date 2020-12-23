@@ -6,6 +6,7 @@ from ..constants import (
     HA_SENSOR,
     HA_SWITCH,
     MAX_TIME_DRIFT,
+    MESSAGE_TIME_OUT,
     PULSES_PER_KW_SECOND,
     RELAY_SWITCHED_OFF,
     RELAY_SWITCHED_ON,
@@ -63,6 +64,8 @@ class PlugwiseCircle(PlugwiseNode):
             SENSOR_RSSI_OUT["id"],
         )
         self.switches = (SWITCH_RELAY["id"],)
+        self._new_relay_state = False
+        self._new_relay_stamp = datetime.now()
         self.pulses_1s = None
         self.pulses_8s = None
         self.pulses_consumed_1h = None
@@ -83,6 +86,27 @@ class PlugwiseCircle(PlugwiseNode):
         self._clock_offset = None
         self.get_clock(self.sync_clock)
         self._request_calibration()
+
+    @property
+    def relay_state(self) -> bool:
+        """
+        Return last known relay state or the new switch state by anticipating
+        the acknowledge for new state is getting in before message timeout.
+        """
+        if self._new_relay_stamp + timedelta(seconds=MESSAGE_TIME_OUT) > datetime.now():
+            return self._new_relay_state
+        return self._relay_state
+
+    @relay_state.setter
+    def relay_state(self, state):
+        """Request the relay to switch state."""
+        self.message_sender(
+            CircleSwitchRelayRequest(self._mac, state),
+            None,
+        )
+        # Predict new state
+        self._new_relay_state = state
+        self._new_relay_stamp = datetime.now()
 
     def measure_power(self) -> bool:
         """Return True if node can measure power usage."""
@@ -163,10 +187,18 @@ class PlugwiseCircle(PlugwiseNode):
 
     def get_relay_state(self) -> bool:
         """Return last known relay state."""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_relay_state' will be removed in future, use the 'relay_state' property instead !",
+        )
         return self._relay_state
 
     def set_relay_state(self, state: bool, callback=None):
         """Switch relay."""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'set_relay_state' will be removed in future, use the 'relay_state' property instead !",
+        )
         self._request_switch(state, callback)
 
     def get_power_usage(self):
