@@ -823,9 +823,6 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-    # TODO: This device setup needs work - doesn't seem to work straightforard
-    # currently breaks on setting thermostat setpoint
-
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna(self):
         """Test outdated information for Adam with Anna setup."""
