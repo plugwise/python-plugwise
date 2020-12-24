@@ -65,7 +65,7 @@ class PlugwiseCircle(PlugwiseNode):
         )
         self._switches = (SWITCH_RELAY["id"],)
         self._new_relay_state = False
-        self._new_relay_stamp = datetime.now()
+        self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
         self._pulses_1s = None
         self._pulses_8s = None
         self._pulses_consumed_1h = None
@@ -101,13 +101,11 @@ class PlugwiseCircle(PlugwiseNode):
     @relay_state.setter
     def relay_state(self, state):
         """Request the relay to switch state."""
-        self.message_sender(
-            CircleSwitchRelayRequest(self._mac, state),
-            None,
-        )
-        # Predict new state
+        self._request_switch(state)
         self._new_relay_state = state
         self._new_relay_stamp = datetime.now()
+        if state != self._relay_state:
+            self.do_callback(SWITCH_RELAY["id"])
 
     @property
     def current_power_usage(self):
