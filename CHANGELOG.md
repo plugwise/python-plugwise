@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.8.x - Code quality improvements for stick
+
+- Bug-fix: Power history was not reported (0 value) during last week of the month
+- Improvement: Validate message checksums
+- Improvement: Do a single ping request to validate if node is on-line
+- Improvement: Guard Scan sensitivity setting to medium
+- Improvement: Move general module code of messages, nodes, connection to the  __init__.py files.
+- Improvement: Better code separation. All logic is in their designated files:
+  1. Connection (connection/*.py)
+  2. Data parsing (parser.py)
+  3. Data encoding/decoding of message (messages/*.py)
+  4. Message handling - Initialization & transportation (controller.py)
+  5. Message processing - Do the required stuff (stick.py & nodes/*.py)
+- Improvement: Resolves all flake8 comments
+
 ## 0.8.5 - Fix sensor scaling
   - Fix for via HA Core issue #44349
   - Fix other value scaling bugs
