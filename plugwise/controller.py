@@ -142,7 +142,7 @@ class StickMessageController:
                     if self.expected_responses[seq_id][1]:
                         self.expected_responses[seq_id][1]()
                 else:
-                    _LOGGER.warning(
+                    _LOGGER.info(
                         "Resend %s for %s, retry %s of %s",
                         _request,
                         _mac,
