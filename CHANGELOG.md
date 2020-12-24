@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.5 - Fix sensor scaling
+  - As reported via HA Core issue #44349
+
+(## 0.8.4 - Not released: Fix "Gas Consumed Interval stays 0" )
+
 ## 0.8.2/0.8.3 - Code quality improvements
   - Switch Smile to defusedxml from lxml (improving security)
   - Lint and flake recommendations fixed
