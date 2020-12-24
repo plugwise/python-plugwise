@@ -465,7 +465,7 @@ class stick:
                     mac,
                 )
                 self.msg_controller.send(NodeAddRequest(node_join_request.mac, True))
-                self.discover_node(mac, self._discover_after_scan)
+                self._nodes_not_discovered[mac] = (None, None)
             else:
                 _LOGGER.debug(
                     "New node with mac %s requesting to join Plugwise network, do callback",
