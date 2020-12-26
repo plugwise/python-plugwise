@@ -612,7 +612,7 @@ class stick:
                             self._check_availability_of_seds(mac)
                         else:
                             # Do ping request for all non SED's
-                            self._plugwise_nodes[mac].ping(None, False)
+                            self._plugwise_nodes[mac].ping(None, True)
 
                         if self._plugwise_nodes[mac].measure_power():
                             # Request current power usage
