@@ -162,7 +162,7 @@ class PlugwiseNode:
         """Return True if node can measure power usage."""
         return self._measures_power
 
-    def request_info(self, callback=None):
+    def _request_info(self, callback=None):
         """Request info from node."""
         self.message_sender(
             NodeInfoRequest(self._mac),
@@ -198,7 +198,7 @@ class PlugwiseNode:
                 self._last_update = message.timestamp
             if not self._available:
                 self.available = True
-                self.request_info()
+                self._request_info()
             if isinstance(message, NodePingResponse):
                 self._process_ping_response(message)
             elif isinstance(message, NodeInfoResponse):

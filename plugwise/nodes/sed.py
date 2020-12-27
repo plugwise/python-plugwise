@@ -109,7 +109,7 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
-    def request_info(self, callback=None):
+    def _request_info(self, callback=None):
         """Request info from node"""
         self._queue_request(
             NodeInfoRequest(self._mac),

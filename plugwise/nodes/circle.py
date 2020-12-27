@@ -191,7 +191,7 @@ class PlugwiseCircle(PlugwiseNode):
                     microsecond=0,
                 )
             ):
-                self.request_info(self.request_power_buffer)
+                self._request_info(self.request_power_buffer)
             if not self.last_log_collected:
                 self.request_power_buffer()
 
