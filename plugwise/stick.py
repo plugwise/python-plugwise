@@ -544,7 +544,7 @@ class stick:
                     )
                     self.msg_controller._receive_timeout_thread = threading.Thread(
                         None,
-                        self._receive_timeout_loop,
+                        self.msg_controller._receive_timeout_loop,
                         "receive_timeout_thread",
                         (),
                         {},
