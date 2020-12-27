@@ -7,7 +7,6 @@
 import logging
 
 from ..constants import (
-    MESSAGE_RETRY,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
@@ -94,7 +93,7 @@ class NodeSED(PlugwiseNode):
                     request_message.__class__.__name__,
                     self.get_mac(),
                 )
-                self.message_sender(request_message, callback, MESSAGE_RETRY)
+                self.message_sender(request_message, callback, -1)
             self._SED_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:

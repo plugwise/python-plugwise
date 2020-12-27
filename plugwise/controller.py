@@ -114,7 +114,9 @@ class StickMessageController:
                 _mac = self.expected_responses[seq_id][0].mac.decode(UTF8_DECODE)
             _request = self.expected_responses[seq_id][0].__class__.__name__
 
-            if self.expected_responses[seq_id][2] <= MESSAGE_RETRY:
+            if self.expected_responses[seq_id][2] == -1:
+                _LOGGER.debug("Drop single %s to %s ", _request, _mac)
+            elif self.expected_responses[seq_id][2] <= MESSAGE_RETRY:
                 if (
                     isinstance(self.expected_responses[seq_id][0], NodeInfoRequest)
                     and not self.discovery_finished
@@ -142,35 +144,25 @@ class StickMessageController:
                         self.expected_responses[seq_id][2] + 1,
                     )
             else:
-                if self.expected_responses[seq_id][2] + 1 == MESSAGE_RETRY:
-                    _LOGGER.warning(
-                        "Drop %s to %s because max retries %s reached",
-                        _request,
-                        _mac,
-                        str(MESSAGE_RETRY + 1),
-                    )
-                    # Report node as unavailable for missing NodePingRequest
-                    if isinstance(self.expected_responses[seq_id][0], NodePingRequest):
-                        self.node_state(_mac, False)
-                    else:
-                        _LOGGER.debug(
-                            "Do a ping request to %s to validate if node is reachable",
-                            _mac,
-                        )
-                        self.send(NodePingRequest(_mac))
+                _LOGGER.warning(
+                    "Drop %s to %s because max retries %s reached",
+                    _request,
+                    _mac,
+                    str(MESSAGE_RETRY + 1),
+                )
+                # Report node as unavailable for missing NodePingRequest
+                if isinstance(self.expected_responses[seq_id][0], NodePingRequest):
+                    self.node_state(_mac, False)
                 else:
-                    if isinstance(self.expected_responses[seq_id][0], NodePingRequest):
-                        _LOGGER.info(
-                            "Drop single %s to %s ",
-                            _request,
-                            _mac,
-                        )
-                    else:
-                        _LOGGER.warning(
-                            "Drop single %s to %s ",
-                            _request,
-                            _mac,
-                        )
+                    _LOGGER.debug(
+                        "Do a single ping request to %s to validate if node is reachable",
+                        _mac,
+                    )
+                    self.send(
+                        NodePingRequest(self.expected_responses[seq_id][0].mac),
+                        None,
+                        MESSAGE_RETRY + 1,
+                    )
             del self.expected_responses[seq_id]
 
     def _send_message_loop(self):
