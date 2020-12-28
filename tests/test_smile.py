@@ -1,6 +1,7 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 
 import asyncio
+import importlib
 
 # Fixture writing
 import logging
@@ -13,7 +14,6 @@ import string
 
 # Testing
 import aiohttp
-import importlib
 import jsonpickle as json
 import pytest
 
