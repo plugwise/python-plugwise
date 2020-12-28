@@ -13,17 +13,12 @@ import string
 
 # Testing
 import aiohttp
+import importlib
 import jsonpickle as json
 import pytest
 
-from plugwise.exceptions import (
-    ConnectionFailedError,
-    DeviceTimeoutError,
-    ErrorSendingCommandError,
-    InvalidXMLError,
-    ResponseError,
-)
-from plugwise.smile import Smile
+pw_exceptions = importlib.import_module('plugwise.exceptions')
+pw_smile = importlib.import_module('plugwise.smile')
 
 pp = PrettyPrinter(indent=8)
 
@@ -204,7 +199,7 @@ class TestPlugwise:
             text = await resp.text()
             assert "xml" in text
 
-        smile = Smile(
+        smile = pw_smile.Smile(
             host=server.host,
             username="smile",
             password="".join(random.choice(string.ascii_lowercase) for i in range(8)),
@@ -223,7 +218,7 @@ class TestPlugwise:
             assert connection_state
             assert smile.smile_type is not None
             return server, smile, client
-        except (DeviceTimeoutError, InvalidXMLError) as e:
+        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.InvalidXMLError) as e:
             await self.disconnect(server, client)
             raise e
 
@@ -239,7 +234,7 @@ class TestPlugwise:
             await self.connect(timeout=True)
             _LOGGER.error(" - timeout not handled")
             raise self.ConnectError
-        except (DeviceTimeoutError, ResponseError):
+        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
@@ -247,7 +242,7 @@ class TestPlugwise:
             await self.connect(broken=True)
             _LOGGER.error(" - broken information not handled")
             raise self.ConnectError
-        except InvalidXMLError:
+        except pw_exceptions.InvalidXMLError:
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
@@ -282,7 +277,7 @@ class TestPlugwise:
                 _LOGGER.info("      ! no devices found in this location")
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=Smile, testdata=None):
+    async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         device_list = smile.get_all_devices()
@@ -346,7 +341,7 @@ class TestPlugwise:
                     )
                     assert relay_change
                     _LOGGER.info("  + worked as intended")
-                except (ErrorSendingCommandError, ResponseError):
+                except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
                     if unhappy:
                         _LOGGER.info("  + failed as expected")
                     else:
@@ -366,7 +361,7 @@ class TestPlugwise:
                 temp_change = await smile.set_temperature(loc_id, new_temp)
                 assert temp_change
                 _LOGGER.info("  + worked as intended")
-            except (ErrorSendingCommandError, ResponseError):
+            except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
@@ -385,7 +380,7 @@ class TestPlugwise:
                 preset_change = await smile.set_preset(loc_id, new_preset)
                 assert preset_change == assert_state
                 _LOGGER.info("  + worked as intended")
-            except (ErrorSendingCommandError, ResponseError):
+            except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
@@ -408,7 +403,7 @@ class TestPlugwise:
                     )
                     assert schema_change == assert_state
                     _LOGGER.info("  + failed as intended")
-                except (ErrorSendingCommandError, ResponseError):
+                except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
                     else:
@@ -1366,7 +1361,7 @@ class TestPlugwise:
         try:
             _server, _smile, _client = await self.connect_wrapper()
             assert False
-        except ConnectionFailedError:
+        except pw_exceptions.ConnectionFailedError:
             assert True
 
     class PlugwiseTestError(Exception):
