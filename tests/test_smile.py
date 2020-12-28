@@ -17,8 +17,8 @@ import importlib
 import jsonpickle as json
 import pytest
 
-pw_exceptions = importlib.import_module('plugwise.exceptions')
-pw_smile = importlib.import_module('plugwise.smile')
+pw_exceptions = importlib.import_module("plugwise.exceptions")
+pw_smile = importlib.import_module("plugwise.smile")
 
 pp = PrettyPrinter(indent=8)
 
@@ -341,7 +341,10 @@ class TestPlugwise:
                     )
                     assert relay_change
                     _LOGGER.info("  + worked as intended")
-                except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
+                except (
+                    pw_exceptions.ErrorSendingCommandError,
+                    pw_exceptions.ResponseError,
+                ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected")
                     else:
@@ -361,7 +364,10 @@ class TestPlugwise:
                 temp_change = await smile.set_temperature(loc_id, new_temp)
                 assert temp_change
                 _LOGGER.info("  + worked as intended")
-            except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
@@ -380,7 +386,10 @@ class TestPlugwise:
                 preset_change = await smile.set_preset(loc_id, new_preset)
                 assert preset_change == assert_state
                 _LOGGER.info("  + worked as intended")
-            except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
@@ -403,7 +412,10 @@ class TestPlugwise:
                     )
                     assert schema_change == assert_state
                     _LOGGER.info("  + failed as intended")
-                except (pw_exceptions.ErrorSendingCommandError, pw_exceptions.ResponseError):
+                except (
+                    pw_exceptions.ErrorSendingCommandError,
+                    pw_exceptions.ResponseError,
+                ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
                     else:
