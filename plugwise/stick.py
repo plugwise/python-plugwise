@@ -96,6 +96,20 @@ class stick:
             self.auto_initialize(callback)
 
     @property
+    def discovered_nodes(self) -> list:
+        """Return a list of mac addresses of all discovered and supported plugwise nodes."""
+        return list(
+            dict(
+                filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
+            ).keys()
+        )
+
+    @property
+    def joined_nodes(self) -> int:
+        """Return total number of nodes registered to Circle+ including Circle+ itself."""
+        return self._joined_nodes + 1
+
+    @property
     def mac(self) -> str:
         """Return the MAC address of the USB-Stick."""
         if self._mac_stick:
@@ -111,20 +125,6 @@ class stick:
     def network_id(self) -> int:
         """Return the id of the Plugwise network."""
         return self._network_id
-
-    @property
-    def joined_nodes(self) -> int:
-        """Return total number of nodes registered to Circle+ including Circle+ itself."""
-        return self._joined_nodes + 1
-
-    @property
-    def discovered_nodes(self) -> list:
-        """Return a list of mac addresses of all discovered and supported plugwise nodes."""
-        return list(
-            dict(
-                filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
-            ).keys()
-        )
 
     @property
     def port(self) -> str:
