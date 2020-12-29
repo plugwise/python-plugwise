@@ -37,14 +37,14 @@ class PlugwiseSense(NodeSED):
         self._humidity = None
 
     @property
-    def temperature(self) -> int:
-        """Return the current temperature."""
-        return self._temperature
-
-    @property
     def humidity(self) -> int:
         """Return the current humidity."""
         return self._humidity
+
+    @property
+    def temperature(self) -> int:
+        """Return the current temperature."""
+        return self._temperature
 
     def message_for_sense(self, message):
         """
