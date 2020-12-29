@@ -1,6 +1,6 @@
 # Plugwise python module
 
-This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain in Home Assistant Core. 
+This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain in Home Assistant Core.
 
 Our main usage for this module is supporting [Home Assistant](https://www.home-assistant.io) / [home-assistant](http://github.com/home-assistant/core/)
 
@@ -10,7 +10,6 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 [![codecov](https://codecov.io/gh/plugwise/python-plugwise/branch/main/graph/badge.svg)](https://codecov.io/gh/plugwise/python-plugwise)
 [![PyPI version fury.io](https://badge.fury.io/py/plugwise.svg)](https://pypi.python.org/pypi/plugwise/)
 [![Newest commit](https://github.com/plugwise/python-plugwise/workflows/Latest%20commit/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
-
 
 ## Integration
 
@@ -42,20 +41,20 @@ Please make sure you at least ran `scripts/setup.sh` before attempting to `git c
 
 Module providing interfacing with the Plugwise devices:
 
-  - [x] Adam
-  - [x]  - Floor
-  - [x]  - Koen (a Koen always comes with a Plug, the Plug is the active part)
-  - [x]  - Lisa
-  - [x]  - Plug
-  - [x]  - Tom
-  - [x] Anna 
-  - [x] Smile P1
-  - [x] Stick
-  - [x] Stretch
-  - [x] [Home-Assistant](https://home-assistant.io) via 
-  - [x]  - Native supporting networked Plugwise products
-  - [ ]  - Native supporting USB Plugwise products
-  - [x]  - (HACS)[https://hacs.xyz] and `custom_component` [Plugwise-HA](https://github.com/plugwise/plugwise-beta/] (supporting all devices)
+- [x] Adam
+  - [x] Floor
+  - [x] Koen (a Koen always comes with a Plug, the Plug is the active part)
+  - [x] Lisa
+  - [x] Plug
+  - [x] Tom
+- [x] Anna
+- [x] Smile P1
+- [x] Stick
+- [x] Stretch
+- [x] [Home-Assistant](https://home-assistant.io) via
+  - [x] Native supporting networked Plugwise products
+  - [ ] Native supporting USB Plugwise products (in progress)
+  - [x] [HACS](https://hacs.xyz) and `custom_component` [Plugwise-HA](https://github.com/plugwise/plugwise-beta/) (supporting all devices above)
 
 ## License, origins and contributors
 
@@ -63,12 +62,12 @@ As per the origins we have retained the appropriate licensing and including the 
 
 Origins (from newest to oldest):
 
-  - 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
-  - Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
-  - Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via https://github.com/laetificat (Kevin)
-  - USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
-  - USB-plugwise module - `plugwise` by https://github.com/cyberjunky/python-plugwise (Ron) originally by https://github.com/aequitas/python-plugwise (Johan) (with reference only in license to Sven)
+- 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
+- Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
+- Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via <https://github.com/laetificat> (Kevin)
+- USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
+- USB-plugwise module - `plugwise` by <https://github.com/cyberjunky/python-plugwise> (Ron) originally by <https://github.com/aequitas/python-plugwise> (Johan) (with reference only in license to Sven)
 
-# Thanks
+## Thanks
 
 On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl)for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.
