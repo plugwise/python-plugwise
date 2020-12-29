@@ -56,37 +56,6 @@ class PlugwiseNode:
         self._features = None
 
     @property
-    def mac(self) -> str:
-        """Return the MAC address in string."""
-        return self._mac.decode(UTF8_DECODE)
-
-    @property
-    def hardware_model(self) -> str:
-        """Return hardware model."""
-        if self._hardware_version:
-            return version_to_model(self._hardware_version)
-        return None
-
-    @property
-    def hardware_version(self) -> str:
-        """Return hardware version."""
-        if self._hardware_version is not None:
-            return self._hardware_version
-        return "Unknown"
-
-    @property
-    def firmware_version(self) -> str:
-        """Return firmware version."""
-        if self._firmware_version is not None:
-            return str(self._firmware_version)
-        return "Unknown"
-
-    @property
-    def name(self) -> str:
-        """Return unique name."""
-        return self.hardware_model + " (" + str(self._address) + ")"
-
-    @property
     def available(self) -> bool:
         """Current network state of plugwise node."""
         return self._available
@@ -112,9 +81,55 @@ class PlugwiseNode:
                 self.do_callback(SENSOR_AVAILABLE["id"])
 
     @property
+    def battery_powered(self) -> bool:
+        """Return True if node is a SED (battery powered) device."""
+        return self._battery_powered
+
+    @property
+    def categories(self) -> tuple:
+        """Return Home Assistant categories supported by plugwise node."""
+        return self._categories
+
+    @property
+    def hardware_model(self) -> str:
+        """Return hardware model."""
+        if self._hardware_version:
+            return version_to_model(self._hardware_version)
+        return None
+
+    @property
+    def hardware_version(self) -> str:
+        """Return hardware version."""
+        if self._hardware_version is not None:
+            return self._hardware_version
+        return "Unknown"
+
+    @property
+    def firmware_version(self) -> str:
+        """Return firmware version."""
+        if self._firmware_version is not None:
+            return str(self._firmware_version)
+        return "Unknown"
+
+    @property
     def last_update(self) -> datetime:
         """Return datetime of last received update."""
         return self._last_update
+
+    @property
+    def mac(self) -> str:
+        """Return the MAC address in string."""
+        return self._mac.decode(UTF8_DECODE)
+
+    @property
+    def measures_power(self) -> bool:
+        """Return True if node can measure power usage."""
+        return self._measures_power
+
+    @property
+    def name(self) -> str:
+        """Return unique name."""
+        return self.hardware_model + " (" + str(self._address) + ")"
 
     @property
     def ping(self) -> int:
@@ -138,29 +153,14 @@ class PlugwiseNode:
         return 0
 
     @property
-    def switches(self) -> tuple:
-        """Return switches supported by plugwise node."""
-        return self._switches
-
-    @property
     def sensors(self) -> tuple:
         """Return sensors supported by plugwise node."""
         return self._sensors
 
     @property
-    def categories(self) -> tuple:
-        """Return Home Assistant categories supported by plugwise node."""
-        return self._categories
-
-    @property
-    def battery_powered(self) -> bool:
-        """Return True if node is a SED (battery powered) device."""
-        return self._battery_powered
-
-    @property
-    def measures_power(self) -> bool:
-        """Return True if node can measure power usage."""
-        return self._measures_power
+    def switches(self) -> tuple:
+        """Return switches supported by plugwise node."""
+        return self._switches
 
     def _request_info(self, callback=None):
         """Request info from node."""
