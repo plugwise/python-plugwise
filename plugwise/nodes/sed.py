@@ -119,10 +119,11 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
-    def ping(self, callback=None):
+    def ping(self, callback=None, sensor=True):
         """Ping node"""
         if (
-            self._callbacks.get(SENSOR_PING["id"])
+            sensor
+            or self._callbacks.get(SENSOR_PING["id"])
             or self._callbacks.get(SENSOR_RSSI_IN["id"])
             or self._callbacks.get(SENSOR_RSSI_OUT["id"])
         ):
