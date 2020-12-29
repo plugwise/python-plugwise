@@ -67,7 +67,7 @@ class stick:
     """Plugwise connection stick."""
 
     def __init__(self, port, callback=None):
-        self.port = port
+        self._port = port
         self._mac_stick = None
         self._network_online = False
         self.circle_plus_mac = None
@@ -125,6 +125,18 @@ class stick:
                 filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
             ).keys()
         )
+
+    @property
+    def port(self) -> str:
+        """Return currently configured port to USB-Stick."""
+        return self._port
+
+    @port.setter
+    def port(self, port: str):
+        """Set port to USB-Stick."""
+        if self.msg_controller:
+            self.disconnect()
+        self._port = port
 
     def auto_initialize(self, callback=None):
         """Automatic initialization of USB-stick and discovery of all registered nodes."""
@@ -206,6 +218,7 @@ class stick:
         self._run_update_thread = False
         self._auto_update_timer = 0
         self.msg_controller.disconnect_from_stick()
+        self.msg_controller = None
 
     def subscribe_stick_callback(self, callback, callback_type):
         """Subscribe callback to execute."""
