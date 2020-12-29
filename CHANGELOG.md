@@ -7,6 +7,7 @@
 - Improvement: Do a single ping request to validate if node is on-line
 - Improvement: Guard Scan sensitivity setting to medium
 - Improvement: Move general module code of messages, nodes, connection to the  __init__.py files.
+- Improvement: Do proper timeout handling while sequence counter resets (once every 65532 messages)
 - Improvement: Better code separation. All logic is in their designated files:
   1. Connection (connection/*.py)
   2. Data parsing (parser.py)

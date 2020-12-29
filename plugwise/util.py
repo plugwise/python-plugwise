@@ -55,7 +55,8 @@ def inc_seq_id(seq_id, value=1) -> bytearray:
     if seq_id is None:
         return b"0000"
     temp_int = int(seq_id, 16) + value
-    # Max seq_id = b'FFFC'
+    # Max seq_id = b'FFFB'
+    # b'FFFC' reserved for <unknown> message
     # b'FFFD' reserved for 'NodeJoinAckResponse' message
     # b'FFFE' reserved for 'NodeSwitchGroupResponse' message
     # b'FFFF' reserved for 'NodeAwakeResponse' message

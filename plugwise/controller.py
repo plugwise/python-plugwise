@@ -217,7 +217,7 @@ class StickMessageController:
         if self.last_seq_id:
             if int(self.last_seq_id, 16) < int(message.seq_id, 16) < 65533:
                 self.last_seq_id = message.seq_id
-            elif message.seq_id == b"0000":
+            elif message.seq_id == b"0000" and self.last_seq_id == b"FFFB":
                 self.last_seq_id = b"0000"
 
         if isinstance(message, NodeAckSmallResponse):
