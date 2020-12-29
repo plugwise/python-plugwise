@@ -53,8 +53,9 @@ Module providing interfacing with the Plugwise devices:
   - [x] Circle+ / Stealth+
   - [x] Circle / Stealth
   - [x] Scan
-  - [ ] Sense (untested)
-  - [ ] Switch
+  - The devices listed below have **NOT** been tested and are therefore unknown for their correct operation
+    - [x] Sense
+    - [x] Switch
 - [x] Stretch
 - [x] [Home-Assistant](https://home-assistant.io) via
   - [x] Native supporting networked Plugwise products
