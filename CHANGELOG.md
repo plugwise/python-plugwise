@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.x - Code quality improvements for stick
+## 0.8.6 - Code quality improvements for stick
 
 - Bug-fix: Power history was not reported (0 value) during last week of the month
 - Improvement: Validate message checksums
