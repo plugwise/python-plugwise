@@ -613,7 +613,7 @@ class stick:
                         if self._plugwise_nodes[mac].is_sed():
                             self._check_availability_of_seds(mac)
                         # Request current power usage for all nodes supporting power measurement
-                        if self._plugwise_nodes[mac].measures_power():
+                        if self._plugwise_nodes[mac].measure_power():
                             self._plugwise_nodes[mac].update_power_usage()
                             # Sync internal clock of power measure nodes once a day
                             if datetime.now().day != day_of_month:
