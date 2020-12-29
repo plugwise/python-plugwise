@@ -89,25 +89,6 @@ class PlugwiseCircle(PlugwiseNode):
         self._request_calibration()
 
     @property
-    def relay_state(self) -> bool:
-        """
-        Return last known relay state or the new switch state by anticipating
-        the acknowledge for new state is getting in before message timeout.
-        """
-        if self._new_relay_stamp + timedelta(seconds=MESSAGE_TIME_OUT) > datetime.now():
-            return self._new_relay_state
-        return self._relay_state
-
-    @relay_state.setter
-    def relay_state(self, state):
-        """Request the relay to switch state."""
-        self._request_switch(state)
-        self._new_relay_state = state
-        self._new_relay_stamp = datetime.now()
-        if state != self._relay_state:
-            self.do_callback(SWITCH_RELAY["id"])
-
-    @property
     def current_power_usage(self):
         """
         Returns power usage during the last second in Watts
@@ -138,16 +119,6 @@ class PlugwiseCircle(PlugwiseNode):
         return None
 
     @property
-    def power_production_current_hour(self):
-        """
-        Returns the power production during this running hour in kWh
-        Based on last received power usage information
-        """
-        if self._pulses_produced_1h is not None:
-            return self.pulses_to_kWs(self._pulses_produced_1h, 3600)
-        return None
-
-    @property
     def power_consumption_previous_hour(self):
         """Returns power consumption during the previous hour in kWh"""
         return self._power_consumption_prev_hour
@@ -161,6 +132,35 @@ class PlugwiseCircle(PlugwiseNode):
     def power_consumption_yesterday(self):
         """Total power consumption of yesterday in kWh"""
         return self._power_consumption_yesterday
+
+    @property
+    def power_production_current_hour(self):
+        """
+        Returns the power production during this running hour in kWh
+        Based on last received power usage information
+        """
+        if self._pulses_produced_1h is not None:
+            return self.pulses_to_kWs(self._pulses_produced_1h, 3600)
+        return None
+
+    @property
+    def relay_state(self) -> bool:
+        """
+        Return last known relay state or the new switch state by anticipating
+        the acknowledge for new state is getting in before message timeout.
+        """
+        if self._new_relay_stamp + timedelta(seconds=MESSAGE_TIME_OUT) > datetime.now():
+            return self._new_relay_state
+        return self._relay_state
+
+    @relay_state.setter
+    def relay_state(self, state):
+        """Request the relay to switch state."""
+        self._request_switch(state)
+        self._new_relay_state = state
+        self._new_relay_stamp = datetime.now()
+        if state != self._relay_state:
+            self.do_callback(SWITCH_RELAY["id"])
 
     def _request_calibration(self, callback=None):
         """Request calibration info"""
