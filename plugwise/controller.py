@@ -65,13 +65,6 @@ class StickMessageController:
             self.connection = PlugwiseUSBConnection(self.port, self.parser.feed)
         if self.connection.connect():
             _LOGGER.debug("Starting message controller threads...")
-            # receive timeout daemon
-            self._run_receive_timeout_thread = True
-            self._receive_timeout_thread = threading.Thread(
-                None, self._receive_timeout_loop, "receive_timeout_thread", (), {}
-            )
-            self._receive_timeout_thread.daemon = True
-            self._receive_timeout_thread.start()
             # send daemon
             self._send_message_queue = queue.Queue()
             self._run_send_message_thread = True
@@ -80,6 +73,13 @@ class StickMessageController:
             )
             self._send_message_thread.daemon = True
             self._send_message_thread.start()
+            # receive timeout daemon
+            self._run_receive_timeout_thread = True
+            self._receive_timeout_thread = threading.Thread(
+                None, self._receive_timeout_loop, "receive_timeout_thread", (), {}
+            )
+            self._receive_timeout_thread.daemon = True
+            self._receive_timeout_thread.start()
             _LOGGER.debug("All message controller threads started")
         else:
             _LOGGER.warning("Failed to connect to USB stick")
