@@ -642,7 +642,7 @@ class stick:
 
                         if self._plugwise_nodes[mac].measures_power:
                             # Request current power usage
-                            self._plugwise_nodes[mac].update_power_usage()
+                            self._plugwise_nodes[mac]._request_power_update()
                             # Sync internal clock of power measure nodes once a day
                             if datetime.now().day != day_of_month:
                                 day_of_month = datetime.now().day
