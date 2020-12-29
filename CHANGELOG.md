@@ -26,11 +26,11 @@
     - `ping` (integer) - Network roundtrip time in milliseconds
     - `rssi_in` (DBm) - Inbound RSSI level
     - `rssi_out` (DBm) - Outbound RSSI level based on the received inbound RSSI level of the neighbor node
+  - Scan devices
+    - `motion` (boolean) - Current detection state of motion.
   - Sense devices
     - `humidity`  (integer) - Last reported humidity value.
     - `temperature` (integer) - Last reported temperature value.
-  - Scan devices
-    - `motion` (boolean) - Current detection state of motion.
   - Circle/Circle+/Stealth devices
     - `current_power_usage` (float) - Current power usage (Watts) during the last second
     - `current_power_usage_8_sec` (float) - Current power usage (Watts) during the last 8 seconds
