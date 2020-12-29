@@ -53,7 +53,7 @@ Module providing interfacing with the Plugwise devices:
   - [x] Circle+ / Stealth+
   - [x] Circle / Stealth
   - [x] Scan
-  - The devices listed below have **NOT** been tested and are therefore unknown for their correct operation
+  The devices listed below have **NOT** been tested and are therefore unknown for their correct operation
     - [x] Sense
     - [x] Switch
 - [x] Stretch
