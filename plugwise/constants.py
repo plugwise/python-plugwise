@@ -230,7 +230,7 @@ SENSOR_AVAILABLE = {
 SENSOR_HUMIDITY = {
     "id": "humidity",
     "name": "Humidity",
-    "state": "get_humidity",
+    "state": "humidity",
     "unit": "%",
 }
 SENSOR_MOTION = {
@@ -302,7 +302,7 @@ SENSOR_SWITCH = {
 SENSOR_TEMPERATURE = {
     "id": "temperature",
     "name": "Temperature",
-    "state": "get_temperature",
+    "state": "temperature",
     "unit": TEMP_CELSIUS,
 }
 
