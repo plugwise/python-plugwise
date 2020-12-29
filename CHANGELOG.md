@@ -40,6 +40,8 @@
     - `power_consumption_yesterday` (float) - Total power consumption (kWh) during yesterday
     - `power_production_current_hour` (float) - Total power production (kWh) this hour
     - `relay_state` (boolean) - State of the output power relay. Setting this property will operate the relay
+  - Switch devices
+    - `switch`  (boolean) - Last reported state of switch
 
 ## 0.8.6 - Code quality improvements for stick
 

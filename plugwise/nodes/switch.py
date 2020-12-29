@@ -26,8 +26,9 @@ class PlugwiseSwitch(NodeSED):
         )
         self._switch_state = False
 
-    def get_switch_state(self):
-        """Return state of switch"""
+    @property
+    def switch(self) -> bool:
+        """Return the last known switch state"""
         return self._switch_state
 
     def message_for_switch(self, message):
@@ -61,3 +62,11 @@ class PlugwiseSwitch(NodeSED):
                 str(message.power_state),
                 self.mac,
             )
+
+    ## TODO: All functions below can be removed when HA component is changed to use the property values ##
+    def get_switch_state(self):
+        """Return state of switch"""
+        _LOGGER.warning(
+            "Function 'get_switch_state' will be removed in future, use the 'switch' property instead !",
+        )
+        return self._switch_state
