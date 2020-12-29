@@ -1,5 +1,48 @@
 # Changelog
 
+## 0.8.7 - API change for stick
+
+- Improvement: Debounce relay state
+- Added: New property attributes for USB-stick.
+  The old functions are still available but will give a deprecate warning
+  - Stick
+    - `discovered_nodes` (list) - List of MAC addresses of all discovered nodes
+    - `joined_nodes` (integer) - Total number of registered nodes at Plugwise Circle+
+    - `mac` (string) - The MAC address of the USB-Stick
+    - `network_state` (boolean) - The state (on-line/off-line) of the Plugwise network.
+    - `network_id` (integer) - The ID of the Plugwise network.
+    - `port` (string) - The port connection string
+  - All plugwise devices
+    - `available` (boolean) - The current network availability state of the device
+    - `battery_powered` (boolean) - Indicates if device is battery powered
+    - `ha_components` (tuple) - All supported Home Assistant [components](https://developers.home-assistant.io/docs/core/entity#component) the device supports
+    - `hardware_model` (string) - Hardware model name
+    - `hardware_version` (string) - Hardware version of device
+    - `firmware_version` (string) - Firmware version device is running
+    - `last_update` (datetime) - Date/time stamp of last received update from device
+    - `mac` (string) - MAC address of device
+    - `measures_power` (boolean) - Indicates if device supports power measurement
+    - `name` (string) - Name of device based om hardware model and MAC address
+    - `ping` (integer) - Network roundtrip time in milliseconds
+    - `rssi_in` (DBm) - Inbound RSSI level
+    - `rssi_out` (DBm) - Outbound RSSI level based on the received inbound RSSI level of the neighbor node
+    - `sensors` (tuple) - All supported sensors
+    - `switches` (tuple) - All supported switches
+  - Sense devices
+    - `humidity`  (integer) - Last reported humidity value.
+    - `temperature` (integer) - Last reported temperature value.
+  - Scan devices
+    - `motion` (boolean) - Current detection state of motion.
+  - Circle/Circle+/Stealth devices
+    - `current_power_usage` (float) - Current power usage (Watts) during the last second
+    - `current_power_usage_8_sec` (float) - Current power usage (Watts) during the last 8 seconds
+    - `power_consumption_current_hour` (float) - Total power consumption (kWh) this running hour
+    - `power_consumption_previous_hour` (float) - Total power consumption (kWh) during the previous hour
+    - `power_consumption_today` (float) - Total power consumption (kWh) of today
+    - `power_consumption_yesterday` (float) - Total power consumption (kWh) during yesterday
+    - `power_production_current_hour` (float) - Total power production (kWh) this hour
+    - `relay_state` (boolean) - State of the output power relay. Setting this property will operate the relay
+
 ## 0.8.6 - Code quality improvements for stick
 
 - Bug-fix: Power history was not reported (0 value) during last week of the month
