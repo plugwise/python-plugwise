@@ -220,86 +220,92 @@ SENSE_TEMPERATURE_OFFSET = 46.85
 CB_NEW_NODE = "NEW_NODE"
 CB_JOIN_REQUEST = "JOIN_REQUEST"
 
-# Sensors
-SENSOR_AVAILABLE = {
+# Stick device features
+FEATURE_AVAILABLE = {
     "id": "available",
     "name": "Available",
     "state": "available",
     "unit": "state",
 }
-SENSOR_HUMIDITY = {
+FEATURE_HUMIDITY = {
     "id": "humidity",
     "name": "Humidity",
     "state": "humidity",
     "unit": "%",
 }
-SENSOR_MOTION = {
+FEATURE_MOTION = {
     "id": "motion",
     "name": "Motion",
     "state": "motion",
     "unit": "state",
 }
-SENSOR_PING = {
+FEATURE_PING = {
     "id": "ping",
     "name": "Ping roundtrip",
     "state": "ping",
     "unit": TIME_MILLISECONDS,
 }
-SENSOR_POWER_USE = {
+FEATURE_POWER_USE = {
     "id": "power_1s",
     "name": "Power usage",
     "state": "current_power_usage",
     "unit": POWER_WATT,
 }
-SENSOR_POWER_USE_LAST_8_SEC = {
+FEATURE_POWER_USE_LAST_8_SEC = {
     "id": "power_8s",
     "name": "Power usage 8 seconds",
     "state": "current_power_usage_8_sec",
     "unit": POWER_WATT,
 }
-SENSOR_POWER_CONSUMPTION_CURRENT_HOUR = {
+FEATURE_POWER_CONSUMPTION_CURRENT_HOUR = {
     "id": "power_con_cur_hour",
     "name": "Power consumption current hour",
     "state": "power_consumption_current_hour",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
-SENSOR_POWER_CONSUMPTION_PREVIOUS_HOUR = {
+FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR = {
     "id": "power_con_prev_hour",
     "name": "Power consumption previous hour",
     "state": "power_consumption_previous_hour",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
-SENSOR_POWER_CONSUMPTION_TODAY = {
+FEATURE_POWER_CONSUMPTION_TODAY = {
     "id": "power_con_today",
     "name": "Power consumption today",
     "state": "power_consumption_today",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
-SENSOR_POWER_CONSUMPTION_YESTERDAY = {
+FEATURE_POWER_CONSUMPTION_YESTERDAY = {
     "id": "power_con_yesterday",
     "name": "Power consumption yesterday",
     "state": "power_consumption_yesterday",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
-SENSOR_POWER_PRODUCTION_CURRENT_HOUR = {
+FEATURE_POWER_PRODUCTION_CURRENT_HOUR = {
     "id": "power_prod_cur_hour",
     "name": "Power production current hour",
     "state": "power_production_current_hour",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
-SENSOR_POWER_PRODUCTION_PREVIOUS_HOUR = {
+FEATURE_POWER_PRODUCTION_PREVIOUS_HOUR = {
     "id": "power_prod_prev_hour",
     "name": "Power production previous hour",
     "state": "power_production_previous_hour",
     "unit": ENERGY_KILO_WATT_HOUR,
 }
-SENSOR_SWITCH = {
+FEATURE_RELAY = {
+    "id": "relay",
+    "name": "Relay state",
+    "state": "relay_state",
+    "unit": "state",
+}
+FEATURE_SWITCH = {
     "id": "switch",
-    "name": "switch",
+    "name": "Switch state",
     "state": "switch_state",
     "unit": "state",
 }
-SENSOR_TEMPERATURE = {
+FEATURE_TEMPERATURE = {
     "id": "temperature",
     "name": "Temperature",
     "state": "temperature",
@@ -307,32 +313,18 @@ SENSOR_TEMPERATURE = {
 }
 
 # TODO: Need to validate RSSI sensors
-SENSOR_RSSI_IN = {
+FEATURE_RSSI_IN = {
     "id": "RSSI_in",
     "name": "RSSI in",
     "state": "rssi_in",
     "unit": "Unknown",
 }
-SENSOR_RSSI_OUT = {
+FEATURE_RSSI_OUT = {
     "id": "RSSI_out",
     "name": "RSSI out",
     "state": "rssi_out",
     "unit": "Unknown",
 }
-
-# Switches
-SWITCH_RELAY = {
-    "id": "relay",
-    "name": "Relay state",
-    "state": "relay_state",
-    "switch": "relay_state",
-}
-
-# Home Assistant entities
-HA_SWITCH = "switch"
-HA_SENSOR = "sensor"
-HA_BINARY_SENSOR = "binary_sensor"
-
 
 ### Smile constants ###
 

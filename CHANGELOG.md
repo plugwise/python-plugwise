@@ -15,10 +15,10 @@
   - All plugwise devices
     - `available` (boolean) - The current network availability state of the device
     - `battery_powered` (boolean) - Indicates if device is battery powered
-    - `ha_components` (tuple) - All supported Home Assistant [components](https://developers.home-assistant.io/docs/core/entity#component) the device supports
+    - `features` (tuple) - List of supported attribute IDs
+    - `firmware_version` (string) - Firmware version device is running
     - `hardware_model` (string) - Hardware model name
     - `hardware_version` (string) - Hardware version of device
-    - `firmware_version` (string) - Firmware version device is running
     - `last_update` (datetime) - Date/time stamp of last received update from device
     - `mac` (string) - MAC address of device
     - `measures_power` (boolean) - Indicates if device supports power measurement
@@ -26,8 +26,6 @@
     - `ping` (integer) - Network roundtrip time in milliseconds
     - `rssi_in` (DBm) - Inbound RSSI level
     - `rssi_out` (DBm) - Outbound RSSI level based on the received inbound RSSI level of the neighbor node
-    - `sensors` (tuple) - All supported sensors
-    - `switches` (tuple) - All supported switches
   - Sense devices
     - `humidity`  (integer) - Last reported humidity value.
     - `temperature` (integer) - Last reported temperature value.

@@ -17,9 +17,9 @@ from ..constants import (
     SED_MAINTENANCE_INTERVAL,
     SED_SLEEP_FOR,
     SED_STAY_ACTIVE,
-    SENSOR_PING,
-    SENSOR_RSSI_IN,
-    SENSOR_RSSI_OUT,
+    FEATURE_PING,
+    FEATURE_RSSI_IN,
+    FEATURE_RSSI_OUT,
     SLEEP_SET,
 )
 from ..messages.requests import NodeInfoRequest, NodePingRequest, NodeSleepConfigRequest
@@ -120,9 +120,9 @@ class NodeSED(PlugwiseNode):
         """Ping node"""
         if (
             sensor
-            or self._callbacks.get(SENSOR_PING["id"])
-            or self._callbacks.get(SENSOR_RSSI_IN["id"])
-            or self._callbacks.get(SENSOR_RSSI_OUT["id"])
+            or self._callbacks.get(FEATURE_PING["id"])
+            or self._callbacks.get(FEATURE_RSSI_IN["id"])
+            or self._callbacks.get(FEATURE_RSSI_OUT["id"])
         ):
             self._queue_request(
                 NodePingRequest(self._mac),

@@ -3,25 +3,23 @@ from datetime import datetime, timedelta
 import logging
 
 from ..constants import (
-    HA_SENSOR,
-    HA_SWITCH,
+    FEATURE_AVAILABLE,
+    FEATURE_PING,
+    FEATURE_POWER_CONSUMPTION_CURRENT_HOUR,
+    FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR,
+    FEATURE_POWER_CONSUMPTION_TODAY,
+    FEATURE_POWER_CONSUMPTION_YESTERDAY,
+    FEATURE_POWER_PRODUCTION_CURRENT_HOUR,
+    FEATURE_POWER_USE,
+    FEATURE_POWER_USE_LAST_8_SEC,
+    FEATURE_RELAY,
+    FEATURE_RSSI_IN,
+    FEATURE_RSSI_OUT,
     MAX_TIME_DRIFT,
     MESSAGE_TIME_OUT,
     PULSES_PER_KW_SECOND,
     RELAY_SWITCHED_OFF,
     RELAY_SWITCHED_ON,
-    SENSOR_AVAILABLE,
-    SENSOR_PING,
-    SENSOR_POWER_CONSUMPTION_CURRENT_HOUR,
-    SENSOR_POWER_CONSUMPTION_PREVIOUS_HOUR,
-    SENSOR_POWER_CONSUMPTION_TODAY,
-    SENSOR_POWER_CONSUMPTION_YESTERDAY,
-    SENSOR_POWER_PRODUCTION_CURRENT_HOUR,
-    SENSOR_POWER_USE,
-    SENSOR_POWER_USE_LAST_8_SEC,
-    SENSOR_RSSI_IN,
-    SENSOR_RSSI_OUT,
-    SWITCH_RELAY,
 )
 from ..messages.requests import (
     CircleCalibrationRequest,
@@ -48,22 +46,20 @@ class PlugwiseCircle(PlugwiseNode):
 
     def __init__(self, mac, address, message_sender):
         super().__init__(mac, address, message_sender)
-        self._categories = (HA_SWITCH, HA_SENSOR)
-        self._sensors = (
-            SENSOR_AVAILABLE["id"],
-            SENSOR_PING["id"],
-            SENSOR_POWER_USE["id"],
-            SENSOR_POWER_USE_LAST_8_SEC["id"],
-            SENSOR_POWER_CONSUMPTION_CURRENT_HOUR["id"],
-            SENSOR_POWER_CONSUMPTION_PREVIOUS_HOUR["id"],
-            SENSOR_POWER_CONSUMPTION_TODAY["id"],
-            SENSOR_POWER_CONSUMPTION_YESTERDAY["id"],
-            SENSOR_POWER_PRODUCTION_CURRENT_HOUR["id"],
-            # SENSOR_POWER_PRODUCTION_PREVIOUS_HOUR["id"],
-            SENSOR_RSSI_IN["id"],
-            SENSOR_RSSI_OUT["id"],
+        self._features = (
+            FEATURE_PING["id"],
+            FEATURE_POWER_USE["id"],
+            FEATURE_POWER_USE_LAST_8_SEC["id"],
+            FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"],
+            FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"],
+            FEATURE_POWER_CONSUMPTION_TODAY["id"],
+            FEATURE_POWER_CONSUMPTION_YESTERDAY["id"],
+            FEATURE_POWER_PRODUCTION_CURRENT_HOUR["id"],
+            # FEATURE_POWER_PRODUCTION_PREVIOUS_HOUR["id"],
+            FEATURE_RSSI_IN["id"],
+            FEATURE_RSSI_OUT["id"],
+            FEATURE_RELAY["id"],
         )
-        self._switches = (SWITCH_RELAY["id"],)
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
         self._pulses_1s = None
@@ -160,7 +156,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._new_relay_state = state
         self._new_relay_stamp = datetime.now()
         if state != self._relay_state:
-            self.do_callback(SWITCH_RELAY["id"])
+            self.do_callback(FEATURE_RELAY["id"])
 
     def _request_calibration(self, callback=None):
         """Request calibration info"""
@@ -244,7 +240,7 @@ class PlugwiseCircle(PlugwiseNode):
                     self.mac,
                 )
                 self._relay_state = True
-                self.do_callback(SWITCH_RELAY["id"])
+                self.do_callback(FEATURE_RELAY["id"])
         elif message.ack_id == RELAY_SWITCHED_OFF:
             if self._relay_state:
                 _LOGGER.debug(
@@ -252,13 +248,14 @@ class PlugwiseCircle(PlugwiseNode):
                     self.mac,
                 )
                 self._relay_state = False
-                self.do_callback(SWITCH_RELAY["id"])
+                self.do_callback(FEATURE_RELAY["id"])
         else:
             _LOGGER.debug(
                 "Unmanaged _node_ack_response %s received for %s",
                 str(message.ack_id),
                 self.mac,
             )
+        self._request_features()
 
     def _response_power_usage(self, message):
         # Sometimes the circle returns -1 for some of the pulse counters
@@ -285,7 +282,7 @@ class PlugwiseCircle(PlugwiseNode):
             self._pulses_1s = pulses_1s
         else:
             self._pulses_1s = 0
-        self.do_callback(SENSOR_POWER_USE["id"])
+        self.do_callback(FEATURE_POWER_USE["id"])
         # Power consumption last 8 seconds
         if message.pulse_8s.value == -1:
             message.pulse_8s.value = 0
@@ -304,7 +301,7 @@ class PlugwiseCircle(PlugwiseNode):
             self._pulses_8s = pulses_8s
         else:
             self._pulses_8s = 0
-        self.do_callback(SENSOR_POWER_USE_LAST_8_SEC["id"])
+        self.do_callback(FEATURE_POWER_USE_LAST_8_SEC["id"])
         # Power consumption current hour
         if message.pulse_hour_consumed.value == -1:
             message.pulse_hour_consumed.value = 0
@@ -314,7 +311,7 @@ class PlugwiseCircle(PlugwiseNode):
             )
         if self._pulses_consumed_1h != message.pulse_hour_consumed.value:
             self._pulses_consumed_1h = message.pulse_hour_consumed.value
-            self.do_callback(SENSOR_POWER_CONSUMPTION_CURRENT_HOUR["id"])
+            self.do_callback(FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"])
         # Power produced current hour
         if message.pulse_hour_produced.value == -1:
             message.pulse_hour_produced.value = 0
@@ -324,7 +321,7 @@ class PlugwiseCircle(PlugwiseNode):
             )
         if self._pulses_produced_1h != message.pulse_hour_produced.value:
             self._pulses_produced_1h = message.pulse_hour_produced.value
-            self.do_callback(SENSOR_POWER_PRODUCTION_CURRENT_HOUR["id"])
+            self.do_callback(FEATURE_POWER_PRODUCTION_CURRENT_HOUR["id"])
 
     def _response_calibration(self, message):
         """Store calibration properties"""
@@ -421,13 +418,13 @@ class PlugwiseCircle(PlugwiseNode):
                 yesterday_power += self.power_history[dt]
         if self._power_consumption_prev_hour != last_hour_usage:
             self._power_consumption_prev_hour = last_hour_usage
-            self.do_callback(SENSOR_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
+            self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
         if self._power_consumption_today != today_power:
             self._power_consumption_today = today_power
-            self.do_callback(SENSOR_POWER_CONSUMPTION_TODAY["id"])
+            self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
         if self._power_consumption_yesterday != yesterday_power:
             self._power_consumption_yesterday = yesterday_power
-            self.do_callback(SENSOR_POWER_CONSUMPTION_YESTERDAY["id"])
+            self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
 
     def _response_clock(self, message):
         dt = datetime(

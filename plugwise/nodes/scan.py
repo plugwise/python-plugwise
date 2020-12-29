@@ -2,19 +2,17 @@
 import logging
 
 from ..constants import (
-    HA_BINARY_SENSOR,
-    HA_SENSOR,
+    FEATURE_AVAILABLE,
+    FEATURE_MOTION,
+    FEATURE_PING,
+    FEATURE_RSSI_IN,
+    FEATURE_RSSI_OUT,
     SCAN_CONFIGURE_ACCEPTED,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
     SCAN_SENSITIVITY_HIGH,
     SCAN_SENSITIVITY_MEDIUM,
     SCAN_SENSITIVITY_OFF,
-    SENSOR_AVAILABLE,
-    SENSOR_MOTION,
-    SENSOR_PING,
-    SENSOR_RSSI_IN,
-    SENSOR_RSSI_OUT,
 )
 from ..messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
 from ..messages.responses import NodeAckResponse, NodeSwitchGroupResponse
@@ -28,13 +26,11 @@ class PlugwiseScan(NodeSED):
 
     def __init__(self, mac, address, message_sender):
         super().__init__(mac, address, message_sender)
-        self._categories = (HA_SENSOR, HA_BINARY_SENSOR)
-        self._sensors = (
-            SENSOR_AVAILABLE["id"],
-            SENSOR_PING["id"],
-            SENSOR_MOTION["id"],
-            SENSOR_RSSI_IN["id"],
-            SENSOR_RSSI_OUT["id"],
+        self._features = (
+            FEATURE_MOTION["id"],
+            FEATURE_PING["id"],
+            FEATURE_RSSI_IN["id"],
+            FEATURE_RSSI_OUT["id"],
         )
         self._motion_state = False
         self._motion_reset_timer = None
@@ -89,12 +85,12 @@ class PlugwiseScan(NodeSED):
             # turn off => clear motion
             if self._motion_state:
                 self._motion_state = False
-                self.do_callback(SENSOR_MOTION["id"])
+                self.do_callback(FEATURE_MOTION["id"])
         elif message.power_state.value == 1:
             # turn on => motion
             if not self._motion_state:
                 self._motion_state = True
-                self.do_callback(SENSOR_MOTION["id"])
+                self.do_callback(FEATURE_MOTION["id"])
         else:
             _LOGGER.warning(
                 "Unknown power_state (%s) received from %s",

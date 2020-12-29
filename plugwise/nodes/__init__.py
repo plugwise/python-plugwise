@@ -3,11 +3,11 @@ from datetime import datetime
 import logging
 
 from ..constants import (
-    SENSOR_AVAILABLE,
-    SENSOR_PING,
-    SENSOR_RSSI_IN,
-    SENSOR_RSSI_OUT,
-    SWITCH_RELAY,
+    FEATURE_AVAILABLE,
+    FEATURE_PING,
+    FEATURE_RSSI_IN,
+    FEATURE_RSSI_OUT,
+    FEATURE_RELAY,
     UTF8_DECODE,
 )
 from ..messages.requests import NodeFeaturesRequest, NodeInfoRequest, NodePingRequest
@@ -35,9 +35,7 @@ class PlugwiseNode:
             )
         self._mac = bytes(mac, encoding=UTF8_DECODE)
         self.message_sender = message_sender
-        self._categories = ()
-        self._sensors = ()
-        self._switches = ()
+        self._features = ()
         self._address = address
         self._callbacks = {}
         self._last_update = None
@@ -53,7 +51,7 @@ class PlugwiseNode:
         self._relay_state = False
         self._last_log_address = None
         self.last_info_message = None
-        self._features = None
+        self._device_features = None
 
     @property
     def available(self) -> bool:
@@ -70,7 +68,7 @@ class PlugwiseNode:
                     "Mark node %s available",
                     self.mac,
                 )
-                self.do_callback(SENSOR_AVAILABLE["id"])
+                self.do_callback(FEATURE_AVAILABLE["id"])
         else:
             if self._available:
                 self._available = False
@@ -78,17 +76,12 @@ class PlugwiseNode:
                     "Mark node %s unavailable",
                     self.mac,
                 )
-                self.do_callback(SENSOR_AVAILABLE["id"])
+                self.do_callback(FEATURE_AVAILABLE["id"])
 
     @property
     def battery_powered(self) -> bool:
         """Return True if node is a SED (battery powered) device."""
         return self._battery_powered
-
-    @property
-    def categories(self) -> tuple:
-        """Return Home Assistant categories supported by plugwise node."""
-        return self._categories
 
     @property
     def hardware_model(self) -> str:
@@ -103,6 +96,11 @@ class PlugwiseNode:
         if self._hardware_version is not None:
             return self._hardware_version
         return "Unknown"
+
+    @property
+    def features(self) -> tuple:
+        """Return the abstracted features supported by this plugwise device."""
+        return self._features
 
     @property
     def firmware_version(self) -> str:
@@ -152,16 +150,6 @@ class PlugwiseNode:
             return self._RSSI_out
         return 0
 
-    @property
-    def sensors(self) -> tuple:
-        """Return sensors supported by plugwise node."""
-        return self._sensors
-
-    @property
-    def switches(self) -> tuple:
-        """Return switches supported by plugwise node."""
-        return self._switches
-
     def _request_info(self, callback=None):
         """Request info from node."""
         self.message_sender(
@@ -178,7 +166,7 @@ class PlugwiseNode:
 
     def _request_ping(self, callback=None, ignore_sensor=True):
         """Ping node."""
-        if ignore_sensor or SENSOR_PING["id"] in self._callbacks:
+        if ignore_sensor or FEATURE_PING["id"] in self._callbacks:
             self.message_sender(
                 NodePingRequest(self._mac),
                 callback,
@@ -227,7 +215,7 @@ class PlugwiseNode:
 
     def subscribe_callback(self, callback, sensor) -> bool:
         """Subscribe callback to execute when state change happens."""
-        if sensor in self._sensors:
+        if sensor in self._features:
             if sensor not in self._callbacks:
                 self._callbacks[sensor] = []
             self._callbacks[sensor].append(callback)
@@ -262,13 +250,13 @@ class PlugwiseNode:
         """Process ping response message."""
         if self._RSSI_in != message.in_RSSI.value:
             self._RSSI_in = message.in_RSSI.value
-            self.do_callback(SENSOR_RSSI_IN["id"])
+            self.do_callback(FEATURE_RSSI_IN["id"])
         if self._RSSI_out != message.out_RSSI.value:
             self._RSSI_out = message.out_RSSI.value
-            self.do_callback(SENSOR_RSSI_OUT["id"])
+            self.do_callback(FEATURE_RSSI_OUT["id"])
         if self._ping != message.ping_ms.value:
             self._ping = message.ping_ms.value
-            self.do_callback(SENSOR_PING["id"])
+            self.do_callback(FEATURE_PING["id"])
 
     def _process_info_response(self, message):
         """Process info response message."""
@@ -276,11 +264,11 @@ class PlugwiseNode:
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
                 self._relay_state = True
-                self.do_callback(SWITCH_RELAY["id"])
+                self.do_callback(FEATURE_RELAY["id"])
         else:
             if self._relay_state:
                 self._relay_state = False
-                self.do_callback(SWITCH_RELAY["id"])
+                self.do_callback(FEATURE_RELAY["id"])
         self._hardware_version = message.hw_ver.value.decode(UTF8_DECODE)
         self._firmware_version = message.fw_ver.value
         self._node_type = message.node_type.value
@@ -295,10 +283,10 @@ class PlugwiseNode:
 
     def _process_features_response(self, message):
         """Process features message."""
-        _LOGGER.info(
+        _LOGGER.warning(
             "Node %s supports features %s", self.mac, str(message.features.value)
         )
-        self._features = message.features.value
+        self._device_features = message.features.value
 
     ## TODO: All functions below can be removed when HA component is changed to use the property values ##
     def get_node_type(self) -> str:
