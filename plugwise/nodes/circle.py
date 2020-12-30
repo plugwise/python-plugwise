@@ -255,7 +255,6 @@ class PlugwiseCircle(PlugwiseNode):
                 str(message.ack_id),
                 self.mac,
             )
-        self._request_features()
 
     def _response_power_usage(self, message):
         # Sometimes the circle returns -1 for some of the pulse counters
