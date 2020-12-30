@@ -1,4 +1,16 @@
-"""Transform Plugwise message from wire format to response message object."""
+"""
+Data parser for USB-Stick
+
+The parser will:
+- buffer receiving data
+- filter out received zigbee routing data
+- collect message data by detecting header and footer
+- detect message type based on message ID or fixed sequence ID
+- validate received data on checksum
+- decode collected data into a response message instance
+- pass over received messages to message_processor (controller.py)
+
+"""
 
 import logging
 

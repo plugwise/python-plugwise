@@ -1,4 +1,15 @@
-"""Base for Plugwise messages."""
+"""
+Message controller for USB-Stick
+
+The controller will:
+- handle the connection (connect/disconnect) to the USB-Stick
+- take care for message acknowledgements based on sequence id's
+- resend message requests when timeouts occurs
+- holds a sending queue (fifo)
+- passes received messages back to message processor (stick.py)
+- execution of callbacks after processing the response message
+
+"""
 
 from datetime import datetime, timedelta
 import logging
