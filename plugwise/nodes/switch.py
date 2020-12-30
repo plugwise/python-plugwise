@@ -1,12 +1,7 @@
 """Plugwise switch node object."""
 import logging
 
-from ..constants import (
-    FEATURE_PING,
-    FEATURE_RSSI_IN,
-    FEATURE_RSSI_OUT,
-    FEATURE_SWITCH,
-)
+from ..constants import FEATURE_PING, FEATURE_RSSI_IN, FEATURE_RSSI_OUT, FEATURE_SWITCH
 from ..messages.responses import NodeSwitchGroupResponse
 from ..nodes.sed import NodeSED
 

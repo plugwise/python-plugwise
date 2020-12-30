@@ -5,9 +5,9 @@ import logging
 from ..constants import (
     FEATURE_AVAILABLE,
     FEATURE_PING,
+    FEATURE_RELAY,
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
-    FEATURE_RELAY,
     UTF8_DECODE,
 )
 from ..messages.requests import NodeFeaturesRequest, NodeInfoRequest, NodePingRequest

@@ -7,6 +7,9 @@
 import logging
 
 from ..constants import (
+    FEATURE_PING,
+    FEATURE_RSSI_IN,
+    FEATURE_RSSI_OUT,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
@@ -17,9 +20,6 @@ from ..constants import (
     SED_MAINTENANCE_INTERVAL,
     SED_SLEEP_FOR,
     SED_STAY_ACTIVE,
-    FEATURE_PING,
-    FEATURE_RSSI_IN,
-    FEATURE_RSSI_OUT,
     SLEEP_SET,
 )
 from ..messages.requests import NodeInfoRequest, NodePingRequest, NodeSleepConfigRequest
