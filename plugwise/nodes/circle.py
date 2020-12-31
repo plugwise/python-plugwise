@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 import logging
 
 from ..constants import (
-    FEATURE_AVAILABLE,
     FEATURE_PING,
     FEATURE_POWER_CONSUMPTION_CURRENT_HOUR,
     FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR,
