@@ -12,8 +12,8 @@ The controller will:
 """
 
 from datetime import datetime, timedelta
-from queue import Empty, PriorityQueue
 import logging
+from queue import Empty, PriorityQueue
 import threading
 import time
 
