@@ -686,7 +686,7 @@ class stick:
             self._auto_update_timer = 0
             self._run_update_thread = False
         else:
-            # Timer based on a minium of 5 seconds + 1 second for each node supporting power measurement
+            # Timer based on a minimum of 5 seconds + 1 second for each node supporting power measurement
             if not self._auto_update_manually:
                 count_nodes = 0
                 for mac in self.discovered_nodes:
