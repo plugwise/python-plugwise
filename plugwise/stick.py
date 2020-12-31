@@ -23,6 +23,7 @@ from .constants import (
     NODE_TYPE_SENSE,
     NODE_TYPE_STEALTH,
     NODE_TYPE_SWITCH,
+    PRIORITY_LOW,
     STATE_ACTIONS,
     UTF8_DECODE,
     WATCHDOG_DEAMON,
@@ -656,6 +657,7 @@ class stick:
                             NodePingRequest(bytes(mac, UTF8_DECODE)),
                             None,
                             -1,
+                            PRIORITY_LOW,
                         )
                     _discover_counter = 0
                 else:
@@ -679,6 +681,7 @@ class stick:
         """Configure auto update polling daemon for power usage and availability state."""
         if timer:
             self._auto_update_timer = timer
+            self._auto_update_manually = True
         elif timer == 0:
             self._auto_update_timer = 0
             self._run_update_thread = False
@@ -764,6 +767,8 @@ class stick:
                         self.msg_controller.send(
                             NodeInfoRequest(bytes(mac, UTF8_DECODE)),
                             callback,
+                            0,
+                            PRIORITY_LOW,
                         )
                     elif force_discover:
                         self.msg_controller.send(

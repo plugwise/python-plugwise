@@ -17,6 +17,8 @@ from ..constants import (
     FEATURE_RSSI_OUT,
     MAX_TIME_DRIFT,
     MESSAGE_TIME_OUT,
+    PRIORITY_HIGH,
+    PRIORITY_LOW,
     PULSES_PER_KW_SECOND,
     RELAY_SWITCHED_OFF,
     RELAY_SWITCHED_ON,
@@ -163,6 +165,8 @@ class PlugwiseCircle(PlugwiseNode):
         self.message_sender(
             CircleCalibrationRequest(self._mac),
             callback,
+            0,
+            PRIORITY_HIGH,
         )
 
     def _request_switch(self, state, callback=None):
@@ -170,6 +174,8 @@ class PlugwiseCircle(PlugwiseNode):
         self.message_sender(
             CircleSwitchRelayRequest(self._mac, state),
             callback,
+            0,
+            PRIORITY_HIGH,
         )
 
     def _request_power_update(self, callback=None):
@@ -358,10 +364,15 @@ class PlugwiseCircle(PlugwiseNode):
                 # Only request last 2 power buffer logs
                 self.message_sender(
                     CirclePowerBufferRequest(self._mac, log_address - 1),
+                    None,
+                    0,
+                    PRIORITY_LOW,
                 )
                 self.message_sender(
                     CirclePowerBufferRequest(self._mac, log_address),
                     callback,
+                    0,
+                    PRIORITY_LOW,
                 )
             else:
                 # Collect power history info of today and yesterday
@@ -369,10 +380,15 @@ class PlugwiseCircle(PlugwiseNode):
                 for req_log_address in range(log_address - 13, log_address):
                     self.message_sender(
                         CirclePowerBufferRequest(self._mac, req_log_address),
+                        None,
+                        0,
+                        PRIORITY_LOW,
                     )
                 self.message_sender(
                     CirclePowerBufferRequest(self._mac, log_address),
                     callback,
+                    0,
+                    PRIORITY_LOW,
                 )
 
     def _response_power_buffer(self, message):
@@ -452,6 +468,8 @@ class PlugwiseCircle(PlugwiseNode):
         self.message_sender(
             CircleClockGetRequest(self._mac),
             callback,
+            0,
+            PRIORITY_LOW,
         )
 
     def set_clock(self, callback=None):

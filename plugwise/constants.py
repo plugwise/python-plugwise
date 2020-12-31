@@ -136,6 +136,11 @@ LOGADDR_OFFSET = 278528
 # Default sleep between sending messages
 SLEEP_TIME = 150 / 1000
 
+# Message priority levels
+PRIORITY_HIGH = 1
+PRIORITY_LOW = 2
+PRIORITY_MEDIUM = 3
+
 # Max seconds the internal clock of plugwise nodes
 # are allowed to drift in seconds
 MAX_TIME_DRIFT = 30

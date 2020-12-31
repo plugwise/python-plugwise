@@ -12,8 +12,8 @@ The controller will:
 """
 
 from datetime import datetime, timedelta
+from queue import Empty, PriorityQueue
 import logging
-import queue
 import threading
 import time
 
@@ -22,6 +22,7 @@ from .connections.socket import SocketConnection
 from .constants import (
     MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
+    PRIORITY_MEDIUM,
     REQUEST_FAILED,
     REQUEST_SUCCESS,
     SLEEP_TIME,
@@ -77,7 +78,7 @@ class StickMessageController:
         if self.connection.connect():
             _LOGGER.debug("Starting message controller threads...")
             # send daemon
-            self._send_message_queue = queue.Queue()
+            self._send_message_queue = PriorityQueue()
             self._run_send_message_thread = True
             self._send_message_thread = threading.Thread(
                 None, self._send_message_loop, "send_messages_thread", (), {}
@@ -96,20 +97,32 @@ class StickMessageController:
             _LOGGER.warning("Failed to connect to USB stick")
         return self.connection.is_connected()
 
-    def send(self, request: NodeRequest, callback=None, retry_counter=0):
+    def send(
+        self,
+        request: NodeRequest,
+        callback=None,
+        retry_counter=0,
+        priority=PRIORITY_MEDIUM,
+    ):
         """Queue request message to be sent into Plugwise Zigbee network."""
         _LOGGER.debug(
-            "Queue %s to be send with retry counter %s",
+            "Queue %s to be send with retry counter %s and priority %s",
             request.__class__.__name__,
             str(retry_counter),
+            str(priority),
         )
         self._send_message_queue.put(
-            [
-                request,
-                callback,
+            (
+                priority,
                 retry_counter,
-                None,
-            ]
+                datetime.now(),
+                [
+                    request,
+                    callback,
+                    retry_counter,
+                    None,
+                ],
+            )
         )
 
     def resend(self, seq_id):
@@ -180,8 +193,10 @@ class StickMessageController:
         """Daemon to send messages waiting in queue."""
         while self._run_send_message_thread:
             try:
-                request_set = self._send_message_queue.get(block=True, timeout=1)
-            except queue.Empty:
+                _prio, _retry, _dt, request_set = self._send_message_queue.get(
+                    block=True, timeout=1
+                )
+            except Empty:
                 time.sleep(SLEEP_TIME)
             else:
                 # Calc next seq_id based last received ack message
