@@ -1,10 +1,12 @@
 # Changelog
 
-## 0.8.7 - API change for stick
+## 0.9.0 - API change for stick
 
 - Improvement: Debounce relay state
+- Improvement: Prioritize request so requests like switching a relay get send out before power measurement requests.
+- Improvement: Dynamically change the refresh interval based on the actual discovered nodes with power measurement capabilities
 - Added: New property attributes for USB-stick.
-  The old functions are still available but will give a deprecate warning
+  The old methods are still available but will give a deprecate warning
   - Stick
     - `discovered_nodes` (list) - List of MAC addresses of all discovered nodes
     - `joined_nodes` (integer) - Total number of registered nodes at Plugwise Circle+
