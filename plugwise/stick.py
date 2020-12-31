@@ -86,6 +86,7 @@ class stick:
         self._stick_callbacks = {}
         self._run_update_thread = False
         self._auto_update_timer = 0
+        self._auto_update_manually = False
         self._nodes_discovered = None
         self._run_watchdog = None
         self._update_thread = None
@@ -682,8 +683,17 @@ class stick:
             self._auto_update_timer = 0
             self._run_update_thread = False
         else:
-            # Timer based on number of nodes and 3 seconds per node
-            self._auto_update_timer = len(self._plugwise_nodes) * 3
+            # Timer based on a minium of 5 seconds + 1 second for each node supporting power measurement
+            if not self._auto_update_manually:
+                count_nodes = 0
+                for mac in self.discovered_nodes:
+                    if self._plugwise_nodes[mac].measures_power:
+                        count_nodes += 1
+                self._auto_update_timer = 5 + (count_nodes * 1)
+                _LOGGER.info(
+                    "Update interval is (re)set to %s seconds",
+                    str(self._auto_update_timer),
+                )
         if not self._run_update_thread:
             self._update_thread.start()
 
@@ -733,6 +743,7 @@ class stick:
         if node_discovered:
             del self._nodes_not_discovered[node_discovered]
             self.do_callback(CB_NEW_NODE, node_discovered)
+            self.auto_update()
 
     def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
         """Helper to try to discovery the node (type) based on mac."""
