@@ -900,10 +900,10 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
+                    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+                    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
                     if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
                         f_val = int(round(float(val)))
-                    else:
-                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
                     if all(
                         item in key_string for item in ["electricity", "cumulative"]
                     ):
@@ -915,13 +915,10 @@ class Smile:
                             diff = -1
                         if net_string not in direct_data:
                             direct_data[net_string] = 0
-                        if f_val != 0:
-                            if isinstance(f_val, int):
-                                direct_data[net_string] += int(
-                                    round(float(f_val * diff))
-                                )
-                            else:
-                                direct_data[net_string] += float(f_val * diff)
+                        if isinstance(f_val, int):
+                            direct_data[net_string] += f_val * diff
+                        else:
+                            direct_data[net_string] += float(f_val * diff)
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
