@@ -750,36 +750,33 @@ class stick:
             self.do_callback(CB_NEW_NODE, node_discovered)
             self.auto_update()
 
-    def discover_node(self, mac: str, callback=None, force_discover=False) -> bool:
+    def discover_node(self, mac: str, callback=None, force_discover=False):
         """Helper to try to discovery the node (type) based on mac."""
-        if validate_mac(mac):
-            if not self._plugwise_nodes.get(mac):
-                if mac not in self._nodes_not_discovered:
-                    self._nodes_not_discovered[mac] = (
-                        None,
-                        None,
-                    )
-                    self.msg_controller.send(
-                        NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                        callback,
-                    )
-                else:
-                    (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
-                    if not (firstrequest and lastrequest):
-                        self.msg_controller.send(
-                            NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                            callback,
-                            0,
-                            PRIORITY_LOW,
-                        )
-                    elif force_discover:
-                        self.msg_controller.send(
-                            NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                            callback,
-                        )
-                return True
-            return False
-        return False
+        if not validate_mac(mac) or self._plugwise_nodes.get(mac):
+            return
+        if mac not in self._nodes_not_discovered:
+            self._nodes_not_discovered[mac] = (
+                None,
+                None,
+            )
+            self.msg_controller.send(
+                NodeInfoRequest(bytes(mac, UTF8_DECODE)),
+                callback,
+            )
+        else:
+            (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
+            if not (firstrequest and lastrequest):
+                self.msg_controller.send(
+                    NodeInfoRequest(bytes(mac, UTF8_DECODE)),
+                    callback,
+                    0,
+                    PRIORITY_LOW,
+                )
+            elif force_discover:
+                self.msg_controller.send(
+                    NodeInfoRequest(bytes(mac, UTF8_DECODE)),
+                    callback,
+                )
 
     ## TODO: All functions below can be removed when HA component is changed to use the property values ##
     def get_mac_stick(self) -> str:
