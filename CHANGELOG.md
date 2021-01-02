@@ -8,6 +8,7 @@
 - Added: New property attributes for USB-stick.
   The old methods are still available but will give a deprecate warning
   - Stick
+    - `devices` (dict) - All discovered and supported plugwise devices with the MAC address as their key
     - `discovered_nodes` (list) - List of MAC addresses of all discovered nodes
     - `joined_nodes` (integer) - Total number of registered nodes at Plugwise Circle+
     - `mac` (string) - The MAC address of the USB-Stick

@@ -76,7 +76,7 @@ class stick:
         self._circle_plus_retries = 0
         self.scan_callback = None
         self._network_id = None
-        self._plugwise_nodes = {}
+        self._device_nodes = {}
         self._joined_nodes = 0
         self._nodes_to_discover = {}
         self._nodes_not_discovered = {}
@@ -98,11 +98,16 @@ class stick:
             self.auto_initialize(callback)
 
     @property
+    def devices(self) -> dict:
+        """All discovered and supported plugwise devices with the MAC address as their key"""
+        return self._device_nodes
+
+    @property
     def discovered_nodes(self) -> list:
         """Return a list of mac addresses of all discovered and supported plugwise nodes."""
         return list(
             dict(
-                filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
+                filter(lambda item: item[1] is not None, self._device_nodes.items())
             ).keys()
         )
 
@@ -251,9 +256,9 @@ class stick:
 
     def scan_circle_plus(self):
         """Scan the Circle+ memory for registered nodes."""
-        if self._plugwise_nodes.get(self.circle_plus_mac):
+        if self._device_nodes.get(self.circle_plus_mac):
             _LOGGER.debug("Scan Circle+ for linked nodes...")
-            self._plugwise_nodes[self.circle_plus_mac].scan_for_nodes(
+            self._device_nodes[self.circle_plus_mac].scan_for_nodes(
                 self.discover_nodes
             )
         else:
@@ -262,7 +267,7 @@ class stick:
     def scan_for_registered_nodes(self):
         """Discover Circle+ and all registered nodes at Circle+."""
         if self.circle_plus_mac:
-            if self._plugwise_nodes.get(self.circle_plus_mac):
+            if self._device_nodes.get(self.circle_plus_mac):
                 self.scan_circle_plus()
             else:
                 _LOGGER.debug("Discover Circle+ at %s", self.circle_plus_mac)
@@ -295,11 +300,11 @@ class stick:
         self._nodes_discovered += 1
         _LOGGER.debug(
             "Discovered Plugwise node %s (%s off-line) of %s",
-            str(len(self._plugwise_nodes)),
+            str(len(self._device_nodes)),
             str(self._nodes_off_line),
             str(len(self._nodes_to_discover)),
         )
-        if (len(self._plugwise_nodes) - 1 + self._nodes_off_line) >= len(
+        if (len(self._device_nodes) - 1 + self._nodes_off_line) >= len(
             self._nodes_to_discover
         ):
             if self._nodes_off_line == 0:
@@ -307,7 +312,7 @@ class stick:
                 self._nodes_not_discovered = {}
             else:
                 for mac in self._nodes_to_discover:
-                    if mac not in self._plugwise_nodes.keys():
+                    if mac not in self._device_nodes.keys():
                         _LOGGER.info(
                             "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
                             str(mac),
@@ -323,7 +328,7 @@ class stick:
         """Timeout for initial scan."""
         if not self.msg_controller.discovery_finished:
             for mac in self._nodes_to_discover:
-                if mac not in self._plugwise_nodes.keys():
+                if mac not in self._device_nodes.keys():
                     _LOGGER.info(
                         "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
                         str(mac),
@@ -342,34 +347,34 @@ class stick:
             mac,
         )
         if node_type == NODE_TYPE_CIRCLE_PLUS:
-            self._plugwise_nodes[mac] = PlugwiseCirclePlus(
+            self._device_nodes[mac] = PlugwiseCirclePlus(
                 mac, address, self.msg_controller.send
             )
         elif node_type == NODE_TYPE_CIRCLE:
-            self._plugwise_nodes[mac] = PlugwiseCircle(
+            self._device_nodes[mac] = PlugwiseCircle(
                 mac, address, self.msg_controller.send
             )
         elif node_type == NODE_TYPE_SWITCH:
-            self._plugwise_nodes[mac] = None
+            self._device_nodes[mac] = None
         elif node_type == NODE_TYPE_SENSE:
-            self._plugwise_nodes[mac] = PlugwiseSense(
+            self._device_nodes[mac] = PlugwiseSense(
                 mac, address, self.msg_controller.send
             )
         elif node_type == NODE_TYPE_SCAN:
-            self._plugwise_nodes[mac] = PlugwiseScan(
+            self._device_nodes[mac] = PlugwiseScan(
                 mac, address, self.msg_controller.send
             )
         elif node_type == NODE_TYPE_CELSIUS_SED:
-            self._plugwise_nodes[mac] = None
+            self._device_nodes[mac] = None
         elif node_type == NODE_TYPE_CELSIUS_NR:
-            self._plugwise_nodes[mac] = None
+            self._device_nodes[mac] = None
         elif node_type == NODE_TYPE_STEALTH:
-            self._plugwise_nodes[mac] = PlugwiseStealth(
+            self._device_nodes[mac] = PlugwiseStealth(
                 mac, address, self.msg_controller.send
             )
         else:
             _LOGGER.warning("Unsupported node type '%s'", str(node_type))
-            self._plugwise_nodes[mac] = None
+            self._device_nodes[mac] = None
 
         # process previous missed messages
         msg_to_process = self._messages_for_undiscovered_nodes[:]
@@ -377,15 +382,11 @@ class stick:
         for msg in msg_to_process:
             self.message_processor(msg)
 
-    def node(self, mac: str) -> PlugwiseNode:
-        """Return a specific node object"""
-        return self._plugwise_nodes.get(mac)
-
     def node_state_updates(self, mac, state: bool):
         """Update availability state of a node"""
-        if mac in self._plugwise_nodes:
-            if not self._plugwise_nodes[mac].battery_powered:
-                self._plugwise_nodes[mac].available = state
+        if mac in self._device_nodes:
+            if not self._device_nodes[mac].battery_powered:
+                self._device_nodes[mac].available = state
 
     def node_join(self, mac: str, callback=None) -> bool:
         """Accept node to join Plugwise network by register mac in Circle+ memory"""
@@ -413,8 +414,8 @@ class stick:
 
     def _remove_node(self, mac):
         """Remove node from list of controllable nodes."""
-        if mac in self._plugwise_nodes:
-            del self._plugwise_nodes[mac]
+        if mac in self._device_nodes:
+            del self._device_nodes[mac]
         else:
             _LOGGER.warning("Node %s does not exists, unable to remove node.", mac)
 
@@ -487,7 +488,7 @@ class stick:
         Process NodeJoinAvailableResponse message from a node that
         is not part of a plugwise network yet and wants to join
         """
-        if not self._plugwise_nodes.get(mac):
+        if not self._device_nodes.get(mac):
             if self._accept_join_requests:
                 # Send accept join request
                 _LOGGER.info(
@@ -515,8 +516,8 @@ class stick:
         """
         unjoined_mac = node_remove_response.node_mac_id.value
         if node_remove_response.status.value == 1:
-            if self._plugwise_nodes.get(unjoined_mac):
-                del self._plugwise_nodes[unjoined_mac]
+            if self._device_nodes.get(unjoined_mac):
+                del self._device_nodes[unjoined_mac]
                 _LOGGER.info(
                     "Received NodeRemoveResponse from node %s it has been unjoined from Plugwise network",
                     unjoined_mac,
@@ -538,8 +539,8 @@ class stick:
 
         Returns True if message has passed onto existing known node
         """
-        if self._plugwise_nodes.get(mac):
-            self._plugwise_nodes[mac].message_for_node(message)
+        if self._device_nodes.get(mac):
+            self._device_nodes[mac].message_for_node(message)
             return True
         if discover:
             _LOGGER.info(
@@ -635,22 +636,22 @@ class stick:
         day_of_month = datetime.now().day
         try:
             while self._run_update_thread:
-                for mac in self._plugwise_nodes:
-                    if self._plugwise_nodes[mac]:
-                        if self._plugwise_nodes[mac].battery_powered:
+                for mac in self._device_nodes:
+                    if self._device_nodes[mac]:
+                        if self._device_nodes[mac].battery_powered:
                             # Check availability state of SED's
                             self._check_availability_of_seds(mac)
                         else:
                             # Do ping request for all non SED's
-                            self._plugwise_nodes[mac]._request_ping(None, True)
+                            self._device_nodes[mac]._request_ping(None, True)
 
-                        if self._plugwise_nodes[mac].measures_power:
+                        if self._device_nodes[mac].measures_power:
                             # Request current power usage
-                            self._plugwise_nodes[mac]._request_power_update()
+                            self._device_nodes[mac]._request_power_update()
                             # Sync internal clock of power measure nodes once a day
                             if datetime.now().day != day_of_month:
                                 day_of_month = datetime.now().day
-                                self._plugwise_nodes[mac].sync_clock()
+                                self._device_nodes[mac].sync_clock()
 
                 # Do a single ping for undiscovered nodes once per 10 update cycles
                 if _discover_counter == 10:
@@ -692,7 +693,7 @@ class stick:
             if not self._auto_update_manually:
                 count_nodes = 0
                 for mac in self.discovered_nodes:
-                    if self._plugwise_nodes[mac].measures_power:
+                    if self._device_nodes[mac].measures_power:
                         count_nodes += 1
                 self._auto_update_timer = 5 + (count_nodes * 1)
                 _LOGGER.info(
@@ -717,32 +718,32 @@ class stick:
 
     def _check_availability_of_seds(self, mac):
         """Helper to check if SED device is still sending its hartbeat."""
-        if self._plugwise_nodes[mac].available:
-            if self._plugwise_nodes[mac].last_update < (
+        if self._device_nodes[mac].available:
+            if self._device_nodes[mac].last_update < (
                 datetime.now()
                 - timedelta(
-                    minutes=(self._plugwise_nodes[mac].maintenance_interval + 1)
+                    minutes=(self._device_nodes[mac].maintenance_interval + 1)
                 )
             ):
                 _LOGGER.info(
                     "No messages received within (%s minutes) of expected maintenance interval from node %s, mark as unavailable [%s > %s]",
-                    str(self._plugwise_nodes[mac].maintenance_interval),
+                    str(self._device_nodes[mac].maintenance_interval),
                     mac,
-                    str(self._plugwise_nodes[mac].last_update),
+                    str(self._device_nodes[mac].last_update),
                     str(
                         datetime.now()
                         - timedelta(
-                            minutes=(self._plugwise_nodes[mac].maintenance_interval + 1)
+                            minutes=(self._device_nodes[mac].maintenance_interval + 1)
                         )
                     ),
                 )
-                self._plugwise_nodes[mac].available = False
+                self._device_nodes[mac].available = False
 
     def _discover_after_scan(self):
         """Helper to do callback for new node."""
         node_discovered = None
         for mac in self._nodes_not_discovered:
-            if self._plugwise_nodes.get(mac):
+            if self._device_nodes.get(mac):
                 node_discovered = mac
                 break
         if node_discovered:
@@ -752,7 +753,7 @@ class stick:
 
     def discover_node(self, mac: str, callback=None, force_discover=False):
         """Helper to try to discovery the node (type) based on mac."""
-        if not validate_mac(mac) or self._plugwise_nodes.get(mac):
+        if not validate_mac(mac) or self._device_nodes.get(mac):
             return
         if mac not in self._nodes_not_discovered:
             self._nodes_not_discovered[mac] = (
@@ -802,6 +803,13 @@ class stick:
         )
         return list(
             dict(
-                filter(lambda item: item[1] is not None, self._plugwise_nodes.items())
+                filter(lambda item: item[1] is not None, self._device_nodes.items())
             ).keys()
         )
+
+    def node(self, mac: str) -> PlugwiseNode:
+        """Return a specific node object"""
+        _LOGGER.warning(
+            "Function 'node' will be removed in future, use the 'devices' property (dict) instead !",
+        )
+        return self._device_nodes.get(mac)
