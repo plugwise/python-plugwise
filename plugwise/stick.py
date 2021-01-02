@@ -415,6 +415,8 @@ class stick:
         """Remove node from list of controllable nodes."""
         if mac in self._plugwise_nodes:
             del self._plugwise_nodes[mac]
+        else:
+            _LOGGER.warning("Node %s does not exists, unable to remove node.", mac)
 
     def message_processor(self, message: NodeResponse):
         """Received message from Plugwise network."""
