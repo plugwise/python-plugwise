@@ -241,22 +241,12 @@ class DateTime(CompositeType):
 
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
-        minutes = self.minutes.value
-        if minutes == 0:
-            self.value = datetime.datetime(PLUGWISE_EPOCH, 1, 1, 0, 0)
-        elif minutes == 65535:
+        if self.minutes.value == 65535:
             self.value = None
         else:
-            hours = minutes // 60
-            days = hours // 24
-            hours -= days * 24
-            minutes -= (days * 24 * 60) + (hours * 60)
-            try:
-                self.value = datetime.datetime(
-                    self.year.value, self.month.value, days + 1, hours, minutes
-                )
-            except datetime.datetime.ValueError:
-                self.value = None
+            self.value = datetime.datetime(
+                year=self.year.value, month=self.month.value, day=1
+            ) + datetime.timedelta(minutes=self.minutes.value)
 
 
 class Time(CompositeType):
