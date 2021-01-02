@@ -103,15 +103,6 @@ class stick:
         return self._device_nodes
 
     @property
-    def discovered_nodes(self) -> list:
-        """Return a list of mac addresses of all discovered and supported plugwise nodes."""
-        return list(
-            dict(
-                filter(lambda item: item[1] is not None, self._device_nodes.items())
-            ).keys()
-        )
-
-    @property
     def joined_nodes(self) -> int:
         """Return total number of nodes registered to Circle+ including Circle+ itself."""
         return self._joined_nodes + 1
@@ -692,7 +683,7 @@ class stick:
             # Timer based on a minimum of 5 seconds + 1 second for each node supporting power measurement
             if not self._auto_update_manually:
                 count_nodes = 0
-                for mac in self.discovered_nodes:
+                for mac in self._device_nodes:
                     if self._device_nodes[mac].measures_power:
                         count_nodes += 1
                 self._auto_update_timer = 5 + (count_nodes * 1)
@@ -799,7 +790,7 @@ class stick:
     def nodes(self) -> list:
         """Return list of mac addresses of discovered and supported plugwise nodes."""
         _LOGGER.warning(
-            "Function 'nodes' will be removed in future, use the 'discovered_nodes' property instead !",
+            "Function 'nodes' will be removed in future, use the 'devices' (dict) property instead !",
         )
         return list(
             dict(
