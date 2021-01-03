@@ -13,7 +13,6 @@ from .constants import (
     ACCEPT_JOIN_REQUESTS,
     CB_JOIN_REQUEST,
     CB_NEW_NODE,
-    MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
     NODE_TYPE_CELSIUS_NR,
     NODE_TYPE_CELSIUS_SED,
@@ -249,9 +248,7 @@ class stick:
         """Scan the Circle+ memory for registered nodes."""
         if self._device_nodes.get(self.circle_plus_mac):
             _LOGGER.debug("Scan Circle+ for linked nodes...")
-            self._device_nodes[self.circle_plus_mac].scan_for_nodes(
-                self.discover_nodes
-            )
+            self._device_nodes[self.circle_plus_mac].scan_for_nodes(self.discover_nodes)
         else:
             _LOGGER.error("Circle+ is not discovered yet")
 
@@ -276,9 +273,7 @@ class stick:
         self._joined_nodes = len(nodes_to_discover)
 
         # setup timeout for node discovery
-        discover_timeout = (
-            10 + (len(nodes_to_discover) * 2) + (MESSAGE_TIME_OUT * MESSAGE_RETRY)
-        )
+        discover_timeout = 10 + (len(nodes_to_discover) * 2) + (MESSAGE_TIME_OUT)
         threading.Timer(discover_timeout, self.scan_timeout_expired).start()
         _LOGGER.debug("Start discovery of linked node types...")
         for mac in nodes_to_discover:
@@ -303,7 +298,7 @@ class stick:
                 self._nodes_not_discovered = {}
             else:
                 for mac in self._nodes_to_discover:
-                    if mac not in self._device_nodes.keys():
+                    if not self._device_nodes.get(mac):
                         _LOGGER.info(
                             "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
                             str(mac),
@@ -375,7 +370,7 @@ class stick:
 
     def node_state_updates(self, mac, state: bool):
         """Update availability state of a node"""
-        if mac in self._device_nodes:
+        if self._device_nodes.get(mac):
             if not self._device_nodes[mac].battery_powered:
                 self._device_nodes[mac].available = state
 
@@ -405,7 +400,7 @@ class stick:
 
     def _remove_node(self, mac):
         """Remove node from list of controllable nodes."""
-        if mac in self._device_nodes:
+        if self._device_nodes.get(mac):
             del self._device_nodes[mac]
         else:
             _LOGGER.warning("Node %s does not exists, unable to remove node.", mac)
@@ -479,7 +474,12 @@ class stick:
         Process NodeJoinAvailableResponse message from a node that
         is not part of a plugwise network yet and wants to join
         """
-        if not self._device_nodes.get(mac):
+        if self._device_nodes.get(mac):
+            _LOGGER.debug(
+                "Received node available message for node %s which is already joined.",
+                mac,
+            )
+        else:
             if self._accept_join_requests:
                 # Send accept join request
                 _LOGGER.info(
@@ -494,11 +494,6 @@ class stick:
                     mac,
                 )
                 self.do_callback(CB_JOIN_REQUEST, mac)
-        else:
-            _LOGGER.debug(
-                "Received node available message for node %s which is already joined.",
-                mac,
-            )
 
     def _process_node_remove(self, node_remove_response):
         """
@@ -712,9 +707,7 @@ class stick:
         if self._device_nodes[mac].available:
             if self._device_nodes[mac].last_update < (
                 datetime.now()
-                - timedelta(
-                    minutes=(self._device_nodes[mac].maintenance_interval + 1)
-                )
+                - timedelta(minutes=(self._device_nodes[mac].maintenance_interval + 1))
             ):
                 _LOGGER.info(
                     "No messages received within (%s minutes) of expected maintenance interval from node %s, mark as unavailable [%s > %s]",
