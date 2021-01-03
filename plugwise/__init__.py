@@ -1,6 +1,6 @@
 """Plugwise module."""
 
-__version__ = "0.9.0.a1"
+__version__ = "0.9.0.a2"
 
 from plugwise.smile import Smile
 from plugwise.stick import stick
