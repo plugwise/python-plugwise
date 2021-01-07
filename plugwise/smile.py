@@ -1,5 +1,4 @@
 """Plugwise Home Assistant module."""
-
 import asyncio
 import datetime as dt
 import logging
@@ -15,7 +14,7 @@ import pytz
 # Version detection
 import semver
 
-from plugwise.constants import (
+from .constants import (
     APPLIANCES,
     ATTR_NAME,
     ATTR_TYPE,
@@ -31,13 +30,14 @@ from plugwise.constants import (
     LOCATIONS,
     MODULES,
     NOTIFICATIONS,
+    POWER_WATT,
     RULES,
     SMILES,
     STATUS,
     SWITCH_GROUP_TYPES,
     SYSTEM,
 )
-from plugwise.exceptions import (
+from .exceptions import (
     ConnectionFailedError,
     DeviceSetupError,
     DeviceTimeoutError,
@@ -47,7 +47,7 @@ from plugwise.exceptions import (
     UnsupportedDeviceError,
     XMLDataMissingError,
 )
-from plugwise.util import (
+from .util import (
     determine_selected,
     escape_illegal_xml_characters,
     format_measure,
@@ -87,8 +87,6 @@ class Smile:
             self.websession = websession
 
         self._auth = aiohttp.BasicAuth(username, password=password)
-        # Work-around for Stretchv2-aiohttp-deflate-error, can be removed for aiohttp v3.7
-        self._headers = {"Accept-Encoding": "gzip"}
 
         self._timeout = timeout
         self._endpoint = f"http://{host}:{str(port)}"
@@ -232,10 +230,7 @@ class Smile:
         try:
             with async_timeout.timeout(self._timeout):
                 if method == "get":
-                    # Work-around, see above, can be removed for aiohttp v3.7:
-                    resp = await self.websession.get(
-                        url, auth=self._auth, headers=self._headers
-                    )
+                    resp = await self.websession.get(url, auth=self._auth)
                 if method == "put":
                     resp = await self.websession.put(
                         url, data=data, headers=headers, auth=self._auth
@@ -905,25 +900,28 @@ class Smile:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
+                    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+                    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
+                    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
+                        f_val = int(round(float(val)))
                     if all(
                         item in key_string for item in ["electricity", "cumulative"]
                     ):
                         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
-                    else:
-                        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
-                    if "gas" in measurement:
-                        key_string = f"{measurement}_{log_found}"
-                        f_val = float(f"{round(float(val), 3):.3f}")
-
                     # Energy differential
                     if "electricity" in measurement:
-                        f_val = float(f"{round(float(val), 1):.1f}")
                         diff = 1
                         if "produced" in measurement:
                             diff = -1
                         if net_string not in direct_data:
-                            direct_data[net_string] = float()
-                        direct_data[net_string] += float(f_val * diff)
+                            direct_data[net_string] = 0
+                        if isinstance(f_val, int):
+                            direct_data[net_string] += f_val * diff
+                        else:
+                            direct_data[net_string] += float(f_val * diff)
+
+                    if "gas" in measurement:
+                        key_string = f"{measurement}_{log_found}"
 
                     direct_data[key_string] = f_val
 

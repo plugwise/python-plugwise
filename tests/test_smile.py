@@ -1,6 +1,7 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 
 import asyncio
+import importlib
 
 # Fixture writing
 import logging
@@ -16,14 +17,8 @@ import aiohttp
 import jsonpickle as json
 import pytest
 
-from plugwise.exceptions import (
-    ConnectionFailedError,
-    DeviceTimeoutError,
-    ErrorSendingCommandError,
-    InvalidXMLError,
-    ResponseError,
-)
-from plugwise.smile import Smile
+pw_exceptions = importlib.import_module("plugwise.exceptions")
+pw_smile = importlib.import_module("plugwise.smile")
 
 pp = PrettyPrinter(indent=8)
 
@@ -204,7 +199,7 @@ class TestPlugwise:
             text = await resp.text()
             assert "xml" in text
 
-        smile = Smile(
+        smile = pw_smile.Smile(
             host=server.host,
             username="smile",
             password="".join(random.choice(string.ascii_lowercase) for i in range(8)),
@@ -223,7 +218,7 @@ class TestPlugwise:
             assert connection_state
             assert smile.smile_type is not None
             return server, smile, client
-        except (DeviceTimeoutError, InvalidXMLError) as e:
+        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.InvalidXMLError) as e:
             await self.disconnect(server, client)
             raise e
 
@@ -239,7 +234,7 @@ class TestPlugwise:
             await self.connect(timeout=True)
             _LOGGER.error(" - timeout not handled")
             raise self.ConnectError
-        except (DeviceTimeoutError, ResponseError):
+        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
@@ -247,7 +242,7 @@ class TestPlugwise:
             await self.connect(broken=True)
             _LOGGER.error(" - broken information not handled")
             raise self.ConnectError
-        except InvalidXMLError:
+        except pw_exceptions.InvalidXMLError:
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
@@ -282,7 +277,7 @@ class TestPlugwise:
                 _LOGGER.info("      ! no devices found in this location")
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=Smile, testdata=None):
+    async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         device_list = smile.get_all_devices()
@@ -330,27 +325,7 @@ class TestPlugwise:
                                 measure_key, measure_assert
                             ),
                         )
-                        if isinstance(data[measure_key], float):
-                            if all(
-                                item in measure_key
-                                for item in ["electricity", "cumulative"]
-                            ):
-                                measure = float(
-                                    "{:.1f}".format(
-                                        round(float(data[measure_key]) / 1000, 1)
-                                    )
-                                )
-                            elif float(data[measure_key]) < 10:
-                                measure = float(
-                                    "{:.2f}".format(round(float(data[measure_key]), 2))
-                                )
-                            else:
-                                measure = float(
-                                    "{:.1f}".format(round(float(data[measure_key]), 1))
-                                )
-                            assert measure == measure_assert
-                        else:
-                            assert data[measure_key] == measure_assert
+                        assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
     async def tinker_relay(self, smile, dev_ids=None, members=None, unhappy=False):
@@ -366,7 +341,10 @@ class TestPlugwise:
                     )
                     assert relay_change
                     _LOGGER.info("  + worked as intended")
-                except (ErrorSendingCommandError, ResponseError):
+                except (
+                    pw_exceptions.ErrorSendingCommandError,
+                    pw_exceptions.ResponseError,
+                ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected")
                     else:
@@ -386,7 +364,10 @@ class TestPlugwise:
                 temp_change = await smile.set_temperature(loc_id, new_temp)
                 assert temp_change
                 _LOGGER.info("  + worked as intended")
-            except (ErrorSendingCommandError, ResponseError):
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
@@ -405,14 +386,17 @@ class TestPlugwise:
                 preset_change = await smile.set_preset(loc_id, new_preset)
                 assert preset_change == assert_state
                 _LOGGER.info("  + worked as intended")
-            except (ErrorSendingCommandError, ResponseError):
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
-        if good_schemas is not []:
+        if good_schemas != []:
             good_schemas.append("!VeryBogusSchemaNameThatNobodyEverUsesOrShouldUse")
             for new_schema in good_schemas:
                 assert_state = True
@@ -428,7 +412,10 @@ class TestPlugwise:
                     )
                     assert schema_change == assert_state
                     _LOGGER.info("  + failed as intended")
-                except (ErrorSendingCommandError, ResponseError):
+                except (
+                    pw_exceptions.ErrorSendingCommandError,
+                    pw_exceptions.ResponseError,
+                ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
                     else:
@@ -571,9 +558,9 @@ class TestPlugwise:
             "938696c4bcdb4b8a9a595cb38ed43913": {
                 "electricity_consumed_peak_point": 458.0,
                 "net_electricity_point": 458.0,
-                "gas_consumed_cumulative": 584.4,
-                "electricity_produced_peak_cumulative": 1296.1,
-                "electricity_produced_off_peak_cumulative": 482.6,
+                "gas_consumed_cumulative": 584.433,
+                "electricity_produced_peak_cumulative": 1296.136,
+                "electricity_produced_off_peak_cumulative": 482.598,
             }
         }
 
@@ -608,7 +595,7 @@ class TestPlugwise:
             "199aa40f126840f392983d171374ab0b": {
                 "electricity_consumed_peak_point": 368.0,
                 "net_electricity_point": 368.0,
-                "gas_consumed_cumulative": 2638.0,
+                "gas_consumed_cumulative": 2637.993,
                 "electricity_produced_peak_cumulative": 0.0,
             }
         }
@@ -842,42 +829,6 @@ class TestPlugwise:
         )
         await smile.close_connection()
         await self.disconnect(server, client)
-
-    # TODO: This device setup needs work - doesn't seem to work straightforard
-    # currently breaks on setting thermostat setpoint
-
-    # Actual test for directory 'Adam'
-    # living room floor radiator valve and separate zone thermostat
-    # an three rooms with conventional radiators
-    """
-    @pytest.mark.asyncio
-    async def test_connect_adam(self):
-        testdata = {
-            "95395fb15c814a1f8bba88363e4a5833": { "temperature": 19.8, 'active_preset': 'home',},
-            "450d49ef2e8942f78c1242cdd8dfecd0": { "temperature": 20.18, 'battery':  0.77, 'selected_schedule': 'Kira' },
-            "bc9e18756ad04c3f9f35298cbe537c8e": { "temperature": 20.63, 'thermostat': 20.0 },
-        }
-
-        self.smile_setup = 'adam_living_floor_plus_3_rooms'
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_type == "thermostat"
-        assert smile.smile_version[0] == "2.3.35"
-        assert not smile._smile_legacy
-        await self.device_test(smile, testdata)
-        await self.tinker_thermostat(
-            smile, "95395fb15c814a1f8bba88363e4a5833", good_schemas=["Living room"]
-        )
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
-        await self.tinker_thermostat(
-            smile, "95395fb15c814a1f8bba88363e4a5833", good_schemas=["Living room"],
-            unhappy=True,
-        )
-        await smile.close_connection()
-        await self.disconnect(server, client)
-    """
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna(self):
@@ -1146,7 +1097,7 @@ class TestPlugwise:
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 650.0,
                 "electricity_produced_peak_cumulative": 0.0,
-                "electricity_consumed_off_peak_cumulative": 10263.2,
+                "electricity_consumed_off_peak_cumulative": 10263.159,
             }
         }
 
@@ -1178,7 +1129,7 @@ class TestPlugwise:
             "ba4de7613517478da82dd9b6abea36af": {
                 "electricity_consumed_peak_point": 644.0,
                 "electricity_produced_peak_cumulative": 20.0,
-                "electricity_consumed_off_peak_cumulative": 10263.2,
+                "electricity_consumed_off_peak_cumulative": 10263.159,
                 "net_electricity_point": 244,
             }
         }
@@ -1211,11 +1162,11 @@ class TestPlugwise:
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
                 "electricity_consumed_peak_point": 0.0,
-                "electricity_produced_peak_cumulative": 396.6,
-                "electricity_consumed_off_peak_cumulative": 551.1,
-                "electricity_produced_peak_point": 2761.0,
-                "net_electricity_point": -2761.0,
-                "gas_consumed_cumulative": 584.9,
+                "electricity_produced_peak_cumulative": 396.559,
+                "electricity_consumed_off_peak_cumulative": 551.09,
+                "electricity_produced_peak_point": 2761,
+                "net_electricity_point": -2761,
+                "gas_consumed_cumulative": 584.85,
             }
         }
 
@@ -1422,7 +1373,7 @@ class TestPlugwise:
         try:
             _server, _smile, _client = await self.connect_wrapper()
             assert False
-        except ConnectionFailedError:
+        except pw_exceptions.ConnectionFailedError:
             assert True
 
     class PlugwiseTestError(Exception):
