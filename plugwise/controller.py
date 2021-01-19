@@ -5,7 +5,7 @@ The controller will:
 - handle the connection (connect/disconnect) to the USB-Stick
 - take care for message acknowledgements based on sequence id's
 - resend message requests when timeouts occurs
-- holds a sending queue (fifo)
+- holds a sending queue and submit messages based on the message priority (high, medium, low)
 - passes received messages back to message processor (stick.py)
 - execution of callbacks after processing the response message
 
@@ -63,7 +63,7 @@ class StickMessageController:
         """
         Connect to USB-Stick and startup all worker threads
 
-        Return: True when if successfully.
+        Return: True when connection is successfull.
         """
         self.init_callback = callback
         # Open connection to USB Stick

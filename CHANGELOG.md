@@ -26,8 +26,8 @@
     - `measures_power` (boolean) - Indicates if device supports power measurement
     - `name` (string) - Name of device based om hardware model and MAC address
     - `ping` (integer) - Network roundtrip time in milliseconds
-    - `rssi_in` (DBm) - Inbound RSSI level
-    - `rssi_out` (DBm) - Outbound RSSI level based on the received inbound RSSI level of the neighbor node
+    - `rssi_in` (integer) - Inbound RSSI level in DBm
+    - `rssi_out` (integer) - Outbound RSSI level based on the received inbound RSSI level of the neighbor node in DBm
   - Scan devices
     - `motion` (boolean) - Current detection state of motion.
   - Sense devices
