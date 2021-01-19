@@ -63,7 +63,7 @@ class StickMessageController:
         """
         Connect to USB-Stick and startup all worker threads
 
-        Return: True when connection is successfull.
+        Return: True when connection is successful.
         """
         self.init_callback = callback
         # Open connection to USB Stick
