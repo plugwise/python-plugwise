@@ -138,8 +138,8 @@ SLEEP_TIME = 150 / 1000
 
 # Message priority levels
 PRIORITY_HIGH = 1
-PRIORITY_LOW = 2
-PRIORITY_MEDIUM = 3
+PRIORITY_LOW = 3
+PRIORITY_MEDIUM = 2
 
 # Max seconds the internal clock of plugwise nodes
 # are allowed to drift in seconds
