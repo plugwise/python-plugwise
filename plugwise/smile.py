@@ -1185,6 +1185,76 @@ class Smile:
         await self.request(uri, method="put", data=data)
         return True
 
+    async def set_preset_setpoint(self, loc_name, pr_name, s_type, s_point):
+        """
+        Sets the preset-setpoint, with the preset name and type, connected to a location.
+
+        Determined from - DOMAIN_OBJECTS.
+        """
+        loc_id = None
+        locations, dummy = self.scan_thermostats()
+        for location in locations:
+            if locations[location]['name'] == loc_name:
+                loc_id = location
+                
+        preset_rule_ids = self.get_rule_ids_by_name("Thermostat presets", loc_id)
+        if preset_rule_ids == {} or preset_rule_ids is None:
+            return False
+
+        presets = self.get_presets(loc_id)
+        hm_hsp = str(presets["home"][0])
+        if pr_name == "home" and s_type == "heating":
+            hm_hsp = str(s_point)
+        hm_csp = str(presets["home"][1])
+        if pr_name == "home" and s_type == "cooling":
+            hm_csp = str(s_point)
+        aw_hsp = str(presets["away"][0])
+        if pr_name == "away" and s_type == "heating":
+            aw_hsp = str(s_point)
+        aw_csp = str(presets["away"][1])
+        if pr_name == "away" and s_type == "cooling":
+            aw_csp = str(s_point)
+        va_hsp = str(presets["vacation"][0])
+        if pr_name == "vacation" and s_type == "heating":
+            va_hsp = str(s_point)
+        va_csp = str(presets["vacation"][1])
+        if pr_name == "vacation" and s_type == "cooling":
+            va_csp = str(s_point)
+        nf_hsp = str(presets["no_frost"][0])
+        if pr_name == "no_frost" and s_type == "heating":
+            nf_hsp = str(s_point)
+        nf_csp = str(presets["no_frost"][1])
+        if pr_name == "no_frost" and s_type == "cooling":
+            nf_csp = str(s_point)
+        sl_hsp = str(presets["asleep"][0])
+        if pr_name == "asleep" and s_type == "heating":
+            sl_hsp = str(s_point)
+        sl_csp = str(presets["asleep"][1])
+        if pr_name == "asleep" and s_type == "cooling":
+            sl_csp = str(s_point)
+
+        for preset_rule_id, location_id in preset_rule_ids.items():
+            template_id = None
+            if location_id == loc_id:
+                locator = f'.//*[@id="{preset_rule_id}"]/template'
+                for rule in self._domain_objects.findall(locator):
+                    template_id = rule.attrib["id"]
+
+                uri = f'{RULES};id={preset_rule_id}'
+                data = (
+                    f'<rules><rule id="{preset_rule_id}"><template id="{template_id}"/><active>true</active><directives>'
+                    f'<when preset="home"><then heating_setpoint="{hm_hsp}" cooling_setpoint="{hm_csp}"/></when>'
+                    f'<when preset="away"><then heating_setpoint="{aw_hsp}" cooling_setpoint="{aw_csp}"/></when>'
+                    f'<when preset="vacation"><then heating_setpoint="{va_hsp}" cooling_setpoint="{va_csp}"/></when>'
+                    f'<when preset="no_frost"><then heating_setpoint="{nf_hsp}" cooling_setpoint="{nf_csp}"/></when>'
+                    f'<when preset="asleep"><then heating_setpoint="{sl_hsp}" cooling_setpoint="{sl_csp}"/></when>'
+                    f'</directives></rule></rules>'
+                )
+
+                await self.request(uri, method="put", data=data)
+
+        return True
+
     async def set_temperature(self, loc_id, temperature):
         """Send temperature-set request to the locations thermostat."""
         temperature = str(temperature)
