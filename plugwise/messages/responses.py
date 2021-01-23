@@ -1,15 +1,15 @@
 """All known response messages to be received from plugwise devices."""
 from datetime import datetime
 
-from plugwise.constants import (
-    MESSAGE_FOOTER,
-    MESSAGE_HEADER,
-    MESSAGE_LARGE,
-    MESSAGE_SMALL,
+from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER, MESSAGE_LARGE, MESSAGE_SMALL
+from ..exceptions import (
+    InvalidMessageChecksum,
+    InvalidMessageFooter,
+    InvalidMessageHeader,
+    InvalidMessageLength,
 )
-from plugwise.exceptions import ProtocolError
-from plugwise.message import PlugwiseMessage
-from plugwise.util import (
+from ..messages import PlugwiseMessage
+from ..util import (
     DateTime,
     Float,
     Int,
@@ -31,8 +31,7 @@ class NodeResponse(PlugwiseMessage):
         super().__init__()
         self.format_size = format_size
         self.params = []
-        self.mac = None
-        self.timestamp = datetime.now()
+        self.timestamp = None
         self.seq_id = None
         self.msg_id = None
         self.ack_id = None
@@ -44,13 +43,26 @@ class NodeResponse(PlugwiseMessage):
             self.len_correction = 0
 
     def deserialize(self, response):
-        if len(response) != len(self):
-            raise ProtocolError(
-                "message doesn't have expected length, expected %d bytes got %d"
-                % (len(self), len(response))
-            )
+        self.timestamp = datetime.now()
         if response[:4] != MESSAGE_HEADER:
-            raise ProtocolError("Invalid message header")
+            raise InvalidMessageHeader(
+                f"Invalid message header {str(response[:4])} for {self.__class__.__name__}"
+            )
+        if response[-2:] != MESSAGE_FOOTER:
+            raise InvalidMessageFooter(
+                f"Invalid message footer {str(response[-2:])} for {self.__class__.__name__}"
+            )
+        _calculated_checksum = self.calculate_checksum(response[4:-6])
+        _message_checksum = response[-6:-2]
+        if _calculated_checksum != _message_checksum:
+            raise InvalidMessageChecksum(
+                f"Invalid checksum for {self.__class__.__name__}, expected {str(_calculated_checksum)} got {str(_message_checksum)}",
+            )
+        if len(response) != len(self):
+            raise InvalidMessageLength(
+                f"Invalid message length received for {self.__class__.__name__}, expected {str(len(self))} bytes got {str(len(response))}"
+            )
+
         self.msg_id = response[4:8]
         self.seq_id = response[8:12]
         response = response[12:]
@@ -60,13 +72,13 @@ class NodeResponse(PlugwiseMessage):
         if self.format_size != MESSAGE_SMALL:
             self.mac = response[:16]
             response = response[16:]
-
         response = self._parse_params(response)
-        # TODO: unused crc
-        # crc = response[:4]
 
-        if response[4:] != MESSAGE_FOOTER:
-            raise ProtocolError("Invalid message footer")
+        _args = b"".join(a.serialize() for a in self.args)
+        msg = self.ID
+        if self.mac != "":
+            msg += self.mac
+        msg += _args
 
     def _parse_params(self, response):
         for p in self.params:
@@ -217,7 +229,7 @@ class StickInitResponse(NodeResponse):
         self.unknown1 = Int(0, length=2)
         self.network_is_online = Int(0, length=2)
         self.circle_plus_mac = String(None, length=16)
-        self.network_id = Int(0, length=4)
+        self.network_id = Int(0, 4, False)
         self.unknown2 = Int(0, length=2)
         self.params += [
             self.unknown1,
@@ -245,7 +257,7 @@ class NodePingResponse(NodeResponse):
         super().__init__()
         self.in_RSSI = Int(0, length=2)
         self.out_RSSI = Int(0, length=2)
-        self.ping_ms = Int(0, length=4)
+        self.ping_ms = Int(0, 4, False)
         self.params += [
             self.in_RSSI,
             self.out_RSSI,
@@ -290,7 +302,7 @@ class CirclePlusScanResponse(NodeResponse):
     def __init__(self):
         super().__init__()
         self.node_mac = String(None, length=16)
-        self.node_address = Int(0, length=2)
+        self.node_address = Int(0, 2, False)
         self.params += [self.node_mac, self.node_address]
 
 
@@ -371,7 +383,7 @@ class CirclePlusRealTimeClockResponse(NodeResponse):
         super().__init__()
 
         self.time = RealClockTime()
-        self.day_of_week = Int(0, length=2)
+        self.day_of_week = Int(0, 2, False)
         self.date = RealClockDate()
         self.params += [self.time, self.day_of_week, self.date]
 
@@ -388,7 +400,7 @@ class CircleClockResponse(NodeResponse):
     def __init__(self):
         super().__init__()
         self.time = Time()
-        self.day_of_week = Int(0, 2)
+        self.day_of_week = Int(0, 2, False)
         self.unknown = Int(0, 2)
         self.unknown2 = Int(0, 4)
         self.params += [self.time, self.day_of_week, self.unknown, self.unknown2]
@@ -446,7 +458,7 @@ class NodeAwakeResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.awake_type = Int(0, length=2)
+        self.awake_type = Int(0, 2, False)
         self.params += [self.awake_type]
 
 
@@ -463,7 +475,7 @@ class NodeSwitchGroupResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.group = Int(0, length=2)
+        self.group = Int(0, 2, False)
         self.power_state = Int(0, length=2)
         self.params += [
             self.group,
@@ -514,7 +526,7 @@ class NodeAckResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.ack_id = Int(0, length=2)
+        self.ack_id = Int(0, 2, False)
 
 
 class SenseReportResponse(NodeResponse):
@@ -548,3 +560,47 @@ class CircleInitialRelaisStateResponse(NodeResponse):
         set_or_get = Int(0, length=2)
         relais = Int(0, length=2)
         self.params += [set_or_get, relais]
+
+
+id_to_message = {
+    b"0002": CirclePlusQueryResponse(),
+    b"0003": CirclePlusQueryEndResponse(),
+    b"0005": CirclePlusConnectResponse(),
+    b"0006": NodeJoinAvailableResponse(),
+    b"000E": NodePingResponse(),
+    b"0011": StickInitResponse(),
+    b"0013": CirclePowerUsageResponse(),
+    b"0019": CirclePlusScanResponse(),
+    b"001D": NodeRemoveResponse(),
+    b"0024": NodeInfoResponse(),
+    b"0027": CircleCalibrationResponse(),
+    b"003A": CirclePlusRealTimeClockResponse(),
+    b"003F": CircleClockResponse(),
+    b"0049": CirclePowerBufferResponse(),
+    b"0060": NodeFeaturesResponse(),
+    b"0100": NodeAckResponse(),
+    b"0105": SenseReportResponse(),
+}
+
+
+def get_message_response(message_id, length, seq_id):
+    """
+    Return message class based on sequence ID, Length of message or message ID.
+    """
+    # First check for known sequence ID's
+    if seq_id == b"FFFD":
+        return NodeJoinAckResponse()
+    elif seq_id == b"FFFE":
+        return NodeAwakeResponse()
+    elif seq_id == b"FFFF":
+        return NodeSwitchGroupResponse()
+    else:
+        # No fixed sequence ID, continue at message ID
+        if message_id == b"0000":
+            if length == 20:
+                return NodeAckSmallResponse()
+            elif length == 36:
+                return NodeAckLargeResponse()
+        else:
+            return id_to_message.get(message_id, None)
+    return None

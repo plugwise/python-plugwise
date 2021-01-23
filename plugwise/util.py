@@ -35,7 +35,7 @@ def validate_mac(mac):
 
 
 def version_to_model(version):
-    """ Translate hardware_version to device type."""
+    """Translate hardware_version to device type."""
     model = HW_MODELS.get(version[4:10], None)
     if model is None:
         # Try again with reversed order
@@ -46,14 +46,17 @@ def version_to_model(version):
     return model if model is not None else "Unknown"
 
 
-def inc_seq_id(seq_id, value=1):
+def inc_seq_id(seq_id, value=1) -> bytearray:
     """
     Increment sequence id by value
 
     :return: 4 bytes
     """
+    if seq_id is None:
+        return b"0000"
     temp_int = int(seq_id, 16) + value
-    # Max seq_id = b'FFFC'
+    # Max seq_id = b'FFFB'
+    # b'FFFC' reserved for <unknown> message
     # b'FFFD' reserved for 'NodeJoinAckResponse' message
     # b'FFFE' reserved for 'NodeSwitchGroupResponse' message
     # b'FFFF' reserved for 'NodeAwakeResponse' message
@@ -169,9 +172,10 @@ class String(BaseType):
 
 
 class Int(BaseType):
-    def __init__(self, value, length=2):
+    def __init__(self, value, length=2, negative=True):
         self.value = value
         self.length = length
+        self.negative = negative
 
     def serialize(self):
         fmt = "%%0%dX" % self.length
@@ -179,8 +183,9 @@ class Int(BaseType):
 
     def deserialize(self, val):
         self.value = int(val, 16)
-        mask = 1 << (self.length * 4 - 1)
-        self.value = -(self.value & mask) + (self.value & ~mask)
+        if self.negative:
+            mask = 1 << (self.length * 4 - 1)
+            self.value = -(self.value & mask) + (self.value & ~mask)
 
 
 class SInt(BaseType):
@@ -205,7 +210,7 @@ class SInt(BaseType):
 
 class UnixTimestamp(Int):
     def __init__(self, value, length=8):
-        Int.__init__(self, value, length=length)
+        Int.__init__(self, value, length, False)
 
     def deserialize(self, val):
         Int.deserialize(self, val)
@@ -227,29 +232,31 @@ class DateTime(CompositeType):
     and last four bytes are offset from the beginning of the month in minutes
     """
 
-    def __init__(self, year=0, month=0, minutes=0):
+    def __init__(self, year=0, month=1, minutes=0):
         CompositeType.__init__(self)
         self.year = Year2k(year - PLUGWISE_EPOCH, 2)
-        self.month = Int(month, 2)
-        self.minutes = Int(minutes, 4)
+        self.month = Int(month, 2, False)
+        self.minutes = Int(minutes, 4, False)
         self.contents += [self.year, self.month, self.minutes]
 
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
         minutes = self.minutes.value
-        hours = minutes // 60
-        days = hours // 24
-        hours -= days * 24
-        minutes -= (days * 24 * 60) + (hours * 60)
-        try:
-            self.value = datetime.datetime(
-                self.year.value, self.month.value, days + 1, hours, minutes
-            )
-        except ValueError:
-            # debug(
-            #    "encountered value error while attempting to construct datetime object"
-            # )
+        if minutes == 0:
+            self.value = datetime.datetime(PLUGWISE_EPOCH, 1, 1, 0, 0)
+        elif minutes == 65535:
             self.value = None
+        else:
+            hours = minutes // 60
+            days = hours // 24
+            hours -= days * 24
+            minutes -= (days * 24 * 60) + (hours * 60)
+            try:
+                self.value = datetime.datetime(
+                    self.year.value, self.month.value, days + 1, hours, minutes
+                )
+            except datetime.datetime.ValueError:
+                self.value = None
 
 
 class Time(CompositeType):
@@ -257,9 +264,9 @@ class Time(CompositeType):
 
     def __init__(self, hour=0, minute=0, second=0):
         CompositeType.__init__(self)
-        self.hour = Int(hour, 2)
-        self.minute = Int(minute, 2)
-        self.second = Int(second, 2)
+        self.hour = Int(hour, 2, False)
+        self.minute = Int(minute, 2, False)
+        self.second = Int(second, 2, False)
         self.contents += [self.hour, self.minute, self.second]
 
     def deserialize(self, val):

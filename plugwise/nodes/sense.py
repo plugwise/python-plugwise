@@ -1,7 +1,7 @@
 """Plugwise Sense node object."""
 import logging
 
-from plugwise.constants import (
+from ..constants import (
     HA_BINARY_SENSOR,
     HA_SENSOR,
     SENSE_HUMIDITY_MULTIPLIER,
@@ -14,8 +14,8 @@ from plugwise.constants import (
     SENSOR_RSSI_OUT,
     SENSOR_TEMPERATURE,
 )
-from plugwise.messages.responses import SenseReportResponse
-from plugwise.nodes.sed import NodeSED
+from ..messages.responses import SenseReportResponse
+from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,8 +23,8 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseSense(NodeSED):
     """provides interface to the Plugwise Sense nodes"""
 
-    def __init__(self, mac, address, stick):
-        super().__init__(mac, address, stick)
+    def __init__(self, mac, address, message_sender):
+        super().__init__(mac, address, message_sender)
         self.categories = (HA_SENSOR, HA_BINARY_SENSOR)
         self.sensors = (
             SENSOR_AVAILABLE["id"],
@@ -37,14 +37,14 @@ class PlugwiseSense(NodeSED):
         self._humidity = None
 
     def get_temperature(self) -> int:
-        """ Return the current temperature """
+        """Return the current temperature."""
         return self._temperature
 
     def get_humidity(self) -> int:
-        """ Return the current humidity """
+        """Return the current humidity."""
         return self._humidity
 
-    def _on_SED_message(self, message):
+    def message_for_sense(self, message):
         """
         Process received message
         """
@@ -58,7 +58,7 @@ class PlugwiseSense(NodeSED):
             )
 
     def _process_sense_report(self, message):
-        """ process sense report message to extract current temperature and humidity values """
+        """process sense report message to extract current temperature and humidity values."""
         if message.temperature.value != 65535:
             new_temperature = int(
                 SENSE_TEMPERATURE_MULTIPLIER * (message.temperature.value / 65536)

@@ -6,8 +6,7 @@
 
 import logging
 
-from plugwise.constants import (
-    ACK_SLEEP_SET,
+from ..constants import (
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
@@ -21,14 +20,11 @@ from plugwise.constants import (
     SENSOR_PING,
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
+    SLEEP_SET,
 )
-from plugwise.messages.requests import (
-    NodeInfoRequest,
-    NodePingRequest,
-    NodeSleepConfigRequest,
-)
-from plugwise.messages.responses import NodeAckLargeResponse, NodeAwakeResponse
-from plugwise.node import PlugwiseNode
+from ..messages.requests import NodeInfoRequest, NodePingRequest, NodeSleepConfigRequest
+from ..messages.responses import NodeAckLargeResponse, NodeAwakeResponse
+from ..nodes import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -36,37 +32,49 @@ _LOGGER = logging.getLogger(__name__)
 class NodeSED(PlugwiseNode):
     """provides base class for SED based nodes like Scan, Sense & Switch"""
 
-    def __init__(self, mac, address, stick):
-        super().__init__(mac, address, stick)
+    def __init__(self, mac, address, message_sender):
+        super().__init__(mac, address, message_sender)
         self._SED_requests = {}
         self.maintenance_interval = SED_MAINTENANCE_INTERVAL
         self._new_maintenance_interval = None
-
         self._wake_up_interval = None
 
     def is_sed(self) -> bool:
-        """ Return if True if node SED (battery powered)"""
+        """Return if True if node SED (battery powered)"""
         return True
 
-    def _on_message(self, message):
+    def message_for_sed(self, message):
         """
         Process received message
         """
         if isinstance(message, NodeAwakeResponse):
             self._process_awake_response(message)
         elif isinstance(message, NodeAckLargeResponse):
-            if message.ack_id == ACK_SLEEP_SET:
+            if message.ack_id == SLEEP_SET:
                 self.maintenance_interval = self._new_maintenance_interval
             else:
-                self._on_SED_message(message)
+                self.message_for_scan(message)
+                self.message_for_switch(message)
+                self.message_for_sense(message)
         else:
-            self._on_SED_message(message)
+            self.message_for_scan(message)
+            self.message_for_switch(message)
+            self.message_for_sense(message)
 
-    def _on_SED_message(self, message):
+    def message_for_scan(self, message):
+        """Pass messages to PlugwiseScan class"""
+        pass
+
+    def message_for_switch(self, message):
+        """Pass messages to PlugwiseSwitch class"""
+        pass
+
+    def message_for_sense(self, message):
+        """Pass messages to PlugwiseSense class"""
         pass
 
     def _process_awake_response(self, message):
-        """" Process awake message"""
+        """"Process awake message"""
         _LOGGER.debug(
             "Awake message type '%s' received from %s",
             str(message.awake_type.value),
@@ -85,7 +93,7 @@ class NodeSED(PlugwiseNode):
                     request_message.__class__.__name__,
                     self.get_mac(),
                 )
-                self.stick.send(request_message, callback)
+                self.message_sender(request_message, callback, -1)
             self._SED_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:
@@ -98,23 +106,24 @@ class NodeSED(PlugwiseNode):
                 )
 
     def _queue_request(self, request_message, callback=None):
-        """Queue request to be sent when SED is awake. Last message wins """
+        """Queue request to be sent when SED is awake. Last message wins."""
         self._SED_requests[request_message.ID] = (
             request_message,
             callback,
         )
 
     def request_info(self, callback=None):
-        """ Request info from node"""
+        """Request info from node"""
         self._queue_request(
             NodeInfoRequest(self.mac),
             callback,
         )
 
-    def ping(self, callback=None):
-        """ Ping node"""
+    def ping(self, callback=None, sensor=True):
+        """Ping node"""
         if (
-            self._callbacks.get(SENSOR_PING["id"])
+            sensor
+            or self._callbacks.get(SENSOR_PING["id"])
             or self._callbacks.get(SENSOR_RSSI_IN["id"])
             or self._callbacks.get(SENSOR_RSSI_OUT["id"])
         ):
@@ -129,7 +138,7 @@ class NodeSED(PlugwiseNode):
             )
 
     def _wake_up_interval_accepted(self):
-        """ Callback after wake up interval is received and accepted by SED """
+        """Callback after wake up interval is received and accepted by SED."""
         self._wake_up_interval = self._new_maintenance_interval
 
     def Configure_SED(

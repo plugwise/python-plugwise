@@ -1,7 +1,7 @@
 """All known request messages to be send to plugwise devices."""
-from plugwise.constants import MESSAGE_FOOTER, MESSAGE_HEADER
-from plugwise.message import PlugwiseMessage
-from plugwise.util import (
+from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER
+from ..messages import PlugwiseMessage
+from ..util import (
     DateTime,
     Int,
     LogAddr,
@@ -108,7 +108,7 @@ class NodeResetRequest(NodeRequest):
 
 class StickInitRequest(NodeRequest):
     """
-    initialize USB-Stick
+    Initialize USB-Stick
 
     Response message: StickInitResponse
     """
@@ -123,9 +123,9 @@ class StickInitRequest(NodeRequest):
 
 class NodeImagePrepareRequest(NodeRequest):
     """
-        TODO: PWEswImagePrepareRequestV1_0
-    s
-        Response message: TODO:
+    TODO: PWEswImagePrepareRequestV1_0
+
+    Response message: TODO:
     """
 
     ID = b"000B"
@@ -363,7 +363,7 @@ class NodeSleepConfigRequest(NodeRequest):
     clock_sync              : Enable/disable clock sync
     clock_interval          : Duration in minutes the node synchronize its clock
 
-    Response message: Ack message with ACK_SLEEP_SET
+    Response message: Ack message with SLEEP_SET
     """
 
     ID = b"0050"

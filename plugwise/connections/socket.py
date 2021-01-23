@@ -2,8 +2,8 @@
 import logging
 import socket
 
-from plugwise.connections.connection import StickConnection
-from plugwise.exceptions import PortError
+from ..connections import StickConnection
+from ..exceptions import PortError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -11,8 +11,8 @@ _LOGGER = logging.getLogger(__name__)
 class SocketConnection(StickConnection):
     """Wrapper for Socket connection configuration."""
 
-    def __init__(self, port, stick=None):
-        super().__init__(port, stick)
+    def __init__(self, port, parser):
+        super().__init__(port, parser)
         # get the address from a <host>:<port> format
         port_split = self.port.split(":")
         self._socket_host = port_split[0]

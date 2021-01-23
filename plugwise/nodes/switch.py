@@ -1,9 +1,9 @@
 """Plugwise switch node object."""
 import logging
 
-from plugwise.constants import HA_BINARY_SENSOR, HA_SENSOR, SENSOR_SWITCH
-from plugwise.messages.responses import NodeSwitchGroupResponse
-from plugwise.nodes.sed import NodeSED
+from ..constants import HA_BINARY_SENSOR, HA_SENSOR, SENSOR_SWITCH
+from ..messages.responses import NodeSwitchGroupResponse
+from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -11,16 +11,16 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseSwitch(NodeSED):
     """provides interface to the Plugwise Switch nodes"""
 
-    def __init__(self, mac, address, stick):
-        super().__init__(mac, address, stick)
+    def __init__(self, mac, address, message_sender):
+        super().__init__(mac, address, message_sender)
         self.categories = (HA_SENSOR, HA_BINARY_SENSOR)
         self._switch_state = False
 
     def get_switch_state(self):
-        """ Return state of switch"""
+        """Return state of switch"""
         return self._switch_state
 
-    def _on_SED_message(self, message):
+    def message_for_switch(self, message):
         """
         Process received message
         """
@@ -32,7 +32,6 @@ class PlugwiseSwitch(NodeSED):
                 str(message.group),
             )
             self._process_switch_group(message)
-            self.stick.message_processed(message.seq_id)
 
     def _process_switch_group(self, message):
         """Switch group request from Scan"""

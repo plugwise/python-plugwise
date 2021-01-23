@@ -11,6 +11,7 @@ from pprint import PrettyPrinter
 # String generation
 import random
 import string
+import sys
 
 # Testing
 import aiohttp

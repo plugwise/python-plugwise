@@ -3,9 +3,9 @@ import logging
 
 import serial
 
-from plugwise.connections.connection import StickConnection
-from plugwise.constants import BAUD_RATE, BYTE_SIZE, STOPBITS
-from plugwise.exceptions import PortError
+from ..connections import StickConnection
+from ..constants import BAUD_RATE, BYTE_SIZE, STOPBITS
+from ..exceptions import PortError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -13,8 +13,8 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseUSBConnection(StickConnection):
     """Simple wrapper around serial module."""
 
-    def __init__(self, port, stick=None):
-        super().__init__(port, stick)
+    def __init__(self, port, parser):
+        super().__init__(port, parser)
         self._baud = BAUD_RATE
         self._byte_size = BYTE_SIZE
         self._stopbits = STOPBITS

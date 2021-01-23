@@ -1,10 +1,10 @@
 """Plugwise Scan node object."""
 import logging
 
-from plugwise.constants import (
-    ACK_SCAN_PARAMETERS_SET,
+from ..constants import (
     HA_BINARY_SENSOR,
     HA_SENSOR,
+    SCAN_CONFIGURE_ACCEPTED,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
     SCAN_SENSITIVITY_HIGH,
@@ -16,9 +16,9 @@ from plugwise.constants import (
     SENSOR_RSSI_IN,
     SENSOR_RSSI_OUT,
 )
-from plugwise.messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
-from plugwise.messages.responses import NodeAckResponse, NodeSwitchGroupResponse
-from plugwise.nodes.sed import NodeSED
+from ..messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
+from ..messages.responses import NodeAckResponse, NodeSwitchGroupResponse
+from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -26,8 +26,8 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseScan(NodeSED):
     """provides interface to the Plugwise Scan nodes"""
 
-    def __init__(self, mac, address, stick):
-        super().__init__(mac, address, stick)
+    def __init__(self, mac, address, message_sender):
+        super().__init__(mac, address, message_sender)
         self.categories = (HA_SENSOR, HA_BINARY_SENSOR)
         self.sensors = (
             SENSOR_AVAILABLE["id"],
@@ -45,10 +45,10 @@ class PlugwiseScan(NodeSED):
         self._new_sensitivity = None
 
     def get_motion(self) -> bool:
-        """ Return motion state"""
+        """Return motion state"""
         return self._motion_state
 
-    def _on_SED_message(self, message):
+    def message_for_scan(self, message):
         """
         Process received message
         """
@@ -71,7 +71,7 @@ class PlugwiseScan(NodeSED):
 
     def _process_ack_message(self, message):
         """Process acknowledge message"""
-        if message.ack_id == ACK_SCAN_PARAMETERS_SET:
+        if message.ack_id == SCAN_CONFIGURE_ACCEPTED:
             self._motion_reset_timer = self._new_motion_reset_timer
             self._daylight_mode = self._new_daylight_mode
             self._sensitivity = self._new_sensitivity
@@ -117,10 +117,11 @@ class PlugwiseScan(NodeSED):
         self._new_daylight_mode = daylight_mode
         if sensitivity_level == SCAN_SENSITIVITY_HIGH:
             sensitivity_value = 20  # b'14'
-        elif sensitivity_level == SCAN_SENSITIVITY_MEDIUM:
-            sensitivity_value = 30  # b'1E'
         elif sensitivity_level == SCAN_SENSITIVITY_OFF:
             sensitivity_value = 255  # b'FF'
+        else:
+            # Default to medium:
+            sensitivity_value = 30  # b'1E'
         self._new_sensitivity = sensitivity_level
         self._queue_request(
             ScanConfigureRequest(
