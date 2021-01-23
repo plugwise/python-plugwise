@@ -1196,12 +1196,17 @@ class Smile:
         for location in locations:
             if locations[location]["name"] == loc_name:
                 loc_id = location
+        if loc_id == None:
+            return False
 
         preset_rule_ids = self.get_rule_ids_by_name("Thermostat presets", loc_id)
-        if preset_rule_ids == {} or preset_rule_ids is None:
+        if preset_rule_ids is None:
             return False
 
         presets = self.get_presets(loc_id)
+        if presets == {}:
+            return False
+
         hm_hsp = str(presets["home"][0])
         if pr_name == "home" and s_type == "heating":
             hm_hsp = str(s_point)
