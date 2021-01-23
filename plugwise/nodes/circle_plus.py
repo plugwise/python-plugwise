@@ -2,7 +2,7 @@
 from datetime import datetime
 import logging
 
-from ..constants import MAX_TIME_DRIFT, UTF8_DECODE
+from ..constants import MAX_TIME_DRIFT, PRIORITY_LOW, UTF8_DECODE
 from ..messages.requests import (
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
@@ -37,14 +37,14 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             _LOGGER.waning(
                 "Unsupported message type '%s' received from circle with mac %s",
                 str(message.__class__.__name__),
-                self.get_mac(),
+                self.mac,
             )
 
     def scan_for_nodes(self, callback=None):
         """Scan for registered nodes."""
         self._scan_for_nodes_callback = callback
         for node_address in range(0, 64):
-            self.message_sender(CirclePlusScanRequest(self.mac, node_address))
+            self.message_sender(CirclePlusScanRequest(self._mac, node_address))
             self._scan_response[node_address] = False
 
     def _process_scan_response(self, message):
@@ -77,7 +77,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                             str(node_address),
                         )
                         self.message_sender(
-                            CirclePlusScanRequest(self.mac, node_address)
+                            CirclePlusScanRequest(self._mac, node_address)
                         )
                     break
                 if node_address == 63:
@@ -90,8 +90,10 @@ class PlugwiseCirclePlus(PlugwiseCircle):
     def get_real_time_clock(self, callback=None):
         """get current datetime of internal clock of CirclePlus."""
         self.message_sender(
-            CirclePlusRealTimeClockGetRequest(self.mac),
+            CirclePlusRealTimeClockGetRequest(self._mac),
             callback,
+            0,
+            PRIORITY_LOW,
         )
 
     def _response_realtime_clock(self, message):
@@ -112,14 +114,14 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             self._realtime_clock_offset = realtime_clock_offset.seconds
         _LOGGER.debug(
             "Realtime clock of node %s has drifted %s sec",
-            self.get_mac(),
+            self.mac,
             str(self._clock_offset),
         )
 
     def set_real_time_clock(self, callback=None):
         """set internal clock of CirclePlus."""
         self.message_sender(
-            CirclePlusRealTimeClockSetRequest(self.mac, datetime.utcnow()),
+            CirclePlusRealTimeClockSetRequest(self._mac, datetime.utcnow()),
             callback,
         )
 
@@ -133,7 +135,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             ):
                 _LOGGER.info(
                     "Reset realtime clock of node %s because time has drifted %s sec",
-                    self.get_mac(),
+                    self.mac,
                     str(self._clock_offset),
                 )
                 self.set_real_time_clock()

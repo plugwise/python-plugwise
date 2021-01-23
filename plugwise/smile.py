@@ -224,22 +224,21 @@ class Smile:
         resp = None
         url = f"{self._endpoint}{command}"
 
-        if headers is None:
-            headers = {"Content-type": "text/xml"}
-
         try:
             with async_timeout.timeout(self._timeout):
                 if method == "get":
-                    resp = await self.websession.get(url, auth=self._auth)
+                    # Work-around for Stretchv2, should not hurt the other smiles
+                    headers = {"Accept-Encoding": "gzip"}
+                    resp = await self.websession.get(
+                        url, auth=self._auth, headers=headers
+                    )
                 if method == "put":
+                    headers = {"Content-type": "text/xml"}
                     resp = await self.websession.put(
                         url, data=data, headers=headers, auth=self._auth
                     )
                 if method == "delete":
                     resp = await self.websession.delete(url, auth=self._auth)
-            if resp.status == 401:
-                raise InvalidAuthentication
-
         except asyncio.TimeoutError:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
@@ -252,6 +251,9 @@ class Smile:
         # Cornercase for stretch not responding with 202
         if method == "put" and resp.status == 200:
             return
+
+        if resp.status == 401:
+            raise InvalidAuthentication
 
         result = await resp.text()
         if not result or "<error>" in result:

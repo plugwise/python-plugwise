@@ -1,7 +1,7 @@
 """Plugwise switch node object."""
 import logging
 
-from ..constants import HA_BINARY_SENSOR, HA_SENSOR, SENSOR_SWITCH
+from ..constants import FEATURE_PING, FEATURE_RSSI_IN, FEATURE_RSSI_OUT, FEATURE_SWITCH
 from ..messages.responses import NodeSwitchGroupResponse
 from ..nodes.sed import NodeSED
 
@@ -13,11 +13,17 @@ class PlugwiseSwitch(NodeSED):
 
     def __init__(self, mac, address, message_sender):
         super().__init__(mac, address, message_sender)
-        self.categories = (HA_SENSOR, HA_BINARY_SENSOR)
+        self._features = (
+            FEATURE_PING["id"],
+            FEATURE_RSSI_IN["id"],
+            FEATURE_RSSI_OUT["id"],
+            FEATURE_SWITCH["id"],
+        )
         self._switch_state = False
 
-    def get_switch_state(self):
-        """Return state of switch"""
+    @property
+    def switch(self) -> bool:
+        """Return the last known switch state"""
         return self._switch_state
 
     def message_for_switch(self, message):
@@ -28,7 +34,7 @@ class PlugwiseSwitch(NodeSED):
             _LOGGER.debug(
                 "Switch group request %s received from %s for group id %s",
                 str(message.power_state),
-                self.get_mac(),
+                self.mac,
                 str(message.group),
             )
             self._process_switch_group(message)
@@ -39,15 +45,23 @@ class PlugwiseSwitch(NodeSED):
             # turn off => clear motion
             if self._switch_state:
                 self._switch_state = False
-                self.do_callback(SENSOR_SWITCH["id"])
+                self.do_callback(FEATURE_SWITCH["id"])
         elif message.power_state == 1:
             # turn on => motion
             if not self._switch_state:
                 self._switch_state = True
-                self.do_callback(SENSOR_SWITCH["id"])
+                self.do_callback(FEATURE_SWITCH["id"])
         else:
             _LOGGER.debug(
                 "Unknown power_state (%s) received from %s",
                 str(message.power_state),
-                self.get_mac(),
+                self.mac,
             )
+
+    ## TODO: All functions below can be removed when HA component is changed to use the property values ##
+    def get_switch_state(self):
+        """Return state of switch"""
+        _LOGGER.warning(
+            "Function 'get_switch_state' will be removed in future, use the 'switch' property instead !",
+        )
+        return self._switch_state

@@ -495,7 +495,7 @@ class NodeFeaturesResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.features = Int(0, 16)
+        self.features = String(None, length=16)
         self.params += [self.features]
 
 

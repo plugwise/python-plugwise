@@ -7,6 +7,10 @@
 import logging
 
 from ..constants import (
+    FEATURE_PING,
+    FEATURE_RSSI_IN,
+    FEATURE_RSSI_OUT,
+    PRIORITY_HIGH,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
@@ -17,9 +21,6 @@ from ..constants import (
     SED_MAINTENANCE_INTERVAL,
     SED_SLEEP_FOR,
     SED_STAY_ACTIVE,
-    SENSOR_PING,
-    SENSOR_RSSI_IN,
-    SENSOR_RSSI_OUT,
     SLEEP_SET,
 )
 from ..messages.requests import NodeInfoRequest, NodePingRequest, NodeSleepConfigRequest
@@ -38,10 +39,7 @@ class NodeSED(PlugwiseNode):
         self.maintenance_interval = SED_MAINTENANCE_INTERVAL
         self._new_maintenance_interval = None
         self._wake_up_interval = None
-
-    def is_sed(self) -> bool:
-        """Return if True if node SED (battery powered)"""
-        return True
+        self._battery_powered = True
 
     def message_for_sed(self, message):
         """
@@ -78,7 +76,7 @@ class NodeSED(PlugwiseNode):
         _LOGGER.debug(
             "Awake message type '%s' received from %s",
             str(message.awake_type.value),
-            self.get_mac(),
+            self.mac,
         )
         if (
             message.awake_type.value == SED_AWAKE_MAINTENANCE
@@ -91,18 +89,18 @@ class NodeSED(PlugwiseNode):
                 _LOGGER.info(
                     "Send queued %s message to SED node %s",
                     request_message.__class__.__name__,
-                    self.get_mac(),
+                    self.mac,
                 )
-                self.message_sender(request_message, callback, -1)
+                self.message_sender(request_message, callback, -1, PRIORITY_HIGH)
             self._SED_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:
-                _LOGGER.debug("Node %s awake for state change", self.get_mac())
+                _LOGGER.debug("Node %s awake for state change", self.mac)
             else:
                 _LOGGER.info(
                     "Unknown awake message type (%s) received for node %s",
                     str(message.awake_type.value),
-                    self.get_mac(),
+                    self.mac,
                 )
 
     def _queue_request(self, request_message, callback=None):
@@ -112,29 +110,29 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
-    def request_info(self, callback=None):
+    def _request_info(self, callback=None):
         """Request info from node"""
         self._queue_request(
-            NodeInfoRequest(self.mac),
+            NodeInfoRequest(self._mac),
             callback,
         )
 
-    def ping(self, callback=None, sensor=True):
+    def _request_ping(self, callback=None, sensor=True):
         """Ping node"""
         if (
             sensor
-            or self._callbacks.get(SENSOR_PING["id"])
-            or self._callbacks.get(SENSOR_RSSI_IN["id"])
-            or self._callbacks.get(SENSOR_RSSI_OUT["id"])
+            or self._callbacks.get(FEATURE_PING["id"])
+            or self._callbacks.get(FEATURE_RSSI_IN["id"])
+            or self._callbacks.get(FEATURE_RSSI_OUT["id"])
         ):
             self._queue_request(
-                NodePingRequest(self.mac),
+                NodePingRequest(self._mac),
                 callback,
             )
         else:
             _LOGGER.debug(
                 "Drop ping request for SED %s because no callback is registered",
-                self.get_mac(),
+                self.mac,
             )
 
     def _wake_up_interval_accepted(self):
@@ -151,7 +149,7 @@ class NodeSED(PlugwiseNode):
     ):
         """Reconfigure the sleep/awake settings for a SED send at next awake of SED"""
         message = NodeSleepConfigRequest(
-            self.mac,
+            self._mac,
             stay_active,
             maintenance_interval,
             sleep_for,
@@ -163,5 +161,5 @@ class NodeSED(PlugwiseNode):
         _LOGGER.info(
             "Queue %s message to be send at next awake of SED node %s",
             message.__class__.__name__,
-            self.get_mac(),
+            self.mac,
         )

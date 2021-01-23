@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.9.0 - API change for stick
+
+- Improvement: Debounce relay state
+- Improvement: Prioritize request so requests like switching a relay get send out before power measurement requests.
+- Improvement: Dynamically change the refresh interval based on the actual discovered nodes with power measurement capabilities
+- Added: New property attributes for USB-stick.
+  The old methods are still available but will give a deprecate warning
+  - Stick
+    - `devices` (dict) - All discovered and supported plugwise devices with the MAC address as their key
+    - `joined_nodes` (integer) - Total number of registered nodes at Plugwise Circle+
+    - `mac` (string) - The MAC address of the USB-Stick
+    - `network_state` (boolean) - The state (on-line/off-line) of the Plugwise network.
+    - `network_id` (integer) - The ID of the Plugwise network.
+    - `port` (string) - The port connection string
+  - All plugwise devices
+    - `available` (boolean) - The current network availability state of the device
+    - `battery_powered` (boolean) - Indicates if device is battery powered
+    - `features` (tuple) - List of supported attribute IDs
+    - `firmware_version` (string) - Firmware version device is running
+    - `hardware_model` (string) - Hardware model name
+    - `hardware_version` (string) - Hardware version of device
+    - `last_update` (datetime) - Date/time stamp of last received update from device
+    - `mac` (string) - MAC address of device
+    - `measures_power` (boolean) - Indicates if device supports power measurement
+    - `name` (string) - Name of device based om hardware model and MAC address
+    - `ping` (integer) - Network roundtrip time in milliseconds
+    - `rssi_in` (integer) - Inbound RSSI level in DBm
+    - `rssi_out` (integer) - Outbound RSSI level based on the received inbound RSSI level of the neighbor node in DBm
+  - Scan devices
+    - `motion` (boolean) - Current detection state of motion.
+  - Sense devices
+    - `humidity`  (integer) - Last reported humidity value.
+    - `temperature` (integer) - Last reported temperature value.
+  - Circle/Circle+/Stealth devices
+    - `current_power_usage` (float) - Current power usage (Watts) during the last second
+    - `current_power_usage_8_sec` (float) - Current power usage (Watts) during the last 8 seconds
+    - `power_consumption_current_hour` (float) - Total power consumption (kWh) this running hour
+    - `power_consumption_previous_hour` (float) - Total power consumption (kWh) during the previous hour
+    - `power_consumption_today` (float) - Total power consumption (kWh) of today
+    - `power_consumption_yesterday` (float) - Total power consumption (kWh) during yesterday
+    - `power_production_current_hour` (float) - Total power production (kWh) this hour
+    - `relay_state` (boolean) - State of the output power relay. Setting this property will operate the relay
+  - Switch devices
+    - `switch`  (boolean) - Last reported state of switch
+
 ## 0.8.6 - Code quality improvements for stick
 
 - Bug-fix: Power history was not reported (0 value) during last week of the month
@@ -17,9 +62,10 @@
 - Improvement: Resolves all flake8 comments
 
 ## 0.8.5 - Fix sensor scaling
-  - Fix for via HA Core issue #44349
-  - Fix other value scaling bugs
-  - Remove aiohttp-workaround - issue solved in aiohttp 3.7.1
+
+- Fix for via HA Core issue #44349
+- Fix other value scaling bugs
+- Remove aiohttp-workaround - issue solved in aiohttp 3.7.1
 
 (## 0.8.4 - Not released: Fix "Gas Consumed Interval stays 0" )
 

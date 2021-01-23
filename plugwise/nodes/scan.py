@@ -2,19 +2,17 @@
 import logging
 
 from ..constants import (
-    HA_BINARY_SENSOR,
-    HA_SENSOR,
+    FEATURE_AVAILABLE,
+    FEATURE_MOTION,
+    FEATURE_PING,
+    FEATURE_RSSI_IN,
+    FEATURE_RSSI_OUT,
     SCAN_CONFIGURE_ACCEPTED,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
     SCAN_SENSITIVITY_HIGH,
     SCAN_SENSITIVITY_MEDIUM,
     SCAN_SENSITIVITY_OFF,
-    SENSOR_AVAILABLE,
-    SENSOR_MOTION,
-    SENSOR_PING,
-    SENSOR_RSSI_IN,
-    SENSOR_RSSI_OUT,
 )
 from ..messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
 from ..messages.responses import NodeAckResponse, NodeSwitchGroupResponse
@@ -28,13 +26,11 @@ class PlugwiseScan(NodeSED):
 
     def __init__(self, mac, address, message_sender):
         super().__init__(mac, address, message_sender)
-        self.categories = (HA_SENSOR, HA_BINARY_SENSOR)
-        self.sensors = (
-            SENSOR_AVAILABLE["id"],
-            SENSOR_PING["id"],
-            SENSOR_MOTION["id"],
-            SENSOR_RSSI_IN["id"],
-            SENSOR_RSSI_OUT["id"],
+        self._features = (
+            FEATURE_MOTION["id"],
+            FEATURE_PING["id"],
+            FEATURE_RSSI_IN["id"],
+            FEATURE_RSSI_OUT["id"],
         )
         self._motion_state = False
         self._motion_reset_timer = None
@@ -44,8 +40,9 @@ class PlugwiseScan(NodeSED):
         self._new_daylight_mode = None
         self._new_sensitivity = None
 
-    def get_motion(self) -> bool:
-        """Return motion state"""
+    @property
+    def motion(self) -> bool:
+        """Return the last known motion state"""
         return self._motion_state
 
     def message_for_scan(self, message):
@@ -57,7 +54,7 @@ class PlugwiseScan(NodeSED):
                 "Switch group %s to state %s received from %s",
                 str(message.group.value),
                 str(message.power_state.value),
-                self.get_mac(),
+                self.mac,
             )
             self._process_switch_group(message)
         elif isinstance(message, NodeAckResponse):
@@ -66,7 +63,7 @@ class PlugwiseScan(NodeSED):
             _LOGGER.info(
                 "Unsupported message %s received from %s",
                 message.__class__.__name__,
-                self.get_mac(),
+                self.mac,
             )
 
     def _process_ack_message(self, message):
@@ -79,7 +76,7 @@ class PlugwiseScan(NodeSED):
             _LOGGER.info(
                 "Unsupported ack message %s received for %s",
                 str(message.ack_id),
-                self.get_mac(),
+                self.mac,
             )
 
     def _process_switch_group(self, message):
@@ -88,22 +85,22 @@ class PlugwiseScan(NodeSED):
             # turn off => clear motion
             if self._motion_state:
                 self._motion_state = False
-                self.do_callback(SENSOR_MOTION["id"])
+                self.do_callback(FEATURE_MOTION["id"])
         elif message.power_state.value == 1:
             # turn on => motion
             if not self._motion_state:
                 self._motion_state = True
-                self.do_callback(SENSOR_MOTION["id"])
+                self.do_callback(FEATURE_MOTION["id"])
         else:
             _LOGGER.warning(
                 "Unknown power_state (%s) received from %s",
                 str(message.power_state.value),
-                self.get_mac(),
+                self.mac,
             )
 
     def CalibrateLight(self, callback=None):
         """Queue request to calibration light sensitivity"""
-        self._queue_request(ScanLightCalibrateRequest(self.mac), callback)
+        self._queue_request(ScanLightCalibrateRequest(self._mac), callback)
 
     def Configure_scan(
         self,
@@ -125,7 +122,7 @@ class PlugwiseScan(NodeSED):
         self._new_sensitivity = sensitivity_level
         self._queue_request(
             ScanConfigureRequest(
-                self.mac, motion_reset_timer, sensitivity_value, daylight_mode
+                self._mac, motion_reset_timer, sensitivity_value, daylight_mode
             ),
             callback,
         )
@@ -134,4 +131,13 @@ class PlugwiseScan(NodeSED):
         """Queue Configure Scan to signal motion"""
         # TODO:
 
-        # self._queue_request(NodeSwitchGroupRequest(self.mac), callback)
+        # self._queue_request(NodeSwitchGroupRequest(self._mac), callback)
+
+    ## TODO: All functions below can be removed when HA component is changed to use the property values ##
+    def get_motion(self) -> bool:
+        """Return motion state"""
+        # TODO: Can be removed when HA component is changed to use property
+        _LOGGER.warning(
+            "Function 'get_motion' will be removed in future, use the 'motion' property instead !",
+        )
+        return self._motion_state
