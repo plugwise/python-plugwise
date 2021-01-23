@@ -62,9 +62,10 @@
 - Improvement: Resolves all flake8 comments
 
 ## 0.8.5 - Fix sensor scaling
-  - Fix for via HA Core issue #44349
-  - Fix other value scaling bugs
-  - Remove aiohttp-workaround - issue solved in aiohttp 3.7.1
+
+- Fix for via HA Core issue #44349
+- Fix other value scaling bugs
+- Remove aiohttp-workaround - issue solved in aiohttp 3.7.1
 
 (## 0.8.4 - Not released: Fix "Gas Consumed Interval stays 0" )
 
