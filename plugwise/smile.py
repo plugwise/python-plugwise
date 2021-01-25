@@ -1196,7 +1196,7 @@ class Smile:
         for location in locations:
             if locations[location]["name"] == loc_name:
                 loc_id = location
-        if loc_id == None:
+        if loc_id is None:
             return False
 
         preset_rule_ids = self.get_rule_ids_by_name("Thermostat presets", loc_id)
