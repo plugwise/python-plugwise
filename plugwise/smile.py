@@ -1209,9 +1209,9 @@ class Smile:
             return False
 
         if sp_type == "heating":
-            presets.update({f'{preset}': [value, presets[f'{preset}'][1]]})
+            presets.update({f"{preset}": [value, presets[f"{preset}"][1]]})
         else:
-            presets.update({f'{preset}': [presets[f'{preset}'][0], value]})
+            presets.update({f"{preset}": [presets[f"{preset}"][0], value]})
 
         hm_hsp = presets["home"][0]
         hm_csp = presets["home"][1]
