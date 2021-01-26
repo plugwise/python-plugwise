@@ -1185,7 +1185,7 @@ class Smile:
         await self.request(uri, method="put", data=data)
         return True
 
-    async def set_preset_setpoint(self, loc_name, pr_name, s_type, s_point):
+    async def set_preset_setpoint(self, area, preset, sp_type, value):
         """
         Sets the preset-setpoint, with the preset name and type, connected to a location.
 
@@ -1194,8 +1194,9 @@ class Smile:
         loc_id = None
         locations, dummy = self.scan_thermostats()
         for location in locations:
-            if locations[location]["name"] == loc_name:
+            if locations[location]["name"] == area:
                 loc_id = location
+
         if loc_id is None:
             return False
 
@@ -1207,36 +1208,21 @@ class Smile:
         if presets == {}:
             return False
 
-        hm_hsp = str(presets["home"][0])
-        if pr_name == "home" and s_type == "heating":
-            hm_hsp = str(s_point)
-        hm_csp = str(presets["home"][1])
-        if pr_name == "home" and s_type == "cooling":
-            hm_csp = str(s_point)
-        aw_hsp = str(presets["away"][0])
-        if pr_name == "away" and s_type == "heating":
-            aw_hsp = str(s_point)
-        aw_csp = str(presets["away"][1])
-        if pr_name == "away" and s_type == "cooling":
-            aw_csp = str(s_point)
-        va_hsp = str(presets["vacation"][0])
-        if pr_name == "vacation" and s_type == "heating":
-            va_hsp = str(s_point)
-        va_csp = str(presets["vacation"][1])
-        if pr_name == "vacation" and s_type == "cooling":
-            va_csp = str(s_point)
-        nf_hsp = str(presets["no_frost"][0])
-        if pr_name == "no_frost" and s_type == "heating":
-            nf_hsp = str(s_point)
-        nf_csp = str(presets["no_frost"][1])
-        if pr_name == "no_frost" and s_type == "cooling":
-            nf_csp = str(s_point)
-        sl_hsp = str(presets["asleep"][0])
-        if pr_name == "asleep" and s_type == "heating":
-            sl_hsp = str(s_point)
-        sl_csp = str(presets["asleep"][1])
-        if pr_name == "asleep" and s_type == "cooling":
-            sl_csp = str(s_point)
+        if sp_type == "heating":
+            presets.update({f'{preset}': [value, presets[f'{preset}'][1]]})
+        else:
+            presets.update({f'{preset}': [presets[f'{preset}'][0], value]})
+
+        hm_hsp = presets["home"][0]
+        hm_csp = presets["home"][1]
+        aw_hsp = presets["away"][0]
+        aw_csp = presets["away"][1]
+        va_hsp = presets["vacation"][0]
+        va_csp = presets["vacation"][1]
+        nf_hsp = presets["no_frost"][0]
+        nf_csp = presets["no_frost"][1]
+        sl_hsp = presets["asleep"][0]
+        sl_csp = presets["asleep"][1]
 
         for preset_rule_id, location_id in preset_rule_ids.items():
             template_id = None
