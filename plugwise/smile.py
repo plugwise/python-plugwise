@@ -111,13 +111,15 @@ class Smile:
         names = []
 
         result = await self.request(DOMAIN_OBJECTS)
+        # Look in MODULES when nothing found in DOMAIN_OBJECTS - Stretch fw v2.7
+        if result.find(.//module) is None:
+            result = await self.request(MODULES)
         dsmrmain = result.find(".//module/protocols/dsmrmain")
         network = result.find(".//module/protocols/network_router/network")
 
         vendor_names = result.findall(".//module/vendor_name")
         for name in vendor_names:
             names.append(name.text)
-
         if "Plugwise" not in names:
             if dsmrmain is None:
                 _LOGGER.error(
@@ -129,9 +131,8 @@ class Smile:
 
         # TODO create this as another function NOT part of connect!
         # just using request to parse the data
-        gateway = result.find(".//gateway")
-
         model = version = None
+        gateway = result.find(".//gateway")
         if gateway is not None:
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
