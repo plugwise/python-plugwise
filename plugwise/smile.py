@@ -112,7 +112,7 @@ class Smile:
 
         result = await self.request(DOMAIN_OBJECTS)
         # Look in MODULES when nothing found in DOMAIN_OBJECTS - Stretch fw v2.7
-        if result.find(.//module) is None:
+        if result.find(".//module") is None:
             result = await self.request(MODULES)
         dsmrmain = result.find(".//module/protocols/dsmrmain")
         network = result.find(".//module/protocols/network_router/network")
@@ -214,12 +214,7 @@ class Smile:
         await self.websession.close()
 
     async def request(
-        self,
-        command,
-        retry=3,
-        method="get",
-        data=None,
-        headers=None,
+        self, command, retry=3, method="get", data=None, headers=None,
     ):
         """Request data."""
         resp = None
