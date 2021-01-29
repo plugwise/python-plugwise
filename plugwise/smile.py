@@ -214,7 +214,12 @@ class Smile:
         await self.websession.close()
 
     async def request(
-        self, command, retry=3, method="get", data=None, headers=None,
+        self,
+        command,
+        retry=3,
+        method="get",
+        data=None,
+        headers=None,
     ):
         """Request data."""
         resp = None
