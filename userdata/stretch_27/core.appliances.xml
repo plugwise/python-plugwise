@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appliances>
+	<appliance id='d9e16c0152144b3fb492f1f98a794b63'>
+		<name>Schemerlamp hoek woonkamer 2900E29</name>
+		<description></description>
+		<type>lamp</type>
+		<created_date>2017-10-23T10:57:57.907+02:00</created_date>
+		<modified_date>2021-01-28T22:45:03.207+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='660e48ae6b0c41b6bef9f19346ab0050'/>
+			<relay id='63ed36aef6b2477d8e420a950e0a9e47'/>
+			<electricity_point_meter id='9cadca2dbb6347838da7c7afdcd03758'/>
+		</services>
+		<logs>
+			<interval_log id='157e6d22a91f4eb19b500f211d9f0380'>
+				<updated_date>2021-01-28T22:45:03.084+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:03.084+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='5df6431253bb4d75bdfc02dc1a07ffbc'>
+				<updated_date>2021-01-28T22:45:03.201+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2021-01-28T21:37:50.531+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:03.201+01:00" end_date="2021-01-28T22:45:03.201+01:00">
+					<measurement log_date="2021-01-28T22:45:03.201+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='a4b9f56677d9424d82845b801ea47645'>
+				<updated_date>2021-01-28T22:45:03.076+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2017-10-23T10:58:00.687+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:03.076+01:00" end_date="2021-01-28T22:45:03.076+01:00">
+					<measurement log_date="2021-01-28T22:45:03.076+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='b3c2275437b6402989d2c17cce012960'>
+				<updated_date>2021-01-28T22:45:03.076+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2019-12-08T11:58:05.083+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:03.076+01:00" end_date="2021-01-28T22:45:03.076+01:00">
+					<measurement log_date="2021-01-28T22:45:03.076+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='e0f6f426464f4f25b9479d9a09546a1e'>
+				<updated_date>2021-01-28T22:45:03.082+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:03.082+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='3195cedabe8f4ff8838f0f1c01acb39f'>
+				<updated_date>2021-01-28T22:45:03.207+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='c888de700df84187bc0ce3a2f9ddfe63'>
+		<name>TV 19E0EBF</name>
+		<description></description>
+		<type>tv</type>
+		<created_date>2017-10-23T12:13:47.283+02:00</created_date>
+		<modified_date>2021-01-28T22:45:02.425+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='5026046ff53942818d8dba167e6718c6'/>
+			<relay id='1ff4abb86f714460952dda334f2842b1'/>
+			<electricity_point_meter id='423126cf540040acb5075a418a4997a4'/>
+		</services>
+		<logs>
+			<interval_log id='27b7ed6f11904c5b8051d1bc0cd1fd91'>
+				<updated_date>2021-01-28T22:45:02.423+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.423+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='5aaa8302776c48ff9ce65bb0351c52b1'>
+				<updated_date>2021-01-28T22:44:45.856+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2017-10-23T16:39:39.641+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:44:45.856+01:00" end_date="2021-01-28T22:44:45.856+01:00">
+					<measurement log_date="2021-01-28T22:44:45.856+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='70969c9dc69b4b07857ac85f9e2a77d8'>
+				<updated_date>2021-01-28T22:45:02.425+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.425+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='c933fec58b334dbbb1871cc287c592a4'>
+				<updated_date>2021-01-28T22:45:02.392+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2017-10-23T12:13:48.635+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.392+01:00" end_date="2021-01-28T22:45:02.392+01:00">
+					<measurement log_date="2021-01-28T22:45:02.392+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='f883cbca8b3b411ca2546df6ea267e0e'>
+				<updated_date>2021-01-28T22:45:02.392+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2021-01-28T21:35:29.549+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.392+01:00" end_date="2021-01-28T22:45:02.392+01:00">
+					<measurement log_date="2021-01-28T22:45:02.392+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='dba10b8a745a4858bac11c0d35527e67'>
+				<updated_date>2021-01-28T22:44:45.865+01:00</updated_date>
+				<state>on</state>
+				<lock>true</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='508a7b1c407c474dbceb4a866845e2f4'>
+		<name>Koelkast  19E1139</name>
+		<description></description>
+		<type>refrigerator</type>
+		<created_date>2017-10-23T10:43:49.064+02:00</created_date>
+		<modified_date>2021-01-28T22:45:02.957+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='2c5c50af0e774301a8478e3aabf55119'/>
+			<electricity_interval_meter id='a8a10e7955504f019555cbf8adee3d9c'/>
+			<electricity_point_meter id='b48132d197d7427099cbce3b4dedce07'/>
+		</services>
+		<logs>
+			<interval_log id='330a876d00024a368f3599cf1cc80a83'>
+				<updated_date>2021-01-28T22:45:02.956+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.956+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='505008f5d8db447aa7f260734c716c15'>
+				<updated_date>2021-01-28T22:44:45.748+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2017-11-02T19:51:05.511+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:44:45.748+01:00" end_date="2021-01-28T22:44:45.748+01:00">
+					<measurement log_date="2021-01-28T22:44:45.748+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='5c49ff4de8a84b52bd8b856f9b03154c'>
+				<updated_date>2021-01-28T22:45:02.951+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2017-10-23T10:43:50.424+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.951+01:00" end_date="2021-01-28T22:45:02.951+01:00">
+					<measurement log_date="2021-01-28T22:45:02.951+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='739c5283b6fb4ca6ace8d062fd2b6f50'>
+				<updated_date>2021-01-28T22:45:02.951+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2021-01-28T22:42:13.724+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.951+01:00" end_date="2021-01-28T22:45:02.951+01:00">
+					<measurement log_date="2021-01-28T22:45:02.951+01:00">2.69</measurement>
+				</period>
+			</point_log>
+			<interval_log id='b4d823815c924e8688187cda0e5e93e6'>
+				<updated_date>2021-01-28T22:45:02.957+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.957+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='0fc595729c504e2ca6005a42b000a289'>
+				<updated_date>2021-01-28T22:44:45.754+01:00</updated_date>
+				<state>on</state>
+				<lock>true</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='b08beb34789e4c11bd042e46d63c270e'>
+		<name>Audio Rack 28F61EB</name>
+		<description></description>
+		<type>amplifier</type>
+		<created_date>2017-10-23T10:33:41.383+02:00</created_date>
+		<modified_date>2021-01-28T22:45:02.881+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='6cfbeee458d846e39b2466546aac9f20'/>
+			<electricity_point_meter id='8123cab09a9c48d48481550c4016cc9e'/>
+			<electricity_interval_meter id='4bd405fe17fb4fd380a391a13ab54604'/>
+		</services>
+		<logs>
+			<point_log id='0f28823bd6cf40eba893653ab421776a'>
+				<updated_date>2021-01-28T22:44:45.515+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2017-10-23T12:21:25.653+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:44:45.515+01:00" end_date="2021-01-28T22:44:45.515+01:00">
+					<measurement log_date="2021-01-28T22:44:45.515+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='565cbde77d314626ace4cbca655a5efd'>
+				<updated_date>2021-01-28T22:45:02.875+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2017-10-23T10:33:42.821+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.875+01:00" end_date="2021-01-28T22:45:02.875+01:00">
+					<measurement log_date="2021-01-28T22:45:02.875+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='6e0c14c1008f4420a5ec5a61bf1f895d'>
+				<updated_date>2021-01-28T22:45:02.881+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.881+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='c9edf534a94144a3ad9c1eaebdf4594c'>
+				<updated_date>2021-01-28T22:45:02.875+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2021-01-28T20:51:06.252+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.875+01:00" end_date="2021-01-28T22:45:02.875+01:00">
+					<measurement log_date="2021-01-28T22:45:02.875+01:00">8.94</measurement>
+				</period>
+			</point_log>
+			<interval_log id='d92ea631d4ee4a1ba68ac122422a8efd'>
+				<updated_date>2021-01-28T22:45:02.880+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2021-01-28T21:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.880+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='1f42972324a94ab79d9ca8407617c128'>
+				<updated_date>2021-01-28T22:44:45.521+01:00</updated_date>
+				<state>on</state>
+				<lock>true</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='a809fd62e471424fae510e965db891fc'>
+		<name>Stealth voor PV op de schuur 039D8177</name>
+		<description></description>
+		<type>solarpanel</type>
+		<created_date>2013-07-31T07:44:11.177+02:00</created_date>
+		<modified_date>2020-05-07T07:12:24.961+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='fa49e6ca8cd848fcba5aab9a8480b568'/>
+			<relay id='67758fb9ce824d688ae9f06ed828ba8d'/>
+			<electricity_interval_meter id='f44ce36776864244b1a07121d4cafc66'/>
+		</services>
+		<logs>
+			<point_log id='30892c9c35f94d6c997e06ea4761d54e'>
+				<updated_date>2020-05-07T07:12:24.926+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-04-29T01:00:57.973+02:00</last_consecutive_log_date>
+				<period start_date="2020-05-07T07:12:24.926+02:00" end_date="2020-05-07T07:12:24.926+02:00">
+					<measurement log_date="2020-05-07T07:12:24.926+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='27b1d2e3944d4cfc833a05b01d8e7bc4'>
+				<updated_date>2020-05-07T07:12:24.755+02:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2013-10-23T13:42:51.618+02:00</last_consecutive_log_date>
+				<period start_date="2020-05-07T07:12:24.755+02:00" end_date="2020-05-07T07:12:24.755+02:00">
+					<measurement log_date="2020-05-07T07:12:24.755+02:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='b35e8eec030747eb9949fa7f1dbd0c94'>
+				<updated_date>2020-05-06T16:27:41.923+02:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-05-06T15:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2020-05-06T16:00:00+02:00" end_date="2020-05-06T16:27:41.923+02:00" interval="PT1H">
+					<measurement log_date="2020-05-06T16:00:00+02:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='535c1aa2e99d420b8cf41738bd199546'>
+				<updated_date>2020-05-06T16:27:41.925+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-05-06T15:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2020-05-06T16:00:00+02:00" end_date="2020-05-06T16:27:41.925+02:00" interval="PT1H">
+					<measurement log_date="2020-05-06T16:00:00+02:00">1602.30</measurement>
+				</period>
+			</interval_log>
+			<point_log id='c72df22050e24dffb407e49cef9f3b05'>
+				<updated_date>2020-05-07T07:12:24.961+02:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2020-05-07T07:12:24.926+02:00</last_consecutive_log_date>
+				<period start_date="2020-05-07T07:12:24.961+02:00" end_date="2020-05-07T07:12:24.961+02:00">
+					<measurement log_date="2020-05-07T07:12:24.961+02:00">76.94</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='9a581bc7158a43eb9ef48c9fa7613029'>
+				<updated_date>2020-05-07T07:12:24.777+02:00</updated_date>
+				<state>on</state>
+				<lock>true</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='34e4df887ab44fb9a6ed578eda1053ef'>
+		<name>PC scanner 19E1046</name>
+		<description></description>
+		<type>scanner_pc</type>
+		<created_date>2017-10-23T12:57:23.686+02:00</created_date>
+		<modified_date>2021-01-28T22:45:02.849+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='e291f643f3b645de884edc005b7222f1'/>
+			<electricity_interval_meter id='57ea0d48a99e4770ac5d9fb3418fedd6'/>
+			<relay id='11af06d493704402a1aa45c4c4d63b43'/>
+		</services>
+		<logs>
+			<point_log id='5697a696cf934b4c994821e6a09cdf9c'>
+				<updated_date>2021-01-28T22:45:02.843+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2021-01-27T12:49:14.769+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.843+01:00" end_date="2021-01-28T22:45:02.843+01:00">
+					<measurement log_date="2021-01-28T22:45:02.843+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='5e03c16f45a7468c8c2312a839a23983'>
+				<updated_date>2021-01-28T22:45:02.849+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2019-11-21T19:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.849+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='677975399c834d569d3e46a74e12ef47'>
+				<updated_date>2021-01-28T22:44:46.218+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2021-01-28T22:10:49.464+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:44:46.218+01:00" end_date="2021-01-28T22:44:46.218+01:00">
+					<measurement log_date="2021-01-28T22:44:46.218+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='82ba090f10cc43efaaa723bd4940e09b'>
+				<updated_date>2021-01-28T22:45:02.848+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2019-11-21T20:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.848+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='83cc0bd2d77e48f69ea74cc1f9c7d1af'>
+				<updated_date>2021-01-28T22:45:02.843+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2017-10-23T12:57:26.347+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.843+01:00" end_date="2021-01-28T22:45:02.843+01:00">
+					<measurement log_date="2021-01-28T22:45:02.843+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='76897b7ecaca4c4ab938dd2096b6b63d'>
+				<updated_date>2021-01-28T22:44:46.234+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='18cc600817f64779886a03d228118191'>
+		<name>Diepvriezer 2900C0A</name>
+		<description></description>
+		<type>refrigerator</type>
+		<created_date>2017-10-23T12:33:55.251+02:00</created_date>
+		<modified_date>2021-01-28T22:45:02.545+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='0f0dd590d33f4a9d8df6f278362c15a2'/>
+			<electricity_interval_meter id='0c47969912bf44c6a156d3fed1faa969'/>
+			<electricity_point_meter id='06d9f1985eeb4904983c0c6a9bb2c0d7'/>
+		</services>
+		<logs>
+			<interval_log id='42215d2cb580499b9648d23c6dcfc8b6'>
+				<updated_date>2021-01-28T22:45:02.545+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-04-15T17:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.545+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='858292f481ae4449affba8b7a935d00b'>
+				<updated_date>2021-01-28T22:45:02.538+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2021-01-28T22:31:49.874+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.538+01:00" end_date="2021-01-28T22:45:02.538+01:00">
+					<measurement log_date="2021-01-28T22:45:02.538+01:00">0.94</measurement>
+				</period>
+			</point_log>
+			<point_log id='a1896902dcc34a91b25e388f51e4a906'>
+				<updated_date>2021-01-28T22:45:02.538+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2017-10-23T12:33:58.369+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.538+01:00" end_date="2021-01-28T22:45:02.538+01:00">
+					<measurement log_date="2021-01-28T22:45:02.538+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='bf0963a42bb0482592725cb1c2b8755e'>
+				<updated_date>2021-01-28T22:45:02.543+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-04-15T17:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.543+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='f5accb56642e48b8b3bd29c2d28ea8cd'>
+				<updated_date>2021-01-28T22:44:45.969+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2017-11-02T19:04:39.369+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:44:45.969+01:00" end_date="2021-01-28T22:44:45.969+01:00">
+					<measurement log_date="2021-01-28T22:44:45.969+01:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='03b7481599814d1589dc3dec2b262364'>
+				<updated_date>2021-01-28T22:44:45.975+01:00</updated_date>
+				<state>on</state>
+				<lock>true</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='34e40af8a1c24986afae89f7e5588a62'>
+		<name>Central heat 278FAF4</name>
+		<description></description>
+		<type>heater_central</type>
+		<created_date>2013-07-31T07:44:10.957+02:00</created_date>
+		<modified_date>2021-01-28T22:45:02.673+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='7b0497f20f2946faa426d7234770ee30'/>
+			<electricity_interval_meter id='9b767c841f774f37b26ca98626de0044'/>
+			<relay id='a9f02b8e55964ea39978aad9732e5f4d'/>
+		</services>
+		<logs>
+			<point_log id='4e1ced026fee486995b776214d6deddb'>
+				<updated_date>2021-01-28T22:45:02.664+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2013-10-23T13:42:52.393+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.664+01:00" end_date="2021-01-28T22:45:02.664+01:00">
+					<measurement log_date="2021-01-28T22:45:02.664+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='3a67ed4a33b1466cb94a3f5d9ea0fd4b'>
+				<updated_date>2021-01-28T22:45:02.671+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-07-14T16:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.671+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='96cd0965c242459f9ee6e4a9926847ea'>
+				<updated_date>2021-01-28T22:45:02.664+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2021-01-28T22:14:46.088+01:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:45:02.664+01:00" end_date="2021-01-28T22:45:02.664+01:00">
+					<measurement log_date="2021-01-28T22:45:02.664+01:00">6.69</measurement>
+				</period>
+			</point_log>
+			<interval_log id='d75be787322f41f6b496f053b49ec247'>
+				<updated_date>2021-01-28T22:45:02.673+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2020-07-14T16:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2021-01-28T22:00:00+01:00" end_date="2021-01-28T22:45:02.673+01:00" interval="PT1H">
+					<measurement log_date="2021-01-28T22:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='aed48efe33f247bdad2a6c2a71d28ad3'>
+				<updated_date>2021-01-28T22:44:45.640+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2017-08-10T22:31:16.919+02:00</last_consecutive_log_date>
+				<period start_date="2021-01-28T22:44:45.640+01:00" end_date="2021-01-28T22:44:45.640+01:00">
+					<measurement log_date="2021-01-28T22:44:45.640+01:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='2217c81342ef4827a13fcf7ad77ad4a6'>
+				<updated_date>2021-01-28T22:44:45.646+01:00</updated_date>
+				<state>on</state>
+				<lock>true</lock>
+			</relay>
+		</actuators>
+	</appliance>
+</appliances>
