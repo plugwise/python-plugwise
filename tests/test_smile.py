@@ -1368,6 +1368,39 @@ class TestPlugwise:
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_stretch_v27(self):
+        """Test erroneous domain_objects file from user."""
+        # testdata dictionary with key ctrl_id_dev_id => keys:values
+        testdata = {
+            # Koelkast  19E1139
+            "508a7b1c407c474dbceb4a866845e2f4": {
+                "electricity_consumed": 2.69,
+                "relay": True,
+            },
+            # Stealth voor PV op de schuur 039D8177
+            "a809fd62e471424fae510e965db891fc": {
+                "electricity_produced_interval": 1602,
+            },
+        }
+
+        self.smile_setup = "stretch_v27"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "stretch000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "stretch"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "2.7.15"
+        _LOGGER.info(" # Assert legacy")
+        assert smile._smile_legacy  # pylint: disable=protected-access
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_fail_legacy_system(self):
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
