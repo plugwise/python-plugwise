@@ -418,9 +418,10 @@ class Smile:
                     module = self._modules.find(
                         f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
                     )
-                    hw_version = module.find("hardware_version").text.replace("-", "")
-                    appliance_model = version_to_model(hw_version)
-                    appliance_fw = module.find("firmware_version").text
+                    if module is not None:
+                        hw_version = module.find("hardware_version").text.replace("-", "")
+                        appliance_model = version_to_model(hw_version)
+                        appliance_fw = module.find("firmware_version").text
 
             # Nothing useful in opentherm so skip it
             if appliance_class == "open_therm_gateway":
