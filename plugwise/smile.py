@@ -488,6 +488,8 @@ class Smile:
                 "class": appliance_class,
                 "location": appliance_location,
             }
+            if appliance_fw is None:
+                appliances[appliance_id].pop("fw", None)
 
         return appliances
 
