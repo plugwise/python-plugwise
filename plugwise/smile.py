@@ -400,7 +400,6 @@ class Smile:
 
             appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
-            appliance_descr = appliance.find("description").text
             appliance_name = appliance.find("name").text
             appliance_model = appliance_class.replace("_", " ").title()
             appliance_fw = None
