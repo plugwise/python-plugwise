@@ -416,7 +416,9 @@ class Smile:
                     module = self._modules.find(
                         f".//thermostat[@id='{appliance_mod_link_id}']...."
                     )
-                    appliance_model = version_to_model(module.find("vendor_model").text)
+                    tmp_model = version_to_model(module.find("vendor_model").text)
+                    if model != "Unknown":
+                        appliance_model = tmp_model
                     appliance_fw = module.find("firmware_version").text
             if stretch_v2 or stretch_v3:
                 appl_search = appliance.find(".//services/electricity_point_meter")
