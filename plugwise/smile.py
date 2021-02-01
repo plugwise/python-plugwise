@@ -417,7 +417,7 @@ class Smile:
                         f".//thermostat[@id='{appliance_mod_link_id}']...."
                     )
                     tmp_model = version_to_model(module.find("vendor_model").text)
-                    if model != "Unknown":
+                    if tmp_model != "Unknown":
                         appliance_model = tmp_model
                     appliance_fw = module.find("firmware_version").text
             if stretch_v2 or stretch_v3:
