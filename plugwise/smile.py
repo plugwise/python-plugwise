@@ -436,7 +436,7 @@ class Smile:
                 # Return all types applicable to home
                 appliance_types = locations[home_location]["types"]
                 # If heater or gatweay override registering
-                if appliance_class == "heater_central":
+                if appliance_class == "heater_central" and self.smile_type != "stretch":
                     appliance_id = self.heater_id
                     appliance_name = self.smile_name
                 if appliance_class == "gateway":
