@@ -417,7 +417,7 @@ class Smile:
                         f".//thermostat[@id='{appliance_mod_link_id}']...."
                     )
                     mod_search = module.find("vendor_model").text
-                    if  mod_search == "ThermoTouch":
+                    if mod_search == "ThermoTouch":
                         appliance_model = "Anna"
                     tmp_model = version_to_model(mod_search)
                     if tmp_model != "Unknown":
@@ -452,7 +452,7 @@ class Smile:
                 # If heater or gatweay override registering
                 if appliance_class == "heater_central" and self.smile_type != "stretch":
                     appliance_id = self.heater_id
-                    appliance_name = "Auxiliary" # old: self.smile_name
+                    appliance_name = "Auxiliary"  # old: self.smile_name
                 if appliance_class == "gateway":
                     appliance_id = self.gateway_id
                     appliance_name = self.smile_name
