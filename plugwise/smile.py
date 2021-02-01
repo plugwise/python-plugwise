@@ -449,7 +449,7 @@ class Smile:
                 # If heater or gatweay override registering
                 if appliance_class == "heater_central" and self.smile_type != "stretch":
                     appliance_id = self.heater_id
-                    appliance_name = self.smile_name
+                    appliance_name = "Auxiliary" # old: self.smile_name
                 if appliance_class == "gateway":
                     appliance_id = self.gateway_id
                     appliance_name = self.smile_name
