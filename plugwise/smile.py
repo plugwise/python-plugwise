@@ -484,6 +484,8 @@ class Smile:
 
             if appliance_model == "Gateway":
                 appliance_model = f"Smile {self.smile_name}"
+            if appliance_model == "Thermostat":
+                appliance_model = "Anna"
 
             appliances[appliance_id] = {
                 "name": appliance_name,
