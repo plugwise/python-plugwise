@@ -330,8 +330,8 @@ class Smile:
             _LOGGER.error("Locataion data missing")
             raise XMLDataMissingError
 
-        # Stretch_v2 only uses modules
-        if self.smile_type == "stretch" and self.smile_version[1].major == 2:
+        # No need to import modules for P1
+        if self.smile_type != "power":
             await self.update_modules()
             if self._modules is None:
                 _LOGGER.error("Modules data missing")
@@ -403,7 +403,15 @@ class Smile:
             appliance_descr = appliance.find("description").text
             appliance_name = appliance.find("name").text
             appliance_model = appliance_class.replace("_", " ").title()
-            if stretch_v2:
+            appliance_fw = None
+            if appliance_class in ["thermostat", "zone_thermostat", "thermostatic_radiator_valve"]:
+                appl_search = appliance.find("./logs/point_log[type='thermostat']/thermostat")
+                if appl_search is not None:
+                    appliance_mod_link_id = appl_search.attrib["id"]
+                    module = self._modules.find(f".//thermostat[@id='{appliance_mod_link_id}']....")
+                    appliance_model = version_to_model(module.find("vendor_model").text)
+                    appliance_fw = module.find("firmware_version").text
+            if stretch_v2 or stretch_v3:
                 appl_search = appliance.find(".//services/electricity_point_meter")
                 if appl_search is not None:
                     appl_serv_epm_id = appl_search.attrib["id"]
@@ -412,9 +420,7 @@ class Smile:
                     )
                     hw_version = module.find("hardware_version").text.replace("-", "")
                     appliance_model = version_to_model(hw_version)
-
-            if stretch_v3:
-                appliance_model = appliance_descr
+                    appliance_fw = module.find("firmware_version").text
 
             # Nothing useful in opentherm so skip it
             if appliance_class == "open_therm_gateway":
@@ -450,7 +456,12 @@ class Smile:
                 appliance_types.add("thermostat")
 
             if self.smile_type != "stretch" and "plug" in appliance_types:
-                appliance_model = "Plug"
+                appl_search = appliance.find(".//logs/point_log/electricity_point_meter")
+                if appl_search is not None:
+                    appliance_mod_link_id = appl_search.attrib["id"]
+                    module = self._modules.find(f".//electricity_point_meter[@id='{appliance_mod_link_id}']....")
+                    appliance_model = version_to_model(module.find("vendor_model").text)
+                    appliance_fw = module.find("firmware_version").text
 
             if appliance_model == "Gateway":
                 appliance_model = f"Smile {self.smile_name}"
@@ -458,6 +469,7 @@ class Smile:
             appliances[appliance_id] = {
                 "name": appliance_name,
                 "model": appliance_model,
+                "fw": appliance_fw,
                 "types": appliance_types,
                 "class": appliance_class,
                 "location": appliance_location,
@@ -652,7 +664,7 @@ class Smile:
                         details["class"] = "thermo_sensor"
 
             if details["name"] == "Anna" and not self.single_master_thermostat():
-                details["model"] = "Zone Thermostat"
+                details["model"] = "Anna"
 
             devices[appliance] = details
 
@@ -691,7 +703,7 @@ class Smile:
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl[group_id] = {
                     "name": group_name,
-                    "model": "group_switch",
+                    "model": "Group Switch",
                     "types": {"switch_group"},
                     "class": group_type,
                     "members": members,
