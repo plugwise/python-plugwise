@@ -404,11 +404,19 @@ class Smile:
             appliance_name = appliance.find("name").text
             appliance_model = appliance_class.replace("_", " ").title()
             appliance_fw = None
-            if appliance_class in ["thermostat", "zone_thermostat", "thermostatic_radiator_valve"]:
-                appl_search = appliance.find("./logs/point_log[type='thermostat']/thermostat")
+            if appliance_class in [
+                "thermostat",
+                "zone_thermostat",
+                "thermostatic_radiator_valve",
+            ]:
+                appl_search = appliance.find(
+                    "./logs/point_log[type='thermostat']/thermostat"
+                )
                 if appl_search is not None:
                     appliance_mod_link_id = appl_search.attrib["id"]
-                    module = self._modules.find(f".//thermostat[@id='{appliance_mod_link_id}']....")
+                    module = self._modules.find(
+                        f".//thermostat[@id='{appliance_mod_link_id}']...."
+                    )
                     appliance_model = version_to_model(module.find("vendor_model").text)
                     appliance_fw = module.find("firmware_version").text
             if stretch_v2 or stretch_v3:
@@ -419,7 +427,9 @@ class Smile:
                         f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
                     )
                     if module is not None:
-                        hw_version = module.find("hardware_version").text.replace("-", "")
+                        hw_version = module.find("hardware_version").text.replace(
+                            "-", ""
+                        )
                         appliance_model = version_to_model(hw_version)
                         appliance_fw = module.find("firmware_version").text
 
@@ -457,10 +467,14 @@ class Smile:
                 appliance_types.add("thermostat")
 
             if self.smile_type != "stretch" and "plug" in appliance_types:
-                appl_search = appliance.find(".//logs/point_log/electricity_point_meter")
+                appl_search = appliance.find(
+                    ".//logs/point_log/electricity_point_meter"
+                )
                 if appl_search is not None:
                     appliance_mod_link_id = appl_search.attrib["id"]
-                    module = self._modules.find(f".//electricity_point_meter[@id='{appliance_mod_link_id}']....")
+                    module = self._modules.find(
+                        f".//electricity_point_meter[@id='{appliance_mod_link_id}']...."
+                    )
                     appliance_model = version_to_model(module.find("vendor_model").text)
                     appliance_fw = module.find("firmware_version").text
 

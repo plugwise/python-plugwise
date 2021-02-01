@@ -41,9 +41,7 @@ def version_to_model(version):
         model = HW_MODELS.get(version[4:10])
     if model is None:
         # Try again with reversed order
-        model = HW_MODELS.get(
-            version[-2:] + version[-4:-2] + version[-6:-4]
-        )
+        model = HW_MODELS.get(version[-2:] + version[-4:-2] + version[-6:-4])
 
     return model if model is not None else "Unknown"
 

@@ -198,7 +198,6 @@ HW_MODELS = {
     "160-01": "Plug",
     "106-03": "Tom",
     "158-01": "Lisa",
-    
 }
 
 # Defaults for SED's (Sleeping End Devices)
