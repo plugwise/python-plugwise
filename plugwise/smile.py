@@ -480,7 +480,8 @@ class Smile:
                 mod_type = "electricity_point_meter"
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
-                    appliance_model = version_to_model(module_data[1])
+                    if module_data[1] is not None:
+                        appliance_model = version_to_model(module_data[1])
                     appliance_fw = module_data[2]
 
             if appliance_model == "Gateway":
