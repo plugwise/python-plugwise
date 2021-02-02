@@ -363,7 +363,9 @@ class Smile:
             module = self._modules.find(f".//{mod_type}[@id='{link_id}']....")
             if module is not None:
                 v_model = module.find("vendor_model").text
-                hw_version = module.find("hardware_version").text.replace("-", "")
+                locate_hwv = module.find("hardware_version")
+                if locate_hwv is not None:
+                    hw_version = locate_hwv.text.replace("-", "")
                 fw_version = module.find("firmware_version").text
 
             return [v_model, hw_version, fw_version]
