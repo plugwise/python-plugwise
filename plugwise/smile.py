@@ -278,13 +278,12 @@ class Smile:
     async def update_domain_objects(self):
         """Request domain_objects data."""
         new_data = await self.request(DOMAIN_OBJECTS)
-        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
-
         if new_data is not None:
             self._domain_objects = new_data
 
         # If Plugwise notifications present:
         self.notifications = {}
+        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
         notifications = self._domain_objects.findall(".//notification")
         for notification in notifications:
             try:
@@ -330,7 +329,7 @@ class Smile:
             _LOGGER.error("Locataion data missing")
             raise XMLDataMissingError
 
-        # No need to import modules for P1
+        # No need to import modules for P1, no userfull info
         if self.smile_type != "power":
             await self.update_modules()
             if self._modules is None:
@@ -355,6 +354,20 @@ class Smile:
                         types.add(attrs[ATTR_TYPE])
 
         return types
+
+def _get_module_data(self, locator, mod_type):
+    """ABC."""
+    appl_search = appliance.find(locator)
+    if appl_search is not None:
+        link_id = appl_search.attrib["id"]
+        module = self._modules.find(f".//'{mod_type}'[@id='{link_id}']....")
+        if module is not None:
+            v_model = module.find("vendor_model").text
+            hw_version = module.find("hardware_version").text.replace("-", "")
+            fw_version = module.find("firmware_version").text
+
+        return [v_model, hw_version, fw_version]
+    return None
 
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
@@ -403,39 +416,30 @@ class Smile:
             appliance_name = appliance.find("name").text
             appliance_model = appliance_class.replace("_", " ").title()
             appliance_fw = None
+
             if appliance_class in [
                 "thermostat",
                 "zone_thermostat",
                 "thermostatic_radiator_valve",
             ]:
-                appl_search = appliance.find(
-                    "./logs/point_log[type='thermostat']/thermostat"
-                )
-                if appl_search is not None:
-                    appliance_mod_link_id = appl_search.attrib["id"]
-                    module = self._modules.find(
-                        f".//thermostat[@id='{appliance_mod_link_id}']...."
-                    )
-                    mod_search = module.find("vendor_model").text
-                    if mod_search == "ThermoTouch":
+                locator = "./logs/point_log[type='thermostat']/thermostat"
+                mod_type = thermostat
+                module_data = self._get_module_data(locator, mod_type)
+                if module_data is not None:
+                    if module_data[0] == "ThermoTouch":
                         appliance_model = "Anna"
-                    tmp_model = version_to_model(mod_search)
+                    tmp_model = version_to_model(module_data[0])
                     if tmp_model != "Unknown":
                         appliance_model = tmp_model
-                    appliance_fw = module.find("firmware_version").text
+                    appliance_fw = module_data[3]
+
             if stretch_v2 or stretch_v3:
-                appl_search = appliance.find(".//services/electricity_point_meter")
-                if appl_search is not None:
-                    appl_serv_epm_id = appl_search.attrib["id"]
-                    module = self._modules.find(
-                        f".//electricity_point_meter[@id='{appl_serv_epm_id}']...."
-                    )
-                    if module is not None:
-                        hw_version = module.find("hardware_version").text.replace(
-                            "-", ""
-                        )
-                        appliance_model = version_to_model(hw_version)
-                        appliance_fw = module.find("firmware_version").text
+                locator = ".//logs/point_log/electricity_point_meter"
+                mod_type = electricity_point_meter
+                module_data = self._get_module_data(locator, mod_type)
+                if module_data is not None:
+                    appliance_model = module_data[2]
+                    appliance_fw = module_data[3]
 
             # Nothing useful in opentherm so skip it
             if appliance_class == "open_therm_gateway":
@@ -471,16 +475,12 @@ class Smile:
                 appliance_types.add("thermostat")
 
             if self.smile_type != "stretch" and "plug" in appliance_types:
-                appl_search = appliance.find(
-                    ".//logs/point_log/electricity_point_meter"
-                )
-                if appl_search is not None:
-                    appliance_mod_link_id = appl_search.attrib["id"]
-                    module = self._modules.find(
-                        f".//electricity_point_meter[@id='{appliance_mod_link_id}']...."
-                    )
-                    appliance_model = version_to_model(module.find("vendor_model").text)
-                    appliance_fw = module.find("firmware_version").text
+                locator = ".//logs/point_log/electricity_point_meter"
+                mod_type = electricity_point_meter
+                module_data = self._get_module_data(locator, mod_type)
+                if module_data is not None:
+                    appliance_model = module_data[2]
+                    appliance_fw = module_data[3]
 
             if appliance_model == "Gateway":
                 appliance_model = f"Smile {self.smile_name}"
