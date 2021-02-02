@@ -396,16 +396,6 @@ class Smile:
         # Basically walk locations for 'members' not set[] and
         # scan for the same functionality
 
-        # Find gateway and heater devices
-        for appliance in self._appliances:
-            if appliance.find("type").text == "gateway":
-                self.gateway_id = appliance.attrib["id"]
-            if appliance.find("type").text == "heater_central":
-                self.heater_id = appliance.attrib["id"]
-
-        # for legacy it is the same device
-        if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id
 
         for appliance in self._appliances:
             appliance_location = None
@@ -416,6 +406,12 @@ class Smile:
             appliance_name = appliance.find("name").text
             appliance_model = appliance_class.replace("_", " ").title()
             appliance_fw = None
+
+            # Find gateway and heater_central devices
+            if appliance_class == "gateway":
+                self.gateway_id = appliance.attrib["id"]
+            if appliance_class == "heater_central":
+                self.heater_id = appliance.attrib["id"]
 
             if appliance_class in [
                 "thermostat",
@@ -499,6 +495,10 @@ class Smile:
             }
             if appliance_fw is None:
                 appliances[appliance_id].pop("fw", None)
+
+        # for legacy Anns gateway and heater_central is the same device
+        if self._smile_legacy and self.smile_type == "thermostat":
+            self.gateway_id = self.heater_id
 
         return appliances
 
