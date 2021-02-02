@@ -396,7 +396,6 @@ class Smile:
         # Basically walk locations for 'members' not set[] and
         # scan for the same functionality
 
-
         for appliance in self._appliances:
             appliance_location = None
             appliance_types = set()
