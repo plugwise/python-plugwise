@@ -363,9 +363,7 @@ class Smile:
             module = self._modules.find(f".//{mod_type}[@id='{link_id}']....")
             if module is not None:
                 v_model = module.find("vendor_model").text
-                locate_hwv = module.find("hardware_version")
-                if locate_hwv is not None:
-                    hw_version = locate_hwv.text.replace("-", "")
+                hw_version = module.find("hardware_version").text
                 fw_version = module.find("firmware_version").text
 
             return [v_model, hw_version, fw_version]
@@ -440,7 +438,8 @@ class Smile:
                 mod_type = "electricity_point_meter"
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
-                    appliance_model = module_data[1]
+                    hw_version = module_data[1].replace("-", "")
+                    appliance_model = version_to_model(hw_version)
                     appliance_fw = module_data[2]
 
             # Nothing useful in opentherm so skip it
@@ -481,7 +480,7 @@ class Smile:
                 mod_type = "electricity_point_meter"
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
-                    appliance_model = module_data[1]
+                    appliance_model = version_to_model(module_data[1])
                     appliance_fw = module_data[2]
 
             if appliance_model == "Gateway":
