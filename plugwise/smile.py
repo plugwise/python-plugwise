@@ -355,19 +355,19 @@ class Smile:
 
         return types
 
-def _get_module_data(self, locator, mod_type):
-    """ABC."""
-    appl_search = appliance.find(locator)
-    if appl_search is not None:
-        link_id = appl_search.attrib["id"]
-        module = self._modules.find(f".//'{mod_type}'[@id='{link_id}']....")
-        if module is not None:
-            v_model = module.find("vendor_model").text
-            hw_version = module.find("hardware_version").text.replace("-", "")
-            fw_version = module.find("firmware_version").text
+    def _get_module_data(self, locator, mod_type):
+        """ABC."""
+        appl_search = appliance.find(locator)
+        if appl_search is not None:
+            link_id = appl_search.attrib["id"]
+            module = self._modules.find(f".//'{mod_type}'[@id='{link_id}']....")
+            if module is not None:
+                v_model = module.find("vendor_model").text
+                hw_version = module.find("hardware_version").text.replace("-", "")
+                fw_version = module.find("firmware_version").text
 
-        return [v_model, hw_version, fw_version]
-    return None
+            return [v_model, hw_version, fw_version]
+        return None
 
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
