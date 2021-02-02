@@ -355,7 +355,7 @@ class Smile:
 
         return types
 
-    def _get_module_data(self, locator, mod_type):
+    def _get_module_data(self, appliance, locator, mod_type):
         """ABC."""
         appl_search = appliance.find(locator)
         if appl_search is not None:
@@ -424,7 +424,7 @@ class Smile:
             ]:
                 locator = "./logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
-                module_data = self._get_module_data(locator, mod_type)
+                module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
                     if module_data[0] == "ThermoTouch":
                         appliance_model = "Anna"
@@ -436,7 +436,7 @@ class Smile:
             if stretch_v2 or stretch_v3:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = self._get_module_data(locator, mod_type)
+                module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
                     appliance_model = module_data[2]
                     appliance_fw = module_data[3]
@@ -477,7 +477,7 @@ class Smile:
             if self.smile_type != "stretch" and "plug" in appliance_types:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = self._get_module_data(locator, mod_type)
+                module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
                     appliance_model = module_data[2]
                     appliance_fw = module_data[3]
