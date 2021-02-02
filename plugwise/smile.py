@@ -366,7 +366,7 @@ class Smile:
                 hw_version = module.find("hardware_version").text
                 fw_version = module.find("firmware_version").text
 
-            return [v_model, hw_version, fw_version]
+                return [v_model, hw_version, fw_version]
         return None
 
     def get_all_appliances(self):
