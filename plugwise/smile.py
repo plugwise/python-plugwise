@@ -356,7 +356,7 @@ class Smile:
         return types
 
     def _get_module_data(self, appliance, locator, mod_type):
-        """ABC."""
+        """Helper functie for finding info in MODULES."""
         appl_search = appliance.find(locator)
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
@@ -368,6 +368,15 @@ class Smile:
 
                 return [v_model, hw_version, fw_version]
         return None
+
+    def _check_model(self, name):
+        """Model checking before using version_to_model."""
+        if name == "ThermoTouch":
+            return "Anna"
+        model = version_to_model(name)
+            if model != "Unknown":
+                return model
+            return None
 
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
@@ -406,6 +415,10 @@ class Smile:
             appliance_model = appliance_class.replace("_", " ").title()
             appliance_fw = None
 
+            # Nothing useful in opentherm so skip it
+            if appliance_class == "open_therm_gateway":
+                continue
+
             # Find gateway and heater_central devices
             if appliance_class == "gateway":
                 self.gateway_id = appliance.attrib["id"]
@@ -421,11 +434,7 @@ class Smile:
                 mod_type = "thermostat"
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
-                    if module_data[0] == "ThermoTouch":
-                        appliance_model = "Anna"
-                    tmp_model = version_to_model(module_data[0])
-                    if tmp_model != "Unknown":
-                        appliance_model = tmp_model
+                    appliance_model = self._get_model(module_data[0])
                     appliance_fw = module_data[2]
 
             if stretch_v2 or stretch_v3:
@@ -436,10 +445,6 @@ class Smile:
                     hw_version = module_data[1].replace("-", "")
                     appliance_model = version_to_model(hw_version)
                     appliance_fw = module_data[2]
-
-            # Nothing useful in opentherm so skip it
-            if appliance_class == "open_therm_gateway":
-                continue
 
             # Appliance with location (i.e. a device)
             if appliance.find("location") is not None:
