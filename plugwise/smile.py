@@ -436,7 +436,7 @@ class Smile:
                 appliance_fw = module_data[2]
 
             if stretch_v2 or stretch_v3:
-                locator = ".//logs/point_log/electricity_point_meter"
+                locator = ".//services/electricity_point_meter"
                 mod_type = "electricity_point_meter"
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data[1] is not None:
