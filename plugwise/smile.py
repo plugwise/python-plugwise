@@ -433,7 +433,7 @@ class Smile:
                 mod_type = "thermostat"
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data is not None:
-                    appliance_model = self._get_model(module_data[0])
+                    appliance_model = self._check_model(module_data[0])
                     appliance_fw = module_data[2]
 
             if stretch_v2 or stretch_v3:
