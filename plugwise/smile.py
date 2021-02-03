@@ -439,7 +439,8 @@ class Smile:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
                 module_data = self._get_module_data(appliance, locator, mod_type)
-                hw_version = module_data[1].replace("-", "")
+                if module_data[1] is not None:
+                    hw_version = module_data[1].replace("-", "")
                 appliance_model = version_to_model(hw_version)
                 appliance_fw = module_data[2]
 
