@@ -477,7 +477,7 @@ class Smile:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
                 module_data = self._get_module_data(appliance, locator, mod_type)
-                appliance_model = version_to_model(module_data[1])
+                appliance_model = version_to_model(module_data[0])
                 appliance_fw = module_data[2]
 
             if appliance_model == "Gateway":
