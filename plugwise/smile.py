@@ -441,7 +441,7 @@ class Smile:
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 if module_data[1] is not None:
                     hw_version = module_data[1].replace("-", "")
-                appliance_model = version_to_model(hw_version)
+                    appliance_model = version_to_model(hw_version)
                 appliance_fw = module_data[2]
 
             # Appliance with location (i.e. a device)
