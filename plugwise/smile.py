@@ -374,9 +374,8 @@ class Smile:
         if name == "ThermoTouch":
             return "Anna"
         model = version_to_model(name)
-            if model != "Unknown":
-                return model
-            return None
+        if model != "Unknown":
+            return model
 
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
