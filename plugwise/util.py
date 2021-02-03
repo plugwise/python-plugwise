@@ -36,6 +36,9 @@ def validate_mac(mac):
 
 def version_to_model(version):
     """Translate hardware_version to device type."""
+    if version is None:
+        return None
+
     model = HW_MODELS.get(version)
     if model is None:
         model = HW_MODELS.get(version[4:10])
