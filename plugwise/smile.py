@@ -596,8 +596,6 @@ class Smile:
     def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
         self.thermo_locs = self.match_locations()
-        print(self.thermo_locs)
-        print(self._home_location)
 
         thermo_matching = {
             "thermostat": 3,
@@ -654,7 +652,6 @@ class Smile:
                 )
 
         # Return location including slaves
-        print(self.thermo_locs)
         return #locations home_location
 
     def match_locations(self):
