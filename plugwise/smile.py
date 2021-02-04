@@ -580,7 +580,6 @@ class Smile:
         """Determine if there is a single master thermostat in the setup."""
         count = 0
         self.scan_thermostats()
-        for dummy, data in locations.items():
         for dummy, data in self._thermo_locs.items():
             if "master_prio" in data:
                 if data.get("master_prio") > 0:
