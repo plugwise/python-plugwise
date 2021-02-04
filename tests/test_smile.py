@@ -913,6 +913,8 @@ class TestPlugwise:
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.2.4"
+        _LOGGER.info(" # Assert master thermostat")
+        assert smile.single_master_thermostat()
 
         await self.tinker_relay(
             smile,
