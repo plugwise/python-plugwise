@@ -285,7 +285,7 @@ class TestPlugwise:
         self._write_json("get_all_devices", device_list)
         self._write_json("notifications", smile.notifications)
 
-        location_list, dummy = smile.scan_thermostats()
+        location_list = smile.scan_thermostats()
 
         _LOGGER.info("Gateway id = %s", smile.gateway_id)
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
