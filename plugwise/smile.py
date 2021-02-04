@@ -633,7 +633,7 @@ class Smile:
 
                         # Demote former master
                         if self.thermo_locs[loc_id]["master"] is not None:
-                            self.thermo_locs[loc_id]["slaves"].add(locations[loc_id]["master"])
+                            self.thermo_locs[loc_id]["slaves"].add(self.thermo_locs[loc_id]["master"])
 
                         # Crown master
                         self.thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
