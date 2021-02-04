@@ -593,7 +593,7 @@ class Smile:
             return True
         return False
 
-    def scan_thermostats(self) #, debug_text="missing text"):
+    def scan_thermostats(self): #, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
         self.thermo_locs = self.match_locations()
 
