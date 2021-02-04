@@ -672,7 +672,7 @@ class Smile:
         """Determine available devices from inventory."""
         devices = {}
 
-        self.get_all_appliances()
+        #self.get_all_appliances()
         thermo_locations = self.scan_thermostats() # , home_location
 
         for appliance, details in self._appl_data.items():
