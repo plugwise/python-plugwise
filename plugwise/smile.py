@@ -379,11 +379,11 @@ class Smile:
 
     def get_all_appliances(self):
         """Determine available appliances from inventory."""
-        appliances = {}
+        self._appl_data = {}
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
-        locations, home_location = self.get_all_locations()
+        self.get_all_locations()
 
         if self._smile_legacy and self.smile_type == "power":
             # Inject home_location as dev_id for legacy so
@@ -393,18 +393,18 @@ class Smile:
                 "model": "Smile P1",
                 "types": {"power", "home"},
                 "class": "gateway",
-                "location": home_location,
+                "location": self._home_location,
             }
             self.gateway_id = self._home_location
 
-            return appliances
+            return
 
         # TODO: add locations with members as appliance as well
         # example 'electricity consumed/produced and relay' on Adam
         # Basically walk locations for 'members' not set[] and
         # scan for the same functionality
 
-        for appliance in self._appliances:
+        for appliance in self._appliances: ### 1 ###
             appliance_location = None
             appliance_types = set()
 
@@ -420,9 +420,9 @@ class Smile:
 
             # Find gateway and heater_central devices
             if appliance_class == "gateway":
-                self.gateway_id = appliance.attrib["id"]
+                self.gateway_id = appliance.attrib["id"] ### This is selfed ###
             if appliance_class == "heater_central":
-                self.heater_id = appliance.attrib["id"]
+                self.heater_id = appliance.attrib["id"]  ### This is selfed ###
 
             if appliance_class in [
                 "thermostat",
@@ -451,7 +451,7 @@ class Smile:
                     appliance_types.add(appl_type)
             else:
                 # Return all types applicable to home
-                appliance_types = locations[home_location]["types"]
+                appliance_types = self._loc_data[self._home_location]["types"]
                 # If heater or gatweay override registering
                 if appliance_class == "heater_central" and self.smile_type != "stretch":
                     appliance_id = self.heater_id
@@ -485,7 +485,7 @@ class Smile:
             if appliance_model == "Thermostat":
                 appliance_model = "Anna"
 
-            appliances[appliance_id] = {
+            self._appl_data[appliance_id] = { ### This is returned ###
                 "name": appliance_name,
                 "model": appliance_model,
                 "fw": appliance_fw,
@@ -494,18 +494,18 @@ class Smile:
                 "location": appliance_location,
             }
             if appliance_fw is None:
-                appliances[appliance_id].pop("fw", None)
+                self._appl_data[appliance_id].pop("fw", None)
 
         # for legacy Anns gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id
+            self.gateway_id = self.heater_id ### This is selfed ###
 
-        return appliances
+        return
 
     def get_all_locations(self):
         """Determine available locations from inventory."""
-        home_location = None
-        locations = {}
+        self._home_location = None
+        self._loc_data = {}
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         if len(self._locations) == 0 and self._smile_legacy:
@@ -517,13 +517,13 @@ class Smile:
                 appliances.add(appliance.attrib["id"])
 
             if self.smile_type == "thermostat":
-                locations[0] = {
+                self._loc_data[0] = {
                     "name": "Legacy Anna",
                     "types": {"temperature"},
                     "members": appliances,
                 }
             if self.smile_type == "stretch":
-                locations[0] = {
+                self._loc_data[0] = {
                     "name": "Legacy Stretch",
                     "types": {"power"},
                     "members": appliances,
@@ -531,7 +531,7 @@ class Smile:
 
             self._home_location = home_location
 
-            return locations, home_location
+            return
 
         for location in self._locations:
             location_name = location.find("name").text
@@ -566,7 +566,7 @@ class Smile:
                 location_types.add("home")
                 location_types.add("power")
 
-            locations[location_id] = {
+            self._loc_data[location_id] = {
                 "name": location_name,
                 "types": location_types,
                 "members": location_members,
@@ -574,12 +574,12 @@ class Smile:
 
         self._home_location = home_location
 
-        return locations, home_location
+        return
 
     def single_master_thermostat(self):
         """Determine if there is a single master thermostat in the setup."""
         count = 0
-        locations, dummy = self.scan_thermostats()
+        locations = self.scan_thermostats() # , dummy
         for dummy, data in locations.items():
             if "master_prio" in data:
                 if data.get("master_prio") > 0:
@@ -593,8 +593,7 @@ class Smile:
 
     def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
-        locations, home_location = self.match_locations()
-        appliances = self.get_all_appliances()
+        locations = self.match_locations() # , home_location
 
         thermo_matching = {
             "thermostat": 3,
@@ -606,18 +605,18 @@ class Smile:
         for loc_id, location_details in locations.items():
             locations[loc_id] = location_details
 
-            if "thermostat" in location_details["types"] and loc_id != home_location:
+            if "thermostat" in location_details["types"] and loc_id != self._home_location:
                 locations[loc_id].update(
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
-            elif loc_id == home_location and self._smile_legacy:
+            elif loc_id == self._home_location and self._smile_legacy:
                 locations[loc_id].update(
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
             else:
                 continue
 
-            for appliance_id, appliance_details in appliances.items():
+            for appliance_id, appliance_details in self._appl_data.items():
 
                 appl_class = appliance_details["class"]
                 if (
@@ -651,36 +650,35 @@ class Smile:
                 )
 
         # Return location including slaves
-        return locations, home_location
+        return locations #, home_location
 
     def match_locations(self):
         """Update locations with used types of appliances."""
         match_locations = {}
 
-        locations, home_location = self.get_all_locations()
-        appliances = self.get_all_appliances()
-
-        for location_id, location_details in locations.items():
-            for dummy, appliance_details in appliances.items():
+        self.get_all_locations()
+        self.get_all_appliances()
+        for location_id, location_details in self._loc_data.items():
+            for dummy, appliance_details in self._appl_data.items():
                 if appliance_details["location"] == location_id:
                     for appl_type in appliance_details["types"]:
                         location_details["types"].add(appl_type)
 
             match_locations[location_id] = location_details
 
-        return match_locations, home_location
+        return match_locations #, self._home_location
 
     def get_all_devices(self):
         """Determine available devices from inventory."""
         devices = {}
 
-        appliances = self.get_all_appliances()
-        thermo_locations, home_location = self.scan_thermostats()
+        self.get_all_appliances()
+        thermo_locations = self.scan_thermostats() # , home_location
 
-        for appliance, details in appliances.items():
+        for appliance, details in self._appl_data.items():
             loc_id = details["location"]
             if loc_id is None:
-                details["location"] = home_location
+                details["location"] = self._home_location
 
             # Override slave thermostat class
             if loc_id in thermo_locations:
@@ -741,7 +739,7 @@ class Smile:
 
     def get_open_valves(self):
         """Obtain the amount of open valves, from APPLIANCES."""
-        appliances = self._appliances.findall(".//appliance")
+        appliances = self._appliances.findall(".//appliance") ### 3 ###
 
         open_valve_count = 0
         for appliance in appliances:
@@ -751,7 +749,7 @@ class Smile:
                 if float(measure) > 0.0:
                     open_valve_count += 1
 
-        return open_valve_count
+        return open_valve_count ### This is returned via applianced ###
 
     def get_device_data(self, dev_id):
         """Provide device-data, based on location_id, from APPLIANCES."""
