@@ -105,6 +105,7 @@ class Smile:
         self.smile_name = None
         self.smile_type = None
         self.smile_version = ()
+        self.thermo_locs = None
 
     async def connect(self):
         """Connect to Plugwise device."""
@@ -580,7 +581,8 @@ class Smile:
         """Determine if there is a single master thermostat in the setup."""
         count = 0
         self.scan_thermostats()
-        for dummy, data in self._thermo_locs.items():
+        #locations = self.scan_thermostats() # , dummy
+        for dummy, data in self.thermo_locs.items():
             if "master_prio" in data:
                 if data.get("master_prio") > 0:
                     count += 1
@@ -593,7 +595,9 @@ class Smile:
 
     def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
-        self._thermo_locs = self.match_locations() # , home_location
+        self.thermo_locs = self.match_locations()
+        print(self.thermo_locs)
+        print(self._home_location)
 
         thermo_matching = {
             "thermostat": 3,
@@ -602,15 +606,15 @@ class Smile:
         }
 
         high_prio = 0
-        for loc_id, location_details in self._thermo_locs.items():
-            self._thermo_locs[loc_id] = location_details
+        for loc_id, location_details in self.thermo_locs.items():
+            self.thermo_locs[loc_id] = location_details
 
             if "thermostat" in location_details["types"] and loc_id != self._home_location:
-                self._thermo_locs[loc_id].update(
+                self.thermo_locs[loc_id].update(
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
             elif loc_id == self._home_location and self._smile_legacy:
-                self._thermo_locs[loc_id].update(
+                self.thermo_locs[loc_id].update(
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
             else:
@@ -625,18 +629,18 @@ class Smile:
                 ) and appl_class in thermo_matching:
 
                     # Pre-elect new master
-                    if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
+                    if thermo_matching[appl_class] > self.thermo_locs[loc_id]["master_prio"]:
 
                         # Demote former master
-                        if self._thermo_locs[loc_id]["master"] is not None:
-                            self._thermo_locs[loc_id]["slaves"].add(locations[loc_id]["master"])
+                        if self.thermo_locs[loc_id]["master"] is not None:
+                            self.thermo_locs[loc_id]["slaves"].add(locations[loc_id]["master"])
 
                         # Crown master
-                        self._thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
-                        self._thermo_locs[loc_id]["master"] = appliance_id
+                        self.thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
+                        self.thermo_locs[loc_id]["master"] = appliance_id
 
                     else:
-                        self._thermo_locs[loc_id]["slaves"].add(appliance_id)
+                        self.thermo_locs[loc_id]["slaves"].add(appliance_id)
 
                 # Find highest ranking thermostat
                 if appl_class in thermo_matching:
@@ -644,12 +648,13 @@ class Smile:
                         high_prio = thermo_matching[appl_class]
                         self._thermo_master_id = appliance_id
 
-            if self._thermo_locs[loc_id]["master"] is None:
+            if self.thermo_locs[loc_id]["master"] is None:
                 _LOGGER.debug(
                     "Location %s has no (master) thermostat", location_details["name"]
                 )
 
         # Return location including slaves
+        print(self.thermo_locs)
         return #locations home_location
 
     def match_locations(self):
@@ -681,9 +686,9 @@ class Smile:
                 details["location"] = self._home_location
 
             # Override slave thermostat class
-            if loc_id in self._thermo_locs:
-                if "slaves" in self._thermo_locs[loc_id]:
-                    if appliance in self._thermo_locs[loc_id]["slaves"]:
+            if loc_id in self.thermo_locs:
+                if "slaves" in self.thermo_locs[loc_id]:
+                    if appliance in self.thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
             if details["name"] == "Anna" and not self.single_master_thermostat():
