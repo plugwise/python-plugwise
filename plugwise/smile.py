@@ -388,7 +388,7 @@ class Smile:
         if self._smile_legacy and self.smile_type == "power":
             # Inject home_location as dev_id for legacy so
             # get_appliance_data can use loc_id for dev_id.
-            appliances[self._home_location] = {
+            self._appl_data[self._home_location] = {
                 "name": "P1",
                 "model": "Smile P1",
                 "types": {"power", "home"},
