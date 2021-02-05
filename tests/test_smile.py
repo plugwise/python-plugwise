@@ -916,7 +916,7 @@ class TestPlugwise:
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.single_master_thermostat()
+        assert not smile.single_master_thermostat()
 
         await self.device_test(smile, testdata)
         await self.tinker_relay(
