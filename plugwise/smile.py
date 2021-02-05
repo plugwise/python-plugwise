@@ -405,7 +405,7 @@ class Smile:
         # Basically walk locations for 'members' not set[] and
         # scan for the same functionality
 
-        for appliance in self._appliances:  ### 1 ###
+        for appliance in self._appliances:
             appliance_location = None
             appliance_types = set()
 
@@ -421,9 +421,9 @@ class Smile:
 
             # Find gateway and heater_central devices
             if appliance_class == "gateway":
-                self.gateway_id = appliance.attrib["id"]  ### This is selfed ###
+                self.gateway_id = appliance.attrib["id"]
             if appliance_class == "heater_central":
-                self.heater_id = appliance.attrib["id"]  ### This is selfed ###
+                self.heater_id = appliance.attrib["id"]
 
             if appliance_class in [
                 "thermostat",
@@ -456,7 +456,7 @@ class Smile:
                 # If heater or gatweay override registering
                 if appliance_class == "heater_central" and self.smile_type != "stretch":
                     appliance_id = self.heater_id
-                    appliance_name = "Auxiliary"  # old: self.smile_name
+                    appliance_name = "Auxiliary"
                 if appliance_class == "gateway":
                     appliance_id = self.gateway_id
                     appliance_name = self.smile_name
@@ -486,7 +486,7 @@ class Smile:
             if appliance_model == "Thermostat":
                 appliance_model = "Anna"
 
-            self._appl_data[appliance_id] = {  ### This is returned ###
+            self._appl_data[appliance_id] = {
                 "name": appliance_name,
                 "model": appliance_model,
                 "fw": appliance_fw,
@@ -499,7 +499,7 @@ class Smile:
 
         # for legacy Anns gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id  ### This is selfed ###
+            self.gateway_id = self.heater_id
 
         return
 
@@ -581,7 +581,6 @@ class Smile:
         """Determine if there is a single master thermostat in the setup."""
         count = 0
         self.scan_thermostats()
-        # locations = self.scan_thermostats() # , dummy
         for dummy, data in self.thermo_locs.items():
             if "master_prio" in data:
                 if data.get("master_prio") > 0:
@@ -593,7 +592,7 @@ class Smile:
             return True
         return False
 
-    def scan_thermostats(self):  # , debug_text="missing text"):
+    def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
         self.thermo_locs = self.match_locations()
 
@@ -661,8 +660,7 @@ class Smile:
                     "Location %s has no (master) thermostat", location_details["name"]
                 )
 
-        # Return location including slaves
-        return  # locations home_location
+        return
 
     def match_locations(self):
         """Update locations with used types of appliances."""
@@ -683,9 +681,6 @@ class Smile:
     def get_all_devices(self):
         """Determine available devices from inventory."""
         devices = {}
-
-        # self.get_all_appliances()
-        # thermo_locations = self.scan_thermostats() # , home_location
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
@@ -751,7 +746,7 @@ class Smile:
 
     def get_open_valves(self):
         """Obtain the amount of open valves, from APPLIANCES."""
-        appliances = self._appliances.findall(".//appliance")  ### 3 ###
+        appliances = self._appliances.findall(".//appliance")
 
         open_valve_count = 0
         for appliance in appliances:
@@ -761,7 +756,7 @@ class Smile:
                 if float(measure) > 0.0:
                     open_valve_count += 1
 
-        return open_valve_count  ### This is returned via applianced ###
+        return open_valve_count
 
     def get_device_data(self, dev_id):
         """Provide device-data, based on location_id, from APPLIANCES."""
