@@ -172,10 +172,6 @@ class Smile:
                     _LOGGER.error("Connected but no gateway device information found")
                     raise ConnectionFailedError
 
-        #if not self._smile_legacy:
-        #    model = result.find(".//gateway/vendor_model").text
-        #    version = result.find(".//gateway/firmware_version").text
-
         if model is None or version is None:
             _LOGGER.error("Unable to find model or version information")
             raise UnsupportedDeviceError
@@ -187,10 +183,9 @@ class Smile:
 
         if target_smile not in SMILES:
             _LOGGER.error(
-                'Your version Smile identified as "%s" \
-                          seems unsupported by our plugin, please create \
-                          an issue on github.com/plugwise/Plugwise-Smile!\
-                          ',
+                'Your version Smile identified as "%s" seems\
+                 unsupported by our plugin, please create an issue\
+                 on http://github.com/plugwise/python-plugwise!',
                 target_smile,
             )
             raise UnsupportedDeviceError
