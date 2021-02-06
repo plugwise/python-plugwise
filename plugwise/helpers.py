@@ -18,6 +18,7 @@ from .constants import (
     DEVICE_MEASUREMENTS,
     ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
+    LOCATIONS,
     SWITCH_GROUP_TYPES,
 )
 from .exceptions import (
