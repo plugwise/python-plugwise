@@ -1,15 +1,15 @@
 """ Smile/Stretch helpers."""
 
 import asyncio
-import async_timeout
 import datetime as dt
 import logging
 
-# Time related
-import pytz
-
+import async_timeout
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
+
+# Time related
+import pytz
 
 from .constants import (
     APPLIANCES,
@@ -17,8 +17,8 @@ from .constants import (
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     DEVICE_MEASUREMENTS,
-    ENERGY_WATT_HOUR,
     ENERGY_KILO_WATT_HOUR,
+    ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
     LOCATIONS,
     POWER_WATT,

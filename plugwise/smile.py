@@ -32,7 +32,6 @@ from .exceptions import (
     XMLDataMissingError,
 )
 from .helpers import (
-    request,
     _appliance_data,
     _group_switches,
     _last_active_schema,
@@ -46,6 +45,7 @@ from .helpers import (
     _scan_thermostats,
     _schemas,
     _temperature_uri,
+    request,
 )
 
 _LOGGER = logging.getLogger(__name__)
