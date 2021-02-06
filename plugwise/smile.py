@@ -303,8 +303,8 @@ class Smile:
                     if appliance in self.thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
-            if details["name"] == "Anna" and not self.single_master_thermostat():
-                details["model"] = "Anna"
+            #if details["name"] == "Anna" and not self.single_master_thermostat():
+            #    details["model"] = "Anna"
 
             devices[appliance] = details
 
