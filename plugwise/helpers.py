@@ -12,6 +12,7 @@ from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 
 from .constants import (
+    APPLIANCES,
     ATTR_NAME,
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
