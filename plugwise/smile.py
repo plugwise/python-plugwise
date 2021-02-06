@@ -44,7 +44,7 @@ from .helpers import (
     _schemas,
     _last_active_schema,
     _object_value,
-    __rule_ids_by_name,
+    _rule_ids_by_name,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -406,7 +406,7 @@ class Smile:
         if self._smile_legacy:
             return await self.set_schedule_state_legacy(name, state)
 
-        schema_rule_ids = __rule_ids_by_name(self, str(name), loc_id)
+        schema_rule_ids = _rule_ids_by_name(self, str(name), loc_id)
         if schema_rule_ids == {} or schema_rule_ids is None:
             return False
 

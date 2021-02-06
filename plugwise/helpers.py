@@ -396,7 +396,7 @@ def _presets(self, loc_id):
 
     rule_ids = __rule_ids_by_tag(self, tag, loc_id)
     if rule_ids is None:
-        rule_ids = __rule_ids_by_name(self, "Thermostat presets", loc_id)
+        rule_ids = _rule_ids_by_name(self, "Thermostat presets", loc_id)
         if rule_ids is None:
             return presets
 
@@ -827,7 +827,7 @@ def __rule_ids_by_tag(self, tag, loc_id):
     if schema_ids != {}:
         return schema_ids
 
-def __rule_ids_by_name(self, name, loc_id):
+def _rule_ids_by_name(self, name, loc_id):
     """Obtain the rule_id on the given name and location_id."""
     schema_ids = {}
     locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
