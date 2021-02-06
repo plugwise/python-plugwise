@@ -278,7 +278,6 @@ class Smile:
         """Provide device-data, based on location_id, from APPLIANCES."""
         devices = self.get_all_devices()
         details = devices.get(dev_id)
-
         device_data = _appliance_data(self, dev_id)
 
         # Generic
@@ -326,7 +325,7 @@ class Smile:
                         device_data["heating_state"] = False
 
         # Anna, Lisa, Tom/Floor
-        if details["class"] in thermostat_classes:
+        if details["class"] in THERMOSTAT_CLASSES:
             device_data["active_preset"] = _preset(self, details["location"])
             device_data["presets"] = _presets(self, details["location"])
 
