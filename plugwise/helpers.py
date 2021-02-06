@@ -40,6 +40,7 @@ from .util import (
 
 _LOGGER = logging.getLogger(__name__)
 
+
 async def request(
     self,
     command,
@@ -57,9 +58,7 @@ async def request(
             if method == "get":
                 # Work-around for Stretchv2, should not hurt the other smiles
                 headers = {"Accept-Encoding": "gzip"}
-                resp = await self.websession.get(
-                    url, auth=self._auth, headers=headers
-                )
+                resp = await self.websession.get(url, auth=self._auth, headers=headers)
             if method == "put":
                 headers = {"Content-type": "text/xml"}
                 resp = await self.websession.put(
@@ -97,6 +96,7 @@ async def request(
 
     return xml
 
+
 def _appliance_data(self, dev_id):
     """
     Obtain the appliance-data connected to a location.
@@ -114,9 +114,7 @@ def _appliance_data(self, dev_id):
     for appliance in appliances:
         for measurement, attrs in DEVICE_MEASUREMENTS.items():
 
-            p_locator = (
-                f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            )
+            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if appliance.find(p_locator) is not None:
                 if self._smile_legacy:
                     if measurement == "domestic_hot_water_state":
@@ -143,9 +141,7 @@ def _appliance_data(self, dev_id):
                     measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
                 )
 
-            i_locator = (
-                f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            )
+            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if appliance.find(i_locator) is not None:
                 name = f"{measurement}_interval"
                 measure = appliance.find(i_locator).text
@@ -153,6 +149,7 @@ def _appliance_data(self, dev_id):
                 data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
     return data
+
 
 def _scan_thermostats(self, debug_text="missing text"):
     """Update locations with actual master/slave thermostats."""
@@ -168,10 +165,7 @@ def _scan_thermostats(self, debug_text="missing text"):
     for loc_id, location_details in self.thermo_locs.items():
         self.thermo_locs[loc_id] = location_details
 
-        if (
-            "thermostat" in location_details["types"]
-            and loc_id != self._home_location
-        ):
+        if "thermostat" in location_details["types"] and loc_id != self._home_location:
             self.thermo_locs[loc_id].update(
                 {"master": None, "master_prio": 0, "slaves": set()}
             )
@@ -224,15 +218,19 @@ def _scan_thermostats(self, debug_text="missing text"):
 
     return
 
+
 def _temperature_uri(self, loc_id):
     """Determine the location-set_temperature uri - from LOCATIONS."""
     if self._smile_legacy:
         return __temperature_uri_legacy(self)
 
-    locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
+    locator = (
+        f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
+    )
     thermostat_functionality_id = self._locations.find(locator).attrib["id"]
 
     return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
+
 
 def __temperature_uri_legacy(self):
     """Determine the location-set_temperature uri - from APPLIANCES."""
@@ -240,6 +238,7 @@ def __temperature_uri_legacy(self):
     appliance_id = self._appliances.find(locator).attrib["id"]
 
     return f"{APPLIANCES};id={appliance_id}/thermostat"
+
 
 def _group_switches(self):
     """Provide switching- or pump-groups, from DOMAIN_OBJECTS."""
@@ -281,6 +280,7 @@ def _group_switches(self):
 
     return switch_groups
 
+
 def _open_valves(self):
     """Obtain the amount of open valves, from APPLIANCES."""
     appliances = self._appliances.findall(".//appliance")
@@ -294,6 +294,7 @@ def _open_valves(self):
                 open_valve_count += 1
 
     return open_valve_count
+
 
 def _power_data_from_location(self, loc_id):
     """Obtain the power-data from domain_objects based on location."""
@@ -321,9 +322,7 @@ def _power_data_from_location(self, loc_id):
                 )
                 # Only once try to find P1 Legacy values
                 if loc_logs.find(locator) is None and self.smile_type == "power":
-                    locator = (
-                        f'.//{log_type}[type="{measurement}"]/period/measurement'
-                    )
+                    locator = f'.//{log_type}[type="{measurement}"]/period/measurement'
 
                     # Skip peak if not split (P1 Legacy)
                     if peak_select == "nl_offpeak":
@@ -343,9 +342,7 @@ def _power_data_from_location(self, loc_id):
                 # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
                 if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
                     f_val = int(round(float(val)))
-                if all(
-                    item in key_string for item in ["electricity", "cumulative"]
-                ):
+                if all(item in key_string for item in ["electricity", "cumulative"]):
                     f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
                 # Energy differential
                 if "electricity" in measurement:
@@ -367,6 +364,7 @@ def _power_data_from_location(self, loc_id):
     if direct_data != {}:
         return direct_data
 
+
 def _preset(self, loc_id):
     """
     Obtain the active preset based on the location_id.
@@ -385,6 +383,7 @@ def _preset(self, loc_id):
     preset = self._domain_objects.find(locator)
     if preset is not None:
         return preset.text
+
 
 def _presets(self, loc_id):
     """Get the presets from the thermostat based on location_id."""
@@ -416,6 +415,7 @@ def _presets(self, loc_id):
 
     return presets
 
+
 # LEGACY Anna function
 def __presets_legacy(self):
     """Get presets from domain_objects for legacy Smile."""
@@ -429,6 +429,7 @@ def __presets_legacy(self):
             ]
 
     return preset_dictionary
+
 
 def _schemas(self, loc_id):
     """Obtain the available schemas or schedules based on the location_id."""
@@ -470,10 +471,7 @@ def _schemas(self, loc_id):
     for rule_id, dummy in rule_ids.items():
         active = False
         name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-        if (
-            self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
-            == "true"
-        ):
+        if self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text == "true":
             active = True
         schemas[name] = active
         schedules = {}
@@ -518,6 +516,7 @@ def _schemas(self, loc_id):
 
     return available, selected, schedule_temperature
 
+
 def _last_active_schema(self, loc_id):
     """Determine the last active schema."""
     epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
@@ -544,6 +543,7 @@ def _last_active_schema(self, loc_id):
 
     return last_modified
 
+
 def _object_value(self, obj_type, obj_id, measurement):
     """Obtain the object-value from the thermostat."""
     search = self._domain_objects
@@ -557,6 +557,7 @@ def _object_value(self, obj_type, obj_id, measurement):
         return val
 
     return None
+
 
 def __all_appliances(self):
     """Determine available appliances from inventory."""
@@ -683,7 +684,8 @@ def __all_appliances(self):
 
     return
 
-#@staticmethod
+
+# @staticmethod
 def ___types_finder(self, data):
     """Detect types within locations from logs."""
     types = set()
@@ -702,6 +704,7 @@ def ___types_finder(self, data):
 
     return types
 
+
 def ___get_module_data(self, appliance, locator, mod_type):
     """Helper functie for finding info in MODULES."""
     appl_search = appliance.find(locator)
@@ -716,6 +719,7 @@ def ___get_module_data(self, appliance, locator, mod_type):
             return [v_model, hw_version, fw_version]
     return [None, None, None]
 
+
 def ___check_model(self, name):
     """Model checking before using version_to_model."""
     if name == "ThermoTouch":
@@ -723,6 +727,7 @@ def ___check_model(self, name):
     model = version_to_model(name)
     if model != "Unknown":
         return model
+
 
 def __all_locations(self):
     """Determine available locations from inventory."""
@@ -798,6 +803,7 @@ def __all_locations(self):
 
     return
 
+
 def _match_locations(self):
     """Update locations with used types of appliances."""
     matched_locations = {}
@@ -814,6 +820,7 @@ def _match_locations(self):
 
     return matched_locations
 
+
 def __rule_ids_by_tag(self, tag, loc_id):
     """Obtain the rule_id based on the given template_tag and location_id."""
     schema_ids = {}
@@ -826,6 +833,7 @@ def __rule_ids_by_tag(self, tag, loc_id):
 
     if schema_ids != {}:
         return schema_ids
+
 
 def _rule_ids_by_name(self, name, loc_id):
     """Obtain the rule_id on the given name and location_id."""

@@ -378,8 +378,7 @@ class Smile:
             device_data["presets"] = _presets(self, details["location"])
 
             avail_schemas, sel_schema, sched_setpoint = _schemas(
-                self,
-                details["location"]
+                self, details["location"]
             )
             if not self._smile_legacy:
                 device_data["schedule_temperature"] = sched_setpoint
@@ -389,8 +388,7 @@ class Smile:
                 device_data["last_used"] = "".join(map(str, avail_schemas))
             else:
                 device_data["last_used"] = _last_active_schema(
-                    self,
-                    details["location"]
+                    self, details["location"]
                 )
 
         # Anna specific
@@ -545,5 +543,3 @@ class Smile:
 
         await request(self, uri, method="delete")
         return True
-
-
