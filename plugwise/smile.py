@@ -303,9 +303,6 @@ class Smile:
                     if appliance in self.thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
-            #if details["name"] == "Anna" and not self.single_master_thermostat():
-            #    details["model"] = "Anna"
-
             devices[appliance] = details
 
         group_data = _group_switches(self)
@@ -319,13 +316,43 @@ class Smile:
         devices = self.get_all_devices()
         details = devices.get(dev_id)
 
+        device_data = _appliance_data(self, dev_id)
+
+        # Generic
+        if details["class"] == "gateway" or dev_id == self.gateway_id:
+            # Anna: outdoor_temperature only present in domain_objects
+            if "outdoor_temperature" not in device_data:
+                outdoor_temperature = _object_value(
+                    self, "location", self._home_location, "outdoor_temperature"
+                )
+                if outdoor_temperature is not None:
+                    device_data["outdoor_temperature"] = outdoor_temperature
+
+            # Try to get P1 data and 2nd outdoor_temperature, when present
+            power_data = _power_data_from_location(self, details["location"])
+            if power_data is not None:
+                device_data.update(power_data)
+
+        # Switching Groups
+        if details["class"] in SWITCH_GROUP_TYPES:
+            counter = 0
+            for member in details["members"]:
+                appl_data = _appliance_data(self, member)
+                if appl_data["relay"]:
+                    counter += 1
+
+            device_data["relay"] = True
+            if counter == 0:
+                device_data["relay"] = False
+
+        if self.smile_type != "thermostat":
+            return device_data
+
         thermostat_classes = [
             "thermostat",
             "zone_thermostat",
             "thermostatic_radiator_valve",
         ]
-
-        device_data = _appliance_data(self, dev_id)
 
         # Legacy_anna: create heating_state and leave out domestic_hot_water_state
         if "boiler_state" in device_data:
@@ -371,33 +398,6 @@ class Smile:
             illuminance = _object_value(self, "appliance", dev_id, "illuminance")
             if illuminance is not None:
                 device_data["illuminance"] = illuminance
-
-        # Generic
-        if details["class"] == "gateway" or dev_id == self.gateway_id:
-            # Anna: outdoor_temperature only present in domain_objects
-            if "outdoor_temperature" not in device_data:
-                outdoor_temperature = _object_value(
-                    self, "location", self._home_location, "outdoor_temperature"
-                )
-                if outdoor_temperature is not None:
-                    device_data["outdoor_temperature"] = outdoor_temperature
-
-            # Try to get P1 data and 2nd outdoor_temperature, when present
-            power_data = _power_data_from_location(self, details["location"])
-            if power_data is not None:
-                device_data.update(power_data)
-
-        # Switching Groups
-        if details["class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in details["members"]:
-                appl_data = _appliance_data(self, member)
-                if appl_data["relay"]:
-                    counter += 1
-
-            device_data["relay"] = True
-            if counter == 0:
-                device_data["relay"] = False
 
         return device_data
 
