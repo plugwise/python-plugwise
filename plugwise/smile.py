@@ -271,6 +271,9 @@ class Smile:
 
     def single_master_thermostat(self):
         """Determine if there is a single master thermostat in the setup."""
+        if self.smile_type != "thermostat":
+            return None
+
         count = 0
         _scan_thermostats(self)
         for dummy, data in self.thermo_locs.items():
@@ -278,8 +281,7 @@ class Smile:
                 if data.get("master_prio") > 0:
                     count += 1
 
-        if count == 0:
-            return None
+        print("thermostat-count = ", count)
         if count == 1:
             return True
         return False
