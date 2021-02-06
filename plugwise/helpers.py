@@ -558,7 +558,7 @@ def _object_value(self, obj_type, obj_id, measurement):
 
     return None
 
-def __all_appliances(self):
+def _all_appliances(self):
     """Determine available appliances from inventory."""
     self._appl_data = {}
     stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
@@ -803,7 +803,7 @@ def __match_locations(self):
     matched_locations = {}
 
     __all_locations(self)
-    __all_appliances(self)
+    _all_appliances(self)
     for location_id, location_details in self._loc_data.items():
         for dummy, appliance_details in self._appl_data.items():
             if appliance_details["location"] == location_id:
