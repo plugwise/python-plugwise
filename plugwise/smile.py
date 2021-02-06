@@ -360,10 +360,6 @@ class Smile:
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Fix for Adam + Anna: heating_state also present under Anna, remove
-        if "thermostat" in device_data:
-            device_data.pop("heating_state", None)
-
         # Adam: indicate heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
             if details["class"] == "heater_central":

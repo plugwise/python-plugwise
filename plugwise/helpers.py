@@ -148,6 +148,10 @@ def _appliance_data(self, dev_id):
 
                 data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
+    # Fix for Adam + Anna: heating_state also present under Anna, remove
+    if "temperature" in data:
+        data.pop("heating_state", None)
+
     return data
 
 
