@@ -27,6 +27,7 @@ from .util import (
     version_to_model,
 )
 
+_LOGGER = logging.getLogger(__name__)
 
 async def request(
     self,
