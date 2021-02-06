@@ -33,8 +33,8 @@ from .exceptions import (
 )
 from .helpers import (
     request,
-    _all_appliances,
     _appliance_data,
+    _match_locations,
     _scan_thermostats,
     _temperature_uri,
     _group_switches,
@@ -273,7 +273,7 @@ class Smile:
     def single_master_thermostat(self):
         """Determine if there is a single master thermostat in the setup."""
         if self.smile_type != "thermostat":
-            _all_appliances(self)
+            self.thermo_locs = _match_locations(self)
             return None
 
         count = 0

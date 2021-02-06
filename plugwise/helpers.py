@@ -156,7 +156,7 @@ def _appliance_data(self, dev_id):
 
 def _scan_thermostats(self, debug_text="missing text"):
     """Update locations with actual master/slave thermostats."""
-    self.thermo_locs = __match_locations(self)
+    self.thermo_locs = _match_locations(self)
 
     thermo_matching = {
         "thermostat": 3,
@@ -558,7 +558,7 @@ def _object_value(self, obj_type, obj_id, measurement):
 
     return None
 
-def _all_appliances(self):
+def __all_appliances(self):
     """Determine available appliances from inventory."""
     self._appl_data = {}
     stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
@@ -798,12 +798,12 @@ def __all_locations(self):
 
     return
 
-def __match_locations(self):
+def _match_locations(self):
     """Update locations with used types of appliances."""
     matched_locations = {}
 
     __all_locations(self)
-    _all_appliances(self)
+    __all_appliances(self)
     for location_id, location_details in self._loc_data.items():
         for dummy, appliance_details in self._appl_data.items():
             if appliance_details["location"] == location_id:
