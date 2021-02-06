@@ -298,10 +298,11 @@ class Smile:
                 details["location"] = self._home_location
 
             # Override slave thermostat class
-            if loc_id in self.thermo_locs:
-                if "slaves" in self.thermo_locs[loc_id]:
-                    if appliance in self.thermo_locs[loc_id]["slaves"]:
-                        details["class"] = "thermo_sensor"
+            if self.thermo_locs is not None:
+                if loc_id in self.thermo_locs:
+                    if "slaves" in self.thermo_locs[loc_id]:
+                        if appliance in self.thermo_locs[loc_id]["slaves"]:
+                            details["class"] = "thermo_sensor"
 
             if details["name"] == "Anna" and not self.single_master_thermostat():
                 details["model"] = "Anna"
