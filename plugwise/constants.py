@@ -352,7 +352,11 @@ DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80
 
 SWITCH_GROUP_TYPES = ["switching", "report"]
-
+THERMOSTAT_CLASSES = [
+    "thermostat",
+    "zone_thermostat",
+    "thermostatic_radiator_valve",
+]
 HOME_MEASUREMENTS = {
     "electricity_consumed": {
         ATTR_TYPE: "power",
