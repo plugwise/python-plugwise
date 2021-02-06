@@ -224,8 +224,6 @@ def _scan_thermostats(self, debug_text="missing text"):
             self.thermo_locs[loc_id].update(
                 {"master": None, "master_prio": 0, "slaves": set()}
             )
-        #else:
-        #    continue
 
         for appliance_id, appliance_details in self._appl_data.items():
 
@@ -260,12 +258,6 @@ def _scan_thermostats(self, debug_text="missing text"):
             if appl_class in thermo_matching:
                 if thermo_matching[appl_class] > high_prio:
                     high_prio = thermo_matching[appl_class]
-                    #self._thermo_master_id = appliance_id
-
-        #if self.thermo_locs[loc_id]["master"] is None:
-        #    _LOGGER.debug(
-        #        "Location %s has no (master) thermostat", location_details["name"]
-        #    )
 
     return
 
