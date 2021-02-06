@@ -246,7 +246,6 @@ class Smile:
                 if data.get("master_prio") > 0:
                     count += 1
 
-        print("thermostat-count = ", count)
         if count == 1:
             return True
         return False
