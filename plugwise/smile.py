@@ -325,29 +325,27 @@ class Smile:
                         device_data["heating_state"] = False
 
         # Anna, Lisa, Tom/Floor
-        if details["class"] in THERMOSTAT_CLASSES:
-            device_data["active_preset"] = _preset(self, details["location"])
-            device_data["presets"] = _presets(self, details["location"])
+        device_data["active_preset"] = _preset(self, details["location"])
+        device_data["presets"] = _presets(self, details["location"])
 
-            avail_schemas, sel_schema, sched_setpoint = _schemas(
+        avail_schemas, sel_schema, sched_setpoint = _schemas(
+            self, details["location"]
+        )
+        if not self._smile_legacy:
+            device_data["schedule_temperature"] = sched_setpoint
+        device_data["available_schedules"] = avail_schemas
+        device_data["selected_schedule"] = sel_schema
+        if self._smile_legacy:
+            device_data["last_used"] = "".join(map(str, avail_schemas))
+        else:
+            device_data["last_used"] = _last_active_schema(
                 self, details["location"]
             )
-            if not self._smile_legacy:
-                device_data["schedule_temperature"] = sched_setpoint
-            device_data["available_schedules"] = avail_schemas
-            device_data["selected_schedule"] = sel_schema
-            if self._smile_legacy:
-                device_data["last_used"] = "".join(map(str, avail_schemas))
-            else:
-                device_data["last_used"] = _last_active_schema(
-                    self, details["location"]
-                )
 
         # Anna specific
-        if details["class"] in ["thermostat"]:
-            illuminance = _object_value(self, "appliance", dev_id, "illuminance")
-            if illuminance is not None:
-                device_data["illuminance"] = illuminance
+        illuminance = _object_value(self, "appliance", dev_id, "illuminance")
+        if illuminance is not None:
+            device_data["illuminance"] = illuminance
 
         return device_data
 
