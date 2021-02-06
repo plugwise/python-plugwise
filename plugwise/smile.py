@@ -27,10 +27,7 @@ from .constants import (
 from .exceptions import (
     ConnectionFailedError,
     DeviceSetupError,
-    DeviceTimeoutError,
-    InvalidAuthentication,
     InvalidXMLError,
-    ResponseError,
     UnsupportedDeviceError,
     XMLDataMissingError,
 )

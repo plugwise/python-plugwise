@@ -20,6 +20,12 @@ from .constants import (
     HOME_MEASUREMENTS,
     SWITCH_GROUP_TYPES,
 )
+from .exceptions import (
+    DeviceTimeoutError,
+    InvalidAuthentication,
+    InvalidXMLError,
+    ResponseError,
+)
 from .util import (
     determine_selected,
     escape_illegal_xml_characters,
