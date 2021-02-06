@@ -98,11 +98,13 @@ async def request(
 
     return xml
 
+
 async def update_appliances(self):
     """Request appliance data."""
     new_data = await request(self, APPLIANCES)
     if new_data is not None:
         self._appliances = new_data
+
 
 async def update_domain_objects(self):
     """Request domain_objects data."""
@@ -127,17 +129,20 @@ async def update_domain_objects(self):
                 url,
             )
 
+
 async def update_locations(self):
     """Request locations data."""
     new_data = await request(self, LOCATIONS)
     if new_data is not None:
         self._locations = new_data
 
+
 async def update_modules(self):
     """Request modules data."""
     new_data = await request(self, MODULES)
     if new_data is not None:
         self._modules = new_data
+
 
 def _appliance_data(self, dev_id):
     """
