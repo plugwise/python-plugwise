@@ -203,47 +203,6 @@ class Smile:
         """Close the Plugwise connection."""
         await self.websession.close()
 
-    async def update_appliances(self):
-        """Request appliance data."""
-        new_data = await request(self, APPLIANCES)
-        if new_data is not None:
-            self._appliances = new_data
-
-    async def update_domain_objects(self):
-        """Request domain_objects data."""
-        new_data = await request(self, DOMAIN_OBJECTS)
-        if new_data is not None:
-            self._domain_objects = new_data
-
-        # If Plugwise notifications present:
-        self.notifications = {}
-        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
-        notifications = self._domain_objects.findall(".//notification")
-        for notification in notifications:
-            try:
-                msg_id = notification.attrib["id"]
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
-                self.notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
-            except AttributeError:
-                _LOGGER.info(
-                    "Plugwise notification present but unable to process, manually investigate: %s",
-                    url,
-                )
-
-    async def update_locations(self):
-        """Request locations data."""
-        new_data = await request(self, LOCATIONS)
-        if new_data is not None:
-            self._locations = new_data
-
-    async def update_modules(self):
-        """Request modules data."""
-        new_data = await request(self, MODULES)
-        if new_data is not None:
-            self._modules = new_data
-
     async def full_update_device(self):
         """Update all XML data from device."""
         # P1 legacy has no appliances
