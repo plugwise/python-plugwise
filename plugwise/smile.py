@@ -34,18 +34,18 @@ from .exceptions import (
 from .helpers import (
     request,
     _appliance_data,
-    _match_locations,
-    _scan_thermostats,
-    _temperature_uri,
     _group_switches,
+    _last_active_schema,
+    _match_locations,
+    _object_value,
     _open_valves,
     _power_data_from_location,
     _preset,
     _presets,
-    _schemas,
-    _last_active_schema,
-    _object_value,
     _rule_ids_by_name,
+    _scan_thermostats,
+    _schemas,
+    _temperature_uri,
 )
 
 _LOGGER = logging.getLogger(__name__)
