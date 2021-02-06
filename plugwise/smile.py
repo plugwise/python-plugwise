@@ -307,7 +307,7 @@ class Smile:
             if counter == 0:
                 device_data["relay"] = False
 
-        if self.smile_type != "thermostat" or details["class"] not in THERMOSTAT_CLASSES:
+        if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
 
         # Legacy_anna: create heating_state and leave out domestic_hot_water_state
