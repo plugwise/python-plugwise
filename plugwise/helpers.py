@@ -638,6 +638,7 @@ def __all_appliances(self):
         appliance_name = appliance.find("name").text
         appliance_model = appliance_class.replace("_", " ").title()
         appliance_fw = None
+        aux_dev_vendor = None
 
         # Nothing useful in opentherm so skip it
         if appliance_class == "open_therm_gateway":
@@ -660,6 +661,7 @@ def __all_appliances(self):
             module_data = ___get_module_data(self, appliance, locator, mod_type)
             appliance_model = ___check_model(self, module_data[0])
             appliance_fw = module_data[2]
+            aux_dev_vendor = module_data[3]
 
         if stretch_v2 or stretch_v3:
             locator = ".//services/electricity_point_meter"
@@ -713,6 +715,7 @@ def __all_appliances(self):
 
         self._appl_data[appliance_id] = {
             "name": appliance_name,
+            "vendor": aux_dev_vendor,
             "model": appliance_model,
             "fw": appliance_fw,
             "types": appliance_types,
@@ -721,6 +724,8 @@ def __all_appliances(self):
         }
         if appliance_fw is None:
             self._appl_data[appliance_id].pop("fw", None)
+        if aux_dev_vendor is None:
+            self._appl_data[appliance_id].pop("vendor", None)
 
     # for legacy Anns gateway and heater_central is the same device
     if self._smile_legacy and self.smile_type == "thermostat":
@@ -759,9 +764,10 @@ def ___get_module_data(self, appliance, locator, mod_type):
             v_model = module.find("vendor_model").text
             hw_version = module.find("hardware_version").text
             fw_version = module.find("firmware_version").text
+            v_name = module.find("vendro_name").text
 
-            return [v_model, hw_version, fw_version]
-    return [None, None, None]
+            return [v_model, hw_version, fw_version, v_name]
+    return [None, None, None, None]
 
 
 def ___check_model(self, name):
