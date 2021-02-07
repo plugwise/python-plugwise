@@ -653,7 +653,6 @@ def __all_appliances(self):
             self.gateway_id = appliance.attrib["id"]
             appliance_model = f"Smile {self.smile_name}"
             appliance_name = self.smile_name
-        #if appliance_class == "heater_central":
 
         if appliance_class in [
             "thermostat",
@@ -697,13 +696,6 @@ def __all_appliances(self):
         else:
             # Return all types applicable to home
             appliance_types = self._loc_data[self._home_location]["types"]
-            # If heater or gatweay override registering
-            #if appliance_class == "heater_central" and self.smile_type != "stretch":
-                #appliance_id = self.heater_id
-                #appliance_name = "Auxiliary"
-            #if appliance_class == "gateway":
-                #appliance_id = self.gateway_id
-                #appliance_name = self.smile_name
 
         # Determine appliance_type from functionality
         if (
@@ -726,8 +718,6 @@ def __all_appliances(self):
             appliance_model = version_to_model(module_data[1])
             appliance_fw = module_data[3]
 
-        #if appliance_model == "Gateway":
-        #    appliance_model = f"Smile {self.smile_name}"
         if appliance_model == "Thermostat":
             appliance_model = "Anna"
 
