@@ -638,7 +638,7 @@ def __all_appliances(self):
         appliance_name = appliance.find("name").text
         appliance_model = appliance_class.replace("_", " ").title()
         appliance_fw = None
-        aux_dev_vendor = None
+        appliance_v_name = None
 
         # Nothing useful in opentherm so skip it
         if appliance_class == "open_therm_gateway":
