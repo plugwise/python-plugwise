@@ -175,9 +175,6 @@ def _appliance_data(self, dev_id):
                     and float(measure) > 3.5
                 ):
                     continue
-                # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-                if measurement in ["compressor_state", "flame_state", "boiler_state"]:
-                    self.active_device_present = True
 
                 try:
                     measurement = attrs[ATTR_NAME]
@@ -601,7 +598,6 @@ def _object_value(self, obj_type, obj_id, measurement):
 
     return None
 
-
 def __all_appliances(self):
     """Determine available appliances from inventory."""
     self._appl_data = {}
@@ -609,6 +605,13 @@ def __all_appliances(self):
     stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
     __all_locations(self)
+
+    # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
+    cp_state = self._appliances.find(".//logs/point_log[type='compressor_state']")
+    fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
+    bl_state = self._appliances.find(".//services/boiler_state")
+    if cp_state or fl_state or bl_state:
+        self.active_device_present = True
 
     if self._smile_legacy and self.smile_type == "power":
         # Inject home_location as dev_id for legacy so
@@ -737,6 +740,9 @@ def __all_appliances(self):
     # for legacy Anns gateway and heater_central is the same device
     if self._smile_legacy and self.smile_type == "thermostat":
         self.gateway_id = self.heater_id
+
+    if not self.active_device_present:
+        self._appl_data.pop(self.heater_id)
 
     return
 
