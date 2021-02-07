@@ -176,7 +176,7 @@ def _appliance_data(self, dev_id):
                 ):
                     continue
                 # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-                if measurement in ["compressor_state", "flame_state"]:
+                if measurement in ["compressor_state", "flame_state", "boiler_state"]:
                     self.active_device_present = True
 
                 try:
