@@ -650,9 +650,10 @@ def __all_appliances(self):
             self.heater_id = appliance.attrib["id"]
 
         if appliance_class in [
+            "heater_central",
             "thermostat",
-            "zone_thermostat",
             "thermostatic_radiator_valve",
+            "zone_thermostat",
         ]:
             locator = "./logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
