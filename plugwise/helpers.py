@@ -780,7 +780,7 @@ def ___check_model(self, name, v_name):
         if model != "Unknown":
             return model
     else:
-        return model
+        return name
 
 
 def __all_locations(self):
