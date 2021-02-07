@@ -667,9 +667,12 @@ def __all_appliances(self):
             appliance_fw = module_data[3]
 
         if appliance_class == "heater_central":
-            locator = ".//logs/point_log[type='flame_state']/boiler_state"
+            locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
+            locator2 = ".//services/boiler_state"
             mod_type = "boiler_state"
-            module_data = ___get_module_data(self, appliance, locator, mod_type)
+            module_data = ___get_module_data(self, appliance, locator1, mod_type)
+            if not module_data:
+                module_data = ___get_module_data(self, appliance, locator2, mod_type)
             appliance_v_name = module_data[0]
             appliance_model = ___check_model(self, module_data[1], appliance_v_name)
 
