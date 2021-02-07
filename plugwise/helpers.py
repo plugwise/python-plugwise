@@ -730,10 +730,9 @@ def __all_appliances(self):
             "class": appliance_class,
             "location": appliance_location,
         }
-        #if appliance_fw is None:
-        #    self._appl_data[appliance_id].pop("fw", None)
-        #if appliance_v_name is None:
-        #    self._appl_data[appliance_id].pop("vendor", None)
+        ___pop_None_data(self, appliance_v_name, appliance_id, "vendor")
+        ___pop_None_data(self, appliance_model, appliance_id, "model")
+        ___pop_None_data(self, appliance_fw, appliance_id, "fw")
 
     # for legacy Anns gateway and heater_central is the same device
     if self._smile_legacy and self.smile_type == "thermostat":
@@ -741,8 +740,6 @@ def __all_appliances(self):
 
     return
 
-
-# @staticmethod
 def ___types_finder(self, data):
     """Detect types within locations from logs."""
     types = set()
@@ -761,7 +758,6 @@ def ___types_finder(self, data):
 
     return types
 
-
 def ___get_module_data(self, appliance, locator, mod_type):
     """Helper functie for finding info in MODULES."""
     appl_search = appliance.find(locator)
@@ -777,7 +773,6 @@ def ___get_module_data(self, appliance, locator, mod_type):
             return [v_name, v_model, hw_version, fw_version]
     return [None, None, None, None]
 
-
 def ___check_model(self, name, v_name):
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
@@ -788,6 +783,11 @@ def ___check_model(self, name, v_name):
             return model
     else:
         return name
+
+def ___pop_None_data(self, var, appl_id, idx):
+    """Remove data when None."""
+    if var is None:
+        self._appl_data[appl_id].pop(idx, None)
 
 
 def __all_locations(self):
