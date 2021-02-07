@@ -659,18 +659,19 @@ def __all_appliances(self):
             locator = "./logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
-            appliance_model = ___check_model(self, module_data[0])
-            appliance_fw = module_data[2]
-            aux_dev_vendor = module_data[3]
+            appliance_v_name = module_data[0]
+            appliance_model = ___check_model(self, module_data[1], applaince_v_model)
+            appliance_fw = module_data[3]
+
 
         if stretch_v2 or stretch_v3:
             locator = ".//services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
             if module_data[1] is not None:
-                hw_version = module_data[1].replace("-", "")
+                hw_version = module_data[2].replace("-", "")
                 appliance_model = version_to_model(hw_version)
-            appliance_fw = module_data[2]
+            appliance_fw = module_data[3]
 
         # Appliance with location (i.e. a device)
         if appliance.find("location") is not None:
@@ -705,8 +706,8 @@ def __all_appliances(self):
             locator = ".//logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
-            appliance_model = version_to_model(module_data[0])
-            appliance_fw = module_data[2]
+            appliance_model = version_to_model(module_data[1])
+            appliance_fw = module_data[3]
 
         if appliance_model == "Gateway":
             appliance_model = f"Smile {self.smile_name}"
@@ -715,7 +716,7 @@ def __all_appliances(self):
 
         self._appl_data[appliance_id] = {
             "name": appliance_name,
-            "vendor": aux_dev_vendor,
+            "vendor": appliance_v_name,
             "model": appliance_model,
             "fw": appliance_fw,
             "types": appliance_types,
@@ -724,7 +725,7 @@ def __all_appliances(self):
         }
         if appliance_fw is None:
             self._appl_data[appliance_id].pop("fw", None)
-        if aux_dev_vendor is None:
+        if appliance_v_name is None:
             self._appl_data[appliance_id].pop("vendor", None)
 
     # for legacy Anns gateway and heater_central is the same device
@@ -761,21 +762,24 @@ def ___get_module_data(self, appliance, locator, mod_type):
         link_id = appl_search.attrib["id"]
         module = self._modules.find(f".//{mod_type}[@id='{link_id}']....")
         if module is not None:
+            v_name = module.find("vendor_name").text
             v_model = module.find("vendor_model").text
             hw_version = module.find("hardware_version").text
             fw_version = module.find("firmware_version").text
-            v_name = module.find("vendor_name").text
 
-            return [v_model, hw_version, fw_version, v_name]
+            return [v_name, v_model, hw_version, fw_version]
     return [None, None, None, None]
 
 
-def ___check_model(self, name):
+def ___check_model(self, name, v_name):
     """Model checking before using version_to_model."""
-    if name == "ThermoTouch":
-        return "Anna"
-    model = version_to_model(name)
-    if model != "Unknown":
+    if v_name == "Plugwise":
+        if name == "ThermoTouch":
+            return "Anna"
+        model = version_to_model(name)
+        if model != "Unknown":
+            return model
+    else:
         return model
 
 
