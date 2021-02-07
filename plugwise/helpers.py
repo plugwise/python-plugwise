@@ -660,7 +660,7 @@ def __all_appliances(self):
             mod_type = "thermostat"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
             appliance_v_name = module_data[0]
-            appliance_model = ___check_model(self, module_data[1], applaince_v_model)
+            appliance_model = ___check_model(self, module_data[1], appliance_v_model)
             appliance_fw = module_data[3]
 
 
