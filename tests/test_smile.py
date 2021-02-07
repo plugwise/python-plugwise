@@ -19,7 +19,6 @@ import jsonpickle as json
 import pytest
 
 pw_exceptions = importlib.import_module("plugwise.exceptions")
-pw_helpers = importlib.import_module("plugwise.helpers")
 pw_smile = importlib.import_module("plugwise.smile")
 
 pp = PrettyPrinter(indent=8)
@@ -286,7 +285,6 @@ class TestPlugwise:
         self._write_json("get_all_devices", device_list)
         self._write_json("notifications", smile.notifications)
 
-        # pw_helpers._scan_thermostats(self)
         location_list = smile.thermo_locs
 
         _LOGGER.info("Gateway id = %s", smile.gateway_id)
