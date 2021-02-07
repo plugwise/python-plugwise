@@ -653,6 +653,7 @@ def __all_appliances(self):
             self.gateway_id = appliance.attrib["id"]
             appliance_model = f"Smile {self.smile_name}"
             appliance_name = self.smile_name
+            appliance_fw = self.smile_version[0]
 
         if appliance_class in [
             "thermostat",
