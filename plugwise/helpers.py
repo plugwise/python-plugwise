@@ -741,8 +741,9 @@ def __all_appliances(self):
     if self._smile_legacy and self.smile_type == "thermostat":
         self.gateway_id = self.heater_id
 
-    if not self.active_device_present:
-        self._appl_data.pop(self.heater_id)
+    if self.smile_type == "thermostat":
+        if not self.active_device_present:
+            self._appl_data.pop(self.heater_id)
 
     return
 
