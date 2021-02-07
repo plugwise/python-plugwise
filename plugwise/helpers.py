@@ -651,6 +651,8 @@ def __all_appliances(self):
         # Find gateway and heater_central devices
         if appliance_class == "gateway":
             self.gateway_id = appliance.attrib["id"]
+            appliance_model = f"Smile {self.smile_name}"
+            appliance_name = self.smile_name
         #if appliance_class == "heater_central":
 
         if appliance_class in [
@@ -675,6 +677,7 @@ def __all_appliances(self):
                 module_data = ___get_module_data(self, appliance, locator2, mod_type)
             appliance_v_name = module_data[0]
             appliance_model = ___check_model(self, module_data[1], appliance_v_name)
+            appliance_name = "Auxiliary"
 
         if stretch_v2 or stretch_v3:
             locator = ".//services/electricity_point_meter"
@@ -695,12 +698,12 @@ def __all_appliances(self):
             # Return all types applicable to home
             appliance_types = self._loc_data[self._home_location]["types"]
             # If heater or gatweay override registering
-            if appliance_class == "heater_central" and self.smile_type != "stretch":
+            #if appliance_class == "heater_central" and self.smile_type != "stretch":
                 #appliance_id = self.heater_id
-                appliance_name = "Auxiliary"
-            if appliance_class == "gateway":
+                #appliance_name = "Auxiliary"
+            #if appliance_class == "gateway":
                 #appliance_id = self.gateway_id
-                appliance_name = self.smile_name
+                #appliance_name = self.smile_name
 
         # Determine appliance_type from functionality
         if (
@@ -723,8 +726,8 @@ def __all_appliances(self):
             appliance_model = version_to_model(module_data[1])
             appliance_fw = module_data[3]
 
-        if appliance_model == "Gateway":
-            appliance_model = f"Smile {self.smile_name}"
+        #if appliance_model == "Gateway":
+        #    appliance_model = f"Smile {self.smile_name}"
         if appliance_model == "Thermostat":
             appliance_model = "Anna"
 
