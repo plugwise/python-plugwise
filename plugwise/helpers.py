@@ -725,10 +725,10 @@ def __all_appliances(self):
             "class": appliance_class,
             "location": appliance_location,
         }
-        if appliance_fw is None:
-            self._appl_data[appliance_id].pop("fw", None)
-        if appliance_v_name is None:
-            self._appl_data[appliance_id].pop("vendor", None)
+        #if appliance_fw is None:
+        #    self._appl_data[appliance_id].pop("fw", None)
+        #if appliance_v_name is None:
+        #    self._appl_data[appliance_id].pop("vendor", None)
 
     # for legacy Anns gateway and heater_central is the same device
     if self._smile_legacy and self.smile_type == "thermostat":
