@@ -737,7 +737,7 @@ def __all_appliances(self):
         ___pop_None_data(self, appliance_model, appliance_id, "model")
         ___pop_None_data(self, appliance_fw, appliance_id, "fw")
 
-    # For legacy AnnA gateway and heater_central is the same device
+    # For legacy Anna gateway and heater_central is the same device
     if self._smile_legacy and self.smile_type == "thermostat":
         self.gateway_id = self.heater_id
 
