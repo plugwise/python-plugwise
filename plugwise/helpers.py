@@ -651,8 +651,7 @@ def __all_appliances(self):
         # Find gateway and heater_central devices
         if appliance_class == "gateway":
             self.gateway_id = appliance.attrib["id"]
-        if appliance_class == "heater_central":
-            self.heater_id = appliance.attrib["id"]
+        #if appliance_class == "heater_central":
 
         if appliance_class in [
             "thermostat",
@@ -667,6 +666,7 @@ def __all_appliances(self):
             appliance_fw = module_data[3]
 
         if appliance_class == "heater_central":
+            self.heater_id = appliance.attrib["id"]
             locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
             locator2 = ".//services/boiler_state"
             mod_type = "boiler_state"
@@ -696,10 +696,10 @@ def __all_appliances(self):
             appliance_types = self._loc_data[self._home_location]["types"]
             # If heater or gatweay override registering
             if appliance_class == "heater_central" and self.smile_type != "stretch":
-                appliance_id = self.heater_id
+                #appliance_id = self.heater_id
                 appliance_name = "Auxiliary"
             if appliance_class == "gateway":
-                appliance_id = self.gateway_id
+                #appliance_id = self.gateway_id
                 appliance_name = self.smile_name
 
         # Determine appliance_type from functionality
