@@ -668,7 +668,8 @@ def __all_appliances(self):
             locator = ".//services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
-            if module_data[1] is not None:
+            appliance_v_name = module_data[0]            
+            if module_data[2] is not None:
                 hw_version = module_data[2].replace("-", "")
                 appliance_model = version_to_model(hw_version)
             appliance_fw = module_data[3]
@@ -706,6 +707,7 @@ def __all_appliances(self):
             locator = ".//logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
+            appliance_v_name = module_data[0]
             appliance_model = version_to_model(module_data[1])
             appliance_fw = module_data[3]
 
@@ -773,7 +775,7 @@ def ___get_module_data(self, appliance, locator, mod_type):
 
 def ___check_model(self, name, v_name):
     """Model checking before using version_to_model."""
-    if v_name == "Plugwise":
+    if v_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
             return "Anna"
         model = version_to_model(name)
