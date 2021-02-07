@@ -307,24 +307,19 @@ class Smile:
             if counter == 0:
                 device_data["relay"] = False
 
-        # Legacy_anna: create heating_state and leave out domestic_hot_water_state
+        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
         if "boiler_state" in device_data:
             device_data["heating_state"] = device_data["intended_boiler_state"]
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
+        # Adam: indicate Auxiliary heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
             if details["class"] == "heater_central":
                 if not self.active_device_present:
                     device_data["heating_state"] = True
                     if _open_valves(self) == 0:
                         device_data["heating_state"] = False
-
-        # Anna specific
-        illuminance = _object_value(self, "appliance", dev_id, "illuminance")
-        if illuminance is not None:
-            device_data["illuminance"] = illuminance
 
         if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
@@ -342,6 +337,11 @@ class Smile:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
             device_data["last_used"] = _last_active_schema(self, details["location"])
+
+        # Anna specific
+        illuminance = _object_value(self, "appliance", dev_id, "illuminance")
+        if illuminance is not None:
+            device_data["illuminance"] = illuminance
 
         return device_data
 
