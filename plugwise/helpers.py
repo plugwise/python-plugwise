@@ -671,7 +671,7 @@ def __all_appliances(self):
             locator2 = ".//services/boiler_state"
             mod_type = "boiler_state"
             module_data = ___get_module_data(self, appliance, locator1, mod_type)
-            if not module_data:
+            if module_data is [None, None, None, None]:
                 module_data = ___get_module_data(self, appliance, locator2, mod_type)
             appliance_v_name = module_data[0]
             appliance_model = ___check_model(self, module_data[1], appliance_v_name)
