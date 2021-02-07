@@ -464,7 +464,7 @@ class TestPlugwise:
         assert smile._smile_legacy  # pylint: disable=protected-access
         _LOGGER.info(" # Assert master thermostat")
         assert smile.single_master_thermostat()
-        assert smile.active_device_present()
+        assert smile.active_device_present
 
         assert not smile.notifications
 
@@ -526,7 +526,7 @@ class TestPlugwise:
         assert smile._smile_legacy  # pylint: disable=protected-access
         _LOGGER.info(" # Assert master thermostat")
         assert smile.single_master_thermostat()
-        assert smile.active_device_present()
+        assert smile.active_device_present
 
         assert not smile.notifications
 
@@ -664,7 +664,7 @@ class TestPlugwise:
         assert not smile._smile_legacy  # pylint: disable=protected-access
         _LOGGER.info(" # Assert master thermostat")
         assert smile.single_master_thermostat()
-        assert smile.active_device_present()
+        assert smile.active_device_present
 
         assert not smile.notifications
 
@@ -703,7 +703,7 @@ class TestPlugwise:
         assert not smile._smile_legacy  # pylint: disable=protected-access
         _LOGGER.info(" # Assert master thermostat")
         assert smile.single_master_thermostat()
-        assert smile.active_device_present()
+        assert smile.active_device_present
 
         await self.tinker_thermostat(
             smile,
@@ -760,7 +760,7 @@ class TestPlugwise:
         assert not smile._smile_legacy  # pylint: disable=protected-access
         _LOGGER.info(" # Assert master thermostat")
         assert smile.single_master_thermostat()
-        assert not smile.active_device_present()
+        assert not smile.active_device_present
 
         assert not smile.notifications
 
