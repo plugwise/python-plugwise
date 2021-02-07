@@ -764,7 +764,7 @@ def ___get_module_data(self, appliance, locator, mod_type):
             v_model = module.find("vendor_model").text
             hw_version = module.find("hardware_version").text
             fw_version = module.find("firmware_version").text
-            v_name = module.find("vendro_name").text
+            v_name = module.find("vendor_name").text
 
             return [v_model, hw_version, fw_version, v_name]
     return [None, None, None, None]
