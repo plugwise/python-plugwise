@@ -656,7 +656,7 @@ def __all_appliances(self):
             "thermostatic_radiator_valve",
             "zone_thermostat",
         ]:
-            locator = "./logs/point_log[type='thermostat']/thermostat"
+            locator = ".//logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
             appliance_v_name = module_data[0]
