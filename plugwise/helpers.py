@@ -606,13 +606,6 @@ def __all_appliances(self):
 
     __all_locations(self)
 
-    # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-    cp_state = self._appliances.find(".//logs/point_log[type='compressor_state']")
-    fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
-    bl_state = self._appliances.find(".//services/boiler_state")
-    if cp_state or fl_state or bl_state:
-        self.active_device_present = True
-
     if self._smile_legacy and self.smile_type == "power":
         # Inject home_location as dev_id for legacy so
         # _appliance_data can use loc_id for dev_id.
@@ -631,6 +624,13 @@ def __all_appliances(self):
     # example 'electricity consumed/produced and relay' on Adam
     # Basically walk locations for 'members' not set[] and
     # scan for the same functionality
+
+    # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
+    cp_state = self._appliances.find(".//logs/point_log[type='compressor_state']")
+    fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
+    bl_state = self._appliances.find(".//services/boiler_state")
+    if cp_state or fl_state or bl_state:
+        self.active_device_present = True
 
     for appliance in self._appliances:
         appliance_location = None
