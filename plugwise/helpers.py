@@ -737,10 +737,11 @@ def __all_appliances(self):
         ___pop_None_data(self, appliance_model, appliance_id, "model")
         ___pop_None_data(self, appliance_fw, appliance_id, "fw")
 
-    # for legacy Anns gateway and heater_central is the same device
+    # For legacy AnnA gateway and heater_central is the same device
     if self._smile_legacy and self.smile_type == "thermostat":
         self.gateway_id = self.heater_id
 
+    # Remove heater_central when no active device present
     if self.smile_type == "thermostat":
         if not self.active_device_present:
             self._appl_data.pop(self.heater_id)
