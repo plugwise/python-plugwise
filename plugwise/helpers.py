@@ -598,6 +598,7 @@ def _object_value(self, obj_type, obj_id, measurement):
 
     return None
 
+
 def __all_appliances(self):
     """Determine available appliances from inventory."""
     self._appl_data = {}
@@ -676,7 +677,7 @@ def __all_appliances(self):
             locator = ".//services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = ___get_module_data(self, appliance, locator, mod_type)
-            appliance_v_name = module_data[0]            
+            appliance_v_name = module_data[0]
             if module_data[2] is not None:
                 hw_version = module_data[2].replace("-", "")
                 appliance_model = version_to_model(hw_version)
@@ -748,6 +749,7 @@ def __all_appliances(self):
 
     return
 
+
 def ___types_finder(self, data):
     """Detect types within locations from logs."""
     types = set()
@@ -766,6 +768,7 @@ def ___types_finder(self, data):
 
     return types
 
+
 def ___get_module_data(self, appliance, locator, mod_type):
     """Helper functie for finding info in MODULES."""
     appl_search = appliance.find(locator)
@@ -781,6 +784,7 @@ def ___get_module_data(self, appliance, locator, mod_type):
             return [v_name, v_model, hw_version, fw_version]
     return [None, None, None, None]
 
+
 def ___check_model(self, name, v_name):
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
@@ -791,6 +795,7 @@ def ___check_model(self, name, v_name):
             return model
     else:
         return name
+
 
 def ___pop_None_data(self, var, appl_id, idx):
     """Remove data when None."""
