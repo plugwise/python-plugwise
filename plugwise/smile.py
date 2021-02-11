@@ -1240,6 +1240,19 @@ class Smile:
         await self.request(uri, method="put", data=data)
         return True
 
+    async def set_dhw_mode_state(self, appl_id, state):
+        """Switch the domestic_hot_water_mode state on/off."""
+        actuator = "actuator_functionalities"
+        toggle = "toggle_functionality"
+        locator = f'appliance[@id="{appl_id}"]/{actuator}/{toggle}'
+        toggle_id = self._appliances.find(locator).attrib["id"]
+        uri = f"{APPLIANCES};id={appl_id}/toggle;id={toggle_id}"
+        state = str(state)
+        data = f"<{toggle}><state>{state}</state></{toggle}>"
+
+        await self.request(uri, method="put", data=data)
+        return True
+
     # LEGACY Anna functions
 
     def __get_presets_legacy(self):
