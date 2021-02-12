@@ -1218,7 +1218,7 @@ class Smile:
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         if stretch_v2:
             actuator = "actuators"
-            switch = "relay"
+            func_type = "relay"
 
         if members is not None:
             for member in members:
