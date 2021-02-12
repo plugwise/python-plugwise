@@ -337,7 +337,7 @@ class TestPlugwise:
             for new_state in [False, True, False]:
                 _LOGGER.info("- Switching %s", new_state)
                 try:
-                    relay_change = await smile.set_relay_state(
+                    relay_change = await smile.set_switch_state(
                         dev_id, members, new_state
                     )
                     assert relay_change
