@@ -1212,7 +1212,7 @@ class Smile:
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
         device = "relay"
-        if name == "dhw_comfort_switch":
+        if name == "dhw_cm_switch":
             func_type = "toggle_functionality"
             device = "toggle"
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
