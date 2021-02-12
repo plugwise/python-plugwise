@@ -384,7 +384,7 @@ DEVICE_MEASUREMENTS = {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
     "domestic_hot_water_comfort_mode": {
-        ATTR_NAME: "dhw_mode",
+        ATTR_NAME: "dhw_comf_mode",
         ATTR_UNIT_OF_MEASUREMENT: None,
     },
     "domestic_hot_water_state": {
