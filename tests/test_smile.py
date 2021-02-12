@@ -329,7 +329,7 @@ class TestPlugwise:
                         assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
-    async def tinker_relay(self, smile, dev_ids=None, members=None, unhappy=False):
+    async def tinker_switch(self, smile, dev_ids=None, members=None, name=None, unhappy=False):
         """Switch a relay on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for relay devices:")
         for dev_id in dev_ids:
@@ -878,7 +878,7 @@ class TestPlugwise:
         await self.tinker_thermostat(
             smile, "009490cc2f674ce6b576863fbb64f867", good_schemas=["Weekschema"]
         )
-        await self.tinker_relay(smile, ["aa6b0002df0a46e1b1eb94beb61eddfe"])
+        await self.tinker_switch(smile, ["aa6b0002df0a46e1b1eb94beb61eddfe"])
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -889,7 +889,7 @@ class TestPlugwise:
             good_schemas=["Weekschema"],
             unhappy=True,
         )
-        await self.tinker_relay(
+        await self.tinker_switch(
             smile, ["aa6b0002df0a46e1b1eb94beb61eddfe"], unhappy=True
         )
         await smile.close_connection()
@@ -913,12 +913,14 @@ class TestPlugwise:
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.2.4"
 
-        await self.tinker_relay(
+        await self.tinker_switch(
             smile,
             ["b83f9f9758064c0fab4af6578cba4c6d"],
             ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
         )
-
+        await self.tinker_switch(
+            smile, ["2743216f626f43948deec1f7ab3b3d70"], name="dhw_comfort_mode"
+        )
         await self.device_test(smile, testdata)
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -986,7 +988,7 @@ class TestPlugwise:
         await self.tinker_thermostat(
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
-        await self.tinker_relay(smile, ["675416a629f343c495449970e2ca37b5"])
+        await self.tinker_switch(smile, ["675416a629f343c495449970e2ca37b5"])
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1069,7 +1071,7 @@ class TestPlugwise:
         await self.tinker_thermostat(
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
-        await self.tinker_relay(smile, ["675416a629f343c495449970e2ca37b5"])
+        await self.tinker_switch(smile, ["675416a629f343c495449970e2ca37b5"])
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1360,7 +1362,7 @@ class TestPlugwise:
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy  # pylint: disable=protected-access
 
-        await self.tinker_relay(smile, ["2587a7fcdd7e482dab03fda256076b4b"])
+        await self.tinker_switch(smile, ["2587a7fcdd7e482dab03fda256076b4b"])
 
         await self.device_test(smile, testdata)
 
