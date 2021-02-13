@@ -391,35 +391,39 @@ class Smile:
         await sh.request(self, uri, method="put", data=data)
         return True
 
-    async def set_relay_state(self, appl_id, members, state):
-        """Switch the Plug off/on."""
+    async def set_switch_state(self, appl_id, members, model, state):
+        """Switch the Switch off/on."""
         actuator = "actuator_functionalities"
-        relay = "relay_functionality"
+        func_type = "relay_functionality"
+        device = "relay"
+        if model == "dhw_cm_switch":
+            func_type = "toggle_functionality"
+            device = "toggle"
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         if stretch_v2:
             actuator = "actuators"
-            relay = "relay"
+            func_type = "relay"
 
         if members is not None:
             for member in members:
-                locator = f'appliance[@id="{member}"]/{actuator}/{relay}'
-                relay_functionality_id = self._appliances.find(locator).attrib["id"]
-                uri = f"{APPLIANCES};id={member}/relay;id={relay_functionality_id}"
+                locator = f'appliance[@id="{member}"]/{actuator}/{func_type}'
+                switch_id = self._appliances.find(locator).attrib["id"]
+                uri = f"{APPLIANCES};id={member}/{device};id={switch_id}"
                 if stretch_v2:
-                    uri = f"{APPLIANCES};id={member}/relay"
+                    uri = f"{APPLIANCES};id={member}/{device}"
                 state = str(state)
-                data = f"<{relay}><state>{state}</state></{relay}>"
+                data = f"<{func_type}><state>{state}</state></{func_type}>"
 
                 await sh.request(self, uri, method="put", data=data)
             return True
 
-        locator = f'appliance[@id="{appl_id}"]/{actuator}/{relay}'
-        relay_functionality_id = self._appliances.find(locator).attrib["id"]
-        uri = f"{APPLIANCES};id={appl_id}/relay;id={relay_functionality_id}"
+        locator = f'appliance[@id="{appl_id}"]/{actuator}/{func_type}'
+        switch_id = self._appliances.find(locator).attrib["id"]
+        uri = f"{APPLIANCES};id={appl_id}/{device};id={switch_id}"
         if stretch_v2:
-            uri = f"{APPLIANCES};id={appl_id}/relay"
+            uri = f"{APPLIANCES};id={appl_id}/{device}"
         state = str(state)
-        data = f"<{relay}><state>{state}</state></{relay}>"
+        data = f"<{func_type}><state>{state}</state></{func_type}>"
 
         await sh.request(self, uri, method="put", data=data)
         return True
