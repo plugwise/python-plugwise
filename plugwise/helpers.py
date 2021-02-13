@@ -381,7 +381,7 @@ class Base:
         """Update locations with used types of appliances."""
         matched_locations = {}
 
-        Base.all_locations(self)
+        Base.all_appliances(self)
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self._appl_data.items():
                 if appliance_details["location"] == location_id:
@@ -584,23 +584,7 @@ class SmileHelper(Base):
 
     def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
-        def matched_locations(self):
-            """Update locations with used types of appliances."""
-            matched_locations = {}
-
-            Base.all_locations(self)
-            Base.all_appliances(self)
-            for location_id, location_details in self._loc_data.items():
-                for dummy, appliance_details in self._appl_data.items():
-                    if appliance_details["location"] == location_id:
-                        for appl_type in appliance_details["types"]:
-                            location_details["types"].add(appl_type)
-
-                matched_locations[location_id] = location_details
-
-            return matched_locations
-
-        self.thermo_locs = matched_locations(self)
+        self.thermo_locs = Base.match_locations(self)
 
         thermo_matching = {
             "thermostat": 3,
