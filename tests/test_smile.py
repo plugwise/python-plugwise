@@ -330,19 +330,19 @@ class TestPlugwise:
 
     @pytest.mark.asyncio
     async def tinker_switch(
-        self, smile, dev_ids=None, members=None, name=None, unhappy=False
+        self, smile, dev_ids=None, members=None, model=None, unhappy=False
     ):
-        """Switch a relay on and off to test functionality."""
-        _LOGGER.info("Asserting modifying settings for relay devices:")
+        """Turn a Switch on and off to test functionality."""
+        _LOGGER.info("Asserting modifying settings for switch devices:")
         for dev_id in dev_ids:
             _LOGGER.info("- Devices (%s):", dev_id)
             for new_state in [False, True, False]:
                 _LOGGER.info("- Switching %s", new_state)
                 try:
-                    relay_change = await smile.set_switch_state(
-                        dev_id, members, name, new_state
+                    switch_change = await smile.set_switch_state(
+                        dev_id, members, model, new_state
                     )
-                    assert relay_change
+                    assert switch_change
                     _LOGGER.info("  + worked as intended")
                 except (
                     pw_exceptions.ErrorSendingCommandError,
@@ -921,7 +921,7 @@ class TestPlugwise:
             ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
         )
         await self.tinker_switch(
-            smile, ["2743216f626f43948deec1f7ab3b3d70"], name="dhw_cm_switch"
+            smile, ["2743216f626f43948deec1f7ab3b3d70"], model="dhw_cm_switch"
         )
         await self.device_test(smile, testdata)
         await smile.close_connection()
