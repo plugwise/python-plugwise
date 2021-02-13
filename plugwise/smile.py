@@ -32,26 +32,8 @@ from .exceptions import (
     UnsupportedDeviceError,
     XMLDataMissingError,
 )
-from .helpers import (
-    _appliance_data,
-    _group_switches,
-    _last_active_schema,
-    _match_locations,
-    _object_value,
-    _open_valves,
-    _power_data_from_location,
-    _preset,
-    _presets,
-    _rule_ids_by_name,
-    _scan_thermostats,
-    _schemas,
-    _temperature_uri,
-    request,
-    update_appliances,
-    update_domain_objects,
-    update_locations,
-    update_modules,
-)
+from .helpers import Base as b
+from .helpers import SmileHelper as sh
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -86,30 +68,18 @@ class Smile:
 
         self._auth = aiohttp.BasicAuth(username, password=password)
 
+        self._host = host
+        self._port = port
+        self._endpoint = f"http://{self._host}:{str(self._port)}"
         self._timeout = timeout
-        self._endpoint = f"http://{host}:{str(port)}"
-        self._appliances = None
-        self._domain_objects = None
-        self._home_location = None
-        self._locations = None
         self._smile_legacy = False
-        self._thermo_master_id = None
 
-        self.active_device_present = False
-        self.gateway_id = None
-        self.heater_id = None
-        self.notifications = {}
-        self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
-        self.thermo_locs = None
 
     async def connect(self):
         """Connect to Plugwise device."""
         names = []
 
-        result = await request(self, DOMAIN_OBJECTS)
+        result = await sh.request(self, DOMAIN_OBJECTS)
         dsmrmain = result.find(".//module/protocols/dsmrmain")
         network = result.find(".//module/protocols/network_router/network")
 
@@ -149,7 +119,7 @@ class Smile:
                 # P1 legacy:
                 if dsmrmain is not None:
                     try:
-                        status = await request(self, STATUS)
+                        status = await sh.request(self, STATUS)
                         version = status.find(".//system/version").text
                         model = status.find(".//system/product").text
                         self.smile_hostname = status.find(".//network/hostname").text
@@ -159,7 +129,7 @@ class Smile:
                 # Stretch:
                 elif network is not None:
                     try:
-                        system = await request(self, SYSTEM)
+                        system = await sh.request(self, SYSTEM)
                         version = system.find(".//gateway/firmware").text
                         model = system.find(".//gateway/product").text
                         self.smile_hostname = system.find(".//gateway/hostname").text
@@ -212,48 +182,32 @@ class Smile:
         """Update all XML data from device."""
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
-            await update_appliances(self)
+            await sh.update_appliances(self)
             if self._appliances is None:
                 _LOGGER.error("Appliance data missing")
                 raise XMLDataMissingError
 
-        await update_domain_objects(self)
+        await sh.update_domain_objects(self)
         if self._domain_objects is None:
             _LOGGER.error("Domain_objects data missing")
             raise XMLDataMissingError
 
-        await update_locations(self)
+        await sh.update_locations(self)
         if self._locations is None:
             _LOGGER.error("Locataion data missing")
             raise XMLDataMissingError
 
         # No need to import modules for P1, no userfull info
         if self.smile_type != "power":
-            await update_modules(self)
+            await sh.update_modules(self)
             if self._modules is None:
                 _LOGGER.error("Modules data missing")
                 raise XMLDataMissingError
 
-    def single_master_thermostat(self):
-        """Determine if there is a single master thermostat in the setup."""
-        if self.smile_type != "thermostat":
-            self.thermo_locs = _match_locations(self)
-            return None
-
-        count = 0
-        _scan_thermostats(self)
-        for dummy, data in self.thermo_locs.items():
-            if "master_prio" in data:
-                if data.get("master_prio") > 0:
-                    count += 1
-
-        if count == 1:
-            return True
-        return False
-
     def get_all_devices(self):
         """Determine available devices from inventory."""
         devices = {}
+        sh.scan_thermostats(self)
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
@@ -268,7 +222,7 @@ class Smile:
 
             devices[appliance] = details
 
-        group_data = _group_switches(self)
+        group_data = sh.group_switches(self)
         if group_data is not None:
             devices.update(group_data)
 
@@ -278,20 +232,20 @@ class Smile:
         """Provide device-data, based on location_id, from APPLIANCES."""
         devices = self.get_all_devices()
         details = devices.get(dev_id)
-        device_data = _appliance_data(self, dev_id)
+        device_data = sh.appliance_data(self, dev_id)
 
         # Generic
         if details["class"] == "gateway" or dev_id == self.gateway_id:
             # Anna: outdoor_temperature only present in domain_objects
             if "outdoor_temperature" not in device_data:
-                outdoor_temperature = _object_value(
+                outdoor_temperature = sh.object_value(
                     self, "location", self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
             # Try to get P1 data and 2nd outdoor_temperature, when present
-            power_data = _power_data_from_location(self, details["location"])
+            power_data = sh.power_data_from_location(self, details["location"])
             if power_data is not None:
                 device_data.update(power_data)
 
@@ -299,7 +253,7 @@ class Smile:
         if details["class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
-                appl_data = _appliance_data(self, member)
+                appl_data = sh.appliance_data(self, member)
                 if appl_data["relay"]:
                     counter += 1
 
@@ -318,17 +272,17 @@ class Smile:
             if details["class"] == "heater_central":
                 if not self.active_device_present:
                     device_data["heating_state"] = True
-                    if _open_valves(self) == 0:
+                    if sh.open_valves(self) == 0:
                         device_data["heating_state"] = False
 
         if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
 
         # Anna, Lisa, Tom/Floor
-        device_data["active_preset"] = _preset(self, details["location"])
-        device_data["presets"] = _presets(self, details["location"])
+        device_data["active_preset"] = sh.preset(self, details["location"])
+        device_data["presets"] = sh.presets(self, details["location"])
 
-        avail_schemas, sel_schema, sched_setpoint = _schemas(self, details["location"])
+        avail_schemas, sel_schema, sched_setpoint = sh.schemas(self, details["location"])
         if not self._smile_legacy:
             device_data["schedule_temperature"] = sched_setpoint
         device_data["available_schedules"] = avail_schemas
@@ -336,14 +290,31 @@ class Smile:
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
-            device_data["last_used"] = _last_active_schema(self, details["location"])
+            device_data["last_used"] = sh.last_active_schema(self, details["location"])
 
         # Anna specific
-        illuminance = _object_value(self, "appliance", dev_id, "illuminance")
+        illuminance = sh.object_value(self, "appliance", dev_id, "illuminance")
         if illuminance is not None:
             device_data["illuminance"] = illuminance
 
         return device_data
+
+    def single_master_thermostat(self):
+        """Determine if there is a single master thermostat in the setup."""
+        if self.smile_type != "thermostat":
+            self.thermo_locs = b.match_locations(self)
+            return None
+
+        count = 0
+        sh.scan_thermostats(self)
+        for dummy, data in self.thermo_locs.items():
+            if "master_prio" in data:
+                if data.get("master_prio") > 0:
+                    count += 1
+
+        if count == 1:
+            return True
+        return False
 
     async def set_schedule_state(self, loc_id, name, state):
         """
@@ -354,7 +325,7 @@ class Smile:
         if self._smile_legacy:
             return await self.set_schedule_state_legacy(name, state)
 
-        schema_rule_ids = _rule_ids_by_name(self, str(name), loc_id)
+        schema_rule_ids = sh.rule_ids_by_name(self, str(name), loc_id)
         if schema_rule_ids == {} or schema_rule_ids is None:
             return False
 
@@ -373,7 +344,7 @@ class Smile:
                     f' id="{template_id}"/><active>{state}</active></rule></rules>'
                 )
 
-                await request(self, uri, method="put", data=data)
+                await sh.request(self, uri, method="put", data=data)
 
         return True
 
@@ -386,7 +357,7 @@ class Smile:
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
 
-        if preset not in _presets(self, loc_id):
+        if preset not in sh.presets(self, loc_id):
             return False
 
         uri = f"{LOCATIONS};id={loc_id}"
@@ -396,19 +367,19 @@ class Smile:
             f"</type><preset>{preset}</preset></location></locations>"
         )
 
-        await request(self, uri, method="put", data=data)
+        await sh.request(self, uri, method="put", data=data)
         return True
 
     async def set_temperature(self, loc_id, temperature):
         """Send temperature-set request to the locations thermostat."""
         temperature = str(temperature)
-        uri = _temperature_uri(self, loc_id)
+        uri = sh.temperature_uri(self, loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
             f"{temperature}</setpoint></thermostat_functionality>"
         )
 
-        await request(self, uri, method="put", data=data)
+        await sh.request(self, uri, method="put", data=data)
         return True
 
     async def set_relay_state(self, appl_id, members, state):
@@ -430,7 +401,7 @@ class Smile:
                 state = str(state)
                 data = f"<{relay}><state>{state}</state></{relay}>"
 
-                await request(self, uri, method="put", data=data)
+                await sh.request(self, uri, method="put", data=data)
             return True
 
         locator = f'appliance[@id="{appl_id}"]/{actuator}/{relay}'
@@ -441,7 +412,7 @@ class Smile:
         state = str(state)
         data = f"<{relay}><state>{state}</state></{relay}>"
 
-        await request(self, uri, method="put", data=data)
+        await sh.request(self, uri, method="put", data=data)
         return True
 
     async def set_preset_legacy(self, preset):
@@ -454,7 +425,7 @@ class Smile:
         uri = f"{RULES}"
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
-        await request(self, uri, method="put", data=data)
+        await sh.request(self, uri, method="put", data=data)
         return True
 
     async def set_schedule_state_legacy(self, name, state):
@@ -480,12 +451,12 @@ class Smile:
             f' id="{template_id}" /><active>{state}</active></rule></rules>'
         )
 
-        await request(self, uri, method="put", data=data)
+        await sh.request(self, uri, method="put", data=data)
         return True
 
     async def delete_notification(self):
         """Send a set request to the schema with the given name."""
         uri = f"{NOTIFICATIONS}"
 
-        await request(self, uri, method="delete")
+        await sh.request(self, uri, method="delete")
         return True
