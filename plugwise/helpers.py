@@ -398,7 +398,7 @@ class Base:
         tag = "zone_setpoint_and_state_based_on_preset"
 
         if self._smile_legacy:
-            return __presets_legacy(self)
+            return Base.presets_legacy(self)
 
         rule_ids = Base.rule_ids_by_tag(self, tag, loc_id)
         if rule_ids is None:
@@ -442,6 +442,21 @@ class Base:
         return types
 
 
+    # LEGACY Anna function
+    def presets_legacy(self):
+        """Get presets from domain_objects for legacy Smile."""
+        preset_dictionary = {}
+        for directive in self._domain_objects.findall("rule/directives/when/then"):
+            if directive is not None and "icon" in directive.keys():
+                # Ensure list of heating_setpoint, cooling_setpoint
+                preset_dictionary[directive.attrib["icon"]] = [
+                    float(directive.attrib["temperature"]),
+                    0,
+                ]
+
+        return preset_dictionary
+
+
     def rule_ids_by_tag(self, tag, loc_id):
         """Obtain the rule_id based on the given template_tag and location_id."""
         schema_ids = {}
@@ -454,6 +469,14 @@ class Base:
 
         if schema_ids != {}:
             return schema_ids
+
+
+    def temperature_uri_legacy(self):
+        """Determine the location-set_temperature uri - from APPLIANCES."""
+        locator = ".//appliance[type='thermostat']"
+        appliance_id = self._appliances.find(locator).attrib["id"]
+
+        return f"{APPLIANCES};id={appliance_id}/thermostat"
 
 
 class SmileHelper(Base):
@@ -637,7 +660,7 @@ class SmileHelper(Base):
     def temperature_uri(self, loc_id):
         """Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
-            return __temperature_uri_legacy(self)
+            return Base.temperature_uri_legacy(self)
 
         locator = (
             f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
@@ -645,14 +668,6 @@ class SmileHelper(Base):
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
-
-
-    def __temperature_uri_legacy(self):
-        """Determine the location-set_temperature uri - from APPLIANCES."""
-        locator = ".//appliance[type='thermostat']"
-        appliance_id = self._appliances.find(locator).attrib["id"]
-
-        return f"{APPLIANCES};id={appliance_id}/thermostat"
 
 
     def group_switches(self):
@@ -798,24 +813,6 @@ class SmileHelper(Base):
         preset = self._domain_objects.find(locator)
         if preset is not None:
             return preset.text
-
-
-
-
-
-    # LEGACY Anna function
-    def __presets_legacy(self):
-        """Get presets from domain_objects for legacy Smile."""
-        preset_dictionary = {}
-        for directive in self._domain_objects.findall("rule/directives/when/then"):
-            if directive is not None and "icon" in directive.keys():
-                # Ensure list of heating_setpoint, cooling_setpoint
-                preset_dictionary[directive.attrib["icon"]] = [
-                    float(directive.attrib["temperature"]),
-                    0,
-                ]
-
-        return preset_dictionary
 
 
     def schemas(self, loc_id):
