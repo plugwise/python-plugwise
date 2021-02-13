@@ -64,10 +64,6 @@ class Base:
         self.gateway_id = None
         self.heater_id = None
         self.notifications = {}
-        self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
         self.thermo_locs = None
 
 

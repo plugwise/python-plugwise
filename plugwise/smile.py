@@ -73,6 +73,10 @@ class Smile:
         self._endpoint = f"http://{self._host}:{str(self._port)}"
         self._timeout = timeout
         self._smile_legacy = False
+        self.smile_hostname = None
+        self.smile_name = None
+        self.smile_type = None
+        self.smile_version = ()
 
 
     async def connect(self):
