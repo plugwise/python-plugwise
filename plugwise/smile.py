@@ -77,6 +77,7 @@ class Smile:
         self._domain_objects = None
         self._locations = None
         self._modules = None
+        self.active_device_present = False
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None

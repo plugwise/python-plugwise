@@ -55,7 +55,6 @@ class Base:
         self._endpoint = None
         self._home_location = None
         self._thermo_master_id = None
-        self.active_device_present = False
         self.gateway_id = None
         self.heater_id = None
         self.notifications = {}
