@@ -936,7 +936,7 @@ class TestPlugwise:
             ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
         )
         await self.tinker_switch(
-            smile, ["2743216f626f43948deec1f7ab3b3d70"], name="dhw_cm_switch"
+            smile, ["2743216f626f43948deec1f7ab3b3d70"], model="dhw_cm_switch"
         )
         await smile.close_connection()
         await self.disconnect(server, client)
