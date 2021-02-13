@@ -208,10 +208,10 @@ class TestPlugwise:
             websession=websession,
         )
 
-#        if not timeout:
-#            assert smile._timeout == 30  # pylint: disable=protected-access
-#        assert smile._domain_objects is None  # pylint: disable=protected-access
-#        assert smile.smile_type is None
+        if not timeout:
+            assert smile._timeout == 30  # pylint: disable=protected-access
+        assert smile._domain_objects is None  # pylint: disable=protected-access
+        assert smile.smile_type is None
 
         # Connect to the smile
         try:
