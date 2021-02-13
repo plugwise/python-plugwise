@@ -381,6 +381,7 @@ class Base:
         """Update locations with used types of appliances."""
         matched_locations = {}
 
+        Base.all_locations(self)
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self._appl_data.items():
                 if appliance_details["location"] == location_id:
