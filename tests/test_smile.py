@@ -329,7 +329,9 @@ class TestPlugwise:
                         assert data[measure_key] == measure_assert
 
     @pytest.mark.asyncio
-    async def tinker_switch(self, smile, dev_ids=None, members=None, model=None, unhappy=False):
+    async def tinker_switch(
+        self, smile, dev_ids=None, members=None, model=None, unhappy=False
+    ):
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         for dev_id in dev_ids:
