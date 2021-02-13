@@ -83,7 +83,6 @@ class Smile:
         self.smile_type = None
         self.smile_version = ()
 
-
     async def connect(self):
         """Connect to Plugwise device."""
         names = []
@@ -291,7 +290,9 @@ class Smile:
         device_data["active_preset"] = sh.preset(self, details["location"])
         device_data["presets"] = sh.presets(self, details["location"])
 
-        avail_schemas, sel_schema, sched_setpoint = sh.schemas(self, details["location"])
+        avail_schemas, sel_schema, sched_setpoint = sh.schemas(
+            self, details["location"]
+        )
         if not self._smile_legacy:
             device_data["schedule_temperature"] = sched_setpoint
         device_data["available_schedules"] = avail_schemas

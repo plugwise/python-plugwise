@@ -45,7 +45,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class Base:
     """Define the Base object."""
-    
+
     def __init__(self):
         """Set the constructor for this class."""
         self._auth = None
@@ -59,7 +59,6 @@ class Base:
         self.heater_id = None
         self.notifications = {}
         self.thermo_locs = None
-
 
     async def request(
         self,
@@ -78,7 +77,9 @@ class Base:
                 if method == "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
                     headers = {"Accept-Encoding": "gzip"}
-                    resp = await self.websession.get(url, auth=self._auth, headers=headers)
+                    resp = await self.websession.get(
+                        url, auth=self._auth, headers=headers
+                    )
                 if method == "put":
                     headers = {"Content-type": "text/xml"}
                     resp = await self.websession.put(
@@ -190,10 +191,9 @@ class Base:
 
         return
 
-
     def all_appliances(self):
         """Determine available appliances from inventory."""
-        
+
         def __get_module_data(self, appliance, locator, mod_type):
             """Helper functie for finding info in MODULES."""
             appl_search = appliance.find(locator)
@@ -224,7 +224,7 @@ class Base:
             """Remove data when None."""
             if var is None:
                 self._appl_data[appl_id].pop(idx, None)
-        
+
         self._appl_data = {}
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
@@ -370,7 +370,6 @@ class Base:
 
         return
 
-
     def match_locations(self):
         """Update locations with used types of appliances."""
         matched_locations = {}
@@ -385,7 +384,6 @@ class Base:
             matched_locations[location_id] = location_details
 
         return matched_locations
-
 
     def presets(self, loc_id):
         """Get the presets from the thermostat based on location_id."""
@@ -417,7 +415,6 @@ class Base:
 
         return presets
 
-
     def types_finder(self, data):
         """Detect types within locations from logs."""
         types = set()
@@ -436,7 +433,6 @@ class Base:
 
         return types
 
-
     # LEGACY Anna function
     def presets_legacy(self):
         """Get presets from domain_objects for legacy Smile."""
@@ -451,7 +447,6 @@ class Base:
 
         return preset_dictionary
 
-
     def rule_ids_by_name(self, name, loc_id):
         """Obtain the rule_id on the given name and location_id."""
         schema_ids = {}
@@ -462,7 +457,6 @@ class Base:
 
         if schema_ids != {}:
             return schema_ids
-
 
     def rule_ids_by_tag(self, tag, loc_id):
         """Obtain the rule_id based on the given template_tag and location_id."""
@@ -477,7 +471,6 @@ class Base:
         if schema_ids != {}:
             return schema_ids
 
-
     def temperature_uri_legacy(self):
         """Determine the location-set_temperature uri - from APPLIANCES."""
         locator = ".//appliance[type='thermostat']"
@@ -489,13 +482,11 @@ class Base:
 class SmileHelper(Base):
     """Define the SmileHelper object."""
 
-
     async def update_appliances(self):
         """Request appliance data."""
         new_data = await Base.request(self, APPLIANCES)
         if new_data is not None:
             self._appliances = new_data
-
 
     async def update_domain_objects(self):
         """Request domain_objects data."""
@@ -520,13 +511,11 @@ class SmileHelper(Base):
                     url,
                 )
 
-
     async def update_locations(self):
         """Request locations data."""
         new_data = await Base.request(self, LOCATIONS)
         if new_data is not None:
             self._locations = new_data
-
 
     async def update_modules(self):
         """Request modules data."""
@@ -551,7 +540,9 @@ class SmileHelper(Base):
         for appliance in appliances:
             for measurement, attrs in DEVICE_MEASUREMENTS.items():
 
-                p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
+                p_locator = (
+                    f'.//logs/point_log[type="{measurement}"]/period/measurement'
+                )
                 if appliance.find(p_locator) is not None:
                     if self._smile_legacy:
                         if measurement == "domestic_hot_water_state":
@@ -575,7 +566,9 @@ class SmileHelper(Base):
                         measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
                     )
 
-                i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
+                i_locator = (
+                    f'.//logs/interval_log[type="{measurement}"]/period/measurement'
+                )
                 if appliance.find(i_locator) is not None:
                     name = f"{measurement}_interval"
                     measure = appliance.find(i_locator).text
@@ -647,19 +640,15 @@ class SmileHelper(Base):
 
         return
 
-
     def temperature_uri(self, loc_id):
         """Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
             return Base.temperature_uri_legacy(self)
 
-        locator = (
-            f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
-        )
+        locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
-
 
     def group_switches(self):
         """Provide switching- or pump-groups, from DOMAIN_OBJECTS."""
@@ -701,7 +690,6 @@ class SmileHelper(Base):
 
         return switch_groups
 
-
     def open_valves(self):
         """Obtain the amount of open valves, from APPLIANCES."""
         appliances = self._appliances.findall(".//appliance")
@@ -715,7 +703,6 @@ class SmileHelper(Base):
                     open_valve_count += 1
 
         return open_valve_count
-
 
     def power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
@@ -743,7 +730,9 @@ class SmileHelper(Base):
                     )
                     # Only once try to find P1 Legacy values
                     if loc_logs.find(locator) is None and self.smile_type == "power":
-                        locator = f'.//{log_type}[type="{measurement}"]/period/measurement'
+                        locator = (
+                            f'.//{log_type}[type="{measurement}"]/period/measurement'
+                        )
 
                         # Skip peak if not split (P1 Legacy)
                         if peak_select == "nl_offpeak":
@@ -763,7 +752,9 @@ class SmileHelper(Base):
                     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
                     if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
                         f_val = int(round(float(val)))
-                    if all(item in key_string for item in ["electricity", "cumulative"]):
+                    if all(
+                        item in key_string for item in ["electricity", "cumulative"]
+                    ):
                         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
                     # Energy differential
                     if "electricity" in measurement:
@@ -785,7 +776,6 @@ class SmileHelper(Base):
         if direct_data != {}:
             return direct_data
 
-
     def preset(self, loc_id):
         """
         Obtain the active preset based on the location_id.
@@ -804,7 +794,6 @@ class SmileHelper(Base):
         preset = self._domain_objects.find(locator)
         if preset is not None:
             return preset.text
-
 
     def schemas(self, loc_id):
         """Obtain the available schemas or schedules based on the location_id."""
@@ -846,7 +835,10 @@ class SmileHelper(Base):
         for rule_id, dummy in rule_ids.items():
             active = False
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            if self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text == "true":
+            if (
+                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
+                == "true"
+            ):
                 active = True
             schemas[name] = active
             schedules = {}
@@ -891,7 +883,6 @@ class SmileHelper(Base):
 
         return available, selected, schedule_temperature
 
-
     def last_active_schema(self, loc_id):
         """Determine the last active schema."""
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
@@ -918,7 +909,6 @@ class SmileHelper(Base):
 
         return last_modified
 
-
     def object_value(self, obj_type, obj_id, measurement):
         """Obtain the object-value from the thermostat."""
         search = self._domain_objects
@@ -932,4 +922,3 @@ class SmileHelper(Base):
             return val
 
         return None
-
