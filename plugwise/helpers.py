@@ -453,6 +453,18 @@ class Base:
         return preset_dictionary
 
 
+    def rule_ids_by_name(self, name, loc_id):
+        """Obtain the rule_id on the given name and location_id."""
+        schema_ids = {}
+        locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
+        for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
+            if rule.find(locator) is not None:
+                schema_ids[rule.attrib["id"]] = loc_id
+
+        if schema_ids != {}:
+            return schema_ids
+
+
     def rule_ids_by_tag(self, tag, loc_id):
         """Obtain the rule_id based on the given template_tag and location_id."""
         schema_ids = {}
@@ -922,14 +934,3 @@ class SmileHelper(Base):
 
         return None
 
-
-    def rule_ids_by_name(self, name, loc_id):
-        """Obtain the rule_id on the given name and location_id."""
-        schema_ids = {}
-        locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
-            if rule.find(locator) is not None:
-                schema_ids[rule.attrib["id"]] = loc_id
-
-        if schema_ids != {}:
-            return schema_ids
