@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.9.1 - Add Domestic Hot Water Comfort Mode switch - Feature request
+
 ## 0.9.0 - API change for stick
 
 - Improvement: Debounce relay state
@@ -44,6 +46,7 @@
     - `relay_state` (boolean) - State of the output power relay. Setting this property will operate the relay
   - Switch devices
     - `switch`  (boolean) - Last reported state of switch
+  - Stretch v2: fix failed connection by re-adding the aiohttp-workaround
 
 ## 0.8.6 - Code quality improvements for stick
 
@@ -63,7 +66,7 @@
 
 ## 0.8.5 - Fix sensor scaling
 
-- Fix for via HA Core issue #44349
+- Fix for HA Core issue #44349
 - Fix other value scaling bugs
 - Remove aiohttp-workaround - issue solved in aiohttp 3.7.1
 
