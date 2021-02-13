@@ -53,13 +53,8 @@ class Base:
         self._host = None
         self._port = None
         self._endpoint = None
-        self._appliances = None
-        self._domain_objects = None
         self._home_location = None
-        self._locations = None
-        #self._smile_legacy = False
         self._thermo_master_id = None
-
         self.active_device_present = False
         self.gateway_id = None
         self.heater_id = None
