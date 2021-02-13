@@ -256,7 +256,9 @@ class Base:
                 mod_type = "thermostat"
                 module_data = Base.get_module_data(self, appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
-                appliance_model = Base.check_model(self, module_data[1], appliance_v_name)
+                appliance_model = Base.check_model(
+                    self, module_data[1], appliance_v_name
+                )
                 appliance_fw = module_data[3]
 
             if appliance_class == "heater_central":
@@ -266,9 +268,13 @@ class Base:
                 mod_type = "boiler_state"
                 module_data = Base.get_module_data(self, appliance, locator1, mod_type)
                 if module_data == [None, None, None, None]:
-                    module_data = Base.get_module_data(self, appliance, locator2, mod_type)
+                    module_data = Base.get_module_data(
+                        self, appliance, locator2, mod_type
+                    )
                 appliance_v_name = module_data[0]
-                appliance_model = Base.check_model(self, module_data[1], appliance_v_name)
+                appliance_model = Base.check_model(
+                    self, module_data[1], appliance_v_name
+                )
                 appliance_name = "Auxiliary"
 
             if stretch_v2 or stretch_v3:
@@ -337,7 +343,6 @@ class Base:
 
         return
 
-
     def get_module_data(self, appliance, locator, mod_type):
         """Helper functie for finding info in MODULES."""
         appl_search = appliance.find(locator)
@@ -353,7 +358,6 @@ class Base:
                 return [v_name, v_model, hw_version, fw_version]
         return [None, None, None, None]
 
-
     def check_model(self, name, v_name):
         """Model checking before using version_to_model."""
         if v_name in ["Plugwise", "Plugwise B.V."]:
@@ -365,12 +369,10 @@ class Base:
         else:
             return name
 
-
     def pop_None_data(self, var, appl_id, idx):
         """Remove data when None."""
         if var is None:
             self._appl_data[appl_id].pop(idx, None)
-
 
     def match_locations(self):
         """Update locations with used types of appliances."""
