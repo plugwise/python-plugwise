@@ -398,7 +398,7 @@ class Base:
 
         rule_ids = Base.rule_ids_by_tag(self, tag, loc_id)
         if rule_ids is None:
-            rule_ids = rule_ids_by_name(self, "Thermostat presets", loc_id)
+            rule_ids = Base.rule_ids_by_name(self, "Thermostat presets", loc_id)
             if rule_ids is None:
                 return presets
 
@@ -921,9 +921,6 @@ class SmileHelper(Base):
             return val
 
         return None
-
-
-
 
 
     def rule_ids_by_name(self, name, loc_id):
