@@ -262,6 +262,9 @@ class Base:
                 appliance_fw = module_data[3]
 
             if appliance_class == "heater_central":
+            # Remove heater_central when no active device present
+                if not self.active_device_present:
+                    continue
                 self.heater_id = appliance.attrib["id"]
                 locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
                 locator2 = ".//services/boiler_state"
@@ -335,11 +338,6 @@ class Base:
         # For legacy Anna gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
             self.gateway_id = self.heater_id
-
-        # Remove heater_central when no active device present
-        if self.smile_type == "thermostat":
-            if not self.active_device_present:
-                self._appl_data.pop(self.heater_id)
 
         return
 
