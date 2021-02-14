@@ -119,7 +119,6 @@ class Base:
 
     def all_locations(self):
         """Determine available locations from inventory."""
-        self._home_location = None
         self._loc_data = {}
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
