@@ -319,9 +319,6 @@ class Base:
                 appliance_model = version_to_model(module_data[1])
                 appliance_fw = module_data[3]
 
-            if appliance_model == "Thermostat":
-                appliance_model = "Anna"
-
             self._appl_data[appliance_id] = {
                 "name": appliance_name,
                 "vendor": appliance_v_name,
@@ -334,6 +331,7 @@ class Base:
             Base.pop_None_data(self, appliance_v_name, appliance_id, "vendor")
             Base.pop_None_data(self, appliance_model, appliance_id, "model")
             Base.pop_None_data(self, appliance_fw, appliance_id, "fw")
+
         # For legacy Anna gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
             self.gateway_id = self.heater_id
