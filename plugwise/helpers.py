@@ -262,7 +262,7 @@ class Base:
                 appliance_fw = module_data[3]
 
             if appliance_class == "heater_central":
-            # Remove heater_central when no active device present
+                # Remove heater_central when no active device present
                 if not self.active_device_present:
                     continue
                 self.heater_id = appliance.attrib["id"]
