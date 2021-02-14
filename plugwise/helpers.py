@@ -332,9 +332,9 @@ class Base:
                 "class": appliance_class,
                 "location": appliance_location,
             }
-            #Base.pop_None_data(self, appliance_v_name, appliance_id, "vendor")
-            #Base.pop_None_data(self, appliance_model, appliance_id, "model")
-            #Base.pop_None_data(self, appliance_fw, appliance_id, "fw")
+            # Base.pop_None_data(self, appliance_v_name, appliance_id, "vendor")
+            # Base.pop_None_data(self, appliance_model, appliance_id, "model")
+            # Base.pop_None_data(self, appliance_fw, appliance_id, "fw")
 
         # For legacy Anna gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
