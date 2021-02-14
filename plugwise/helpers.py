@@ -282,8 +282,8 @@ class Base:
                 mod_type = "electricity_point_meter"
                 module_data = Base.get_module_data(self, appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
-                if appliance_name != "Group Switch":
-                    appliance_name = None
+                if appliance_model != "Group Switch":
+                    appliance_model = None
                 if module_data[2] is not None:
                     hw_version = module_data[2].replace("-", "")
                     appliance_model = version_to_model(hw_version)
