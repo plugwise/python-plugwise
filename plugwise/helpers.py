@@ -277,6 +277,8 @@ class Base:
                 appliance_model = Base.check_model(
                     self, module_data[1], appliance_v_name
                 )
+                if appliance_model is None:
+                    appliance_model = "Generic heater/cooler"
                 appliance_name = "Auxiliary"
 
             if stretch_v2 or stretch_v3:
