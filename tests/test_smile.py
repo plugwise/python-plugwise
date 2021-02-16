@@ -1068,7 +1068,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         try:
             await smile.delete_notification()
-            assert False
+            assert False  # pragma: no cover
         except pw_exceptions.ResponseError:
             assert True
 
