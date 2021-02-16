@@ -169,7 +169,8 @@ class Smile:
                     except InvalidXMLError:  # pragma: no cover
                         # Corner case check
                         raise ConnectionFailedError
-                else:
+                else:  # pragma: no cover
+                    # No cornercase, just end of the line
                     _LOGGER.error("Connected but no gateway device information found")
                     raise ConnectionFailedError
 

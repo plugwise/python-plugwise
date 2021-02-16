@@ -278,7 +278,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.error(" - invalid credentials not handled")
                 raise self.ConnectError
             except pw_exceptions.InvalidAuthentication:
-                _LOGGER.info(" + successfully passed credentials handling.")
+                _LOGGER.info(" + successfully aborted on credentials missing.")
+                raise pw_exceptions.InvalidAuthentication
 
         if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
@@ -1486,18 +1487,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect_wrapper(fail_auth=True)
             assert False
         except pw_exceptions.InvalidAuthentication:
-            _LOGGER.debug("InvalidAuthentication raised")
-            assert True
-        except Exception as exception:
-            _LOGGER.debug("Other")
-            _LOGGER.debug(format(exception))
+            _LOGGER.debug("InvalidAuthentication raised successfully")
             assert True
 
     @pytest.mark.asyncio
-    async def test_connect_p1vfail(self):
+    async def test_connect_fail_firmware(self):
         """Test a P1 non existing firmware setup."""
 
-        self.smile_setup = "p1vfail"
+        self.smile_setup = "fail_firmware"
         try:
             await self.connect_wrapper()
         except pw_exceptions.UnsupportedDeviceError:
