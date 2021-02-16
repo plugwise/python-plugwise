@@ -53,9 +53,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         broken=False,
         timeout=False,
         raise_timeout=False,
+        fail_auth=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
+
+        if fail_auth:
+            app.router.add_get("/{tail:.*}", self.smile_fail_auth)
+            app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
+            return app
+
         app.router.add_get("/core/appliances", self.smile_appliances)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
         app.router.add_get("/core/modules", self.smile_modules)
@@ -64,9 +71,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         if broken:
             app.router.add_get("/core/locations", self.smile_broken)
-        if timeout:
+        elif timeout:
             app.router.add_get("/core/locations", self.smile_timeout)
-        if not broken and not timeout:
+        else:
             app.router.add_get("/core/locations", self.smile_locations)
 
         # Introducte timeout with 2 seconds, test by setting response to 10ms
@@ -179,12 +186,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Render server error endpoint."""
         raise aiohttp.web.HTTPInternalServerError(text="Internal Server Error")
 
-    async def connect(self, broken=False, timeout=False, raise_timeout=False):
+    async def smile_fail_auth(self, request):
+        """Render authentication error endpoint."""
+        raise aiohttp.web.HTTPUnauthorized()
+
+    async def connect(
+        self, broken=False, timeout=False, raise_timeout=False, fail_auth=False
+    ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
 
         # Happy flow
-        app = await self.setup_app(broken, timeout, raise_timeout)
+        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -204,9 +217,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assumed_status = 500
         if timeout:
             assumed_status = 504
+        if fail_auth:
+            assumed_status = 401
         assert resp.status == assumed_status
 
-        if not broken and not timeout:
+        if not broken and not timeout and not fail_auth:
             text = await resp.text()
             assert "xml" in text
 
@@ -247,13 +262,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         except (
             pw_exceptions.DeviceTimeoutError,
             pw_exceptions.InvalidXMLError,
+            pw_exceptions.InvalidAuthentication,
         ) as exception:
             await self.disconnect(server, client)
             raise exception
 
     # Wrap connect for invalid connections
-    async def connect_wrapper(self, raise_timeout=False):
+    async def connect_wrapper(self, raise_timeout=False, fail_auth=False):
         """Wrap connect to try negative testing before positive testing."""
+
+        if fail_auth:
+            try:
+                _LOGGER.warning("Connecting to device with invalid credentials:")
+                await self.connect(fail_auth=fail_auth)
+                _LOGGER.error(" - invalid credentials not handled")
+                raise self.ConnectError
+            except pw_exceptions.InvalidAuthentication:
+                _LOGGER.info(" + successfully passed credentials handling.")
+
         if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
             return await self.connect(raise_timeout=True)
@@ -1024,24 +1050,27 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+
         await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
             good_schemas=["GF7  Woonkamer"],
             unhappy=True,
         )
+
         await self.tinker_thermostat(
             smile,
             "82fa13f017d240daa0d0ea1775420f24",
             good_schemas=["CV Jessie"],
             unhappy=True,
         )
+
         try:
             await smile.delete_notification()
             assert False
         except pw_exceptions.ResponseError:
-            print("HOI responseerror")
             assert True
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1407,6 +1436,38 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_p1v4(self):
+        """Test a P1 firmware 4 setup."""
+        # testdata dictionary with key ctrl_id_dev_id => keys:values
+        testdata = {
+            # Gateway / P1 itself
+            "ba4de7613517478da82dd9b6abea36af": {
+                "electricity_consumed_peak_point": 571,
+                "electricity_produced_peak_cumulative": 0.0,
+            }
+        }
+
+        self.smile_setup = "p1v4"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = power")
+        assert smile.smile_type == "power"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.1.1"
+        _LOGGER.info(" # Assert legacy")
+        assert not smile._smile_legacy  # pylint: disable=protected-access
+        _LOGGER.info(" # Assert no master thermostat")
+        assert smile.single_master_thermostat() is None  # it's not a thermostat :)
+
+        assert not smile.notifications
+
+        await self.device_test(smile, testdata)
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_fail_legacy_system(self):
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
@@ -1414,6 +1475,32 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _server, _smile, _client = await self.connect_wrapper()
             assert False
         except pw_exceptions.ConnectionFailedError:
+            assert True
+
+    @pytest.mark.asyncio
+    async def test_invalid_credentials(self):
+        """Test P1 with invalid credentials setup."""
+
+        self.smile_setup = "p1v4"
+        try:
+            await self.connect_wrapper(fail_auth=True)
+            assert False
+        except pw_exceptions.InvalidAuthentication:
+            _LOGGER.debug("InvalidAuthentication raised")
+            assert True
+        except Exception as exception:
+            _LOGGER.debug("Other")
+            _LOGGER.debug(format(exception))
+            assert True
+
+    @pytest.mark.asyncio
+    async def test_connect_p1vfail(self):
+        """Test a P1 non existing firmware setup."""
+
+        self.smile_setup = "p1vfail"
+        try:
+            await self.connect_wrapper()
+        except pw_exceptions.UnsupportedDeviceError:
             assert True
 
     class PlugwiseTestError(Exception):
