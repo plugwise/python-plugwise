@@ -11,7 +11,6 @@ from pprint import PrettyPrinter
 # String generation
 import random
 import string
-import sys
 
 # Testing
 import aiohttp
@@ -32,7 +31,7 @@ _LOGGER.setLevel(logging.DEBUG)
 # as inclusion point
 
 
-class TestPlugwise:
+class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     """Tests for Plugwise Smile."""
 
     def _write_json(self, call, data):
@@ -53,7 +52,7 @@ class TestPlugwise:
         self,
         broken=False,
         timeout=False,
-        put_timeout=False,
+        raise_timeout=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
@@ -72,7 +71,7 @@ class TestPlugwise:
 
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
-        if not put_timeout:
+        if not raise_timeout:
             app.router.add_route(
                 "PUT", "/core/locations{tail:.*}", self.smile_set_temp_or_preset
             )
@@ -80,10 +79,16 @@ class TestPlugwise:
             app.router.add_route(
                 "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
             )
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
+            )
         else:
             app.router.add_route("PUT", "/core/locations{tail:.*}", self.smile_timeout)
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_timeout)
             app.router.add_route("PUT", "/core/appliances{tail:.*}", self.smile_timeout)
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_timeout
+            )
 
         return app
 
@@ -94,9 +99,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.appliances.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_domain_objects(self, request):
@@ -105,9 +110,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.domain_objects.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_locations(self, request):
@@ -116,9 +121,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.locations.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_modules(self, request):
@@ -127,9 +132,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.modules.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_status(self, request):
@@ -139,12 +144,12 @@ class TestPlugwise:
                 os.path.dirname(__file__),
                 f"../userdata/{self.smile_setup}/system_status_xml.xml",
             )
-            f = open(userdata)
-            data = f.read()
-            f.close()
+            filedata = open(userdata)
+            data = filedata.read()
+            filedata.close()
             return aiohttp.web.Response(text=data)
         except OSError:
-            raise self.ConnectError
+            raise aiohttp.web.HTTPNotFound
 
     async def smile_set_temp_or_preset(self, request):
         """Render generic API calling endpoint."""
@@ -161,6 +166,11 @@ class TestPlugwise:
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
+    async def smile_del_notification(self, request):
+        """Render generic API calling endpoint."""
+        text = "<xml />"
+        raise aiohttp.web.HTTPAccepted(text=text)
+
     async def smile_timeout(self, request):
         """Render timeout endpoint."""
         raise asyncio.TimeoutError
@@ -169,12 +179,12 @@ class TestPlugwise:
         """Render server error endpoint."""
         raise aiohttp.web.HTTPInternalServerError(text="Internal Server Error")
 
-    async def connect(self, broken=False, timeout=False, put_timeout=False):
+    async def connect(self, broken=False, timeout=False, raise_timeout=False):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
 
         # Happy flow
-        app = await self.setup_app(broken, timeout, put_timeout)
+        app = await self.setup_app(broken, timeout, raise_timeout)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -200,6 +210,21 @@ class TestPlugwise:
             text = await resp.text()
             assert "xml" in text
 
+        # Test lack of websession
+        try:
+            smile = pw_smile.Smile(
+                host=server.host,
+                username="smile",
+                password="".join(
+                    random.choice(string.ascii_lowercase) for i in range(8)
+                ),
+                port=server.port,
+                websession=None,
+            )
+            assert False
+        except Exception:  # pylint disable=broad-except
+            assert True
+
         smile = pw_smile.Smile(
             host=server.host,
             username="smile",
@@ -219,16 +244,19 @@ class TestPlugwise:
             assert connection_state
             assert smile.smile_type is not None
             return server, smile, client
-        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.InvalidXMLError) as e:
+        except (
+            pw_exceptions.DeviceTimeoutError,
+            pw_exceptions.InvalidXMLError,
+        ) as exception:
             await self.disconnect(server, client)
-            raise e
+            raise exception
 
     # Wrap connect for invalid connections
-    async def connect_wrapper(self, put_timeout=False):
+    async def connect_wrapper(self, raise_timeout=False):
         """Wrap connect to try negative testing before positive testing."""
-        if put_timeout:
+        if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
-            return await self.connect(put_timeout=True)
+            return await self.connect(raise_timeout=True)
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
@@ -479,7 +507,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -540,7 +568,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -587,7 +615,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
 
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2_2(self):
@@ -674,7 +702,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -709,7 +737,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -766,7 +794,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -823,7 +851,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -884,7 +912,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
@@ -982,6 +1010,7 @@ class TestPlugwise:
         assert not smile.single_master_thermostat()
 
         assert "af82e4ccf9c548528166d38e560662a4" in smile.notifications
+        await smile.delete_notification()
 
         await self.device_test(smile, testdata)
         await self.tinker_thermostat(
@@ -994,7 +1023,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
@@ -1007,6 +1036,12 @@ class TestPlugwise:
             good_schemas=["CV Jessie"],
             unhappy=True,
         )
+        try:
+            await smile.delete_notification()
+            assert False
+        except pw_exceptions.ResponseError:
+            print("HOI responseerror")
+            assert True
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1077,7 +1112,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
