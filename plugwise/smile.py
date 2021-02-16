@@ -155,7 +155,7 @@ class Smile:
                         model = status.find(".//system/product").text
                         self.smile_hostname = status.find(".//network/hostname").text
                     except InvalidXMLError:  # pragma: no cover
-                        """Corner case check."""
+                        # Corner case check
                         raise ConnectionFailedError
 
                 # Stretch:
@@ -167,7 +167,7 @@ class Smile:
                         self.smile_hostname = system.find(".//gateway/hostname").text
                         self.gateway_id = network.attrib["id"]
                     except InvalidXMLError:  # pragma: no cover
-                        """Corner case check."""
+                        # Corner case check
                         raise ConnectionFailedError
                 else:
                     _LOGGER.error("Connected but no gateway device information found")
@@ -178,7 +178,7 @@ class Smile:
             version = result.find(".//gateway/firmware_version").text
 
         if model is None or version is None:  # pragma: no cover
-            """Corner case check."""
+            # Corner case check
             _LOGGER.error("Unable to find model or version information")
             raise UnsupportedDeviceError
 
