@@ -242,9 +242,10 @@ class Base:
             # Find gateway and heater_central devices
             if appliance_class == "gateway":
                 self.gateway_id = appliance.attrib["id"]
+                appliance_fw = self.smile_version[0]
                 appliance_model = f"Smile {self.smile_name}"
                 appliance_name = self.smile_name
-                appliance_fw = self.smile_version[0]
+                appliance_v_name = "Plugwise B.V."
 
             if appliance_class in [
                 "thermostat",
