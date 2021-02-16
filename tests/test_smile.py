@@ -275,8 +275,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 _LOGGER.warning("Connecting to device with invalid credentials:")
                 await self.connect(fail_auth=fail_auth)
-                _LOGGER.error(" - invalid credentials not handled")
-                raise self.ConnectError
+                _LOGGER.error(" - invalid credentials not handled")  # pragma: no cover
+                raise self.ConnectError  # pragma: no cover
             except pw_exceptions.InvalidAuthentication:
                 _LOGGER.info(" + successfully aborted on credentials missing.")
                 raise pw_exceptions.InvalidAuthentication
@@ -288,16 +288,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
             await self.connect(timeout=True)
-            _LOGGER.error(" - timeout not handled")
-            raise self.ConnectError
+            _LOGGER.error(" - timeout not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
         except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
             _LOGGER.warning("Connecting to device with missing data:")
             await self.connect(broken=True)
-            _LOGGER.error(" - broken information not handled")
-            raise self.ConnectError
+            _LOGGER.error(" - broken information not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
             _LOGGER.info(" + successfully passed XML issue handling.")
 
@@ -405,14 +405,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected")
-                    else:
+                    else:  # pragma: no cover
                         _LOGGER.info("  - failed unexpectedly")
                         raise self.UnexpectedError
 
     @pytest.mark.asyncio
     async def tinker_thermostat(self, smile, loc_id, good_schemas=None, unhappy=False):
         """Toggle various climate settings to test functionality."""
-        if good_schemas is None:
+        if good_schemas is None:  # pragma: no cover
             good_schemas = ["Weekschema"]
 
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
@@ -428,7 +428,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
-                else:
+                else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
@@ -450,7 +450,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
-                else:
+                else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
@@ -476,10 +476,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
-                    else:
+                    else:  # pragma: no cover
                         _LOGGER.info("  - succeeded unexpectedly for some reason")
                         raise self.UnexpectedError
-        else:
+        else:  # pragma: no cover
             _LOGGER.info("- Skipping schema adjustments")
 
     @pytest.mark.asyncio
@@ -1474,7 +1474,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "faulty_stretch"
         try:
             _server, _smile, _client = await self.connect_wrapper()
-            assert False
+            assert False  # pragma: no cover
         except pw_exceptions.ConnectionFailedError:
             assert True
 
@@ -1485,7 +1485,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "p1v4"
         try:
             await self.connect_wrapper(fail_auth=True)
-            assert False
+            assert False  # pragma: no cover
         except pw_exceptions.InvalidAuthentication:
             _LOGGER.debug("InvalidAuthentication raised successfully")
             assert True
@@ -1497,6 +1497,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "fail_firmware"
         try:
             await self.connect_wrapper()
+            assert False  # pragma: no cover
         except pw_exceptions.UnsupportedDeviceError:
             assert True
 
