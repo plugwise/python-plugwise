@@ -325,13 +325,13 @@ class Base:
                 appliance_fw = module_data[3]
 
             self._appl_data[appliance_id] = {
-                "name": appliance_name,
-                "vendor": appliance_v_name,
-                "model": appliance_model,
-                "fw": appliance_fw,
-                "types": appliance_types,
                 "class": appliance_class,
+                "fw": appliance_fw,
                 "location": appliance_location,
+                "model": appliance_model,
+                "name": appliance_name,
+                "types": appliance_types,
+                "vendor": appliance_v_name,
             }
             # Base.pop_None_data(self, appliance_v_name, appliance_id, "vendor")
             # Base.pop_None_data(self, appliance_model, appliance_id, "model")
@@ -682,12 +682,13 @@ class SmileHelper(Base):
 
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl[group_id] = {
-                    "name": group_name,
-                    "model": "Group Switch",
-                    "types": {"switch_group"},
                     "class": group_type,
-                    "members": members,
                     "location": None,
+                    "members": members,
+                    "model": "Group Switch",
+                    "name": group_name,
+                    "types": {"switch_group"},
+                    "vendor": "Plugwise",
                 }
 
             switch_groups.update(group_appl)
