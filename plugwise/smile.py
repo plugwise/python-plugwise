@@ -216,7 +216,7 @@ class Smile:
         devices = {}
         sh.scan_thermostats(self)
 
-        for appliance, details in self._appl_data.items():
+        for appliance, details in self.appl_data.items():
             loc_id = details["location"]
             if loc_id is None:
                 details["location"] = self._home_location

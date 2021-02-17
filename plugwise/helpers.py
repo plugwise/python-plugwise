@@ -192,7 +192,7 @@ class Base:
 
     def all_appliances(self):
         """Determine available appliances from inventory."""
-        self._appl_data = {}
+        self.appl_data = {}
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
@@ -201,7 +201,7 @@ class Base:
         if self._smile_legacy and self.smile_type == "power":
             # Inject home_location as dev_id for legacy so
             # _appliance_data can use loc_id for dev_id.
-            self._appl_data[self._home_location] = {
+            self.appl_data[self._home_location] = {
                 "name": "P1",
                 "model": "Smile P1",
                 "types": {"power", "home"},
@@ -324,7 +324,7 @@ class Base:
                 appliance_model = version_to_model(module_data[1])
                 appliance_fw = module_data[3]
 
-            self._appl_data[appliance_id] = {
+            self.appl_data[appliance_id] = {
                 "class": appliance_class,
                 "fw": appliance_fw,
                 "location": appliance_location,
@@ -333,9 +333,6 @@ class Base:
                 "types": appliance_types,
                 "vendor": appliance_v_name,
             }
-            # Base.pop_None_data(self, appliance_v_name, appliance_id, "vendor")
-            # Base.pop_None_data(self, appliance_model, appliance_id, "model")
-            # Base.pop_None_data(self, appliance_fw, appliance_id, "fw")
 
         # For legacy Anna gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
@@ -369,18 +366,13 @@ class Base:
         else:
             return name
 
-    def pop_None_data(self, var, appl_id, idx):
-        """Remove data when None."""
-        if var is None:
-            self._appl_data[appl_id].pop(idx, None)
-
     def match_locations(self):
         """Update locations with used types of appliances."""
         matched_locations = {}
 
         Base.all_appliances(self)
         for location_id, location_details in self._loc_data.items():
-            for dummy, appliance_details in self._appl_data.items():
+            for dummy, appliance_details in self.appl_data.items():
                 if appliance_details["location"] == location_id:
                     for appl_type in appliance_details["types"]:
                         location_details["types"].add(appl_type)
