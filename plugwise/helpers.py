@@ -600,7 +600,7 @@ class SmileHelper(Base):
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
 
-            for appliance_id, appliance_details in self._appl_data.items():
+            for appliance_id, appliance_details in self.appl_data.items():
 
                 appl_class = appliance_details["class"]
                 if (
