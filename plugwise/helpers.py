@@ -43,8 +43,8 @@ from .util import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class Base:
-    """Define the Base object."""
+class SmileHelper:
+    """Define the SmileHelper object."""
 
     def __init__(self):
         """Set the constructor for this class."""
@@ -91,7 +91,7 @@ class Base:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
                 raise DeviceTimeoutError
-            return await self.request(command, retry - 1)
+            return await SmileHelper.request(self, command, retry - 1)
 
         # Command accepted gives empty body with status 202
         if resp.status == 202:
@@ -163,7 +163,7 @@ class Base:
                 home_location = location_id
                 location_types.add("home")
 
-                for location_type in Base.types_finder(self, location):
+                for location_type in SmileHelper.types_finder(self, location):
                     location_types.add(location_type)
 
             # Legacy P1 right location has 'services' filled
@@ -196,7 +196,7 @@ class Base:
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
-        Base.all_locations(self)
+        SmileHelper.all_locations(self)
 
         if self._smile_legacy and self.smile_type == "power":
             # Inject home_location as dev_id for legacy so
@@ -254,9 +254,9 @@ class Base:
             ]:
                 locator = ".//logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
-                module_data = Base.get_module_data(self, appliance, locator, mod_type)
+                module_data = SmileHelper.get_module_data(self, appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
-                appliance_model = Base.check_model(
+                appliance_model = SmileHelper.check_model(
                     self, module_data[1], appliance_v_name
                 )
                 appliance_fw = module_data[3]
@@ -269,13 +269,13 @@ class Base:
                 locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
                 locator2 = ".//services/boiler_state"
                 mod_type = "boiler_state"
-                module_data = Base.get_module_data(self, appliance, locator1, mod_type)
+                module_data = SmileHelper.get_module_data(self, appliance, locator1, mod_type)
                 if module_data == [None, None, None, None]:
-                    module_data = Base.get_module_data(
+                    module_data = SmileHelper.get_module_data(
                         self, appliance, locator2, mod_type
                     )
                 appliance_v_name = module_data[0]
-                appliance_model = Base.check_model(
+                appliance_model = SmileHelper.check_model(
                     self, module_data[1], appliance_v_name
                 )
                 if appliance_model is None:
@@ -285,7 +285,7 @@ class Base:
             if stretch_v2 or stretch_v3:
                 locator = ".//services/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = Base.get_module_data(self, appliance, locator, mod_type)
+                module_data = SmileHelper.get_module_data(self, appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
                 if appliance_model != "Group Switch":
                     appliance_model = None
@@ -297,7 +297,7 @@ class Base:
             # Appliance with location (i.e. a device)
             if appliance.find("location") is not None:
                 appliance_location = appliance.find("location").attrib["id"]
-                for appl_type in Base.types_finder(self, appliance):
+                for appl_type in SmileHelper.types_finder(self, appliance):
                     appliance_types.add(appl_type)
             else:
                 # Return all types applicable to home
@@ -319,7 +319,7 @@ class Base:
             if self.smile_type != "stretch" and "plug" in appliance_types:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = Base.get_module_data(self, appliance, locator, mod_type)
+                module_data = SmileHelper.get_module_data(self, appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
                 appliance_model = version_to_model(module_data[1])
                 appliance_fw = module_data[3]
@@ -370,7 +370,7 @@ class Base:
         """Update locations with used types of appliances."""
         matched_locations = {}
 
-        Base.all_appliances(self)
+        SmileHelper.all_appliances(self)
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self.appl_data.items():
                 if appliance_details["location"] == location_id:
@@ -387,11 +387,11 @@ class Base:
         tag = "zone_setpoint_and_state_based_on_preset"
 
         if self._smile_legacy:
-            return Base.presets_legacy(self)
+            return SmileHelper.presets_legacy(self)
 
-        rule_ids = Base.rule_ids_by_tag(self, tag, loc_id)
+        rule_ids = SmileHelper.rule_ids_by_tag(self, tag, loc_id)
         if rule_ids is None:
-            rule_ids = Base.rule_ids_by_name(self, "Thermostat presets", loc_id)
+            rule_ids = SmileHelper.rule_ids_by_name(self, "Thermostat presets", loc_id)
             if rule_ids is None:
                 return presets
 
@@ -475,12 +475,9 @@ class Base:
         return f"{APPLIANCES};id={appliance_id}/thermostat"
 
 
-class SmileHelper(Base):
-    """Define the SmileHelper object."""
-
     async def update_domain_objects(self):
         """Request domain_objects data."""
-        self._domain_objects = await Base.request(self, DOMAIN_OBJECTS)
+        self._domain_objects = await SmileHelper.request(self, DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
         self.notifications = {}
@@ -558,7 +555,7 @@ class SmileHelper(Base):
 
     def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
-        self.thermo_locs = Base.match_locations(self)
+        self.thermo_locs = SmileHelper.match_locations(self)
 
         thermo_matching = {
             "thermostat": 3,
@@ -618,7 +615,7 @@ class SmileHelper(Base):
     def temperature_uri(self, loc_id):
         """Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
-            return Base.temperature_uri_legacy(self)
+            return SmileHelper.temperature_uri_legacy(self)
 
         locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
@@ -802,7 +799,7 @@ class SmileHelper(Base):
 
         # Current schemas
         tag = "zone_preset_based_on_time_and_presence_with_override"
-        rule_ids = Base.rule_ids_by_tag(self, tag, loc_id)
+        rule_ids = SmileHelper.rule_ids_by_tag(self, tag, loc_id)
 
         if rule_ids is None:
             return available, selected, schedule_temperature
@@ -833,7 +830,7 @@ class SmileHelper(Base):
                 keys, dummy = zip(*schedule.items())
                 if str(keys[0]) == "preset":
                     schedules[directive.attrib["time"]] = float(
-                        Base.presets(self, loc_id)[schedule["preset"]][0]
+                        SmileHelper.presets(self, loc_id)[schedule["preset"]][0]
                     )
                 else:
                     schedules[directive.attrib["time"]] = float(schedule["setpoint"])
@@ -867,7 +864,7 @@ class SmileHelper(Base):
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
 
-        rule_ids = Base.rule_ids_by_tag(self, tag, loc_id)
+        rule_ids = SmileHelper.rule_ids_by_tag(self, tag, loc_id)
         if rule_ids is None:
             return
 
