@@ -478,10 +478,6 @@ class Base:
 class SmileHelper(Base):
     """Define the SmileHelper object."""
 
-    async def update_appliances(self):
-        """Request appliance data."""
-        self._appliances = await Base.request(self, APPLIANCES)
-
     async def update_domain_objects(self):
         """Request domain_objects data."""
         self._domain_objects = await Base.request(self, DOMAIN_OBJECTS)
@@ -502,14 +498,6 @@ class SmileHelper(Base):
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     url,
                 )
-
-    async def update_locations(self):
-        """Request locations data."""
-        self._locations = await Base.request(self, LOCATIONS)
-
-    async def update_modules(self):
-        """Request modules data."""
-        self._modules = await Base.request(self, MODULES)
 
     def appliance_data(self, dev_id):
         """
