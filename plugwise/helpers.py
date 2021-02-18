@@ -480,15 +480,11 @@ class SmileHelper(Base):
 
     async def update_appliances(self):
         """Request appliance data."""
-        new_data = await Base.request(self, APPLIANCES)
-        if new_data is not None:
-            self._appliances = new_data
+        self._appliances = await Base.request(self, APPLIANCES)
 
     async def update_domain_objects(self):
         """Request domain_objects data."""
-        new_data = await Base.request(self, DOMAIN_OBJECTS)
-        if new_data is not None:
-            self._domain_objects = new_data
+        self._domain_objects = await Base.request(self, DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
         self.notifications = {}
@@ -509,20 +505,15 @@ class SmileHelper(Base):
 
     async def update_locations(self):
         """Request locations data."""
-        new_data = await Base.request(self, LOCATIONS)
-        if new_data is not None:
-            self._locations = new_data
+        self._locations = await Base.request(self, LOCATIONS)
 
     async def update_modules(self):
         """Request modules data."""
-        new_data = await Base.request(self, MODULES)
-        if new_data is not None:
-            self._modules = new_data
+        self._modules = await Base.request(self, MODULES)
 
     def appliance_data(self, dev_id):
         """
         Obtain the appliance-data connected to a location.
-
         Determined from APPLIANCES or legacy DOMAIN_OBJECTS.
         """
         data = {}
@@ -776,7 +767,6 @@ class SmileHelper(Base):
     def preset(self, loc_id):
         """
         Obtain the active preset based on the location_id.
-
         Determined from DOMAIN_OBJECTS.
         """
         if self._smile_legacy:
