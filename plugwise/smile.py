@@ -306,7 +306,7 @@ class Smile:
     def single_master_thermostat(self):
         """Determine if there is a single master thermostat in the setup."""
         if self.smile_type != "thermostat":
-            self.thermo_locs = b.match_locations(self)
+            self.thermo_locs = sh.match_locations(self)
             return None
 
         count = 0
