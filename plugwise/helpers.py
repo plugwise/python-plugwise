@@ -254,7 +254,9 @@ class SmileHelper:
             ]:
                 locator = ".//logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
-                module_data = SmileHelper.get_module_data(self, appliance, locator, mod_type)
+                module_data = SmileHelper.get_module_data(
+                    self, appliance, locator, mod_type
+                )
                 appliance_v_name = module_data[0]
                 appliance_model = SmileHelper.check_model(
                     self, module_data[1], appliance_v_name
@@ -269,7 +271,9 @@ class SmileHelper:
                 locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
                 locator2 = ".//services/boiler_state"
                 mod_type = "boiler_state"
-                module_data = SmileHelper.get_module_data(self, appliance, locator1, mod_type)
+                module_data = SmileHelper.get_module_data(
+                    self, appliance, locator1, mod_type
+                )
                 if module_data == [None, None, None, None]:
                     module_data = SmileHelper.get_module_data(
                         self, appliance, locator2, mod_type
@@ -285,7 +289,9 @@ class SmileHelper:
             if stretch_v2 or stretch_v3:
                 locator = ".//services/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = SmileHelper.get_module_data(self, appliance, locator, mod_type)
+                module_data = SmileHelper.get_module_data(
+                    self, appliance, locator, mod_type
+                )
                 appliance_v_name = module_data[0]
                 if appliance_model != "Group Switch":
                     appliance_model = None
@@ -319,7 +325,9 @@ class SmileHelper:
             if self.smile_type != "stretch" and "plug" in appliance_types:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = SmileHelper.get_module_data(self, appliance, locator, mod_type)
+                module_data = SmileHelper.get_module_data(
+                    self, appliance, locator, mod_type
+                )
                 appliance_v_name = module_data[0]
                 appliance_model = version_to_model(module_data[1])
                 appliance_fw = module_data[3]
@@ -473,7 +481,6 @@ class SmileHelper:
         appliance_id = self._appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
-
 
     async def update_domain_objects(self):
         """Request domain_objects data."""

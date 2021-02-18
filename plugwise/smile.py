@@ -204,7 +204,7 @@ class Smile:
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
-             self._appliances = await sh.request(self, APPLIANCES)
+            self._appliances = await sh.request(self, APPLIANCES)
 
     def get_all_devices(self):
         """Determine available devices from inventory."""
