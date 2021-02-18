@@ -185,7 +185,7 @@ class Smile:
         """Close the Plugwise connection."""
         await self.websession.close()
 
-    async def full_device(self):
+    async def full_update_device(self):
         """Update all XML data from device."""
         await sh.update_domain_objects(self)
         await sh.request(self, LOCATIONS)
