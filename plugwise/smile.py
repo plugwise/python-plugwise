@@ -188,15 +188,15 @@ class Smile:
     async def full_update_device(self):
         """Update all XML data from device."""
         await sh.update_domain_objects(self)
-        await sh.request(self, LOCATIONS)
+        self._locations = await sh.request(self, LOCATIONS)
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
-            await sh.request(self, APPLIANCES)
+            self._appliances = await sh.request(self, APPLIANCES)
 
         # No need to import modules for P1, no userfull info
         if self.smile_type != "power":
-            await sh.request(self, MODULES)
+            self._modules = await sh.request(self, MODULES)
 
     async def update_device(self):
         """Update all XML data from device."""
@@ -204,8 +204,7 @@ class Smile:
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
-            await sh.request(self, APPLIANCES)
-
+             self._appliances = await sh.request(self, APPLIANCES)
 
     def get_all_devices(self):
         """Determine available devices from inventory."""
