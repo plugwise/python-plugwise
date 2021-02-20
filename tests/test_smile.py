@@ -1131,6 +1131,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "electricity_consumed": 12.2,
                 "relay": True,
             },
+            # Fake heater_central
+            "90986d591dcd426cae3ec3e8111ff730":{
+                "heating_state": True
+            }
         }
 
         self.smile_setup = "adam_multiple_devices_per_zone"
