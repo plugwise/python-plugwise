@@ -1008,7 +1008,7 @@ class SmileHelper:
         for appliance in self._appliances.findall(".//appliance"):
             locator = './/logs/point_log[type="valve_position"]/period/measurement'
             if appliance.find(locator) is not None:
-                loc_found +=1
+                loc_found += 1
                 measure = appliance.find(locator).text
                 if float(measure) > 0.0:
                     open_valve_count += 1
