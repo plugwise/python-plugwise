@@ -949,7 +949,6 @@ class SmileHelper:
                     if thermo_matching[appl_class] > high_prio:
                         high_prio = thermo_matching[appl_class]
 
-
     def temperature_uri(self, loc_id):
         """Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
