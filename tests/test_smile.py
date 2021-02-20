@@ -1013,7 +1013,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "b310b72a0e354bfab43089919b9a88bf": {
                 "setpoint": 21.5,
                 "temperature": 26.2,
-                "valve_position": 100,
+                "valve_position": 0,
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
