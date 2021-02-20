@@ -288,7 +288,9 @@ class SmileHelper:
                     self, module_data[1], appliance_v_name
                 )
                 if appliance_model is None:
-                    appliance_model = "Generic heater" if self._cp_state else "Generic heater/cooler"
+                    appliance_model = (
+                        "Generic heater" if self._cp_state else "Generic heater/cooler"
+                    )
 
             if stretch_v2 or stretch_v3:
                 locator = ".//services/electricity_point_meter"
