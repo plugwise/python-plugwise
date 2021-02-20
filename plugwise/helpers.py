@@ -219,7 +219,9 @@ class SmileHelper:
         # scan for the same functionality
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        self._cp_state = self._appliances.find(".//logs/point_log[type='compressor_state']")
+        self._cp_state = self._appliances.find(
+            ".//logs/point_log[type='compressor_state']"
+        )
         fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
         bl_state = self._appliances.find(".//services/boiler_state")
         if self._cp_state or fl_state or bl_state:
@@ -284,7 +286,7 @@ class SmileHelper:
                     self, module_data[1], appliance_v_name
                 )
                 if appliance_model is None:
-                    appliance_model = "Generic heater"                    
+                    appliance_model = "Generic heater"
                     if self._cp_state:
                         appliance_model = "Generic heater/cooler"
                 appliance_name = "Auxiliary"
