@@ -1531,14 +1531,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         except pw_exceptions.UnsupportedDeviceError:
             assert True
 
-
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""
 
-
     class ConnectError(PlugwiseTestError):
         """Raised when connectivity test fails."""
-
 
     class UnexpectedError(PlugwiseTestError):
         """Raised when something went against logic."""
