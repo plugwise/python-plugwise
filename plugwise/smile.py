@@ -76,13 +76,15 @@ class Smile:
         if not websession:
 
             async def _create_session() -> aiohttp.ClientSession:
-                return aiohttp.ClientSession()
+                return aiohttp.ClientSession()  # pragma: no cover
 
             loop = asyncio.get_event_loop()
             if loop.is_running():
                 self.websession = aiohttp.ClientSession()
             else:
-                self.websession = loop.run_until_complete(_create_session())
+                self.websession = loop.run_until_complete(
+                    _create_session()
+                )  # pragma: no cover
         else:
             self.websession = websession
 
@@ -119,7 +121,7 @@ class Smile:
             names.append(name.text)
 
         if "Plugwise" not in names:
-            if dsmrmain is None:
+            if dsmrmain is None:  # pragma: no cover
                 _LOGGER.error(
                     "Connected but expected text not returned, \
                               we got %s",
@@ -152,7 +154,8 @@ class Smile:
                         version = status.find(".//system/version").text
                         model = status.find(".//system/product").text
                         self.smile_hostname = status.find(".//network/hostname").text
-                    except InvalidXMLError:
+                    except InvalidXMLError:  # pragma: no cover
+                        # Corner case check
                         raise ConnectionFailedError
 
                 # Stretch:
@@ -163,9 +166,11 @@ class Smile:
                         model = system.find(".//gateway/product").text
                         self.smile_hostname = system.find(".//gateway/hostname").text
                         self.gateway_id = network.attrib["id"]
-                    except InvalidXMLError:
+                    except InvalidXMLError:  # pragma: no cover
+                        # Corner case check
                         raise ConnectionFailedError
-                else:
+                else:  # pragma: no cover
+                    # No cornercase, just end of the line
                     _LOGGER.error("Connected but no gateway device information found")
                     raise ConnectionFailedError
 
@@ -173,7 +178,8 @@ class Smile:
             model = result.find(".//gateway/vendor_model").text
             version = result.find(".//gateway/firmware_version").text
 
-        if model is None or version is None:
+        if model is None or version is None:  # pragma: no cover
+            # Corner case check
             _LOGGER.error("Unable to find model or version information")
             raise UnsupportedDeviceError
 
@@ -293,7 +299,7 @@ class Smile:
                 msg = notification.find("message").text
                 self.notifications.update({msg_id: {msg_type: msg}})
                 _LOGGER.debug("Plugwise notifications: %s", self.notifications)
-            except AttributeError:
+            except AttributeError:  # pragma: no cover
                 _LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     url,
@@ -316,24 +322,24 @@ class Smile:
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
             await self.update_appliances()
-            if self._appliances is None:
+            if self._appliances is None:  # pragma: no cover
                 _LOGGER.error("Appliance data missing")
                 raise XMLDataMissingError
 
         await self.update_domain_objects()
-        if self._domain_objects is None:
+        if self._domain_objects is None:  # pragma: no cover
             _LOGGER.error("Domain_objects data missing")
             raise XMLDataMissingError
 
         await self.update_locations()
-        if self._locations is None:
+        if self._locations is None:  # pragma: no cover
             _LOGGER.error("Locataion data missing")
             raise XMLDataMissingError
 
         # Stretch_v2 only uses modules
         if self.smile_type == "stretch" and self.smile_version[1].major == 2:
             await self.update_modules()
-            if self._modules is None:
+            if self._modules is None:  # pragma: no cover
                 _LOGGER.error("Modules data missing")
                 raise XMLDataMissingError
 
@@ -577,7 +583,7 @@ class Smile:
                 locations[loc_id].update(
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
-            else:
+            else:  # pragma: no cover
                 continue
 
             for appliance_id, appliance_details in appliances.items():

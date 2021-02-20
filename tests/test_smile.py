@@ -11,7 +11,6 @@ from pprint import PrettyPrinter
 # String generation
 import random
 import string
-import sys
 
 # Testing
 import aiohttp
@@ -32,7 +31,7 @@ _LOGGER.setLevel(logging.DEBUG)
 # as inclusion point
 
 
-class TestPlugwise:
+class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     """Tests for Plugwise Smile."""
 
     def _write_json(self, call, data):
@@ -53,10 +52,17 @@ class TestPlugwise:
         self,
         broken=False,
         timeout=False,
-        put_timeout=False,
+        raise_timeout=False,
+        fail_auth=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
+
+        if fail_auth:
+            app.router.add_get("/{tail:.*}", self.smile_fail_auth)
+            app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
+            return app
+
         app.router.add_get("/core/appliances", self.smile_appliances)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
         app.router.add_get("/core/modules", self.smile_modules)
@@ -65,14 +71,14 @@ class TestPlugwise:
 
         if broken:
             app.router.add_get("/core/locations", self.smile_broken)
-        if timeout:
+        elif timeout:
             app.router.add_get("/core/locations", self.smile_timeout)
-        if not broken and not timeout:
+        else:
             app.router.add_get("/core/locations", self.smile_locations)
 
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
-        if not put_timeout:
+        if not raise_timeout:
             app.router.add_route(
                 "PUT", "/core/locations{tail:.*}", self.smile_set_temp_or_preset
             )
@@ -80,10 +86,16 @@ class TestPlugwise:
             app.router.add_route(
                 "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
             )
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
+            )
         else:
             app.router.add_route("PUT", "/core/locations{tail:.*}", self.smile_timeout)
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_timeout)
             app.router.add_route("PUT", "/core/appliances{tail:.*}", self.smile_timeout)
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_timeout
+            )
 
         return app
 
@@ -94,9 +106,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.appliances.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_domain_objects(self, request):
@@ -105,9 +117,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.domain_objects.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_locations(self, request):
@@ -116,9 +128,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.locations.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_modules(self, request):
@@ -127,9 +139,9 @@ class TestPlugwise:
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.modules.xml",
         )
-        f = open(userdata)
-        data = f.read()
-        f.close()
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
         return aiohttp.web.Response(text=data)
 
     async def smile_status(self, request):
@@ -139,12 +151,12 @@ class TestPlugwise:
                 os.path.dirname(__file__),
                 f"../userdata/{self.smile_setup}/system_status_xml.xml",
             )
-            f = open(userdata)
-            data = f.read()
-            f.close()
+            filedata = open(userdata)
+            data = filedata.read()
+            filedata.close()
             return aiohttp.web.Response(text=data)
         except OSError:
-            raise self.ConnectError
+            raise aiohttp.web.HTTPNotFound
 
     async def smile_set_temp_or_preset(self, request):
         """Render generic API calling endpoint."""
@@ -161,6 +173,11 @@ class TestPlugwise:
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
+    async def smile_del_notification(self, request):
+        """Render generic API calling endpoint."""
+        text = "<xml />"
+        raise aiohttp.web.HTTPAccepted(text=text)
+
     async def smile_timeout(self, request):
         """Render timeout endpoint."""
         raise asyncio.TimeoutError
@@ -169,12 +186,18 @@ class TestPlugwise:
         """Render server error endpoint."""
         raise aiohttp.web.HTTPInternalServerError(text="Internal Server Error")
 
-    async def connect(self, broken=False, timeout=False, put_timeout=False):
+    async def smile_fail_auth(self, request):
+        """Render authentication error endpoint."""
+        raise aiohttp.web.HTTPUnauthorized()
+
+    async def connect(
+        self, broken=False, timeout=False, raise_timeout=False, fail_auth=False
+    ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
 
         # Happy flow
-        app = await self.setup_app(broken, timeout, put_timeout)
+        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -194,11 +217,28 @@ class TestPlugwise:
             assumed_status = 500
         if timeout:
             assumed_status = 504
+        if fail_auth:
+            assumed_status = 401
         assert resp.status == assumed_status
 
-        if not broken and not timeout:
+        if not broken and not timeout and not fail_auth:
             text = await resp.text()
             assert "xml" in text
+
+        # Test lack of websession
+        try:
+            smile = pw_smile.Smile(
+                host=server.host,
+                username="smile",
+                password="".join(
+                    random.choice(string.ascii_lowercase) for i in range(8)
+                ),
+                port=server.port,
+                websession=None,
+            )
+            assert False
+        except Exception:  # pylint disable=broad-except
+            assert True
 
         smile = pw_smile.Smile(
             host=server.host,
@@ -219,30 +259,45 @@ class TestPlugwise:
             assert connection_state
             assert smile.smile_type is not None
             return server, smile, client
-        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.InvalidXMLError) as e:
+        except (
+            pw_exceptions.DeviceTimeoutError,
+            pw_exceptions.InvalidXMLError,
+            pw_exceptions.InvalidAuthentication,
+        ) as exception:
             await self.disconnect(server, client)
-            raise e
+            raise exception
 
     # Wrap connect for invalid connections
-    async def connect_wrapper(self, put_timeout=False):
+    async def connect_wrapper(self, raise_timeout=False, fail_auth=False):
         """Wrap connect to try negative testing before positive testing."""
-        if put_timeout:
+
+        if fail_auth:
+            try:
+                _LOGGER.warning("Connecting to device with invalid credentials:")
+                await self.connect(fail_auth=fail_auth)
+                _LOGGER.error(" - invalid credentials not handled")  # pragma: no cover
+                raise self.ConnectError  # pragma: no cover
+            except pw_exceptions.InvalidAuthentication:
+                _LOGGER.info(" + successfully aborted on credentials missing.")
+                raise pw_exceptions.InvalidAuthentication
+
+        if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
-            return await self.connect(put_timeout=True)
+            return await self.connect(raise_timeout=True)
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
             await self.connect(timeout=True)
-            _LOGGER.error(" - timeout not handled")
-            raise self.ConnectError
+            _LOGGER.error(" - timeout not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
         except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
             _LOGGER.warning("Connecting to device with missing data:")
             await self.connect(broken=True)
-            _LOGGER.error(" - broken information not handled")
-            raise self.ConnectError
+            _LOGGER.error(" - broken information not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
             _LOGGER.info(" + successfully passed XML issue handling.")
 
@@ -350,14 +405,14 @@ class TestPlugwise:
                 ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected")
-                    else:
+                    else:  # pragma: no cover
                         _LOGGER.info("  - failed unexpectedly")
                         raise self.UnexpectedError
 
     @pytest.mark.asyncio
     async def tinker_thermostat(self, smile, loc_id, good_schemas=None, unhappy=False):
         """Toggle various climate settings to test functionality."""
-        if good_schemas is None:
+        if good_schemas is None:  # pragma: no cover
             good_schemas = ["Weekschema"]
 
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
@@ -373,7 +428,7 @@ class TestPlugwise:
             ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
-                else:
+                else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
@@ -395,7 +450,7 @@ class TestPlugwise:
             ):
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
-                else:
+                else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
@@ -421,10 +476,10 @@ class TestPlugwise:
                 ):
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
-                    else:
+                    else:  # pragma: no cover
                         _LOGGER.info("  - succeeded unexpectedly for some reason")
                         raise self.UnexpectedError
-        else:
+        else:  # pragma: no cover
             _LOGGER.info("- Skipping schema adjustments")
 
     @pytest.mark.asyncio
@@ -479,7 +534,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -540,7 +595,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -587,7 +642,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
 
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2_2(self):
@@ -674,7 +729,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -709,7 +764,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -766,7 +821,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -823,7 +878,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -884,7 +939,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
@@ -982,6 +1037,7 @@ class TestPlugwise:
         assert not smile.single_master_thermostat()
 
         assert "af82e4ccf9c548528166d38e560662a4" in smile.notifications
+        await smile.delete_notification()
 
         await self.device_test(smile, testdata)
         await self.tinker_thermostat(
@@ -994,19 +1050,28 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
+
         await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
             good_schemas=["GF7  Woonkamer"],
             unhappy=True,
         )
+
         await self.tinker_thermostat(
             smile,
             "82fa13f017d240daa0d0ea1775420f24",
             good_schemas=["CV Jessie"],
             unhappy=True,
         )
+
+        try:
+            await smile.delete_notification()
+            assert False  # pragma: no cover
+        except pw_exceptions.ResponseError:
+            assert True
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1077,7 +1142,7 @@ class TestPlugwise:
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(put_timeout=True)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
         await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
@@ -1372,13 +1437,68 @@ class TestPlugwise:
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_p1v4(self):
+        """Test a P1 firmware 4 setup."""
+        # testdata dictionary with key ctrl_id_dev_id => keys:values
+        testdata = {
+            # Gateway / P1 itself
+            "ba4de7613517478da82dd9b6abea36af": {
+                "electricity_consumed_peak_point": 571,
+                "electricity_produced_peak_cumulative": 0.0,
+            }
+        }
+
+        self.smile_setup = "p1v4"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = power")
+        assert smile.smile_type == "power"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.1.1"
+        _LOGGER.info(" # Assert legacy")
+        assert not smile._smile_legacy  # pylint: disable=protected-access
+        _LOGGER.info(" # Assert no master thermostat")
+        assert smile.single_master_thermostat() is None  # it's not a thermostat :)
+
+        assert not smile.notifications
+
+        await self.device_test(smile, testdata)
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_fail_legacy_system(self):
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
         try:
             _server, _smile, _client = await self.connect_wrapper()
-            assert False
+            assert False  # pragma: no cover
         except pw_exceptions.ConnectionFailedError:
+            assert True
+
+    @pytest.mark.asyncio
+    async def test_invalid_credentials(self):
+        """Test P1 with invalid credentials setup."""
+
+        self.smile_setup = "p1v4"
+        try:
+            await self.connect_wrapper(fail_auth=True)
+            assert False  # pragma: no cover
+        except pw_exceptions.InvalidAuthentication:
+            _LOGGER.debug("InvalidAuthentication raised successfully")
+            assert True
+
+    @pytest.mark.asyncio
+    async def test_connect_fail_firmware(self):
+        """Test a P1 non existing firmware setup."""
+
+        self.smile_setup = "fail_firmware"
+        try:
+            await self.connect_wrapper()
+            assert False  # pragma: no cover
+        except pw_exceptions.UnsupportedDeviceError:
             assert True
 
     class PlugwiseTestError(Exception):
