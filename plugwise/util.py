@@ -407,13 +407,29 @@ class SmileHelper:
         self._cp_state = None
         self._endpoint = None
         self._home_location = None
+        self._smile_legacy = None
         self._host = None
+        self._loc_data = {}
         self._port = None
         self._timeout = None
+
+        __empty_xml = etree.XML("<xml></xml>")
+        self._appliances = __empty_xml
+        self._domain_objects = __empty_xml
+        self._locations = __empty_xml
+        self._modules = __empty_xml
+
+        self.active_device_present = None
+        self.appl_data = {}
         self.gateway_id = None
         self.heater_id = None
         self.notifications = {}
+        self.smile_hostname = None
+        self.smile_name = None
+        self.smile_type = None
+        self.smile_version = ()
         self.thermo_locs = None
+        self.websession = None
 
     async def request(
         self,
@@ -446,7 +462,7 @@ class SmileHelper:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
                 raise DeviceTimeoutError
-            return await SmileHelper.request(self, command, retry - 1)
+            return await self.request(command, retry - 1)
 
         # Command accepted gives empty body with status 202
         if resp.status == 202:
@@ -551,7 +567,7 @@ class SmileHelper:
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
-        SmileHelper.all_locations(self)
+        self.all_locations()
 
         if self._smile_legacy and self.smile_type == "power":
             # Inject home_location as dev_id for legacy so
@@ -611,9 +627,7 @@ class SmileHelper:
             ]:
                 locator = ".//logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
-                module_data = SmileHelper.get_module_data(
-                    self, appliance, locator, mod_type
-                )
+                module_data = self.get_module_data(appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
                 appliance_model = check_model(module_data[1], appliance_v_name)
                 appliance_fw = module_data[3]
@@ -628,13 +642,9 @@ class SmileHelper:
                 locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
                 locator2 = ".//services/boiler_state"
                 mod_type = "boiler_state"
-                module_data = SmileHelper.get_module_data(
-                    self, appliance, locator1, mod_type
-                )
+                module_data = self.get_module_data(appliance, locator1, mod_type)
                 if module_data == [None, None, None, None]:
-                    module_data = SmileHelper.get_module_data(
-                        self, appliance, locator2, mod_type
-                    )
+                    module_data = self.get_module_data(appliance, locator2, mod_type)
                 appliance_v_name = module_data[0]
                 appliance_model = check_model(module_data[1], appliance_v_name)
                 if appliance_model is None:
@@ -645,9 +655,7 @@ class SmileHelper:
             if stretch_v2 or stretch_v3:
                 locator = ".//services/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = SmileHelper.get_module_data(
-                    self, appliance, locator, mod_type
-                )
+                module_data = self.get_module_data(appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
                 if appliance_model != "Group Switch":
                     appliance_model = None
@@ -681,9 +689,7 @@ class SmileHelper:
             if self.smile_type != "stretch" and "plug" in appliance_types:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
-                module_data = SmileHelper.get_module_data(
-                    self, appliance, locator, mod_type
-                )
+                module_data = self.get_module_data(appliance, locator, mod_type)
                 appliance_v_name = module_data[0]
                 appliance_model = version_to_model(module_data[1])
                 appliance_fw = module_data[3]
@@ -723,7 +729,7 @@ class SmileHelper:
         """Update locations with used types of appliances."""
         matched_locations = {}
 
-        SmileHelper.all_appliances(self)
+        self.all_appliances()
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self.appl_data.items():
                 if appliance_details["location"] == location_id:
@@ -740,11 +746,11 @@ class SmileHelper:
         tag = "zone_setpoint_and_state_based_on_preset"
 
         if self._smile_legacy:
-            return SmileHelper.presets_legacy(self)
+            return self.presets_legacy()
 
-        rule_ids = SmileHelper.rule_ids_by_tag(self, tag, loc_id)
+        rule_ids = self.rule_ids_by_tag(tag, loc_id)
         if rule_ids is None:
-            rule_ids = SmileHelper.rule_ids_by_name(self, "Thermostat presets", loc_id)
+            rule_ids = self.rule_ids_by_name("Thermostat presets", loc_id)
             if rule_ids is None:
                 return presets
 
@@ -811,7 +817,7 @@ class SmileHelper:
 
     async def update_domain_objects(self):
         """Request domain_objects data."""
-        self._domain_objects = await SmileHelper.request(self, DOMAIN_OBJECTS)
+        self._domain_objects = await self.request(DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
         self.notifications = {}
@@ -866,7 +872,7 @@ class SmileHelper:
                     try:
                         measurement = attrs[ATTR_NAME]
                     except KeyError:
-                        measurement = measurement
+                        pass
 
                     data[measurement] = format_measure(
                         measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
@@ -889,7 +895,7 @@ class SmileHelper:
 
     def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
-        self.thermo_locs = SmileHelper.match_locations(self)
+        self.thermo_locs = self.match_locations()
 
         thermo_matching = {
             "thermostat": 3,
@@ -944,12 +950,11 @@ class SmileHelper:
                     if thermo_matching[appl_class] > high_prio:
                         high_prio = thermo_matching[appl_class]
 
-        return
 
     def temperature_uri(self, loc_id):
         """Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
-            return SmileHelper.temperature_uri_legacy(self)
+            return self.temperature_uri_legacy()
 
         locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
@@ -1134,7 +1139,7 @@ class SmileHelper:
 
         # Current schemas
         tag = "zone_preset_based_on_time_and_presence_with_override"
-        rule_ids = SmileHelper.rule_ids_by_tag(self, tag, loc_id)
+        rule_ids = self.rule_ids_by_tag(tag, loc_id)
 
         if rule_ids is None:
             return available, selected, schedule_temperature
@@ -1165,7 +1170,7 @@ class SmileHelper:
                 keys, dummy = zip(*schedule.items())
                 if str(keys[0]) == "preset":
                     schedules[directive.attrib["time"]] = float(
-                        SmileHelper.presets(self, loc_id)[schedule["preset"]][0]
+                        self.presets(loc_id)[schedule["preset"]][0]
                     )
                 else:
                     schedules[directive.attrib["time"]] = float(schedule["setpoint"])
@@ -1199,7 +1204,7 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
 
-        rule_ids = SmileHelper.rule_ids_by_tag(self, tag, loc_id)
+        rule_ids = self.rule_ids_by_tag(tag, loc_id)
         if rule_ids is None:
             return
 
