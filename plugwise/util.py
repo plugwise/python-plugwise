@@ -632,24 +632,31 @@ class SmileHelper:
                 appliance_fw = module_data[3]
 
             if appliance_class == "heater_central":
-                # Remove heater_central when no active device present
-                if not self.active_device_present and self.open_valves() is None:
-                    continue
-
-                self.heater_id = appliance.attrib["id"]
-                appliance_name = "Auxiliary"
-                locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
-                locator2 = ".//services/boiler_state"
-                mod_type = "boiler_state"
-                module_data = self.get_module_data(appliance, locator1, mod_type)
-                if module_data == [None, None, None, None]:
-                    module_data = self.get_module_data(appliance, locator2, mod_type)
-                appliance_v_name = module_data[0]
-                appliance_model = check_model(module_data[1], appliance_v_name)
-                if appliance_model is None:
-                    appliance_model = (
-                        "Generic heater/cooler" if self._cp_state else "Generic heater"
-                    )
+                # Remove heater_central when no active device present and no valves found
+                if not self.active_device_present:
+                    if self.open_valves() is None:
+                        continue
+                    else:
+                        # When no active device present and valves found it's city-provided heating
+                        self.heater_id = appliance.attrib["id"]
+                        appliance_name = "Auxiliary"
+                        appliance_model = "City heating"
+                        appliance_v_name =  None
+                else:
+                    self.heater_id = appliance.attrib["id"]
+                    appliance_name = "Auxiliary"
+                    locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
+                    locator2 = ".//services/boiler_state"
+                    mod_type = "boiler_state"
+                    module_data = self.get_module_data(appliance, locator1, mod_type)
+                    if module_data == [None, None, None, None]:
+                        module_data = self.get_module_data(appliance, locator2, mod_type)
+                    appliance_v_name = module_data[0]
+                    appliance_model = check_model(module_data[1], appliance_v_name)
+                    if appliance_model is None:
+                        appliance_model = (
+                            "Generic heater/cooler" if self._cp_state else "Generic heater"
+                        )
 
             if stretch_v2 or stretch_v3:
                 locator = ".//services/electricity_point_meter"
