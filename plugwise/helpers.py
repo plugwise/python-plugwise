@@ -50,12 +50,11 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._auth = None
         self._cp_state = None
-        self._timeout = None
-        self._host = None
-        self._port = None
         self._endpoint = None
         self._home_location = None
-        self._thermo_master_id = None
+        self._host = None
+        self._port = None
+        self._timeout = None
         self.gateway_id = None
         self.heater_id = None
         self.notifications = {}
@@ -289,7 +288,7 @@ class SmileHelper:
                 )
                 if appliance_model is None:
                     appliance_model = (
-                        "Generic heater" if self._cp_state else "Generic heater/cooler"
+                        "Generic heater/cooler" if self._cp_state else "Generic heater"
                     )
 
             if stretch_v2 or stretch_v3:
