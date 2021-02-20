@@ -323,9 +323,7 @@ class Time(CompositeType):
 
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
-        self.value = dt.time(
-            self.hour.value, self.minute.value, self.second.value
-        )
+        self.value = dt.time(self.hour.value, self.minute.value, self.second.value)
 
 
 class IntDec(BaseType):
@@ -618,9 +616,7 @@ class SmileHelper:
                     self, appliance, locator, mod_type
                 )
                 appliance_v_name = module_data[0]
-                appliance_model = check_model(
-                    module_data[1], appliance_v_name
-                )
+                appliance_model = check_model(module_data[1], appliance_v_name)
                 appliance_fw = module_data[3]
 
             if appliance_class == "heater_central":
@@ -641,9 +637,7 @@ class SmileHelper:
                         self, appliance, locator2, mod_type
                     )
                 appliance_v_name = module_data[0]
-                appliance_model = check_model(
-                    module_data[1], appliance_v_name
-                )
+                appliance_model = check_model(module_data[1], appliance_v_name)
                 if appliance_model is None:
                     appliance_model = (
                         "Generic heater/cooler" if self._cp_state else "Generic heater"
