@@ -633,7 +633,7 @@ class SmileHelper:
 
             if appliance_class == "heater_central":
                 # Remove heater_central when no active device present
-                if not self.active_device_present:
+                if not self.active_device_present and self.open_valves() is None:
                     continue
 
                 self.heater_id = appliance.attrib["id"]
@@ -1003,17 +1003,17 @@ class SmileHelper:
 
     def open_valves(self):
         """Obtain the amount of open valves, from APPLIANCES."""
-        appliances = self._appliances.findall(".//appliance")
-
+        loc_found = 0
         open_valve_count = 0
-        for appliance in appliances:
+        for appliance in self._appliances.findall(".//appliance"):
             locator = './/logs/point_log[type="valve_position"]/period/measurement'
             if appliance.find(locator) is not None:
+                loc_found +=1
                 measure = appliance.find(locator).text
                 if float(measure) > 0.0:
                     open_valve_count += 1
 
-        return open_valve_count
+        return None if loc_found == 0 else open_valve_count
 
     def power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
