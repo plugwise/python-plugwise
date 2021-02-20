@@ -32,7 +32,7 @@ from .exceptions import (
     UnsupportedDeviceError,
     XMLDataMissingError,
 )
-from .helpers import SmileHelper as sh
+from .util import SmileHelper as sh
 
 _LOGGER = logging.getLogger(__name__)
 
