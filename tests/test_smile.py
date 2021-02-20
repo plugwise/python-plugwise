@@ -40,9 +40,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__), "../fixtures/" + self.smile_setup
         )
         datafile = os.path.join(path, call + ".json")
-        if not os.path.exists(path):
+        if not os.path.exists(path):  # pragma: no cover
             os.mkdir(path)
-        if not os.path.exists(os.path.dirname(datafile)):
+        if not os.path.exists(os.path.dirname(datafile)):  # pragma: no cover
             os.mkdir(os.path.dirname(datafile))
 
         with open(datafile, "w") as fixture_file:
