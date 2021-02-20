@@ -270,7 +270,9 @@ class SmileHelper:
                 # Remove heater_central when no active device present
                 if not self.active_device_present:
                     continue
+
                 self.heater_id = appliance.attrib["id"]
+                appliance_name = "Auxiliary"
                 locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
                 locator2 = ".//services/boiler_state"
                 mod_type = "boiler_state"
@@ -286,10 +288,7 @@ class SmileHelper:
                     self, module_data[1], appliance_v_name
                 )
                 if appliance_model is None:
-                    appliance_model = "Generic heater"
-                    if self._cp_state:
-                        appliance_model = "Generic heater/cooler"
-                appliance_name = "Auxiliary"
+                    appliance_model = "Generic heater" if self._cp_state else "Generic heater/cooler"
 
             if stretch_v2 or stretch_v3:
                 locator = ".//services/electricity_point_meter"
