@@ -413,11 +413,10 @@ class SmileHelper:
         self._port = None
         self._timeout = None
 
-        __empty_xml = etree.XML("<xml></xml>")
-        self._appliances = __empty_xml
-        self._domain_objects = __empty_xml
-        self._locations = __empty_xml
-        self._modules = __empty_xml
+        self._appliances = None
+        self._domain_objects = None
+        self._locations = None
+        self._modules = None
 
         self.active_device_present = False
         self.appl_data = {}
