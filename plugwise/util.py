@@ -6,6 +6,7 @@ Plugwise protocol helpers
 import asyncio
 import binascii
 import datetime as dt
+import logging
 import re
 import struct
 
@@ -16,8 +17,6 @@ from defusedxml import ElementTree as etree
 
 # Time related
 import pytz
-
-import logging
 
 from .constants import (
     APPLIANCES,
