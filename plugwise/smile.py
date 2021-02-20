@@ -73,16 +73,6 @@ class Smile(SmileHelper):
         self._port = port
         self._endpoint = f"http://{self._host}:{str(self._port)}"
         self._timeout = timeout
-        self._smile_legacy = False
-        self._appliances = None
-        self._domain_objects = None
-        self._locations = None
-        self._modules = None
-        self.active_device_present = False
-        self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
 
     async def connect(self):
         """Connect to Plugwise device."""

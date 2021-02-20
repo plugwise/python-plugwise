@@ -407,7 +407,7 @@ class SmileHelper:
         self._cp_state = None
         self._endpoint = None
         self._home_location = None
-        self._smile_legacy = None
+        self._smile_legacy = False
         self._host = None
         self._loc_data = {}
         self._port = None
@@ -419,7 +419,7 @@ class SmileHelper:
         self._locations = __empty_xml
         self._modules = __empty_xml
 
-        self.active_device_present = None
+        self.active_device_present = False
         self.appl_data = {}
         self.gateway_id = None
         self.heater_id = None
