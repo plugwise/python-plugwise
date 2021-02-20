@@ -49,6 +49,7 @@ class SmileHelper:
     def __init__(self):
         """Set the constructor for this class."""
         self._auth = None
+        self._cp_state = None
         self._timeout = None
         self._host = None
         self._port = None
@@ -218,10 +219,10 @@ class SmileHelper:
         # scan for the same functionality
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        cp_state = self._appliances.find(".//logs/point_log[type='compressor_state']")
+        self._cp_state = self._appliances.find(".//logs/point_log[type='compressor_state']")
         fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
         bl_state = self._appliances.find(".//services/boiler_state")
-        if cp_state or fl_state or bl_state:
+        if self._cp_state or fl_state or bl_state:
             self.active_device_present = True
 
         for appliance in self._appliances:
@@ -283,7 +284,9 @@ class SmileHelper:
                     self, module_data[1], appliance_v_name
                 )
                 if appliance_model is None:
-                    appliance_model = "Generic heater/cooler"
+                    appliance_model = "Generic heater"                    
+                    if self._cp_state:
+                        appliance_model = "Generic heater/cooler"
                 appliance_name = "Auxiliary"
 
             if stretch_v2 or stretch_v3:
