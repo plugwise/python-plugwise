@@ -658,6 +658,7 @@ class SmileHelper:
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl[group_id] = {
                     "class": group_type,
+                    "fw": None,
                     "location": None,
                     "members": members,
                     "model": "Group Switch",
