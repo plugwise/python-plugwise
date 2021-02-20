@@ -55,13 +55,15 @@ class Smile:
         if not websession:
 
             async def _create_session() -> aiohttp.ClientSession:
-                return aiohttp.ClientSession()
+                return aiohttp.ClientSession()  # pragma: no cover
 
             loop = asyncio.get_event_loop()
             if loop.is_running():
                 self.websession = aiohttp.ClientSession()
             else:
-                self.websession = loop.run_until_complete(_create_session())
+                self.websession = loop.run_until_complete(
+                    _create_session()
+                )  # pragma: no cover
         else:
             self.websession = websession
 
@@ -95,7 +97,7 @@ class Smile:
             names.append(name.text)
 
         if "Plugwise" not in names:
-            if dsmrmain is None:
+            if dsmrmain is None:  # pragma: no cover
                 _LOGGER.error(
                     "Connected but expected text not returned, \
                               we got %s",
@@ -130,7 +132,8 @@ class Smile:
                         version = status.find(".//system/version").text
                         model = status.find(".//system/product").text
                         self.smile_hostname = status.find(".//network/hostname").text
-                    except InvalidXMLError:
+                    except InvalidXMLError:  # pragma: no cover
+                        # Corner case check
                         raise ConnectionFailedError
 
                 # Stretch:
@@ -141,13 +144,16 @@ class Smile:
                         model = system.find(".//gateway/product").text
                         self.smile_hostname = system.find(".//gateway/hostname").text
                         self.gateway_id = network.attrib["id"]
-                    except InvalidXMLError:
+                    except InvalidXMLError:  # pragma: no cover
+                        # Corner case check
                         raise ConnectionFailedError
-                else:
+                else:  # pragma: no cover
+                    # No cornercase, just end of the line
                     _LOGGER.error("Connected but no gateway device information found")
                     raise ConnectionFailedError
 
-        if model is None or version is None:
+        if model is None or version is None:  # pragma: no cover
+            # Corner case check
             _LOGGER.error("Unable to find model or version information")
             raise UnsupportedDeviceError
 
