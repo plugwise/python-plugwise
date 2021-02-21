@@ -295,8 +295,8 @@ class SmileHelper:
             if appliance_class == "gateway":
                 self.gateway_id = appliance.attrib["id"]
                 appliance_fw = self.smile_version[0]
-                appliance_model = f"Smile {self.smile_name}"
-                appliance_name = self.smile_name
+                appliance_model = self.smile_name
+                appliance_name = f"Smile {self.smile_name}"
                 appliance_v_name = "Plugwise B.V."
 
             if appliance_class in [
