@@ -685,7 +685,7 @@ class SmileHelper:
         return switch_groups
 
     def heating_valves(self):
-        """Obtain the amount of open valves, from APPLIANCES."""
+        """Obtain the amount of open valves used for direct heating, from APPLIANCES."""
         loc_found = 0
         open_valve_count = 0
         for appliance in self._appliances.findall(".//appliance"):
