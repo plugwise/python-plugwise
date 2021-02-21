@@ -265,7 +265,7 @@ class Smile(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Adam: indicate Auxiliary heating_state based on valves being open in case of city-provided heating
+        # Adam: indicate heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
             if details["class"] == "gateway":
                 if not self.active_device_present and self.heating_valves() is not None:
