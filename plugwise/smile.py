@@ -267,10 +267,10 @@ class Smile(SmileHelper):
 
         # Adam: indicate Auxiliary heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
-            if details["class"] == "heater_central":
-                if not self.active_device_present and self.open_valves() is not None:
+            if details["class"] == "gateway":
+                if not self.active_device_present and self.heating_valves() is not None:
                     device_data["heating_state"] = True
-                    if self.open_valves() == 0:
+                    if self.heating_valves() == 0:
                         device_data["heating_state"] = False
 
         if details["class"] not in THERMOSTAT_CLASSES:
