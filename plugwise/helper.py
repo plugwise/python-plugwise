@@ -4,14 +4,10 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 Plugwise protocol helpers
 """
 import asyncio
-import binascii
 import datetime as dt
 import logging
-import re
-import struct
 
 import async_timeout
-import crcmod
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 
@@ -28,16 +24,10 @@ from .constants import (
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     HOME_MEASUREMENTS,
-    HW_MODELS,
     LOCATIONS,
-    LOGADDR_OFFSET,
     MODULES,
-    PERCENTAGE,
-    PLUGWISE_EPOCH,
     POWER_WATT,
     SWITCH_GROUP_TYPES,
-    UTF8_DECODE,
-    VOLUME_CUBIC_METERS,
 )
 from .exceptions import (
     DeviceTimeoutError,
@@ -45,9 +35,10 @@ from .exceptions import (
     InvalidXMLError,
     ResponseError,
 )
-
 from .util import (
     determine_selected,
+    escape_illegal_xml_characters,
+    format_measure,
     in_between,
     version_to_model,
 )
