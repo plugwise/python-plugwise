@@ -531,7 +531,10 @@ class SmileHelper:
         for appliance in appliances:
             measurements = DEVICE_MEASUREMENTS.items()
             if self.active_device_present:
-                measurements = {**DEVICE_MEASUREMENTS, **HEATER_CENTRAL_MEASUREMENTS}.items()
+                measurements = {
+                    **DEVICE_MEASUREMENTS,
+                    **HEATER_CENTRAL_MEASUREMENTS,
+                }.items()
             for measurement, attrs in measurements:
 
                 p_locator = (
