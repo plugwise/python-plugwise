@@ -633,7 +633,7 @@ class SmileHelper:
 
             if appliance_class == "heater_central":
                 # Remove heater_central when no active device present
-                if not self.active_device_present and self.open_valves() is None:
+                if not self.active_device_present:
                     continue
 
                 self.heater_id = appliance.attrib["id"]
