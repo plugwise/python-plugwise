@@ -45,6 +45,7 @@ from .util import (
 
 _LOGGER = logging.getLogger(__name__)
 
+
 def check_model(name, v_name):
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
@@ -55,6 +56,7 @@ def check_model(name, v_name):
             return model
     else:
         return name
+
 
 def types_finder(data):
     """Detect types within locations from logs."""
