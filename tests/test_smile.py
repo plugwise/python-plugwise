@@ -1027,8 +1027,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "battery": 67,
             },
             # Adam
-            # "90986d591dcd426cae3ec3e8111ff730": {"intended_boiler_temperature": 70.0},
             "fe799307f1624099878210aa0b9f1475": {
+                "heating_state": False,
                 "outdoor_temperature": 7.69,
             },
             # Modem
@@ -1036,8 +1036,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "electricity_consumed": 12.2,
                 "relay": True,
             },
-            # Fake heater_central
-            # Disable for now "90986d591dcd426cae3ec3e8111ff730": {"heating_state": False},
         }
 
         self.smile_setup = "adam_zone_per_device"
@@ -1124,8 +1122,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "battery": 67,
             },
             # Adam
-            # "90986d591dcd426cae3ec3e8111ff730": {"intended_boiler_temperature": 70.0},
             "fe799307f1624099878210aa0b9f1475": {
+                "heating_state": True,
                 "outdoor_temperature": 7.81,
             },
             # Modem
@@ -1133,8 +1131,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "electricity_consumed": 12.2,
                 "relay": True,
             },
-            # Fake heater_central
-            # Disable for now "90986d591dcd426cae3ec3e8111ff730": {"heating_state": True},
         }
 
         self.smile_setup = "adam_multiple_devices_per_zone"
