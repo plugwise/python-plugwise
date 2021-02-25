@@ -26,7 +26,6 @@ from .constants import (
     HEATER_CENTRAL_MEASUREMENTS,
     HOME_MEASUREMENTS,
     LOCATIONS,
-    MODULES,
     POWER_WATT,
     SWITCH_GROUP_TYPES,
 )
