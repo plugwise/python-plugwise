@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.9.2 - Optimize
+
+- Functions not called by the plugwise(-beta) code have been moved to helper.py in which they are part of the subclass SmileHelper
+- All for-loops are now executed only once, the results are stored in self-parameters.
+- Added fw, model and vendor information into the output of get_device_data(), for future use in the HA Core Plugwise(-beta) Integration
+- Split off HEATER_CENTRAL_MEASUREMENTS from DEVICE_MEASUREMENTS so they can be blocked when there is no Auxiliary device present
+- Collect only the data from the Smile that is needed: full_update_device() for initialisation, update-device() for updating of live data
+- Adapt test_smile.py to the new code, increase test-coverage further
+
 ## 0.9.1 - Add Domestic Hot Water Comfort Mode switch - Feature request
 
 ## 0.9.0 - API change for stick
