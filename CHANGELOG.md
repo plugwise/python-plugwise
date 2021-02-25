@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.9.2 - Optimize
+## 0.9.2 - Smile Optimize 
 
 - Functions not called by the plugwise(-beta) code have been moved to helper.py in which they are part of the subclass SmileHelper
 - All for-loops are now executed only once, the results are stored in self-parameters.
