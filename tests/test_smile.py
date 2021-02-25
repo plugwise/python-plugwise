@@ -40,9 +40,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__), "../fixtures/" + self.smile_setup
         )
         datafile = os.path.join(path, call + ".json")
-        if not os.path.exists(path):
+        if not os.path.exists(path):  # pragma: no cover
             os.mkdir(path)
-        if not os.path.exists(os.path.dirname(datafile)):
+        if not os.path.exists(os.path.dirname(datafile)):  # pragma: no cover
             os.mkdir(os.path.dirname(datafile))
 
         with open(datafile, "w") as fixture_file:
@@ -81,6 +81,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if not raise_timeout:
             app.router.add_route(
                 "PUT", "/core/locations{tail:.*}", self.smile_set_temp_or_preset
+            )
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
             )
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_set_schedule)
             app.router.add_route(
@@ -340,7 +343,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._write_json("get_all_devices", device_list)
         self._write_json("notifications", smile.notifications)
 
-        location_list, dummy = smile.scan_thermostats()
+        location_list = smile.thermo_locs
 
         _LOGGER.info("Gateway id = %s", smile.gateway_id)
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
@@ -523,6 +526,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert smile.active_device_present
 
         await self.tinker_thermostat(
             smile,
@@ -584,6 +588,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert smile.active_device_present
 
         await self.tinker_thermostat(
             smile,
@@ -721,6 +726,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert smile.active_device_present
+
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -792,10 +799,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "a270735e4ccd45239424badc0578a2b1": {
                 "outdoor_temperature": 10.8,
             },
-            # Central
-            "c46b4794d28149699eacf053deedd003": {
-                "heating_state": False,
-            },
+            ## Central
+            # "c46b4794d28149699eacf053deedd003": {
+            #    "heating_state": False,
+            # },
         }
 
         self.smile_setup = "anna_without_boiler_fw3"
@@ -815,6 +822,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert not smile.active_device_present
+
         await self.tinker_thermostat(
             smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Test", "Normal"]
         )
@@ -849,10 +858,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "a270735e4ccd45239424badc0578a2b1": {
                 "outdoor_temperature": 16.6,
             },
-            # Central
-            "c46b4794d28149699eacf053deedd003": {
-                "heating_state": True,
-            },
+            ## Central
+            # "c46b4794d28149699eacf053deedd003": {
+            #    "heating_state": True,
+            # },
         }
 
         self.smile_setup = "anna_without_boiler_fw4"
@@ -872,6 +881,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert not smile.active_device_present
+
         await self.tinker_thermostat(
             smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Test", "Normal"]
         )
@@ -932,6 +943,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert smile.active_device_present
+
         await self.tinker_thermostat(
             smile, "009490cc2f674ce6b576863fbb64f867", good_schemas=["Weekschema"]
         )
@@ -969,6 +982,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.2.4"
+        _LOGGER.info(" # Assert legacy")
+        assert not smile._smile_legacy  # pylint: disable=protected-access
+        _LOGGER.info(" # Assert master thermostat")
+        assert not smile.single_master_thermostat()
+
+        await self.device_test(smile, testdata)
+        assert smile.active_device_present
 
         await self.tinker_switch(
             smile,
@@ -978,7 +998,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_switch(
             smile, ["2743216f626f43948deec1f7ab3b3d70"], model="dhw_cm_switch"
         )
-        await self.device_test(smile, testdata)
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -997,7 +1017,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "b310b72a0e354bfab43089919b9a88bf": {
                 "setpoint": 21.5,
                 "temperature": 26.2,
-                "valve_position": 100,
+                "valve_position": 0,
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
@@ -1011,8 +1031,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "battery": 67,
             },
             # Adam
-            "90986d591dcd426cae3ec3e8111ff730": {"intended_boiler_temperature": 70.0},
             "fe799307f1624099878210aa0b9f1475": {
+                "heating_state": False,
                 "outdoor_temperature": 7.69,
             },
             # Modem
@@ -1040,6 +1060,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.delete_notification()
 
         await self.device_test(smile, testdata)
+        assert not smile.active_device_present
+
         await self.tinker_thermostat(
             smile, "c50f167537524366a5af7aa3942feb1e", good_schemas=["GF7  Woonkamer"]
         )
@@ -1104,8 +1126,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "battery": 67,
             },
             # Adam
-            "90986d591dcd426cae3ec3e8111ff730": {"intended_boiler_temperature": 70.0},
             "fe799307f1624099878210aa0b9f1475": {
+                "heating_state": True,
                 "outdoor_temperature": 7.81,
             },
             # Modem
@@ -1132,6 +1154,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert "af82e4ccf9c548528166d38e560662a4" in smile.notifications
 
         await self.device_test(smile, testdata)
+        assert not smile.active_device_present
+
         await self.tinker_thermostat(
             smile, "c50f167537524366a5af7aa3942feb1e", good_schemas=["GF7  Woonkamer"]
         )
@@ -1299,6 +1323,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert smile.active_device_present
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1341,6 +1367,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.notifications
 
         await self.device_test(smile, testdata)
+        assert smile.active_device_present
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1395,7 +1423,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "3.1.11"
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy  # pylint: disable=protected-access
+        _LOGGER.info(" # Assert no master thermostat")
+        assert smile.single_master_thermostat() is None  # it's not a thermostat :)
 
+        smile.get_all_devices()
         await self.device_test(smile, testdata)
 
         await smile.close_connection()
@@ -1428,9 +1459,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "2.3.12"
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy  # pylint: disable=protected-access
+        _LOGGER.info(" # Assert no master thermostat")
+        assert smile.single_master_thermostat() is None  # it's not a thermostat :)
 
         await self.tinker_switch(smile, ["2587a7fcdd7e482dab03fda256076b4b"])
 
+        smile.get_all_devices()
         await self.device_test(smile, testdata)
 
         await smile.close_connection()

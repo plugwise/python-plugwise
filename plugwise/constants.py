@@ -195,6 +195,10 @@ HW_MODELS = {
     "120006": "Sense Legrand",
     "070051": "Switch",
     "080029": "Switch",
+    "160-01": "Plug",
+    "106-03": "Tom/Floor",
+    "158-01": "Lisa",
+    "143.1": "Anna",
 }
 
 # Defaults for SED's (Sleeping End Devices)
@@ -348,7 +352,11 @@ DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80
 
 SWITCH_GROUP_TYPES = ["switching", "report"]
-
+THERMOSTAT_CLASSES = [
+    "thermostat",
+    "zone_thermostat",
+    "thermostatic_radiator_valve",
+]
 HOME_MEASUREMENTS = {
     "electricity_consumed": {
         ATTR_TYPE: "power",
@@ -378,7 +386,23 @@ DEVICE_MEASUREMENTS = {
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core setpoint
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # Anna/Adam
+    "outdoor_temperature": {
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
+    },  # Outdoor temp as reported on the Anna, in the App
+    "schedule_temperature": {
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
+    },  # Only present on legacy Anna and Anna_v3
+    # Lisa and Tom
+    "battery": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    "temperature_difference": {ATTR_UNIT_OF_MEASUREMENT: DEGREE},
+    "valve_position": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    # Plug
+    "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
+    "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
+    "relay": {ATTR_UNIT_OF_MEASUREMENT: None},
+}
+
+HEATER_CENTRAL_MEASUREMENTS = {
     "boiler_temperature": {
         ATTR_NAME: "water_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
@@ -416,24 +440,10 @@ DEVICE_MEASUREMENTS = {
         ATTR_NAME: "water_pressure",
         ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
     },
-    "outdoor_temperature": {
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
-    },  # Outdoor temp as reported on the Anna, in the App
-    "schedule_temperature": {
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
-    },  # Only present on legacy Anna and Anna_v3
     # Legacy Anna: similar to flame-state on Anna/Adam
     "boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
     # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably
     "intended_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
-    # Lisa and Tom
-    "battery": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    "temperature_difference": {ATTR_UNIT_OF_MEASUREMENT: DEGREE},
-    "valve_position": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    # Plug
-    "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "relay": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
 SMILES = {

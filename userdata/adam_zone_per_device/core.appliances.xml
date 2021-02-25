@@ -86,7 +86,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-03-20T12:15:29.245+01:00</last_consecutive_log_date>
 				<period start_date="2020-03-20T12:15:29.245+01:00" end_date="2020-03-20T12:15:29.245+01:00">
-					<measurement log_date="2020-03-20T12:15:29.245+01:00">1.00</measurement>
+					<measurement log_date="2020-03-20T12:15:29.245+01:00">0.00</measurement>
 				</period>
 				<valve_position_meter id='1db7d08fabb24bdb8f5fdfd5d317cac5'/>
 			</point_log>
