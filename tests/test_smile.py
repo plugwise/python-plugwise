@@ -89,6 +89,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             app.router.add_route(
                 "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
             )
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
+            )
         else:
             app.router.add_route("PUT", "/core/locations{tail:.*}", self.smile_timeout)
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_timeout)
@@ -995,6 +998,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_switch(
             smile, ["2743216f626f43948deec1f7ab3b3d70"], model="dhw_cm_switch"
         )
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
