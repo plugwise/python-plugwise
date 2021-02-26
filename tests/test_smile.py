@@ -351,6 +351,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         pp4 = PrettyPrinter(indent=4)
         pp8 = PrettyPrinter(indent=8)
         _LOGGER.debug("Device list:\n%s", pp4.pformat(device_list))
+        await smile.update_device()
         for dev_id, details in device_list.items():
             data = smile.get_device_data(dev_id)
             self._write_json("get_device_data/" + dev_id, data)
