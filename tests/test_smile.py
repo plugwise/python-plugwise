@@ -1482,9 +1482,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no master thermostat")
         assert smile.single_master_thermostat() is None  # it's not a thermostat :)
 
+        await self.tinker_switch(smile, "09c8ce93d7064fa6a233c0e4c2449bfe")
         await self.tinker_switch(
             smile,
-            ["f7b145c8492f4dd7a4de760456fdef3e"],
+            "f7b145c8492f4dd7a4de760456fdef3e",
             ["407aa1c1099d463c9137a3a9eda787fd"],
         )
 
