@@ -23,13 +23,7 @@ from .constants import (
     SYSTEM,
     THERMOSTAT_CLASSES,
 )
-from .exceptions import (
-    ConnectionFailedError,
-    DeviceSetupError,
-    InvalidXMLError,
-    UnsupportedDeviceError,
-    XMLDataMissingError,
-)
+from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
 from .helper import SmileHelper
 
 _LOGGER = logging.getLogger(__name__)
@@ -95,8 +89,6 @@ class Smile(SmileHelper):
                 )
                 raise ConnectionFailedError
 
-        # TODO create this as another function NOT part of connect!
-        # just using request to parse the data
         gateway = result.find(".//gateway")
 
         model = version = None
@@ -169,11 +161,7 @@ class Smile(SmileHelper):
             self._smile_legacy = SMILES[target_smile]["legacy"]
 
         # Update all endpoints on first connect
-        try:
-            await self.full_update_device()
-        except XMLDataMissingError:
-            _LOGGER.error("Critical information not returned from device")
-            raise DeviceSetupError
+        await self.full_update_device()
 
         return True
 

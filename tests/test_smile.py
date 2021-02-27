@@ -11,6 +11,7 @@ from pprint import PrettyPrinter
 # String generation
 import random
 import string
+from unittest.mock import patch
 
 # Testing
 import aiohttp
@@ -54,6 +55,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         timeout=False,
         raise_timeout=False,
         fail_auth=False,
+        stretch=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
@@ -87,11 +89,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             )
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_set_schedule)
             app.router.add_route(
-                "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
-            )
-            app.router.add_route(
                 "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
             )
+            if not stretch:
+                app.router.add_route(
+                    "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
+                )
+            else:
+                app.router.add_route(
+                    "PUT", "/core/appliances{tail:.*}", self.smile_set_relay_stretch
+                )
         else:
             app.router.add_route("PUT", "/core/locations{tail:.*}", self.smile_timeout)
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_timeout)
@@ -176,6 +183,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
+    async def smile_set_relay_stretch(self, request):
+        """Render generic API calling endpoint."""
+        text = "<xml />"
+        raise aiohttp.web.HTTPOk(text=text)
+
     async def smile_del_notification(self, request):
         """Render generic API calling endpoint."""
         text = "<xml />"
@@ -194,13 +206,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         raise aiohttp.web.HTTPUnauthorized()
 
     async def connect(
-        self, broken=False, timeout=False, raise_timeout=False, fail_auth=False
+        self,
+        broken=False,
+        timeout=False,
+        raise_timeout=False,
+        fail_auth=False,
+        stretch=False,
     ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
 
         # Happy flow
-        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth)
+        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -271,7 +288,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             raise exception
 
     # Wrap connect for invalid connections
-    async def connect_wrapper(self, raise_timeout=False, fail_auth=False):
+    async def connect_wrapper(
+        self, raise_timeout=False, fail_auth=False, stretch=False
+    ):
         """Wrap connect to try negative testing before positive testing."""
 
         if fail_auth:
@@ -305,7 +324,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
-        return await self.connect()
+        return await self.connect(stretch=stretch)
 
     # Generic disconnect
     @pytest.mark.asyncio
@@ -351,6 +370,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         pp4 = PrettyPrinter(indent=4)
         pp8 = PrettyPrinter(indent=8)
         _LOGGER.debug("Device list:\n%s", pp4.pformat(device_list))
+        await smile.update_device()
         for dev_id, details in device_list.items():
             data = smile.get_device_data(dev_id)
             self._write_json("get_device_data/" + dev_id, data)
@@ -388,29 +408,28 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_switch(
-        self, smile, dev_ids=None, members=None, model=None, unhappy=False
+        self, smile, dev_id=None, members=None, model=None, unhappy=False
     ):
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
-        for dev_id in dev_ids:
-            _LOGGER.info("- Devices (%s):", dev_id)
-            for new_state in [False, True, False]:
-                _LOGGER.info("- Switching %s", new_state)
-                try:
-                    switch_change = await smile.set_switch_state(
-                        dev_id, members, model, new_state
-                    )
-                    assert switch_change
-                    _LOGGER.info("  + worked as intended")
-                except (
-                    pw_exceptions.ErrorSendingCommandError,
-                    pw_exceptions.ResponseError,
-                ):
-                    if unhappy:
-                        _LOGGER.info("  + failed as expected")
-                    else:  # pragma: no cover
-                        _LOGGER.info("  - failed unexpectedly")
-                        raise self.UnexpectedError
+        _LOGGER.info("- Devices (%s):", dev_id)
+        for new_state in [False, True, False]:
+            _LOGGER.info("- Switching %s", new_state)
+            try:
+                switch_change = await smile.set_switch_state(
+                    dev_id, members, model, new_state
+                )
+                assert switch_change
+                _LOGGER.info("  + worked as intended")
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
+                if unhappy:
+                    _LOGGER.info("  + failed as expected")
+                else:  # pragma: no cover
+                    _LOGGER.info("  - failed unexpectedly")
+                    raise self.UnexpectedError
 
     @pytest.mark.asyncio
     async def tinker_thermostat(self, smile, loc_id, good_schemas=None, unhappy=False):
@@ -799,7 +818,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "a270735e4ccd45239424badc0578a2b1": {
                 "outdoor_temperature": 10.8,
             },
-            ## Central
+            # # Central
             # "c46b4794d28149699eacf053deedd003": {
             #    "heating_state": False,
             # },
@@ -858,7 +877,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "a270735e4ccd45239424badc0578a2b1": {
                 "outdoor_temperature": 16.6,
             },
-            ## Central
+            # # Central
             # "c46b4794d28149699eacf053deedd003": {
             #    "heating_state": True,
             # },
@@ -948,7 +967,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile, "009490cc2f674ce6b576863fbb64f867", good_schemas=["Weekschema"]
         )
-        await self.tinker_switch(smile, ["aa6b0002df0a46e1b1eb94beb61eddfe"])
+        await self.tinker_switch(smile, "aa6b0002df0a46e1b1eb94beb61eddfe")
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -960,7 +979,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             unhappy=True,
         )
         await self.tinker_switch(
-            smile, ["aa6b0002df0a46e1b1eb94beb61eddfe"], unhappy=True
+            smile, "aa6b0002df0a46e1b1eb94beb61eddfe", unhappy=True
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -992,11 +1011,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.tinker_switch(
             smile,
-            ["b83f9f9758064c0fab4af6578cba4c6d"],
+            "b83f9f9758064c0fab4af6578cba4c6d",
             ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
         )
         await self.tinker_switch(
-            smile, ["2743216f626f43948deec1f7ab3b3d70"], model="dhw_cm_switch"
+            smile, "2743216f626f43948deec1f7ab3b3d70", model="dhw_cm_switch"
         )
 
         await smile.close_connection()
@@ -1068,7 +1087,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
-        await self.tinker_switch(smile, ["675416a629f343c495449970e2ca37b5"])
+        await self.tinker_switch(smile, "675416a629f343c495449970e2ca37b5")
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1162,7 +1181,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
-        await self.tinker_switch(smile, ["675416a629f343c495449970e2ca37b5"])
+        await self.tinker_switch(smile, "675416a629f343c495449970e2ca37b5")
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1413,7 +1432,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
 
         self.smile_setup = "stretch_v31"
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
         _LOGGER.info("Basics:")
@@ -1449,7 +1468,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
 
         self.smile_setup = "stretch_v23"
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
         _LOGGER.info("Basics:")
@@ -1462,7 +1481,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no master thermostat")
         assert smile.single_master_thermostat() is None  # it's not a thermostat :)
 
-        await self.tinker_switch(smile, ["2587a7fcdd7e482dab03fda256076b4b"])
+        await self.tinker_switch(smile, "2587a7fcdd7e482dab03fda256076b4b")
+        await self.tinker_switch(
+            smile,
+            "f7b145c8492f4dd7a4de760456fdef3e",
+            ["407aa1c1099d463c9137a3a9eda787fd"],
+        )
 
         smile.get_all_devices()
         await self.device_test(smile, testdata)
@@ -1533,6 +1557,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect_wrapper()
             assert False  # pragma: no cover
         except pw_exceptions.UnsupportedDeviceError:
+            assert True
+
+    # Test connect for timeout
+    @patch("async_timeout.timeout", side_effect=asyncio.exceptions.TimeoutError)
+    async def test_connect_timeout(self, timeout_test):
+        """Wrap connect to raise timeout during get."""
+
+        try:
+            await self.connect_wrapper()
+            assert False  # pragma: no cover
+        except pw_exceptions.DeviceTimeoutError:
             assert True
 
     class PlugwiseTestError(Exception):
