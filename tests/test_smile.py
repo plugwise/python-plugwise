@@ -408,29 +408,28 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_switch(
-        self, smile, dev_ids=None, members=None, model=None, unhappy=False
+        self, smile, dev_id=None, members=None, model=None, unhappy=False
     ):
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
-        for dev_id in dev_ids:
-            _LOGGER.info("- Devices (%s):", dev_id)
-            for new_state in [False, True, False]:
-                _LOGGER.info("- Switching %s", new_state)
-                try:
-                    switch_change = await smile.set_switch_state(
-                        dev_id, members, model, new_state
-                    )
-                    assert switch_change
-                    _LOGGER.info("  + worked as intended")
-                except (
-                    pw_exceptions.ErrorSendingCommandError,
-                    pw_exceptions.ResponseError,
-                ):
-                    if unhappy:
-                        _LOGGER.info("  + failed as expected")
-                    else:  # pragma: no cover
-                        _LOGGER.info("  - failed unexpectedly")
-                        raise self.UnexpectedError
+        _LOGGER.info("- Devices (%s):", dev_id)
+        for new_state in [False, True, False]:
+            _LOGGER.info("- Switching %s", new_state)
+            try:
+                switch_change = await smile.set_switch_state(
+                    dev_id, members, model, new_state
+                )
+                assert switch_change
+                _LOGGER.info("  + worked as intended")
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
+                if unhappy:
+                    _LOGGER.info("  + failed as expected")
+                else:  # pragma: no cover
+                    _LOGGER.info("  - failed unexpectedly")
+                    raise self.UnexpectedError
 
     @pytest.mark.asyncio
     async def tinker_thermostat(self, smile, loc_id, good_schemas=None, unhappy=False):
@@ -968,7 +967,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile, "009490cc2f674ce6b576863fbb64f867", good_schemas=["Weekschema"]
         )
-        await self.tinker_switch(smile, ["aa6b0002df0a46e1b1eb94beb61eddfe"])
+        await self.tinker_switch(smile, "aa6b0002df0a46e1b1eb94beb61eddfe")
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -980,7 +979,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             unhappy=True,
         )
         await self.tinker_switch(
-            smile, ["aa6b0002df0a46e1b1eb94beb61eddfe"], unhappy=True
+            smile, "aa6b0002df0a46e1b1eb94beb61eddfe", unhappy=True
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1012,11 +1011,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.tinker_switch(
             smile,
-            ["b83f9f9758064c0fab4af6578cba4c6d"],
+            "b83f9f9758064c0fab4af6578cba4c6d",
             ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
         )
         await self.tinker_switch(
-            smile, ["2743216f626f43948deec1f7ab3b3d70"], model="dhw_cm_switch"
+            smile, "2743216f626f43948deec1f7ab3b3d70", model="dhw_cm_switch"
         )
 
         await smile.close_connection()
@@ -1088,7 +1087,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
-        await self.tinker_switch(smile, ["675416a629f343c495449970e2ca37b5"])
+        await self.tinker_switch(smile, "675416a629f343c495449970e2ca37b5")
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1182,7 +1181,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
-        await self.tinker_switch(smile, ["675416a629f343c495449970e2ca37b5"])
+        await self.tinker_switch(smile, "675416a629f343c495449970e2ca37b5")
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1482,10 +1481,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no master thermostat")
         assert smile.single_master_thermostat() is None  # it's not a thermostat :)
 
-        await self.tinker_switch(smile, ["2587a7fcdd7e482dab03fda256076b4b"])
+        await self.tinker_switch(smile, "2587a7fcdd7e482dab03fda256076b4b")
         await self.tinker_switch(
             smile,
-            ["f7b145c8492f4dd7a4de760456fdef3e"],
+            "f7b145c8492f4dd7a4de760456fdef3e",
             ["407aa1c1099d463c9137a3a9eda787fd"],
         )
 
