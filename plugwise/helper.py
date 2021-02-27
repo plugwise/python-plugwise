@@ -507,7 +507,7 @@ class SmileHelper:
                 msg = notification.find("message").text
                 self.notifications.update({msg_id: {msg_type: msg}})
                 _LOGGER.debug("Plugwise notifications: %s", self.notifications)
-            except AttributeError: # pragma: no cover
+            except AttributeError:  # pragma: no cover
                 _LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     url,
