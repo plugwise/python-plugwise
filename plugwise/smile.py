@@ -169,11 +169,7 @@ class Smile(SmileHelper):
             self._smile_legacy = SMILES[target_smile]["legacy"]
 
         # Update all endpoints on first connect
-        try:
-            await self.full_update_device()
-        except XMLDataMissingError:
-            _LOGGER.error("Critical information not returned from device")
-            raise DeviceSetupError
+        await self.full_update_device()
 
         return True
 
