@@ -23,13 +23,7 @@ from .constants import (
     SYSTEM,
     THERMOSTAT_CLASSES,
 )
-from .exceptions import (
-    ConnectionFailedError,
-    DeviceSetupError,
-    InvalidXMLError,
-    UnsupportedDeviceError,
-    XMLDataMissingError,
-)
+from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
 from .helper import SmileHelper
 
 _LOGGER = logging.getLogger(__name__)
@@ -95,8 +89,6 @@ class Smile(SmileHelper):
                 )
                 raise ConnectionFailedError
 
-        # TODO create this as another function NOT part of connect!
-        # just using request to parse the data
         gateway = result.find(".//gateway")
 
         model = version = None

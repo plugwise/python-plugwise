@@ -11,6 +11,7 @@ from pprint import PrettyPrinter
 # String generation
 import random
 import string
+from unittest.mock import patch
 
 # Testing
 import aiohttp
@@ -54,6 +55,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         timeout=False,
         raise_timeout=False,
         fail_auth=False,
+        stretch=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
@@ -87,11 +89,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             )
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_set_schedule)
             app.router.add_route(
-                "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
-            )
-            app.router.add_route(
                 "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
             )
+            if not stretch:
+                app.router.add_route(
+                    "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
+                )
+            else:
+                app.router.add_route(
+                    "PUT", "/core/appliances{tail:.*}", self.smile_set_relay_stretch
+                )
         else:
             app.router.add_route("PUT", "/core/locations{tail:.*}", self.smile_timeout)
             app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_timeout)
@@ -176,6 +183,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
+    async def smile_set_relay_stretch(self, request):
+        """Render generic API calling endpoint."""
+        text = "<xml />"
+        raise aiohttp.web.HTTPOk(text=text)
+
     async def smile_del_notification(self, request):
         """Render generic API calling endpoint."""
         text = "<xml />"
@@ -194,13 +206,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         raise aiohttp.web.HTTPUnauthorized()
 
     async def connect(
-        self, broken=False, timeout=False, raise_timeout=False, fail_auth=False
+        self,
+        broken=False,
+        timeout=False,
+        raise_timeout=False,
+        fail_auth=False,
+        stretch=False,
     ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
 
         # Happy flow
-        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth)
+        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -271,7 +288,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             raise exception
 
     # Wrap connect for invalid connections
-    async def connect_wrapper(self, raise_timeout=False, fail_auth=False):
+    async def connect_wrapper(
+        self, raise_timeout=False, fail_auth=False, stretch=False
+    ):
         """Wrap connect to try negative testing before positive testing."""
 
         if fail_auth:
@@ -305,7 +324,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
-        return await self.connect()
+        return await self.connect(stretch=stretch)
 
     # Generic disconnect
     @pytest.mark.asyncio
@@ -800,7 +819,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "a270735e4ccd45239424badc0578a2b1": {
                 "outdoor_temperature": 10.8,
             },
-            ## Central
+            # # Central
             # "c46b4794d28149699eacf053deedd003": {
             #    "heating_state": False,
             # },
@@ -859,7 +878,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "a270735e4ccd45239424badc0578a2b1": {
                 "outdoor_temperature": 16.6,
             },
-            ## Central
+            # # Central
             # "c46b4794d28149699eacf053deedd003": {
             #    "heating_state": True,
             # },
@@ -1414,7 +1433,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
 
         self.smile_setup = "stretch_v31"
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
         _LOGGER.info("Basics:")
@@ -1450,7 +1469,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
 
         self.smile_setup = "stretch_v23"
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
         _LOGGER.info("Basics:")
@@ -1534,6 +1553,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect_wrapper()
             assert False  # pragma: no cover
         except pw_exceptions.UnsupportedDeviceError:
+            assert True
+
+    # Test connect for timeout
+    @patch("async_timeout.timeout", side_effect=asyncio.exceptions.TimeoutError)
+    async def test_connect_timeout(self, timeout_test):
+        """Wrap connect to raise timeout during get."""
+
+        try:
+            await self.connect_wrapper()
+            assert False  # pragma: no cover
+        except pw_exceptions.DeviceTimeoutError:
             assert True
 
     class PlugwiseTestError(Exception):
