@@ -578,7 +578,7 @@ class SmileHelper:
                 locator = f'.//{actuator}/{func_type}/{item}'
                 if appliance.find(locator) is not None:
                     measure = appliance.find(locator).text
-                    data[name] = measure
+                    data[name] = format_measure(measure, None)
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
