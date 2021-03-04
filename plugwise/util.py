@@ -114,9 +114,9 @@ def format_measure(measure, unit):
                 elif abs(float(measure)) >= 100:
                     measure = int(round(float(measure)))
         except ValueError:
-            if measure == "on":
+            if measure in ["on", "true"]:
                 measure = True
-            elif measure == "off":
+            if measure in ["off", "false"]:
                 measure = False
     return measure
 
