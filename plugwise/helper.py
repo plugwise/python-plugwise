@@ -575,7 +575,7 @@ class SmileHelper:
                 actuator = "actuators"
                 func_type = "relay"
             for item, name in {"lock": "lock", "state": "relay"}.items():
-                locator = f'.//{actuator}/{func_type}/{item}'
+                locator = f".//{actuator}/{func_type}/{item}"
                 if appliance.find(locator) is not None:
                     measure = appliance.find(locator).text
                     data[name] = format_measure(measure, None)
