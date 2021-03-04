@@ -568,8 +568,14 @@ class SmileHelper:
 
                     data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
+            # Adam & Stretches: detect relay switch data
+            actuator = "actuator_functionalities"
+            func_type = "relay_functionality"
+            if self.smile_type == "stretch" and self.smile_version[1].major == 2:
+                actuator = "actuators"
+                func_type = "relay"
             for item, name in {"lock": "lock", "state": "relay"}.items():
-                locator = f'.//actuator_functionalities/relay_functionality/{item}'
+                locator = f'.//{actuator}/{func_type}/{item}'
                 if appliance.find(locator) is not None:
                     measure = appliance.find(locator).text
                     data[name] = measure
