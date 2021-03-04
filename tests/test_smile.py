@@ -941,6 +941,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Plug MediaCenter
             "aa6b0002df0a46e1b1eb94beb61eddfe": {
                 "electricity_consumed": 10.3,
+                "lock": False,
                 "relay": True,
             },
         }
@@ -1459,6 +1460,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Tv hoek 25F6790
             "c71f1cb2100b42ca942f056dcb7eb01f": {
                 "electricity_consumed": 33.3,
+                "lock": False,
                 "relay": True,
             },
             # Wasdroger 043AECA
