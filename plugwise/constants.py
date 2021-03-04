@@ -399,7 +399,6 @@ DEVICE_MEASUREMENTS = {
     # Plug
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "relay": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
 HEATER_CENTRAL_MEASUREMENTS = {

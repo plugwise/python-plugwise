@@ -568,6 +568,12 @@ class SmileHelper:
 
                     data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
+            for item, name in {"lock": "lock", "state": "relay"}.items():
+                locator = f'.//actuator_functionalities/relay_functionality/{item}'
+                if appliance.find(locator) is not None:
+                    measure = appliance.find(locator).text
+                    data[name] = measure
+
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
