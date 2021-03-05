@@ -381,7 +381,7 @@ class Smile(SmileHelper):
         if model == "lock":
             func = "lock"
             state = "false" if state == "off" else "true"
-                
+
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         if stretch_v2:
             actuator = "actuators"
