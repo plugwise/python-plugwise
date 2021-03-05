@@ -371,11 +371,17 @@ class Smile(SmileHelper):
     async def set_switch_state(self, appl_id, members, model, state):
         """Switch the Switch off/on."""
         actuator = "actuator_functionalities"
-        func_type = "relay_functionality"
         device = "relay"
+        func_type = "relay_functionality"
+        func = "state"
         if model == "dhw_cm_switch":
-            func_type = "toggle_functionality"
             device = "toggle"
+            func_type = "toggle_functionality"
+
+        if model == "lock":
+            func = "lock"
+            state = "false" if state == "off" else "true"
+                
         stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
         if stretch_v2:
             actuator = "actuators"
@@ -399,8 +405,7 @@ class Smile(SmileHelper):
         uri = f"{APPLIANCES};id={appl_id}/{device};id={switch_id}"
         if stretch_v2:
             uri = f"{APPLIANCES};id={appl_id}/{device}"
-        state = str(state)
-        data = f"<{func_type}><state>{state}</state></{func_type}>"
+        data = f"<{func_type}><{func}>{state}</{func}></{func_type}>"
 
         await self.request(uri, method="put", data=data)
         return True
