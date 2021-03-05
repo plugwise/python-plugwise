@@ -1018,7 +1018,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_switch(
             smile, "2743216f626f43948deec1f7ab3b3d70", model="dhw_cm_switch"
         )
-
+        await self.tinker_switch(
+            smile, "40ec6ebe67844b21914c4a5382a3f09f", model="lock"
+        )
         await smile.close_connection()
         await self.disconnect(server, client)
 
