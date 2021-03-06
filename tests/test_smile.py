@@ -991,7 +991,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Test Switch
             "b83f9f9758064c0fab4af6578cba4c6d": {
-                "lock": True,
                 "relay": True,
             },
         }
