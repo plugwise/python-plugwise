@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.3 - Add lock-state switches
+
+- Support for getting and setting the lock-state of Plugs-, Circles-, Stealth-switches. A set lock-state prevents a switch from being turned off.
+- There is no lock_state available for the following special Plugwise classes: `central heating pump` and `value actuator`
+
 ## 0.9.2 - Smile Optimize 
 
 - Functions not called by the plugwise(-beta) code have been moved to helper.py in which they are part of the subclass SmileHelper
