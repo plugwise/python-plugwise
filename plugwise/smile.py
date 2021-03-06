@@ -407,6 +407,17 @@ class Smile(SmileHelper):
             uri = f"{APPLIANCES};id={appl_id}/{device}"
         data = f"<{func_type}><{func}>{state}</{func}></{func_type}>"
 
+        if model == "relay":
+            locator = f'appliance[@id="{appl_id}"]/{actuator}/{func_type}/lock'
+            lock_state = self._appliances.find(locator).text
+            print("Lock state: ", lock_state)
+            # Don't bother switching a relay when the corresponding lock-state is true
+            if lock_state == "true":
+                return False
+            else:
+                await self.request(uri, method="put", data=data)
+                return True
+
         await self.request(uri, method="put", data=data)
         return True
 
