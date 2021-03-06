@@ -518,7 +518,6 @@ class SmileHelper:
         """
         data = {}
         search = self._appliances
-
         if self._smile_legacy and self.smile_type != "stretch":
             search = self._domain_objects
 
@@ -531,6 +530,7 @@ class SmileHelper:
                     **DEVICE_MEASUREMENTS,
                     **HEATER_CENTRAL_MEASUREMENTS,
                 }.items()
+
             for measurement, attrs in measurements:
 
                 p_locator = (
@@ -565,21 +565,9 @@ class SmileHelper:
                 if appliance.find(i_locator) is not None:
                     name = f"{measurement}_interval"
                     measure = appliance.find(i_locator).text
-
                     data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
-            # Adam & Stretches: find relay switch lock state
-            actuator = "actuator_functionalities"
-            func_type = "relay_functionality"
-            if self.smile_type == "stretch" and self.smile_version[1].major == 2:
-                actuator = "actuators"
-                func_type = "relay"
-            appl_class = appliance.find("type").text
-            if appl_class not in ["central_heating_pump", "valve_actuator"]:
-                locator = f".//{actuator}/{func_type}/lock"
-                if appliance.find(locator) is not None:
-                    measure = appliance.find(locator).text
-                    data["lock"] = format_measure(measure, None)
+            data.update(self.get_lock_state(appliance))
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
@@ -927,3 +915,20 @@ class SmileHelper:
             return val
 
         return None
+
+    def get_lock_state(self, xml):
+        """Adam & Stretches: find relay switch lock state."""
+        data = {}
+        actuator = "actuator_functionalities"
+        func_type = "relay_functionality"
+        if self.smile_type == "stretch" and self.smile_version[1].major == 2:
+            actuator = "actuators"
+            func_type = "relay"
+        appl_class = xml.find("type").text
+        if appl_class not in ["central_heating_pump", "valve_actuator"]:
+            locator = f".//{actuator}/{func_type}/lock"
+            if xml.find(locator) is not None:
+                measure = xml.find(locator).text
+                data["lock"] = format_measure(measure, None)
+
+        return data
