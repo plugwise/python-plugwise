@@ -568,17 +568,18 @@ class SmileHelper:
 
                     data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
-            # Adam & Stretches: detect relay switch data
+            # Adam & Stretches: find relay switch lock state
             actuator = "actuator_functionalities"
             func_type = "relay_functionality"
             if self.smile_type == "stretch" and self.smile_version[1].major == 2:
                 actuator = "actuators"
                 func_type = "relay"
-            for item, name in {"lock": "lock", "state": "relay"}.items():
-                locator = f".//{actuator}/{func_type}/{item}"
+            appl_class = appliance.find("type").text
+            if appl_class not in ["central_heating_pump", "valve_actuator"]:
+                locator = f".//{actuator}/{func_type}/lock"
                 if appliance.find(locator) is not None:
                     measure = appliance.find(locator).text
-                    data[name] = format_measure(measure, None)
+                    data["lock"] = format_measure(measure, None)
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
