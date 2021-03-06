@@ -983,7 +983,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         switch_change = await self.tinker_switch(
             smile, "aa6b0002df0a46e1b1eb94beb61eddfe", unhappy=True
         )
-        assert switch_change
+        assert not switch_change
         await smile.close_connection()
         await self.disconnect(server, client)
 
