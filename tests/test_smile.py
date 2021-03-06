@@ -991,6 +991,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Test Switch
             "b83f9f9758064c0fab4af6578cba4c6d": {
+                "lock": True,
                 "relay": True,
             },
         }
@@ -1020,6 +1021,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         await self.tinker_switch(
             smile, "40ec6ebe67844b21914c4a5382a3f09f", model="lock"
+        )
+        await self.tinker_switch(
+            smile, "f2be121e4a9345ac83c6e99ed89a98be", model="relay"
         )
         await smile.close_connection()
         await self.disconnect(server, client)
