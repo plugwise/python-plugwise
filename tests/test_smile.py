@@ -1098,7 +1098,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
         switch_change = await self.tinker_switch(smile, "675416a629f343c495449970e2ca37b5")
-        assert switch_change
+        assert not switch_change
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1193,7 +1193,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
         )
         switch_change = await self.tinker_switch(smile, "675416a629f343c495449970e2ca37b5")
-        assert switch_change
+        assert not switch_change
         await smile.close_connection()
         await self.disconnect(server, client)
 
