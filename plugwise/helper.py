@@ -247,6 +247,7 @@ class SmileHelper:
 
         self.all_locations()
 
+        # For legacy P1
         if self._smile_legacy and self.smile_type == "power":
             # Inject home_location as dev_id for legacy so
             # _appliance_data can use loc_id for dev_id.
@@ -260,6 +261,10 @@ class SmileHelper:
             self.gateway_id = self._home_location
 
             return
+
+        # For legacy Anna gateway and heater_central is the same device
+        if self._smile_legacy and self.smile_type == "thermostat":
+            self.gateway_id = self.heater_id
 
         # TODO: add locations with members as appliance as well
         # example 'electricity consumed/produced and relay' on Adam
@@ -276,19 +281,20 @@ class SmileHelper:
             self.active_device_present = True
 
         for appliance in self._appliances:
-            appliance_location = None
-            appliance_types = set()
-
-            appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
-            appliance_name = appliance.find("name").text
-            appliance_model = appliance_class.replace("_", " ").title()
-            appliance_fw = None
-            appliance_v_name = None
 
             # Nothing useful in opentherm so skip it
             if appliance_class == "open_therm_gateway":
                 continue
+
+            appliance_location = None
+            appliance_types = set()
+
+            appliance_id = appliance.attrib["id"]
+            appliance_name = appliance.find("name").text
+            appliance_model = appliance_class.replace("_", " ").title()
+            appliance_fw = None
+            appliance_v_name = None
 
             # Find gateway and heater_central devices
             if appliance_class == "gateway":
@@ -380,12 +386,6 @@ class SmileHelper:
                 "types": appliance_types,
                 "vendor": appliance_v_name,
             }
-
-        # For legacy Anna gateway and heater_central is the same device
-        if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id
-
-        return
 
     def get_module_data(self, appliance, locator, mod_type):
         """Helper functie for finding info in MODULES."""
