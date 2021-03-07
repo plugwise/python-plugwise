@@ -92,7 +92,7 @@ class PlugwiseCircle(PlugwiseNode):
         Based on last received power usage information
         """
         if self._pulses_1s is not None:
-            return self.pulses_to_kWs(self._pulses_1s) * 1000
+            return self.pulses_to_kws(self._pulses_1s) * 1000
         return None
 
     @property
@@ -102,7 +102,7 @@ class PlugwiseCircle(PlugwiseNode):
         Based on last received power usage information
         """
         if self._pulses_8s is not None:
-            return self.pulses_to_kWs(self._pulses_8s, 8) * 1000
+            return self.pulses_to_kws(self._pulses_8s, 8) * 1000
         return None
 
     @property
@@ -112,7 +112,7 @@ class PlugwiseCircle(PlugwiseNode):
         Based on last received power usage information
         """
         if self._pulses_consumed_1h is not None:
-            return self.pulses_to_kWs(self._pulses_consumed_1h, 3600)
+            return self.pulses_to_kws(self._pulses_consumed_1h, 3600)
         return None
 
     @property
@@ -137,7 +137,7 @@ class PlugwiseCircle(PlugwiseNode):
         Based on last received power usage information
         """
         if self._pulses_produced_1h is not None:
-            return self.pulses_to_kWs(self._pulses_produced_1h, 3600)
+            return self.pulses_to_kws(self._pulses_produced_1h, 3600)
         return None
 
     @property
@@ -234,7 +234,6 @@ class PlugwiseCircle(PlugwiseNode):
 
     def message_for_circle_plus(self, message):
         """Pass messages to PlugwiseCirclePlus class"""
-        pass
 
     def _node_ack_response(self, message):
         """Process switch response message"""
@@ -329,12 +328,12 @@ class PlugwiseCircle(PlugwiseNode):
 
     def _response_calibration(self, message):
         """Store calibration properties"""
-        for x in ("gain_a", "gain_b", "off_noise", "off_tot"):
-            val = getattr(message, x).value
-            setattr(self, "_" + x, val)
+        for calibration in ("gain_a", "gain_b", "off_noise", "off_tot"):
+            val = getattr(message, calibration).value
+            setattr(self, "_" + calibration, val)
         self.calibration = True
 
-    def pulses_to_kWs(self, pulses, seconds=1):
+    def pulses_to_kws(self, pulses, seconds=1):
         """
         converts the amount of pulses to kWs using the calaboration offsets
         """
@@ -399,37 +398,37 @@ class PlugwiseCircle(PlugwiseNode):
         # Collect logged power usage
         for i in range(1, 5):
             if getattr(message, "logdate%d" % (i,)).value is not None:
-                dt = getattr(message, "logdate%d" % (i,)).value
+                log_date = getattr(message, "logdate%d" % (i,)).value
                 if getattr(message, "pulses%d" % (i,)).value == 0:
-                    self.power_history[dt] = 0.0
+                    self.power_history[log_date] = 0.0
                 else:
-                    self.power_history[dt] = self.pulses_to_kWs(
+                    self.power_history[log_date] = self.pulses_to_kws(
                         getattr(message, "pulses%d" % (i,)).value, 3600
                     )
         # Cleanup history for more than 2 day's ago
         if len(self.power_history.keys()) > 48:
-            for dt in list(self.power_history.keys()):
-                if (dt + self.timezone_delta - timedelta(hours=1)).date() < (
+            for log_date in list(self.power_history.keys()):
+                if (log_date + self.timezone_delta - timedelta(hours=1)).date() < (
                     datetime.now().today().date() - timedelta(days=1)
                 ):
-                    del self.power_history[dt]
+                    del self.power_history[log_date]
         # Recalculate power use counters
         last_hour_usage = 0
         today_power = 0
         yesterday_power = 0
-        for dt in self.power_history:
-            if (dt + self.timezone_delta) == datetime.now().today().replace(
+        for log_date in self.power_history:
+            if (log_date + self.timezone_delta) == datetime.now().today().replace(
                 minute=0, second=0, microsecond=0
             ):
-                last_hour_usage = self.power_history[dt]
+                last_hour_usage = self.power_history[log_date]
             if (
-                dt + self.timezone_delta - timedelta(hours=1)
+                log_date + self.timezone_delta - timedelta(hours=1)
             ).date() == datetime.now().today().date():
-                today_power += self.power_history[dt]
-            if (dt + self.timezone_delta - timedelta(hours=1)).date() == (
+                today_power += self.power_history[log_date]
+            if (log_date + self.timezone_delta - timedelta(hours=1)).date() == (
                 datetime.now().today().date() - timedelta(days=1)
             ):
-                yesterday_power += self.power_history[dt]
+                yesterday_power += self.power_history[log_date]
         if self._power_consumption_prev_hour != last_hour_usage:
             self._power_consumption_prev_hour = last_hour_usage
             self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
@@ -441,7 +440,7 @@ class PlugwiseCircle(PlugwiseNode):
             self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
 
     def _response_clock(self, message):
-        dt = datetime(
+        log_date = datetime(
             datetime.now().year,
             datetime.now().month,
             datetime.now().day,
@@ -450,7 +449,7 @@ class PlugwiseCircle(PlugwiseNode):
             message.time.value.second,
         )
         clock_offset = message.timestamp.replace(microsecond=0) - (
-            dt + self.timezone_delta
+            log_date + self.timezone_delta
         )
         if clock_offset.days == -1:
             self._clock_offset = clock_offset.seconds - 86400
@@ -515,7 +514,7 @@ class PlugwiseCircle(PlugwiseNode):
             "Function 'get_power_usage' will be removed in future, use the 'current_power_usage' property instead !",
         )
         if self._pulses_1s is not None:
-            return self.pulses_to_kWs(self._pulses_1s) * 1000
+            return self.pulses_to_kws(self._pulses_1s) * 1000
         return None
 
     def get_power_usage_8_sec(self):
@@ -527,7 +526,7 @@ class PlugwiseCircle(PlugwiseNode):
             "Function 'get_power_usage_8_sec' will be removed in future, use the 'current_power_usage_8_sec' property instead !",
         )
         if self._pulses_8s is not None:
-            return self.pulses_to_kWs(self._pulses_8s, 8) * 1000
+            return self.pulses_to_kws(self._pulses_8s, 8) * 1000
         return None
 
     def get_power_consumption_current_hour(self):
@@ -539,7 +538,7 @@ class PlugwiseCircle(PlugwiseNode):
             "Function 'get_power_consumption_current_hour' will be removed in future, use the 'power_consumption_current_hour' property instead !",
         )
         if self._pulses_consumed_1h is not None:
-            return self.pulses_to_kWs(self._pulses_consumed_1h, 3600)
+            return self.pulses_to_kws(self._pulses_consumed_1h, 3600)
         return None
 
     def get_power_production_current_hour(self):
@@ -551,7 +550,7 @@ class PlugwiseCircle(PlugwiseNode):
             "Function 'get_power_production_current_hour' will be removed in future, use the 'power_production_current_hour' property instead !",
         )
         if self._pulses_produced_1h is not None:
-            return self.pulses_to_kWs(self._pulses_produced_1h, 3600)
+            return self.pulses_to_kws(self._pulses_produced_1h, 3600)
         return None
 
     def get_power_consumption_prev_hour(self):
