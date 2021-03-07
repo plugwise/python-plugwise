@@ -590,17 +590,16 @@ def get_message_response(message_id, length, seq_id):
     # First check for known sequence ID's
     if seq_id == b"FFFD":
         return NodeJoinAckResponse()
-    elif seq_id == b"FFFE":
+    if seq_id == b"FFFE":
         return NodeAwakeResponse()
-    elif seq_id == b"FFFF":
+    if seq_id == b"FFFF":
         return NodeSwitchGroupResponse()
-    else:
-        # No fixed sequence ID, continue at message ID
-        if message_id == b"0000":
-            if length == 20:
-                return NodeAckSmallResponse()
-            elif length == 36:
-                return NodeAckLargeResponse()
-        else:
-            return id_to_message.get(message_id, None)
-    return None
+
+    # No fixed sequence ID, continue at message ID
+    if message_id == b"0000":
+        if length == 20:
+            return NodeAckSmallResponse()
+        if length == 36:
+            return NodeAckLargeResponse()
+        return None
+    return id_to_message.get(message_id, None)
