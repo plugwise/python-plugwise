@@ -18,6 +18,7 @@ for venv in venv .venv .; do
 
     # Install module requirements
     python setup.py install
+    pip install -e .
     # Install testing requirements
     pip install --upgrade -r requirements_test.txt 
     # Install pre-commit hook
