@@ -210,11 +210,9 @@ class PlugwiseNode:
 
     def message_for_circle(self, message):
         """Pass messages to PlugwiseCircle class"""
-        pass
 
     def message_for_sed(self, message):
         """Pass messages to NodeSED class"""
-        pass
 
     def subscribe_callback(self, callback, sensor) -> bool:
         """Subscribe callback to execute when state change happens."""
