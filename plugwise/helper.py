@@ -295,6 +295,15 @@ class SmileHelper:
             appl.fw = module_data[3]
             return appl
 
+        if self.smile_type != "stretch" and "plug" in appl.types:
+            locator = ".//logs/point_log/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            appl.model = version_to_model(module_data[1])
+            appl.fw = module_data[3]
+            return appl
+
         return appl
 
     def all_appliances(self):
@@ -347,11 +356,6 @@ class SmileHelper:
             appl.fw = None
             appl.v_name = None
 
-            appl = self.appliance_class_finder(appliance, appl)
-            # Skip on heater_central when no active device present
-            if not appl:
-                continue
-
             # Preset all types applicable to home
             appl.types = self._loc_data[self._home_location]["types"]
 
@@ -362,25 +366,22 @@ class SmileHelper:
                     appl.types.add(appl_type)
 
             # Determine appliance_type from functionality
-            if (
-                appliance.find(".//actuator_functionalities/relay_functionality")
-                is not None
-                or appliance.find(".//actuators/relay") is not None
-            ):
+            relay_func = appliance.find(
+                ".//actuator_functionalities/relay_functionality"
+            )
+            relay_act = appliance.find(".//actuators/relay")
+            thermo_func = appliance.find(
+                ".//actuator_functionalities/thermostat_functionality"
+            )
+            if relay_func is not None or relay_act is not None:
                 appl.types.add("plug")
-            elif (
-                appliance.find(".//actuator_functionalities/thermostat_functionality")
-                is not None
-            ):
+            elif thermo_func is not None:
                 appl.types.add("thermostat")
 
-            if self.smile_type != "stretch" and "plug" in appl.types:
-                locator = ".//logs/point_log/electricity_point_meter"
-                mod_type = "electricity_point_meter"
-                module_data = self.get_module_data(appliance, locator, mod_type)
-                appl.v_name = module_data[0]
-                appl.model = version_to_model(module_data[1])
-                appl.fw = module_data[3]
+            appl = self.appliance_class_finder(appliance, appl)
+            # Skip on heater_central when no active device present
+            if not appl:
+                continue
 
             self.appl_data[appl.id] = {
                 "class": appl.pwclass,
@@ -709,6 +710,23 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
+    @staticmethod
+    def energy_diff(measurement, net_string, f_val, direct_data):
+        """Calculate differential energy."""
+        if "electricity" in measurement:
+            diff = 1
+            if "produced" in measurement:
+                diff = -1
+            if net_string not in direct_data:
+                direct_data[net_string] = 0
+
+            if isinstance(f_val, int):
+                direct_data[net_string] += f_val * diff
+            else:
+                direct_data[net_string] += float(f_val * diff)
+
+        return direct_data
+
     def power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
@@ -733,15 +751,16 @@ class SmileHelper:
                         f'.//{log_type}[type="{measurement}"]/period/'
                         f'measurement[@{t_string}="{peak_select}"]'
                     )
+
                     # Only once try to find P1 Legacy values
                     if loc_logs.find(locator) is None and self.smile_type == "power":
-                        locator = (
-                            f'.//{log_type}[type="{measurement}"]/period/measurement'
-                        )
-
                         # Skip peak if not split (P1 Legacy)
                         if peak_select == "nl_offpeak":
                             continue
+
+                        locator = (
+                            f'.//{log_type}[type="{measurement}"]/period/measurement'
+                        )
 
                     if loc_logs.find(locator) is None:
                         continue
@@ -761,17 +780,10 @@ class SmileHelper:
                         item in key_string for item in ["electricity", "cumulative"]
                     ):
                         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
-                    # Energy differential
-                    if "electricity" in measurement:
-                        diff = 1
-                        if "produced" in measurement:
-                            diff = -1
-                        if net_string not in direct_data:
-                            direct_data[net_string] = 0
-                        if isinstance(f_val, int):
-                            direct_data[net_string] += f_val * diff
-                        else:
-                            direct_data[net_string] += float(f_val * diff)
+
+                    direct_data = self.energy_diff(
+                        measurement, net_string, f_val, direct_data
+                    )
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
