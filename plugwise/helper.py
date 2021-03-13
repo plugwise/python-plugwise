@@ -279,16 +279,16 @@ class SmileHelper:
             appliance_location = None
             appliance_types = set()
 
-            appliance_id = appliance.attrib["id"]
             appliance_class = appliance.find("type").text
+            # Nothing useful in opentherm so skip it
+            if appliance_class == "open_therm_gateway":
+                continue
+
+            appliance_id = appliance.attrib["id"]
             appliance_name = appliance.find("name").text
             appliance_model = appliance_class.replace("_", " ").title()
             appliance_fw = None
             appliance_v_name = None
-
-            # Nothing useful in opentherm so skip it
-            if appliance_class == "open_therm_gateway":
-                continue
 
             # Find gateway and heater_central devices
             if appliance_class == "gateway":
@@ -297,7 +297,7 @@ class SmileHelper:
                 appliance_model = appliance_name = self.smile_name
                 appliance_v_name = "Plugwise B.V."
 
-            if appliance_class in [
+            elif appliance_class in [
                 "thermostat",
                 "thermostatic_radiator_valve",
                 "zone_thermostat",
@@ -309,7 +309,7 @@ class SmileHelper:
                 appliance_model = check_model(module_data[1], appliance_v_name)
                 appliance_fw = module_data[3]
 
-            if appliance_class == "heater_central":
+            elif appliance_class == "heater_central":
                 # Remove heater_central when no active device present
                 if not self.active_device_present:
                     continue
@@ -329,7 +329,7 @@ class SmileHelper:
                         "Generic heater/cooler" if self._cp_state else "Generic heater"
                     )
 
-            if self.stretch_v2 or self.stretch_v3:
+            elif self.stretch_v2 or self.stretch_v3:
                 locator = ".//services/electricity_point_meter"
                 mod_type = "electricity_point_meter"
                 module_data = self.get_module_data(appliance, locator, mod_type)
