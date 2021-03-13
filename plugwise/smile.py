@@ -160,6 +160,13 @@ class Smile(SmileHelper):
         if "legacy" in SMILES[target_smile]:
             self._smile_legacy = SMILES[target_smile]["legacy"]
 
+        self.stretch_v2 = (
+            self.smile_type == "stretch" and self.smile_version[1].major == 2
+        )
+        self.stretch_v3 = (
+            self.smile_type == "stretch" and self.smile_version[1].major == 3
+        )
+
         # Update all endpoints on first connect
         await self.full_update_device()
 
@@ -382,8 +389,7 @@ class Smile(SmileHelper):
             func = "lock"
             state = "false" if state == "off" else "true"
 
-        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
-        if stretch_v2:
+        if self.stretch_v2:
             actuator = "actuators"
             func_type = "relay"
 
@@ -392,7 +398,7 @@ class Smile(SmileHelper):
                 locator = f'appliance[@id="{member}"]/{actuator}/{func_type}'
                 switch_id = self._appliances.find(locator).attrib["id"]
                 uri = f"{APPLIANCES};id={member}/{device};id={switch_id}"
-                if stretch_v2:
+                if self.stretch_v2:
                     uri = f"{APPLIANCES};id={member}/{device}"
                 state = str(state)
                 data = f"<{func_type}><state>{state}</state></{func_type}>"
@@ -403,7 +409,7 @@ class Smile(SmileHelper):
         locator = f'appliance[@id="{appl_id}"]/{actuator}/{func_type}'
         switch_id = self._appliances.find(locator).attrib["id"]
         uri = f"{APPLIANCES};id={appl_id}/{device};id={switch_id}"
-        if stretch_v2:
+        if self.stretch_v2:
             uri = f"{APPLIANCES};id={appl_id}/{device}"
         data = f"<{func_type}><{func}>{state}</{func}></{func_type}>"
 

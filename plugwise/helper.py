@@ -106,6 +106,8 @@ class SmileHelper:
         self.smile_name = None
         self.smile_type = None
         self.smile_version = ()
+        self.stretch_v2 = False
+        self.stretch_v3 = False
         self.thermo_locs = None
         self.websession = None
 
@@ -242,8 +244,6 @@ class SmileHelper:
     def all_appliances(self):
         """Determine available appliances from inventory."""
         self.appl_data = {}
-        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
-        stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
         self.all_locations()
 
@@ -329,7 +329,7 @@ class SmileHelper:
                         "Generic heater/cooler" if self._cp_state else "Generic heater"
                     )
 
-            if stretch_v2 or stretch_v3:
+            if self.stretch_v2 or self.stretch_v3:
                 locator = ".//services/electricity_point_meter"
                 mod_type = "electricity_point_meter"
                 module_data = self.get_module_data(appliance, locator, mod_type)
@@ -341,14 +341,14 @@ class SmileHelper:
                     appliance_model = version_to_model(hw_version)
                 appliance_fw = module_data[3]
 
+            # Preset all types applicable to home
+            appliance_types = self._loc_data[self._home_location]["types"]
+
             # Appliance with location (i.e. a device)
             if appliance.find("location") is not None:
                 appliance_location = appliance.find("location").attrib["id"]
                 for appl_type in types_finder(appliance):
                     appliance_types.add(appl_type)
-            else:
-                # Return all types applicable to home
-                appliance_types = self._loc_data[self._home_location]["types"]
 
             # Determine appliance_type from functionality
             if (
