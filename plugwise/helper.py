@@ -32,6 +32,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
 )
 from .exceptions import (
+    DeviceSetupError,
     DeviceTimeoutError,
     InvalidAuthentication,
     InvalidXMLError,
@@ -304,7 +305,8 @@ class SmileHelper:
             appl.fw = module_data[3]
             return appl
 
-        return appl
+        # Cornercase just return existing dict-object
+        return appl  # pragma: no cover
 
     def all_appliances(self):
         """Determine available appliances from inventory."""
