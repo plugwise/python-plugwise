@@ -74,7 +74,6 @@ class Smile(SmileHelper):
 
         result = await self.request(DOMAIN_OBJECTS)
         dsmrmain = result.find(".//module/protocols/dsmrmain")
-        network = result.find(".//module/protocols/network_router/network")
 
         vendor_names = result.findall(".//module/vendor_name")
         for name in vendor_names:
@@ -89,50 +88,66 @@ class Smile(SmileHelper):
                 )
                 raise ConnectionFailedError
 
+        # Determine smile specifics
+        await self.smile_detect(result, dsmrmain)
+
+        # Update all endpoints on first connect
+        await self.full_update_device()
+
+        return True
+
+    async def smile_detect_legacy(self, result, dsmrmain):
+        network = result.find(".//module/protocols/network_router/network")
+
+        # Assume legacy
+        self._smile_legacy = True
+        # Try if it is an Anna, assuming appliance thermostat
+        anna = result.find('.//appliance[type="thermostat"]')
+        # Fake insert version assuming Anna
+        # couldn't find another way to identify as legacy Anna
+        version = "1.8.0"
+        model = "smile_thermo"
+        if anna is None:
+            # P1 legacy:
+            if dsmrmain is not None:
+                try:
+                    status = await self.request(STATUS)
+                    version = status.find(".//system/version").text
+                    model = status.find(".//system/product").text
+                    self.smile_hostname = status.find(".//network/hostname").text
+                except InvalidXMLError:  # pragma: no cover
+                    # Corner case check
+                    raise ConnectionFailedError
+
+            # Stretch:
+            elif network is not None:
+                try:
+                    system = await self.request(SYSTEM)
+                    version = system.find(".//gateway/firmware").text
+                    model = system.find(".//gateway/product").text
+                    self.smile_hostname = system.find(".//gateway/hostname").text
+                    self.gateway_id = network.attrib["id"]
+                except InvalidXMLError:  # pragma: no cover
+                    # Corner case check
+                    raise ConnectionFailedError
+            else:  # pragma: no cover
+                # No cornercase, just end of the line
+                _LOGGER.error("Connected but no gateway device information found")
+                raise ConnectionFailedError
+        return model, version
+
+    async def smile_detect(self, result, dsmrmain):
+        """Detect which type of Smile is connected."""
+        model = None
         gateway = result.find(".//gateway")
 
-        model = version = None
         if gateway is not None:
             model = result.find(".//gateway/vendor_model").text
             version = result.find(".//gateway/firmware_version").text
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
         else:
-            # Assume legacy
-            self._smile_legacy = True
-            # Try if it is an Anna, assuming appliance thermostat
-            anna = result.find('.//appliance[type="thermostat"]')
-            # Fake insert version assuming Anna
-            # couldn't find another way to identify as legacy Anna
-            version = "1.8.0"
-            model = "smile_thermo"
-            if anna is None:
-                # P1 legacy:
-                if dsmrmain is not None:
-                    try:
-                        status = await self.request(STATUS)
-                        version = status.find(".//system/version").text
-                        model = status.find(".//system/product").text
-                        self.smile_hostname = status.find(".//network/hostname").text
-                    except InvalidXMLError:  # pragma: no cover
-                        # Corner case check
-                        raise ConnectionFailedError
-
-                # Stretch:
-                elif network is not None:
-                    try:
-                        system = await self.request(SYSTEM)
-                        version = system.find(".//gateway/firmware").text
-                        model = system.find(".//gateway/product").text
-                        self.smile_hostname = system.find(".//gateway/hostname").text
-                        self.gateway_id = network.attrib["id"]
-                    except InvalidXMLError:  # pragma: no cover
-                        # Corner case check
-                        raise ConnectionFailedError
-                else:  # pragma: no cover
-                    # No cornercase, just end of the line
-                    _LOGGER.error("Connected but no gateway device information found")
-                    raise ConnectionFailedError
+            model, version = await self.smile_detect_legacy(result, dsmrmain)
 
         if model is None or version is None:  # pragma: no cover
             # Corner case check
@@ -160,17 +175,9 @@ class Smile(SmileHelper):
         if "legacy" in SMILES[target_smile]:
             self._smile_legacy = SMILES[target_smile]["legacy"]
 
-        self.stretch_v2 = (
-            self.smile_type == "stretch" and self.smile_version[1].major == 2
-        )
-        self.stretch_v3 = (
-            self.smile_type == "stretch" and self.smile_version[1].major == 3
-        )
-
-        # Update all endpoints on first connect
-        await self.full_update_device()
-
-        return True
+        if self.smile_type == "stretch":
+            self.stretch_v2 = self.smile_version[1].major == 2
+            self.stretch_v3 = self.smile_version[1].major == 3
 
     async def close_connection(self):
         """Close the Plugwise connection."""
