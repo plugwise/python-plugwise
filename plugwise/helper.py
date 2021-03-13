@@ -32,7 +32,6 @@ from .constants import (
     THERMOSTAT_CLASSES,
 )
 from .exceptions import (
-    DeviceSetupError,
     DeviceTimeoutError,
     InvalidAuthentication,
     InvalidXMLError,
