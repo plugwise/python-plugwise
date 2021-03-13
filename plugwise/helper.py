@@ -333,7 +333,6 @@ class SmileHelper:
 
         for appliance in self._appliances:
             appl = Munch()
-
             appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
             if appl.pwclass == "open_therm_gateway":
@@ -349,7 +348,7 @@ class SmileHelper:
             appl.v_name = None
 
             appl = self.appliance_class_finder(appliance, appl)
-            # Remove heater_central when no active device present
+            # Skip on heater_central when no active device present
             if not appl:
                 continue
 
@@ -400,7 +399,7 @@ class SmileHelper:
         return
 
     def get_module_data(self, appliance, locator, mod_type):
-        """Helper functie for finding info in MODULES."""
+        """Helper function for finding info in MODULES."""
         appl_search = appliance.find(locator)
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
