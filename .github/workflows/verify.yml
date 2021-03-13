@@ -340,9 +340,8 @@ jobs:
         run: |
           echo "Failed to restore Python virtual environment from cache"
           exit 1
-      - name: Download all coverage artifacts
-        uses: actions/download-artifact@v2
-      - name: Combine coverage results
+      - name: Run complexity report (click to view details)
         run: |
           . venv/bin/activate
-          radon cc plugwise/smile.py plugwise/helper.py tests/test_smile.py -s --no-assert
+          echo "Showing complexity higher or equal to 'C'"
+          radon cc plugwise/smile.py plugwise/helper.py tests/test_smile.py -s -nc --no-assert
