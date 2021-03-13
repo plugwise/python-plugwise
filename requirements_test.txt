@@ -13,3 +13,4 @@ pytest-aiohttp==0.3.0
 pytest-asyncio==0.14.0
 pytest-cov==2.10.1
 pytest-cover==3.0.0
+radon=4.5.0

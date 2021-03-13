@@ -10,6 +10,7 @@ import logging
 import async_timeout
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
+from munch import Munch
 
 # Time related
 import pytz
@@ -28,6 +29,7 @@ from .constants import (
     LOCATIONS,
     POWER_WATT,
     SWITCH_GROUP_TYPES,
+    THERMOSTAT_CLASSES,
 )
 from .exceptions import (
     DeviceTimeoutError,
@@ -241,6 +243,60 @@ class SmileHelper:
 
         return
 
+    def appliance_class_finder(self, appliance, appl):
+        # Find gateway and heater_central devices
+        if appl.pwclass == "gateway":
+            self.gateway_id = appliance.attrib["id"]
+            appl.fw = self.smile_version[0]
+            appl.model = appl.name = self.smile_name
+            appl.v_name = "Plugwise B.V."
+            return appl
+
+        if appl.pwclass in THERMOSTAT_CLASSES:
+            locator = ".//logs/point_log[type='thermostat']/thermostat"
+            mod_type = "thermostat"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            appl.model = check_model(module_data[1], appl.v_name)
+            appl.fw = module_data[3]
+            return appl
+
+        if appl.pwclass == "heater_central":
+            # Remove heater_central when no active device present
+            if not self.active_device_present:
+                return None
+
+            self.heater_id = appliance.attrib["id"]
+            appl.name = "Auxiliary"
+            locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
+            locator2 = ".//services/boiler_state"
+            mod_type = "boiler_state"
+            module_data = self.get_module_data(appliance, locator1, mod_type)
+            if module_data == [None, None, None, None]:
+                module_data = self.get_module_data(appliance, locator2, mod_type)
+            appl.v_name = module_data[0]
+            appl.model = check_model(module_data[1], appl.v_name)
+            if appl.model is None:
+                appl.model = (
+                    "Generic heater/cooler" if self._cp_state else "Generic heater"
+                )
+            return appl
+
+        if self.stretch_v2 or self.stretch_v3:
+            locator = ".//services/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            if appl.model != "Group Switch":
+                appl.model = None
+            if module_data[2] is not None:
+                hw_version = module_data[2].replace("-", "")
+                appl.model = version_to_model(hw_version)
+            appl.fw = module_data[3]
+            return appl
+
+        return appl
+
     def all_appliances(self):
         """Determine available appliances from inventory."""
         self.appl_data = {}
@@ -276,79 +332,35 @@ class SmileHelper:
             self.active_device_present = True
 
         for appliance in self._appliances:
-            appliance_location = None
-            appliance_types = set()
+            appl = Munch()
 
-            appliance_class = appliance.find("type").text
+            appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
-            if appliance_class == "open_therm_gateway":
+            if appl.pwclass == "open_therm_gateway":
                 continue
 
-            appliance_id = appliance.attrib["id"]
-            appliance_name = appliance.find("name").text
-            appliance_model = appliance_class.replace("_", " ").title()
-            appliance_fw = None
-            appliance_v_name = None
+            appl.location = None
+            appl.types = set()
 
-            # Find gateway and heater_central devices
-            if appliance_class == "gateway":
-                self.gateway_id = appliance.attrib["id"]
-                appliance_fw = self.smile_version[0]
-                appliance_model = appliance_name = self.smile_name
-                appliance_v_name = "Plugwise B.V."
+            appl.id = appliance.attrib["id"]
+            appl.name = appliance.find("name").text
+            appl.model = appl.pwclass.replace("_", " ").title()
+            appl.fw = None
+            appl.v_name = None
 
-            elif appliance_class in [
-                "thermostat",
-                "thermostatic_radiator_valve",
-                "zone_thermostat",
-            ]:
-                locator = ".//logs/point_log[type='thermostat']/thermostat"
-                mod_type = "thermostat"
-                module_data = self.get_module_data(appliance, locator, mod_type)
-                appliance_v_name = module_data[0]
-                appliance_model = check_model(module_data[1], appliance_v_name)
-                appliance_fw = module_data[3]
-
-            elif appliance_class == "heater_central":
-                # Remove heater_central when no active device present
-                if not self.active_device_present:
-                    continue
-
-                self.heater_id = appliance.attrib["id"]
-                appliance_name = "Auxiliary"
-                locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
-                locator2 = ".//services/boiler_state"
-                mod_type = "boiler_state"
-                module_data = self.get_module_data(appliance, locator1, mod_type)
-                if module_data == [None, None, None, None]:
-                    module_data = self.get_module_data(appliance, locator2, mod_type)
-                appliance_v_name = module_data[0]
-                appliance_model = check_model(module_data[1], appliance_v_name)
-                if appliance_model is None:
-                    appliance_model = (
-                        "Generic heater/cooler" if self._cp_state else "Generic heater"
-                    )
-
-            elif self.stretch_v2 or self.stretch_v3:
-                locator = ".//services/electricity_point_meter"
-                mod_type = "electricity_point_meter"
-                module_data = self.get_module_data(appliance, locator, mod_type)
-                appliance_v_name = module_data[0]
-                if appliance_model != "Group Switch":
-                    appliance_model = None
-                if module_data[2] is not None:
-                    hw_version = module_data[2].replace("-", "")
-                    appliance_model = version_to_model(hw_version)
-                appliance_fw = module_data[3]
+            appl = self.appliance_class_finder(appliance, appl)
+            # Remove heater_central when no active device present
+            if not appl:
+                continue
 
             # Preset all types applicable to home
-            appliance_types = self._loc_data[self._home_location]["types"]
+            appl.types = self._loc_data[self._home_location]["types"]
 
             # Appliance with location (i.e. a device)
             if appliance.find("location") is not None:
-                appliance_location = appliance.find("location").attrib["id"]
+                appl.location = appliance.find("location").attrib["id"]
                 for appl_type in types_finder(appliance):
-                    appliance_types.add(appl_type)
+                    appl.types.add(appl_type)
 
             # Determine appliance_type from functionality
             if (
@@ -356,29 +368,29 @@ class SmileHelper:
                 is not None
                 or appliance.find(".//actuators/relay") is not None
             ):
-                appliance_types.add("plug")
+                appl.types.add("plug")
             elif (
                 appliance.find(".//actuator_functionalities/thermostat_functionality")
                 is not None
             ):
-                appliance_types.add("thermostat")
+                appl.types.add("thermostat")
 
-            if self.smile_type != "stretch" and "plug" in appliance_types:
+            if self.smile_type != "stretch" and "plug" in appl.types:
                 locator = ".//logs/point_log/electricity_point_meter"
                 mod_type = "electricity_point_meter"
                 module_data = self.get_module_data(appliance, locator, mod_type)
-                appliance_v_name = module_data[0]
-                appliance_model = version_to_model(module_data[1])
-                appliance_fw = module_data[3]
+                appl.v_name = module_data[0]
+                appl.model = version_to_model(module_data[1])
+                appl.fw = module_data[3]
 
-            self.appl_data[appliance_id] = {
-                "class": appliance_class,
-                "fw": appliance_fw,
-                "location": appliance_location,
-                "model": appliance_model,
-                "name": appliance_name,
-                "types": appliance_types,
-                "vendor": appliance_v_name,
+            self.appl_data[appl.id] = {
+                "class": appl.pwclass,
+                "fw": appl.fw,
+                "location": appl.location,
+                "model": appl.model,
+                "name": appl.name,
+                "types": appl.types,
+                "vendor": appl.v_name,
             }
 
         # For legacy Anna gateway and heater_central is the same device

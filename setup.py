@@ -40,6 +40,7 @@ setup(
         "async_timeout<4.0",
         "crcmod",
         "defusedxml",
+        "munch",
         "pyserial",
         "pytz",
         "python-dateutil",
