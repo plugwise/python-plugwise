@@ -228,6 +228,66 @@ class Smile(SmileHelper):
 
         return devices
 
+    def get_device_data_switching_groups(self, details, device_data):
+        """Determine switching groups device data."""
+        if details["class"] in SWITCH_GROUP_TYPES:
+            counter = 0
+            for member in details["members"]:
+                appl_data = self.appliance_data(member)
+                if appl_data["relay"]:
+                    counter += 1
+
+            device_data["relay"] = True
+            if counter == 0:
+                device_data["relay"] = False
+
+        return device_data
+
+    def get_device_data_anna(self, dev_id, details, device_data):
+        """Determine anna and legacy_anna device data."""
+        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
+        if "boiler_state" in device_data:
+            device_data["heating_state"] = device_data["intended_boiler_state"]
+            device_data.pop("boiler_state", None)
+            device_data.pop("intended_boiler_state", None)
+
+        # Anna specific
+        illuminance = self.object_value("appliance", dev_id, "illuminance")
+        if illuminance is not None:
+            device_data["illuminance"] = illuminance
+
+        return device_data
+
+    def get_device_data_adam(self, details, device_data):
+        """Determine Adam device data."""
+        # Adam: indicate heating_state based on valves being open in case of city-provided heating
+        if self.smile_name == "Adam":
+            if details["class"] == "gateway":
+                if not self.active_device_present and self.heating_valves() is not None:
+                    device_data["heating_state"] = True
+                    if self.heating_valves() == 0:
+                        device_data["heating_state"] = False
+
+        return device_data
+
+    def get_device_data_climate(self, details, device_data):
+        """Determine climate-control device data."""
+        # Anna, Lisa, Tom/Floor
+        device_data["active_preset"] = self.preset(details["location"])
+        device_data["presets"] = self.presets(details["location"])
+
+        avail_schemas, sel_schema, sched_setpoint = self.schemas(details["location"])
+        if not self._smile_legacy:
+            device_data["schedule_temperature"] = sched_setpoint
+        device_data["available_schedules"] = avail_schemas
+        device_data["selected_schedule"] = sel_schema
+        if self._smile_legacy:
+            device_data["last_used"] = "".join(map(str, avail_schemas))
+        else:
+            device_data["last_used"] = self.last_active_schema(details["location"])
+
+        return device_data
+
     def get_device_data(self, dev_id):
         """Provide device-data, based on location_id, from APPLIANCES."""
         devices = self.get_all_devices()
@@ -249,53 +309,18 @@ class Smile(SmileHelper):
             if power_data is not None:
                 device_data.update(power_data)
 
-        # Switching Groups
-        if details["class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in details["members"]:
-                appl_data = self.appliance_data(member)
-                if appl_data["relay"]:
-                    counter += 1
-
-            device_data["relay"] = True
-            if counter == 0:
-                device_data["relay"] = False
-
-        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
-        if "boiler_state" in device_data:
-            device_data["heating_state"] = device_data["intended_boiler_state"]
-            device_data.pop("boiler_state", None)
-            device_data.pop("intended_boiler_state", None)
-
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
-        if self.smile_name == "Adam":
-            if details["class"] == "gateway":
-                if not self.active_device_present and self.heating_valves() is not None:
-                    device_data["heating_state"] = True
-                    if self.heating_valves() == 0:
-                        device_data["heating_state"] = False
-
+        # Switching groups data
+        device_data = self.get_device_data_switching_groups(details, device_data)
+        # Specific, not generic Anna data
+        device_data = self.get_device_data_anna(dev_id, details, device_data)
+        # Specific, not generic Adam data
+        device_data = self.get_device_data_adam(details, device_data)
+        # Unless thermostat based, no need to walk presets
         if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
 
-        # Anna, Lisa, Tom/Floor
-        device_data["active_preset"] = self.preset(details["location"])
-        device_data["presets"] = self.presets(details["location"])
-
-        avail_schemas, sel_schema, sched_setpoint = self.schemas(details["location"])
-        if not self._smile_legacy:
-            device_data["schedule_temperature"] = sched_setpoint
-        device_data["available_schedules"] = avail_schemas
-        device_data["selected_schedule"] = sel_schema
-        if self._smile_legacy:
-            device_data["last_used"] = "".join(map(str, avail_schemas))
-        else:
-            device_data["last_used"] = self.last_active_schema(details["location"])
-
-        # Anna specific
-        illuminance = self.object_value("appliance", dev_id, "illuminance")
-        if illuminance is not None:
-            device_data["illuminance"] = illuminance
+        # Climate based data (presets, temperatures etc)
+        device_data = self.get_device_data_climate(details, device_data)
 
         return device_data
 
