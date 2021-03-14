@@ -243,7 +243,7 @@ class SmileHelper:
 
         return
 
-    def all_appliances_class_finder(self, appliance, appl):
+    def appliance_class_finder(self, appliance, appl):
         """Determine class per appliance."""
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
@@ -308,7 +308,7 @@ class SmileHelper:
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
 
-    def all_appliances_types_finder(self, appliance, appl):
+    def appliance_types_finder(self, appliance, appl):
         """Determine type per appliance."""
         # Preset all types applicable to home
         appl.types = self._loc_data[self._home_location]["types"]
@@ -383,10 +383,10 @@ class SmileHelper:
             appl.v_name = None
 
             # Determine types for this appliance
-            appl = self.all_appliances_types_finder(appliance, appl)
+            appl = self.appliance_types_finder(appliance, appl)
 
             # Determine class for this appliance
-            appl = self.all_appliances_class_finder(appliance, appl)
+            appl = self.appliance_class_finder(appliance, appl)
             # Skip on heater_central when no active device present
             if not appl:
                 continue
