@@ -4,6 +4,9 @@ import logging
 
 import aiohttp
 
+# Dict as class
+from munch import Munch
+
 # Version detection
 import semver
 
@@ -407,46 +410,54 @@ class Smile(SmileHelper):
         await self.request(uri, method="put", data=data)
         return True
 
+    async def set_groupswitch_member_state(self, members, state, switch):
+        """Switch the Switch within a group of members off/on."""
+        for member in members:
+            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
+            switch_id = self._appliances.find(locator).attrib["id"]
+            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
+            if self.stretch_v2:
+                uri = f"{APPLIANCES};id={member}/{switch.device}"
+            state = str(state)
+            data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
+
+            await self.request(uri, method="put", data=data)
+
+        return True
+
     async def set_switch_state(self, appl_id, members, model, state):
         """Switch the Switch off/on."""
-        actuator = "actuator_functionalities"
-        device = "relay"
-        func_type = "relay_functionality"
-        func = "state"
+        switch = Munch()
+        switch.actuator = "actuator_functionalities"
+        switch.device = "relay"
+        switch.func_type = "relay_functionality"
+        switch.func = "state"
         if model == "dhw_cm_switch":
-            device = "toggle"
-            func_type = "toggle_functionality"
+            switch.device = "toggle"
+            switch.func_type = "toggle_functionality"
 
         if model == "lock":
-            func = "lock"
+            switch.func = "lock"
             state = "false" if state == "off" else "true"
 
         if self.stretch_v2:
-            actuator = "actuators"
-            func_type = "relay"
+            switch.actuator = "actuators"
+            switch.func_type = "relay"
 
         if members is not None:
-            for member in members:
-                locator = f'appliance[@id="{member}"]/{actuator}/{func_type}'
-                switch_id = self._appliances.find(locator).attrib["id"]
-                uri = f"{APPLIANCES};id={member}/{device};id={switch_id}"
-                if self.stretch_v2:
-                    uri = f"{APPLIANCES};id={member}/{device}"
-                state = str(state)
-                data = f"<{func_type}><state>{state}</state></{func_type}>"
+            return await self.set_groupswitch_member_state(members, state, switch)
 
-                await self.request(uri, method="put", data=data)
-            return True
-
-        locator = f'appliance[@id="{appl_id}"]/{actuator}/{func_type}'
+        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         switch_id = self._appliances.find(locator).attrib["id"]
-        uri = f"{APPLIANCES};id={appl_id}/{device};id={switch_id}"
+        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self.stretch_v2:
-            uri = f"{APPLIANCES};id={appl_id}/{device}"
-        data = f"<{func_type}><{func}>{state}</{func}></{func_type}>"
+            uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
+        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
         if model == "relay":
-            locator = f'appliance[@id="{appl_id}"]/{actuator}/{func_type}/lock'
+            locator = (
+                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
+            )
             lock_state = self._appliances.find(locator).text
             print("Lock state: ", lock_state)
             # Don't bother switching a relay when the corresponding lock-state is true

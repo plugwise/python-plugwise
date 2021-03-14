@@ -79,6 +79,35 @@ def types_finder(data):
     return types
 
 
+def power_data_local_format(attrs, key_string, val):
+    """Format power data."""
+    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
+    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
+        f_val = int(round(float(val)))
+    if all(item in key_string for item in ["electricity", "cumulative"]):
+        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
+
+    return f_val
+
+
+def power_data_energy_diff(measurement, net_string, f_val, direct_data):
+    """Calculate differential energy."""
+    if "electricity" in measurement:
+        diff = 1
+        if "produced" in measurement:
+            diff = -1
+        if net_string not in direct_data:
+            direct_data[net_string] = 0
+
+        if isinstance(f_val, int):
+            direct_data[net_string] += f_val * diff
+        else:
+            direct_data[net_string] += float(f_val * diff)
+
+    return direct_data
+
+
 class SmileHelper:
     """Define the SmileHelper object."""
 
@@ -726,35 +755,6 @@ class SmileHelper:
 
         return t_string
 
-    @staticmethod
-    def power_data_local_format(attrs, key_string, val):
-        """Format power data."""
-        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
-        # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
-        if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
-            f_val = int(round(float(val)))
-        if all(item in key_string for item in ["electricity", "cumulative"]):
-            f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
-
-        return f_val
-
-    @staticmethod
-    def power_data_energy_diff(measurement, net_string, f_val, direct_data):
-        """Calculate differential energy."""
-        if "electricity" in measurement:
-            diff = 1
-            if "produced" in measurement:
-                diff = -1
-            if net_string not in direct_data:
-                direct_data[net_string] = 0
-
-            if isinstance(f_val, int):
-                direct_data[net_string] += f_val * diff
-            else:
-                direct_data[net_string] += float(f_val * diff)
-
-        return direct_data
-
     def power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
@@ -798,9 +798,9 @@ class SmileHelper:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = self.power_data_local_format(attrs, key_string, val)
+                    f_val = power_data_local_format(attrs, key_string, val)
 
-                    direct_data = self.power_data_energy_diff(
+                    direct_data = power_data_energy_diff(
                         measurement, net_string, f_val, direct_data
                     )
 
