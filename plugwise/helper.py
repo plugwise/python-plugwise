@@ -719,7 +719,7 @@ class SmileHelper:
         return None if loc_found == 0 else open_valve_count
 
     @staticmethod
-    def energy_diff(measurement, net_string, f_val, direct_data):
+    def power_data_energy_diff(measurement, net_string, f_val, direct_data):
         """Calculate differential energy."""
         if "electricity" in measurement:
             diff = 1
@@ -789,7 +789,7 @@ class SmileHelper:
                     ):
                         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
 
-                    direct_data = self.energy_diff(
+                    direct_data = self.power_data_energy_diff(
                         measurement, net_string, f_val, direct_data
                     )
 
@@ -819,35 +819,43 @@ class SmileHelper:
         if preset is not None:
             return preset.text
 
+    def schemas_legacy(self):
+        """Obtain legacy available schemas or schedules."""
+        available = []
+        name = None
+        schedule_temperature = None
+        schemas = {}
+        selected = None
+
+        for schema in self._domain_objects.findall(".//rule"):
+            rule_name = schema.find("name").text
+            if rule_name:
+                if "preset" not in rule_name:
+                    name = rule_name
+
+        log_type = "schedule_state"
+        locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
+        active = False
+        if self._domain_objects.find(locator) is not None:
+            active = self._domain_objects.find(locator).text == "on"
+
+        if name is not None:
+            schemas[name] = active
+
+        available, selected = determine_selected(available, selected, schemas)
+        return available, selected, schedule_temperature
+
     def schemas(self, loc_id):
         """Obtain the available schemas or schedules based on the location_id."""
+        available = []
         rule_ids = {}
         schemas = {}
-        available = []
-        selected = None
         schedule_temperature = None
+        selected = None
 
         # Legacy schemas
         if self._smile_legacy:  # Only one schedule allowed
-            name = None
-            for schema in self._domain_objects.findall(".//rule"):
-                rule_name = schema.find("name").text
-                if rule_name:
-                    if "preset" not in rule_name:
-                        name = rule_name
-
-            log_type = "schedule_state"
-            locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
-            active = False
-            if self._domain_objects.find(locator) is not None:
-                active = self._domain_objects.find(locator).text == "on"
-
-            if name is not None:
-                schemas[name] = active
-
-            available, selected = determine_selected(available, selected, schemas)
-
-            return available, selected, schedule_temperature
+            return self.schemas_legacy()
 
         # Current schemas
         tag = "zone_preset_based_on_time_and_presence_with_override"
