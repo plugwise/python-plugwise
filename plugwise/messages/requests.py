@@ -249,10 +249,10 @@ class CirclePlusRealTimeClockSetRequest(NodeRequest):
 
     def __init__(self, mac, dt):
         super().__init__(mac)
-        t = RealClockTime(dt.hour, dt.minute, dt.second)
+        this_time = RealClockTime(dt.hour, dt.minute, dt.second)
         day_of_week = Int(dt.weekday(), 2)
-        d = RealClockDate(dt.day, dt.month, dt.year)
-        self.args += [t, day_of_week, d]
+        this_date = RealClockDate(dt.day, dt.month, dt.year)
+        self.args += [this_time, day_of_week, this_date]
 
 
 class CirclePlusRealTimeClockGetRequest(NodeRequest):
