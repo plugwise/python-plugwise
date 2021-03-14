@@ -20,6 +20,7 @@ import pytest
 
 pw_exceptions = importlib.import_module("plugwise.exceptions")
 pw_smile = importlib.import_module("plugwise.smile")
+pw_constants = importlib.import_module("plugwise.constants")
 
 pp = PrettyPrinter(indent=8)
 
@@ -215,6 +216,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
+        test_password = "".join(random.choice(string.ascii_lowercase) for i in range(8))
 
         # Happy flow
         app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
@@ -249,10 +251,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             smile = pw_smile.Smile(
                 host=server.host,
-                username="smile",
-                password="".join(
-                    random.choice(string.ascii_lowercase) for i in range(8)
-                ),
+                username=pw_constants.DEFAULT_USERNAME,
+                password=test_password,
                 port=server.port,
                 websession=None,
             )
@@ -262,8 +262,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         smile = pw_smile.Smile(
             host=server.host,
-            username="smile",
-            password="".join(random.choice(string.ascii_lowercase) for i in range(8)),
+            username=pw_constants.DEFAULT_USERNAME,
+            password=test_password,
             port=server.port,
             websession=websession,
         )
@@ -432,11 +432,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return switch_change
 
     @pytest.mark.asyncio
-    async def tinker_thermostat(self, smile, loc_id, good_schemas=None, unhappy=False):
-        """Toggle various climate settings to test functionality."""
-        if good_schemas is None:  # pragma: no cover
-            good_schemas = ["Weekschema"]
-
+    async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
+        """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         for new_temp in [20.0, 22.9]:
             _LOGGER.info("- Adjusting temperature to %s", new_temp)
@@ -454,6 +451,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
+    @pytest.mark.asyncio
+    async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
+        """Toggle preset to test functionality."""
         for new_preset in ["asleep", "home", "!bogus"]:
             assert_state = True
             warning = ""
@@ -476,6 +476,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
 
+    @pytest.mark.asyncio
+    async def tinker_thermostat_schema(
+        self, smile, loc_id, good_schemas=None, unhappy=False
+    ):
         if good_schemas != []:
             good_schemas.append("!VeryBogusSchemaNameThatNobodyEverUsesOrShouldUse")
             for new_schema in good_schemas:
@@ -503,6 +507,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         raise self.UnexpectedError
         else:  # pragma: no cover
             _LOGGER.info("- Skipping schema adjustments")
+
+    @pytest.mark.asyncio
+    async def tinker_thermostat(self, smile, loc_id, good_schemas=None, unhappy=False):
+        """Toggle various climate settings to test functionality."""
+        if good_schemas is None:  # pragma: no cover
+            good_schemas = ["Weekschema"]
+
+        await self.tinker_thermostat_temp(smile, loc_id, unhappy)
+        await self.tinker_thermostat_preset(smile, loc_id, unhappy)
+        await self.tinker_thermostat_schema(smile, loc_id, good_schemas, unhappy)
 
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
