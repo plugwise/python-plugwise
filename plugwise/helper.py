@@ -747,19 +747,13 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
-    def tariff_str(self):
-        """Provide the correct t_string."""
-        t_string = "tariff"
-        if self._smile_legacy and self.smile_type == "power":
-            t_string = "tariff_indicator"
-
-        return t_string
-
     def power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
         search = self._domain_objects
-        t_string = self.tariff_str()
+        t_string = "tariff"
+        if self._smile_legacy and self.smile_type == "power":
+            t_string = "tariff_indicator"
 
         loc_logs = search.find(f'.//location[@id="{loc_id}"]/logs')
 
