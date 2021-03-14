@@ -228,7 +228,7 @@ class Smile(SmileHelper):
 
         return devices
 
-    def get_device_data_switching_groups(self, details, device_data):
+    def device_data_switching_group(self, details, device_data):
         """Determine switching groups device data."""
         if details["class"] in SWITCH_GROUP_TYPES:
             counter = 0
@@ -243,7 +243,7 @@ class Smile(SmileHelper):
 
         return device_data
 
-    def get_device_data_anna(self, dev_id, details, device_data):
+    def device_data_anna(self, dev_id, details, device_data):
         """Determine anna and legacy_anna device data."""
         # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
         if "boiler_state" in device_data:
@@ -258,7 +258,7 @@ class Smile(SmileHelper):
 
         return device_data
 
-    def get_device_data_adam(self, details, device_data):
+    def device_data_adam(self, details, device_data):
         """Determine Adam device data."""
         # Adam: indicate heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
@@ -270,7 +270,7 @@ class Smile(SmileHelper):
 
         return device_data
 
-    def get_device_data_climate(self, details, device_data):
+    def device_data_climate(self, details, device_data):
         """Determine climate-control device data."""
         # Anna, Lisa, Tom/Floor
         device_data["active_preset"] = self.preset(details["location"])
@@ -310,17 +310,17 @@ class Smile(SmileHelper):
                 device_data.update(power_data)
 
         # Switching groups data
-        device_data = self.get_device_data_switching_groups(details, device_data)
+        device_data = self.device_data_switching_group(details, device_data)
         # Specific, not generic Anna data
-        device_data = self.get_device_data_anna(dev_id, details, device_data)
+        device_data = self.device_data_anna(dev_id, details, device_data)
         # Specific, not generic Adam data
-        device_data = self.get_device_data_adam(details, device_data)
+        device_data = self.device_data_adam(details, device_data)
         # Unless thermostat based, no need to walk presets
         if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
 
         # Climate based data (presets, temperatures etc)
-        device_data = self.get_device_data_climate(details, device_data)
+        device_data = self.device_data_climate(details, device_data)
 
         return device_data
 
