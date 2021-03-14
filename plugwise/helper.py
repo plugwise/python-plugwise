@@ -733,9 +733,7 @@ class SmileHelper:
         # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
         if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
             f_val = int(round(float(val)))
-        if all(
-            item in key_string for item in ["electricity", "cumulative"]
-        ):
+        if all(item in key_string for item in ["electricity", "cumulative"]):
             f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
 
         return f_val
