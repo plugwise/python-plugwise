@@ -727,7 +727,7 @@ class SmileHelper:
         return t_string
 
     @staticmethod
-    def power_data_local_format(attrs, val):
+    def power_data_local_format(attrs, key_string, val):
         """Format power data."""
         f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
         # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
@@ -798,7 +798,11 @@ class SmileHelper:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = self.power_data_local_format(attrs, val)
+                    f_val = self.power_data_local_format(attrs, key_string, val)
+
+                    direct_data = self.power_data_energy_diff(
+                        measurement, net_string, f_val, direct_data
+                    )
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
