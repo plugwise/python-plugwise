@@ -243,7 +243,8 @@ class SmileHelper:
 
         return
 
-    def appliance_class_finder(self, appliance, appl):
+    def all_appliances_class_finder(self, appliance, appl):
+        """Determine class per appliance."""
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
@@ -307,6 +308,30 @@ class SmileHelper:
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
 
+    def all_appliances_types_finder(self, appliance, appl):
+        """Determine type per appliance."""
+        # Preset all types applicable to home
+        appl.types = self._loc_data[self._home_location]["types"]
+
+        # Appliance with location (i.e. a device)
+        if appliance.find("location") is not None:
+            appl.location = appliance.find("location").attrib["id"]
+            for appl_type in types_finder(appliance):
+                appl.types.add(appl_type)
+
+        # Determine appliance_type from functionality
+        relay_func = appliance.find(".//actuator_functionalities/relay_functionality")
+        relay_act = appliance.find(".//actuators/relay")
+        thermo_func = appliance.find(
+            ".//actuator_functionalities/thermostat_functionality"
+        )
+        if relay_func is not None or relay_act is not None:
+            appl.types.add("plug")
+        elif thermo_func is not None:
+            appl.types.add("thermostat")
+
+        return appl
+
     def all_appliances(self):
         """Determine available appliances from inventory."""
         self.appl_data = {}
@@ -357,29 +382,11 @@ class SmileHelper:
             appl.fw = None
             appl.v_name = None
 
-            # Preset all types applicable to home
-            appl.types = self._loc_data[self._home_location]["types"]
+            # Determine types for this appliance
+            appl = self.all_appliances_types_finder(appliance, appl)
 
-            # Appliance with location (i.e. a device)
-            if appliance.find("location") is not None:
-                appl.location = appliance.find("location").attrib["id"]
-                for appl_type in types_finder(appliance):
-                    appl.types.add(appl_type)
-
-            # Determine appliance_type from functionality
-            relay_func = appliance.find(
-                ".//actuator_functionalities/relay_functionality"
-            )
-            relay_act = appliance.find(".//actuators/relay")
-            thermo_func = appliance.find(
-                ".//actuator_functionalities/thermostat_functionality"
-            )
-            if relay_func is not None or relay_act is not None:
-                appl.types.add("plug")
-            elif thermo_func is not None:
-                appl.types.add("thermostat")
-
-            appl = self.appliance_class_finder(appliance, appl)
+            # Determine class for this appliance
+            appl = self.all_appliances_class_finder(appliance, appl)
             # Skip on heater_central when no active device present
             if not appl:
                 continue
