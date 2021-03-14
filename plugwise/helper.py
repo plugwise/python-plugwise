@@ -796,6 +796,8 @@ class SmileHelper:
                         peak = "off_peak"
                     log_found = log_type.split("_")[0]
                     key_string = f"{measurement}_{peak}_{log_found}"
+                    if "gas" in measurement:
+                        key_string = f"{measurement}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
                     f_val = power_data_local_format(attrs, key_string, val)
@@ -803,9 +805,6 @@ class SmileHelper:
                     direct_data = power_data_energy_diff(
                         measurement, net_string, f_val, direct_data
                     )
-
-                    if "gas" in measurement:
-                        key_string = f"{measurement}_{log_found}"
 
                     direct_data[key_string] = f_val
 
