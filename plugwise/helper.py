@@ -800,7 +800,7 @@ class SmileHelper:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = self.power_data_local_format(attrts, val)
+                    f_val = self.power_data_local_format(attrs, val)
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
