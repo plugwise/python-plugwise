@@ -5,6 +5,7 @@ import logging
 import aiohttp
 
 # Dict as class
+# Dict as class
 from munch import Munch
 
 # Version detection
