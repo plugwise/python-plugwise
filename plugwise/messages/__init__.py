@@ -22,6 +22,7 @@ class PlugwiseMessage:
         self.checksum = self.calculate_checksum(msg)
         return MESSAGE_HEADER + msg + self.checksum + MESSAGE_FOOTER
 
-    def calculate_checksum(self, s):
+    @staticmethod
+    def calculate_checksum(something):
         """Calculate crc checksum."""
-        return bytes("%04X" % crc_fun(s), UTF8_DECODE)
+        return bytes("%04X" % crc_fun(something), UTF8_DECODE)

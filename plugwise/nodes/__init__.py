@@ -300,7 +300,8 @@ class PlugwiseNode:
             return version_to_model(self._hardware_version)
         return None
 
-    def is_sed(self) -> bool:
+    @staticmethod
+    def is_sed() -> bool:
         """Return True if node SED (battery powered)."""
         _LOGGER.warning(
             "Function 'is_sed' will be removed in future, use the 'battery_powered' property instead !",

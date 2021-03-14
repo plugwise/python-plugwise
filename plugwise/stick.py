@@ -63,36 +63,39 @@ from .util import validate_mac
 _LOGGER = logging.getLogger(__name__)
 
 
+# TODO: stick should become StickClass be PascalCase style
 class stick:
     """Plugwise connection stick."""
 
     def __init__(self, port, callback=None):
-        self._port = port
-        self._mac_stick = None
-        self._network_online = False
         self.circle_plus_mac = None
-        self._circle_plus_discovered = False
-        self._circle_plus_retries = 0
-        self.scan_callback = None
-        self._network_id = None
-        self._device_nodes = {}
-        self._joined_nodes = 0
-        self._nodes_to_discover = {}
-        self._nodes_not_discovered = {}
-        self._nodes_off_line = 0
-        self._messages_for_undiscovered_nodes = []
-        self._accept_join_requests = ACCEPT_JOIN_REQUESTS
-        self._stick_initialized = False
-        self._stick_callbacks = {}
-        self._run_update_thread = False
-        self._auto_update_timer = 0
-        self._auto_update_manually = False
-        self._nodes_discovered = None
-        self._run_watchdog = None
-        self._update_thread = None
-        self._watchdog_thread = None
         self.init_callback = None
         self.msg_controller = None
+        self.scan_callback = None
+
+        self._accept_join_requests = ACCEPT_JOIN_REQUESTS
+        self._auto_update_manually = False
+        self._auto_update_timer = 0
+        self._circle_plus_discovered = False
+        self._circle_plus_retries = 0
+        self._device_nodes = {}
+        self._joined_nodes = 0
+        self._mac_stick = None
+        self._messages_for_undiscovered_nodes = []
+        self._network_id = None
+        self._network_online = False
+        self._nodes_discovered = None
+        self._nodes_not_discovered = {}
+        self._nodes_off_line = 0
+        self._nodes_to_discover = {}
+        self._port = port
+        self._run_update_thread = False
+        self._run_watchdog = None
+        self._stick_callbacks = {}
+        self._stick_initialized = False
+        self._update_thread = None
+        self._watchdog_thread = None
+
         if callback:
             self.auto_initialize(callback)
 

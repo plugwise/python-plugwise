@@ -81,9 +81,9 @@ class NodeResponse(PlugwiseMessage):
         msg += _args
 
     def _parse_params(self, response):
-        for p in self.params:
-            my_val = response[: len(p)]
-            p.deserialize(my_val)
+        for param in self.params:
+            my_val = response[: len(param)]
+            param.deserialize(my_val)
             response = response[len(my_val) :]
         return response
 

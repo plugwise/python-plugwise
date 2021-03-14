@@ -114,6 +114,7 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
+    # TODO: parameters differ from overridden method (arguments-differ)
     def _request_ping(self, callback=None, sensor=True):
         """Ping node"""
         if (
