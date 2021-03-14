@@ -718,6 +718,28 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
+    def tariff_str(self):
+        """Provide the correct t_string."""
+        t_string = "tariff"
+        if self._smile_legacy and self.smile_type == "power":
+            t_string = "tariff_indicator"
+
+        return t_string
+
+    @staticmethod
+    def power_data_local_format(attrs, val):
+        """Format power data."""
+        f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+        # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
+        if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
+            f_val = int(round(float(val)))
+        if all(
+            item in key_string for item in ["electricity", "cumulative"]
+        ):
+            f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
+
+        return f_val
+
     @staticmethod
     def power_data_energy_diff(measurement, net_string, f_val, direct_data):
         """Calculate differential energy."""
@@ -739,9 +761,7 @@ class SmileHelper:
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
         search = self._domain_objects
-        t_string = "tariff"
-        if self._smile_legacy and self.smile_type == "power":
-            t_string = "tariff_indicator"
+        t_string = self.tariff_str()
 
         loc_logs = search.find(f'.//location[@id="{loc_id}"]/logs')
 
@@ -780,18 +800,7 @@ class SmileHelper:
                     key_string = f"{measurement}_{peak}_{log_found}"
                     net_string = f"net_electricity_{log_found}"
                     val = loc_logs.find(locator).text
-                    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
-                    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
-                    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
-                        f_val = int(round(float(val)))
-                    if all(
-                        item in key_string for item in ["electricity", "cumulative"]
-                    ):
-                        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
-
-                    direct_data = self.power_data_energy_diff(
-                        measurement, net_string, f_val, direct_data
-                    )
+                    f_val = self.power_data_local_format(attrts, val)
 
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
