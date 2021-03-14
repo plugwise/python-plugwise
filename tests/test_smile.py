@@ -206,6 +206,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Render authentication error endpoint."""
         raise aiohttp.web.HTTPUnauthorized()
 
+    @staticmethod
+    def connect_status(broken, timeout, fail_auth):
+        """Determine assumed status from settings."""
+        assumed_status = 200
+        if broken:
+            assumed_status = 500
+        if timeout:
+            assumed_status = 504
+        if fail_auth:
+            assumed_status = 401
+        return assumed_status
+
     async def connect(
         self,
         broken=False,
@@ -234,13 +246,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         resp = await websession.get(url)
 
-        assumed_status = 200
-        if broken:
-            assumed_status = 500
-        if timeout:
-            assumed_status = 504
-        if fail_auth:
-            assumed_status = 401
+        assumed_status = self.connect_status(broken, timeout, fail_auth)
         assert resp.status == assumed_status
 
         if not broken and not timeout and not fail_auth:
