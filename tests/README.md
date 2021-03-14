@@ -18,14 +18,12 @@ Data processing (positive)
 
 ## Running tests against Plugwise Smile
 
-Our tests are mainly conducted locally by the contributors and Travis CI. You can always look up the latest (hopefully successful) build at (Travis for Plugwise-Smile)[https://travis-ci.org/github/plugwise/Plugwise-Smile].
+Our tests are mainly conducted locally by the contributors and using Github Actions. You can always look up the latest (hopefully successful) build at (python-plugwise Github actions)[https://github.com/plugwise/python-plugwise/actions].
 
+If you want to run tests locally, use the provided `scripts/setup.sh` to initialize and enable your virtualenv using `source venv/bin/activate`.
 
-Ensure you have python(3) with virtualenv installed. For ubuntu based systems `apt install python3-pip python3-dev python3-venv`
+Without your virtualenv, run the `scripts/setup_test.sh` script. With that (and your virtualenv enabled) you can run `scripts/tests_and_coverage.sh` or `scripts/complexity` to show areas that need Cyclometic Complexity improving.
 
-From the main directory of this repository run `python3 -m venv venv` followed by `source venv/bin/activate`. 
+## Quality
 
-Now install the requirements into your virtual environment by running `scripts/setup_test.sh`. **Note** that you'll have to run the `source venv/bin/activate` each time you work on files to ensure you have the virtual environment.
-
-Now you can test using `scripts/tests_and_coverage.sh` from the main directory and watch the results.
-
+Code quality is checked (through Github Actions) at (CodeFactor)[https://www.codefactor.io/repository/github/plugwise/python-plugwise] and (codecov.io)[https://app.codecov.io/gh/plugwise/python-plugwise] as depicted by the badges on the (main repository page)[https://github.com/plugwise/python-plugwise].

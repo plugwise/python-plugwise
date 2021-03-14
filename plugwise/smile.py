@@ -4,6 +4,9 @@ import logging
 
 import aiohttp
 
+# Dict as class
+from munch import Munch
+
 # Version detection
 import semver
 
@@ -74,7 +77,6 @@ class Smile(SmileHelper):
 
         result = await self.request(DOMAIN_OBJECTS)
         dsmrmain = result.find(".//module/protocols/dsmrmain")
-        network = result.find(".//module/protocols/network_router/network")
 
         vendor_names = result.findall(".//module/vendor_name")
         for name in vendor_names:
@@ -89,50 +91,66 @@ class Smile(SmileHelper):
                 )
                 raise ConnectionFailedError
 
+        # Determine smile specifics
+        await self.smile_detect(result, dsmrmain)
+
+        # Update all endpoints on first connect
+        await self.full_update_device()
+
+        return True
+
+    async def smile_detect_legacy(self, result, dsmrmain):
+        network = result.find(".//module/protocols/network_router/network")
+
+        # Assume legacy
+        self._smile_legacy = True
+        # Try if it is an Anna, assuming appliance thermostat
+        anna = result.find('.//appliance[type="thermostat"]')
+        # Fake insert version assuming Anna
+        # couldn't find another way to identify as legacy Anna
+        version = "1.8.0"
+        model = "smile_thermo"
+        if anna is None:
+            # P1 legacy:
+            if dsmrmain is not None:
+                try:
+                    status = await self.request(STATUS)
+                    version = status.find(".//system/version").text
+                    model = status.find(".//system/product").text
+                    self.smile_hostname = status.find(".//network/hostname").text
+                except InvalidXMLError:  # pragma: no cover
+                    # Corner case check
+                    raise ConnectionFailedError
+
+            # Stretch:
+            elif network is not None:
+                try:
+                    system = await self.request(SYSTEM)
+                    version = system.find(".//gateway/firmware").text
+                    model = system.find(".//gateway/product").text
+                    self.smile_hostname = system.find(".//gateway/hostname").text
+                    self.gateway_id = network.attrib["id"]
+                except InvalidXMLError:  # pragma: no cover
+                    # Corner case check
+                    raise ConnectionFailedError
+            else:  # pragma: no cover
+                # No cornercase, just end of the line
+                _LOGGER.error("Connected but no gateway device information found")
+                raise ConnectionFailedError
+        return model, version
+
+    async def smile_detect(self, result, dsmrmain):
+        """Detect which type of Smile is connected."""
+        model = None
         gateway = result.find(".//gateway")
 
-        model = version = None
         if gateway is not None:
             model = result.find(".//gateway/vendor_model").text
             version = result.find(".//gateway/firmware_version").text
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
         else:
-            # Assume legacy
-            self._smile_legacy = True
-            # Try if it is an Anna, assuming appliance thermostat
-            anna = result.find('.//appliance[type="thermostat"]')
-            # Fake insert version assuming Anna
-            # couldn't find another way to identify as legacy Anna
-            version = "1.8.0"
-            model = "smile_thermo"
-            if anna is None:
-                # P1 legacy:
-                if dsmrmain is not None:
-                    try:
-                        status = await self.request(STATUS)
-                        version = status.find(".//system/version").text
-                        model = status.find(".//system/product").text
-                        self.smile_hostname = status.find(".//network/hostname").text
-                    except InvalidXMLError:  # pragma: no cover
-                        # Corner case check
-                        raise ConnectionFailedError
-
-                # Stretch:
-                elif network is not None:
-                    try:
-                        system = await self.request(SYSTEM)
-                        version = system.find(".//gateway/firmware").text
-                        model = system.find(".//gateway/product").text
-                        self.smile_hostname = system.find(".//gateway/hostname").text
-                        self.gateway_id = network.attrib["id"]
-                    except InvalidXMLError:  # pragma: no cover
-                        # Corner case check
-                        raise ConnectionFailedError
-                else:  # pragma: no cover
-                    # No cornercase, just end of the line
-                    _LOGGER.error("Connected but no gateway device information found")
-                    raise ConnectionFailedError
+            model, version = await self.smile_detect_legacy(result, dsmrmain)
 
         if model is None or version is None:  # pragma: no cover
             # Corner case check
@@ -160,10 +178,9 @@ class Smile(SmileHelper):
         if "legacy" in SMILES[target_smile]:
             self._smile_legacy = SMILES[target_smile]["legacy"]
 
-        # Update all endpoints on first connect
-        await self.full_update_device()
-
-        return True
+        if self.smile_type == "stretch":
+            self.stretch_v2 = self.smile_version[1].major == 2
+            self.stretch_v3 = self.smile_version[1].major == 3
 
     async def close_connection(self):
         """Close the Plugwise connection."""
@@ -214,6 +231,66 @@ class Smile(SmileHelper):
 
         return devices
 
+    def device_data_switching_group(self, details, device_data):
+        """Determine switching groups device data."""
+        if details["class"] in SWITCH_GROUP_TYPES:
+            counter = 0
+            for member in details["members"]:
+                appl_data = self.appliance_data(member)
+                if appl_data["relay"]:
+                    counter += 1
+
+            device_data["relay"] = True
+            if counter == 0:
+                device_data["relay"] = False
+
+        return device_data
+
+    def device_data_anna(self, dev_id, details, device_data):
+        """Determine anna and legacy_anna device data."""
+        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
+        if "boiler_state" in device_data:
+            device_data["heating_state"] = device_data["intended_boiler_state"]
+            device_data.pop("boiler_state", None)
+            device_data.pop("intended_boiler_state", None)
+
+        # Anna specific
+        illuminance = self.object_value("appliance", dev_id, "illuminance")
+        if illuminance is not None:
+            device_data["illuminance"] = illuminance
+
+        return device_data
+
+    def device_data_adam(self, details, device_data):
+        """Determine Adam device data."""
+        # Adam: indicate heating_state based on valves being open in case of city-provided heating
+        if self.smile_name == "Adam":
+            if details["class"] == "gateway":
+                if not self.active_device_present and self.heating_valves() is not None:
+                    device_data["heating_state"] = True
+                    if self.heating_valves() == 0:
+                        device_data["heating_state"] = False
+
+        return device_data
+
+    def device_data_climate(self, details, device_data):
+        """Determine climate-control device data."""
+        # Anna, Lisa, Tom/Floor
+        device_data["active_preset"] = self.preset(details["location"])
+        device_data["presets"] = self.presets(details["location"])
+
+        avail_schemas, sel_schema, sched_setpoint = self.schemas(details["location"])
+        if not self._smile_legacy:
+            device_data["schedule_temperature"] = sched_setpoint
+        device_data["available_schedules"] = avail_schemas
+        device_data["selected_schedule"] = sel_schema
+        if self._smile_legacy:
+            device_data["last_used"] = "".join(map(str, avail_schemas))
+        else:
+            device_data["last_used"] = self.last_active_schema(details["location"])
+
+        return device_data
+
     def get_device_data(self, dev_id):
         """Provide device-data, based on location_id, from APPLIANCES."""
         devices = self.get_all_devices()
@@ -235,53 +312,18 @@ class Smile(SmileHelper):
             if power_data is not None:
                 device_data.update(power_data)
 
-        # Switching Groups
-        if details["class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in details["members"]:
-                appl_data = self.appliance_data(member)
-                if appl_data["relay"]:
-                    counter += 1
-
-            device_data["relay"] = True
-            if counter == 0:
-                device_data["relay"] = False
-
-        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
-        if "boiler_state" in device_data:
-            device_data["heating_state"] = device_data["intended_boiler_state"]
-            device_data.pop("boiler_state", None)
-            device_data.pop("intended_boiler_state", None)
-
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
-        if self.smile_name == "Adam":
-            if details["class"] == "gateway":
-                if not self.active_device_present and self.heating_valves() is not None:
-                    device_data["heating_state"] = True
-                    if self.heating_valves() == 0:
-                        device_data["heating_state"] = False
-
+        # Switching groups data
+        device_data = self.device_data_switching_group(details, device_data)
+        # Specific, not generic Anna data
+        device_data = self.device_data_anna(dev_id, details, device_data)
+        # Specific, not generic Adam data
+        device_data = self.device_data_adam(details, device_data)
+        # Unless thermostat based, no need to walk presets
         if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
 
-        # Anna, Lisa, Tom/Floor
-        device_data["active_preset"] = self.preset(details["location"])
-        device_data["presets"] = self.presets(details["location"])
-
-        avail_schemas, sel_schema, sched_setpoint = self.schemas(details["location"])
-        if not self._smile_legacy:
-            device_data["schedule_temperature"] = sched_setpoint
-        device_data["available_schedules"] = avail_schemas
-        device_data["selected_schedule"] = sel_schema
-        if self._smile_legacy:
-            device_data["last_used"] = "".join(map(str, avail_schemas))
-        else:
-            device_data["last_used"] = self.last_active_schema(details["location"])
-
-        # Anna specific
-        illuminance = self.object_value("appliance", dev_id, "illuminance")
-        if illuminance is not None:
-            device_data["illuminance"] = illuminance
+        # Climate based data (presets, temperatures etc)
+        device_data = self.device_data_climate(details, device_data)
 
         return device_data
 
@@ -368,47 +410,54 @@ class Smile(SmileHelper):
         await self.request(uri, method="put", data=data)
         return True
 
+    async def set_groupswitch_member_state(self, members, state, switch):
+        """Switch the Switch within a group of members off/on."""
+        for member in members:
+            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
+            switch_id = self._appliances.find(locator).attrib["id"]
+            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
+            if self.stretch_v2:
+                uri = f"{APPLIANCES};id={member}/{switch.device}"
+            state = str(state)
+            data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
+
+            await self.request(uri, method="put", data=data)
+
+        return True
+
     async def set_switch_state(self, appl_id, members, model, state):
         """Switch the Switch off/on."""
-        actuator = "actuator_functionalities"
-        device = "relay"
-        func_type = "relay_functionality"
-        func = "state"
+        switch = Munch()
+        switch.actuator = "actuator_functionalities"
+        switch.device = "relay"
+        switch.func_type = "relay_functionality"
+        switch.func = "state"
         if model == "dhw_cm_switch":
-            device = "toggle"
-            func_type = "toggle_functionality"
+            switch.device = "toggle"
+            switch.func_type = "toggle_functionality"
 
         if model == "lock":
-            func = "lock"
+            switch.func = "lock"
             state = "false" if state == "off" else "true"
 
-        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
-        if stretch_v2:
-            actuator = "actuators"
-            func_type = "relay"
+        if self.stretch_v2:
+            switch.actuator = "actuators"
+            switch.func_type = "relay"
 
         if members is not None:
-            for member in members:
-                locator = f'appliance[@id="{member}"]/{actuator}/{func_type}'
-                switch_id = self._appliances.find(locator).attrib["id"]
-                uri = f"{APPLIANCES};id={member}/{device};id={switch_id}"
-                if stretch_v2:
-                    uri = f"{APPLIANCES};id={member}/{device}"
-                state = str(state)
-                data = f"<{func_type}><state>{state}</state></{func_type}>"
+            return await self.set_groupswitch_member_state(members, state, switch)
 
-                await self.request(uri, method="put", data=data)
-            return True
-
-        locator = f'appliance[@id="{appl_id}"]/{actuator}/{func_type}'
+        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         switch_id = self._appliances.find(locator).attrib["id"]
-        uri = f"{APPLIANCES};id={appl_id}/{device};id={switch_id}"
-        if stretch_v2:
-            uri = f"{APPLIANCES};id={appl_id}/{device}"
-        data = f"<{func_type}><{func}>{state}</{func}></{func_type}>"
+        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
+        if self.stretch_v2:
+            uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
+        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
         if model == "relay":
-            locator = f'appliance[@id="{appl_id}"]/{actuator}/{func_type}/lock'
+            locator = (
+                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
+            )
             lock_state = self._appliances.find(locator).text
             print("Lock state: ", lock_state)
             # Don't bother switching a relay when the corresponding lock-state is true

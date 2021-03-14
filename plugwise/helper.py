@@ -10,6 +10,7 @@ import logging
 import async_timeout
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
+from munch import Munch
 
 # Time related
 import pytz
@@ -28,6 +29,7 @@ from .constants import (
     LOCATIONS,
     POWER_WATT,
     SWITCH_GROUP_TYPES,
+    THERMOSTAT_CLASSES,
 )
 from .exceptions import (
     DeviceTimeoutError,
@@ -77,6 +79,35 @@ def types_finder(data):
     return types
 
 
+def power_data_local_format(attrs, key_string, val):
+    """Format power data."""
+    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
+    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
+        f_val = int(round(float(val)))
+    if all(item in key_string for item in ["electricity", "cumulative"]):
+        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
+
+    return f_val
+
+
+def power_data_energy_diff(measurement, net_string, f_val, direct_data):
+    """Calculate differential energy."""
+    if "electricity" in measurement:
+        diff = 1
+        if "produced" in measurement:
+            diff = -1
+        if net_string not in direct_data:
+            direct_data[net_string] = 0
+
+        if isinstance(f_val, int):
+            direct_data[net_string] += f_val * diff
+        else:
+            direct_data[net_string] += float(f_val * diff)
+
+    return direct_data
+
+
 class SmileHelper:
     """Define the SmileHelper object."""
 
@@ -106,6 +137,8 @@ class SmileHelper:
         self.smile_name = None
         self.smile_type = None
         self.smile_version = ()
+        self.stretch_v2 = False
+        self.stretch_v3 = False
         self.thermo_locs = None
         self.websession = None
 
@@ -239,11 +272,98 @@ class SmileHelper:
 
         return
 
+    def appliance_class_finder(self, appliance, appl):
+        """Determine class per appliance."""
+        # Find gateway and heater_central devices
+        if appl.pwclass == "gateway":
+            self.gateway_id = appliance.attrib["id"]
+            appl.fw = self.smile_version[0]
+            appl.model = appl.name = self.smile_name
+            appl.v_name = "Plugwise B.V."
+            return appl
+
+        if appl.pwclass in THERMOSTAT_CLASSES:
+            locator = ".//logs/point_log[type='thermostat']/thermostat"
+            mod_type = "thermostat"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            appl.model = check_model(module_data[1], appl.v_name)
+            appl.fw = module_data[3]
+            return appl
+
+        if appl.pwclass == "heater_central":
+            # Remove heater_central when no active device present
+            if not self.active_device_present:
+                return None
+
+            self.heater_id = appliance.attrib["id"]
+            appl.name = "Auxiliary"
+            locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
+            locator2 = ".//services/boiler_state"
+            mod_type = "boiler_state"
+            module_data = self.get_module_data(appliance, locator1, mod_type)
+            if module_data == [None, None, None, None]:
+                module_data = self.get_module_data(appliance, locator2, mod_type)
+            appl.v_name = module_data[0]
+            appl.model = check_model(module_data[1], appl.v_name)
+            if appl.model is None:
+                appl.model = (
+                    "Generic heater/cooler" if self._cp_state else "Generic heater"
+                )
+            return appl
+
+        if self.stretch_v2 or self.stretch_v3:
+            locator = ".//services/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            if appl.model != "Group Switch":
+                appl.model = None
+            if module_data[2] is not None:
+                hw_version = module_data[2].replace("-", "")
+                appl.model = version_to_model(hw_version)
+            appl.fw = module_data[3]
+            return appl
+
+        if self.smile_type != "stretch" and "plug" in appl.types:
+            locator = ".//logs/point_log/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            appl.model = version_to_model(module_data[1])
+            appl.fw = module_data[3]
+            return appl
+
+        # Cornercase just return existing dict-object
+        return appl  # pragma: no cover
+
+    def appliance_types_finder(self, appliance, appl):
+        """Determine type per appliance."""
+        # Preset all types applicable to home
+        appl.types = self._loc_data[self._home_location]["types"]
+
+        # Appliance with location (i.e. a device)
+        if appliance.find("location") is not None:
+            appl.location = appliance.find("location").attrib["id"]
+            for appl_type in types_finder(appliance):
+                appl.types.add(appl_type)
+
+        # Determine appliance_type from functionality
+        relay_func = appliance.find(".//actuator_functionalities/relay_functionality")
+        relay_act = appliance.find(".//actuators/relay")
+        thermo_func = appliance.find(
+            ".//actuator_functionalities/thermostat_functionality"
+        )
+        if relay_func is not None or relay_act is not None:
+            appl.types.add("plug")
+        elif thermo_func is not None:
+            appl.types.add("thermostat")
+
+        return appl
+
     def all_appliances(self):
         """Determine available appliances from inventory."""
         self.appl_data = {}
-        stretch_v2 = self.smile_type == "stretch" and self.smile_version[1].major == 2
-        stretch_v3 = self.smile_type == "stretch" and self.smile_version[1].major == 3
 
         self.all_locations()
 
@@ -276,109 +396,38 @@ class SmileHelper:
             self.active_device_present = True
 
         for appliance in self._appliances:
-            appliance_location = None
-            appliance_types = set()
-
-            appliance_id = appliance.attrib["id"]
-            appliance_class = appliance.find("type").text
-            appliance_name = appliance.find("name").text
-            appliance_model = appliance_class.replace("_", " ").title()
-            appliance_fw = None
-            appliance_v_name = None
-
+            appl = Munch()
+            appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
-            if appliance_class == "open_therm_gateway":
+            if appl.pwclass == "open_therm_gateway":
                 continue
 
-            # Find gateway and heater_central devices
-            if appliance_class == "gateway":
-                self.gateway_id = appliance.attrib["id"]
-                appliance_fw = self.smile_version[0]
-                appliance_model = appliance_name = self.smile_name
-                appliance_v_name = "Plugwise B.V."
+            appl.location = None
+            appl.types = set()
 
-            if appliance_class in [
-                "thermostat",
-                "thermostatic_radiator_valve",
-                "zone_thermostat",
-            ]:
-                locator = ".//logs/point_log[type='thermostat']/thermostat"
-                mod_type = "thermostat"
-                module_data = self.get_module_data(appliance, locator, mod_type)
-                appliance_v_name = module_data[0]
-                appliance_model = check_model(module_data[1], appliance_v_name)
-                appliance_fw = module_data[3]
+            appl.id = appliance.attrib["id"]
+            appl.name = appliance.find("name").text
+            appl.model = appl.pwclass.replace("_", " ").title()
+            appl.fw = None
+            appl.v_name = None
 
-            if appliance_class == "heater_central":
-                # Remove heater_central when no active device present
-                if not self.active_device_present:
-                    continue
+            # Determine types for this appliance
+            appl = self.appliance_types_finder(appliance, appl)
 
-                self.heater_id = appliance.attrib["id"]
-                appliance_name = "Auxiliary"
-                locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
-                locator2 = ".//services/boiler_state"
-                mod_type = "boiler_state"
-                module_data = self.get_module_data(appliance, locator1, mod_type)
-                if module_data == [None, None, None, None]:
-                    module_data = self.get_module_data(appliance, locator2, mod_type)
-                appliance_v_name = module_data[0]
-                appliance_model = check_model(module_data[1], appliance_v_name)
-                if appliance_model is None:
-                    appliance_model = (
-                        "Generic heater/cooler" if self._cp_state else "Generic heater"
-                    )
+            # Determine class for this appliance
+            appl = self.appliance_class_finder(appliance, appl)
+            # Skip on heater_central when no active device present
+            if not appl:
+                continue
 
-            if stretch_v2 or stretch_v3:
-                locator = ".//services/electricity_point_meter"
-                mod_type = "electricity_point_meter"
-                module_data = self.get_module_data(appliance, locator, mod_type)
-                appliance_v_name = module_data[0]
-                if appliance_model != "Group Switch":
-                    appliance_model = None
-                if module_data[2] is not None:
-                    hw_version = module_data[2].replace("-", "")
-                    appliance_model = version_to_model(hw_version)
-                appliance_fw = module_data[3]
-
-            # Appliance with location (i.e. a device)
-            if appliance.find("location") is not None:
-                appliance_location = appliance.find("location").attrib["id"]
-                for appl_type in types_finder(appliance):
-                    appliance_types.add(appl_type)
-            else:
-                # Return all types applicable to home
-                appliance_types = self._loc_data[self._home_location]["types"]
-
-            # Determine appliance_type from functionality
-            if (
-                appliance.find(".//actuator_functionalities/relay_functionality")
-                is not None
-                or appliance.find(".//actuators/relay") is not None
-            ):
-                appliance_types.add("plug")
-            elif (
-                appliance.find(".//actuator_functionalities/thermostat_functionality")
-                is not None
-            ):
-                appliance_types.add("thermostat")
-
-            if self.smile_type != "stretch" and "plug" in appliance_types:
-                locator = ".//logs/point_log/electricity_point_meter"
-                mod_type = "electricity_point_meter"
-                module_data = self.get_module_data(appliance, locator, mod_type)
-                appliance_v_name = module_data[0]
-                appliance_model = version_to_model(module_data[1])
-                appliance_fw = module_data[3]
-
-            self.appl_data[appliance_id] = {
-                "class": appliance_class,
-                "fw": appliance_fw,
-                "location": appliance_location,
-                "model": appliance_model,
-                "name": appliance_name,
-                "types": appliance_types,
-                "vendor": appliance_v_name,
+            self.appl_data[appl.id] = {
+                "class": appl.pwclass,
+                "fw": appl.fw,
+                "location": appl.location,
+                "model": appl.model,
+                "name": appl.name,
+                "types": appl.types,
+                "vendor": appl.v_name,
             }
 
         # For legacy Anna gateway and heater_central is the same device
@@ -388,7 +437,7 @@ class SmileHelper:
         return
 
     def get_module_data(self, appliance, locator, mod_type):
-        """Helper functie for finding info in MODULES."""
+        """Helper function for finding info in MODULES."""
         appl_search = appliance.find(locator)
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
@@ -722,15 +771,16 @@ class SmileHelper:
                         f'.//{log_type}[type="{measurement}"]/period/'
                         f'measurement[@{t_string}="{peak_select}"]'
                     )
+
                     # Only once try to find P1 Legacy values
                     if loc_logs.find(locator) is None and self.smile_type == "power":
-                        locator = (
-                            f'.//{log_type}[type="{measurement}"]/period/measurement'
-                        )
-
                         # Skip peak if not split (P1 Legacy)
                         if peak_select == "nl_offpeak":
                             continue
+
+                        locator = (
+                            f'.//{log_type}[type="{measurement}"]/period/measurement'
+                        )
 
                     if loc_logs.find(locator) is None:
                         continue
@@ -740,30 +790,15 @@ class SmileHelper:
                         peak = "off_peak"
                     log_found = log_type.split("_")[0]
                     key_string = f"{measurement}_{peak}_{log_found}"
-                    net_string = f"net_electricity_{log_found}"
-                    val = loc_logs.find(locator).text
-                    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
-                    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
-                    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
-                        f_val = int(round(float(val)))
-                    if all(
-                        item in key_string for item in ["electricity", "cumulative"]
-                    ):
-                        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
-                    # Energy differential
-                    if "electricity" in measurement:
-                        diff = 1
-                        if "produced" in measurement:
-                            diff = -1
-                        if net_string not in direct_data:
-                            direct_data[net_string] = 0
-                        if isinstance(f_val, int):
-                            direct_data[net_string] += f_val * diff
-                        else:
-                            direct_data[net_string] += float(f_val * diff)
-
                     if "gas" in measurement:
                         key_string = f"{measurement}_{log_found}"
+                    net_string = f"net_electricity_{log_found}"
+                    val = loc_logs.find(locator).text
+                    f_val = power_data_local_format(attrs, key_string, val)
+
+                    direct_data = power_data_energy_diff(
+                        measurement, net_string, f_val, direct_data
+                    )
 
                     direct_data[key_string] = f_val
 
@@ -788,35 +823,43 @@ class SmileHelper:
         if preset is not None:
             return preset.text
 
+    def schemas_legacy(self):
+        """Obtain legacy available schemas or schedules."""
+        available = []
+        name = None
+        schedule_temperature = None
+        schemas = {}
+        selected = None
+
+        for schema in self._domain_objects.findall(".//rule"):
+            rule_name = schema.find("name").text
+            if rule_name:
+                if "preset" not in rule_name:
+                    name = rule_name
+
+        log_type = "schedule_state"
+        locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
+        active = False
+        if self._domain_objects.find(locator) is not None:
+            active = self._domain_objects.find(locator).text == "on"
+
+        if name is not None:
+            schemas[name] = active
+
+        available, selected = determine_selected(available, selected, schemas)
+        return available, selected, schedule_temperature
+
     def schemas(self, loc_id):
         """Obtain the available schemas or schedules based on the location_id."""
+        available = []
         rule_ids = {}
         schemas = {}
-        available = []
-        selected = None
         schedule_temperature = None
+        selected = None
 
         # Legacy schemas
         if self._smile_legacy:  # Only one schedule allowed
-            name = None
-            for schema in self._domain_objects.findall(".//rule"):
-                rule_name = schema.find("name").text
-                if rule_name:
-                    if "preset" not in rule_name:
-                        name = rule_name
-
-            log_type = "schedule_state"
-            locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
-            active = False
-            if self._domain_objects.find(locator) is not None:
-                active = self._domain_objects.find(locator).text == "on"
-
-            if name is not None:
-                schemas[name] = active
-
-            available, selected = determine_selected(available, selected, schemas)
-
-            return available, selected, schedule_temperature
+            return self.schemas_legacy()
 
         # Current schemas
         tag = "zone_preset_based_on_time_and_presence_with_override"
