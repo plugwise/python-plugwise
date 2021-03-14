@@ -51,13 +51,14 @@ class PlugwiseParser:
         """
         try:
             self.message_processor(message)
-        except Exception as e:
+        # TODO: narrow exception
+        except Exception as err:  # pylint: disable=broad-except
             _LOGGER.error(
                 "Error while processing %s : %s",
                 self._message.__class__.__name__,
-                e,
+                err,
             )
-            _LOGGER.error(e, exc_info=True)
+            _LOGGER.error(err, exc_info=True)
 
     def parse_data(self):
         """
@@ -106,15 +107,16 @@ class PlugwiseParser:
                             InvalidMessageFooter,
                             InvalidMessageHeader,
                             InvalidMessageLength,
-                        ) as e:
-                            _LOGGER.warning(e)
-                        except Exception as e:
+                        ) as err:
+                            _LOGGER.warning(err)
+                        # TODO: narrow exception
+                        except Exception as err:  # pylint: disable=broad-except
                             _LOGGER.error(
                                 "Failed to parse %s message (%s)",
                                 self._message.__class__.__name__,
                                 str(self._buffer[: footer_index + 2]),
                             )
-                            _LOGGER.error(e)
+                            _LOGGER.error(err)
                         else:
                             # Submit message
                             self.next_message(self._message)

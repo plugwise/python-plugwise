@@ -278,7 +278,8 @@ class StickMessageController:
                     )
                     try:
                         self.expected_responses[seq_id][1]()
-                    except Exception as err:
+                    # TODO: narrow exception
+                    except Exception as err:  # pylint: disable=broad-except
                         _LOGGER.error(
                             "Execution of  %s for request with seq_id %s failed: %s",
                             self.expected_responses[seq_id][1].__name__,

@@ -234,10 +234,11 @@ class PlugwiseNode:
             for callback in self._callbacks[sensor]:
                 try:
                     callback(None)
-                except Exception as e:
+                # TODO: narrow exception
+                except Exception as err:  # pylint: disable=broad-except
                     _LOGGER.error(
                         "Error while executing all callback : %s",
-                        e,
+                        err,
                     )
 
     def _process_join_ack_response(self, message):

@@ -151,16 +151,16 @@ class stick:
         try:
             self.msg_controller.connect_to_stick()
             self.initialize_stick(init_finished)
-        except PortError as e:
-            _LOGGER.error("Failed to connect: '%s'", e)
-        except StickInitError as e:
-            _LOGGER.error("Failed to initialize USBstick: '%s'", e)
+        except PortError as err:
+            _LOGGER.error("Failed to connect: '%s'", err)
+        except StickInitError as err:
+            _LOGGER.error("Failed to initialize USBstick: '%s'", err)
         except NetworkDown:
             _LOGGER.error("Failed to communicated: Plugwise Zigbee network")
         except TimeoutException:
             _LOGGER.error("Timeout exception while initializing USBstick")
-        except Exception as e:
-            _LOGGER.error("Unknown error : %s", e)
+        except Exception as err:  # pylint: disable=broad-except
+            _LOGGER.error("Unknown error : %s", err)
 
     def connect(self, callback=None):
         """Startup message controller and connect to stick."""
@@ -661,9 +661,12 @@ class stick:
                         time.sleep(1)
                         update_loop_checker += 1
 
-        except Exception as e:
+        # TODO: narrow exception
+        except Exception as err:  # pylint: disable=broad-except
             _exc_type, _exc_obj, exc_tb = sys.exc_info()
-            _LOGGER.error("Error at line %s of _update_loop : %s", exc_tb.tb_lineno, e)
+            _LOGGER.error(
+                "Error at line %s of _update_loop : %s", exc_tb.tb_lineno, err
+            )
         _LOGGER.debug("Update loop stopped")
 
     def auto_update(self, timer=None):
@@ -699,8 +702,9 @@ class stick:
                         callback()
                     else:
                         callback(callback_arg)
-                except Exception as e:
-                    _LOGGER.error("Error while executing callback : %s", e)
+                # TODO: narrow exception
+                except Exception as err:  # pylint: disable=broad-except
+                    _LOGGER.error("Error while executing callback : %s", err)
 
     def _check_availability_of_seds(self, mac):
         """Helper to check if SED device is still sending its hartbeat."""
