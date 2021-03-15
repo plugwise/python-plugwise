@@ -16,12 +16,12 @@ from .constants import (
     LOGADDR_OFFSET,
     PERCENTAGE,
     PLUGWISE_EPOCH,
-    POWER_WATT,
     UTF8_DECODE,
     VOLUME_CUBIC_METERS,
 )
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
+SPECIAL_FORMAT = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 
 
 def validate_mac(mac):
@@ -94,7 +94,6 @@ def escape_illegal_xml_characters(xmldata):
 
 def format_measure(measure, unit):
     """Format measure to correct type."""
-    SPECIAL_FORMAT = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
     try:
         measure = int(measure)
     except ValueError:
@@ -153,6 +152,7 @@ class BaseType:
 
 
 class CompositeType(BaseType):
+    # TODO: super-init-not-called
     def __init__(self):
         self.contents = []
 
@@ -160,9 +160,9 @@ class CompositeType(BaseType):
         return b"".join(a.serialize() for a in self.contents)
 
     def deserialize(self, val):
-        for p in self.contents:
-            myval = val[: len(p)]
-            p.deserialize(myval)
+        for content in self.contents:
+            myval = val[: len(content)]
+            content.deserialize(myval)
             val = val[len(myval) :]
         return val
 
@@ -176,8 +176,7 @@ class String(BaseType):
 
 class Int(BaseType):
     def __init__(self, value, length=2, negative=True):
-        self.value = value
-        self.length = length
+        super().__init__(value, length)
         self.negative = negative
 
     def serialize(self):
@@ -193,10 +192,10 @@ class Int(BaseType):
 
 class SInt(BaseType):
     def __init__(self, value, length=2):
-        self.value = value
-        self.length = length
+        super().__init__(value, length)
 
-    def negative(self, val, octals):
+    @staticmethod
+    def negative(val, octals):
         """compute the 2's compliment of int value val for negative values"""
         bits = octals << 2
         if (val & (1 << (bits - 1))) != 0:
@@ -271,8 +270,7 @@ class Time(CompositeType):
 
 class IntDec(BaseType):
     def __init__(self, value, length=2):
-        self.value = value
-        self.length = length
+        super().__init__(value, length)
 
     def serialize(self):
         fmt = "%%0%dd" % self.length
@@ -322,8 +320,7 @@ class RealClockDate(CompositeType):
 
 class Float(BaseType):
     def __init__(self, value, length=4):
-        self.value = value
-        self.length = length
+        super().__init__(value, length)
 
     def deserialize(self, val):
         hexval = binascii.unhexlify(val)

@@ -73,7 +73,7 @@ class PlugwiseUSBConnection(StickConnection):
                 _LOGGER.debug("Error while reading data from serial port : %s", err)
                 self._is_connected = False
                 raise PortError(err)
-            except Exception as err:
+            except Exception as err:  # pylint: disable=broad-except
                 _LOGGER.debug("Error _read_data : %s", err)
             return serial_data
         return None

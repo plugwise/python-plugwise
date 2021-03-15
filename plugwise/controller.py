@@ -46,18 +46,21 @@ class StickMessageController:
 
     def __init__(self, port: str, message_processor, node_state):
         """Initialize message controller """
-        self.port = port
-        self.message_processor = message_processor
-        self.node_state = node_state
-        self.expected_responses = {}
-        self._send_message_queue = None
-        self._send_message_thread = None
-        self._run_receive_timeout_thread = False
-        self._run_send_message_thread = False
-        self.last_seq_id = None
-        self.parser = PlugwiseParser(self.message_handler)
         self.connection = None
         self.discovery_finished = False
+        self.expected_responses = {}
+        self.init_callback = None
+        self.last_seq_id = None
+        self.message_processor = message_processor
+        self.node_state = node_state
+        self.parser = PlugwiseParser(self.message_handler)
+        self.port = port
+
+        self._send_message_queue = None
+        self._send_message_thread = None
+        self._receive_timeout_thread = False
+        self._run_receive_timeout_thread = False
+        self._run_send_message_thread = False
 
     def connect_to_stick(self, callback=None) -> bool:
         """
@@ -278,7 +281,8 @@ class StickMessageController:
                     )
                     try:
                         self.expected_responses[seq_id][1]()
-                    except Exception as err:
+                    # TODO: narrow exception
+                    except Exception as err:  # pylint: disable=broad-except
                         _LOGGER.error(
                             "Execution of  %s for request with seq_id %s failed: %s",
                             self.expected_responses[seq_id][1].__name__,

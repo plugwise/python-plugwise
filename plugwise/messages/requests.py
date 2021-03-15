@@ -164,12 +164,12 @@ class CircleClockSetRequest(NodeRequest):
         super().__init__(mac)
         passed_days = dt.day - 1
         month_minutes = (passed_days * 24 * 60) + (dt.hour * 60) + dt.minute
-        d = DateTime(dt.year, dt.month, month_minutes)
-        t = Time(dt.hour, dt.minute, dt.second)
+        this_date = DateTime(dt.year, dt.month, month_minutes)
+        this_time = Time(dt.hour, dt.minute, dt.second)
         day_of_week = Int(dt.weekday(), 2)
         # FIXME: use LogAddr instead
         log_buf_addr = String("FFFFFFFF", 8)
-        self.args += [d, log_buf_addr, t, day_of_week]
+        self.args += [this_date, log_buf_addr, this_time, day_of_week]
 
 
 class CircleSwitchRelayRequest(NodeRequest):
@@ -249,10 +249,10 @@ class CirclePlusRealTimeClockSetRequest(NodeRequest):
 
     def __init__(self, mac, dt):
         super().__init__(mac)
-        t = RealClockTime(dt.hour, dt.minute, dt.second)
+        this_time = RealClockTime(dt.hour, dt.minute, dt.second)
         day_of_week = Int(dt.weekday(), 2)
-        d = RealClockDate(dt.day, dt.month, dt.year)
-        self.args += [t, day_of_week, d]
+        this_date = RealClockDate(dt.day, dt.month, dt.year)
+        self.args += [this_time, day_of_week, this_date]
 
 
 class CirclePlusRealTimeClockGetRequest(NodeRequest):

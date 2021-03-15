@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.4 - (alpha)
+
+- Underlying code improvements (complexity, linting, amongst others)
+
 ## 0.9.3 - Add lock-state switches
 
 - Support for getting and setting the lock-state of Plugs-, Circles-, Stealth-switches. A set lock-state prevents a switch from being turned off.

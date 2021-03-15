@@ -367,6 +367,7 @@ class SmileHelper:
 
         self.all_locations()
 
+        # For legacy P1
         if self._smile_legacy and self.smile_type == "power":
             # Inject home_location as dev_id for legacy so
             # _appliance_data can use loc_id for dev_id.
@@ -380,6 +381,10 @@ class SmileHelper:
             self.gateway_id = self._home_location
 
             return
+
+        # For legacy Anna gateway and heater_central is the same device
+        if self._smile_legacy and self.smile_type == "thermostat":
+            self.gateway_id = self.heater_id
 
         # TODO: add locations with members as appliance as well
         # example 'electricity consumed/produced and relay' on Adam
@@ -429,12 +434,6 @@ class SmileHelper:
                 "types": appl.types,
                 "vendor": appl.v_name,
             }
-
-        # For legacy Anna gateway and heater_central is the same device
-        if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id
-
-        return
 
     def get_module_data(self, appliance, locator, mod_type):
         """Helper function for finding info in MODULES."""

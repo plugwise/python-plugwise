@@ -61,15 +61,12 @@ class NodeSED(PlugwiseNode):
 
     def message_for_scan(self, message):
         """Pass messages to PlugwiseScan class"""
-        pass
 
     def message_for_switch(self, message):
         """Pass messages to PlugwiseSwitch class"""
-        pass
 
     def message_for_sense(self, message):
         """Pass messages to PlugwiseSense class"""
-        pass
 
     def _process_awake_response(self, message):
         """"Process awake message"""
@@ -117,6 +114,7 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
+    # TODO: parameters differ from overridden method (arguments-differ)
     def _request_ping(self, callback=None, sensor=True):
         """Ping node"""
         if (

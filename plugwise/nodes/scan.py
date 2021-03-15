@@ -2,7 +2,6 @@
 import logging
 
 from ..constants import (
-    FEATURE_AVAILABLE,
     FEATURE_MOTION,
     FEATURE_PING,
     FEATURE_RSSI_IN,

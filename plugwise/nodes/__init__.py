@@ -210,11 +210,9 @@ class PlugwiseNode:
 
     def message_for_circle(self, message):
         """Pass messages to PlugwiseCircle class"""
-        pass
 
     def message_for_sed(self, message):
         """Pass messages to NodeSED class"""
-        pass
 
     def subscribe_callback(self, callback, sensor) -> bool:
         """Subscribe callback to execute when state change happens."""
@@ -236,10 +234,11 @@ class PlugwiseNode:
             for callback in self._callbacks[sensor]:
                 try:
                     callback(None)
-                except Exception as e:
+                # TODO: narrow exception
+                except Exception as err:  # pylint: disable=broad-except
                     _LOGGER.error(
                         "Error while executing all callback : %s",
-                        e,
+                        err,
                     )
 
     def _process_join_ack_response(self, message):
@@ -301,7 +300,8 @@ class PlugwiseNode:
             return version_to_model(self._hardware_version)
         return None
 
-    def is_sed(self) -> bool:
+    @staticmethod
+    def is_sed() -> bool:
         """Return True if node SED (battery powered)."""
         _LOGGER.warning(
             "Function 'is_sed' will be removed in future, use the 'battery_powered' property instead !",
