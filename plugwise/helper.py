@@ -47,6 +47,16 @@ from .util import (
 
 _LOGGER = logging.getLogger(__name__)
 
+DAYS = {
+    "mo": 0,
+    "tu": 1,
+    "we": 2,
+    "th": 3,
+    "fr": 4,
+    "sa": 5,
+    "su": 6,
+}
+
 
 def check_model(name, v_name):
     """Model checking before using version_to_model."""
@@ -142,6 +152,32 @@ class SmileHelper:
         self.thermo_locs = None
         self.websession = None
 
+    async def request_validate(self, resp, method):
+        """Validate request data."""
+        # Command accepted gives empty body with status 202
+        if resp.status == 202:
+            return
+        # Cornercase for stretch not responding with 202
+        if method == "put" and resp.status == 200:
+            return
+
+        if resp.status == 401:
+            raise InvalidAuthentication
+
+        result = await resp.text()
+        if not result or "<error>" in result:
+            _LOGGER.error("Smile response empty or error in %s", result)
+            raise ResponseError
+
+        try:
+            # Encode to ensure utf8 parsing
+            xml = etree.XML(escape_illegal_xml_characters(result).encode())
+        except etree.ParseError:
+            _LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
+            raise InvalidXMLError
+
+        return xml
+
     async def request(
         self,
         command,
@@ -175,102 +211,111 @@ class SmileHelper:
                 raise DeviceTimeoutError
             return await self.request(command, retry - 1)
 
-        # Command accepted gives empty body with status 202
-        if resp.status == 202:
-            return
-        # Cornercase for stretch not responding with 202
-        if method == "put" and resp.status == 200:
-            return
+        return await self.request_validate(resp, method)
 
-        if resp.status == 401:
-            raise InvalidAuthentication
+    def locations_legacy(self):
+        """Determine legacy locations."""
+        appliances = set()
+        self._home_location = 0
 
-        result = await resp.text()
-        if not result or "<error>" in result:
-            _LOGGER.error("Smile response empty or error in %s", result)
-            raise ResponseError
+        # Add Anna appliances
+        for appliance in self._appliances:
+            appliances.add(appliance.attrib["id"])
 
-        try:
-            # Encode to ensure utf8 parsing
-            xml = etree.XML(escape_illegal_xml_characters(result).encode())
-        except etree.ParseError:
-            _LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
-            raise InvalidXMLError
+        if self.smile_type == "thermostat":
+            self._loc_data[0] = {
+                "name": "Legacy Anna",
+                "types": {"temperature"},
+                "members": appliances,
+            }
+        if self.smile_type == "stretch":
+            self._loc_data[0] = {
+                "name": "Legacy Stretch",
+                "types": {"power"},
+                "members": appliances,
+            }
 
-        return xml
+    def locations_specials(self, loc, location):
+        """Determine available locations from inventory."""
+        if loc.name == "Home":
+            self._home_location = loc.id
+            loc.types.add("home")
+
+            for location_type in types_finder(location):
+                loc.types.add(location_type)
+
+        # Legacy P1 right location has 'services' filled
+        # test data has 5 for example
+        locator = ".//services"
+        if (
+            self._smile_legacy
+            and self.smile_type == "power"
+            and len(location.find(locator)) > 0
+        ):
+            # Override location name found to match
+            loc.name = "Home"
+            self._home_location = loc.id
+            loc.types.add("home")
+            loc.types.add("power")
+
+        return loc
 
     def all_locations(self):
         """Determine available locations from inventory."""
         self._loc_data = {}
+        loc = Munch()
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         if len(self._locations) == 0 and self._smile_legacy:
-            appliances = set()
-            home_location = 0
-
-            # Add Anna appliances
-            for appliance in self._appliances:
-                appliances.add(appliance.attrib["id"])
-
-            if self.smile_type == "thermostat":
-                self._loc_data[0] = {
-                    "name": "Legacy Anna",
-                    "types": {"temperature"},
-                    "members": appliances,
-                }
-            if self.smile_type == "stretch":
-                self._loc_data[0] = {
-                    "name": "Legacy Stretch",
-                    "types": {"power"},
-                    "members": appliances,
-                }
-
-            self._home_location = home_location
-
+            self.locations_legacy()
             return
 
         for location in self._locations:
-            location_name = location.find("name").text
-            location_id = location.attrib["id"]
-            location_types = set()
-            location_members = set()
+            loc.name = location.find("name").text
+            loc.id = location.attrib["id"]
+            loc.types = set()
+            loc.members = set()
 
             # Group of appliances
             locator = ".//appliances/appliance"
             if location.find(locator) is not None:
                 for member in location.findall(locator):
-                    location_members.add(member.attrib["id"])
+                    loc.members.add(member.attrib["id"])
 
-            if location_name == "Home":
-                home_location = location_id
-                location_types.add("home")
+            # Specials
+            loc = self.locations_specials(loc, location)
 
-                for location_type in types_finder(location):
-                    location_types.add(location_type)
-
-            # Legacy P1 right location has 'services' filled
-            # test data has 5 for example
-            locator = ".//services"
-            if (
-                self._smile_legacy
-                and self.smile_type == "power"
-                and len(location.find(locator)) > 0
-            ):
-                # Override location name found to match
-                location_name = "Home"
-                home_location = location_id
-                location_types.add("home")
-                location_types.add("power")
-
-            self._loc_data[location_id] = {
-                "name": location_name,
-                "types": location_types,
-                "members": location_members,
+            self._loc_data[loc.id] = {
+                "name": loc.name,
+                "types": loc.types,
+                "members": loc.members,
             }
 
-        self._home_location = home_location
-
         return
+
+    def appliance_stretch_class_finder(self, appliance, appl):
+        """Determine class per stretch appliance."""
+        if self.stretch_v2 or self.stretch_v3:
+            locator = ".//services/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            if appl.model != "Group Switch":
+                appl.model = None
+            if module_data[2] is not None:
+                hw_version = module_data[2].replace("-", "")
+                appl.model = version_to_model(hw_version)
+            appl.fw = module_data[3]
+            return appl
+
+        if self.smile_type != "stretch" and "plug" in appl.types:
+            locator = ".//logs/point_log/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+            module_data = self.get_module_data(appliance, locator, mod_type)
+            appl.v_name = module_data[0]
+            appl.model = version_to_model(module_data[1])
+            appl.fw = module_data[3]
+            return appl
 
     def appliance_class_finder(self, appliance, appl):
         """Determine class per appliance."""
@@ -312,27 +357,12 @@ class SmileHelper:
                 )
             return appl
 
-        if self.stretch_v2 or self.stretch_v3:
-            locator = ".//services/electricity_point_meter"
-            mod_type = "electricity_point_meter"
-            module_data = self.get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
-            if appl.model != "Group Switch":
-                appl.model = None
-            if module_data[2] is not None:
-                hw_version = module_data[2].replace("-", "")
-                appl.model = version_to_model(hw_version)
-            appl.fw = module_data[3]
-            return appl
+        # Handle stretches
+        self.appliance_stretch_class_finder(appliance, appl)
 
-        if self.smile_type != "stretch" and "plug" in appl.types:
-            locator = ".//logs/point_log/electricity_point_meter"
-            mod_type = "electricity_point_meter"
-            module_data = self.get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
-            appl.model = version_to_model(module_data[1])
-            appl.fw = module_data[3]
-            return appl
+        # For legacy Anna gateway and heater_central is the same device
+        if self._smile_legacy and self.smile_type == "thermostat":
+            self.gateway_id = self.heater_id
 
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
@@ -559,6 +589,42 @@ class SmileHelper:
                     url,
                 )
 
+    def appliance_measurements(self, appliance, data, measurements):
+        """Determine appliance measurement data."""
+        for measurement, attrs in measurements:
+
+            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
+            if appliance.find(p_locator) is not None:
+                if self._smile_legacy:
+                    if measurement == "domestic_hot_water_state":
+                        continue
+
+                measure = appliance.find(p_locator).text
+                # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
+                # this measurement appears at power-on and is never updated, therefore remove.
+                if (
+                    measurement == "central_heater_water_pressure"
+                    and float(measure) > 3.5
+                ):
+                    continue
+
+                try:
+                    measurement = attrs[ATTR_NAME]
+                except KeyError:
+                    pass
+
+                data[measurement] = format_measure(
+                    measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                )
+
+            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
+            if appliance.find(i_locator) is not None:
+                name = f"{measurement}_interval"
+                measure = appliance.find(i_locator).text
+                data[name] = format_measure(measure, ENERGY_WATT_HOUR)
+
+        return data
+
     def appliance_data(self, dev_id):
         """
         Obtain the appliance-data connected to a location.
@@ -579,41 +645,7 @@ class SmileHelper:
                     **HEATER_CENTRAL_MEASUREMENTS,
                 }.items()
 
-            for measurement, attrs in measurements:
-
-                p_locator = (
-                    f'.//logs/point_log[type="{measurement}"]/period/measurement'
-                )
-                if appliance.find(p_locator) is not None:
-                    if self._smile_legacy:
-                        if measurement == "domestic_hot_water_state":
-                            continue
-
-                    measure = appliance.find(p_locator).text
-                    # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
-                    # this measurement appears at power-on and is never updated, therefore remove.
-                    if (
-                        measurement == "central_heater_water_pressure"
-                        and float(measure) > 3.5
-                    ):
-                        continue
-
-                    try:
-                        measurement = attrs[ATTR_NAME]
-                    except KeyError:
-                        pass
-
-                    data[measurement] = format_measure(
-                        measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
-                    )
-
-                i_locator = (
-                    f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-                )
-                if appliance.find(i_locator) is not None:
-                    name = f"{measurement}_interval"
-                    measure = appliance.find(i_locator).text
-                    data[name] = format_measure(measure, ENERGY_WATT_HOUR)
+            data = self.appliance_measurements(appliance, data, measurements)
 
             data.update(self.get_lock_state(appliance))
 
@@ -622,6 +654,33 @@ class SmileHelper:
             data.pop("heating_state", None)
 
         return data
+
+    def rank_thermostat(self, thermo_matching, loc_id, appliance_id, appliance_details):
+        """Rank thermostat based on appliance_details."""
+        appl_class = appliance_details["class"]
+
+        if (
+            loc_id == appliance_details["location"]
+            or (self._smile_legacy and not appliance_details["location"])
+        ) and appl_class in thermo_matching:
+
+            # Pre-elect new master
+            if thermo_matching[appl_class] > self.thermo_locs[loc_id]["master_prio"]:
+
+                # Demote former master
+                if self.thermo_locs[loc_id]["master"] is not None:
+                    self.thermo_locs[loc_id]["slaves"].add(
+                        self.thermo_locs[loc_id]["master"]
+                    )
+
+                # Crown master
+                self.thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
+                self.thermo_locs[loc_id]["master"] = appliance_id
+
+            else:
+                self.thermo_locs[loc_id]["slaves"].add(appliance_id)
+
+        return appl_class
 
     def scan_thermostats(self, debug_text="missing text"):
         """Update locations with actual master/slave thermostats."""
@@ -648,32 +707,9 @@ class SmileHelper:
 
             for appliance_id, appliance_details in self.appl_data.items():
 
-                appl_class = appliance_details["class"]
-                if (
-                    loc_id == appliance_details["location"]
-                    or (self._smile_legacy and not appliance_details["location"])
-                ) and appl_class in thermo_matching:
-
-                    # Pre-elect new master
-                    if (
-                        thermo_matching[appl_class]
-                        > self.thermo_locs[loc_id]["master_prio"]
-                    ):
-
-                        # Demote former master
-                        if self.thermo_locs[loc_id]["master"] is not None:
-                            self.thermo_locs[loc_id]["slaves"].add(
-                                self.thermo_locs[loc_id]["master"]
-                            )
-
-                        # Crown master
-                        self.thermo_locs[loc_id]["master_prio"] = thermo_matching[
-                            appl_class
-                        ]
-                        self.thermo_locs[loc_id]["master"] = appliance_id
-
-                    else:
-                        self.thermo_locs[loc_id]["slaves"].add(appliance_id)
+                appl_class = self.rank_thermostat(
+                    thermo_matching, loc_id, appliance_id, appliance_details
+                )
 
                 # Find highest ranking thermostat
                 if appl_class in thermo_matching:
@@ -746,60 +782,74 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
+    def power_data_peak_value(self, loc):
+        loc.found = True
+
+        # Only once try to find P1 Legacy values
+        if loc.logs.find(loc.locator) is None and self.smile_type == "power":
+            # Skip peak if not split (P1 Legacy)
+            if loc.peak_select == "nl_offpeak":
+                loc.found = False
+                return loc
+
+            loc.locator = (
+                f'.//{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+            )
+
+        # Locator not found
+        if loc.logs.find(loc.locator) is None:
+            loc.found = False
+            return loc
+
+        peak = loc.peak_select.split("_")[1]
+        if peak == "offpeak":
+            peak = "off_peak"
+        log_found = loc.log_type.split("_")[0]
+        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+        if "gas" in loc.measurement:
+            loc.key_string = f"{loc.measurement}_{log_found}"
+        loc.net_string = f"net_electricity_{log_found}"
+        val = loc.logs.find(loc.locator).text
+        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
+
+        return loc
+
     def power_data_from_location(self, loc_id):
         """Obtain the power-data from domain_objects based on location."""
         direct_data = {}
+        loc = Munch()
+
         search = self._domain_objects
         t_string = "tariff"
         if self._smile_legacy and self.smile_type == "power":
             t_string = "tariff_indicator"
 
-        loc_logs = search.find(f'.//location[@id="{loc_id}"]/logs')
+        loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
 
-        if loc_logs is None:
+        if loc.logs is None:
             return
 
         log_list = ["point_log", "cumulative_log", "interval_log"]
         peak_list = ["nl_peak", "nl_offpeak"]
 
         # meter_string = ".//{}[type='{}']/"
-        for measurement, attrs in HOME_MEASUREMENTS.items():
-            for log_type in log_list:
-                for peak_select in peak_list:
-                    locator = (
-                        f'.//{log_type}[type="{measurement}"]/period/'
-                        f'measurement[@{t_string}="{peak_select}"]'
+        for loc.measurement, loc.attrs in HOME_MEASUREMENTS.items():
+            for loc.log_type in log_list:
+                for loc.peak_select in peak_list:
+                    loc.locator = (
+                        f'.//{loc.log_type}[type="{loc.measurement}"]/period/'
+                        f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
 
-                    # Only once try to find P1 Legacy values
-                    if loc_logs.find(locator) is None and self.smile_type == "power":
-                        # Skip peak if not split (P1 Legacy)
-                        if peak_select == "nl_offpeak":
-                            continue
-
-                        locator = (
-                            f'.//{log_type}[type="{measurement}"]/period/measurement'
-                        )
-
-                    if loc_logs.find(locator) is None:
+                    loc = self.power_data_peak_value(loc)
+                    if not loc.found:
                         continue
 
-                    peak = peak_select.split("_")[1]
-                    if peak == "offpeak":
-                        peak = "off_peak"
-                    log_found = log_type.split("_")[0]
-                    key_string = f"{measurement}_{peak}_{log_found}"
-                    if "gas" in measurement:
-                        key_string = f"{measurement}_{log_found}"
-                    net_string = f"net_electricity_{log_found}"
-                    val = loc_logs.find(locator).text
-                    f_val = power_data_local_format(attrs, key_string, val)
-
                     direct_data = power_data_energy_diff(
-                        measurement, net_string, f_val, direct_data
+                        loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
 
-                    direct_data[key_string] = f_val
+                    direct_data[loc.key_string] = loc.f_val
 
         if direct_data != {}:
             return direct_data
@@ -848,6 +898,24 @@ class SmileHelper:
         available, selected = determine_selected(available, selected, schemas)
         return available, selected, schedule_temperature
 
+    def schemas_schedule_temp(self, schedules):
+        """Obtain the schedule_temp from a schedule."""
+        for period, temp in schedules.items():
+            moment_1, moment_2 = period.split(",")
+            moment_1 = moment_1.replace("[", "").split(" ")
+            moment_2 = moment_2.replace(")", "").split(" ")
+            result_1 = DAYS.get(moment_1[0], "None")
+            result_2 = DAYS.get(moment_2[0], "None")
+            now = dt.datetime.now().time()
+            start = dt.datetime.strptime(moment_1[1], "%H:%M").time()
+            end = dt.datetime.strptime(moment_2[1], "%H:%M").time()
+            if (
+                result_1 == dt.datetime.now().weekday()
+                or result_2 == dt.datetime.now().weekday()
+            ):
+                if in_between(now, start, end):
+                    return temp
+
     def schemas(self, loc_id):
         """Obtain the available schemas or schedules based on the location_id."""
         available = []
@@ -877,15 +945,6 @@ class SmileHelper:
                 active = True
             schemas[name] = active
             schedules = {}
-            days = {
-                "mo": 0,
-                "tu": 1,
-                "we": 2,
-                "th": 3,
-                "fr": 4,
-                "sa": 5,
-                "su": 6,
-            }
             locator = f'rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
             for directive in directives:
@@ -898,21 +957,7 @@ class SmileHelper:
                 else:
                     schedules[directive.attrib["time"]] = float(schedule["setpoint"])
 
-            for period, temp in schedules.items():
-                moment_1, moment_2 = period.split(",")
-                moment_1 = moment_1.replace("[", "").split(" ")
-                moment_2 = moment_2.replace(")", "").split(" ")
-                result_1 = days.get(moment_1[0], "None")
-                result_2 = days.get(moment_2[0], "None")
-                now = dt.datetime.now().time()
-                start = dt.datetime.strptime(moment_1[1], "%H:%M").time()
-                end = dt.datetime.strptime(moment_2[1], "%H:%M").time()
-                if (
-                    result_1 == dt.datetime.now().weekday()
-                    or result_2 == dt.datetime.now().weekday()
-                ):
-                    if in_between(now, start, end):
-                        schedule_temperature = temp
+            schedule_temperature = self.schemas_schedule_temp(schedules)
 
         available, selected = determine_selected(available, selected, schemas)
 
