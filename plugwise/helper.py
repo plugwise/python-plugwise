@@ -360,10 +360,6 @@ class SmileHelper:
         # Handle stretches
         self.appliance_stretch_class_finder(appliance, appl)
 
-        # For legacy Anna gateway and heater_central is the same device
-        if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id
-
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
 
