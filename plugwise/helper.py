@@ -293,7 +293,7 @@ class SmileHelper:
 
         return
 
-    def appliance_stretch_class_finder(self, appliance, appl):
+    def energy_device_info_finder(self, appliance, appl):
         """Determine class per stretch appliance."""
         if self.stretch_v2 or self.stretch_v3:
             locator = ".//services/electricity_point_meter"
@@ -317,8 +317,8 @@ class SmileHelper:
             appl.fw = module_data[3]
             return appl
 
-    def appliance_class_finder(self, appliance, appl):
-        """Determine class per appliance."""
+    def appliance_info_finder(self, appliance, appl):
+        """Collect device info: firmware, model and vendor name."""
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
@@ -358,13 +358,17 @@ class SmileHelper:
             return appl
 
         # Handle stretches
-        self.appliance_stretch_class_finder(appliance, appl)
+        self.energy_device_info_finder(appliance, appl)
 
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
 
     def appliance_types_finder(self, appliance, appl):
         """Determine type per appliance."""
+        # For legacy Anna gateway and heater_central is the same device
+        if self._smile_legacy and self.smile_type == "thermostat":
+            self.gateway_id = self.heater_id
+
         # Preset all types applicable to home
         appl.types = self._loc_data[self._home_location]["types"]
 
@@ -408,10 +412,6 @@ class SmileHelper:
 
             return
 
-        # For legacy Anna gateway and heater_central is the same device
-        if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id
-
         # TODO: add locations with members as appliance as well
         # example 'electricity consumed/produced and relay' on Adam
         # Basically walk locations for 'members' not set[] and
@@ -446,7 +446,7 @@ class SmileHelper:
             appl = self.appliance_types_finder(appliance, appl)
 
             # Determine class for this appliance
-            appl = self.appliance_class_finder(appliance, appl)
+            appl = self.appliance_info_finder(appliance, appl)
             # Skip on heater_central when no active device present
             if not appl:
                 continue
