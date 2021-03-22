@@ -138,7 +138,6 @@ class SmileHelper:
         self._locations = None
         self._modules = None
 
-        self.active_device_present = False
         self.appl_data = {}
         self.gateway_id = None
         self.heater_id = None
@@ -434,8 +433,9 @@ class SmileHelper:
         )
         fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
         bl_state = self._appliances.find(".//services/boiler_state")
-        if self._cp_state or fl_state or bl_state:
-            self.active_device_present = True
+        self.active_device_present = (
+            self._cp_state is not None or fl_state is not None or bl_state is not None
+        )
 
         for appliance in self._appliances:
             appl = Munch()
@@ -932,13 +932,11 @@ class SmileHelper:
             return available, selected, schedule_temperature
 
         for rule_id, dummy in rule_ids.items():
-            active = False
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            if (
+            active = (
                 self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
                 == "true"
-            ):
-                active = True
+            )
             schemas[name] = active
             schedules = {}
             locator = f'rule[@id="{rule_id}"]/directives'
