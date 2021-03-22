@@ -932,13 +932,10 @@ class SmileHelper:
             return available, selected, schedule_temperature
 
         for rule_id, dummy in rule_ids.items():
-            active = False
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            if (
-                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
-                == "true"
+            active = (
+                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text == "true"
             ):
-                active = True
             schemas[name] = active
             schedules = {}
             locator = f'rule[@id="{rule_id}"]/directives'
