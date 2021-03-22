@@ -434,8 +434,9 @@ class SmileHelper:
         )
         fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
         bl_state = self._appliances.find(".//services/boiler_state")
-        if self._cp_state or fl_state or bl_state:
-            self.active_device_present = True
+        self.active_device_present = (
+            self._cp_state is not None or fl_state is not None or bl_state is not None
+        )
 
         for appliance in self._appliances:
             appl = Munch()
