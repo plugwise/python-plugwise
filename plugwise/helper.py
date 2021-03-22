@@ -935,7 +935,7 @@ class SmileHelper:
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
             active = (
                 self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text == "true"
-            ):
+            )
             schemas[name] = active
             schedules = {}
             locator = f'rule[@id="{rule_id}"]/directives'
