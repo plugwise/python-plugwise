@@ -934,7 +934,8 @@ class SmileHelper:
         for rule_id, dummy in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
             active = (
-                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text == "true"
+                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
+                == "true"
             )
             schemas[name] = active
             schedules = {}
