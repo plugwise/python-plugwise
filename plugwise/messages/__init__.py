@@ -7,6 +7,8 @@ from ..util import crc_fun
 class PlugwiseMessage:
     """Plugwise message base."""
 
+    ID = b"0000"
+
     def __init__(self):
         self.mac = ""
         self.checksum = None
