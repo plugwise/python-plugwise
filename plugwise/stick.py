@@ -588,7 +588,7 @@ class stick:
                     self.msg_controller._send_message_thread.start()
             # Update daemon
             if self._run_update_thread:
-                if not self._update_thread.isAlive():
+                if not self._update_thread.is_alive():
                     _LOGGER.warning(
                         "Unexpected halt of update thread, restart thread",
                     )

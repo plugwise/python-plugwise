@@ -100,11 +100,11 @@ class StickConnection:
 
     def read_thread_alive(self):
         """Return state of write thread."""
-        return self._reader_thread.isAlive() if self.run_reader_thread else False
+        return self._reader_thread.is_alive() if self.run_reader_thread else False
 
     def write_thread_alive(self):
         """Return state of write thread."""
-        return self._writer_thread.isAlive() if self.run_writer_thread else False
+        return self._writer_thread.is_alive() if self.run_writer_thread else False
 
     ################################################
     ###             Close connection             ###
@@ -117,7 +117,7 @@ class StickConnection:
             self.run_writer_thread = False
             self.run_reader_thread = False
             max_wait = 5 * SLEEP_TIME
-            while self._writer_thread.isAlive():
+            while self._writer_thread.is_alive():
                 time.sleep(SLEEP_TIME)
                 max_wait -= SLEEP_TIME
             self._close_connection()
