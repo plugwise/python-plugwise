@@ -114,11 +114,10 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
-    # TODO: parameters differ from overridden method (arguments-differ)
-    def _request_ping(self, callback=None, sensor=True):
+    def _request_ping(self, callback=None, ignore_sensor=True):
         """Ping node"""
         if (
-            sensor
+            ignore_sensor
             or self._callbacks.get(FEATURE_PING["id"])
             or self._callbacks.get(FEATURE_RSSI_IN["id"])
             or self._callbacks.get(FEATURE_RSSI_OUT["id"])
