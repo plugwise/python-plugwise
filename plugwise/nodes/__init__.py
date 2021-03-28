@@ -282,7 +282,7 @@ class PlugwiseNode:
         if self._last_log_address != message.last_logaddr.value:
             self._last_log_address = message.last_logaddr.value
         _LOGGER.debug("Node type        = %s", self.hardware_model)
-        if not self.is_sed:
+        if not self._battery_powered:
             _LOGGER.debug("Relay state      = %s", str(self._relay_state))
         _LOGGER.debug("Hardware version = %s", str(self._hardware_version))
         _LOGGER.debug("Firmware version = %s", str(self._firmware_version))
