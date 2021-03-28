@@ -36,6 +36,9 @@ class StickConnection:
             self._open_connection()
         return self._is_connected
 
+    def _open_connection(self):
+        """Placeholder."""
+
     ################################################
     ###                   Reader                 ###
     ################################################
@@ -54,6 +57,10 @@ class StickConnection:
                 self.parser(data)
             time.sleep(0.01)
         _LOGGER.debug("Reader daemon stopped")
+
+    def _read_data(self):
+        """placeholder."""
+        return b"0000"
 
     ################################################
     ###                 Writer                   ###
@@ -85,6 +92,9 @@ class StickConnection:
                 if callback:
                     callback()
         _LOGGER.debug("Writer daemon stopped")
+
+    def _write_data(self, data):
+        """Placeholder."""
 
     def send(self, message: NodeRequest, callback=None):
         """Add message to write queue."""
@@ -121,3 +131,6 @@ class StickConnection:
                 time.sleep(SLEEP_TIME)
                 max_wait -= SLEEP_TIME
             self._close_connection()
+
+    def _close_connection(self):
+        """Placeholder."""
