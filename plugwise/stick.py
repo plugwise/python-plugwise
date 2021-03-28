@@ -557,35 +557,17 @@ class stick:
                 if not self.msg_controller.connection.write_thread_alive():
                     _LOGGER.warning("Unexpected halt of connection writer thread")
             # receive timeout daemon
-            if self.msg_controller._run_receive_timeout_thread:
-                if not self.msg_controller._receive_timeout_thread.isAlive():
-                    _LOGGER.warning(
-                        "Unexpected halt of receive thread, restart thread",
-                    )
-                    self.msg_controller._receive_timeout_thread = threading.Thread(
-                        None,
-                        self.msg_controller._receive_timeout_loop,
-                        "receive_timeout_thread",
-                        (),
-                        {},
-                    )
-                    self.msg_controller._receive_timeout_thread.daemon = True
-                    self.msg_controller._receive_timeout_thread.start()
+            if (
+                self.msg_controller.receive_timeout_thread_state
+                and self.msg_controller.receive_timeout_thread_is_alive
+            ):
+                self.msg_controller.restart_receive_timeout_thread()
             # send message daemon
-            if self.msg_controller._run_send_message_thread:
-                if not self.msg_controller._send_message_thread.isAlive():
-                    _LOGGER.warning(
-                        "Unexpected halt of send thread, restart thread",
-                    )
-                    self.msg_controller._send_message_thread = threading.Thread(
-                        None,
-                        self.msg_controller._send_message_loop,
-                        "send_messages_thread",
-                        (),
-                        {},
-                    )
-                    self.msg_controller._send_message_thread.daemon = True
-                    self.msg_controller._send_message_thread.start()
+            if (
+                self.msg_controller.send_message_thread_state
+                and self.msg_controller.send_message_thread_is_alive
+            ):
+                self.msg_controller.restart_send_message_thread()
             # Update daemon
             if self._run_update_thread:
                 if not self._update_thread.is_alive():
