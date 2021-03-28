@@ -151,6 +151,10 @@ class PlugwiseNode:
             return self._RSSI_out
         return 0
 
+    def do_ping(self, callback):
+        """Send network ping message to node"""
+        self._request_ping(callback, True)
+
     def _request_info(self, callback=None):
         """Request info from node."""
         self.message_sender(

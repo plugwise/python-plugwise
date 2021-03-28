@@ -614,7 +614,7 @@ class stick:
                             self._check_availability_of_seds(mac)
                         else:
                             # Do ping request for all non SED's
-                            self._device_nodes[mac]._request_ping(None, True)
+                            self._device_nodes[mac].do_ping()
 
                         if self._device_nodes[mac].measures_power:
                             # Request current power usage
