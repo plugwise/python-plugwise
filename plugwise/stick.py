@@ -751,38 +751,3 @@ class stick:
                     NodeInfoRequest(bytes(mac, UTF8_DECODE)),
                     callback,
                 )
-
-    ## TODO: All functions below can be removed when HA component is changed to use the property values ##
-    def get_mac_stick(self) -> str:
-        """Return mac address of USB-Stick"""
-        _LOGGER.warning(
-            "Function 'get_mac_stick' will be removed in future, use the 'mac' property instead !",
-        )
-        if self._mac_stick:
-            return self._mac_stick.decode(UTF8_DECODE)
-        return None
-
-    def registered_nodes(self) -> int:
-        """Return total number of nodes registered to Circle+ including Circle+ itself"""
-        _LOGGER.warning(
-            "Function 'registered_nodes' will be removed in future, use the 'joined_nodes' property instead !",
-        )
-        return self._joined_nodes + 1
-
-    def nodes(self) -> list:
-        """Return list of mac addresses of discovered and supported plugwise nodes."""
-        _LOGGER.warning(
-            "Function 'nodes' will be removed in future, use the 'devices' (dict) property instead !",
-        )
-        return list(
-            dict(
-                filter(lambda item: item[1] is not None, self._device_nodes.items())
-            ).keys()
-        )
-
-    def node(self, mac: str) -> PlugwiseNode:
-        """Return a specific node object"""
-        _LOGGER.warning(
-            "Function 'node' will be removed in future, use the 'devices' property (dict) instead !",
-        )
-        return self._device_nodes.get(mac)
