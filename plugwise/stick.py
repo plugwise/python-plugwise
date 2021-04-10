@@ -585,7 +585,7 @@ class stick:
                 # First hour every once an hour
                 if self._circle_plus_retries < 60 or circle_plus_retry_counter > 60:
                     _LOGGER.info(
-                        "Circle+ not yet discovered, resubmit discovery request",
+                        "Circle+ not yet discovered, resubmit discovery request"
                     )
                     self.discover_node(self.circle_plus_mac, self.scan)
                     self._circle_plus_retries += 1

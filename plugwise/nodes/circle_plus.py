@@ -126,7 +126,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         )
 
     def sync_realtime_clock(self, max_drift=0):
-        """Sync real time clock of node if time has drifted more than max drifted"""
+        """Sync real time clock of node if time has drifted more than max drifted."""
         if self._realtime_clock_offset is not None:
             if max_drift == 0:
                 max_drift = MAX_TIME_DRIFT
