@@ -1,16 +1,16 @@
 # Changelog
 
-## 0.9.4 - (alpha)
+## 0.9.4 - Bugfix and improvements
 
-- Underlying code improvements (complexity, linting, amongst others)
-- Make stick code run at python 3.9 (fixes AttributeError: 'Thread' object has no attribute 'isAlive')
+- Stick: make stick code run at python 3.9 (fixes AttributeError: 'Thread' object has no attribute 'isAlive')
+- Smile: underlying code improvements (solve complexity, linting, etc.), continuing to improve on the changes implemented in v0.9.2.
 
-## 0.9.3 - Add lock-state switches
+## 0.9.3 - Smile: add lock-state switches
 
 - Add support for getting and setting the lock-state of Plugs-, Circles-, Stealth-switches, for Adam and Stretch only. A set lock-state prevents a switch from being turned off.
 - There is no lock_state available for the following special Plugwise classes: `central heating pump` and `value actuator`
 
-## 0.9.2 - Smile Optimize
+## 0.9.2 - Smile: optimize
 
 - Functions not called by the plugwise(-beta) code have been moved to helper.py in which they are part of the subclass SmileHelper
 - All for-loops are now executed only once, the results are stored in self-parameters.
@@ -19,9 +19,9 @@
 - Collect only the data from the Smile that is needed: full_update_device() for initialisation, update-device() for updating of live data
 - Adapt test_smile.py to the new code, increase test-coverage further
 
-## 0.9.1 - Add Domestic Hot Water Comfort Mode switch - Feature request
+## 0.9.1 - Smile: add Domestic Hot Water Comfort Mode switch - Feature request
 
-## 0.9.0 - API change for stick
+## 0.9.0 - Stick: API change
 
 - Improvement: Debounce relay state
 - Improvement: Prioritize request so requests like switching a relay get send out before power measurement requests.
@@ -67,7 +67,7 @@
     - `switch` (boolean) - Last reported state of switch
   - Stretch v2: fix failed connection by re-adding the aiohttp-workaround
 
-## 0.8.6 - Code quality improvements for stick
+## 0.8.6 - Stick: code quality improvements
 
 - Bug-fix: Power history was not reported (0 value) during last week of the month
 - Improvement: Validate message checksums
@@ -83,7 +83,7 @@
   5. Message processing - Do the required stuff (stick.py & nodes/\*.py)
 - Improvement: Resolves all flake8 comments
 
-## 0.8.5 - Fix sensor scaling
+## 0.8.5 - Smile: fix sensor scaling
 
 - Fix for HA Core issue #44349
 - Fix other value scaling bugs
@@ -91,7 +91,7 @@
 
 (## 0.8.4 - Not released: Fix "Gas Consumed Interval stays 0" )
 
-## 0.8.2/0.8.3 - Code quality improvements
+## 0.8.2/0.8.3 - Smile: code quality improvements
 
 - Switch Smile to defusedxml from lxml (improving security)
 - Lint and flake recommendations fixed
@@ -100,9 +100,9 @@
 - Add model-info: to be used in Core to provide a more correct model-name for each device.
 - Code improvements and increase in test-coverage.
 
-## 0.8.1 - Standardize logging for stick
+## 0.8.1 - Stick: standardize logging
 
-## 0.8.0 - Merged Smile/USB module
+## 0.8.0 - Merged Smile/Stick module
 
 - Merge of the former network and former USB module to a single python module
 - Improved commit/test/CI&CD
