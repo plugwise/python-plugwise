@@ -557,38 +557,20 @@ class stick:
                 if not self.msg_controller.connection.write_thread_alive():
                     _LOGGER.warning("Unexpected halt of connection writer thread")
             # receive timeout daemon
-            if self.msg_controller._run_receive_timeout_thread:
-                if not self.msg_controller._receive_timeout_thread.isAlive():
-                    _LOGGER.warning(
-                        "Unexpected halt of receive thread, restart thread",
-                    )
-                    self.msg_controller._receive_timeout_thread = threading.Thread(
-                        None,
-                        self.msg_controller._receive_timeout_loop,
-                        "receive_timeout_thread",
-                        (),
-                        {},
-                    )
-                    self.msg_controller._receive_timeout_thread.daemon = True
-                    self.msg_controller._receive_timeout_thread.start()
+            if (
+                self.msg_controller.receive_timeout_thread_state
+                and self.msg_controller.receive_timeout_thread_is_alive
+            ):
+                self.msg_controller.restart_receive_timeout_thread()
             # send message daemon
-            if self.msg_controller._run_send_message_thread:
-                if not self.msg_controller._send_message_thread.isAlive():
-                    _LOGGER.warning(
-                        "Unexpected halt of send thread, restart thread",
-                    )
-                    self.msg_controller._send_message_thread = threading.Thread(
-                        None,
-                        self.msg_controller._send_message_loop,
-                        "send_messages_thread",
-                        (),
-                        {},
-                    )
-                    self.msg_controller._send_message_thread.daemon = True
-                    self.msg_controller._send_message_thread.start()
+            if (
+                self.msg_controller.send_message_thread_state
+                and self.msg_controller.send_message_thread_is_alive
+            ):
+                self.msg_controller.restart_send_message_thread()
             # Update daemon
             if self._run_update_thread:
-                if not self._update_thread.isAlive():
+                if not self._update_thread.is_alive():
                     _LOGGER.warning(
                         "Unexpected halt of update thread, restart thread",
                     )
@@ -603,7 +585,7 @@ class stick:
                 # First hour every once an hour
                 if self._circle_plus_retries < 60 or circle_plus_retry_counter > 60:
                     _LOGGER.info(
-                        "Circle+ not yet discovered, resubmit discovery request",
+                        "Circle+ not yet discovered, resubmit discovery request"
                     )
                     self.discover_node(self.circle_plus_mac, self.scan)
                     self._circle_plus_retries += 1
@@ -632,7 +614,7 @@ class stick:
                             self._check_availability_of_seds(mac)
                         else:
                             # Do ping request for all non SED's
-                            self._device_nodes[mac]._request_ping(None, True)
+                            self._device_nodes[mac].do_ping()
 
                         if self._device_nodes[mac].measures_power:
                             # Request current power usage
@@ -769,38 +751,3 @@ class stick:
                     NodeInfoRequest(bytes(mac, UTF8_DECODE)),
                     callback,
                 )
-
-    ## TODO: All functions below can be removed when HA component is changed to use the property values ##
-    def get_mac_stick(self) -> str:
-        """Return mac address of USB-Stick"""
-        _LOGGER.warning(
-            "Function 'get_mac_stick' will be removed in future, use the 'mac' property instead !",
-        )
-        if self._mac_stick:
-            return self._mac_stick.decode(UTF8_DECODE)
-        return None
-
-    def registered_nodes(self) -> int:
-        """Return total number of nodes registered to Circle+ including Circle+ itself"""
-        _LOGGER.warning(
-            "Function 'registered_nodes' will be removed in future, use the 'joined_nodes' property instead !",
-        )
-        return self._joined_nodes + 1
-
-    def nodes(self) -> list:
-        """Return list of mac addresses of discovered and supported plugwise nodes."""
-        _LOGGER.warning(
-            "Function 'nodes' will be removed in future, use the 'devices' (dict) property instead !",
-        )
-        return list(
-            dict(
-                filter(lambda item: item[1] is not None, self._device_nodes.items())
-            ).keys()
-        )
-
-    def node(self, mac: str) -> PlugwiseNode:
-        """Return a specific node object"""
-        _LOGGER.warning(
-            "Function 'node' will be removed in future, use the 'devices' property (dict) instead !",
-        )
-        return self._device_nodes.get(mac)

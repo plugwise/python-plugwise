@@ -35,7 +35,7 @@ class NodeSED(PlugwiseNode):
 
     def __init__(self, mac, address, message_sender):
         super().__init__(mac, address, message_sender)
-        self._SED_requests = {}
+        self._sed_requests = {}
         self.maintenance_interval = SED_MAINTENANCE_INTERVAL
         self._new_maintenance_interval = None
         self._wake_up_interval = None
@@ -81,15 +81,15 @@ class NodeSED(PlugwiseNode):
             or message.awake_type.value == SED_AWAKE_STARTUP
             or message.awake_type.value == SED_AWAKE_BUTTON
         ):
-            for request in self._SED_requests:
-                (request_message, callback) = self._SED_requests[request]
+            for request in self._sed_requests:
+                (request_message, callback) = self._sed_requests[request]
                 _LOGGER.info(
                     "Send queued %s message to SED node %s",
                     request_message.__class__.__name__,
                     self.mac,
                 )
                 self.message_sender(request_message, callback, -1, PRIORITY_HIGH)
-            self._SED_requests = {}
+            self._sed_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:
                 _LOGGER.debug("Node %s awake for state change", self.mac)
@@ -102,7 +102,7 @@ class NodeSED(PlugwiseNode):
 
     def _queue_request(self, request_message, callback=None):
         """Queue request to be sent when SED is awake. Last message wins."""
-        self._SED_requests[request_message.ID] = (
+        self._sed_requests[request_message.ID] = (
             request_message,
             callback,
         )
@@ -114,11 +114,10 @@ class NodeSED(PlugwiseNode):
             callback,
         )
 
-    # TODO: parameters differ from overridden method (arguments-differ)
-    def _request_ping(self, callback=None, sensor=True):
+    def _request_ping(self, callback=None, ignore_sensor=True):
         """Ping node"""
         if (
-            sensor
+            ignore_sensor
             or self._callbacks.get(FEATURE_PING["id"])
             or self._callbacks.get(FEATURE_RSSI_IN["id"])
             or self._callbacks.get(FEATURE_RSSI_OUT["id"])

@@ -59,8 +59,28 @@ class StickMessageController:
         self._send_message_queue = None
         self._send_message_thread = None
         self._receive_timeout_thread = False
-        self._run_receive_timeout_thread = False
-        self._run_send_message_thread = False
+        self._receive_timeout_thread_state = False
+        self._send_message_thread_state = False
+
+    @property
+    def receive_timeout_thread_state(self) -> bool:
+        """Required state of the receive timeout thread"""
+        return self._receive_timeout_thread_state
+
+    @property
+    def receive_timeout_thread_is_alive(self) -> bool:
+        """Current state of the receive timeout thread"""
+        return self._send_message_thread.is_alive()
+
+    @property
+    def send_message_thread_state(self) -> bool:
+        """Required state of the send message thread"""
+        return self._send_message_thread_state
+
+    @property
+    def send_message_thread_is_alive(self) -> bool:
+        """Current state of the send message thread"""
+        return self._send_message_thread.is_alive()
 
     def connect_to_stick(self, callback=None) -> bool:
         """
@@ -82,14 +102,14 @@ class StickMessageController:
             _LOGGER.debug("Starting message controller threads...")
             # send daemon
             self._send_message_queue = PriorityQueue()
-            self._run_send_message_thread = True
+            self._send_message_thread_state = True
             self._send_message_thread = threading.Thread(
                 None, self._send_message_loop, "send_messages_thread", (), {}
             )
             self._send_message_thread.daemon = True
             self._send_message_thread.start()
             # receive timeout daemon
-            self._run_receive_timeout_thread = True
+            self._receive_timeout_thread_state = True
             self._receive_timeout_thread = threading.Thread(
                 None, self._receive_timeout_loop, "receive_timeout_thread", (), {}
             )
@@ -194,7 +214,7 @@ class StickMessageController:
 
     def _send_message_loop(self):
         """Daemon to send messages waiting in queue."""
-        while self._run_send_message_thread:
+        while self._send_message_thread_state:
             try:
                 _prio, _retry, _dt, request_set = self._send_message_queue.get(
                     block=True, timeout=1
@@ -235,7 +255,7 @@ class StickMessageController:
                 ):
                     time.sleep(0.1)
                     timeout_counter += 1
-                if timeout_counter >= 10 and self._run_send_message_thread:
+                if timeout_counter >= 10 and self._send_message_thread_state:
                     self.resend(seq_id)
         _LOGGER.debug("Send message loop stopped")
 
@@ -308,7 +328,7 @@ class StickMessageController:
 
     def _receive_timeout_loop(self):
         """Daemon to time out open requests without any (n)ack response message."""
-        while self._run_receive_timeout_thread:
+        while self._receive_timeout_thread_state:
             for seq_id in list(self.expected_responses.keys()):
                 if self.expected_responses[seq_id][3] is not None:
                     if self.expected_responses[seq_id][3] < (
@@ -330,7 +350,7 @@ class StickMessageController:
             receive_timeout_checker = 0
             while (
                 receive_timeout_checker < MESSAGE_TIME_OUT
-                and self._run_receive_timeout_thread
+                and self._receive_timeout_thread_state
             ):
                 time.sleep(1)
                 receive_timeout_checker += 1
@@ -376,6 +396,38 @@ class StickMessageController:
 
     def disconnect_from_stick(self):
         """Disconnect from stick and raise error if it fails"""
-        self._run_send_message_thread = False
-        self._run_receive_timeout_thread = False
+        self._send_message_thread_state = False
+        self._receive_timeout_thread_state = False
         self.connection.disconnect()
+
+    def restart_receive_timeout_thread(self):
+        """Restart the receive timeout thread if not running"""
+        if not self._receive_timeout_thread.is_alive():
+            _LOGGER.warning(
+                "Unexpected halt of receive thread, restart thread",
+            )
+            self._receive_timeout_thread = threading.Thread(
+                None,
+                self._receive_timeout_loop,
+                "receive_timeout_thread",
+                (),
+                {},
+            )
+            self._receive_timeout_thread.daemon = True
+            self._receive_timeout_thread.start()
+
+    def restart_send_message_thread(self):
+        """Restart the message sender thread if not running"""
+        if not self._send_message_thread.is_alive():
+            _LOGGER.warning(
+                "Unexpected halt of send thread, restart thread",
+            )
+            self._send_message_thread = threading.Thread(
+                None,
+                self._send_message_loop,
+                "send_messages_thread",
+                (),
+                {},
+            )
+            self._send_message_thread.daemon = True
+            self._send_message_thread.start()

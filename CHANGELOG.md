@@ -3,13 +3,14 @@
 ## 0.9.4 - (alpha)
 
 - Underlying code improvements (complexity, linting, amongst others)
+- Make stick code run at python 3.9 (fixes AttributeError: 'Thread' object has no attribute 'isAlive')
 
 ## 0.9.3 - Add lock-state switches
 
 - Add support for getting and setting the lock-state of Plugs-, Circles-, Stealth-switches, for Adam and Stretch only. A set lock-state prevents a switch from being turned off.
 - There is no lock_state available for the following special Plugwise classes: `central heating pump` and `value actuator`
 
-## 0.9.2 - Smile Optimize 
+## 0.9.2 - Smile Optimize
 
 - Functions not called by the plugwise(-beta) code have been moved to helper.py in which they are part of the subclass SmileHelper
 - All for-loops are now executed only once, the results are stored in self-parameters.
@@ -51,7 +52,7 @@
   - Scan devices
     - `motion` (boolean) - Current detection state of motion.
   - Sense devices
-    - `humidity`  (integer) - Last reported humidity value.
+    - `humidity` (integer) - Last reported humidity value.
     - `temperature` (integer) - Last reported temperature value.
   - Circle/Circle+/Stealth devices
     - `current_power_usage` (float) - Current power usage (Watts) during the last second
@@ -63,7 +64,7 @@
     - `power_production_current_hour` (float) - Total power production (kWh) this hour
     - `relay_state` (boolean) - State of the output power relay. Setting this property will operate the relay
   - Switch devices
-    - `switch`  (boolean) - Last reported state of switch
+    - `switch` (boolean) - Last reported state of switch
   - Stretch v2: fix failed connection by re-adding the aiohttp-workaround
 
 ## 0.8.6 - Code quality improvements for stick
@@ -72,14 +73,14 @@
 - Improvement: Validate message checksums
 - Improvement: Do a single ping request to validate if node is on-line
 - Improvement: Guard Scan sensitivity setting to medium
-- Improvement: Move general module code of messages, nodes, connection to the  __init__.py files.
+- Improvement: Move general module code of messages, nodes, connection to the **init**.py files.
 - Improvement: Do proper timeout handling while sequence counter resets (once every 65532 messages)
 - Improvement: Better code separation. All logic is in their designated files:
-  1. Connection (connection/*.py)
+  1. Connection (connection/\*.py)
   2. Data parsing (parser.py)
-  3. Data encoding/decoding of message (messages/*.py)
+  3. Data encoding/decoding of message (messages/\*.py)
   4. Message handling - Initialization & transportation (controller.py)
-  5. Message processing - Do the required stuff (stick.py & nodes/*.py)
+  5. Message processing - Do the required stuff (stick.py & nodes/\*.py)
 - Improvement: Resolves all flake8 comments
 
 ## 0.8.5 - Fix sensor scaling
@@ -182,7 +183,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 - Add exporter for fixtures to be used by HA-core for testing plugwise
 - Improve `error`-detection
 - Expose Plugwise System notifications (i.e. warnings or errors visible in the app)
-  
+
 ### 1.0.0 - Stable release
 
 - Just `black`ened code (Python `black`)
@@ -190,15 +191,15 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 ### 0.2.15 - Code cleanup
 
 - Just code improvements
-  
+
 ### 0.2.14 - Code cleanup
 
 - Just code improvements
-  
+
 ### 0.2.13 - Final legacy fix
 
 - Adjust `dwh` and `setpoint` handling
-  
+
 ### 0.2.12 - Fix available schema's
 
 - Thanks to report from @fsaris
@@ -208,12 +209,12 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 
 - See [65](https://github.com/plugwise/plugwise-beta/issues/65)
 - Add return water temperature from Auxiliary
-  
+
 ### 0.2.10 - Core PR updates
 
 - Add exception for InvalidAuthentication
 - Revert setting heating when None
-  
+
 ### 0.2.9 - Use intended state
 
 - Change to `intended_central_heating_state`
@@ -225,17 +226,17 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 - CI/CD improve pre-commit hooks
 - Remove useless water sensor
 - Improve testing guidelines README
-  
+
 ### 0.2.7 - CI/CD
 
 - CI/CD Version number handling
-  
+
 ### 0.2.6 - New firmware support and XML handling
 
 - Improvement by contributor @sbeukers (Smile P1 v4 support)
 - Legacy Anna fixes and test improvements
 - Favour `domain_objects` over `appliances` XML-data
-  
+
 ### 0.2.5 - Issuefix, cleanup and CI/CD
 
 - Fix for HVAC idle issue [#57](https://github.com/plugwise/plugwise-beta/issues/57)
@@ -248,7 +249,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 - `chs` and `dhw` determined from `boiler_state`
 - No `chs` or `dhw` on legacy Anna
 - More legacy anna fixes
-  
+
 ### 0.2.1 - Master thermostat fixes
 
 - Legacy Anna fixes
@@ -270,12 +271,12 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 - Prepare virtualenvs (travis etc.)
 - Code styling/wording fixes (lint/pep)
 - Improve READMEs
-  
+
 ### 0.1.25 - Domestic hot water and CI/CD improvements
 
 - Testing improvements
 - `dhw`-handling
-  
+
 ### 0.1.24 - Add handling erroneous XML and/or timeouts
 
 - Favour exception raises above returning `False`
@@ -293,7 +294,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 
 - Add heatpump-environment data and tests (thanks to @marcelveldt)
 - Improve `outdoor_temperature` accordingly (favour Auxiliary over Smile)
-  
+
 ### 0.1.20 - Fix thermostat count
 
 ### 0.1.19 - Add thermostat counting
@@ -307,7 +308,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 ### 0.1.16 - Fix central components
 
 - Version skip to align with `-beta`-component
-  
+
 ### 0.1.12 - Introduce heatpump
 
 - Thanks to @marcelveldt and his environment
@@ -316,7 +317,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 ### 0.1.11 - Add all options for P1 DSMR
 
 - Thanks to @(tbd) and his environment
-  
+
 ### 0.1.9 - Set HVAC on legacy Anna
 
 ### 0.1.8 - Scheduled state on legacy Anna
@@ -333,7 +334,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 - Improve/standardize public variables
 - Tests updated accordingly
 - Version skip to align with `-beta`-component
-  
+
 ### 0.1.0 - Public beta
 
 ### 0.0.57 - Review to public beta
@@ -376,7 +377,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 - Improve handling Lisa thermostat
 - Improve relay (plugs) functionality
 - Add individual Smiles as 'hub'-components
-  
+
 ### 0.0.26 - Add relay (plugs) support and tests
 
 ### 0.0.x - Not individually release but left in [this repo](https://github.com/plugwise/Plugwise-HA)

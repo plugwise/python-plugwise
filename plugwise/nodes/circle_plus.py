@@ -97,7 +97,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         )
 
     def _response_realtime_clock(self, message):
-        dt = datetime(
+        realtime_clock_dt = datetime(
             datetime.now().year,
             datetime.now().month,
             datetime.now().day,
@@ -106,7 +106,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             message.time.value.second,
         )
         realtime_clock_offset = message.timestamp.replace(microsecond=0) - (
-            dt + self.timezone_delta
+            realtime_clock_dt + self.timezone_delta
         )
         if realtime_clock_offset.days == -1:
             self._realtime_clock_offset = realtime_clock_offset.seconds - 86400
@@ -126,7 +126,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         )
 
     def sync_realtime_clock(self, max_drift=0):
-        """Sync real time clock of node if time has drifted more than max drifted"""
+        """Sync real time clock of node if time has drifted more than max drifted."""
         if self._realtime_clock_offset is not None:
             if max_drift == 0:
                 max_drift = MAX_TIME_DRIFT

@@ -36,6 +36,9 @@ class StickConnection:
             self._open_connection()
         return self._is_connected
 
+    def _open_connection(self):
+        """Placeholder."""
+
     ################################################
     ###                   Reader                 ###
     ################################################
@@ -54,6 +57,10 @@ class StickConnection:
                 self.parser(data)
             time.sleep(0.01)
         _LOGGER.debug("Reader daemon stopped")
+
+    def _read_data(self):
+        """placeholder."""
+        return b"0000"
 
     ################################################
     ###                 Writer                   ###
@@ -86,6 +93,9 @@ class StickConnection:
                     callback()
         _LOGGER.debug("Writer daemon stopped")
 
+    def _write_data(self, data):
+        """Placeholder."""
+
     def send(self, message: NodeRequest, callback=None):
         """Add message to write queue."""
         self._write_queue.put_nowait((message, callback))
@@ -100,11 +110,11 @@ class StickConnection:
 
     def read_thread_alive(self):
         """Return state of write thread."""
-        return self._reader_thread.isAlive() if self.run_reader_thread else False
+        return self._reader_thread.is_alive() if self.run_reader_thread else False
 
     def write_thread_alive(self):
         """Return state of write thread."""
-        return self._writer_thread.isAlive() if self.run_writer_thread else False
+        return self._writer_thread.is_alive() if self.run_writer_thread else False
 
     ################################################
     ###             Close connection             ###
@@ -117,7 +127,10 @@ class StickConnection:
             self.run_writer_thread = False
             self.run_reader_thread = False
             max_wait = 5 * SLEEP_TIME
-            while self._writer_thread.isAlive():
+            while self._writer_thread.is_alive():
                 time.sleep(SLEEP_TIME)
                 max_wait -= SLEEP_TIME
             self._close_connection()
+
+    def _close_connection(self):
+        """Placeholder."""

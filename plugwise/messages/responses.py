@@ -244,7 +244,7 @@ class NodePingResponse(NodeResponse):
     """
     Ping response from node
 
-    - incomingLastHopRssiTarget
+    - incomingLastHopRssiTarget (received signal strength indicator)
     - lastHopRssiSource
     - timediffInMs
 
@@ -255,12 +255,12 @@ class NodePingResponse(NodeResponse):
 
     def __init__(self):
         super().__init__()
-        self.in_RSSI = Int(0, length=2)
-        self.out_RSSI = Int(0, length=2)
+        self.rssi_in = Int(0, length=2)
+        self.rssi_out = Int(0, length=2)
         self.ping_ms = Int(0, 4, False)
         self.params += [
-            self.in_RSSI,
-            self.out_RSSI,
+            self.rssi_in,
+            self.rssi_out,
             self.ping_ms,
         ]
 
