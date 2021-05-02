@@ -231,6 +231,9 @@ jobs:
       - name: Run all tests
         run: |
           . venv/bin/activate
+          which python
+          which pytest
+          ls -la venv/bin
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v2.2.0
