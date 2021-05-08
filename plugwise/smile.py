@@ -12,6 +12,8 @@ import semver
 
 from .constants import (
     APPLIANCES,
+    ATTR_ID,
+    BINARY_SENSORS,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
@@ -20,9 +22,11 @@ from .constants import (
     MODULES,
     NOTIFICATIONS,
     RULES,
+    SENSORS,
     SMILES,
     STATUS,
     SWITCH_GROUP_TYPES,
+    SWITCHES,
     SYSTEM,
     THERMOSTAT_CLASSES,
 )
@@ -209,7 +213,8 @@ class Smile(SmileHelper):
 
     def get_all_devices(self):
         """Determine available devices from inventory."""
-        devices = {}
+        self.devices = {}
+        self.gw_devices = {}
         self.scan_thermostats()
 
         for appliance, details in self.appl_data.items():
@@ -223,13 +228,40 @@ class Smile(SmileHelper):
                     if appliance in self.thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
-            devices[appliance] = details
+            self.devices[appliance] = details
 
         group_data = self.group_switches()
         if group_data is not None:
-            devices.update(group_data)
+            self.devices.update(group_data)
 
-        return devices
+        self.gw_devices = self.devices
+        for dev_id in self.devices:
+            temp_bs_dict = {}
+            temp_sensor_dict = {}
+            temp_switch_dict = {}
+            data = self.get_device_data(dev_id)
+            for key, value in data.items():
+                for item in BINARY_SENSORS:
+                    for k, v in item.items():
+                        if k == key:
+                            temp_bs_dict.update(item)
+                            temp_bs_dict[key]["state"] = value
+                for item in SENSORS:
+                    for k, v in item.items():
+                        if k == key:
+                            temp_sensor_dict.update(item)
+                            temp_sensor_dict[key]["state"] = value
+                for item in SWITCHES:
+                    for k, v in item.items():
+                        if k == key:
+                            temp_switch_dict.update(item)
+                            temp_switch_dict[key]["state"] = value
+            if temp_bs_dict != {}:
+                self.gw_devices[dev_id]["binary_sensors"] = temp_bs_dict
+            if temp_sensor_dict != {}:
+                self.gw_devices[dev_id]["sensors"] = temp_sensor_dict
+            if temp_switch_dict != {}:
+                self.gw_devices[dev_id]["switches"] = temp_switch_dict
 
     def device_data_switching_group(self, details, device_data):
         """Determine switching groups device data."""
@@ -293,7 +325,7 @@ class Smile(SmileHelper):
 
     def get_device_data(self, dev_id):
         """Provide device-data, based on location_id, from APPLIANCES."""
-        devices = self.get_all_devices()
+        devices = self.devices
         details = devices.get(dev_id)
         device_data = self.appliance_data(dev_id)
 
