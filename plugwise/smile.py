@@ -222,15 +222,21 @@ class Smile(SmileHelper):
                 if "binary_sensors" in dev_dict:
                     for key, value in dev_dict["binary_sensors"].items():
                         if key in data:
-                            self.gw_devices[dev_id]["binary_sensors"][key][ATTR_STATE] = data[key]
+                            self.gw_devices[dev_id]["binary_sensors"][key][
+                                ATTR_STATE
+                            ] = data[key]
                 if "sensors" in dev_dict:
                     for key, value in dev_dict["sensors"].items():
                         if key in data:
-                            self.gw_devices[dev_id]["sensors"][key][ATTR_STATE] = data[key]
+                            self.gw_devices[dev_id]["sensors"][key][ATTR_STATE] = data[
+                                key
+                            ]
                 if "switches" in dev_dict:
                     for key, value in dev_dict["switches"].items():
                         if key in data:
-                            self.gw_devices[dev_id]["switches"][key][ATTR_STATE] = data[key]
+                            self.gw_devices[dev_id]["switches"][key][ATTR_STATE] = data[
+                                key
+                            ]
 
     def get_all_devices(self):
         """Determine available devices from inventory."""
@@ -289,7 +295,6 @@ class Smile(SmileHelper):
                 dev_and_data["switches"] = temp_switch_dict
 
             self.gw_devices[dev_id] = dev_and_data
-
 
     def device_data_switching_group(self, details, device_data):
         """Determine switching groups device data."""
