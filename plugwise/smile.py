@@ -13,6 +13,7 @@ import semver
 from .constants import (
     APPLIANCES,
     ATTR_ID,
+    ATTR_STATE,
     BINARY_SENSORS,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -74,6 +75,8 @@ class Smile(SmileHelper):
         self._port = port
         self._endpoint = f"http://{self._host}:{str(self._port)}"
         self._timeout = timeout
+
+        self.gw_devices = {}
 
     async def connect(self):
         """Connect to Plugwise device."""
@@ -203,7 +206,7 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             self._modules = await self.request(MODULES)
 
-    async def update_device(self):
+    async def update_gw_devices(self):
         """Update all XML data from device."""
         await self.update_domain_objects()
 
@@ -211,10 +214,27 @@ class Smile(SmileHelper):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self.request(APPLIANCES)
 
+        for dev_id, dev_dict in self.gw_devices.items():
+            data = self.get_device_data(dev_id)
+            for key, value in list(data.items()):
+                if key in dev_dict:
+                    self.gw_devices[dev_id][key] = value
+                if "binary_sensors" in dev_dict:
+                    for key, value in dev_dict["binary_sensors"].items():
+                        if key in data:
+                            self.gw_devices[dev_id]["binary_sensors"][key][ATTR_STATE] = data[key]
+                if "sensors" in dev_dict:
+                    for key, value in dev_dict["sensors"].items():
+                        if key in data:
+                            self.gw_devices[dev_id]["sensors"][key][ATTR_STATE] = data[key]
+                if "switches" in dev_dict:
+                    for key, value in dev_dict["switches"].items():
+                        if key in data:
+                            self.gw_devices[dev_id]["switches"][key][ATTR_STATE] = data[key]
+
     def get_all_devices(self):
         """Determine available devices from inventory."""
         self.devices = {}
-        self.gw_devices = {}
         self.scan_thermostats()
 
         for appliance, details in self.appl_data.items():
@@ -234,34 +254,42 @@ class Smile(SmileHelper):
         if group_data is not None:
             self.devices.update(group_data)
 
-        self.gw_devices = self.devices
-        for dev_id in self.devices:
-            temp_bs_dict = {}
+        for dev_id, dev_dict in self.devices.items():
+            dev_and_data = {}
+            temp_b_sensor_dict = {}
             temp_sensor_dict = {}
             temp_switch_dict = {}
             data = self.get_device_data(dev_id)
-            for key, value in data.items():
+            for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
-                    for k, v in item.items():
-                        if k == key:
-                            temp_bs_dict.update(item)
-                            temp_bs_dict[key]["state"] = value
+                    for bs_key, bs_value in item.items():
+                        if bs_key == key:
+                            data.pop(key)
+                            temp_b_sensor_dict.update(item)
+                            temp_b_sensor_dict[bs_key][ATTR_STATE] = value
                 for item in SENSORS:
-                    for k, v in item.items():
-                        if k == key:
+                    for s_key, s_value in item.items():
+                        if s_key == key:
+                            data.pop(key)
                             temp_sensor_dict.update(item)
-                            temp_sensor_dict[key]["state"] = value
+                            temp_sensor_dict[s_key][ATTR_STATE] = value
                 for item in SWITCHES:
-                    for k, v in item.items():
-                        if k == key:
+                    for sw_key, sw_value in item.items():
+                        if sw_key == key:
+                            data.pop(key)
                             temp_switch_dict.update(item)
-                            temp_switch_dict[key]["state"] = value
-            if temp_bs_dict != {}:
-                self.gw_devices[dev_id]["binary_sensors"] = temp_bs_dict
+                            temp_switch_dict[sw_key][ATTR_STATE] = value
+            dev_and_data = dev_dict
+            dev_and_data.update(data)
+            if temp_b_sensor_dict != {}:
+                dev_and_data["binary_sensors"] = temp_b_sensor_dict
             if temp_sensor_dict != {}:
-                self.gw_devices[dev_id]["sensors"] = temp_sensor_dict
+                dev_and_data["sensors"] = temp_sensor_dict
             if temp_switch_dict != {}:
-                self.gw_devices[dev_id]["switches"] = temp_switch_dict
+                dev_and_data["switches"] = temp_switch_dict
+
+            self.gw_devices[dev_id] = dev_and_data
+
 
     def device_data_switching_group(self, details, device_data):
         """Determine switching groups device data."""
