@@ -225,7 +225,7 @@ class Thermostat:
         """Climate extra state attributes."""
         return self._extra_state_attributes
 
-    #def init_data(self):
+    # def init_data(self):
     #    """Collect the initial data."""
     #    for sensor in self.sensor_list:
     #        for key, value in sensor.items():
@@ -237,7 +237,7 @@ class Thermostat:
         data = self._api.gw_devices[self._dev_id]
 
         ## sensor data
-        #for sensor in self.sensor_list:
+        # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
         #        if data.get(value[ATTR_ID]) is not None:
         #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
@@ -251,7 +251,7 @@ class Thermostat:
         self._setpoint = data["sensors"]["setpoint"]["state"]
         self._schedule_temp = data.get("schedule_temperature")
         if self._active_device:
-            hc_data =  self._api.gw_devices[self._heater_id]
+            hc_data = self._api.gw_devices[self._heater_id]
             self._compressor_state = hc_data.get("compressor_state")
             if self._sm_thermostat:
                 self._cooling_state = hc_data.get("cooling_state")
