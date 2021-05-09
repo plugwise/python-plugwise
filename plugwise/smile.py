@@ -238,28 +238,8 @@ class Smile(SmileHelper):
                                 key
                             ]
 
-    def get_all_devices(self):
-        """Determine available devices from inventory."""
-        self.devices = {}
-        self.scan_thermostats()
-
-        for appliance, details in self.appl_data.items():
-            loc_id = details["location"]
-            if loc_id is None:
-                details["location"] = self._home_location
-
-            # Override slave thermostat class
-            if loc_id in self.thermo_locs:
-                if "slaves" in self.thermo_locs[loc_id]:
-                    if appliance in self.thermo_locs[loc_id]["slaves"]:
-                        details["class"] = "thermo_sensor"
-
-            self.devices[appliance] = details
-
-        group_data = self.group_switches()
-        if group_data is not None:
-            self.devices.update(group_data)
-
+    def all_device_data(self):
+        "Collect all data for each device and add to self.gw_devices."
         for dev_id, dev_dict in self.devices.items():
             dev_and_data = {}
             temp_b_sensor_dict = {}
@@ -295,6 +275,30 @@ class Smile(SmileHelper):
                 dev_and_data["switches"] = temp_switch_dict
 
             self.gw_devices[dev_id] = dev_and_data
+
+    def get_all_devices(self):
+        """Determine available devices from inventory."""
+        self.devices = {}
+        self.scan_thermostats()
+
+        for appliance, details in self.appl_data.items():
+            loc_id = details["location"]
+            if loc_id is None:
+                details["location"] = self._home_location
+
+            # Override slave thermostat class
+            if loc_id in self.thermo_locs:
+                if "slaves" in self.thermo_locs[loc_id]:
+                    if appliance in self.thermo_locs[loc_id]["slaves"]:
+                        details["class"] = "thermo_sensor"
+
+            self.devices[appliance] = details
+
+        group_data = self.group_switches()
+        if group_data is not None:
+            self.devices.update(group_data)
+
+        self.all_device_data()
 
     def device_data_switching_group(self, details, device_data):
         """Determine switching groups device data."""
