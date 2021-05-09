@@ -1,5 +1,6 @@
 """Plugwise Home Assistant module."""
 import asyncio
+import copy
 import logging
 
 import aiohttp
@@ -240,32 +241,33 @@ class Smile(SmileHelper):
 
     def all_device_data(self):
         "Collect all data for each device and add to self.gw_devices."
+        dev_id_list = []
+        dev_and_data_list = []
         for dev_id, dev_dict in self.devices.items():
-            dev_and_data = {}
+            dev_and_data = dev_dict
             temp_b_sensor_dict = {}
             temp_sensor_dict = {}
             temp_switch_dict = {}
             data = self.get_device_data(dev_id)
             for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
-                    for bs_key, bs_value in item.items():
+                    for bs_key in item:
                         if bs_key == key:
                             data.pop(key)
                             temp_b_sensor_dict.update(item)
                             temp_b_sensor_dict[bs_key][ATTR_STATE] = value
                 for item in SENSORS:
-                    for s_key, s_value in item.items():
+                    for s_key in item:
                         if s_key == key:
                             data.pop(key)
                             temp_sensor_dict.update(item)
                             temp_sensor_dict[s_key][ATTR_STATE] = value
                 for item in SWITCHES:
-                    for sw_key, sw_value in item.items():
+                    for sw_key in item:
                         if sw_key == key:
                             data.pop(key)
                             temp_switch_dict.update(item)
                             temp_switch_dict[sw_key][ATTR_STATE] = value
-            dev_and_data = dev_dict
             dev_and_data.update(data)
             if temp_b_sensor_dict != {}:
                 dev_and_data["binary_sensors"] = temp_b_sensor_dict
@@ -273,8 +275,10 @@ class Smile(SmileHelper):
                 dev_and_data["sensors"] = temp_sensor_dict
             if temp_switch_dict != {}:
                 dev_and_data["switches"] = temp_switch_dict
+            dev_id_list.append(dev_id)
+            dev_and_data_list.append(copy.deepcopy(dev_and_data)) 
 
-            self.gw_devices[dev_id] = dev_and_data
+        self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
     def get_all_devices(self):
         """Determine available devices from inventory."""
