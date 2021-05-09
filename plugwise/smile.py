@@ -204,15 +204,15 @@ class Smile(SmileHelper):
     async def full_update_device(self):
         """Update all XML data from device."""
         await self.update_domain_objects()
-        self.locations = await self.request(LOCATIONS)
+        self._locations = await self.request(LOCATIONS)
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
-            self.appliances = await self.request(APPLIANCES)
+            self._appliances = await self.request(APPLIANCES)
 
         # No need to import modules for P1, no userfull info
         if self.smile_type != "power":
-            self.modules = await self.request(MODULES)
+            self._modules = await self.request(MODULES)
 
     def update_device_state(self, data, dev_dict):
         """Helper for update_helper."""
@@ -263,7 +263,7 @@ class Smile(SmileHelper):
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
-            self.appliances = await self.request(APPLIANCES)
+            self._appliances = await self.request(APPLIANCES)
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self.get_device_data(dev_id)
@@ -492,7 +492,7 @@ class Smile(SmileHelper):
             if location_id == loc_id:
                 state = str(state)
                 locator = f'.//*[@id="{schema_rule_id}"]/template'
-                for rule in self.domain_objects.findall(locator):
+                for rule in self._domain_objects.findall(locator):
                     template_id = rule.attrib["id"]
 
                 uri = f"{RULES};id={schema_rule_id}"
@@ -511,7 +511,7 @@ class Smile(SmileHelper):
         if self._smile_legacy:
             return await self.set_preset_legacy(preset)
 
-        current_location = self.locations.find(f'location[@id="{loc_id}"]')
+        current_location = self._locations.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
 
@@ -544,7 +544,7 @@ class Smile(SmileHelper):
         """Switch the Switch within a group of members off/on."""
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self.appliances.find(locator).attrib["id"]
+            switch_id = self._appliances.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
             if self.stretch_v2:
                 uri = f"{APPLIANCES};id={member}/{switch.device}"
@@ -578,7 +578,7 @@ class Smile(SmileHelper):
             return await self.set_groupswitch_member_state(members, state, switch)
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        switch_id = self.appliances.find(locator).attrib["id"]
+        switch_id = self._appliances.find(locator).attrib["id"]
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self.stretch_v2:
             uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
@@ -588,7 +588,7 @@ class Smile(SmileHelper):
             locator = (
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
-            lock_state = self.appliances.find(locator).text
+            lock_state = self._appliances.find(locator).text
             print("Lock state: ", lock_state)
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
@@ -602,7 +602,7 @@ class Smile(SmileHelper):
     async def set_preset_legacy(self, preset):
         """Set the given preset on the thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = self.domain_objects.find(locator)
+        rule = self._domain_objects.find(locator)
         if rule is None:
             return False
 
@@ -615,7 +615,7 @@ class Smile(SmileHelper):
     async def set_schedule_state_legacy(self, name, state):
         """Send a set request to the schema with the given name."""
         schema_rule_id = None
-        for rule in self.domain_objects.findall("rule"):
+        for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
                 schema_rule_id = rule.attrib["id"]
 
@@ -625,7 +625,7 @@ class Smile(SmileHelper):
         template_id = None
         state = str(state)
         locator = f'.//*[@id="{schema_rule_id}"]/template'
-        for rule in self.domain_objects.findall(locator):
+        for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
 
         uri = f"{RULES};id={schema_rule_id}"
