@@ -218,7 +218,7 @@ class Smile(SmileHelper):
         for dev_id, dev_dict in self.gw_devices.items():
             data = self.get_device_data(dev_id)
             for key, value in list(data.items()):
-                if key not in dev_dict:
+                if key in dev_dict:
                     self.gw_devices[dev_id][key] = value
                 if "binary_sensors" in dev_dict:
                     for key in dev_dict["binary_sensors"]:
