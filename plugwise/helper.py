@@ -133,10 +133,10 @@ class SmileHelper:
         self._port = None
         self._timeout = None
 
-        self._appliances = None
-        self._domain_objects = None
-        self._locations = None
-        self._modules = None
+        self.appliances = None
+        self.domain_objects = None
+        self.locations = None
+        self.modules = None
 
         self.appl_data = {}
         self.gateway_id = None
@@ -218,7 +218,7 @@ class SmileHelper:
         self._home_location = 0
 
         # Add Anna appliances
-        for appliance in self._appliances:
+        for appliance in self.appliances:
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
@@ -265,11 +265,11 @@ class SmileHelper:
         loc = Munch()
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
-        if len(self._locations) == 0 and self._smile_legacy:
+        if len(self.locations) == 0 and self._smile_legacy:
             self.locations_legacy()
             return
 
-        for location in self._locations:
+        for location in self.locations:
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
             loc.types = set()
@@ -297,7 +297,7 @@ class SmileHelper:
         appl_search = appliance.find(locator)
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
-            module = self._modules.find(f".//{mod_type}[@id='{link_id}']....")
+            module = self.modules.find(f".//{mod_type}[@id='{link_id}']....")
             if module is not None:
                 v_name = module.find("vendor_name").text
                 v_model = module.find("vendor_model").text
@@ -428,16 +428,16 @@ class SmileHelper:
         # scan for the same functionality
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        self._cp_state = self._appliances.find(
+        self._cp_state = self.appliances.find(
             ".//logs/point_log[type='compressor_state']"
         )
-        fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
-        bl_state = self._appliances.find(".//services/boiler_state")
+        fl_state = self.appliances.find(".//logs/point_log[type='flame_state']")
+        bl_state = self.appliances.find(".//services/boiler_state")
         self.active_device_present = (
             self._cp_state is not None or fl_state is not None or bl_state is not None
         )
 
-        for appliance in self._appliances:
+        for appliance in self.appliances:
             appl = Munch()
             appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
@@ -504,7 +504,7 @@ class SmileHelper:
             rule_ids = self.rule_ids_by_name("Thermostat presets", loc_id)
 
         for rule_id in rule_ids:
-            directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
+            directives = self.domain_objects.find(f'rule[@id="{rule_id}"]/directives')
 
             for directive in directives:
                 preset = directive.find("then").attrib
@@ -523,7 +523,7 @@ class SmileHelper:
     def presets_legacy(self):
         """Collect presets for legacy Anna."""
         preset_dictionary = {}
-        for directive in self._domain_objects.findall("rule/directives/when/then"):
+        for directive in self.domain_objects.findall("rule/directives/when/then"):
             if directive is not None and "icon" in directive.keys():
                 # Ensure list of heating_setpoint, cooling_setpoint
                 preset_dictionary[directive.attrib["icon"]] = [
@@ -537,7 +537,7 @@ class SmileHelper:
         """Obtain the rule_id from name and location_id."""
         schema_ids = {}
         locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
+        for rule in self.domain_objects.findall(f'.//rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
 
@@ -549,7 +549,7 @@ class SmileHelper:
         schema_ids = {}
         locator1 = f'.//template[@tag="{tag}"]'
         locator2 = f'.//contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(".//rule"):
+        for rule in self.domain_objects.findall(".//rule"):
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
                     schema_ids[rule.attrib["id"]] = loc_id
@@ -560,18 +560,18 @@ class SmileHelper:
     def temperature_uri_legacy(self):
         """Determine the location-set_temperature uri - from APPLIANCES."""
         locator = ".//appliance[type='thermostat']"
-        appliance_id = self._appliances.find(locator).attrib["id"]
+        appliance_id = self.appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
 
     async def update_domain_objects(self):
         """Request domain_objects data."""
-        self._domain_objects = await self.request(DOMAIN_OBJECTS)
+        self.domain_objects = await self.request(DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
         self.notifications = {}
         url = f"{self._endpoint}{DOMAIN_OBJECTS}"
-        notifications = self._domain_objects.findall(".//notification")
+        notifications = self.domain_objects.findall(".//notification")
         for notification in notifications:
             try:
                 msg_id = notification.attrib["id"]
@@ -627,9 +627,9 @@ class SmileHelper:
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         data = {}
-        search = self._appliances
+        search = self.appliances
         if self._smile_legacy and self.smile_type != "stretch":
-            search = self._domain_objects
+            search = self.domain_objects
 
         appliances = search.findall(f'.//appliance[@id="{dev_id}"]')
 
@@ -718,14 +718,14 @@ class SmileHelper:
             return self.temperature_uri_legacy()
 
         locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
-        thermostat_functionality_id = self._locations.find(locator).attrib["id"]
+        thermostat_functionality_id = self.locations.find(locator).attrib["id"]
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
     def group_switches(self):
         """Collect switching- or pump-group info."""
         switch_groups = {}
-        search = self._domain_objects
+        search = self.domain_objects
 
         appliances = search.findall("./appliance")
         groups = search.findall("./group")
@@ -771,7 +771,7 @@ class SmileHelper:
         """
         loc_found = 0
         open_valve_count = 0
-        for appliance in self._appliances.findall(".//appliance"):
+        for appliance in self.appliances.findall(".//appliance"):
             locator = './/logs/point_log[type="valve_position"]/period/measurement'
             if appliance.find(locator) is not None:
                 loc_found += 1
@@ -818,7 +818,7 @@ class SmileHelper:
         direct_data = {}
         loc = Munch()
 
-        search = self._domain_objects
+        search = self.domain_objects
         t_string = "tariff"
         if self._smile_legacy and self.smile_type == "power":
             t_string = "tariff_indicator"
@@ -856,7 +856,7 @@ class SmileHelper:
     def preset(self, loc_id):
         """Collect the active preset based on location_id."""
         if self._smile_legacy:
-            active_rule = self._domain_objects.find(
+            active_rule = self.domain_objects.find(
                 "rule[active='true']/directives/when/then"
             )
             if active_rule is None or "icon" not in active_rule.keys():
@@ -864,7 +864,7 @@ class SmileHelper:
             return active_rule.attrib["icon"]
 
         locator = f'.//location[@id="{loc_id}"]/preset'
-        preset = self._domain_objects.find(locator)
+        preset = self.domain_objects.find(locator)
         if preset is not None:
             return preset.text
 
@@ -876,7 +876,7 @@ class SmileHelper:
         schemas = {}
         selected = None
 
-        for schema in self._domain_objects.findall(".//rule"):
+        for schema in self.domain_objects.findall(".//rule"):
             rule_name = schema.find("name").text
             if rule_name:
                 if "preset" not in rule_name:
@@ -885,8 +885,8 @@ class SmileHelper:
         log_type = "schedule_state"
         locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
-        if self._domain_objects.find(locator) is not None:
-            active = self._domain_objects.find(locator).text == "on"
+        if self.domain_objects.find(locator) is not None:
+            active = self.domain_objects.find(locator).text == "on"
 
         if name is not None:
             schemas[name] = active
@@ -932,15 +932,15 @@ class SmileHelper:
             return available, selected, schedule_temperature
 
         for rule_id, dummy in rule_ids.items():
-            name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            name = self.domain_objects.find(f'rule[@id="{rule_id}"]/name').text
             active = (
-                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
+                self.domain_objects.find(f'rule[@id="{rule_id}"]/active').text
                 == "true"
             )
             schemas[name] = active
             schedules = {}
             locator = f'rule[@id="{rule_id}"]/directives'
-            directives = self._domain_objects.find(locator)
+            directives = self.domain_objects.find(locator)
             for directive in directives:
                 schedule = directive.find("then").attrib
                 keys, dummy = zip(*schedule.items())
@@ -971,8 +971,8 @@ class SmileHelper:
             return
 
         for rule_id, dummy in rule_ids.items():
-            schema_name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            schema_date = self._domain_objects.find(
+            schema_name = self.domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            schema_date = self.domain_objects.find(
                 f'rule[@id="{rule_id}"]/modified_date'
             ).text
             schema_time = parse(schema_date)
@@ -985,7 +985,7 @@ class SmileHelper:
 
     def object_value(self, obj_type, obj_id, measurement):
         """Obtain the object-value from the thermostat."""
-        search = self._domain_objects
+        search = self.domain_objects
 
         locator = (
             f'.//{obj_type}[@id="{obj_id}"]/logs/point_log'
