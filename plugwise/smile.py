@@ -218,26 +218,20 @@ class Smile(SmileHelper):
         for dev_id, dev_dict in self.gw_devices.items():
             data = self.get_device_data(dev_id)
             for key, value in list(data.items()):
-                if key in dev_dict:
+                if key not in dev_dict:
                     self.gw_devices[dev_id][key] = value
                 if "binary_sensors" in dev_dict:
-                    for key, value in dev_dict["binary_sensors"].items():
+                    for key in dev_dict["binary_sensors"]:
                         if key in data:
-                            self.gw_devices[dev_id]["binary_sensors"][key][
-                                ATTR_STATE
-                            ] = data[key]
+                            self.gw_devices[dev_id]["binary_sensors"][key][ATTR_STATE] = data[key]
                 if "sensors" in dev_dict:
-                    for key, value in dev_dict["sensors"].items():
+                    for key in dev_dict["sensors"]:
                         if key in data:
-                            self.gw_devices[dev_id]["sensors"][key][ATTR_STATE] = data[
-                                key
-                            ]
+                            self.gw_devices[dev_id]["sensors"][key][ATTR_STATE] = data[key]
                 if "switches" in dev_dict:
-                    for key, value in dev_dict["switches"].items():
+                    for key in dev_dict["switches"]:
                         if key in data:
-                            self.gw_devices[dev_id]["switches"][key][ATTR_STATE] = data[
-                                key
-                            ]
+                            self.gw_devices[dev_id]["switches"][key][ATTR_STATE] = data[key]
 
     def all_device_data(self):
         "Collect all data for each device and add to self.gw_devices."
