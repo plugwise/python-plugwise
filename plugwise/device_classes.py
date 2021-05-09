@@ -243,7 +243,7 @@ class Thermostat:
         #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
 
         # skip the rest for thermo_sensors
-        if self._api.gw_devices[dev_id]["class"] == "thermo_sensor":
+        if self._api.gw_devices[self._dev_id]["class"] == "thermo_sensor":
             return
 
         # current & target_temps, heater_central data when required
