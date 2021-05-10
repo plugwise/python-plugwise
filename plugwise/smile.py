@@ -228,7 +228,9 @@ class Smile(SmileHelper):
                                 ATTR_STATE
                             ] = data[key]
                     if "plugwise_notification" in dev_dict["binary_sensors"]:
-                        self.gw_devices[dev_id]["binary_sensors"]["plugwise_notification"][ATTR_STATE] = self.notifications != {}
+                        self.gw_devices[dev_id]["binary_sensors"][
+                            "plugwise_notification"
+                        ][ATTR_STATE] = (self.notifications != {})
                 if "sensors" in dev_dict:
                     for key in dev_dict["sensors"]:
                         if key in data:
