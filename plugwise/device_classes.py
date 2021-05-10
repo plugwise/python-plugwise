@@ -95,21 +95,6 @@ class Gateway:
 
         self._sm_thermostat = self._api.single_master_thermostat()
 
-        self.init_data()
-
-    def init_data(self):
-        """Collect the initial data."""
-        data = self._api.get_device_data(self._dev_id)
-
-        if self._sm_thermostat is not None:
-            for key, value in PW_NOTIFICATION.items():
-                self.binary_sensors.update(PW_NOTIFICATION)
-
-        for sensor in self.sensor_list:
-            for key, value in sensor.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.sensors.update(sensor)
-
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.get_device_data(self._dev_id)
@@ -325,28 +310,6 @@ class AuxDevice:
         self._heater_id = self._api.heater_id
         self._sm_thermostat = self._api.single_master_thermostat()
 
-        self.init_data()
-
-    def init_data(self):
-        """Collect the initial data."""
-        data = self._api.get_device_data(self._dev_id)
-
-        if self._active_device:
-            for b_sensor in self.b_sensor_list:
-                for key, value in b_sensor.items():
-                    if data.get(value[ATTR_ID]) is not None:
-                        self.binary_sensors.update(b_sensor)
-
-        for sensor in self.sensor_list:
-            for key, value in sensor.items():
-                if data.get(value[ATTR_ID]) is not None or sensor == DEVICE_STATE:
-                    self.sensors.update(sensor)
-
-        for switch in self.switch_list:
-            for key, value in switch.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.switches.update(switch)
-
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.get_device_data(self._dev_id)
@@ -411,22 +374,6 @@ class Plug:
         ]
 
         self.switch_list = [LOCK, RELAY]
-
-        self.init_data()
-
-    def init_data(self):
-        """Collect the initial data."""
-        data = self._api.get_device_data(self._dev_id)
-
-        for sensor in self.sensor_list:
-            for key, value in sensor.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.sensors.update(sensor)
-
-        for switch in self.switch_list:
-            for key, value in switch.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.switches.update(switch)
 
     def update_data(self):
         """Handle update callbacks."""
