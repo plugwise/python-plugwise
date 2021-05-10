@@ -97,7 +97,7 @@ class Gateway:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._api.gw_devices[self._dev_id]
+        # data = self._api.gw_devices[self._dev_id]
 
         if self._sm_thermostat is not None:
             for key, value in PW_NOTIFICATION.items():
