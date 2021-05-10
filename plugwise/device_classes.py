@@ -97,16 +97,16 @@ class Gateway:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._api.get_device_data(self._dev_id)
+        data = self._api.gw_devices[self._dev_id]
 
         if self._sm_thermostat is not None:
             for key, value in PW_NOTIFICATION.items():
                 self.binary_sensors[key][ATTR_STATE] = self._api.notifications != {}
 
-        for sensor in self.sensor_list:
-            for key, value in sensor.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
+        #for sensor in self.sensor_list:
+        #    for key, value in sensor.items():
+        #        if data.get(value[ATTR_ID]) is not None:
+        #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
 
 
 class Thermostat:
@@ -210,13 +210,6 @@ class Thermostat:
         """Climate extra state attributes."""
         return self._extra_state_attributes
 
-    # def init_data(self):
-    #    """Collect the initial data."""
-    #    for sensor in self.sensor_list:
-    #        for key, value in sensor.items():
-    #            if data.get(value[ATTR_ID]) is not None:
-    #                self.sensors.update(sensor)
-
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
@@ -312,7 +305,7 @@ class AuxDevice:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._api.get_device_data(self._dev_id)
+        data = self._api.gw_devices[self._dev_id]
 
         if self._active_device:
             for b_sensor in self.b_sensor_list:
@@ -330,29 +323,29 @@ class AuxDevice:
                                 FLAME_ICON if bs_state else IDLE_ICON
                             )
 
-        for sensor in self.sensor_list:
-            for key, value in sensor.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
-                if sensor == DEVICE_STATE:
-                    self.sensors[key][ATTR_STATE] = "idle"
-                    self.sensors[key][ATTR_ICON] = IDLE_ICON
-                    if self._active_device:
-                        hc_data = self._api.get_device_data(self._heater_id)
-                        if not self._sm_thermostat:
-                            self._cooling_state = hc_data.get("cooling_state")
-                            self._heating_state = hc_data.get("heating_state")
-                            if self._heating_state:
-                                self.sensors[key][ATTR_STATE] = "heating"
-                                self.sensors[key][ATTR_ICON] = HEATING_ICON
-                            if self._cooling_state:
-                                self.sensors[key][ATTR_STATE] = "cooling"
-                                self.sensors[key][ATTR_ICON] = COOLING_ICON
+        #for sensor in self.sensor_list:
+        #    for key, value in sensor.items():
+        #        if data.get(value[ATTR_ID]) is not None:
+        #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
+        #        if sensor == DEVICE_STATE:
+        #            self.sensors[key][ATTR_STATE] = "idle"
+        #            self.sensors[key][ATTR_ICON] = IDLE_ICON
+        #            if self._active_device:
+        #                hc_data = self._api.get_device_data(self._heater_id)
+        #                if not self._sm_thermostat:
+        #                    self._cooling_state = hc_data.get("cooling_state")
+        #                    self._heating_state = hc_data.get("heating_state")
+        #                    if self._heating_state:
+        #                        self.sensors[key][ATTR_STATE] = "heating"
+        #                        self.sensors[key][ATTR_ICON] = HEATING_ICON
+        #                    if self._cooling_state:
+        #                        self.sensors[key][ATTR_STATE] = "cooling"
+        #                        self.sensors[key][ATTR_ICON] = COOLING_ICON
 
-        for switch in self.switch_list:
-            for key, value in switch.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.switches[key][ATTR_STATE] = data.get(value[ATTR_ID])
+        #for switch in self.switch_list:
+        #    for key, value in switch.items():
+        #        if data.get(value[ATTR_ID]) is not None:
+        #            self.switches[key][ATTR_STATE] = data.get(value[ATTR_ID])
 
 
 class Plug:
@@ -377,7 +370,7 @@ class Plug:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._api.get_device_data(self._dev_id)
+        data = self._api.gw_devices[self._dev_id]
 
         for sensor in self.sensor_list:
             for key, value in sensor.items():
