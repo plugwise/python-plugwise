@@ -103,7 +103,7 @@ class Gateway:
             for key, value in PW_NOTIFICATION.items():
                 self.binary_sensors[key][ATTR_STATE] = self._api.notifications != {}
 
-        #for sensor in self.sensor_list:
+        # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
         #        if data.get(value[ATTR_ID]) is not None:
         #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
@@ -323,7 +323,7 @@ class AuxDevice:
                                 FLAME_ICON if bs_state else IDLE_ICON
                             )
 
-        #for sensor in self.sensor_list:
+        # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
         #        if data.get(value[ATTR_ID]) is not None:
         #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
@@ -342,7 +342,7 @@ class AuxDevice:
         #                        self.sensors[key][ATTR_STATE] = "cooling"
         #                        self.sensors[key][ATTR_ICON] = COOLING_ICON
 
-        #for switch in self.switch_list:
+        # for switch in self.switch_list:
         #    for key, value in switch.items():
         #        if data.get(value[ATTR_ID]) is not None:
         #            self.switches[key][ATTR_STATE] = data.get(value[ATTR_ID])
