@@ -23,6 +23,7 @@ from .constants import (
     LOCATIONS,
     MODULES,
     NOTIFICATIONS,
+    PW_NOTIFICATION,
     RULES,
     SENSORS,
     SMILES,
@@ -226,6 +227,8 @@ class Smile(SmileHelper):
                             self.gw_devices[dev_id]["binary_sensors"][key][
                                 ATTR_STATE
                             ] = data[key]
+                    if "plugwise_notification" in dev_dict["binary_sensors"]:
+                        self.gw_devices[dev_id]["binary_sensors"]["plugwise_notification"][ATTR_STATE] = self.notifications != {}
                 if "sensors" in dev_dict:
                     for key in dev_dict["sensors"]:
                         if key in data:
@@ -249,6 +252,10 @@ class Smile(SmileHelper):
             temp_sensor_dict = {}
             temp_switch_dict = {}
             data = self.get_device_data(dev_id)
+            if dev_id == self.gateway_id and self.single_master_thermostat is not None:
+                for key, value in PW_NOTIFICATION.items():
+                    temp_b_sensor_dict.update(PW_NOTIFICATION)
+                    temp_b_sensor_dict[key][ATTR_STATE] = False
             for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
                     for bs_key in item:
