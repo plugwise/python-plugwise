@@ -105,7 +105,6 @@ class Gateway:
         """Gateway binary_sensor/sensor/switch icon."""
         return self._icon
 
-
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
@@ -115,7 +114,9 @@ class Gateway:
                 for bs_key, bs_value in value.items():
                     if "plugwise_notification" in bs_key:
                         self._is_on = bs_value["plugwise_notification"]["state"]
-                        self._icon = NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
+                        self._icon = (
+                            NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
+                        )
 
         # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
@@ -336,11 +337,18 @@ class AuxDevice:
                     for b_sensor in self.b_sensor_list:
                         for k, v in b_sensor.items():
                             if k == bs_key:
-                                self._is_on = bs_value[bs_key]['state']
+                                self._is_on = bs_value[bs_key]["state"]
                                 if b_sensor == DHW_STATE:
-                                    self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
-                                if b_sensor == FLAME_STATE or b_sensor == SLAVE_BOILER_STATE:
-                                     self._icon = FLAME_ICON if self._is_on else IDLE_ICON
+                                    self._icon = (
+                                        FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
+                                    )
+                                if (
+                                    b_sensor == FLAME_STATE
+                                    or b_sensor == SLAVE_BOILER_STATE
+                                ):
+                                    self._icon = (
+                                        FLAME_ICON if self._is_on else IDLE_ICON
+                                    )
 
         # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
