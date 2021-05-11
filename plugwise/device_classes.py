@@ -316,6 +316,16 @@ class AuxDevice:
         self._heater_id = self._api.heater_id
         self._sm_thermostat = self._api.single_master_thermostat()
 
+    @property
+    def is_on(self):
+        """Gateway binary_sensor state."""
+        return self._is_on
+
+    @property
+    def icon(self):
+        """Gateway binary_sensor/sensor/switch icon."""
+        return self._icon
+
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
