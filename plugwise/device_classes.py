@@ -69,6 +69,8 @@ class Gateway:
         """Initialize the Gateway."""
         self._api = api
         self._dev_id = dev_id
+        self._icon = None
+        self._is_on = False
 
         self.binary_sensors = {}
         self.sensors = {}
@@ -93,15 +95,27 @@ class Gateway:
             GAS_CONSUMED_CUMULATIVE,
         ]
 
-        self._sm_thermostat = self._api.single_master_thermostat()
+    @property
+    def is_on(self):
+        """Gateway binary_sensor state."""
+        return self._is_on
+
+    @property
+    def icon(self):
+        """Gateway binary_sensor/sensor/switch icon."""
+        return self._icon
+
 
     def update_data(self):
         """Handle update callbacks."""
-        # data = self._api.gw_devices[self._dev_id]
+        data = self._api.gw_devices[self._dev_id]
 
-        if self._sm_thermostat is not None:
-            for key, value in PW_NOTIFICATION.items():
-                self.binary_sensors[key][ATTR_STATE] = self._api.notifications != {}
+        for key, value in data.items():
+            if "binary_sensors" in value:
+                for bs_key, bs_value in "binary_sensors""
+                    if "plugwise_notification" in bs_value:
+                        self._is_on = bs_value["plugwise_notification"]["state"]
+                        self._icon = NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
 
         # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
@@ -299,7 +313,6 @@ class AuxDevice:
 
         self.switch_list = [DHW_COMF_MODE]
 
-        self._active_device = self._api.active_device_present
         self._heater_id = self._api.heater_id
         self._sm_thermostat = self._api.single_master_thermostat()
 
@@ -307,21 +320,17 @@ class AuxDevice:
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
 
-        if self._active_device:
-            for b_sensor in self.b_sensor_list:
-                for key, value in b_sensor.items():
-                    if data.get(value[ATTR_ID]) is not None:
-                        self.binary_sensors[key][ATTR_STATE] = bs_state = data.get(
-                            value[ATTR_ID]
-                        )
-                        if b_sensor == DHW_STATE:
-                            self.binary_sensors[key][ATTR_ICON] = (
-                                FLOW_ON_ICON if bs_state else FLOW_OFF_ICON
-                            )
-                        if b_sensor == FLAME_STATE or b_sensor == SLAVE_BOILER_STATE:
-                            self.binary_sensors[key][ATTR_ICON] = (
-                                FLAME_ICON if bs_state else IDLE_ICON
-                            )
+        for key, value in data.items():
+            if "binary_sensors" in value:
+                for bs_key, bs_value in "binary_sensors""
+                    for b_sensor in self.b_sensor_list:
+                        for k, v in b_sensor.items():
+                            if k == bs_key:
+                                self._is_on = bs_value['state']
+                                if b_sensor == DHW_STATE:
+                                    self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
+                                if b_sensor == FLAME_STATE or b_sensor == SLAVE_BOILER_STATE:
+                                     self._icon = FLAME_ICON if self._is_on else IDLE_ICON
 
         # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
