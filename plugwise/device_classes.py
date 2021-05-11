@@ -115,7 +115,7 @@ class Gateway:
             if "binary_sensors" in key:
                 for bs_key, bs_value in value.items():
                     if "plugwise_notification" in bs_key:
-                        self._is_on = bs_value["plugwise_notification"]["state"]
+                        self._is_on = value["plugwise_notification"]["state"]
                         self._icon = (
                             NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
                         )
@@ -339,7 +339,7 @@ class AuxDevice:
                     for b_sensor in self.b_sensor_list:
                         for k, v in b_sensor.items():
                             if k == bs_key:
-                                self._is_on = bs_value[bs_key]["state"]
+                                self._is_on = value[bs_key]["state"]
                                 if b_sensor == DHW_STATE:
                                     self._icon = (
                                         FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
