@@ -111,9 +111,9 @@ class Gateway:
         data = self._api.gw_devices[self._dev_id]
 
         for key, value in data.items():
-            if "binary_sensors" in value:
+            if "binary_sensors" in key:
                 for bs_key, bs_value in value.items()
-                    if "plugwise_notification" in bs_value:
+                    if "plugwise_notification" in bs_key:
                         self._is_on = bs_value["plugwise_notification"]["state"]
                         self._icon = NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
 
@@ -331,7 +331,7 @@ class AuxDevice:
         data = self._api.gw_devices[self._dev_id]
 
         for key, value in data.items():
-            if "binary_sensors" in value:
+            if "binary_sensors" in key:
                 for bs_key, bs_value in value.items()
                     for b_sensor in self.b_sensor_list:
                         for k, v in b_sensor.items():
