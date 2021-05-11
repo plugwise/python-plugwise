@@ -298,6 +298,8 @@ class AuxDevice:
         self._cooling_state = None
         self._dev_id = dev_id
         self._heating_state = None
+        self._icon = None
+        self._is_on = False
 
         self.binary_sensors = {}
         self.sensors = {}
