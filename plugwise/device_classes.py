@@ -64,43 +64,16 @@ from .constants import (
 from .smile import Smile
 
 
-class Gateway:
-    """ Represent the Plugwise Smile/Stretch gateway."""
+class GW_B_Sensor:
+    """ Represent the Plugwise Smile/Stretch binary_sensor."""
 
-    def __init__(self, api, dev_id):
+    def __init__(self, api, dev_id, binary_sensor):
         """Initialize the Gateway."""
         self._api = api
+        self._binary_sensor = binary_sensor
         self._dev_id = dev_id
         self._icon = None
         self._is_on = False
-
-        self.binary_sensors = [
-            "dhw_state",
-            "flame_state",
-            "plugwise_notification",
-            "slave_boiler_state",
-        ]
-        self.sensors = {}
-
-        self.sensor_list = [
-            OUTDOOR_TEMP,
-            EL_CONSUMED_PEAK_INTERVAL,
-            EL_CONSUMED_OFF_PEAK_INTERVAL,
-            EL_CONSUMED_OFF_PEAK_POINT,
-            EL_CONSUMED_PEAK_POINT,
-            EL_CONSUMED_OFF_PEAK_CUMULATIVE,
-            EL_CONSUMED_PEAK_CUMULATIVE,
-            EL_PRODUCED_PEAK_INTERVAL,
-            EL_PRODUCED_OFF_PEAK_INTERVAL,
-            EL_PRODUCED_OFF_PEAK_POINT,
-            EL_PRODUCED_PEAK_POINT,
-            EL_PRODUCED_OFF_PEAK_CUMULATIVE,
-            EL_PRODUCED_PEAK_CUMULATIVE,
-            NET_EL_POINT,
-            NET_EL_CUMULATIVE,
-            GAS_CONSUMED_INTERVAL,
-            GAS_CONSUMED_CUMULATIVE,
-        ]
 
     @property
     def is_on(self):
@@ -119,29 +92,23 @@ class Gateway:
         for key, value in data.items():
             if "binary_sensors" in key:
                 for bs_key, bs_value in value.items():
-                    for b_sensor in self.binary_sensors:
-                        if b_sensor == bs_key:
-                            self._is_on = value[bs_key]["state"]
-                            if b_sensor == "dhw_state":
-                                self._icon = (
-                                    FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
-                                )
-                            if (
-                                b_sensor == "flame_state"
-                                or b_sensor == "slave_boiler_state"
-                            ):
-                                self._icon = FLAME_ICON if self._is_on else IDLE_ICON
-                            if b_sensor == "plugwise_notification":
-                                self._icon = (
-                                    NOTIFICATION_ICON
-                                    if self._is_on
-                                    else NO_NOTIFICATION_ICON
-                                )
-
-        # for sensor in self.sensor_list:
-        #    for key, value in sensor.items():
-        #        if data.get(value[ATTR_ID]) is not None:
-        #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
+                    if self._binary_sensor == bs_key:
+                        self._is_on = value[bs_key]["state"]
+                        if self._binary_sensor == "dhw_state":
+                            self._icon = (
+                                FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
+                            )
+                        if (
+                            self._binary_sensor == "flame_state"
+                            or b_sensor == "slave_boiler_state"
+                        ):
+                            self._icon = FLAME_ICON if self._is_on else IDLE_ICON
+                        if self._binary_sensor == "plugwise_notification":
+                            self._icon = (
+                                NOTIFICATION_ICON
+                                if self._is_on
+                                else NO_NOTIFICATION_ICON
+                            )
 
 
 class Thermostat:
