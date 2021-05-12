@@ -74,7 +74,7 @@ class Gateway:
         self._icon = None
         self._is_on = False
 
-        self.binary_sensors = {}
+        self.binary_sensors = ["dhw_state", "flame_state", "plugwise_notification", "slave_boiler_state"]
         self.sensors = {}
 
         self.sensor_list = [
@@ -114,11 +114,24 @@ class Gateway:
         for key, value in data.items():
             if "binary_sensors" in key:
                 for bs_key, bs_value in value.items():
-                    if "plugwise_notification" in bs_key:
-                        self._is_on = value["plugwise_notification"]["state"]
-                        self._icon = (
-                            NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
-                        )
+                    for b_sensor in self.binary_sensors:
+                        if b_sensor == bs_key:
+                            self._is_on = value[bs_key]["state"]
+                            if b_sensor == "dhw_state":
+                                self._icon = (
+                                    FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
+                                )
+                            if (
+                                b_sensor == "flame_state"
+                                or b_sensor == "slave_boiler_state"
+                            ):
+                                self._icon = (
+                                    FLAME_ICON if self._is_on else IDLE_ICON
+                                )
+                            if b_sensor == "plugwise_notification":
+                                self._icon = (
+                                    NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
+                            )                                    
 
         # for sensor in self.sensor_list:
         #    for key, value in sensor.items():
