@@ -109,7 +109,7 @@ class GW_B_Sensor:
                             )
 
 
-class Thermostat:
+class GW_Thermostat:
     """Represent a Plugwise Thermostat Device."""
 
     def __init__(self, api, dev_id):
@@ -133,18 +133,6 @@ class Thermostat:
         self._setpoint = None
         self._smile_class = None
         self._temperature = None
-
-        self.sensors = {}
-
-        self.sensor_list = [
-            BATTERY,
-            ILLUMINANCE,
-            OUTDOOR_TEMP,
-            TARGET_TEMP,
-            CURRENT_TEMP,
-            TEMP_DIFF,
-            VALVE_POS,
-        ]
 
         self._active_device = self._api.active_device_present
         self._heater_id = self._api.heater_id
@@ -213,16 +201,6 @@ class Thermostat:
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
-
-        ## sensor data
-        # for sensor in self.sensor_list:
-        #    for key, value in sensor.items():
-        #        if data.get(value[ATTR_ID]) is not None:
-        #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
-
-        # skip the rest for thermo_sensors
-        if self._api.gw_devices[self._dev_id]["class"] == "thermo_sensor":
-            return
 
         # current & target_temps, heater_central data when required
         self._temperature = data["sensors"]["temperature"]["state"]
