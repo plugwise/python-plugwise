@@ -98,7 +98,7 @@ class GW_B_Sensor:
                             self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
                         if (
                             self._binary_sensor == "flame_state"
-                            or b_sensor == "slave_boiler_state"
+                            or self._binary_sensor == "slave_boiler_state"
                         ):
                             self._icon = FLAME_ICON if self._is_on else IDLE_ICON
                         if self._binary_sensor == "plugwise_notification":
