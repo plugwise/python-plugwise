@@ -95,9 +95,7 @@ class GW_B_Sensor:
                     if self._binary_sensor == bs_key:
                         self._is_on = value[bs_key]["state"]
                         if self._binary_sensor == "dhw_state":
-                            self._icon = (
-                                FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
-                            )
+                            self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
                         if (
                             self._binary_sensor == "flame_state"
                             or b_sensor == "slave_boiler_state"
