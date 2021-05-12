@@ -82,7 +82,7 @@ class GW_B_Sensor:
 
     @property
     def icon(self):
-        """Gateway binary_sensor/sensor/switch icon."""
+        """Gateway binary_sensor icon."""
         return self._icon
 
     def update_data(self):
@@ -93,7 +93,7 @@ class GW_B_Sensor:
             if "binary_sensors" in key:
                 for bs_key, bs_value in value.items():
                     if self._binary_sensor == bs_key:
-                        self._is_on = value[bs_key]["state"]
+                        self._is_on = value[bs_key][ATTR_STATE]
                         if self._binary_sensor == "dhw_state":
                             self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
                         if (
