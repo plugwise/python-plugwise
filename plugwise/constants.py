@@ -515,413 +515,340 @@ SWITCH_ICON = "mdi:electric-switch"
 
 # Binary Sensors
 DHW_STATE = {
-    "dhw_state": {
-        ATTR_ID: "dhw_state",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "DHW State",
-        ATTR_STATE: "dhw_state",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: None,
-    }
+    ATTR_ID: "dhw_state",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "DHW State",
+    ATTR_STATE: False,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: None,
 }
 FLAME_STATE = {
-    "flame_state": {
-        ATTR_ID: "flame_state",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Flame State",
-        ATTR_STATE: "flame_state",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: None,
-    }
+    ATTR_ID: "flame_state",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Flame State",
+    ATTR_STATE: False,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: None,
 }
 PW_NOTIFICATION = {
-    "plugwise_notification": {
-        ATTR_ID: "plugwise_notification",
-        ATTR_ENABLED: False,
-        ATTR_NAME: "Plugwise Notification",
-        ATTR_STATE: "plugwise_notification",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: None,
-    }
+    ATTR_ID: "plugwise_notification",
+    ATTR_ENABLED: False,
+    ATTR_NAME: "Plugwise Notification",
+    ATTR_STATE: False,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: None,
 }
 SLAVE_BOILER_STATE = {
-    "slave_boiler_state": {
-        ATTR_ID: "slave_boiler_state",
-        ATTR_ENABLED: False,
-        ATTR_NAME: "Slave Boiler State",
-        ATTR_STATE: "slave_boiler_state",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: None,
-    }
+    ATTR_ID: "slave_boiler_state",
+    ATTR_ENABLED: False,
+    ATTR_NAME: "Slave Boiler State",
+    ATTR_STATE: False,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: None,
 }
 BINARY_SENSORS = [
     DHW_STATE,
     FLAME_STATE,
     SLAVE_BOILER_STATE,
 ]
+
 # Sensors
 BATTERY = {
-    "battery": {
-        ATTR_ID: "battery",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Battery",
-        ATTR_STATE: "battery",
-        ATTR_DEVICE_CLASS: "battery",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "battery",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Battery",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "battery",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 CURRENT_TEMP = {
-    "temperature": {
-        ATTR_ID: "temperature",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Temperature",
-        ATTR_STATE: "temperature",
-        ATTR_DEVICE_CLASS: "temperature",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "temperature",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Temperature",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "temperature",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 DEVICE_STATE = {
-    "device_state": {
-        ATTR_ID: "device_state",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Device State",
-        ATTR_STATE: "device_state",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "device_state",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Device State",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 EL_CONSUMED = {
-    "electricity_consumed": {
-        ATTR_ID: "electricity_consumed",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed",
-        ATTR_STATE: "electricity_consumed",
-        ATTR_DEVICE_CLASS: "power",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    }
+    ATTR_ID: "electricity_consumed",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
 EL_CONSUMED_INTERVAL = {
-    "electricity_consumed_interval": {
-        ATTR_ID: "electricity_consumed_interval",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed Interval",
-        ATTR_STATE: "electricity_consumed_interval",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_consumed_interval",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Interval",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_CONSUMED_OFF_PEAK_CUMULATIVE = {
-    "electricity_consumed_off_peak_cumulative": {
-        ATTR_ID: "electricity_consumed_off_peak_cumulative",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed Off Peak Cumulative",
-        ATTR_STATE: "electricity_consumed_off_peak_cumulative",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_consumed_off_peak_cumulative",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Off Peak Cumulative",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_CONSUMED_OFF_PEAK_INTERVAL = {
-    "electricity_consumed_off_peak_interval": {
-        ATTR_ID: "electricity_consumed_off_peak_interval",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed Off Peak Interval",
-        ATTR_STATE: "electricity_consumed_off_peak_interval",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_consumed_off_peak_interval",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Off Peak Interval",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_CONSUMED_OFF_PEAK_POINT = {
-    "electricity_consumed_off_peak_point": {
-        ATTR_ID: "electricity_consumed_off_peak_point",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed Off Peak Point",
-        ATTR_STATE: "electricity_consumed_off_peak_point",
-        ATTR_DEVICE_CLASS: "power",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    }
+    ATTR_ID: "electricity_consumed_off_peak_point",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Off Peak Point",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
 EL_CONSUMED_PEAK_CUMULATIVE = {
-    "electricity_consumed_peak_cumulative": {
-        ATTR_ID: "electricity_consumed_peak_cumulative",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed Peak Cumulative",
-        ATTR_STATE: "electricity_consumed_peak_cumulative",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_consumed_peak_cumulative",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Peak Cumulative",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_CONSUMED_PEAK_INTERVAL = {
-    "electricity_consumed_peak_interval": {
-        ATTR_ID: "electricity_consumed_peak_interval",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed Peak Interval",
-        ATTR_STATE: "electricity_consumed_peak_interval",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_consumed_peak_interval",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Peak Interval",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_CONSUMED_PEAK_POINT = {
-    "electricity_consumed_peak_point": {
-        ATTR_ID: "electricity_consumed_peak_point",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Consumed Peak Point",
-        ATTR_STATE: "electricity_consumed_peak_point",
-        ATTR_DEVICE_CLASS: "power",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    }
+    ATTR_ID: "electricity_consumed_peak_point",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Peak Point",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
 EL_PRODUCED = {
-    "electricity_produced": {
-        ATTR_ID: "electricity_produced",
-        ATTR_ENABLED: False,
-        ATTR_NAME: "Electricity Produced",
-        ATTR_STATE: "electricity_produced",
-        ATTR_DEVICE_CLASS: "power",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    }
+    ATTR_ID: "electricity_produced",
+    ATTR_ENABLED: False,
+    ATTR_NAME: "Electricity Produced",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
 EL_PRODUCED_INTERVAL = {
-    "electricity_produced_interval": {
-        ATTR_ID: "electricity_produced_interval",
-        ATTR_ENABLED: False,
-        ATTR_NAME: "Electricity Produced Interval",
-        ATTR_STATE: "electricity_produced_interval",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_produced_interval",
+    ATTR_ENABLED: False,
+    ATTR_NAME: "Electricity Produced Interval",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_PRODUCED_OFF_PEAK_CUMULATIVE = {
-    "electricity_produced_off_peak_cumulative": {
-        ATTR_ID: "electricity_produced_off_peak_cumulative",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Produced Off Peak Cumulative",
-        ATTR_STATE: "electricity_produced_off_peak_cumulative",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_produced_off_peak_cumulative",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Produced Off Peak Cumulative",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_PRODUCED_OFF_PEAK_INTERVAL = {
-    "electricity_produced_off_peak_interval": {
-        ATTR_ID: "electricity_produced_off_peak_interval",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Produced Off Peak Interval",
-        ATTR_STATE: "electricity_produced_off_peak_interval",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_produced_off_peak_interval",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Produced Off Peak Interval",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_PRODUCED_OFF_PEAK_POINT = {
-    "electricity_produced_off_peak_point": {
-        ATTR_ID: "electricity_produced_off_peak_point",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Produced Off Peak Point",
-        ATTR_STATE: "electricity_produced_off_peak_point",
-        ATTR_DEVICE_CLASS: "power",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    }
+    ATTR_ID: "electricity_produced_off_peak_point",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Produced Off Peak Point",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
 EL_PRODUCED_PEAK_CUMULATIVE = {
-    "electricity_produced_peak_cumulative": {
-        ATTR_ID: "electricity_produced_peak_cumulative",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Produced Peak Cumulative",
-        ATTR_STATE: "electricity_produced_peak_cumulative",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_produced_peak_cumulative",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Produced Peak Cumulative",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_PRODUCED_PEAK_INTERVAL = {
-    "electricity_produced_peak_interval": {
-        ATTR_ID: "electricity_produced_peak_interval",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Produced Peak Interval",
-        ATTR_STATE: "electricity_produced_peak_interval",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "electricity_produced_peak_interval",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Produced Peak Interval",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 EL_PRODUCED_PEAK_POINT = {
-    "electricity_produced_peak_point": {
-        ATTR_ID: "electricity_produced_peak_point",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Electricity Produced Peak Point",
-        ATTR_STATE: "electricity_produced_peak_point",
-        ATTR_DEVICE_CLASS: "power",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    }
+    ATTR_ID: "electricity_produced_peak_point",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Produced Peak Point",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
 GAS_CONSUMED_CUMULATIVE = {
-    "gas_consumed_cumulative": {
-        ATTR_ID: "gas_consumed_cumulative",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Gas Consumed Cumulative",
-        ATTR_STATE: "gas_consumed_cumulative",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: FLAME_ICON,
-        ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
-    }
+    ATTR_ID: "gas_consumed_cumulative",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Gas Consumed Cumulative",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: FLAME_ICON,
+    ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
 }
 GAS_CONSUMED_INTERVAL = {
-    "gas_consumed_interval": {
-        ATTR_ID: "gas_consumed_interval",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Gas Consumed Interval",
-        ATTR_STATE: "gas_consumed_interval",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: FLAME_ICON,
-        ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
-    }
+    ATTR_ID: "gas_consumed_interval",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Gas Consumed Interval",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: FLAME_ICON,
+    ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
 }
 ILLUMINANCE = {
-    "illuminance": {
-        ATTR_ID: "illuminance",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Illuminance",
-        ATTR_STATE: "illuminance",
-        ATTR_DEVICE_CLASS: "illuminance",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "illuminance",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Illuminance",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "illuminance",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 INTENDED_BOILER_TEMP = {
-    "intended_boiler_temperature": {
-        ATTR_ID: "intended_boiler_temperature",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Intended Boiler Temperature",
-        ATTR_STATE: "intended_boiler_temperature",
-        ATTR_DEVICE_CLASS: "temperature",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "intended_boiler_temperature",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Intended Boiler Temperature",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "temperature",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 MOD_LEVEL = {
-    "modulation_level": {
-        ATTR_ID: "modulation_level",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Modulation Level",
-        ATTR_STATE: "modulation_level",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: "mdi:percent",
-        ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
-    }
+    ATTR_ID: "modulation_level",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Modulation Level",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: "mdi:percent",
+    ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
 }
 NET_EL_CUMULATIVE = {
-    "net_electricity_cumulative": {
-        ATTR_ID: "net_electricity_cumulative",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Net Electricity Cumulative",
-        ATTR_STATE: "net_electricity_cumulative",
-        ATTR_DEVICE_CLASS: "energy",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
-    }
+    ATTR_ID: "net_electricity_cumulative",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Net Electricity Cumulative",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "energy",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
 NET_EL_POINT = {
-    "net_electricity_point": {
-        ATTR_ID: "net_electricity_point",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Net Electricity Point",
-        ATTR_STATE: "net_electricity_point",
-        ATTR_DEVICE_CLASS: "power",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    }
+    ATTR_ID: "net_electricity_point",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Net Electricity Point",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
 OUTDOOR_TEMP = {
-    "outdoor_temperature": {
-        ATTR_ID: "outdoor_temperature",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Outdoor Temperature",
-        ATTR_STATE: "outdoor_temperature",
-        ATTR_DEVICE_CLASS: "temperature",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "outdoor_temperature",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Outdoor Temperature",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "temperature",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 RETURN_TEMP = {
-    "return_temperature": {
-        ATTR_ID: "return_temperature",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Return Temperature",
-        ATTR_STATE: "return_temperature",
-        ATTR_DEVICE_CLASS: "temperature",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "return_temperature",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Return Temperature",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "temperature",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 TARGET_TEMP = {
-    "setpoint": {
-        ATTR_ID: "setpoint",
-        ATTR_ENABLED: False,
-        ATTR_NAME: "Setpoint",
-        ATTR_STATE: "setpoint",
-        ATTR_DEVICE_CLASS: "temperature",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "setpoint",
+    ATTR_ENABLED: False,
+    ATTR_NAME: "Setpoint",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "temperature",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 TEMP_DIFF = {
-    "temperature_difference": {
-        ATTR_ID: "temperature_difference",
-        ATTR_ENABLED: False,
-        ATTR_NAME: "Temperature Difference",
-        ATTR_STATE: "temperature_difference",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_KELVIN,
-    }
+    ATTR_ID: "temperature_difference",
+    ATTR_ENABLED: False,
+    ATTR_NAME: "Temperature Difference",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: TEMP_KELVIN,
 }
 VALVE_POS = {
-    "valve_position": {
-        ATTR_ID: "valve_position",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Valve Position",
-        ATTR_STATE: "valve_position",
-        ATTR_DEVICE_CLASS: None,
-        ATTR_ICON: "mdi:valve",
-        ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
-    }
+    ATTR_ID: "valve_position",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Valve Position",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: "mdi:valve",
+    ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
 }
 WATER_PRESSURE = {
-    "water_pressure": {
-        ATTR_ID: "water_pressure",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Water Pressure",
-        ATTR_STATE: "water_pressure",
-        ATTR_DEVICE_CLASS: "pressure",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "water_pressure",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Water Pressure",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "pressure",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 WATER_TEMP = {
-    "water_temperature": {
-        ATTR_ID: "water_temperature",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "Water Temperature",
-        ATTR_STATE: "water_temperature",
-        ATTR_DEVICE_CLASS: "temperature",
-        ATTR_ICON: None,
-        ATTR_UNIT_OF_MEASUREMENT: None,
-    }
+    ATTR_ID: "water_temperature",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Water Temperature",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "temperature",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: None,
 }
 SENSORS = [
     BATTERY,
@@ -961,34 +888,28 @@ SENSORS = [
 
 # Switches
 DHW_COMF_MODE = {
-    "dhw_cm_switch": {
-        ATTR_ID: "dhw_comf_mode",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "DHW Comfort Mode",
-        ATTR_STATE: "dhw_comf_mode",
-        ATTR_DEVICE_CLASS: "switch",
-        ATTR_ICON: None,
-    }
+    ATTR_ID: "dhw_cm_switch",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "DHW Comfort Mode",
+    ATTR_STATE: False,
+    ATTR_DEVICE_CLASS: "switch",
+    ATTR_ICON: None,
 }
 LOCK = {
-    "lock": {
-        ATTR_ID: "lock",
-        ATTR_ENABLED: False,
-        ATTR_NAME: "Lock",
-        ATTR_STATE: "lock",
-        ATTR_DEVICE_CLASS: "switch",
-        ATTR_ICON: None,
-    }
+    ATTR_ID: "lock",
+    ATTR_ENABLED: False,
+    ATTR_NAME: "Lock",
+    ATTR_STATE: False,
+    ATTR_DEVICE_CLASS: "switch",
+    ATTR_ICON: None,
 }
 RELAY = {
-    "relay": {
-        ATTR_ID: "relay",
-        ATTR_ENABLED: True,
-        ATTR_NAME: "",
-        ATTR_STATE: "relay",
-        ATTR_DEVICE_CLASS: "switch",
-        ATTR_ICON: None,
-    }
+    ATTR_ID: "relay",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "",
+    ATTR_STATE: False,
+    ATTR_DEVICE_CLASS: "switch",
+    ATTR_ICON: None,
 }
 SWITCHES = [
     DHW_COMF_MODE,
