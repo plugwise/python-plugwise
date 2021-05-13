@@ -208,6 +208,15 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             self.modules = await self.request(MODULES)
 
+    def update_helper(self, data, dev_dict, dev_id, key, entity_type):
+        """Helper for update_gw_devices."""
+        for tmp_dict in dev_dict[entity_type]:
+            if key == tmp_dict[ATTR_ID]:
+                gw_list = self.gw_devices[dev_id][entity_type]
+                for idx, item in enumerate(gw_list):
+                    if key == item[ATTR_ID]:
+                        gw_list[idx][ATTR_STATE] = data[key]
+
     async def update_gw_devices(self):
         """Update all XML data from device."""
         await self.update_domain_objects()
@@ -222,30 +231,15 @@ class Smile(SmileHelper):
                 if key in dev_dict:
                     self.gw_devices[dev_id][key] = value
                 if "binary_sensors" in dev_dict:
-                    for dict in dev_dict["binary_sensors"]:
-                        if key == dict[ATTR_ID]:
-                            bs_list = self.gw_devices[dev_id]["binary_sensors"]
-                            for idx, item in enumerate(bs_list):
-                                if key == item[ATTR_ID]:
-                                    bs_list[idx][ATTR_STATE] = data[key]
+                    self.update_helper(data, dev_dict, dev_id, key, "binary_sensors")
                     if "plugwise_notification" in dev_dict["binary_sensors"]:
                         self.gw_devices[dev_id]["binary_sensors"][0][ATTR_STATE] = (
                             self.notifications != {}
                         )
                 if "sensors" in dev_dict:
-                    for dict in dev_dict["sensors"]:
-                        if key == dict[ATTR_ID]:
-                            s_list = self.gw_devices[dev_id]["sensors"]
-                            for idx, item in enumerate(s_list):
-                                if key == item[ATTR_ID]:
-                                    s_list[idx][ATTR_STATE] = data[key]
+                    self.update_helper(data, dev_dict, dev_id, key, "sensors")
                 if "switches" in dev_dict:
-                    for dict in dev_dict["switches"]:
-                        if key == dict[ATTR_ID]:
-                            sw_list = self.gw_devices[dev_id]["switches"]
-                            for idx, item in enumerate(sw_list):
-                                if key == item[ATTR_ID]:
-                                    sw_list[idx][ATTR_STATE] = data[key]
+                    self.update_helper(data, dev_dict, dev_id, key, "switches")
 
     def all_device_data(self):
         "Collect all data for each device and add to self.gw_devices."
