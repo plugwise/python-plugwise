@@ -124,6 +124,7 @@ class GW_B_Sensor:
                                 self._attributes[f"{severity.upper()}_msg"] = []
                             notify = self._api.notifications
                             if notify == {}:
+                                self._message = None
                                 continue
 
                             for notify_id, details in notify.items():
