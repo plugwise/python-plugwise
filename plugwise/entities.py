@@ -103,43 +103,48 @@ class GW_B_Sensor:
         data = self._api.gw_devices[self._dev_id]
 
         for key, value in data.items():
-            if key == "binary_sensors":
-                for bs in value:
-                    if bs[ATTR_ID] == self._binary_sensor:
-                        self._is_on = bs[ATTR_STATE]
-                        if self._binary_sensor == "dhw_state":
-                            self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
-                        if (
-                            self._binary_sensor == "flame_state"
-                            or self._binary_sensor == "slave_boiler_state"
-                        ):
-                            self._icon = FLAME_ICON if self._is_on else IDLE_ICON
-                        if self._binary_sensor == "plugwise_notification":
-                            self._icon = (
-                                NOTIFICATION_ICON
-                                if self._is_on
-                                else NO_NOTIFICATION_ICON
+            if key != "binary_sensors":
+                continue
+
+            for bs in value:
+                if bs[ATTR_ID] != self._binary_sensor:
+                    continue
+
+                self._is_on = bs[ATTR_STATE]
+                if self._binary_sensor == "dhw_state":
+                    self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
+                if (
+                    self._binary_sensor == "flame_state"
+                    or self._binary_sensor == "slave_boiler_state"
+                ):
+                    self._icon = FLAME_ICON if self._is_on else IDLE_ICON
+
+                if self._binary_sensor != "plugwise_notification":
+                    continue
+
+                self._icon = (
+                    NOTIFICATION_ICON
+                    if self._is_on
+                    else NO_NOTIFICATION_ICON
+                )
+                notify = self._api.notifications
+                self._message = None
+                for severity in SEVERITIES:
+                    self._attributes[f"{severity.upper()}_msg"] = []
+                if notify != {}:
+                    for notify_id, details in notify.items():
+                        for msg_type, msg in details.items():
+                            if msg_type not in SEVERITIES:
+                                msg_type = "other"
+
+                            self._attributes[f"{msg_type.upper()}_msg"].append(
+                                msg
                             )
-                            for severity in SEVERITIES:
-                                self._attributes[f"{severity.upper()}_msg"] = []
-                            notify = self._api.notifications
-                            if notify == {}:
-                                self._message = None
-                                continue
-
-                            for notify_id, details in notify.items():
-                                for msg_type, msg in details.items():
-                                    if msg_type not in SEVERITIES:
-                                        msg_type = "other"
-
-                                    self._attributes[f"{msg_type.upper()}_msg"].append(
-                                        msg
-                                    )
-                                    self._message = (
-                                        f"{msg_type.title()}: {msg}",
-                                        "Plugwise Notification:",
-                                        f"plugwise.{notify_id}",
-                                    )
+                            self._message = (
+                                f"{msg_type.title()}: {msg}",
+                                "Plugwise Notification:",
+                                f"plugwise.{notify_id}",
+                            )
 
 
 class GW_Thermostat:
