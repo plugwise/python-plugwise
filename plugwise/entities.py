@@ -286,42 +286,27 @@ class GW_Thermostat:
         self._extra_state_attributes = attributes
 
 
-class AuxDevice:
+class GW_Sensor:
     """Represent an external Auxiliary Device."""
 
-    def __init__(self, api, dev_id):
+    def __init__(self, api, dev_id, sensor):
         """Initialize the Thermostat."""
         self._api = api
         self._cooling_state = None
         self._dev_id = dev_id
         self._heating_state = None
         self._icon = None
-        self._is_on = False
+        self._sensor = sensor
+        self._state = False
 
-        self.binary_sensors = {}
-        self.sensors = {}
-        self.switches = {}
-
-        self.b_sensor_list = [DHW_STATE, FLAME_STATE, SLAVE_BOILER_STATE]
-
-        self.sensor_list = [
-            DEVICE_STATE,
-            INTENDED_BOILER_TEMP,
-            MOD_LEVEL,
-            RETURN_TEMP,
-            WATER_PRESSURE,
-            WATER_TEMP,
-        ]
-
-        self.switch_list = [DHW_COMF_MODE]
-
+        self._active_device = self._api.active_device_present
         self._heater_id = self._api.heater_id
         self._sm_thermostat = self._api.single_master_thermostat()
 
     @property
-    def is_on(self):
+    def state(self):
         """Gateway binary_sensor state."""
-        return self._is_on
+        return self._state
 
     @property
     def icon(self):
@@ -333,47 +318,28 @@ class AuxDevice:
         data = self._api.gw_devices[self._dev_id]
 
         for key, value in data.items():
-            if "binary_sensors" in key:
-                for bs_key, bs_value in value.items():
-                    for b_sensor in self.b_sensor_list:
-                        for k, v in b_sensor.items():
-                            if k == bs_key:
-                                self._is_on = value[bs_key]["state"]
-                                if b_sensor == DHW_STATE:
-                                    self._icon = (
-                                        FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
-                                    )
-                                if (
-                                    b_sensor == FLAME_STATE
-                                    or b_sensor == SLAVE_BOILER_STATE
-                                ):
-                                    self._icon = (
-                                        FLAME_ICON if self._is_on else IDLE_ICON
-                                    )
+            if key != "sensors":
+                continue
 
-        # for sensor in self.sensor_list:
-        #    for key, value in sensor.items():
-        #        if data.get(value[ATTR_ID]) is not None:
-        #            self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
-        #        if sensor == DEVICE_STATE:
-        #            self.sensors[key][ATTR_STATE] = "idle"
-        #            self.sensors[key][ATTR_ICON] = IDLE_ICON
-        #            if self._active_device:
-        #                hc_data = self._api.get_device_data(self._heater_id)
-        #                if not self._sm_thermostat:
-        #                    self._cooling_state = hc_data.get("cooling_state")
-        #                    self._heating_state = hc_data.get("heating_state")
-        #                    if self._heating_state:
-        #                        self.sensors[key][ATTR_STATE] = "heating"
-        #                        self.sensors[key][ATTR_ICON] = HEATING_ICON
-        #                    if self._cooling_state:
-        #                        self.sensors[key][ATTR_STATE] = "cooling"
-        #                        self.sensors[key][ATTR_ICON] = COOLING_ICON
+            for sens in value:
+                if sens[ATTR_ID] != self._sensor:
+                    continue
 
-        # for switch in self.switch_list:
-        #    for key, value in switch.items():
-        #        if data.get(value[ATTR_ID]) is not None:
-        #            self.switches[key][ATTR_STATE] = data.get(value[ATTR_ID])
+                self._state = sens[ATTR_STATE]
+                if sensor == DEVICE_STATE:
+                    self._state = "idle"
+                    self._icon = IDLE_ICON
+                    if self._active_device:
+                        hc_data = self._api.get_device_data(self._heater_id)
+                        if not self._sm_thermostat:
+                            self._cooling_state = hc_data.get("cooling_state")
+                            self._heating_state = hc_data.get("heating_state")
+                            if self._heating_state:
+                                self._state = "heating"
+                                self._icon = HEATING_ICON
+                            if self._cooling_state:
+                                self._state = "cooling"
+                                self._icon = COOLING_ICON
 
 
 class Plug:
