@@ -354,10 +354,15 @@ class GW_Switch:
         self._switch = switch
         self._state = None
 
+#    @property
+#    def icon(self):
+#        """Gateway switch icon."""
+#        return self._icon
+
     @property
-    def icon(self):
-        """Gateway binary_sensor/sensor/switch icon."""
-        return self._icon
+    def is_on(self):
+        """Gateway switch state."""
+        return self._is_on
 
     def update_data(self):
         """Handle update callbacks."""
@@ -371,5 +376,5 @@ class GW_Switch:
                 if switch[ATTR_ID] != self._switch:
                     continue
 
-                self._state = switch[ATTR_STATE]
-                self._icon = switch[ATTR_ICON]
+                self._is_on = switch[ATTR_STATE]
+#                self._icon = switch[ATTR_ICON]
