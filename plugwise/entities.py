@@ -378,5 +378,3 @@ class GW_Switch:
 
                 self._is_on = switch[ATTR_STATE]
 
-
-#                self._icon = switch[ATTR_ICON]
