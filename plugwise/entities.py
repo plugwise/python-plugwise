@@ -73,8 +73,14 @@ class GW_B_Sensor:
         self._api = api
         self._binary_sensor = binary_sensor
         self._dev_id = dev_id
+        self.__extra_state_attributes = None
         self._icon = None
         self._is_on = False
+
+    @property
+    def extra_state_attributes(self):
+        """Gateway binary_sensor extra state attributes."""
+        return self._extra_state_attributes
 
     @property
     def is_on(self):
@@ -110,14 +116,16 @@ class GW_B_Sensor:
                             )
                             notify = self._api.notifications
                             for severity in SEVERITIES:
-                                self._attributes[f"{severity.upper()}_msg"] = []
-                            if notify != {}:
-                                for notify_id, details in notify.items():
-                                    for msg_type, msg in details.items():
-                                        if msg_type not in SEVERITIES:
-                                            msg_type = "other"
+                                self._extra_state_attributes[f"{severity.upper()}_msg"] = []
+                            if notify == {}:
+                                continue
 
-                                        self._attributes[f"{msg_type.upper()}_msg"].append(msg)
+                            for notify_id, details in notify.items():
+                                for msg_type, msg in details.items():
+                                    if msg_type not in SEVERITIES:
+                                        msg_type = "other"
+
+                                    self._extra_state_attributes[f"{msg_type.upper()}_msg"].append(msg)
 
 
 class GW_Thermostat:
