@@ -297,21 +297,21 @@ class GW_Sensor:
         self._heating_state = None
         self._icon = None
         self._sensor = sensor
-        self._state = False
+        self._state = None
 
         self._active_device = self._api.active_device_present
         self._heater_id = self._api.heater_id
         self._sm_thermostat = self._api.single_master_thermostat()
 
     @property
-    def state(self):
-        """Gateway binary_sensor state."""
-        return self._state
-
-    @property
     def icon(self):
         """Gateway binary_sensor/sensor/switch icon."""
         return self._icon
+
+    @property
+    def state(self):
+        """Gateway binary_sensor state."""
+        return self._state
 
     def update_data(self):
         """Handle update callbacks."""
@@ -343,36 +343,33 @@ class GW_Sensor:
                                 self._icon = COOLING_ICON
 
 
-class Plug:
-    """ Represent the Plugwise Plug device."""
+class GW_Switch:
+    """Represent an external Auxiliary Device."""
 
-    def __init__(self, api, dev_id):
-        """Initialize the Plug."""
+    def __init__(self, api, dev_id, switch):
+        """Initialize the Thermostat."""
         self._api = api
         self._dev_id = dev_id
+        self._icon = None
+        self._switch = switch
+        self._state = None
 
-        self.sensors = {}
-        self.switches = {}
-
-        self.sensor_list = [
-            EL_CONSUMED,
-            EL_CONSUMED_INTERVAL,
-            EL_PRODUCED,
-            EL_PRODUCED_INTERVAL,
-        ]
-
-        self.switch_list = [LOCK, RELAY]
+    @property
+    def icon(self):
+        """Gateway binary_sensor/sensor/switch icon."""
+        return self._icon
 
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
 
-        for sensor in self.sensor_list:
-            for key, value in sensor.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.sensors[key][ATTR_STATE] = data.get(value[ATTR_ID])
+        for key, value in data.items():
+            if key != "switches":
+                continue
 
-        for switch in self.switch_list:
-            for key, value in switch.items():
-                if data.get(value[ATTR_ID]) is not None:
-                    self.switches[key][ATTR_STATE] = data.get(value[ATTR_ID])
+            for switch in value:
+                if switch[ATTR_ID] != self._switch:
+                    continue
+
+                self._state = switch[ATTR_STATE]
+                self._icon = switch[ATTR_ICON]
