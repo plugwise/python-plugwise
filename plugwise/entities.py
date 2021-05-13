@@ -73,14 +73,14 @@ class GW_B_Sensor:
         self._api = api
         self._binary_sensor = binary_sensor
         self._dev_id = dev_id
-        self._attributes = None
+        self._attributes = {}
         self._icon = None
         self._is_on = False
 
     @property
     def extra_state_attributes(self):
         """Gateway binary_sensor extra state attributes."""
-        return self._attributes
+        return None if self._attributes == {} else self._attributes
 
     @property
     def is_on(self):
@@ -114,9 +114,9 @@ class GW_B_Sensor:
                                 if self._is_on
                                 else NO_NOTIFICATION_ICON
                             )
-                            notify = self._api.notifications
                             for severity in SEVERITIES:
                                 self._attributes[f"{severity.upper()}_msg"] = []
+                            notify = self._api.notifications
                             if notify == {}:
                                 continue
 
