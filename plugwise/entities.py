@@ -116,7 +116,9 @@ class GW_B_Sensor:
                             )
                             notify = self._api.notifications
                             for severity in SEVERITIES:
-                                self._extra_state_attributes[f"{severity.upper()}_msg"] = []
+                                self._extra_state_attributes[
+                                    f"{severity.upper()}_msg"
+                                ] = []
                             if notify == {}:
                                 continue
 
@@ -125,7 +127,9 @@ class GW_B_Sensor:
                                     if msg_type not in SEVERITIES:
                                         msg_type = "other"
 
-                                    self._extra_state_attributes[f"{msg_type.upper()}_msg"].append(msg)
+                                    self._extra_state_attributes[
+                                        f"{msg_type.upper()}_msg"
+                                    ].append(msg)
 
 
 class GW_Thermostat:
