@@ -54,6 +54,7 @@ from .constants import (
     RELAY,
     RETURN_TEMP,
     RULES,
+    SEVERITIES,
     SLAVE_BOILER_STATE,
     TARGET_TEMP,
     TEMP_DIFF,
@@ -107,6 +108,16 @@ class GW_B_Sensor:
                                 if self._is_on
                                 else NO_NOTIFICATION_ICON
                             )
+                            notify = self._api.notifications
+                            for severity in SEVERITIES:
+                                self._attributes[f"{severity.upper()}_msg"] = []
+                            if notify != {}:
+                                for notify_id, details in notify.items():
+                                    for msg_type, msg in details.items():
+                                        if msg_type not in SEVERITIES:
+                                            msg_type = "other"
+
+                                        self._attributes[f"{msg_type.upper()}_msg"].append(msg)
 
 
 class GW_Thermostat:

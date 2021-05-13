@@ -358,6 +358,7 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80
 
+SEVERITIES = ["other", "info", "warning", "error"]
 SWITCH_GROUP_TYPES = ["switching", "report"]
 THERMOSTAT_CLASSES = [
     "thermostat",
