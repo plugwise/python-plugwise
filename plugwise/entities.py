@@ -203,8 +203,12 @@ class GW_Thermostat:
         data = self._api.gw_devices[self._dev_id]
 
         # current & target_temps, heater_central data when required
-        self._temperature = data["sensors"]["temperature"]["state"]
-        self._setpoint = data["sensors"]["setpoint"]["state"]
+        s_list = data["sensors"]
+        for idx, item in enumerate(s_list):
+            if item[ATTR_ID] == "temperature":
+                self._temperature = s_list[idx][ATTR_STATE]
+            if item[ATTR_ID] == "setpoint":
+                self._setpoint = s_list[idx][ATTR_STATE]
         self._schedule_temp = data.get("schedule_temperature")
         if self._active_device:
             hc_data = self._api.gw_devices[self._heater_id]
