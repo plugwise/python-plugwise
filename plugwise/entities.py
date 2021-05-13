@@ -92,6 +92,11 @@ class GW_B_Sensor:
         """Gateway binary_sensor icon."""
         return self._icon
 
+    @property
+    def notification(self):
+        """Plugwise Notification message."""
+        return self._message
+
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
@@ -127,6 +132,11 @@ class GW_B_Sensor:
 
                                     self._attributes[f"{msg_type.upper()}_msg"].append(
                                         msg
+                                    )
+                                    self._message = (
+                                        f"{msg_type.title()}: {msg}",
+                                        "Plugwise Notification:",
+                                        f"plugwise.{notify_id}",
                                     )
 
 
