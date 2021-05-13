@@ -122,11 +122,7 @@ class GW_B_Sensor:
                 if self._binary_sensor != "plugwise_notification":
                     continue
 
-                self._icon = (
-                    NOTIFICATION_ICON
-                    if self._is_on
-                    else NO_NOTIFICATION_ICON
-                )
+                self._icon = NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
                 notify = self._api.notifications
                 self._message = None
                 for severity in SEVERITIES:
@@ -137,9 +133,7 @@ class GW_B_Sensor:
                             if msg_type not in SEVERITIES:
                                 msg_type = "other"
 
-                            self._attributes[f"{msg_type.upper()}_msg"].append(
-                                msg
-                            )
+                            self._attributes[f"{msg_type.upper()}_msg"].append(msg)
                             self._message = (
                                 f"{msg_type.title()}: {msg}",
                                 "Plugwise Notification:",
