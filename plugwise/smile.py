@@ -229,7 +229,9 @@ class Smile(SmileHelper):
                                 if key == item[ATTR_ID]:
                                     bs_list[idx][ATTR_STATE] = data[key]
                     if "plugwise_notification" in dev_dict["binary_sensors"]:
-                        self.gw_devices[dev_id]["binary_sensors"][0][ATTR_STATE] = self.notifications != {}
+                        self.gw_devices[dev_id]["binary_sensors"][0][ATTR_STATE] = (
+                            self.notifications != {}
+                        )
                 if "sensors" in dev_dict:
                     for dict in dev_dict["sensors"]:
                         if key == dict[ATTR_ID]:
