@@ -76,6 +76,7 @@ class GW_B_Sensor:
         self._attributes = {}
         self._icon = None
         self._is_on = False
+        self._message = None
 
     @property
     def extra_state_attributes(self):
