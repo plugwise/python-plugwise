@@ -326,6 +326,7 @@ class GW_Sensor:
                     continue
 
                 self._state = sens[ATTR_STATE]
+                self._icon = sens[ATTR_ICON]
                 if self._sensor == DEVICE_STATE:
                     self._state = "idle"
                     self._icon = IDLE_ICON
