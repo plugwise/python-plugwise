@@ -222,27 +222,28 @@ class Smile(SmileHelper):
                 if key in dev_dict:
                     self.gw_devices[dev_id][key] = value
                 if "binary_sensors" in dev_dict:
-                    if key in dev_dict["binary_sensors"]:
-                        if key in data:
-                            self.gw_devices[dev_id]["binary_sensors"][key][
-                                ATTR_STATE
-                            ] = data[key]
+                    for dict in dev_dict["binary_sensors"]:
+                        if key == dict[ATTR_ID]:
+                            bs_list = self.gw_devices[dev_id]["binary_sensors"]
+                            for idx, item in enumerate(bs_list):
+                                if key == item[ATTR_ID]:
+                                    bs_list[idx][ATTR_STATE] = data[key]
                     if "plugwise_notification" in dev_dict["binary_sensors"]:
-                        self.gw_devices[dev_id]["binary_sensors"][
-                            "plugwise_notification"
-                        ][ATTR_STATE] = (self.notifications != {})
+                        self.gw_devices[dev_id]["binary_sensors"][0][ATTR_STATE] = self.notifications != {}
                 if "sensors" in dev_dict:
-                    if key in dev_dict["sensors"]:
-                        if key in data:
-                            self.gw_devices[dev_id]["sensors"][key][ATTR_STATE] = data[
-                                key
-                            ]
+                    for dict in dev_dict["sensors"]:
+                        if key == dict[ATTR_ID]:
+                            s_list = self.gw_devices[dev_id]["sensors"]
+                            for idx, item in enumerate(s_list):
+                                if key == item[ATTR_ID]:
+                                    s_list[idx][ATTR_STATE] = data[key]
                 if "switches" in dev_dict:
-                    if key in dev_dict["switches"]:
-                        if key in data:
-                            self.gw_devices[dev_id]["switches"][key][ATTR_STATE] = data[
-                                key
-                            ]
+                    for dict in dev_dict["switches"]:
+                        if key == dict[ATTR_ID]:
+                            sw_list = self.gw_devices[dev_id]["switches"]
+                            for idx, item in enumerate(sw_list):
+                                if key == item[ATTR_ID]:
+                                    sw_list[idx][ATTR_STATE] = data[key]
 
     def all_device_data(self):
         "Collect all data for each device and add to self.gw_devices."
@@ -250,40 +251,37 @@ class Smile(SmileHelper):
         dev_and_data_list = []
         for dev_id, dev_dict in self.devices.items():
             dev_and_data = dev_dict
-            temp_b_sensor_dict = {}
-            temp_sensor_dict = {}
-            temp_switch_dict = {}
+            temp_b_sensor_list = []
+            temp_sensor_list = []
+            temp_switch_list = []
             data = self.get_device_data(dev_id)
             if dev_id == self.gateway_id and self.single_master_thermostat is not None:
-                for key, value in PW_NOTIFICATION.items():
-                    temp_b_sensor_dict.update(PW_NOTIFICATION)
-                    temp_b_sensor_dict[key][ATTR_STATE] = False
+                PW_NOTIFICATION[ATTR_STATE] = False
+                temp_b_sensor_list.append(PW_NOTIFICATION)
             for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
-                    for bs_key in item:
-                        if bs_key == key:
-                            data.pop(key)
-                            temp_b_sensor_dict.update(item)
-                            temp_b_sensor_dict[bs_key][ATTR_STATE] = value
+                    if item[ATTR_ID] == key:
+                        data.pop(key)
+                        if self.active_device_present:
+                            item[ATTR_STATE] = value
+                            temp_b_sensor_list.append(item)
                 for item in SENSORS:
-                    for s_key in item:
-                        if s_key == key:
-                            data.pop(key)
-                            temp_sensor_dict.update(item)
-                            temp_sensor_dict[s_key][ATTR_STATE] = value
+                    if item[ATTR_ID] == key:
+                        data.pop(key)
+                        item[ATTR_STATE] = value
+                        temp_sensor_list.append(item)
                 for item in SWITCHES:
-                    for sw_key in item:
-                        if sw_key == key:
-                            data.pop(key)
-                            temp_switch_dict.update(item)
-                            temp_switch_dict[sw_key][ATTR_STATE] = value
+                    if item[ATTR_ID] == key:
+                        data.pop(key)
+                        item[ATTR_STATE] = value
+                        temp_switch_list.append(item)
             dev_and_data.update(data)
-            if temp_b_sensor_dict != {}:
-                dev_and_data["binary_sensors"] = temp_b_sensor_dict
-            if temp_sensor_dict != {}:
-                dev_and_data["sensors"] = temp_sensor_dict
-            if temp_switch_dict != {}:
-                dev_and_data["switches"] = temp_switch_dict
+            if temp_b_sensor_list != []:
+                dev_and_data["binary_sensors"] = temp_b_sensor_list
+            if temp_sensor_list != []:
+                dev_and_data["sensors"] = temp_sensor_list
+            if temp_switch_list != []:
+                dev_and_data["switches"] = temp_switch_list
             dev_id_list.append(dev_id)
             dev_and_data_list.append(copy.deepcopy(dev_and_data))
 
