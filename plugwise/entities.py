@@ -354,10 +354,10 @@ class GW_Switch:
         self._switch = switch
         self._state = None
 
-#    @property
-#    def icon(self):
-#        """Gateway switch icon."""
-#        return self._icon
+    #    @property
+    #    def icon(self):
+    #        """Gateway switch icon."""
+    #        return self._icon
 
     @property
     def is_on(self):
@@ -377,4 +377,6 @@ class GW_Switch:
                     continue
 
                 self._is_on = switch[ATTR_STATE]
+
+
 #                self._icon = switch[ATTR_ICON]
