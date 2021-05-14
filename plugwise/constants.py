@@ -893,16 +893,16 @@ DHW_COMF_MODE = {
     ATTR_ENABLED: True,
     ATTR_NAME: "DHW Comfort Mode",
     ATTR_STATE: False,
-    ATTR_DEVICE_CLASS: "switch",
-    ATTR_ICON: None,
+    ATTR_DEVICE_CLASS: None,
+    ATTR_ICON: FLAME_ICON,
 }
 LOCK = {
     ATTR_ID: "lock",
     ATTR_ENABLED: False,
     ATTR_NAME: "Lock",
     ATTR_STATE: False,
-    ATTR_DEVICE_CLASS: "switch",
-    ATTR_ICON: None,
+    ATTR_DEVICE_CLASS: None
+    ATTR_ICON: "mdi:lock",
 }
 RELAY = {
     ATTR_ID: "relay",
