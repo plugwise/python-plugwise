@@ -290,7 +290,7 @@ class Smile(SmileHelper):
                     temp_b_sensor_list.append(PW_NOTIFICATION)
                 if not self.active_device_present and "heating_state" in data:
                     temp_sensor_list.append(DEVICE_STATE)
-            if dev_id == self.heater_id and self.single_master_thermostat == False:
+            if dev_id == self.heater_id and self.single_master_thermostat is False:
                 temp_sensor_list.append(DEVICE_STATE)
             for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
