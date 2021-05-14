@@ -262,7 +262,7 @@ class Smile(SmileHelper):
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "binary_sensors")
-                for idx, item in enumerate(dev_dict["binary_sensors"]):                
+                for idx, item in enumerate(dev_dict["binary_sensors"]):
                     if item[ATTR_ID] == "plugwise_notification":
                         self.gw_devices[dev_id]["binary_sensors"][idx][ATTR_STATE] = (
                             self.notifications != {}
@@ -272,9 +272,9 @@ class Smile(SmileHelper):
                     self.update_helper(data, dev_dict, dev_id, key, "sensors")
                 for idx, item in enumerate(dev_dict["sensors"]):
                     if item[ATTR_ID] == "device_state":
-                        self.gw_devices[dev_id]["sensors"][idx][ATTR_STATE] = (
-                            self.update_device_state(data, dev_dict)
-                        )
+                        self.gw_devices[dev_id]["sensors"][idx][
+                            ATTR_STATE
+                        ] = self.update_device_state(data, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
