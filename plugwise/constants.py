@@ -909,7 +909,7 @@ RELAY = {
     ATTR_ENABLED: True,
     ATTR_NAME: "",
     ATTR_STATE: False,
-    ATTR_DEVICE_CLASS: "switch",
+    ATTR_DEVICE_CLASS: "outlet",
     ATTR_ICON: None,
 }
 SWITCHES = [
