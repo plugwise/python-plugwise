@@ -216,12 +216,12 @@ class Smile(SmileHelper):
         _heating_state = False
         state = "idle"
 
-        if "dhw_state" in dev_dict["sensors"]:
-            for idx, item in dev_dict["sensors"]:
-                if item[ATTR_ID] == "dhw_state":
-                    if item[ATTR_STATE]:
-                        state = "dhw-heating"
-                        _dhw_state = True
+        for idx, item in enumerate(dev_dict["binary_sensors"]):
+            if item[ATTR_ID] == "dhw_state":
+                if item[ATTR_STATE]:
+                    state = "dhw-heating"
+                    _dhw_state = True
+
         if "heating_state" in data:
             if data["heating_state"]:
                 state = "heating"
