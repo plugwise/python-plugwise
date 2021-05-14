@@ -19,6 +19,7 @@ from .constants import (
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
+    DEVICE_STATE,
     DOMAIN_OBJECTS,
     LOCATIONS,
     MODULES,
@@ -238,6 +239,22 @@ class Smile(SmileHelper):
                         )
                 if "sensors" in dev_dict:
                     self.update_helper(data, dev_dict, dev_id, key, "sensors")
+                    if "device_state" in dev_dict["sensors"]:
+                        state = "idle"
+                        if self.dhw_state:
+                            state = "dhw-heating"
+                        if self.heating_state:
+                            state = "heating"
+                        if self.heating_state and self.dhw_state:
+                            state = "dhw and heating"
+                        if self.cooling_state:
+                            state = "cooling"
+                        if self.cooling_state and self.dhw_state:
+                            state = "dhw and cooling"
+                        sr_list = self.gw_devices[dev_id]["sensors"]
+                        for idx, item in enumerate(sr_list):
+                            if item[ATTR_ID] == "device_state":
+                                sr_list[idx][ATTR_STATE] = state
                 if "switches" in dev_dict:
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
 
@@ -251,9 +268,13 @@ class Smile(SmileHelper):
             temp_sensor_list = []
             temp_switch_list = []
             data = self.get_device_data(dev_id)
-            if dev_id == self.gateway_id and self.single_master_thermostat is not None:
-                PW_NOTIFICATION[ATTR_STATE] = False
-                temp_b_sensor_list.append(PW_NOTIFICATION)
+            if dev_id == self.gateway_id:
+                if self.single_master_thermostat is not None:
+                    temp_b_sensor_list.append(PW_NOTIFICATION)
+                if not self.active_device_present and "heating_state" in data:
+                    temp_sensor_list.append(DEVICE_STATE)
+            if dev_id == self.heater_id and self.single_master_thermostat == False:
+                temp_sensor_list.append(DEVICE_STATE)
             for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
                     if item[ATTR_ID] == key:
