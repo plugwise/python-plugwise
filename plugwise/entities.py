@@ -377,4 +377,3 @@ class GW_Switch:
                     continue
 
                 self._is_on = switch[ATTR_STATE]
-
