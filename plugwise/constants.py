@@ -893,7 +893,7 @@ DHW_COMF_MODE = {
     ATTR_ENABLED: True,
     ATTR_NAME: "DHW Comfort Mode",
     ATTR_STATE: False,
-    ATTR_DEVICE_CLASS: None,
+    ATTR_DEVICE_CLASS: "switch",
     ATTR_ICON: FLAME_ICON,
 }
 LOCK = {
