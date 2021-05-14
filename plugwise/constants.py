@@ -901,7 +901,7 @@ LOCK = {
     ATTR_ENABLED: False,
     ATTR_NAME: "Lock",
     ATTR_STATE: False,
-    ATTR_DEVICE_CLASS: None
+    ATTR_DEVICE_CLASS: None,
     ATTR_ICON: "mdi:lock",
 }
 RELAY = {
