@@ -550,7 +550,7 @@ class Smile(SmileHelper):
         switch.device = "relay"
         switch.func_type = "relay_functionality"
         switch.func = "state"
-        if model == "dhw_cm_switch":
+        if model == "dhw_comf_mode":
             switch.device = "toggle"
             switch.func_type = "toggle_functionality"
 

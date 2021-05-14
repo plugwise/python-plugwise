@@ -889,7 +889,7 @@ SENSORS = [
 
 # Switches
 DHW_COMF_MODE = {
-    ATTR_ID: "dhw_cm_switch",
+    ATTR_ID: "dhw_comf_mode",
     ATTR_ENABLED: True,
     ATTR_NAME: "DHW Comfort Mode",
     ATTR_STATE: False,
