@@ -232,13 +232,13 @@ class Smile(SmileHelper):
                         state = "heating"
                         _dhw_state = True
         if "heating_state" in data:
-            if data["heating_state"] == True
+            if data["heating_state"] == True:
                 state = "heating"
                 _heating_state = True
         if _heating_state and _dhw_state:
             state = "dhw and heating"
         if "cooling_state" in data:
-            if data["cooling_state"] == True
+            if data["cooling_state"] == True:
                 state = "cooling"
                 _cooling_state = True
         if _cooling_state and _dhw_state:
