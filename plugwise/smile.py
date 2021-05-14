@@ -218,6 +218,36 @@ class Smile(SmileHelper):
                     if key == item[ATTR_ID]:
                         gw_list[idx][ATTR_STATE] = data[key]
 
+    def update_device_state(self, data, dev_dict, dev_id):
+        """2nd helper for update_gw_devices."""
+        _cooling_state = False
+        _dhw_state = False
+        _heating_state = False
+        state = "idle"
+
+        if "dhw_state" in dev_dict["sensors"]:
+            for idx, item in dev_dict["sensors"]:
+                if item[ATTR_ID] == "dhw_state":
+                    if item[ATTR_STATE] == True:
+                        state = "heating"
+                        _dhw_state = True
+        if "heating_state" in data:
+            if data["heating_state"] == True
+                state = "heating"
+                _heating_state = True
+        if _heating_state and _dhw_state:
+            state = "dhw and heating"
+        if "cooling_state" in data:
+            if data["cooling_state"] == True
+                state = "cooling"
+                _cooling_state = True
+        if _cooling_state and _dhw_state:
+            state = "dhw and cooling"
+        sr_list = self.gw_devices[dev_id]["sensors"]
+        for idx, item in enumerate(sr_list):
+            if item[ATTR_ID] == "device_state":
+                sr_list[idx][ATTR_STATE] = state
+
     async def update_gw_devices(self):
         """Update all XML data from device."""
         await self.update_domain_objects()
@@ -240,21 +270,8 @@ class Smile(SmileHelper):
                 if "sensors" in dev_dict:
                     self.update_helper(data, dev_dict, dev_id, key, "sensors")
                     if "device_state" in dev_dict["sensors"]:
-                        state = "idle"
-                        if self.dhw_state:
-                            state = "dhw-heating"
-                        if self.heating_state:
-                            state = "heating"
-                        if self.heating_state and self.dhw_state:
-                            state = "dhw and heating"
-                        if self.cooling_state:
-                            state = "cooling"
-                        if self.cooling_state and self.dhw_state:
-                            state = "dhw and cooling"
-                        sr_list = self.gw_devices[dev_id]["sensors"]
-                        for idx, item in enumerate(sr_list):
-                            if item[ATTR_ID] == "device_state":
-                                sr_list[idx][ATTR_STATE] = state
+                        self.update_device_state(self, data, dev_dict, dev_id)
+
                 if "switches" in dev_dict:
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
 
