@@ -416,7 +416,7 @@ HEATER_CENTRAL_MEASUREMENTS = {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
     "domestic_hot_water_comfort_mode": {
-        ATTR_NAME: "dhw_comf_mode",
+        ATTR_NAME: "dhw_cm_switch",
         ATTR_UNIT_OF_MEASUREMENT: None,
     },
     "domestic_hot_water_state": {
@@ -889,7 +889,7 @@ SENSORS = [
 
 # Switches
 DHW_COMF_MODE = {
-    ATTR_ID: "dhw_comf_mode",
+    ATTR_ID: "dhw_cm_switch",
     ATTR_ENABLED: True,
     ATTR_NAME: "DHW Comfort Mode",
     ATTR_STATE: False,
