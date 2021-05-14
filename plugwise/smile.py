@@ -220,7 +220,7 @@ class Smile(SmileHelper):
             for idx, item in dev_dict["sensors"]:
                 if item[ATTR_ID] == "dhw_state":
                     if item[ATTR_STATE]:
-                        state = "heating"
+                        state = "dhw-heating"
                         _dhw_state = True
         if "heating_state" in data:
             if data["heating_state"]:
