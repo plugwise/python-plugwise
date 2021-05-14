@@ -106,11 +106,11 @@ class GW_B_Sensor:
             if key != "binary_sensors":
                 continue
 
-            for bs in value:
-                if bs[ATTR_ID] != self._binary_sensor:
+            for idx, item in enumerate(data["binary_sensors"]):
+                if item[ATTR_ID] != self._binary_sensor:
                     continue
 
-                self._is_on = bs[ATTR_STATE]
+                self._is_on = item[ATTR_STATE]
                 if self._binary_sensor == "dhw_state":
                     self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
                 if (
@@ -315,12 +315,12 @@ class GW_Sensor:
             if key != "sensors":
                 continue
 
-            for sens in value:
-                if sens[ATTR_ID] != self._sensor:
+            for idx, item in enumerate(data["sensors"]):
+                if item[ATTR_ID] != self._sensor:
                     continue
 
-                self._state = sens[ATTR_STATE]
-                self._icon = sens[ATTR_ICON]
+                self._state = item[ATTR_STATE]
+                self._icon = item[ATTR_ICON]
                 if self._sensor == DEVICE_STATE:
                     self._icon = IDLE_ICON
                     if sens[ATTR_STATE] == "dhw-heating":
@@ -330,6 +330,6 @@ class GW_Sensor:
                     if sens[ATTR_STATE] == "dhw and heating":
                         self._icon = HEATING_ICON
                     if sens[ATTR_STATE] == "COOLING_ICON":
-                        self._icon = IDLE_ICON
+                        self._icon = COOLING_ICON
                     if sens[ATTR_STATE] == "dhw and cooling":
-                        self._icon = IDLE_ICON
+                        self._icon = COOLING_ICON
