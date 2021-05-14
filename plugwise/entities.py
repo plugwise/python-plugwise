@@ -292,16 +292,10 @@ class GW_Sensor:
     def __init__(self, api, dev_id, sensor):
         """Initialize the Thermostat."""
         self._api = api
-        self._cooling_state = None
         self._dev_id = dev_id
-        self._heating_state = None
         self._icon = None
         self._sensor = sensor
         self._state = None
-
-        self._active_device = self._api.active_device_present
-        self._heater_id = self._api.heater_id
-        self._sm_thermostat = self._api.single_master_thermostat()
 
     @property
     def icon(self):
@@ -328,52 +322,14 @@ class GW_Sensor:
                 self._state = sens[ATTR_STATE]
                 self._icon = sens[ATTR_ICON]
                 if self._sensor == DEVICE_STATE:
-                    self._state = "idle"
                     self._icon = IDLE_ICON
-                    if self._active_device:
-                        hc_data = self._api.get_device_data(self._heater_id)
-                        if not self._sm_thermostat:
-                            self._cooling_state = hc_data.get("cooling_state")
-                            self._heating_state = hc_data.get("heating_state")
-                            if self._heating_state:
-                                self._state = "heating"
-                                self._icon = HEATING_ICON
-                            if self._cooling_state:
-                                self._state = "cooling"
-                                self._icon = COOLING_ICON
-
-
-class GW_Switch:
-    """Represent an external Auxiliary Device."""
-
-    def __init__(self, api, dev_id, switch):
-        """Initialize the Thermostat."""
-        self._api = api
-        self._dev_id = dev_id
-        self._icon = None
-        self._switch = switch
-        self._state = None
-
-    #    @property
-    #    def icon(self):
-    #        """Gateway switch icon."""
-    #        return self._icon
-
-    @property
-    def is_on(self):
-        """Gateway switch state."""
-        return self._is_on
-
-    def update_data(self):
-        """Handle update callbacks."""
-        data = self._api.gw_devices[self._dev_id]
-
-        for key, value in data.items():
-            if key != "switches":
-                continue
-
-            for switch in value:
-                if switch[ATTR_ID] != self._switch:
-                    continue
-
-                self._is_on = switch[ATTR_STATE]
+                    if sens[ATTR_STATE] == "dhw-heating":
+                        self._icon = HEATING_ICON                    
+                    if sens[ATTR_STATE] == "heating":
+                        self._icon = HEATING_ICON
+                    if sens[ATTR_STATE] == "dhw and heating":
+                        self._icon = HEATING_ICON
+                    if sens[ATTR_STATE] == "COOLING_ICON":
+                        self._icon = IDLE_ICON
+                    if sens[ATTR_STATE] == "dhw and cooling":
+                         self._icon = IDLE_ICON
