@@ -1084,7 +1084,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test Adam with Anna and heating and domestic_hot_water heating at the same time."""
         testdata = {
             # Central
-            "2743216f626f43948deec1f7ab3b3d70": {,
+            "2743216f626f43948deec1f7ab3b3d70": {
                 "cooling_state": True,
             },
         }
