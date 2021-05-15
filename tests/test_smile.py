@@ -1081,7 +1081,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new_copy_cooling(self):
-        """Test Adam with Anna and heating and domestic_hot_water heating at the same time."""
+        """Test Adam with Anna and cooling."""
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
@@ -1090,6 +1090,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
 
         self.smile_setup = "adam_plus_anna_new_copy_cooling"
+        server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
 
