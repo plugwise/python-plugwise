@@ -281,7 +281,7 @@ class GW_Sensor:
                 if self._sensor == "device_state":
                     self._icon = IDLE_ICON
                     if item[ATTR_STATE] == "dhw-heating":
-                        self._icon = HEATING_ICON
+                        self._icon = FLAME_ICON
                     if item[ATTR_STATE] == "heating":
                         self._icon = HEATING_ICON
                     if item[ATTR_STATE] == "dhw and heating":
