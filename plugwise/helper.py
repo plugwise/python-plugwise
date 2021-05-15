@@ -139,6 +139,7 @@ class SmileHelper:
         self.modules = None
 
         self.appl_data = {}
+        self.active_device_present = None
         self.gateway_id = None
         self.heater_id = None
         self.notifications = {}
