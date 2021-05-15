@@ -1061,6 +1061,26 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new_copy_dhw_and_heating(self):
+        """Test Adam with Anna and heating and domestic_hot_water heating at the same time."""
+        testdata = {
+            # Central
+            "2743216f626f43948deec1f7ab3b3d70": {
+                "dhw_state": True,
+                "heating_state" = True,
+            },
+        }
+
+        self.smile_setup = "adam_plus_anna_new_copy_dhw_and_heating"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
