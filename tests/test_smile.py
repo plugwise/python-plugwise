@@ -364,6 +364,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
+        smile.get_all_devices()
         device_list = smile.devices
         self._write_json("get_all_devices", device_list)
         self._write_json("notifications", smile.notifications)
