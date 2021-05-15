@@ -95,7 +95,9 @@ class GW_B_Sensor:
                                 msg_type = "other"
 
                             self._attributes[f"{msg_type.upper()}_msg"].append(msg)
-                            self._notification[notify_id].append(f"{msg_type.title()}: {msg}")
+                            self._notification[notify_id].append(
+                                f"{msg_type.title()}: {msg}"
+                            )
 
 
 class GW_Thermostat:
