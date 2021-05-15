@@ -57,7 +57,7 @@ class GW_B_Sensor:
     @property
     def notification(self):
         """Plugwise Notification message."""
-        return self._message
+        return self._notification
 
     def update_data(self):
         """Handle update callbacks."""
