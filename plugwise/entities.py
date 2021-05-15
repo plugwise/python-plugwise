@@ -37,7 +37,7 @@ class GW_B_Sensor:
         self._attributes = {}
         self._icon = None
         self._is_on = False
-        self._message = None
+        self._notification = []
 
     @property
     def extra_state_attributes(self):
@@ -85,7 +85,7 @@ class GW_B_Sensor:
 
                 self._icon = NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
                 notify = self._api.notifications
-                self._message = None
+                self._message = []
                 for severity in SEVERITIES:
                     self._attributes[f"{severity.upper()}_msg"] = []
                 if notify != {}:
@@ -95,11 +95,7 @@ class GW_B_Sensor:
                                 msg_type = "other"
 
                             self._attributes[f"{msg_type.upper()}_msg"].append(msg)
-                            self._message = (
-                                f"{msg_type.title()}: {msg}",
-                                "Plugwise Notification:",
-                                f"plugwise.{notify_id}",
-                            )
+                            self._notification[notify_id].append(f"{msg_type.title()}: {msg}")
 
 
 class GW_Thermostat:
