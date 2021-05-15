@@ -497,6 +497,7 @@ SMILES = {
 ATTR_ENABLED = "enabled_default"
 ATTR_ID = "id"
 ATTR_ICON = "icon"
+TEMP_CELSIUS
 TEMP_KELVIN = "°K"
 UNIT = "unit"
 UNIT_LUMEN = "lm"
@@ -561,7 +562,7 @@ BATTERY = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "battery",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
 }
 CURRENT_TEMP = {
     ATTR_ID: "temperature",
@@ -570,7 +571,7 @@ CURRENT_TEMP = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
 DEVICE_STATE = {
     ATTR_ID: "device_state",
@@ -750,7 +751,7 @@ ILLUMINANCE = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "illuminance",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN,
 }
 INTENDED_BOILER_TEMP = {
     ATTR_ID: "intended_boiler_temperature",
@@ -759,7 +760,7 @@ INTENDED_BOILER_TEMP = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
 MOD_LEVEL = {
     ATTR_ID: "modulation_level",
@@ -795,7 +796,7 @@ OUTDOOR_TEMP = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
 RETURN_TEMP = {
     ATTR_ID: "return_temperature",
@@ -804,7 +805,7 @@ RETURN_TEMP = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
 TARGET_TEMP = {
     ATTR_ID: "setpoint",
@@ -813,7 +814,7 @@ TARGET_TEMP = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
 TEMP_DIFF = {
     ATTR_ID: "temperature_difference",
@@ -840,7 +841,7 @@ WATER_PRESSURE = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "pressure",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
 }
 WATER_TEMP = {
     ATTR_ID: "water_temperature",
@@ -849,7 +850,7 @@ WATER_TEMP = {
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: None,
+    ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
 SENSORS = [
     BATTERY,
