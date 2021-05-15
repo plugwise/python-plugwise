@@ -1067,7 +1067,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "dhw_state": True,
-                "heating_state" = True,
+                "heating_state": True,
             },
         }
 
