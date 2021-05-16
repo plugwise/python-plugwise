@@ -2,14 +2,11 @@
 import asyncio
 
 from .constants import (
-    ATTR_ICON,
     ATTR_ID,
     ATTR_STATE,
-    COOLING_ICON,
     FLAME_ICON,
     FLOW_OFF_ICON,
     FLOW_ON_ICON,
-    HEATING_ICON,
     HVAC_MODE_AUTO,
     HVAC_MODE_HEAT,
     HVAC_MODE_HEAT_COOL,
