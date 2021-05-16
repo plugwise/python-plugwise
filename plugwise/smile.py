@@ -283,12 +283,8 @@ class Smile(SmileHelper):
                 for idx, item in enumerate(dev_dict["sensors"]):
                     if item[ATTR_ID] == "device_state":
                         result = self.update_device_state(data, dev_dict)
-                        self.gw_devices[dev_id]["sensors"][idx][
-                            ATTR_STATE
-                        ] = result[0]
-                        self.gw_devices[dev_id]["sensors"][idx][
-                            ATTR_ICON
-                        ] = result[1]
+                        self.gw_devices[dev_id]["sensors"][idx][ATTR_STATE] = result[0]
+                        self.gw_devices[dev_id]["sensors"][idx][ATTR_ICON] = result[1]
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "switches")

@@ -241,4 +241,3 @@ class GW_Thermostat:
         if self._selected_schema:
             attributes["selected_schema"] = self._selected_schema
         self._extra_state_attributes = attributes
-
