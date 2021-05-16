@@ -16,11 +16,15 @@ from .constants import (
     ATTR_ID,
     ATTR_STATE,
     BINARY_SENSORS,
+    COOLING_ICON,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DEVICE_STATE,
     DOMAIN_OBJECTS,
+    FLAME_ICON,
+    HEATING_ICON,
+    IDLE_ICON,
     LOCATIONS,
     MODULES,
     NOTIFICATIONS,
@@ -215,27 +219,33 @@ class Smile(SmileHelper):
         _dhw_state = False
         _heating_state = False
         state = "idle"
+        icon = IDLE_ICON
 
         for idx, item in enumerate(dev_dict["binary_sensors"]):
             if item[ATTR_ID] == "dhw_state":
                 if item[ATTR_STATE]:
                     state = "dhw-heating"
+                    icon = FLAME_ICON
                     _dhw_state = True
 
         if "heating_state" in data:
             if data["heating_state"]:
                 state = "heating"
+                icon = HEATING_ICON
                 _heating_state = True
         if _heating_state and _dhw_state:
             state = "dhw and heating"
+            icon = HEATING_ICON
         if "cooling_state" in data:
             if data["cooling_state"]:
                 state = "cooling"
+                icon = COOLING_ICON
                 _cooling_state = True
         if _cooling_state and _dhw_state:
             state = "dhw and cooling"
+            icon = COOLING_ICON
 
-        return state
+        return [state, icon]
 
     def update_helper(self, data, dev_dict, dev_id, key, entity_type):
         """Helper for update_gw_devices."""
@@ -272,9 +282,13 @@ class Smile(SmileHelper):
                     self.update_helper(data, dev_dict, dev_id, key, "sensors")
                 for idx, item in enumerate(dev_dict["sensors"]):
                     if item[ATTR_ID] == "device_state":
+                        result = self.update_device_state(data, dev_dict)
                         self.gw_devices[dev_id]["sensors"][idx][
                             ATTR_STATE
-                        ] = self.update_device_state(data, dev_dict)
+                        ] = result[0]
+                        self.gw_devices[dev_id]["sensors"][idx][
+                            ATTR_ICON
+                        ] = result[1]
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
