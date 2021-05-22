@@ -289,7 +289,7 @@ class Smile(SmileHelper):
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
-        
+
         return self.gw_devices
 
     def all_device_data(self):
