@@ -407,12 +407,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "%s",
                         "- Testing data for device {} ({})".format(
                             details["name"], dev_id
-                        ),
+                        )
                     )
                     _LOGGER.info("  + Device data: %s", data)
                     if data["class"] in MASTER_THERMOSTATS:
                         thermostat = pw_entities.GW_Thermostat(smile, dev_id)
                         thermostat.update_data()
+                        _LOGGER.info(
+                            "%s",
+                            "Thermostat properties for {}: {}".format(
+                                dev_id, [i for i in dir(thermostat) if not callable(i)]
+                            )
+                        )
                     if "binary_sensors" in data:
                         for idx, b_dict in enumerate(data["binary_sensors"]):
                             b_sensor = pw_entities.GW_B_Sensor(smile, dev_id, b_dict["id"] )
@@ -431,6 +437,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         assert a_item["state"] == b_item["state"]
                         else:
                             assert data[measure_key] == measure_assert
+                            if measure_key == "setpoint":
+                                assert thermostat.target_temperature = measure_assert
+                            if measure_key == "temperature":
+                                assert thermostat.current_temperature = measure_assert
 
     @pytest.mark.asyncio
     async def tinker_switch(
