@@ -438,9 +438,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         else:
                             assert data[measure_key] == measure_assert
                             if measure_key == "setpoint":
-                                assert thermostat.target_temperature = measure_assert
+                                assert thermostat.target_temperature == measure_assert
                             if measure_key == "temperature":
-                                assert thermostat.current_temperature = measure_assert
+                                assert thermostat.current_temperature == measure_assert
 
     @pytest.mark.asyncio
     async def tinker_switch(
