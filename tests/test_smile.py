@@ -415,7 +415,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         thermostat.update_data()
                         _LOGGER.info(
                             "%s",
-                            "Thermostat properties for {}: {}".format(
+                            "Thermostat properties for {}:\n{}".format(
                                 dev_id, pp4.pformat(thermostat.__dict__)
                             )
                         )
