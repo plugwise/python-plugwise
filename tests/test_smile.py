@@ -391,11 +391,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "%s",
                 "Device {} id:{}\nDetails: {}".format(
                     details["name"], dev_id, pp4.pformat(details)
-                ),
+                )
             )
-            if details["class"] in MASTER_THERMOSTATS:
-                thermostat = pw_entities.GW_Thermostat(smile, dev_id)
-                thermostat.update_data()
 
         for testdevice, measurements in testdata.items():
             assert testdevice in device_list
@@ -413,6 +410,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         ),
                     )
                     _LOGGER.info("  + Device data: %s", data)
+                    if data["class"] in MASTER_THERMOSTATS:
+                        thermostat = pw_entities.GW_Thermostat(smile, dev_id)
+                        thermostat.update_data()
+                    if "binary_sensors" in data:
+                        for idx, b_dict in enumerate(data["binary_sensors"]):
+                            b_sensor = pw_entities.GW_B_Sensor(smile, dev_id, b_dict["id"] )
+                            b_sensor.update_data()
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
