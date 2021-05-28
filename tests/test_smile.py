@@ -416,7 +416,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         _LOGGER.info(
                             "%s",
                             "Thermostat properties for {}: {}".format(
-                                dev_id, [i for i in dir(thermostat) if not callable(i)]
+                                dev_id, thermostat.__dict__
                             )
                         )
                     if "binary_sensors" in data:
