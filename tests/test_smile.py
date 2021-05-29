@@ -493,7 +493,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     == measure_assert
                                 )
 
-
     @pytest.mark.asyncio
     async def tinker_switch(
         self, smile, dev_id=None, members=None, model="relay", unhappy=False
