@@ -402,6 +402,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
+                    thermostat = None
+                    b_sensor = None
                     data = smile.gw_devices[dev_id]
                     _LOGGER.info(
                         "%s",
@@ -435,32 +437,32 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 for b, b_item in enumerate(measure_assert):
                                     if a_item["id"] == b_item["id"]:
                                         assert a_item["state"] == b_item["state"]
-                                        if measure_key == "setpoint":
+                                        if thermostat is not None and measure_key == "setpoint":
                                             assert thermostat.target_temperature == measure_assert
-                                        if measure_key == "temperature":
+                                        if thermostat is not None and measure_key == "temperature":
                                             assert thermostat.current_temperature == measure_assert
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
-                            if measure_key == "compressor_state":
+                            if thermostat is not None and measure_key == "compressor_state":
                                 assert thermostat.compressor_state == measure_assert
-                            if measure_key == "cooling_state":
+                            if thermostat is not None and measure_key == "cooling_state":
                                 assert thermostat.cooling_state == measure_assert
-                            if measure_key == "heating_state":
+                            if thermostat is not None and measure_key == "heating_state":
                                 assert thermostat.heating_state == measure_assert
-                            if measure_key == "hvac_mode":
+                            if thermostat is not None and measure_key == "hvac_mode":
                                 assert thermostat.hvac_mode == measure_assert
-                            if measure_key == "presets":
+                            if thermostat is not None and measure_key == "presets":
                                 assert thermostat.presets == measure_assert
-                            if measure_key == "preset_mode":
+                            if thermostat is not None and measure_key == "preset_mode":
                                 assert thermostat.preset_mode == measure_assert
-                            if measure_key == "preset_modes":
+                            if thermostat is not None and measure_key == "preset_modes":
                                 assert thermostat.preset_modes == measure_assert
-                            if measure_key == "last_used":
+                            if thermostat is not None and measure_key == "last_used":
                                 assert thermostat.last_active_schema == measure_assert
-                            if measure_key == "schedule_temperature":
+                            if thermostat is not None and measure_key == "schedule_temperature":
                                 assert thermostat.schedule_temperature == measure_assert
-                            if measure_key == "attributes":
+                            if thermostat is not None and measure_key == "attributes":
                                 assert thermostat.extra_state_attributes == measure_assert
 
     @pytest.mark.asyncio
