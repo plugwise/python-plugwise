@@ -824,6 +824,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "heating_state": True,
+                "binary_sensors": [{"id": "flame_state", "state": True, "icon": pw_constants.FLAME_ICON}],
                 "sensors": [
                     {"id": "water_pressure", "state": 2.1},
                     {"id": "water_temperature", "state": 52.0},
@@ -1042,6 +1043,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "heating_state": False,
+                "binary_sensors": [{"id": "flame_state", "state": False, "icon": pw_constants.IDLE_ICON}]
             },
             "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
                 "sensors": [{"id": "outdoor_temperature", "state": 11.9}]
