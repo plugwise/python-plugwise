@@ -364,6 +364,37 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
+
+        def thermostat_switcher(arg, thermostat):
+            if thermostat is None:
+                return False
+
+            switcher = {
+                "compressor_state": thermostat.compressor_state,
+                "cooling_state": thermostat.cooling_state,
+                "heating_state": thermostat.heating_state,
+                "hvac_mode": thermostat.hvac_mode,
+                "presets": thermostat.presets,
+                "active_preset": thermostat.preset_mode,
+                "preset_modes": thermostat.preset_modes,
+                "last_used": thermostat.last_active_schema,
+                "schedule_temperature": thermostat.schedule_temperature,
+                "attributes": thermostat.extra_state_attributes,
+            }
+            return switcher.get(arg)
+
+        def binary_switcher(arg, b_sensor):
+            if b_sensor is None:
+                return False
+
+            switcher = {
+                "attributes": b_sensor.extra_state_attributes,
+                "icon": b_sensor.icon,
+                "state": b_sensor.is_on,
+                "notification": b_sensor.notification,
+            }
+            return switcher.get(arg)
+
         _LOGGER.info("Asserting testdata:")
         MASTER_THERMOSTATS = [
             "thermostat",
@@ -437,86 +468,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         if measure_key in bsw_lists:
                             for a, a_item in enumerate(data[measure_key]):
                                 for b, b_item in enumerate(measure_assert):
-                                    if a_item["id"] == b_item["id"]:
-                                        assert a_item["state"] == b_item["state"]
-                                        if (
-                                            thermostat is not None
-                                            and measure_key == "setpoint"
-                                        ):
-                                            assert (
-                                                thermostat.target_temperature
-                                                == measure_assert
-                                            )
-                                        if (
-                                            thermostat is not None
-                                            and measure_key == "temperature"
-                                        ):
-                                            assert (
-                                                thermostat.current_temperature
-                                                == measure_assert
-                                            )
-                                        if (
-                                            b_sensor is not None
-                                            and measure_key == "attributes"
-                                        ):
-                                            assert (
-                                                b_sensor.extra_state_attributes
-                                                == measure_assert
-                                            )
-                                        if (
-                                            b_sensor is not None
-                                            and measure_key == "state"
-                                        ):
-                                            assert b_sensor.is_on == measure_assert
-                                        if (
-                                            b_sensor is not None
-                                            and measure_key == "icon"
-                                        ):
-                                            assert b_sensor.icon == measure_assert
-                                        if (
-                                            b_sensor is not None
-                                            and measure_key == "notification"
-                                        ):
-                                            assert (
-                                                b_sensor.notification == measure_assert
-                                            )
+                                    if a_item["id"] != b_item["id"]:
+                                        continue
+
+                                    assert a_item["state"] == b_item["state"]
+                                    if thermostat_switcher(measure_key, thermostat):
+                                        assert thermostat_switcher(measure_key, thermostat) == measure_assert
+                                    if binary_switcher(measure_key, b_sensor):
+                                        assert thermostat_switcher(measure_key, b_sensor) == measure_assert
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
-                            if (
-                                thermostat is not None
-                                and measure_key == "compressor_state"
-                            ):
-                                assert thermostat.compressor_state == measure_assert
-                            if (
-                                thermostat is not None
-                                and measure_key == "cooling_state"
-                            ):
-                                assert thermostat.cooling_state == measure_assert
-                            if (
-                                thermostat is not None
-                                and measure_key == "heating_state"
-                            ):
-                                assert thermostat.heating_state == measure_assert
-                            if thermostat is not None and measure_key == "hvac_mode":
-                                assert thermostat.hvac_mode == measure_assert
-                            if thermostat is not None and measure_key == "presets":
-                                assert thermostat.presets == measure_assert
-                            if thermostat is not None and measure_key == "preset_mode":
-                                assert thermostat.preset_mode == measure_assert
-                            if thermostat is not None and measure_key == "preset_modes":
-                                assert thermostat.preset_modes == measure_assert
-                            if thermostat is not None and measure_key == "last_used":
-                                assert thermostat.last_active_schema == measure_assert
-                            if (
-                                thermostat is not None
-                                and measure_key == "schedule_temperature"
-                            ):
-                                assert thermostat.schedule_temperature == measure_assert
-                            if thermostat is not None and measure_key == "attributes":
-                                assert (
-                                    thermostat.extra_state_attributes == measure_assert
-                                )
+                            if thermostat_switcher(measure_key, thermostat):
+                                assert thermostat_switcher(measure_key, thermostat) == measure_assert
 
     @pytest.mark.asyncio
     async def tinker_switch(
