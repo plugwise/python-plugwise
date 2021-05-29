@@ -457,10 +457,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 assert thermostat.preset_modes == measure_assert
                             if measure_key == "last_used":
                                 assert thermostat.last_active_schema == measure_assert
-                            if measure_key == "setpoint":
-                                assert thermostat.target_temperature == measure_assert
-                            if measure_key == "temperature":
-                                assert thermostat.current_temperature == measure_assert
                             if measure_key == "schedule_temperature":
                                 assert thermostat.schedule_temperature == measure_assert
                             if measure_key == "attributes":
