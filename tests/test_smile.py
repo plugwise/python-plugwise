@@ -455,12 +455,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 dev_id, pp4.pformat(thermostat.__dict__)
                             ),
                         )
-                    if "binary_sensors" in data:
-                        for idx, b_dict in enumerate(data["binary_sensors"]):
-                            b_sensor = pw_entities.GW_B_Sensor(
-                                smile, dev_id, b_dict["id"]
-                            )
-                            b_sensor.update_data()
+
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
@@ -484,6 +479,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                             )
                                             == b_item["state"]
                                         )
+                                    if measure_key == "binary_sensors":
+                                        b_sensor = pw_entities.GW_B_Sensor(
+                                            smile, dev_id, b_item["id"]
+                                        )
+                                        b_sensor.update_data()
                                     if self.binary_switcher(a_item["id"], b_sensor):
                                         assert (
                                             self.binary_switcher(a_item["id"], b_sensor)
