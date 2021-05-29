@@ -391,7 +391,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "%s",
                 "Device {} id:{}\nDetails:\n{}".format(
                     details["name"], dev_id, pp4.pformat(details)
-                )
+                ),
             )
 
         for testdevice, measurements in testdata.items():
@@ -409,7 +409,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "%s",
                         "- Testing data for device {} ({})".format(
                             details["name"], dev_id
-                        )
+                        ),
                     )
                     _LOGGER.info("  + Device data: %s", data)
                     if data["class"] in MASTER_THERMOSTATS:
@@ -419,11 +419,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             "%s",
                             "Thermostat properties for {}:\n{}".format(
                                 dev_id, pp4.pformat(thermostat.__dict__)
-                            )
+                            ),
                         )
                     if "binary_sensors" in data:
                         for idx, b_dict in enumerate(data["binary_sensors"]):
-                            b_sensor = pw_entities.GW_B_Sensor(smile, dev_id, b_dict["id"] )
+                            b_sensor = pw_entities.GW_B_Sensor(
+                                smile, dev_id, b_dict["id"]
+                            )
                             b_sensor.update_data()
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
@@ -437,26 +439,64 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 for b, b_item in enumerate(measure_assert):
                                     if a_item["id"] == b_item["id"]:
                                         assert a_item["state"] == b_item["state"]
-                                        if thermostat is not None and measure_key == "setpoint":
-                                            assert thermostat.target_temperature == measure_assert
-                                        if thermostat is not None and measure_key == "temperature":
-                                            assert thermostat.current_temperature == measure_assert
-                                        if b_sensor is not None and measure_key == "attributes":
-                                            assert b_sensor.extra_state_attributes == measure_assert
-                                        if b_sensor is not None and measure_key == "state":
+                                        if (
+                                            thermostat is not None
+                                            and measure_key == "setpoint"
+                                        ):
+                                            assert (
+                                                thermostat.target_temperature
+                                                == measure_assert
+                                            )
+                                        if (
+                                            thermostat is not None
+                                            and measure_key == "temperature"
+                                        ):
+                                            assert (
+                                                thermostat.current_temperature
+                                                == measure_assert
+                                            )
+                                        if (
+                                            b_sensor is not None
+                                            and measure_key == "attributes"
+                                        ):
+                                            assert (
+                                                b_sensor.extra_state_attributes
+                                                == measure_assert
+                                            )
+                                        if (
+                                            b_sensor is not None
+                                            and measure_key == "state"
+                                        ):
                                             assert b_sensor.is_on == measure_assert
-                                        if b_sensor is not None and measure_key == "icon":
+                                        if (
+                                            b_sensor is not None
+                                            and measure_key == "icon"
+                                        ):
                                             assert b_sensor.icon == measure_assert
-                                        if b_sensor is not None and measure_key == "notification":
-                                            assert b_sensor.notification == measure_assert
+                                        if (
+                                            b_sensor is not None
+                                            and measure_key == "notification"
+                                        ):
+                                            assert (
+                                                b_sensor.notification == measure_assert
+                                            )
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
-                            if thermostat is not None and measure_key == "compressor_state":
+                            if (
+                                thermostat is not None
+                                and measure_key == "compressor_state"
+                            ):
                                 assert thermostat.compressor_state == measure_assert
-                            if thermostat is not None and measure_key == "cooling_state":
+                            if (
+                                thermostat is not None
+                                and measure_key == "cooling_state"
+                            ):
                                 assert thermostat.cooling_state == measure_assert
-                            if thermostat is not None and measure_key == "heating_state":
+                            if (
+                                thermostat is not None
+                                and measure_key == "heating_state"
+                            ):
                                 assert thermostat.heating_state == measure_assert
                             if thermostat is not None and measure_key == "hvac_mode":
                                 assert thermostat.hvac_mode == measure_assert
@@ -468,10 +508,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 assert thermostat.preset_modes == measure_assert
                             if thermostat is not None and measure_key == "last_used":
                                 assert thermostat.last_active_schema == measure_assert
-                            if thermostat is not None and measure_key == "schedule_temperature":
+                            if (
+                                thermostat is not None
+                                and measure_key == "schedule_temperature"
+                            ):
                                 assert thermostat.schedule_temperature == measure_assert
                             if thermostat is not None and measure_key == "attributes":
-                                assert thermostat.extra_state_attributes == measure_assert
+                                assert (
+                                    thermostat.extra_state_attributes == measure_assert
+                                )
 
     @pytest.mark.asyncio
     async def tinker_switch(
@@ -592,18 +637,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
-                "attributes": {'available_schemas': ['Thermostat schedule'], 'selected_schema': 'Thermostat schedule'},
-                'last_used': 'Thermostat schedule',
-                'presets': {
-                    'asleep': [19.0, 0],
-                    'away': [19.0, 0],
-                    'home': [20.0, 0],
-                    'no_frost': [10.0, 0],
-                    'vacation': [15.0, 0]
+                "attributes": {
+                    "available_schemas": ["Thermostat schedule"],
+                    "selected_schema": "Thermostat schedule",
                 },
-                'preset_mode': 'home',
-                'preset_modes': ['away', 'vacation', 'asleep', 'home', 'no_frost'],
-                'schedule_temperature': 20.0,
+                "last_used": "Thermostat schedule",
+                "presets": {
+                    "asleep": [19.0, 0],
+                    "away": [19.0, 0],
+                    "home": [20.0, 0],
+                    "no_frost": [10.0, 0],
+                    "vacation": [15.0, 0],
+                },
+                "preset_mode": "home",
+                "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
+                "schedule_temperature": 20.0,
                 "sensors": [
                     {"id": "illuminance", "state": 151},
                     {"id": "setpoint", "state": 20.5},
@@ -824,7 +872,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "heating_state": True,
-                "binary_sensors": [{"id": "flame_state", "state": True, "icon": pw_constants.FLAME_ICON}],
+                "binary_sensors": [
+                    {
+                        "id": "flame_state",
+                        "state": True,
+                        "icon": pw_constants.FLAME_ICON,
+                    }
+                ],
                 "sensors": [
                     {"id": "water_pressure", "state": 2.1},
                     {"id": "water_temperature", "state": 52.0},
@@ -1043,7 +1097,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "heating_state": False,
-                "binary_sensors": [{"id": "flame_state", "state": False, "icon": pw_constants.IDLE_ICON}]
+                "binary_sensors": [
+                    {
+                        "id": "flame_state",
+                        "state": False,
+                        "icon": pw_constants.IDLE_ICON,
+                    }
+                ],
             },
             "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
                 "sensors": [{"id": "outdoor_temperature", "state": 11.9}]
@@ -1107,7 +1167,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}]
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": True,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ]
             },
             # Test Switch
             "b83f9f9758064c0fab4af6578cba4c6d": {
@@ -1158,7 +1224,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "heating_state": True,
-                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}]
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": True,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ],
             }
         }
 
@@ -1195,7 +1267,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "cooling_state": True,
-                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}]
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": True,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ],
             }
         }
 
@@ -1554,7 +1632,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "binary_sensors": [{"id": "dhw_state", "state": False, "icon": pw_constants.FLOW_OFF_ICON}],
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": False,
+                        "icon": pw_constants.FLOW_OFF_ICON,
+                    }
+                ],
                 "sensors": [
                     {"id": "water_temperature", "state": 29.1},
                     {"id": "water_pressure", "state": 1.57},
@@ -1600,7 +1684,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "binary_sensors": [{"id": "dhw_state", "state": False, "icon": pw_constants.FLOW_ON_ICON}],
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": False,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ],
                 "sensors": [
                     {"id": "water_temperature", "state": 24.7},
                     {"id": "water_pressure", "state": 1.61},
