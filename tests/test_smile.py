@@ -367,6 +367,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return False
 
         switcher = {
+            "attributes": thermostat.extra_state_attributes,
             "compressor_state": thermostat.compressor_state,
             "cooling_state": thermostat.cooling_state,
             "heating_state": thermostat.heating_state,
@@ -376,7 +377,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "preset_modes": thermostat.preset_modes,
             "last_used": thermostat.last_active_schema,
             "schedule_temperature": thermostat.schedule_temperature,
-            "attributes": thermostat.extra_state_attributes,
+            "setpoint": thermostat.target_temperature,
+            "temperature": thermostat.current_temperature,
         }
         return switcher.get(arg)
 
