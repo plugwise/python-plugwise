@@ -582,7 +582,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
-                "attributes": {'available_schedules': ['Thermostat schedule'], 'selected_schedule': 'Thermostat schedule'},
+                "attributes": {'available_schemas': ['Thermostat schedule'], 'selected_schema': 'Thermostat schedule'},
                 'last_used': 'Thermostat schedule',
                 'presets': {
                     'asleep': [19.0, 0],
