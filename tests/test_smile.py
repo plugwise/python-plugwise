@@ -473,9 +473,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         continue
 
                                     assert a_item["state"] == b_item["state"]
-                                    if self.thermostat_switcher(measure_key, thermostat):
+                                    if self.thermostat_switcher(
+                                        measure_key, thermostat
+                                    ):
                                         assert (
-                                            self.thermostat_switcher(measure_key, thermostat)
+                                            self.thermostat_switcher(
+                                                measure_key, thermostat
+                                            )
                                             == measure_assert
                                         )
                                     if self.binary_switcher(measure_key, b_sensor):
