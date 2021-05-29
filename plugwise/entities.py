@@ -89,7 +89,7 @@ class GW_B_Sensor:
                     for notify_id, details in notify.items():
                         for msg_type, msg in details.items():
                             if msg_type not in SEVERITIES:
-                                msg_type = "other"
+                                msg_type = "other" # pragma: no cover
 
                             self._attributes[f"{msg_type.upper()}_msg"].append(msg)
                             self._notification[notify_id] = f"{msg_type.title()}: {msg}"
@@ -215,7 +215,7 @@ class GW_Thermostat:
 
         if not self._schema_status:
             if self._preset_mode == PRESET_AWAY:
-                self._hvac_mode = HVAC_MODE_OFF
+                self._hvac_mode = HVAC_MODE_OFF # pragma: no cover
             else:
                 self._hvac_mode = HVAC_MODE_HEAT
                 if self._compressor_state is not None:
