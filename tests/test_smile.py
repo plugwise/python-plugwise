@@ -486,9 +486,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         )
                                     if self.binary_switcher(a_item["id"], b_sensor):
                                         assert (
-                                            self.binary_switcher(
-                                                a_item["id"], b_sensor
-                                            )
+                                            self.binary_switcher(a_item["id"], b_sensor)
                                             == b_item["state"]
                                         )
                         else:
