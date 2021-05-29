@@ -1303,6 +1303,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Adam
             "fe799307f1624099878210aa0b9f1475": {
                 "heating_state": False,
+                "binary_sensors": [
+                       {"id": "plugwise_notification", "state": True, "icon": pw_entities.NOTIFICATION_ICON}
+                ],
                 "sensors": [
                     {"id": "outdoor_temperature", "state": 7.69},
                 ],
