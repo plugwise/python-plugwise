@@ -484,6 +484,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                             smile, dev_id, a_item["id"]
                                         )
                                         b_sensor.update_data()
+                                        if self.binary_switcher(
+                                            a_item["state"], b_sensor
+                                        ):
+                                            assert (
+                                                self.binary_switcher(
+                                                    a_item["state"], b_sensor
+                                                )
+                                                == b_item["state"]
+                                            )
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
