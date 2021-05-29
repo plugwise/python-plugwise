@@ -361,40 +361,41 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if device_count == 0:
                 _LOGGER.info("      ! no devices found in this location")
 
+    @staticmethod
+    def thermostat_switcher(arg, thermostat):
+        if thermostat is None:
+            return False
+
+        switcher = {
+            "compressor_state": thermostat.compressor_state,
+            "cooling_state": thermostat.cooling_state,
+            "heating_state": thermostat.heating_state,
+            "hvac_mode": thermostat.hvac_mode,
+            "presets": thermostat.presets,
+            "active_preset": thermostat.preset_mode,
+            "preset_modes": thermostat.preset_modes,
+            "last_used": thermostat.last_active_schema,
+            "schedule_temperature": thermostat.schedule_temperature,
+            "attributes": thermostat.extra_state_attributes,
+        }
+        return switcher.get(arg)
+
+    @staticmethod
+    def binary_switcher(arg, b_sensor):
+        if b_sensor is None:
+            return False
+
+        switcher = {
+            "attributes": b_sensor.extra_state_attributes,
+            "icon": b_sensor.icon,
+            "state": b_sensor.is_on,
+            "notification": b_sensor.notification,
+        }
+        return switcher.get(arg)
+
     @pytest.mark.asyncio
     async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
-
-        def thermostat_switcher(arg, thermostat):
-            if thermostat is None:
-                return False
-
-            switcher = {
-                "compressor_state": thermostat.compressor_state,
-                "cooling_state": thermostat.cooling_state,
-                "heating_state": thermostat.heating_state,
-                "hvac_mode": thermostat.hvac_mode,
-                "presets": thermostat.presets,
-                "active_preset": thermostat.preset_mode,
-                "preset_modes": thermostat.preset_modes,
-                "last_used": thermostat.last_active_schema,
-                "schedule_temperature": thermostat.schedule_temperature,
-                "attributes": thermostat.extra_state_attributes,
-            }
-            return switcher.get(arg)
-
-        def binary_switcher(arg, b_sensor):
-            if b_sensor is None:
-                return False
-
-            switcher = {
-                "attributes": b_sensor.extra_state_attributes,
-                "icon": b_sensor.icon,
-                "state": b_sensor.is_on,
-                "notification": b_sensor.notification,
-            }
-            return switcher.get(arg)
-
         _LOGGER.info("Asserting testdata:")
         MASTER_THERMOSTATS = [
             "thermostat",
@@ -472,22 +473,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         continue
 
                                     assert a_item["state"] == b_item["state"]
-                                    if thermostat_switcher(measure_key, thermostat):
+                                    if self.thermostat_switcher(measure_key, thermostat):
                                         assert (
-                                            thermostat_switcher(measure_key, thermostat)
+                                            self.thermostat_switcher(measure_key, thermostat)
                                             == measure_assert
                                         )
-                                    if binary_switcher(measure_key, b_sensor):
+                                    if self.binary_switcher(measure_key, b_sensor):
                                         assert (
-                                            thermostat_switcher(measure_key, b_sensor)
+                                            self.binary_switcher(measure_key, b_sensor)
                                             == measure_assert
                                         )
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
-                            if thermostat_switcher(measure_key, thermostat):
+                            if self.thermostat_switcher(measure_key, thermostat):
                                 assert (
-                                    thermostat_switcher(measure_key, thermostat)
+                                    self.thermostat_switcher(measure_key, thermostat)
                                     == measure_assert
                                 )
 
