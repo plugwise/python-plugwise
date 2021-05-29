@@ -473,14 +473,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
                                     assert a_item["state"] == b_item["state"]
                                     if thermostat_switcher(measure_key, thermostat):
-                                        assert thermostat_switcher(measure_key, thermostat) == measure_assert
+                                        assert (
+                                            thermostat_switcher(measure_key, thermostat)
+                                            == measure_assert
+                                        )
                                     if binary_switcher(measure_key, b_sensor):
-                                        assert thermostat_switcher(measure_key, b_sensor) == measure_assert
+                                        assert (
+                                            thermostat_switcher(measure_key, b_sensor)
+                                            == measure_assert
+                                        )
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
                             if thermostat_switcher(measure_key, thermostat):
-                                assert thermostat_switcher(measure_key, thermostat) == measure_assert
+                                assert (
+                                    thermostat_switcher(measure_key, thermostat)
+                                    == measure_assert
+                                )
 
     @pytest.mark.asyncio
     async def tinker_switch(
