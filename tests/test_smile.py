@@ -476,18 +476,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
                                     assert a_item["state"] == b_item["state"]
                                     if self.thermostat_switcher(
-                                        a_item["state"], thermostat
+                                        a_item["id"], thermostat
                                     ):
                                         assert (
                                             self.thermostat_switcher(
-                                                a_item["state"], thermostat
+                                                a_item["id"], thermostat
                                             )
                                             == b_item["state"]
                                         )
-                                    if self.binary_switcher(a_item["state"], b_sensor):
+                                    if self.binary_switcher(a_item["id"], b_sensor):
                                         assert (
                                             self.binary_switcher(
-                                                a_item["state"], b_sensor
+                                                a_item["id"], b_sensor
                                             )
                                             == b_item["state"]
                                         )
