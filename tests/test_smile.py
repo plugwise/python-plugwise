@@ -363,6 +363,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @staticmethod
     def thermostat_switcher(arg, thermostat):
+        """Helper function 1 for device_test()."""
         if thermostat is None:
             return False
 
@@ -384,9 +385,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @staticmethod
     def binary_switcher(arg, b_sensor):
-        if b_sensor is None:
-            return False
-
+        """Helper function 2 for device_test()."""
         switcher = {
             "attributes": b_sensor.extra_state_attributes,
             "icon": b_sensor.icon,
