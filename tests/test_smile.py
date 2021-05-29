@@ -441,6 +441,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                             assert thermostat.target_temperature == measure_assert
                                         if thermostat is not None and measure_key == "temperature":
                                             assert thermostat.current_temperature == measure_assert
+                                        if b_sensor is not None and measure_key == "attributes":
+                                            assert b_sensor.extra_state_attributes == measure_assert
+                                        if b_sensor is not None and measure_key == "state":
+                                            assert b_sensor.is_on == measure_assert
+                                        if b_sensor is not None and measure_key == "icon":
+                                            assert b_sensor.icon == measure_assert
+                                        if b_sensor is not None and measure_key == "notification":
+                                            assert b_sensor.notification == measure_assert
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
