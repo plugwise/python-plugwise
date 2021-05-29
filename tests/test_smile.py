@@ -1552,7 +1552,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_OFF_ICON}],
+                "binary_sensors": [{"id": "dhw_state", "state": False, "icon": pw_constants.FLOW_OFF_ICON}],
                 "sensors": [
                     {"id": "water_temperature", "state": 29.1},
                     {"id": "water_pressure", "state": 1.57},
@@ -1598,7 +1598,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}],
+                "binary_sensors": [{"id": "dhw_state", "state": False, "icon": pw_constants.FLOW_ON_ICON}],
                 "sensors": [
                     {"id": "water_temperature", "state": 24.7},
                     {"id": "water_pressure", "state": 1.61},
