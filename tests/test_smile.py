@@ -1105,7 +1105,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": [{"id": "dhw_state", "state": True}]
+                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}]
             },
             # Test Switch
             "b83f9f9758064c0fab4af6578cba4c6d": {
@@ -1156,7 +1156,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "heating_state": True,
-                "binary_sensors": [{"id": "dhw_state", "state": True}],
+                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}]
             }
         }
 
@@ -1193,7 +1193,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "cooling_state": True,
-                "binary_sensors": [{"id": "dhw_state", "state": True}],
+                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}]
             }
         }
 
@@ -1552,7 +1552,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "binary_sensors": [{"id": "dhw_state", "state": False}],
+                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_OFF_ICON}],
                 "sensors": [
                     {"id": "water_temperature", "state": 29.1},
                     {"id": "water_pressure", "state": 1.57},
@@ -1598,7 +1598,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "binary_sensors": [{"id": "dhw_state", "state": False}],
+                "binary_sensors": [{"id": "dhw_state", "state": True, "icon": pw_constants.FLOW_ON_ICON}],
                 "sensors": [
                     {"id": "water_temperature", "state": 24.7},
                     {"id": "water_pressure", "state": 1.61},
