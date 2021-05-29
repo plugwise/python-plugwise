@@ -389,7 +389,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             self._write_json("device_data/" + dev_id, data)
             _LOGGER.debug(
                 "%s",
-                "Device {} id:{}\nDetails: {}".format(
+                "Device {} id:{}\nDetails:\n{}".format(
                     details["name"], dev_id, pp4.pformat(details)
                 )
             )
@@ -435,12 +435,36 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 for b, b_item in enumerate(measure_assert):
                                     if a_item["id"] == b_item["id"]:
                                         assert a_item["state"] == b_item["state"]
+                                        if measure_key == "setpoint":
+                                            assert thermostat.target_temperature == measure_assert
+                                        if measure_key == "temperature":
+                                            assert thermostat.current_temperature == measure_assert
                         else:
                             assert data[measure_key] == measure_assert
+                            if measure_key == "compressor_state":
+                                assert thermostat.compressor_state == measure_assert
+                            if measure_key == "cooling_state":
+                                assert thermostat.cooling_state == measure_assert
+                            if measure_key == "heating_state":
+                                assert thermostat.heating_state == measure_assert
+                            if measure_key == "hvac_mode":
+                                assert thermostat.hvac_mode == measure_assert
+                            if measure_key == "presets":
+                                assert thermostat.presets == measure_assert
+                            if measure_key == "preset_mode":
+                                assert thermostat.preset_mode == measure_assert
+                            if measure_key == "preset_modes":
+                                assert thermostat.preset_modes == measure_assert
+                            if measure_key == "last_used":
+                                assert thermostat.last_active_schema == measure_assert
                             if measure_key == "setpoint":
                                 assert thermostat.target_temperature == measure_assert
                             if measure_key == "temperature":
                                 assert thermostat.current_temperature == measure_assert
+                            if measure_key == "schedule_temperature":
+                                assert thermostat.schedule_temperature == measure_assert
+                            if measure_key == "attributes":
+                                assert thermostat.extra_state_attributes == measure_assert
 
     @pytest.mark.asyncio
     async def tinker_switch(
@@ -561,6 +585,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
+                "attributes": {'available_schedules': ['Thermostat schedule'], 'selected_schedule': 'Thermostat schedule'},
+                'last_used': 'Thermostat schedule',
+                'presets': {
+                    'asleep': [19.0, 0],
+                    'away': [19.0, 0],
+                    'home': [20.0, 0],
+                    'no_frost': [10.0, 0],
+                    'vacation': [15.0, 0]
+                },
+                'preset_mode': 'home',
+                'preset_modes': ['away', 'vacation', 'asleep', 'home', 'no_frost'],
+                'schedule_temperature': 20.0,
                 "sensors": [
                     {"id": "illuminance", "state": 151},
                     {"id": "setpoint", "state": 20.5},
