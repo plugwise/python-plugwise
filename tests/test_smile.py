@@ -440,7 +440,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         if measure_key == "temperature":
                                             assert thermostat.current_temperature == measure_assert
                         else:
-                            assert data[measure_key] == measure_assert
+                            if measure_key in data:
+                                assert data[measure_key] == measure_assert
                             if measure_key == "compressor_state":
                                 assert thermostat.compressor_state == measure_assert
                             if measure_key == "cooling_state":
