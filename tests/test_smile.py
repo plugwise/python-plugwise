@@ -468,9 +468,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         continue
 
                                     assert a_item["state"] == b_item["state"]
-                                    if self.th_prop_selector(
-                                        a_item["id"], thermostat
-                                    ):
+                                    if self.th_prop_selector(a_item["id"], thermostat):
                                         assert (
                                             self.th_prop_selector(
                                                 a_item["id"], thermostat
