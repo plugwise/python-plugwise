@@ -468,13 +468,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         continue
 
                                     assert a_item["state"] == b_item["state"]
-                                    # if self.th_prop_selector(a_item["id"], thermostat):
-                                    #    assert (
-                                    #        self.th_prop_selector(
-                                    #            a_item["id"], thermostat
-                                    #        )
-                                    #        == b_item["state"]
-                                    #    )
                                     b_sensor = None
                                     if measure_key == "binary_sensors":
                                         b_sensor = pw_entities.GW_B_Sensor(
