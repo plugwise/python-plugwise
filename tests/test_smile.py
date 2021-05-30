@@ -362,8 +362,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("      ! no devices found in this location")
 
     @staticmethod
-    def thermostat_switcher(arg, thermostat):
-        """Helper function 1 for device_test()."""
+    def th_prop_selector(arg, thermostat):
+        """GW_Thermostat property selector function for device_test()."""
         if thermostat is None:
             return False
 
@@ -384,8 +384,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return switcher.get(arg)
 
     @staticmethod
-    def binary_switcher(arg, b_sensor):
-        """Helper function 2 for device_test()."""
+    def bs_prop_selector(arg, b_sensor):
+        """GW_B_Sensor property selector function for device_test()."""
         switcher = {
             "attributes": b_sensor.extra_state_attributes,
             "icon": b_sensor.icon,
@@ -468,11 +468,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         continue
 
                                     assert a_item["state"] == b_item["state"]
-                                    if self.thermostat_switcher(
+                                    if self.th_prop_selector(
                                         a_item["id"], thermostat
                                     ):
                                         assert (
-                                            self.thermostat_switcher(
+                                            self.th_prop_selector(
                                                 a_item["id"], thermostat
                                             )
                                             == b_item["state"]
@@ -484,15 +484,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         )
                                         b_sensor.update_data()
                                         assert (
-                                            self.binary_switcher("state", b_sensor)
+                                            self.bs_prop_selector("state", b_sensor)
                                             == b_item["state"]
                                         )
                         else:
                             if measure_key in data:
                                 assert data[measure_key] == measure_assert
-                            if self.thermostat_switcher(measure_key, thermostat):
+                            if self.th_prop_selector(measure_key, thermostat):
                                 assert (
-                                    self.thermostat_switcher(measure_key, thermostat)
+                                    self.th_prop_selector(measure_key, thermostat)
                                     == measure_assert
                                 )
 
