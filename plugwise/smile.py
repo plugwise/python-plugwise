@@ -291,7 +291,7 @@ class Smile(SmileHelper):
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
 
     def all_device_data(self):
-        "Collect all data for each device and add to self.gw_devices."
+        "Helper-function: collect data for each device and add to self.gw_devices."
         dev_id_list = []
         dev_and_data_list = []
         for dev_id, dev_dict in self.devices.items():
@@ -358,6 +358,7 @@ class Smile(SmileHelper):
         if group_data is not None:
             self.devices.update(group_data)
 
+        # Collect data for each device via helper function
         self.all_device_data()
 
     def device_data_switching_group(self, details, device_data):
