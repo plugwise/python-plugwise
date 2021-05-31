@@ -56,6 +56,15 @@ class GW_B_Sensor:
         """Plugwise Notification message."""
         return self._notification
 
+    def icon_selector(arg, state):
+        selector = {
+            "dhw_state": FLOW_ON_ICON if state else FLOW_OFF_ICON,
+            "flame_state": FLAME_ICON if state else IDLE_ICON,
+            "slave_boiler_state": FLAME_ICON if state else IDLE_ICON,
+            "plugwise_notification": NOTIFICATION_ICON if state else NO_NOTIFICATION_ICON,
+        }
+        return selector.get(arg)
+
     def update_data(self):
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
@@ -69,18 +78,11 @@ class GW_B_Sensor:
                     continue
 
                 self._is_on = item[ATTR_STATE]
-                if self._binary_sensor == "dhw_state":
-                    self._icon = FLOW_ON_ICON if self._is_on else FLOW_OFF_ICON
-                if (
-                    self._binary_sensor == "flame_state"
-                    or self._binary_sensor == "slave_boiler_state"
-                ):
-                    self._icon = FLAME_ICON if self._is_on else IDLE_ICON
+                self._icon = self.icon_selector(self._binary_sensor, self._is_on)
 
                 if self._binary_sensor != "plugwise_notification":
                     continue
 
-                self._icon = NOTIFICATION_ICON if self._is_on else NO_NOTIFICATION_ICON
                 notify = self._api.notifications
                 self._notification = {}
                 for severity in SEVERITIES:
