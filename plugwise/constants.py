@@ -497,7 +497,6 @@ SMILES = {
 ATTR_ENABLED = "enabled_default"
 ATTR_ID = "id"
 ATTR_ICON = "icon"
-TEMP_CELSIUS
 TEMP_KELVIN = "°K"
 UNIT = "unit"
 UNIT_LUMEN = "lm"
