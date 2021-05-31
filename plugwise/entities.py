@@ -56,6 +56,7 @@ class GW_B_Sensor:
         """Plugwise Notification message."""
         return self._notification
 
+    @staticmethod
     def icon_selector(arg, state):
         selector = {
             "dhw_state": FLOW_ON_ICON if state else FLOW_OFF_ICON,
