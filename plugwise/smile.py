@@ -271,9 +271,12 @@ class Smile(SmileHelper):
                         item[ATTR_STATE] = value
                         temp_switch_list.append(item)
             dev_and_data.update(data)
-            dev_and_data["binary_sensors"] = temp_b_sensor_list
-            dev_and_data["sensors"] = temp_sensor_list
-            dev_and_data["switches"] = temp_switch_list
+            if temp_b_sensor_list != []:
+                dev_and_data["binary_sensors"] = temp_b_sensor_list
+            if temp_sensor_list != []:
+                dev_and_data["sensors"] = temp_sensor_list
+            if temp_switch_list != []:
+                dev_and_data["switches"] = temp_switch_list
             dev_id_list.append(dev_id)
             dev_and_data_list.append(copy.deepcopy(dev_and_data))
 
