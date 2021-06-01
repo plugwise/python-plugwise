@@ -309,19 +309,28 @@ class Smile(SmileHelper):
                 temp_sensor_list.append(DEVICE_STATE)
             for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
-                    if item[ATTR_ID] == key:
-                        data.pop(key)
+                    try:
+                        data.pop(item[ATTR_ID])
+                    except KeyError:
+                        pass
+                    else:
                         if self.active_device_present:
                             item[ATTR_STATE] = value
                             temp_b_sensor_list.append(item)
                 for item in SENSORS:
-                    if item[ATTR_ID] == key:
-                        data.pop(key)
+                    try:
+                        data.pop(item[ATTR_ID])
+                    except KeyError:
+                        pass
+                    else:
                         item[ATTR_STATE] = value
                         temp_sensor_list.append(item)
                 for item in SWITCHES:
-                    if item[ATTR_ID] == key:
-                        data.pop(key)
+                    try:
+                        data.pop(item[ATTR_ID])
+                    except KeyError:
+                        pass
+                    else:
                         item[ATTR_STATE] = value
                         temp_switch_list.append(item)
             dev_and_data.update(data)
