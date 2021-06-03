@@ -215,7 +215,7 @@ class Smile(SmileHelper):
             self._modules = await self.request(MODULES)
 
     def update_device_state(self, data, dev_dict):
-        """Helper for update_helper."""
+        """Helper for device_state_updater()."""
         _cooling_state = False
         _dhw_state = False
         _heating_state = False
@@ -248,6 +248,14 @@ class Smile(SmileHelper):
 
         return [state, icon]
 
+    def device_state_updater(self, data, dev_id, dev_dict):
+        """ Device State sensor update helper."""
+        for idx, item in enumerate(dev_dict["sensors"]):
+            if item[ATTR_ID] == "device_state":
+                result = self.update_device_state(data, dev_dict)
+                self.gw_devices[dev_id]["sensors"][idx][ATTR_STATE] = result[0]
+                self.gw_devices[dev_id]["sensors"][idx][ATTR_ICON] = result[1]
+
     def update_helper(self, data, dev_dict, dev_id, key, entity_type):
         """Helper for update_gw_devices."""
         for tmp_dict in dev_dict[entity_type]:
@@ -256,6 +264,14 @@ class Smile(SmileHelper):
                 for idx, item in enumerate(gw_list):
                     if key == item[ATTR_ID]:
                         gw_list[idx][ATTR_STATE] = data[key]
+
+    def update_pw_notification(self, dev_id, dev_dict):
+        """ PW_Notification update helper."""
+        for idx, item in enumerate(dev_dict["binary_sensors"]):
+            if item[ATTR_ID] == "plugwise_notification":
+                self.gw_devices[dev_id]["binary_sensors"][idx][ATTR_STATE] = (
+                    self.notifications != {}
+                )
 
     async def update_gw_devices(self):
         """Update all XML data from device."""
@@ -273,19 +289,11 @@ class Smile(SmileHelper):
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "binary_sensors")
-                for idx, item in enumerate(dev_dict["binary_sensors"]):
-                    if item[ATTR_ID] == "plugwise_notification":
-                        self.gw_devices[dev_id]["binary_sensors"][idx][ATTR_STATE] = (
-                            self.notifications != {}
-                        )
+                self.update_pw_notification(dev_id, dev_dict)
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "sensors")
-                for idx, item in enumerate(dev_dict["sensors"]):
-                    if item[ATTR_ID] == "device_state":
-                        result = self.update_device_state(data, dev_dict)
-                        self.gw_devices[dev_id]["sensors"][idx][ATTR_STATE] = result[0]
-                        self.gw_devices[dev_id]["sensors"][idx][ATTR_ICON] = result[1]
+                self.device_state_updater(data, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
