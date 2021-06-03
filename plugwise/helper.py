@@ -1014,3 +1014,63 @@ class SmileHelper:
                 data["lock"] = format_measure(measure, None)
 
         return data
+
+    def update_helper(self, data, d_dict, d_id, e_type, key):
+        """Helper for update_gw_devices."""
+        for dummy in d_dict[e_type]:
+            if key != dummy[ATTR_ID]:
+                continue
+            for idx, item in enumerate(self.gw_devices[d_id][e_type]):
+                if key != item[ATTR_ID]:
+                    continue
+                self.gw_devices[d_id][e_type][idx][ATTR_STATE] = data[key]
+
+    def update_device_state(self, data, d_dict):
+        """Helper for device_state_updater()."""
+        _cooling_state = False
+        _dhw_state = False
+        _heating_state = False
+        state = "idle"
+        icon = IDLE_ICON
+
+        for idx, item in enumerate(d_dict["binary_sensors"]):
+            if item[ATTR_ID] == "dhw_state":
+                if item[ATTR_STATE]:
+                    state = "dhw-heating"
+                    icon = FLAME_ICON
+                    _dhw_state = True
+
+        if "heating_state" in data:
+            if data["heating_state"]:
+                state = "heating"
+                icon = HEATING_ICON
+                _heating_state = True
+        if _heating_state and _dhw_state:
+            state = "dhw and heating"
+            icon = HEATING_ICON
+        if "cooling_state" in data:
+            if data["cooling_state"]:
+                state = "cooling"
+                icon = COOLING_ICON
+                _cooling_state = True
+        if _cooling_state and _dhw_state:
+            state = "dhw and cooling"
+            icon = COOLING_ICON
+
+        return [state, icon]
+
+    def device_state_updater(self, data, d_id, d_dict):
+        """ Device State sensor update helper."""
+        for idx, item in enumerate(d_dict["sensors"]):
+            if item[ATTR_ID] == "device_state":
+                result = self.update_device_state(data, d_dict)
+                self.gw_devices[d_id]["sensors"][idx][ATTR_STATE] = result[0]
+                self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+
+    def pw_notification_updater(self, d_id, d_dict):
+        """ PW_Notification update helper."""
+        for idx, item in enumerate(d_dict["binary_sensors"]):
+            if item[ATTR_ID] == "plugwise_notification":
+                self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
+                    self.notifications != {}
+                )

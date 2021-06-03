@@ -214,65 +214,6 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             self._modules = await self.request(MODULES)
 
-    def update_helper(self, data, dev_dict, dev_id, key, entity_type):
-        """Helper for update_gw_devices."""
-        for tmp_dict in dev_dict[entity_type]:
-            if key == tmp_dict[ATTR_ID]:
-                gw_list = self.gw_devices[dev_id][entity_type]
-                for idx, item in enumerate(gw_list):
-                    if key == item[ATTR_ID]:
-                        gw_list[idx][ATTR_STATE] = data[key]
-
-    def update_device_state(self, data, dev_dict):
-        """Helper for device_state_updater()."""
-        _cooling_state = False
-        _dhw_state = False
-        _heating_state = False
-        state = "idle"
-        icon = IDLE_ICON
-
-        for idx, item in enumerate(dev_dict["binary_sensors"]):
-            if item[ATTR_ID] == "dhw_state":
-                if item[ATTR_STATE]:
-                    state = "dhw-heating"
-                    icon = FLAME_ICON
-                    _dhw_state = True
-
-        if "heating_state" in data:
-            if data["heating_state"]:
-                state = "heating"
-                icon = HEATING_ICON
-                _heating_state = True
-        if _heating_state and _dhw_state:
-            state = "dhw and heating"
-            icon = HEATING_ICON
-        if "cooling_state" in data:
-            if data["cooling_state"]:
-                state = "cooling"
-                icon = COOLING_ICON
-                _cooling_state = True
-        if _cooling_state and _dhw_state:
-            state = "dhw and cooling"
-            icon = COOLING_ICON
-
-        return [state, icon]
-
-    def device_state_updater(self, data, dev_id, dev_dict):
-        """ Device State sensor update helper."""
-        for idx, item in enumerate(dev_dict["sensors"]):
-            if item[ATTR_ID] == "device_state":
-                result = self.update_device_state(data, dev_dict)
-                self.gw_devices[dev_id]["sensors"][idx][ATTR_STATE] = result[0]
-                self.gw_devices[dev_id]["sensors"][idx][ATTR_ICON] = result[1]
-
-    def pw_notification_updater(self, dev_id, dev_dict):
-        """ PW_Notification update helper."""
-        for idx, item in enumerate(dev_dict["binary_sensors"]):
-            if item[ATTR_ID] == "plugwise_notification":
-                self.gw_devices[dev_id]["binary_sensors"][idx][ATTR_STATE] = (
-                    self.notifications != {}
-                )
-
     async def update_gw_devices(self):
         """Update all XML data from device."""
         await self.update_domain_objects()
@@ -288,15 +229,15 @@ class Smile(SmileHelper):
                     self.gw_devices[dev_id][key] = value
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    self.update_helper(data, dev_dict, dev_id, key, "binary_sensors")
+                    self.update_helper(data, dev_dict, dev_id, "binary_sensors", key)
                 self.pw_notification_updater(dev_id, dev_dict)
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    self.update_helper(data, dev_dict, dev_id, key, "sensors")
+                    self.update_helper(data, dev_dict, dev_id, "sensors", key)
                 self.device_state_updater(data, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
-                    self.update_helper(data, dev_dict, dev_id, key, "switches")
+                    self.update_helper(data, dev_dict, dev_id, "switches", key)
 
     def append_special(self, data, dev_id, bs_list, s_list):
         """Helper for all_device_data()."""
