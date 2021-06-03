@@ -214,6 +214,15 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             self._modules = await self.request(MODULES)
 
+    def update_helper(self, data, dev_dict, dev_id, key, entity_type):
+        """Helper for update_gw_devices."""
+        for tmp_dict in dev_dict[entity_type]:
+            if key == tmp_dict[ATTR_ID]:
+                gw_list = self.gw_devices[dev_id][entity_type]
+                for idx, item in enumerate(gw_list):
+                    if key == item[ATTR_ID]:
+                        gw_list[idx][ATTR_STATE] = data[key]
+
     def update_device_state(self, data, dev_dict):
         """Helper for device_state_updater()."""
         _cooling_state = False
@@ -256,16 +265,7 @@ class Smile(SmileHelper):
                 self.gw_devices[dev_id]["sensors"][idx][ATTR_STATE] = result[0]
                 self.gw_devices[dev_id]["sensors"][idx][ATTR_ICON] = result[1]
 
-    def update_helper(self, data, dev_dict, dev_id, key, entity_type):
-        """Helper for update_gw_devices."""
-        for tmp_dict in dev_dict[entity_type]:
-            if key == tmp_dict[ATTR_ID]:
-                gw_list = self.gw_devices[dev_id][entity_type]
-                for idx, item in enumerate(gw_list):
-                    if key == item[ATTR_ID]:
-                        gw_list[idx][ATTR_STATE] = data[key]
-
-    def update_pw_notification(self, dev_id, dev_dict):
+    def pw_notification_updater(self, dev_id, dev_dict):
         """ PW_Notification update helper."""
         for idx, item in enumerate(dev_dict["binary_sensors"]):
             if item[ATTR_ID] == "plugwise_notification":
@@ -289,7 +289,7 @@ class Smile(SmileHelper):
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "binary_sensors")
-                self.update_pw_notification(dev_id, dev_dict)
+                self.pw_notification_updater(dev_id, dev_dict)
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "sensors")
