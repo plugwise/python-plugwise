@@ -25,6 +25,7 @@ from .constants import (
     ATTR_UNIT_OF_MEASUREMENT,
     COOLING_ICON,
     DEVICE_MEASUREMENTS,
+    DEVICE_STATE,
     DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -35,6 +36,7 @@ from .constants import (
     HOME_MEASUREMENTS,
     LOCATIONS,
     POWER_WATT,
+    PW_NOTIFICATION,
     SWITCH_GROUP_TYPES,
     THERMOSTAT_CLASSES,
 )
@@ -1081,3 +1083,13 @@ class SmileHelper:
                 self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
                     self.notifications != {}
                 )
+
+    def append_special(self, data, d_id, bs_list, s_list):
+        """Helper for all_device_data()."""
+        if d_id == self.gateway_id:
+            if self.single_master_thermostat() is not None:
+                bs_list.append(PW_NOTIFICATION)
+            if not self.active_device_present and "heating_state" in data:
+                s_list.append(DEVICE_STATE)
+        if d_id == self.heater_id and self.single_master_thermostat() is False:
+            s_list.append(DEVICE_STATE)
