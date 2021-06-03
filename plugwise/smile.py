@@ -298,6 +298,16 @@ class Smile(SmileHelper):
                 for key, value in list(data.items()):
                     self.update_helper(data, dev_dict, dev_id, key, "switches")
 
+    def append_special(self, data, dev_id, bs_list, s_list):
+        """Helper for all_device_data()."""
+        if dev_id == self.gateway_id:
+            if self.single_master_thermostat() is not None:
+                bs_list.append(PW_NOTIFICATION)
+            if not self.active_device_present and "heating_state" in data:
+                s_list.append(DEVICE_STATE)
+        if dev_id == self.heater_id and self.single_master_thermostat() is False:
+            s_list.append(DEVICE_STATE)
+
     def all_device_data(self):
         "Helper-function: collect data for each device and add to self.gw_devices."
         dev_id_list = []
@@ -308,13 +318,8 @@ class Smile(SmileHelper):
             temp_sensor_list = []
             temp_switch_list = []
             data = self.get_device_data(dev_id)
-            if dev_id == self.gateway_id:
-                if self.single_master_thermostat() is not None:
-                    temp_b_sensor_list.append(PW_NOTIFICATION)
-                if not self.active_device_present and "heating_state" in data:
-                    temp_sensor_list.append(DEVICE_STATE)
-            if dev_id == self.heater_id and self.single_master_thermostat() is False:
-                temp_sensor_list.append(DEVICE_STATE)
+
+            self.append_special(data, dev_id, temp_b_sensor_list, temp_sensor_list)
             for key, value in list(data.items()):
                 for item in BINARY_SENSORS:
                     try:
