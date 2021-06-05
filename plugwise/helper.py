@@ -419,8 +419,8 @@ class SmileHelper:
 
         # For legacy P1
         if self._smile_legacy and self.smile_type == "power":
-            # Inject home_location as dev_id for legacy so
-            # _appliance_data can use loc_id for dev_id.
+            # Inject home_location as device id for legacy so
+            # appl_data can use the location id as device id.
             self.appl_data[self._home_location] = {
                 "name": "P1",
                 "model": "Smile P1",
@@ -631,7 +631,7 @@ class SmileHelper:
 
         return data
 
-    def appliance_data(self, dev_id):
+    def appliance_data(self, d_id):
         """
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
@@ -641,7 +641,7 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type != "stretch":
             search = self._domain_objects
 
-        appliances = search.findall(f'.//appliance[@id="{dev_id}"]')
+        appliances = search.findall(f'.//appliance[@id="{d_id}"]')
 
         for appliance in appliances:
             measurements = DEVICE_MEASUREMENTS.items()
@@ -1025,7 +1025,7 @@ class SmileHelper:
         return data
 
     def update_helper(self, data, d_dict, d_id, e_type, key):
-        """Helper for update_gw_devices."""
+        """Helper-function for update_gw_devices()."""
         for dummy in d_dict[e_type]:
             if key != dummy[ATTR_ID]:
                 continue
@@ -1035,7 +1035,7 @@ class SmileHelper:
                 self.gw_devices[d_id][e_type][idx][ATTR_STATE] = data[key]
 
     def update_device_state(self, data, d_dict):
-        """Helper for device_state_updater()."""
+        """Helper-function for device_state_updater()."""
         _cooling_state = False
         _dhw_state = False
         _heating_state = False
@@ -1069,7 +1069,7 @@ class SmileHelper:
         return [state, icon]
 
     def device_state_updater(self, data, d_id, d_dict):
-        """ Device State sensor update helper."""
+        """ Device State sensor update helper-function for update_gw_devices()."""
         for idx, item in enumerate(d_dict["sensors"]):
             if item[ATTR_ID] == "device_state":
                 result = self.update_device_state(data, d_dict)
@@ -1077,7 +1077,7 @@ class SmileHelper:
                 self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
 
     def pw_notification_updater(self, d_id, d_dict):
-        """ PW_Notification update helper."""
+        """ PW_Notification update helper-function for update_gw_devices()."""
         for idx, item in enumerate(d_dict["binary_sensors"]):
             if item[ATTR_ID] == "plugwise_notification":
                 self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
@@ -1085,7 +1085,9 @@ class SmileHelper:
                 )
 
     def append_special(self, data, d_id, bs_list, s_list):
-        """Helper for all_device_data()."""
+        """Helper-function for all_device_data().
+        When the conditions are met, it appends the plugwise_notification binary_sensor and/or the device_state sensor.
+        """
         if d_id == self.gateway_id:
             if self.single_master_thermostat() is not None:
                 bs_list.append(PW_NOTIFICATION)
