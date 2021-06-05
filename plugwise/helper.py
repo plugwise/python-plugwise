@@ -39,8 +39,8 @@ from .constants import (
     POWER_WATT,
     PW_NOTIFICATION,
     SENSORS,
-    SWITCHES,
     SWITCH_GROUP_TYPES,
+    SWITCHES,
     THERMOSTAT_CLASSES,
 )
 from .exceptions import (
