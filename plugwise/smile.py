@@ -15,7 +15,6 @@ from .constants import (
     APPLIANCES,
     ATTR_ID,
     ATTR_STATE,
-    BINARY_SENSORS,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
@@ -24,11 +23,9 @@ from .constants import (
     MODULES,
     NOTIFICATIONS,
     RULES,
-    SENSORS,
     SMILES,
     STATUS,
     SWITCH_GROUP_TYPES,
-    SWITCHES,
     SYSTEM,
     THERMOSTAT_CLASSES,
 )
@@ -238,45 +235,21 @@ class Smile(SmileHelper):
         dev_and_data_list = []
         for dev_id, dev_dict in self.devices.items():
             dev_and_data = dev_dict
-            temp_b_sensor_list = []
-            temp_sensor_list = []
-            temp_switch_list = []
+            temp_bs_list = []
+            temp_s_list = []
+            temp_sw_list = []
             data = self.get_device_data(dev_id)
 
-            self.append_special(data, dev_id, temp_b_sensor_list, temp_sensor_list)
-            for key, value in list(data.items()):
-                for item in BINARY_SENSORS:
-                    try:
-                        data.pop(item[ATTR_ID])
-                    except KeyError:
-                        pass
-                    else:
-                        if self.active_device_present:
-                            item[ATTR_STATE] = value
-                            temp_b_sensor_list.append(item)
-                for item in SENSORS:
-                    try:
-                        data.pop(item[ATTR_ID])
-                    except KeyError:
-                        pass
-                    else:
-                        item[ATTR_STATE] = value
-                        temp_sensor_list.append(item)
-                for item in SWITCHES:
-                    try:
-                        data.pop(item[ATTR_ID])
-                    except KeyError:
-                        pass
-                    else:
-                        item[ATTR_STATE] = value
-                        temp_switch_list.append(item)
+            self.create_lists_from_data(data, temp_bs_list, temp_s_list, temp_sw_list)
+            self.append_special(data, dev_id, temp_bs_list, temp_s_list)
+
             dev_and_data.update(data)
-            if temp_b_sensor_list != []:
-                dev_and_data["binary_sensors"] = temp_b_sensor_list
-            if temp_sensor_list != []:
-                dev_and_data["sensors"] = temp_sensor_list
-            if temp_switch_list != []:
-                dev_and_data["switches"] = temp_switch_list
+            if temp_bs_list != []:
+                dev_and_data["binary_sensors"] = temp_bs_list
+            if temp_s_list != []:
+                dev_and_data["sensors"] = temp_s_list
+            if temp_sw_list != []:
+                dev_and_data["switches"] = temp_sw_list
             dev_id_list.append(dev_id)
             dev_and_data_list.append(copy.deepcopy(dev_and_data))
 

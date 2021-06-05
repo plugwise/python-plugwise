@@ -23,6 +23,7 @@ from .constants import (
     ATTR_STATE,
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
+    BINARY_SENSORS,
     COOLING_ICON,
     DEVICE_MEASUREMENTS,
     DEVICE_STATE,
@@ -37,6 +38,8 @@ from .constants import (
     LOCATIONS,
     POWER_WATT,
     PW_NOTIFICATION,
+    SENSORS,
+    SWITCHES,
     SWITCH_GROUP_TYPES,
     THERMOSTAT_CLASSES,
 )
@@ -1083,6 +1086,37 @@ class SmileHelper:
                 self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
                     self.notifications != {}
                 )
+
+    def create_lists_from_data(self, data, bs_list, s_list, sw_list):
+        """Helper-function for all_device_data().
+        Create lists of binary_sensors, sensors, switches from the relevant data.
+        """
+        for key, value in list(data.items()):
+            for item in BINARY_SENSORS:
+                try:
+                    data.pop(item[ATTR_ID])
+                except KeyError:
+                    pass
+                else:
+                    if self.active_device_present:
+                        item[ATTR_STATE] = value
+                        bs_list.append(item)
+            for item in SENSORS:
+                try:
+                    data.pop(item[ATTR_ID])
+                except KeyError:
+                    pass
+                else:
+                    item[ATTR_STATE] = value
+                    s_list.append(item)
+            for item in SWITCHES:
+                try:
+                    data.pop(item[ATTR_ID])
+                except KeyError:
+                    pass
+                else:
+                    item[ATTR_STATE] = value
+                    sw_list.append(item)
 
     def append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for all_device_data().
