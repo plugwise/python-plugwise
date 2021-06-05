@@ -28,7 +28,7 @@ setup(
     version=get_version("plugwise/__init__.py"),
     description="Plugwise (Adam/Anna/P1/Stick/Stretch) API to use in conjunction with Home Assistant Core.",
     long_description="Plugwise API to use in conjunction with Home Assistant, but it can also be used as a python-module.",
-    long_description_content_type='text/plain',
+    long_description_content_type="text/plain",
     keywords="HomeAssistant HA Home Assistant Anna Adam P1 Smile Stretch Stick Plugwise",
     url="https://github.com/plugwise/python-plugwise",
     author="Plugwise-team",
