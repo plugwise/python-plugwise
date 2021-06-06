@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.0 - Smile: Move functionality into backend, rearrange data in output
+
+- Rearrange data: the outputs of get_all_devices() and get_device_data() are combined into self.gw_devices. Binary_sensors, sensors and switches are included with all their attributes, in lists.
+- Two classes have been added (entities.py), one for master_thermostats and one for binary_sensors, these classes now handle the processing of data previously done in plugwise-beta (climate.py and binary_sensor.py).
+
 ## 0.9.4 - Bugfix and improvements
 
 - Stick: make stick code run at python 3.9 (fixes AttributeError: 'Thread' object has no attribute 'isAlive')
