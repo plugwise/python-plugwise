@@ -500,7 +500,7 @@ class Smile(SmileHelper):
         return True
 
     async def set_groupswitch_member_state(self, members, state, switch):
-        """ Helper-function for set_switch_state() .
+        """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
         """
         for member in members:
