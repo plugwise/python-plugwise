@@ -549,7 +549,7 @@ class SmileHelper:
         return presets
 
     def rule_ids_by_name(self, name, loc_id):
-        """ Helper-function for presets().
+        """Helper-function for presets().
         Obtain the rule_id from the given name and location_id.
         """
         schema_ids = {}
@@ -562,7 +562,7 @@ class SmileHelper:
             return schema_ids
 
     def rule_ids_by_tag(self, tag, loc_id):
-        """ Helper-function for presets(), schemas() and last_active_schema().
+        """Helper-function for presets(), schemas() and last_active_schema().
         Obtain the rule_id from the given template_tag and location_id.
         """
         schema_ids = {}
@@ -729,9 +729,8 @@ class SmileHelper:
                     if thermo_matching[appl_class] > high_prio:
                         high_prio = thermo_matching[appl_class]
 
-
     def temperature_uri_legacy(self):
-        """ Helper-function for temperature_uri().
+        """Helper-function for temperature_uri().
         Determine the location-set_temperature uri - from APPLIANCES.
         """
         locator = ".//appliance[type='thermostat']"
