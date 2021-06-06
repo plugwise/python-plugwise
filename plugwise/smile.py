@@ -1,4 +1,6 @@
-"""Plugwise backend module for Home Assistant Core."""
+"""Use of this source code is governed by the MIT license found in the LICENSE file.
+Plugwise backend module for Home Assistant Core.
+"""
 import asyncio
 import copy
 import logging
