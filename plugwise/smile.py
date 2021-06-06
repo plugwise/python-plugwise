@@ -510,7 +510,7 @@ class Smile(SmileHelper):
             if self.stretch_v2:
                 uri = f"{APPLIANCES};id={member}/{switch.device}"
             state = str(state)
-            data = f"<{switch.func_type}><state>{state}</state></{switch.func_type}>"
+            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
             await self.request(uri, method="put", data=data)
 
@@ -550,7 +550,6 @@ class Smile(SmileHelper):
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
             lock_state = self._appliances.find(locator).text
-            print("Lock state: ", lock_state)
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
                 return False
