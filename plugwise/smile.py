@@ -77,7 +77,7 @@ class Smile(SmileHelper):
         self.gw_devices = {}
 
     async def connect(self):
-        """Connect to Plugwise device."""
+        """Connect to Plugwise device and determine its name, type and version."""
         names = []
 
         result = await self.request(DOMAIN_OBJECTS)
@@ -105,6 +105,7 @@ class Smile(SmileHelper):
         return True
 
     async def smile_detect_legacy(self, result, dsmrmain):
+        """Helper-function for smile_detect()."""
         network = result.find(".//module/protocols/network_router/network")
 
         # Assume legacy
@@ -145,7 +146,9 @@ class Smile(SmileHelper):
         return model, version
 
     async def smile_detect(self, result, dsmrmain):
-        """Detect which type of Smile is connected."""
+        """Helper-function for connect().
+        Detect which type of Smile is connected.
+        """
         model = None
         gateway = result.find(".//gateway")
 
@@ -192,7 +195,7 @@ class Smile(SmileHelper):
         await self.websession.close()
 
     async def full_update_device(self):
-        """Update all XML data from device."""
+        """Perform a first fetch of all XML data, needed for initialization."""
         await self.update_domain_objects()
         self._locations = await self.request(LOCATIONS)
 
@@ -205,7 +208,7 @@ class Smile(SmileHelper):
             self._modules = await self.request(MODULES)
 
     async def update_gw_devices(self):
-        """Update all XML data from device."""
+        """Perform an incremental update for updating the various states."""
         await self.update_domain_objects()
 
         # P1 legacy has no appliances
@@ -230,7 +233,9 @@ class Smile(SmileHelper):
                     self.update_helper(data, dev_dict, dev_id, "switches", key)
 
     def all_device_data(self):
-        "Helper-function: collect data for each device and add to self.gw_devices."
+        """Helper-function for get_all_devices().
+        Collect data for each device and add to self.gw_devices.
+        """
         dev_id_list = []
         dev_and_data_list = []
         for dev_id, dev_dict in self.devices.items():
@@ -256,7 +261,7 @@ class Smile(SmileHelper):
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
     def get_all_devices(self):
-        """Determine available devices from inventory."""
+        """Determine the devices present from the obtained XML-data."""
         self.devices = {}
         self.scan_thermostats()
 
@@ -281,7 +286,9 @@ class Smile(SmileHelper):
         self.all_device_data()
 
     def device_data_switching_group(self, details, device_data):
-        """Determine switching groups device data."""
+        """Helper-function for get_device_data().
+        Determine switching group device data.
+        """
         if details["class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
@@ -296,7 +303,9 @@ class Smile(SmileHelper):
         return device_data
 
     def device_data_anna(self, dev_id, details, device_data):
-        """Determine anna and legacy_anna device data."""
+        """Helper-function for get_device_data().
+        Determine Anna and legacy Anna device data.
+        """
         # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
         if "boiler_state" in device_data:
             device_data["heating_state"] = device_data["intended_boiler_state"]
@@ -311,7 +320,9 @@ class Smile(SmileHelper):
         return device_data
 
     def device_data_adam(self, details, device_data):
-        """Determine Adam device data."""
+        """Helper-function for get_device_data().
+        Determine Adam device data.
+        """
         # Adam: indicate heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
             if details["class"] == "gateway":
@@ -323,8 +334,9 @@ class Smile(SmileHelper):
         return device_data
 
     def device_data_climate(self, details, device_data):
-        """Determine climate-control device data."""
-        # Anna, Lisa, Tom/Floor
+        """Helper-function for get_device_data().
+        Determine climate-control device data.
+        """
         device_data["active_preset"] = self.preset(details["location"])
         device_data["presets"] = self.presets(details["location"])
 
