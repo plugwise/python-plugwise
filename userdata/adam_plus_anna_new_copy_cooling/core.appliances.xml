@@ -450,7 +450,7 @@
 				<interval/>
 				<boiler_state id='dd7213afa98a4d00bcc7f5e8a46dbdee'/>
 				<period start_date="2020-11-01T17:32:43.533+01:00" end_date="2020-11-01T17:32:43.533+01:00">
-					<measurement log_date="2020-11-01T17:32:43.533+01:00">off</measurement>
+					<measurement log_date="2020-11-01T17:32:43.533+01:00">on</measurement>
 				</period>
 			</point_log>
 			<point_log id='26d0cc991be8420f98d043e7c7254954'>
@@ -461,7 +461,7 @@
 				<interval/>
 				<boiler_state id='d4b05bd552b44574933f6bc2717fcbe9'/>
 				<period start_date="2020-11-10T08:37:03.863+01:00" end_date="2020-11-10T08:37:03.863+01:00">
-					<measurement log_date="2020-11-10T08:37:03.863+01:00">on</measurement>
+					<measurement log_date="2020-11-10T08:37:03.863+01:00">off</measurement>
 				</period>
 			</point_log>
 			<point_log id='41abcb8e89354be4bbc6b42a29422af8'>

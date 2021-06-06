@@ -1,7 +1,5 @@
-"""
-Use of this source code is governed by the MIT license found in the LICENSE file.
-
-Plugwise protocol helpers
+"""Use of this source code is governed by the MIT license found in the LICENSE file.
+Plugwise Smile protocol helpers.
 """
 import asyncio
 import datetime as dt
@@ -17,18 +15,30 @@ import pytz
 
 from .constants import (
     APPLIANCES,
+    ATTR_ICON,
+    ATTR_ID,
     ATTR_NAME,
+    ATTR_STATE,
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
+    BINARY_SENSORS,
+    COOLING_ICON,
     DEVICE_MEASUREMENTS,
+    DEVICE_STATE,
     DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
+    FLAME_ICON,
     HEATER_CENTRAL_MEASUREMENTS,
+    HEATING_ICON,
     HOME_MEASUREMENTS,
+    IDLE_ICON,
     LOCATIONS,
     POWER_WATT,
+    PW_NOTIFICATION,
+    SENSORS,
     SWITCH_GROUP_TYPES,
+    SWITCHES,
     THERMOSTAT_CLASSES,
 )
 from .exceptions import (
@@ -119,7 +129,7 @@ def power_data_energy_diff(measurement, net_string, f_val, direct_data):
 
 
 class SmileHelper:
-    """Define the SmileHelper object."""
+    """The SmileHelper class."""
 
     def __init__(self):
         """Set the constructor for this class."""
@@ -139,6 +149,7 @@ class SmileHelper:
         self._modules = None
 
         self.appl_data = {}
+        self.active_device_present = None
         self.gateway_id = None
         self.heater_id = None
         self.notifications = {}
@@ -152,7 +163,7 @@ class SmileHelper:
         self.websession = None
 
     async def request_validate(self, resp, method):
-        """Validate request data."""
+        """Helper-function for request(): validate the returned data."""
         # Command accepted gives empty body with status 202
         if resp.status == 202:
             return
@@ -185,7 +196,7 @@ class SmileHelper:
         data=None,
         headers=None,
     ):
-        """Request data."""
+        """Get/put/delete data from a give URL."""
         resp = None
         url = f"{self._endpoint}{command}"
 
@@ -213,7 +224,9 @@ class SmileHelper:
         return await self.request_validate(resp, method)
 
     def locations_legacy(self):
-        """Create locations for legacy devices."""
+        """Helper-function for all_locations().
+        Create locations for legacy devices.
+        """
         appliances = set()
         self._home_location = 0
 
@@ -235,7 +248,9 @@ class SmileHelper:
             }
 
     def locations_specials(self, loc, location):
-        """Correct location info in special cases."""
+        """Helper-function for all_locations().
+        Correct location info in special cases.
+        """
         if loc.name == "Home":
             self._home_location = loc.id
             loc.types.add("home")
@@ -293,7 +308,9 @@ class SmileHelper:
         return
 
     def get_module_data(self, appliance, locator, mod_type):
-        """Collect requested info from MODULES."""
+        """Helper-function for energy_device_info_finder() and appliance_info_finder().
+        Collect requested info from MODULES.
+        """
         appl_search = appliance.find(locator)
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
@@ -308,7 +325,9 @@ class SmileHelper:
         return [None, None, None, None]
 
     def energy_device_info_finder(self, appliance, appl):
-        """Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name."""
+        """Helper-function for appliance_info_finder().
+        Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
+        """
         if self.stretch_v2 or self.stretch_v3:
             locator = ".//services/electricity_point_meter"
             mod_type = "electricity_point_meter"
@@ -378,7 +397,7 @@ class SmileHelper:
         return appl  # pragma: no cover
 
     def appliance_types_finder(self, appliance, appl):
-        """Determine type(s) per appliance."""
+        """Helper-function for all_appliances() - determine type(s) per appliance."""
         # Appliance with location (i.e. a device)
         if appliance.find("location") is not None:
             appl.location = appliance.find("location").attrib["id"]
@@ -409,8 +428,8 @@ class SmileHelper:
 
         # For legacy P1
         if self._smile_legacy and self.smile_type == "power":
-            # Inject home_location as dev_id for legacy so
-            # _appliance_data can use loc_id for dev_id.
+            # Inject home_location as device id for legacy so
+            # appl_data can use the location id as device id.
             self.appl_data[self._home_location] = {
                 "name": "P1",
                 "model": "Smile P1",
@@ -421,11 +440,6 @@ class SmileHelper:
             self.gateway_id = self._home_location
 
             return
-
-        # TODO: add locations with members as appliance as well
-        # example 'electricity consumed/produced and relay' on Adam
-        # Basically walk locations for 'members' not set[] and
-        # scan for the same functionality
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
         self._cp_state = self._appliances.find(
@@ -477,7 +491,9 @@ class SmileHelper:
             self.gateway_id = self.heater_id
 
     def match_locations(self):
-        """Update locations with present appliance-types."""
+        """Helper-function for scan_thermostats().
+        Update locations with present appliance-types.
+        """
         matched_locations = {}
 
         self.all_appliances()
@@ -491,8 +507,21 @@ class SmileHelper:
 
         return matched_locations
 
+    def presets_legacy(self):
+        """ Helper-function for presets() - collect Presets for a legacy Anna."""
+        preset_dictionary = {}
+        for directive in self._domain_objects.findall("rule/directives/when/then"):
+            if directive is not None and "icon" in directive.keys():
+                # Ensure list of heating_setpoint, cooling_setpoint
+                preset_dictionary[directive.attrib["icon"]] = [
+                    float(directive.attrib["temperature"]),
+                    0,
+                ]
+
+        return preset_dictionary
+
     def presets(self, loc_id):
-        """Collect presets for a thermostat based on location_id."""
+        """Collect Presets for a Thermostat based on location_id."""
         presets = {}
         tag = "zone_setpoint_and_state_based_on_preset"
 
@@ -519,22 +548,10 @@ class SmileHelper:
 
         return presets
 
-    # LEGACY Anna function
-    def presets_legacy(self):
-        """Collect presets for legacy Anna."""
-        preset_dictionary = {}
-        for directive in self._domain_objects.findall("rule/directives/when/then"):
-            if directive is not None and "icon" in directive.keys():
-                # Ensure list of heating_setpoint, cooling_setpoint
-                preset_dictionary[directive.attrib["icon"]] = [
-                    float(directive.attrib["temperature"]),
-                    0,
-                ]
-
-        return preset_dictionary
-
     def rule_ids_by_name(self, name, loc_id):
-        """Obtain the rule_id from name and location_id."""
+        """Helper-function for presets().
+        Obtain the rule_id from the given name and location_id.
+        """
         schema_ids = {}
         locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
@@ -545,7 +562,9 @@ class SmileHelper:
             return schema_ids
 
     def rule_ids_by_tag(self, tag, loc_id):
-        """Obtain the rule_id from template_tag and location_id."""
+        """Helper-function for presets(), schemas() and last_active_schema().
+        Obtain the rule_id from the given template_tag and location_id.
+        """
         schema_ids = {}
         locator1 = f'.//template[@tag="{tag}"]'
         locator2 = f'.//contexts/context/zone/location[@id="{loc_id}"]'
@@ -557,15 +576,10 @@ class SmileHelper:
         if schema_ids != {}:
             return schema_ids
 
-    def temperature_uri_legacy(self):
-        """Determine the location-set_temperature uri - from APPLIANCES."""
-        locator = ".//appliance[type='thermostat']"
-        appliance_id = self._appliances.find(locator).attrib["id"]
-
-        return f"{APPLIANCES};id={appliance_id}/thermostat"
-
     async def update_domain_objects(self):
-        """Request domain_objects data."""
+        """Helper-function for smile.py: full_update_device() and update_gw_devices().
+        Request domain_objects data.
+        """
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
@@ -586,7 +600,7 @@ class SmileHelper:
                 )
 
     def appliance_measurements(self, appliance, data, measurements):
-        """Collect appliance measurement data."""
+        """Helper-function for appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements:
 
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
@@ -621,8 +635,8 @@ class SmileHelper:
 
         return data
 
-    def appliance_data(self, dev_id):
-        """
+    def appliance_data(self, d_id):
+        """Helper-function for smile.py: get_device_data().
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
@@ -631,7 +645,7 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type != "stretch":
             search = self._domain_objects
 
-        appliances = search.findall(f'.//appliance[@id="{dev_id}"]')
+        appliances = search.findall(f'.//appliance[@id="{d_id}"]')
 
         for appliance in appliances:
             measurements = DEVICE_MEASUREMENTS.items()
@@ -652,7 +666,8 @@ class SmileHelper:
         return data
 
     def rank_thermostat(self, thermo_matching, loc_id, appliance_id, appliance_details):
-        """Rank the thermostat based on appliance_details: master or slave."""
+        """Helper-function for scan_thermostats().
+        Rank the thermostat based on appliance_details: master or slave."""
         appl_class = appliance_details["class"]
 
         if (
@@ -679,7 +694,9 @@ class SmileHelper:
         return appl_class
 
     def scan_thermostats(self, debug_text="missing text"):
-        """Update locations with thermostat ranking results."""
+        """Helper-function for smile.py: get_all_devices() and single_master_thermostat().
+        Update locations with thermostat ranking results.
+        """
         self.thermo_locs = self.match_locations()
 
         thermo_matching = {
@@ -712,8 +729,18 @@ class SmileHelper:
                     if thermo_matching[appl_class] > high_prio:
                         high_prio = thermo_matching[appl_class]
 
+    def temperature_uri_legacy(self):
+        """Helper-function for temperature_uri().
+        Determine the location-set_temperature uri - from APPLIANCES.
+        """
+        locator = ".//appliance[type='thermostat']"
+        appliance_id = self._appliances.find(locator).attrib["id"]
+
+        return f"{APPLIANCES};id={appliance_id}/thermostat"
+
     def temperature_uri(self, loc_id):
-        """Determine the location-set_temperature uri."""
+        """Helper-function for smile.py: set_temperature().
+        Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
             return self.temperature_uri_legacy()
 
@@ -723,7 +750,9 @@ class SmileHelper:
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
     def group_switches(self):
-        """Collect switching- or pump-group info."""
+        """Helper-function for smile.py: get_all_devices().
+        Collect switching- or pump-group info.
+        """
         switch_groups = {}
         search = self._domain_objects
 
@@ -765,7 +794,7 @@ class SmileHelper:
         return switch_groups
 
     def heating_valves(self):
-        """
+        """Helper-function for smile.py: device_data_adam().
         Collect amount of open valves indicating active direct heating.
         For cases where the heat is provided from an external shared source (city heating).
         """
@@ -782,6 +811,7 @@ class SmileHelper:
         return None if loc_found == 0 else open_valve_count
 
     def power_data_peak_value(self, loc):
+        """Helper-function for power_data_from_location()."""
         loc.found = True
 
         # Only once try to find P1 Legacy values
@@ -814,7 +844,9 @@ class SmileHelper:
         return loc
 
     def power_data_from_location(self, loc_id):
-        """Collect the power-data based on location_id."""
+        """Helper-function for smile.py: get_device_data().
+        Collect the power-data based on Location ID.
+        """
         direct_data = {}
         loc = Munch()
 
@@ -854,7 +886,9 @@ class SmileHelper:
             return direct_data
 
     def preset(self, loc_id):
-        """Collect the active preset based on location_id."""
+        """Helper-function for smile.py: device_data_climate().
+        Collect the active preset based on Location ID.
+        """
         if self._smile_legacy:
             active_rule = self._domain_objects.find(
                 "rule[active='true']/directives/when/then"
@@ -869,7 +903,9 @@ class SmileHelper:
             return preset.text
 
     def schemas_legacy(self):
-        """Collect available schemas/schedules for the legacy thermostat."""
+        """Helper-function for schemas().
+        Collect available schemas/schedules for the legacy thermostat.
+        """
         available = []
         name = None
         schedule_temperature = None
@@ -895,7 +931,9 @@ class SmileHelper:
         return available, selected, schedule_temperature
 
     def schemas_schedule_temp(self, schedules):
-        """Obtain the schedule temperature of the schema/schedule."""
+        """Helper-function for schemas().
+        Obtain the schedule temperature of the schema/schedule.
+        """
         for period, temp in schedules.items():
             moment_1, moment_2 = period.split(",")
             moment_1 = moment_1.replace("[", "").split(" ")
@@ -913,7 +951,9 @@ class SmileHelper:
                     return temp
 
     def schemas(self, loc_id):
-        """Obtain the available schemas/schedules based on the location_id."""
+        """Helper-function for smile.py: device_data_climate().
+        Obtain the available schemas/schedules based on the Location ID.
+        """
         available = []
         rule_ids = {}
         schemas = {}
@@ -958,7 +998,9 @@ class SmileHelper:
         return available, selected, schedule_temperature
 
     def last_active_schema(self, loc_id):
-        """Determine the last active schema/schedule."""
+        """Helper-function for smile.py: device_data_climate().
+        Determine the last active schema/schedule based on the Location ID.
+        """
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
         rule_ids = {}
         schemas = {}
@@ -984,7 +1026,9 @@ class SmileHelper:
         return last_modified
 
     def object_value(self, obj_type, obj_id, measurement):
-        """Obtain the object-value from the thermostat."""
+        """Helper-function for smile.py: get_device_data() and device_data_anna().
+        Obtain the value/state for the given object.
+        """
         search = self._domain_objects
 
         locator = (
@@ -998,7 +1042,9 @@ class SmileHelper:
         return None
 
     def get_lock_state(self, xml):
-        """Adam & Stretches: obtain relay-switch lock state."""
+        """Helper-function for appliance_data().
+        Adam & Stretches: obtain the relay-switch lock state.
+        """
         data = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
@@ -1013,3 +1059,111 @@ class SmileHelper:
                 data["lock"] = format_measure(measure, None)
 
         return data
+
+    def update_helper(self, data, d_dict, d_id, e_type, key):
+        """Helper-function for smile.py: update_gw_devices()."""
+        for dummy in d_dict[e_type]:
+            if key != dummy[ATTR_ID]:
+                continue
+            for idx, item in enumerate(self.gw_devices[d_id][e_type]):
+                if key != item[ATTR_ID]:
+                    continue
+                self.gw_devices[d_id][e_type][idx][ATTR_STATE] = data[key]
+
+    def update_device_state(self, data, d_dict):
+        """Helper-function for device_state_updater()."""
+        _cooling_state = False
+        _dhw_state = False
+        _heating_state = False
+        state = "idle"
+        icon = IDLE_ICON
+
+        for idx, item in enumerate(d_dict["binary_sensors"]):
+            if item[ATTR_ID] == "dhw_state":
+                if item[ATTR_STATE]:
+                    state = "dhw-heating"
+                    icon = FLAME_ICON
+                    _dhw_state = True
+
+        if "heating_state" in data:
+            if data["heating_state"]:
+                state = "heating"
+                icon = HEATING_ICON
+                _heating_state = True
+        if _heating_state and _dhw_state:
+            state = "dhw and heating"
+            icon = HEATING_ICON
+        if "cooling_state" in data:
+            if data["cooling_state"]:
+                state = "cooling"
+                icon = COOLING_ICON
+                _cooling_state = True
+        if _cooling_state and _dhw_state:
+            state = "dhw and cooling"
+            icon = COOLING_ICON
+
+        return [state, icon]
+
+    def device_state_updater(self, data, d_id, d_dict):
+        """Helper-function for smile.py: update_gw_devices().
+        Update the Device_State sensor state.
+        """
+        for idx, item in enumerate(d_dict["sensors"]):
+            if item[ATTR_ID] == "device_state":
+                result = self.update_device_state(data, d_dict)
+                self.gw_devices[d_id]["sensors"][idx][ATTR_STATE] = result[0]
+                self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+
+    def pw_notification_updater(self, d_id, d_dict):
+        """Helper-function for smile.py: update_gw_devices().
+        Update the PW_Notification binary_sensor state.
+        """
+        for idx, item in enumerate(d_dict["binary_sensors"]):
+            if item[ATTR_ID] == "plugwise_notification":
+                self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
+                    self.notifications != {}
+                )
+
+    def create_lists_from_data(self, data, bs_list, s_list, sw_list):
+        """Helper-function for smile.py: all_device_data().
+        Create lists of binary_sensors, sensors, switches from the relevant data.
+        """
+        for key, value in list(data.items()):
+            for item in BINARY_SENSORS:
+                try:
+                    data.pop(item[ATTR_ID])
+                except KeyError:
+                    pass
+                else:
+                    if self.active_device_present:
+                        item[ATTR_STATE] = value
+                        bs_list.append(item)
+            for item in SENSORS:
+                try:
+                    data.pop(item[ATTR_ID])
+                except KeyError:
+                    pass
+                else:
+                    item[ATTR_STATE] = value
+                    s_list.append(item)
+            for item in SWITCHES:
+                try:
+                    data.pop(item[ATTR_ID])
+                except KeyError:
+                    pass
+                else:
+                    item[ATTR_STATE] = value
+                    sw_list.append(item)
+
+    def append_special(self, data, d_id, bs_list, s_list):
+        """Helper-function for smile.py: all_device_data().
+        When conditions are met, the plugwise_notification binary_sensor
+        and/or the device_state sensor are appended.
+        """
+        if d_id == self.gateway_id:
+            if self.single_master_thermostat() is not None:
+                bs_list.append(PW_NOTIFICATION)
+            if not self.active_device_present and "heating_state" in data:
+                s_list.append(DEVICE_STATE)
+        if d_id == self.heater_id and self.single_master_thermostat() is False:
+            s_list.append(DEVICE_STATE)

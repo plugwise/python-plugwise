@@ -472,7 +472,7 @@
 				<interval/>
 				<boiler_state id='3e69a63e70d84ba0b2cc8feb523275fd'/>
 				<period start_date="2020-11-10T09:05:18.782+01:00" end_date="2020-11-10T09:05:18.782+01:00">
-					<measurement log_date="2020-11-10T09:05:18.782+01:00">off</measurement>
+					<measurement log_date="2020-11-10T09:05:18.782+01:00">on</measurement>
 				</period>
 			</point_log>
 			<point_log id='7c0d55cfd2b24552bbc8a5b3facd5882'>

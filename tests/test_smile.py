@@ -21,6 +21,7 @@ import pytest
 pw_exceptions = importlib.import_module("plugwise.exceptions")
 pw_smile = importlib.import_module("plugwise.smile")
 pw_constants = importlib.import_module("plugwise.constants")
+pw_entities = importlib.import_module("plugwise.entities")
 
 pp = PrettyPrinter(indent=8)
 
@@ -360,12 +361,52 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if device_count == 0:
                 _LOGGER.info("      ! no devices found in this location")
 
+    @staticmethod
+    def th_prop_selector(arg, thermostat):
+        """GW_Thermostat property selector function for device_test()."""
+        if thermostat is None:
+            return False
+
+        selector = {
+            "attributes": thermostat.extra_state_attributes,
+            "compressor_state": thermostat.compressor_state,
+            "cooling_state": thermostat.cooling_state,
+            "heating_state": thermostat.heating_state,
+            "hvac_mode": thermostat.hvac_mode,
+            "presets": thermostat.presets,
+            "active_preset": thermostat.preset_mode,
+            "preset_modes": thermostat.preset_modes,
+            "last_used": thermostat.last_active_schema,
+            "schedule_temperature": thermostat.schedule_temperature,
+            "setpoint": thermostat.target_temperature,
+            "temperature": thermostat.current_temperature,
+        }
+        return selector.get(arg)
+
+    @staticmethod
+    def bs_prop_selector(arg, b_sensor):
+        """GW_B_Sensor property selector function for device_test()."""
+        selector = {
+            "attributes": b_sensor.extra_state_attributes,
+            "icon": b_sensor.icon,
+            "state": b_sensor.is_on,
+            "notification": b_sensor.notification,
+        }
+        return selector.get(arg)
+
     @pytest.mark.asyncio
     async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
-        device_list = smile.get_all_devices()
-        self._write_json("get_all_devices", device_list)
+        MASTER_THERMOSTATS = [
+            "thermostat",
+            "zone_thermostat",
+        ]
+        bsw_lists = ["binary_sensors", "sensors", "switches"]
+        smile.get_all_devices()
+        await smile.update_gw_devices()
+        device_list = smile.gw_devices
+        self._write_json("all_devices", device_list)
         self._write_json("notifications", smile.notifications)
 
         location_list = smile.thermo_locs
@@ -374,16 +415,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         self.show_setup(location_list, device_list)
         pp4 = PrettyPrinter(indent=4)
-        pp8 = PrettyPrinter(indent=8)
-        _LOGGER.debug("Device list:\n%s", pp4.pformat(device_list))
-        await smile.update_device()
+        # pp8 = PrettyPrinter(indent=8)
+        # _LOGGER.debug("Device list:\n%s", pp4.pformat(device_list))
         for dev_id, details in device_list.items():
-            data = smile.get_device_data(dev_id)
-            self._write_json("get_device_data/" + dev_id, data)
+            data = smile.gw_devices[dev_id]
+            self._write_json("device_data/" + dev_id, data)
             _LOGGER.debug(
                 "%s",
-                "Device {} id:{}\nDetails: {}\nData: {}".format(
-                    details["name"], dev_id, pp4.pformat(details), pp8.pformat(data)
+                "Device {} id:{}\nDetails:\n{}".format(
+                    details["name"], dev_id, pp4.pformat(details)
                 ),
             )
 
@@ -395,7 +435,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
-                    data = smile.get_device_data(dev_id)
+                    thermostat = None
+                    data = smile.gw_devices[dev_id]
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
@@ -403,6 +444,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         ),
                     )
                     _LOGGER.info("  + Device data: %s", data)
+                    if data["class"] in MASTER_THERMOSTATS:
+                        thermostat = pw_entities.GW_Thermostat(smile, dev_id)
+                        thermostat.update_data()
+                        _LOGGER.info(
+                            "%s",
+                            "Thermostat properties for {}:\n{}".format(
+                                dev_id, pp4.pformat(thermostat.__dict__)
+                            ),
+                        )
+
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
@@ -410,7 +461,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 measure_key, measure_assert
                             ),
                         )
-                        assert data[measure_key] == measure_assert
+                        if measure_key in bsw_lists:
+                            for a, a_item in enumerate(data[measure_key]):
+                                for b, b_item in enumerate(measure_assert):
+                                    if a_item["id"] != b_item["id"]:
+                                        continue
+
+                                    assert a_item["state"] == b_item["state"]
+                                    b_sensor = None
+                                    if measure_key == "binary_sensors":
+                                        b_sensor = pw_entities.GW_B_Sensor(
+                                            smile, dev_id, a_item["id"]
+                                        )
+                                        b_sensor.update_data()
+                                        assert (
+                                            self.bs_prop_selector("state", b_sensor)
+                                            == b_item["state"]
+                                        )
+                        else:
+                            if measure_key in data:
+                                assert data[measure_key] == measure_assert
+                            if self.th_prop_selector(measure_key, thermostat):
+                                assert (
+                                    self.th_prop_selector(measure_key, thermostat)
+                                    == measure_assert
+                                )
 
     @pytest.mark.asyncio
     async def tinker_switch(
@@ -528,23 +603,40 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
         # testdata is a dictionary with key ctrl_id_dev_id => keys:values
-        # testdata={
-        #             'ctrl_id': { 'outdoor+temp': 20.0, }
-        #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
-        #         }
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
-                "setpoint": 20.5,
-                "temperature": 20.4,
-                "illuminance": 151,
+                "attributes": {
+                    "available_schemas": ["Thermostat schedule"],
+                    "selected_schema": "Thermostat schedule",
+                },
+                "last_used": "Thermostat schedule",
+                "presets": {
+                    "asleep": [19.0, 0],
+                    "away": [19.0, 0],
+                    "home": [20.0, 0],
+                    "no_frost": [10.0, 0],
+                    "vacation": [15.0, 0],
+                },
+                "preset_mode": "home",
+                "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
+                "schedule_temperature": 20.0,
+                "sensors": [
+                    {"id": "illuminance", "state": 151},
+                    {"id": "setpoint", "state": 20.5},
+                    {"id": "temperature", "state": 20.4},
+                ],
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
-                "water_temperature": 23.6,
-                "water_pressure": 1.2,
-                "modulation_level": 0,
                 "heating_state": True,
+                "sensors": [
+                    {"id": "water_temperature", "state": 23.6},
+                    {"id": "intended_boiler_temperature", "state": 17.0},
+                    {"id": "modulation_level", "state": 0.0},
+                    {"id": "return_temperature", "state": 21.7},
+                    {"id": "water_pressure", "state": 1.2},
+                ],
             },
         }
 
@@ -600,13 +692,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "9e7377867dc24e51b8098a5ba02bd89d": {
-                "setpoint": 15.0,
-                "temperature": 21.4,
-                "illuminance": 19.5,
+                "sensors": [
+                    {"id": "illuminance", "state": 19.5},
+                    {"id": "setpoint", "state": 15.0},
+                    {"id": "temperature", "state": 21.4},
+                ],
             },
             # Central
             "ea5d8a7177e541b0a4b52da815166de4": {
-                "water_pressure": 1.7,
+                "sensors": [{"id": "water_pressure", "state": 1.7}]
             },
         }
 
@@ -658,11 +752,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
-                "electricity_consumed_peak_point": 458.0,
-                "net_electricity_point": 458.0,
-                "gas_consumed_cumulative": 584.433,
-                "electricity_produced_peak_cumulative": 1296.136,
-                "electricity_produced_off_peak_cumulative": 482.598,
+                "sensors": [
+                    {"id": "electricity_consumed_peak_point", "state": 458.0},
+                    {"id": "net_electricity_point", "state": 458.0},
+                    {"id": "gas_consumed_cumulative", "state": 584.433},
+                    {"id": "electricity_produced_peak_cumulative", "state": 1296.136},
+                    {
+                        "id": "electricity_produced_off_peak_cumulative",
+                        "state": 482.598,
+                    },
+                ]
             }
         }
 
@@ -695,10 +794,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "199aa40f126840f392983d171374ab0b": {
-                "electricity_consumed_peak_point": 368.0,
-                "net_electricity_point": 368.0,
-                "gas_consumed_cumulative": 2637.993,
-                "electricity_produced_peak_cumulative": 0.0,
+                "sensors": [
+                    {"id": "electricity_consumed_peak_point", "state": 368.0},
+                    {"id": "net_electricity_point", "state": 368.0},
+                    {"id": "gas_consumed_cumulative", "state": 2637.993},
+                    {"id": "electricity_produced_peak_cumulative", "state": 0.0},
+                ]
             }
         }
 
@@ -734,17 +835,26 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
                 "selected_schedule": None,
-                "illuminance": 60.0,
                 "active_preset": "home",
+                "sensors": [{"id": "illuminance", "state": 60.0}],
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "heating_state": True,
-                "water_pressure": 2.1,
-                "water_temperature": 52.0,
+                "binary_sensors": [
+                    {
+                        "id": "flame_state",
+                        "state": True,
+                        "icon": pw_constants.FLAME_ICON,
+                    }
+                ],
+                "sensors": [
+                    {"id": "water_pressure", "state": 2.1},
+                    {"id": "water_temperature", "state": 52.0},
+                ],
             },
             "0466eae8520144c78afb29628384edeb": {
-                "outdoor_temperature": 7.44,
+                "sensors": [{"id": "outdoor_temperature", "state": 7.44}]
             },
         }
 
@@ -832,11 +942,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
                 "selected_schedule": "Normal",
-                "illuminance": 35.0,
                 "active_preset": "away",
+                "sensors": [{"id": "illuminance", "state": 35.0}],
             },
             "a270735e4ccd45239424badc0578a2b1": {
-                "outdoor_temperature": 10.8,
+                "sensors": [{"id": "outdoor_temperature", "state": 10.8}]
             },
             # # Central
             # "c46b4794d28149699eacf053deedd003": {
@@ -891,11 +1001,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
                 "selected_schedule": "Normal",
-                "illuminance": 44.8,
                 "active_preset": "home",
+                "sensors": [{"id": "illuminance", "state": 44.8}],
             },
             "a270735e4ccd45239424badc0578a2b1": {
-                "outdoor_temperature": 16.6,
+                "sensors": [{"id": "outdoor_temperature", "state": 16.6}]
             },
             # # Central
             # "c46b4794d28149699eacf053deedd003": {
@@ -948,21 +1058,32 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
                 "active_preset": "home",
-                "setpoint": 20.5,  # HA setpoint_temp
-                "temperature": 20.5,  # HA current_temp
+                "sensors": [
+                    {"id": "setpoint", "state": 20.5},
+                    {"id": "temperature", "state": 20.5},
+                ],
             },
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "heating_state": False,
+                "binary_sensors": [
+                    {
+                        "id": "flame_state",
+                        "state": False,
+                        "icon": pw_constants.IDLE_ICON,
+                    }
+                ],
             },
             "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
-                "outdoor_temperature": 11.9,
+                "sensors": [{"id": "outdoor_temperature", "state": 11.9}]
             },
             # Plug MediaCenter
             "aa6b0002df0a46e1b1eb94beb61eddfe": {
-                "electricity_consumed": 10.3,
-                "lock": False,
-                "relay": True,
+                "sensors": [{"id": "electricity_consumed", "state": 10.3}],
+                "switches": [
+                    {"id": "lock", "state": False},
+                    {"id": "relay", "state": True},
+                ],
             },
         }
 
@@ -1013,9 +1134,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_adam_plus_anna_new(self):
         """Test Adam with Anna and a switch-group setup."""
         testdata = {
+            # Central
+            "2743216f626f43948deec1f7ab3b3d70": {
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": True,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ]
+            },
             # Test Switch
             "b83f9f9758064c0fab4af6578cba4c6d": {
-                "relay": True,
+                "switches": [{"id": "relay", "state": True}]
             },
         }
 
@@ -1056,42 +1187,135 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new_copy_dhw_and_heating(self):
+        """Test Adam with Anna and heating and domestic_hot_water heating at the same time."""
+        testdata = {
+            # Central
+            "2743216f626f43948deec1f7ab3b3d70": {
+                "heating_state": True,
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": True,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ],
+            }
+        }
+
+        self.smile_setup = "adam_plus_anna_new_copy_dhw_and_heating"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new_copy_cooling(self):
+        """Test Adam with Anna and cooling."""
+        testdata = {
+            # Central
+            "2743216f626f43948deec1f7ab3b3d70": {
+                "cooling_state": True,
+            },
+        }
+
+        self.smile_setup = "adam_plus_anna_new_copy_cooling"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new_copy_dhw_and_cooling(self):
+        """Test Adam with Anna and cooling."""
+        testdata = {
+            # Central
+            "2743216f626f43948deec1f7ab3b3d70": {
+                "cooling_state": True,
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": True,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ],
+            }
+        }
+
+        self.smile_setup = "adam_plus_anna_new_copy_dhw_and_cooling"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
-                "setpoint": 21.5,
-                "temperature": 21.1,
-                "battery": 34,
+                "sensors": [
+                    {"id": "setpoint", "state": 21.5},
+                    {"id": "temperature", "state": 21.1},
+                    {"id": "battery", "state": 34},
+                ]
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
-                "setpoint": 21.5,
-                "temperature": 26.2,
-                "valve_position": 0,
+                "sensors": [
+                    {"id": "setpoint", "state": 21.5},
+                    {"id": "temperature", "state": 26.2},
+                    {"id": "valve_position", "state": 0},
+                ]
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
-                "electricity_consumed": 35.8,
-                "relay": True,
+                "sensors": [
+                    {"id": "electricity_consumed", "state": 35.8},
+                    {"id": "temperature", "state": 26.2},
+                    {"id": "valve_position", "state": 0},
+                ],
+                "switches": [
+                    {"id": "relay", "state": True},
+                ],
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
-                "setpoint": 13.0,
-                "temperature": 16.5,
-                "battery": 67,
+                "sensors": [
+                    {"id": "setpoint", "state": 13.0},
+                    {"id": "temperature", "state": 16.5},
+                    {"id": "battery", "state": 67},
+                ]
             },
             # Adam
             "fe799307f1624099878210aa0b9f1475": {
                 "heating_state": False,
-                "outdoor_temperature": 7.69,
+                "binary_sensors": [
+                    {
+                        "id": "plugwise_notification",
+                        "state": True,
+                        "icon": pw_entities.NOTIFICATION_ICON,
+                    }
+                ],
+                "sensors": [
+                    {"id": "outdoor_temperature", "state": 7.69},
+                ],
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
-                "electricity_consumed": 12.2,
-                "relay": True,
+                "sensors": [
+                    {"id": "electricity_consumed", "state": 12.2},
+                ],
+                "switches": [
+                    {"id": "relay", "state": True},
+                ],
             },
         }
 
@@ -1160,36 +1384,52 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
-                "setpoint": 21.5,
-                "temperature": 20.9,
-                "battery": 34,
+                "sensors": [
+                    {"id": "setpoint", "state": 21.5},
+                    {"id": "temperature", "state": 20.9},
+                    {"id": "battery", "state": 34},
+                ]
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
-                "setpoint": 21.5,
-                "temperature": 26.0,
-                "valve_position": 100,
+                "sensors": [
+                    {"id": "setpoint", "state": 21.5},
+                    {"id": "temperature", "state": 26.0},
+                    {"id": "valve_position", "state": 100},
+                ]
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
-                "electricity_consumed": 35.6,
-                "relay": True,
+                "sensors": [
+                    {"id": "electricity_consumed", "state": 35.6},
+                ],
+                "switches": [
+                    {"id": "relay", "state": True},
+                ],
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
-                "setpoint": 13.0,
-                "temperature": 16.5,
-                "battery": 67,
+                "sensors": [
+                    {"id": "setpoint", "state": 13.0},
+                    {"id": "temperature", "state": 16.5},
+                    {"id": "battery", "state": 67},
+                ]
             },
             # Adam
             "fe799307f1624099878210aa0b9f1475": {
                 "heating_state": True,
-                "outdoor_temperature": 7.81,
+                "sensors": [
+                    {"id": "outdoor_temperature", "state": 7.81},
+                ],
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
-                "electricity_consumed": 12.2,
-                "relay": True,
+                "sensors": [
+                    {"id": "electricity_consumed", "state": 12.2},
+                ],
+                "switches": [
+                    {"id": "relay", "state": True},
+                ],
             },
         }
 
@@ -1248,9 +1488,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "electricity_consumed_peak_point": 650.0,
-                "electricity_produced_peak_cumulative": 0.0,
-                "electricity_consumed_off_peak_cumulative": 10263.159,
+                "sensors": [
+                    {"id": "electricity_consumed_peak_point", "state": 650.0},
+                    {"id": "electricity_produced_peak_cumulative", "state": 0.0},
+                    {
+                        "id": "electricity_consumed_off_peak_cumulative",
+                        "state": 10263.159,
+                    },
+                ]
             }
         }
 
@@ -1280,10 +1525,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "electricity_consumed_peak_point": 644.0,
-                "electricity_produced_peak_cumulative": 20.0,
-                "electricity_consumed_off_peak_cumulative": 10263.159,
-                "net_electricity_point": 244,
+                "sensors": [
+                    {"id": "electricity_consumed_peak_point", "state": 644.0},
+                    {"id": "electricity_produced_peak_cumulative", "state": 20.0},
+                    {
+                        "id": "electricity_consumed_off_peak_cumulative",
+                        "state": 10263.159,
+                    },
+                    {"id": "net_electricity_point", "state": 244},
+                ]
             }
         }
 
@@ -1314,12 +1564,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
-                "electricity_consumed_peak_point": 0.0,
-                "electricity_produced_peak_cumulative": 396.559,
-                "electricity_consumed_off_peak_cumulative": 551.09,
-                "electricity_produced_peak_point": 2761,
-                "net_electricity_point": -2761,
-                "gas_consumed_cumulative": 584.85,
+                "sensors": [
+                    {"id": "electricity_consumed_peak_point", "state": 0.0},
+                    {"id": "electricity_produced_peak_cumulative", "state": 396.559},
+                    {"id": "electricity_consumed_off_peak_cumulative", "state": 551.09},
+                    {"id": "electricity_produced_peak_point", "state": 2761},
+                    {"id": "net_electricity_point", "state": -2761},
+                    {"id": "gas_consumed_cumulative", "state": 584.85},
+                ]
             }
         }
 
@@ -1351,17 +1603,25 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "standaard",
-                "illuminance": 86.0,
                 "active_preset": "home",
+                "sensors": [{"id": "illuminance", "state": 86.0}],
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "dhw_state": False,
-                "water_temperature": 29.1,
-                "water_pressure": 1.57,
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": False,
+                        "icon": pw_constants.FLOW_OFF_ICON,
+                    }
+                ],
+                "sensors": [
+                    {"id": "water_temperature", "state": 29.1},
+                    {"id": "water_pressure", "state": 1.57},
+                ],
             },
             "015ae9ea3f964e668e490fa39da3870b": {
-                "outdoor_temperature": 20.2,
+                "sensors": [{"id": "outdoor_temperature", "state": 20.2}]
             },
         }
 
@@ -1395,17 +1655,25 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": None,
-                "illuminance": 24.5,
                 "active_preset": "home",
+                "sensors": [{"id": "illuminance", "state": 24.5}],
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "dhw_state": False,
-                "water_temperature": 24.7,
-                "water_pressure": 1.61,
+                "binary_sensors": [
+                    {
+                        "id": "dhw_state",
+                        "state": False,
+                        "icon": pw_constants.FLOW_ON_ICON,
+                    }
+                ],
+                "sensors": [
+                    {"id": "water_temperature", "state": 24.7},
+                    {"id": "water_pressure", "state": 1.61},
+                ],
             },
             "015ae9ea3f964e668e490fa39da3870b": {
-                "outdoor_temperature": 22.0,
+                "sensors": [{"id": "outdoor_temperature", "state": 22.0}]
             },
         }
 
@@ -1462,12 +1730,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Koelkast
             "e1c884e7dede431dadee09506ec4f859": {
-                "electricity_consumed": 50.5,
-                "relay": True,
+                "sensors": [{"id": "electricity_consumed", "state": 50.5}],
+                "switches": [{"id": "relay", "state": True}],
             },
             # Vaatwasser
             "aac7b735042c4832ac9ff33aae4f453b": {
-                "electricity_consumed_interval": 0.71,
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.71}]
             },
         }
 
@@ -1498,13 +1766,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Tv hoek 25F6790
             "c71f1cb2100b42ca942f056dcb7eb01f": {
-                "electricity_consumed": 33.3,
-                "lock": False,
-                "relay": True,
+                "sensors": [{"id": "electricity_consumed", "state": 33.3}],
+                "switches": [
+                    {"id": "lock", "state": False},
+                    {"id": "relay", "state": True},
+                ],
             },
             # Wasdroger 043AECA
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "electricity_consumed_interval": 0.21,
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.21}]
             },
         }
 
@@ -1546,8 +1816,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "electricity_consumed_peak_point": 571,
-                "electricity_produced_peak_cumulative": 0.0,
+                "sensors": [
+                    {"id": "electricity_consumed_peak_point", "state": 571},
+                    {"id": "electricity_produced_peak_cumulative", "state": 0.0},
+                ]
             }
         }
 
