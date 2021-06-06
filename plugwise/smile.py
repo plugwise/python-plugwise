@@ -190,6 +190,10 @@ class Smile(SmileHelper):
             self.stretch_v2 = self.smile_version[1].major == 2
             self.stretch_v3 = self.smile_version[1].major == 3
 
+    async def close_connection(self):
+        """Close the Plugwise connection."""
+        await self.websession.close()
+
     async def full_update_device(self):
         """Perform a first fetch of all XML data, needed for initialization."""
         await self.update_domain_objects()
