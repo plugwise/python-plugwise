@@ -415,17 +415,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         self.show_setup(location_list, device_list)
         pp4 = PrettyPrinter(indent=4)
-        # pp8 = PrettyPrinter(indent=8)
-        # _LOGGER.debug("Device list:\n%s", pp4.pformat(device_list))
-        for dev_id, details in device_list.items():
-            data = smile.gw_devices[dev_id]
-            self._write_json("device_data/" + dev_id, data)
-            _LOGGER.debug(
-                "%s",
-                "Device {} id:{}\nDetails:\n{}".format(
-                    details["name"], dev_id, pp4.pformat(details)
-                ),
-            )
 
         for testdevice, measurements in testdata.items():
             assert testdevice in device_list
