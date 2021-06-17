@@ -202,6 +202,7 @@ HW_MODELS = {
     "120006": "Sense Legrand",
     "070051": "Switch",
     "080029": "Switch",
+    "168-01": "Jip",
     "160-01": "Plug",
     "106-03": "Tom/Floor",
     "158-01": "Lisa",
