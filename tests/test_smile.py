@@ -1477,7 +1477,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Woonkamer
             "f61f1a2535f54f52ad006a3d18e459ca": {
                 "sensors": [
-                    {"id": "humidity", "state": 56},
+                    {"id": "humidity", "state": 56.2},
                 ]
             }
         }
