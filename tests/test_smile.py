@@ -1485,7 +1485,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": [
                     {"id": "humidity", "state": 56.2},
                 ],
-            }
+            },
         }
 
         self.smile_setup = "adam_jip"
