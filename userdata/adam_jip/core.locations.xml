@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='13228dab8ce04617af318a2888b3c548'>
+		<name>Woonkamer</name>
+		<description></description>
+		<type>livingroom</type>
+		<created_date>2021-05-31T16:10:18.241+02:00</created_date>
+		<modified_date>2021-06-17T17:23:51.396+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances>
+			<appliance id='833de10f269c4deab58fb9df69901b4e'/>
+			<appliance id='f61f1a2535f54f52ad006a3d18e459ca'/>
+		</appliances>
+		<logs>
+			<point_log id='408ee195512649afbd5eb0e46ff8b98e'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-06-17T17:23:51.383+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-04T15:25:08.833+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<period start_date="2021-06-17T17:23:51.383+02:00" end_date="2021-06-17T17:23:51.383+02:00">
+					<measurement log_date="2021-06-17T17:23:51.383+02:00">27.40</measurement>
+				</period>
+			</point_log>
+			<point_log id='828953ff427b4956999796952998ee85'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval/>
+			</point_log>
+			<point_log id='8b00177c19954fd488d1bfd087e32439'>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<updated_date>2021-06-17T16:07:26.652+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-04T13:30:04.682+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<period start_date="2021-06-17T16:07:26.652+02:00" end_date="2021-06-17T16:07:26.652+02:00">
+					<measurement log_date="2021-06-17T16:07:26.652+02:00">56.25</measurement>
+				</period>
+			</point_log>
+			<point_log id='948922f1b1ed42c2b5e4a81f2c2bbb77'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-06-17T09:56:30.575+02:00</updated_date>
+				<last_consecutive_log_date>2021-05-31T16:25:49.565+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2021-06-17T09:56:30.575+02:00" end_date="2021-06-17T09:56:30.575+02:00">
+					<measurement log_date="2021-06-17T09:56:30.575+02:00">9.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='d24786f5aab5468f93b0ecfb51a84644'>
+				<updated_date>2021-06-17T09:56:30.576+02:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>9</setpoint>
+				<lower_bound>4</lower_bound>
+				<upper_bound>30</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='69e9ac9a815c49218ab76ae1df3e5c25'/></regulations>
+				<cooling_allowed>true</cooling_allowed>
+				<preheating_allowed>true</preheating_allowed>
+				<control_state>off</control_state>
+				<regulation_control>active</regulation_control>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='06aecb3d00354375924f50c47af36bd2'>
+		<name>Slaapkamer</name>
+		<description></description>
+		<type>bedroom</type>
+		<created_date>2021-01-14T19:55:19.399+01:00</created_date>
+		<modified_date>2021-06-17T17:22:30.294+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>no_frost</preset>
+		<clients/>
+		<appliances>
+			<appliance id='1346fbd8498d4dbcab7e18d51b771f3d'/>
+			<appliance id='356b65335e274d769c338223e7af9c33'/>
+		</appliances>
+		<logs>
+			<point_log id='69fd0f9a46ba4f67aaccc1f8f5073f0b'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-06-17T17:22:30.285+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-04T15:32:16.593+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<period start_date="2021-06-17T17:22:30.285+02:00" end_date="2021-06-17T17:22:30.285+02:00">
+					<measurement log_date="2021-06-17T17:22:30.285+02:00">24.20</measurement>
+				</period>
+			</point_log>
+			<point_log id='dbe45872c09944f294ee1aa89b7fa981'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-06-17T15:36:08.568+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-04T07:45:23.653+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2021-06-17T15:36:08.568+02:00" end_date="2021-06-17T15:36:08.568+02:00">
+					<measurement log_date="2021-06-17T15:36:08.568+02:00">13.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='ceac3e3a1ef849fea3ee04cb16106b07'>
+				<updated_date>2021-06-17T15:36:03.992+02:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>13</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='69e9ac9a815c49218ab76ae1df3e5c25'/></regulations>
+				<cooling_allowed>true</cooling_allowed>
+				<preheating_allowed>true</preheating_allowed>
+				<control_state>off</control_state>
+				<regulation_control>active</regulation_control>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='d58fec52899f4f1c92e4f8fad6d8c48c'>
+		<name>Logeerkamer</name>
+		<description></description>
+		<type>guestroom</type>
+		<created_date>2021-01-14T19:55:43.128+01:00</created_date>
+		<modified_date>2021-06-17T17:25:23.140+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances>
+			<appliance id='1da4d325838e4ad8aac12177214505c9'/>
+			<appliance id='a6abc6a129ee499c88a4d420cc413b47'/>
+		</appliances>
+		<logs>
+			<point_log id='27b83f8c2a7f4aa7bff241ba878ffeb7'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-05-31T16:34:08.450+02:00</updated_date>
+				<last_consecutive_log_date>2021-05-31T06:30:27.331+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2021-05-31T16:34:08.450+02:00" end_date="2021-05-31T16:34:08.450+02:00">
+					<measurement log_date="2021-05-31T16:34:08.450+02:00">13.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='4ba65bbd3b3542bc8ad11cc132f5755e'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-06-17T17:25:23.127+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-04T15:28:58.650+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<period start_date="2021-06-17T17:25:23.127+02:00" end_date="2021-06-17T17:25:23.127+02:00">
+					<measurement log_date="2021-06-17T17:25:23.127+02:00">30.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='67a475302a8d4344b1ef78cfad7f662e'>
+				<updated_date>2021-05-31T16:31:10.008+02:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>13</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='69e9ac9a815c49218ab76ae1df3e5c25'/></regulations>
+				<cooling_allowed>true</cooling_allowed>
+				<preheating_allowed>true</preheating_allowed>
+				<control_state>off</control_state>
+				<regulation_control>active</regulation_control>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='d27aede973b54be484f6842d1b2802ad'>
+		<name>Kinderkamer</name>
+		<description></description>
+		<type>nursery</type>
+		<created_date>2021-01-14T19:55:34.878+01:00</created_date>
+		<modified_date>2021-06-17T17:31:58.571+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances>
+			<appliance id='6f3e9d7084214c21b9dfa46f6eeb8700'/>
+			<appliance id='d4496250d0e942cfa7aea3476e9070d5'/>
+		</appliances>
+		<logs>
+			<point_log id='7202885e59374fe19b7b7345ec97c34a'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-05-29T19:02:36.575+02:00</updated_date>
+				<last_consecutive_log_date>2021-04-21T12:19:10.106+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2021-05-29T19:02:36.575+02:00" end_date="2021-05-29T19:02:36.575+02:00">
+					<measurement log_date="2021-05-29T19:02:36.575+02:00">13.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='eac7ed2ebdee4860b0c61addab7626a8'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-06-17T17:31:58.557+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-04T15:28:39.356+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<period start_date="2021-06-17T17:31:58.557+02:00" end_date="2021-06-17T17:31:58.557+02:00">
+					<measurement log_date="2021-06-17T17:31:58.557+02:00">30.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='38bd4b2329444fe0b3791d89c8eadb3c'>
+				<updated_date>2021-05-29T19:02:36.576+02:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>13</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='69e9ac9a815c49218ab76ae1df3e5c25'/></regulations>
+				<cooling_allowed>true</cooling_allowed>
+				<preheating_allowed>true</preheating_allowed>
+				<control_state>off</control_state>
+				<regulation_control>active</regulation_control>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='9e4433a9d69f40b3aefd15e74395eaec'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2019-01-30T11:26:50.383+01:00</created_date>
+		<modified_date>2021-06-17T17:21:44.930+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='177167e6a4fc4bc4967de14f59683b2d'>
+				<type>weather_description</type>
+				<unit></unit>
+				<updated_date>2021-06-17T17:21:44+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-17T17:21:44+02:00</last_consecutive_log_date>
+				<interval/>
+				<weather_descriptor id='5235510344e64d0c8093f0b9fe8cb7f6'/>
+				<period start_date="2021-06-17T17:21:44+02:00" end_date="2021-06-17T17:21:44+02:00">
+					<measurement log_date="2021-06-17T17:21:44+02:00">overcast</measurement>
+				</period>
+			</point_log>
+			<point_log id='351a7c8be0b64b00934ca6ff66a7ea06'>
+				<type>solar_irradiance</type>
+				<unit>W_m2</unit>
+				<updated_date>2021-06-17T17:21:44+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-17T17:21:44+02:00</last_consecutive_log_date>
+				<interval/>
+				<irradiance_meter id='a5508a7723b74864afae60a8022a8d17'/>
+				<period start_date="2021-06-17T17:21:44+02:00" end_date="2021-06-17T17:21:44+02:00">
+					<measurement log_date="2021-06-17T17:21:44+02:00">449.25</measurement>
+				</period>
+			</point_log>
+			<point_log id='5580bc19d5a04a5c8bb1c79e48a0d5ef'>
+				<type>wind_vector</type>
+				<unit>m_s</unit>
+				<updated_date>2021-06-17T17:21:44+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-17T17:21:44+02:00</last_consecutive_log_date>
+				<interval/>
+				<wind_vector id='2c7f708ab58043b9ac04ef6d0e4a57fb'/>
+				<period start_date="2021-06-17T17:21:44+02:00" end_date="2021-06-17T17:21:44+02:00">
+					<measurement log_date="2021-06-17T17:21:44+02:00">(2.68,216.00)</measurement>
+				</period>
+			</point_log>
+			<point_log id='7c8cbbc641644be9bd4e65809e2a19b2'>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<updated_date>2021-06-17T17:21:44+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-17T17:21:44+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<hygro_meter id='60c03d2933674a6ba42b6f0eace165f9'/>
+				<period start_date="2021-06-17T17:21:44+02:00" end_date="2021-06-17T17:21:44+02:00">
+					<measurement log_date="2021-06-17T17:21:44+02:00">68.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='80342f6ee42c4fd2b9cfae93b694c408'>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-06-17T17:21:44+02:00</updated_date>
+				<last_consecutive_log_date>2021-06-17T17:21:44+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='2be8bc18b46a41b684ead7adfd40e69c'/>
+				<period start_date="2021-06-17T17:21:44+02:00" end_date="2021-06-17T17:21:44+02:00">
+					<measurement log_date="2021-06-17T17:21:44+02:00">24.94</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+</locations>
