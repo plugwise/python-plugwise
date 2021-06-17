@@ -1482,7 +1482,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             }
         }
 
-        self.smile_setup = "adam_plus_jip"
+        self.smile_setup = "adam_jip"
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
