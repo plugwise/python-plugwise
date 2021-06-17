@@ -1474,11 +1474,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_adam_plus_jip(self):
         """Test Adam with Jip."""
         testdata = {
-            # Woonkamer
+            # Woonkamer - Tom
+            "833de10f269c4deab58fb9df69901b4e": {
+                "sensors": [
+                    {"id": "valve_position", "state": 100},
+                ],
+            },
+            # Woonkamer - Jip
             "f61f1a2535f54f52ad006a3d18e459ca": {
                 "sensors": [
                     {"id": "humidity", "state": 56.2},
-                ]
+                ],
             }
         }
 
