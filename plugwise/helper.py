@@ -488,7 +488,7 @@ class SmileHelper:
             if (
                 not self._smile_legacy
                 and appl.pwclass == "thermostat"
-                and appl.location == None
+                and appl.location is None
             ):
                 self.appl_data.pop(appl.id)
 
