@@ -703,6 +703,7 @@ class SmileHelper:
 
         thermo_matching = {
             "thermostat": 3,
+            "zone_thermometer": 2,
             "zone_thermostat": 2,
             "thermostatic_radiator_valve": 1,
         }
