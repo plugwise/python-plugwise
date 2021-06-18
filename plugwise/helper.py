@@ -485,7 +485,7 @@ class SmileHelper:
                 "types": appl.types,
                 "vendor": appl.v_name,
             }
-            if appl.pwclass == "thermostat" and appl.location == None:
+            if not self._smile_legacy and appl.pwclass == "thermostat" and appl.location == None:
                 self.appl_data.pop(appl.id)
 
         # For legacy Anna gateway and heater_central is the same device
