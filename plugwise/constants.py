@@ -750,7 +750,7 @@ GAS_CONSUMED_INTERVAL = {
 HUMIDITY = {
     ATTR_ID: "humidity",
     ATTR_ENABLED: True,
-    ATTR_NAME: "humidity",
+    ATTR_NAME: "Relative Humidity",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "humidity",
     ATTR_ICON: None,
