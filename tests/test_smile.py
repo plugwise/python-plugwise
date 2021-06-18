@@ -400,7 +400,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting testdata:")
         MASTER_THERMOSTATS = [
             "thermostat",
+            "zone_thermometer",
             "zone_thermostat",
+            "thermostatic_radiator_valve",
         ]
         bsw_lists = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
