@@ -361,11 +361,6 @@ DEFAULT_PORT = 80
 
 SEVERITIES = ["other", "info", "warning", "error"]
 SWITCH_GROUP_TYPES = ["switching", "report"]
-MASTER_THERMOSTATS = [
-    "thermostat",
-    "zone_thermostat",
-    "thermostatic_radiator_valve",
-]
 THERMOSTAT_CLASSES = [
     "thermostat",
     "zone_thermometer",
