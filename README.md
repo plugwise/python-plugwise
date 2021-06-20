@@ -42,11 +42,12 @@ Please make sure you at least ran `scripts/setup.sh` before attempting to `git c
 Module providing interfacing with the Plugwise devices:
 
 - [x] Adam
-  - [x] Floor
-  - [x] Koen (a Koen always comes with a Plug, the Plug is the active part)
   - [x] Lisa
-  - [x] Plug
+  - [x] Jip
+  - [x] Floor
   - [x] Tom
+  - [x] Koen (a Koen always comes with a Plug, the Plug is the active part)
+  - [x] Plug
 - [x] Anna
 - [x] Smile P1
 - [x] Stick
