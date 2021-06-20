@@ -202,6 +202,7 @@ HW_MODELS = {
     "120006": "Sense Legrand",
     "070051": "Switch",
     "080029": "Switch",
+    "168-01": "Jip",
     "160-01": "Plug",
     "106-03": "Tom/Floor",
     "158-01": "Lisa",
@@ -362,6 +363,7 @@ SEVERITIES = ["other", "info", "warning", "error"]
 SWITCH_GROUP_TYPES = ["switching", "report"]
 THERMOSTAT_CLASSES = [
     "thermostat",
+    "zone_thermometer",
     "zone_thermostat",
     "thermostatic_radiator_valve",
 ]
@@ -404,6 +406,8 @@ DEVICE_MEASUREMENTS = {
     "battery": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "temperature_difference": {ATTR_UNIT_OF_MEASUREMENT: DEGREE},
     "valve_position": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    # Jip
+    "humidity": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     # Plug
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
@@ -743,6 +747,15 @@ GAS_CONSUMED_INTERVAL = {
     ATTR_ICON: FLAME_ICON,
     ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
 }
+HUMIDITY = {
+    ATTR_ID: "humidity",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Relative Humidity",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "humidity",
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
+}
 ILLUMINANCE = {
     ATTR_ID: "illuminance",
     ATTR_ENABLED: True,
@@ -873,6 +886,7 @@ SENSORS = [
     EL_PRODUCED_PEAK_POINT,
     GAS_CONSUMED_CUMULATIVE,
     GAS_CONSUMED_INTERVAL,
+    HUMIDITY,
     ILLUMINANCE,
     INTENDED_BOILER_TEMP,
     MOD_LEVEL,

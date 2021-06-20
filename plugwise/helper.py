@@ -485,6 +485,12 @@ class SmileHelper:
                 "types": appl.types,
                 "vendor": appl.v_name,
             }
+            if (
+                not self._smile_legacy
+                and appl.pwclass == "thermostat"
+                and appl.location is None
+            ):
+                self.appl_data.pop(appl.id)
 
         # For legacy Anna gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
@@ -701,6 +707,7 @@ class SmileHelper:
 
         thermo_matching = {
             "thermostat": 3,
+            "zone_thermometer": 2,
             "zone_thermostat": 2,
             "thermostatic_radiator_valve": 1,
         }

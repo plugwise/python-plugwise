@@ -400,7 +400,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting testdata:")
         MASTER_THERMOSTATS = [
             "thermostat",
+            "zone_thermometer",
             "zone_thermostat",
+            "thermostatic_radiator_valve",
         ]
         bsw_lists = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
@@ -1467,6 +1469,32 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schemas=["CV Jessie"],
             unhappy=True,
         )
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_adam_plus_jip(self):
+        """Test Adam with Jip."""
+        testdata = {
+            # Woonkamer - Tom
+            "833de10f269c4deab58fb9df69901b4e": {
+                "sensors": [
+                    {"id": "valve_position", "state": 100},
+                ],
+            },
+            # Woonkamer - Jip
+            "f61f1a2535f54f52ad006a3d18e459ca": {
+                "sensors": [
+                    {"id": "humidity", "state": 56.2},
+                ],
+            },
+        }
+
+        self.smile_setup = "adam_jip"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata)
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
