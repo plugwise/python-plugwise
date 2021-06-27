@@ -86,7 +86,7 @@ class GW_B_Sensor:
                 if self._binary_sensor != "plugwise_notification":
                     continue
 
-                notify = self._api.notifications
+                notify = self._api._notifications
                 self._notification = {}
                 for severity in SEVERITIES:
                     self._attributes[f"{severity.upper()}_msg"] = []
