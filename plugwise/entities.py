@@ -1,5 +1,4 @@
 """ Plugwise Entity Classes."""
-import asyncio
 
 from .constants import (
     ATTR_ID,
@@ -12,15 +11,11 @@ from .constants import (
     HVAC_MODE_HEAT_COOL,
     HVAC_MODE_OFF,
     IDLE_ICON,
-    LOCATIONS,
     NO_NOTIFICATION_ICON,
     NOTIFICATION_ICON,
     PRESET_AWAY,
-    PW_NOTIFICATION,
-    RULES,
     SEVERITIES,
 )
-from .smile import Smile
 
 
 class GWBinarySensor:
@@ -72,11 +67,11 @@ class GWBinarySensor:
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
 
-        for key, value in data.items():
+        for key, dummy in data.items():
             if key != "binary_sensors":
                 continue
 
-            for idx, item in enumerate(data["binary_sensors"]):
+            for _, item in enumerate(data["binary_sensors"]):
                 if item[ATTR_ID] != self._binary_sensor:
                     continue
 
@@ -86,7 +81,7 @@ class GWBinarySensor:
                 if self._binary_sensor != "plugwise_notification":
                     continue
 
-                notify = self._api._notifications
+                notify = self._api.notifications
                 self._notification = {}
                 for severity in SEVERITIES:
                     self._attributes[f"{severity.upper()}_msg"] = []
