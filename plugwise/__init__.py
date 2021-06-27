@@ -3,4 +3,4 @@
 __version__ = "0.11.0"
 
 from plugwise.smile import Smile
-from plugwise.stick import stick
+from plugwise.stick import Stick

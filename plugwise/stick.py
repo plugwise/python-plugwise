@@ -63,8 +63,7 @@ from .util import validate_mac
 _LOGGER = logging.getLogger(__name__)
 
 
-# TODO: stick should become StickClass be PascalCase style
-class stick:
+class Stick:
     """Plugwise connection stick."""
 
     def __init__(self, port, callback=None):

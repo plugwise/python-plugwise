@@ -23,7 +23,7 @@ from .constants import (
 from .smile import Smile
 
 
-class GW_B_Sensor:
+class GWBinarySensor:
     """ Represent the Plugwise Smile/Stretch binary_sensor."""
 
     def __init__(self, api, dev_id, binary_sensor):
@@ -100,7 +100,7 @@ class GW_B_Sensor:
                             self._notification[notify_id] = f"{msg_type.title()}: {msg}"
 
 
-class GW_Thermostat:
+class GWThermostat:
     """Represent a Plugwise Thermostat Device."""
 
     def __init__(self, api, dev_id):
