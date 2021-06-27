@@ -57,7 +57,7 @@ class GW_B_Sensor:
         return self._notification
 
     @staticmethod
-    def icon_selector(arg, state):
+    def _icon_selector(arg, state):
         selector = {
             "dhw_state": FLOW_ON_ICON if state else FLOW_OFF_ICON,
             "flame_state": FLAME_ICON if state else IDLE_ICON,
@@ -81,7 +81,7 @@ class GW_B_Sensor:
                     continue
 
                 self._is_on = item[ATTR_STATE]
-                self._icon = self.icon_selector(self._binary_sensor, self._is_on)
+                self._icon = self._icon_selector(self._binary_sensor, self._is_on)
 
                 if self._binary_sensor != "plugwise_notification":
                     continue
@@ -125,8 +125,8 @@ class GW_Thermostat:
         self._smile_class = None
         self._temperature = None
 
-        self._active_device = self._api.active_device_present
-        self._heater_id = self._api.heater_id
+        self._active_device = self._api._active_device_present
+        self._heater_id = self._api._heater_id
         self._sm_thermostat = self._api.single_master_thermostat()
 
     @property
