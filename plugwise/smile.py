@@ -229,7 +229,7 @@ class Smile(SmileHelper):
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
                     self._update_helper(data, dev_dict, dev_id, "sensors", key)
-                self.device_state_updater(data, dev_id, dev_dict)
+                self._device_state_updater(data, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
                     self._update_helper(data, dev_dict, dev_id, "switches", key)
