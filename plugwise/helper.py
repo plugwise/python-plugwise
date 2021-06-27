@@ -144,7 +144,6 @@ class SmileHelper:
         self._home_location = None
         self._locations = None
         self._modules = None
-        self._notifications = {}
         self._smile_legacy = False
         self._host = None
         self._loc_data = {}
@@ -156,6 +155,7 @@ class SmileHelper:
         self._websession = None
 
         self.gateway_id = None
+        self.notifications = {}
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None
@@ -588,7 +588,7 @@ class SmileHelper:
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
-        self._notifications = {}
+        self.notifications = {}
         url = f"{self._endpoint}{DOMAIN_OBJECTS}"
         notifications = self._domain_objects.findall(".//notification")
         for notification in notifications:
@@ -596,8 +596,8 @@ class SmileHelper:
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
-                self._notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self._notifications)
+                self.notifications.update({msg_id: {msg_type: msg}})
+                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
             except AttributeError:  # pragma: no cover
                 _LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
@@ -1129,7 +1129,7 @@ class SmileHelper:
         for idx, item in enumerate(d_dict["binary_sensors"]):
             if item[ATTR_ID] == "plugwise_notification":
                 self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
-                    self._notifications != {}
+                    self.notifications != {}
                 )
 
     def _create_lists_from_data(self, data, bs_list, s_list, sw_list):
