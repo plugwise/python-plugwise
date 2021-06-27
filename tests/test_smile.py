@@ -405,7 +405,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "thermostatic_radiator_valve",
         ]
         bsw_lists = ["binary_sensors", "sensors", "switches"]
-        smile._get_all_devices()
+        smile.get_all_devices()
         await smile.update_gw_devices()
         device_list = smile.gw_devices
         self._write_json("all_devices", device_list)
@@ -1770,7 +1770,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no master thermostat")
         assert smile.single_master_thermostat() is None  # it's not a thermostat :)
 
-        smile._get_all_devices()
+        smile.get_all_devices()
         await self.device_test(smile, testdata)
 
         await smile.close_connection()
@@ -1820,7 +1820,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert switch_change
 
-        smile._get_all_devices()
+        smile.get_all_devices()
         await self.device_test(smile, testdata)
 
         await smile.close_connection()

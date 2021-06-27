@@ -758,7 +758,7 @@ class SmileHelper:
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
     def _group_switches(self):
-        """Helper-function for smile.py: _get_all_devices().
+        """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
         switch_groups = {}

@@ -235,7 +235,7 @@ class Smile(SmileHelper):
                     self._update_helper(data, dev_dict, dev_id, "switches", key)
 
     def _all_device_data(self):
-        """Helper-function for _get_all_devices().
+        """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_devices.
         """
         dev_id_list = []
@@ -262,7 +262,7 @@ class Smile(SmileHelper):
 
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
-    def _get_all_devices(self):
+    def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
         self._devices = {}
         self._scan_thermostats()
