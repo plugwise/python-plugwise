@@ -61,13 +61,13 @@ class Smile(SmileHelper):
 
             loop = asyncio.get_event_loop()
             if loop.is_running():
-                self.websession = aiohttp.ClientSession()
+                self._websession = aiohttp.ClientSession()
             else:
-                self.websession = loop.run_until_complete(
+                self._websession = loop.run_until_complete(
                     _create_session()
                 )  # pragma: no cover
         else:
-            self.websession = websession
+            self._websession = websession
 
         self._auth = aiohttp.BasicAuth(username, password=password)
 
@@ -99,15 +99,15 @@ class Smile(SmileHelper):
                 raise ConnectionFailedError
 
         # Determine smile specifics
-        await self.smile_detect(result, dsmrmain)
+        await self._smile_detect(result, dsmrmain)
 
         # Update all endpoints on first connect
-        await self.full_update_device()
+        await self._full_update_device()
 
         return True
 
-    async def smile_detect_legacy(self, result, dsmrmain):
-        """Helper-function for smile_detect()."""
+    async def _smile_detect_legacy(self, result, dsmrmain):
+        """Helper-function for _smile_detect()."""
         network = result.find(".//module/protocols/network_router/network")
 
         # Assume legacy
@@ -147,7 +147,7 @@ class Smile(SmileHelper):
                 raise ConnectionFailedError
         return model, version
 
-    async def smile_detect(self, result, dsmrmain):
+    async def _smile_detect(self, result, dsmrmain):
         """Helper-function for connect().
         Detect which type of Smile is connected.
         """
@@ -160,7 +160,7 @@ class Smile(SmileHelper):
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
         else:
-            model, version = await self.smile_detect_legacy(result, dsmrmain)
+            model, version = await self._smile_detect_legacy(result, dsmrmain)
 
         if model is None or version is None:  # pragma: no cover
             # Corner case check
@@ -189,16 +189,16 @@ class Smile(SmileHelper):
             self._smile_legacy = SMILES[target_smile]["legacy"]
 
         if self.smile_type == "stretch":
-            self.stretch_v2 = self.smile_version[1].major == 2
-            self.stretch_v3 = self.smile_version[1].major == 3
+            self._stretch_v2 = self.smile_version[1].major == 2
+            self._stretch_v3 = self.smile_version[1].major == 3
 
     async def close_connection(self):
         """Close the Plugwise connection."""
-        await self.websession.close()
+        await self._websession.close()
 
-    async def full_update_device(self):
+    async def _full_update_device(self):
         """Perform a first fetch of all XML data, needed for initialization."""
-        await self.update_domain_objects()
+        await self._update_domain_objects()
         self._locations = await self.request(LOCATIONS)
 
         # P1 legacy has no appliances
@@ -211,44 +211,44 @@ class Smile(SmileHelper):
 
     async def update_gw_devices(self):
         """Perform an incremental update for updating the various device states."""
-        await self.update_domain_objects()
+        await self._update_domain_objects()
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self.request(APPLIANCES)
 
         for dev_id, dev_dict in self.gw_devices.items():
-            data = self.get_device_data(dev_id)
+            data = self._get_device_data(dev_id)
             for key, value in list(data.items()):
                 if key in dev_dict:
                     self.gw_devices[dev_id][key] = value
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    self.update_helper(data, dev_dict, dev_id, "binary_sensors", key)
-                self.pw_notification_updater(dev_id, dev_dict)
+                    self._update_helper(data, dev_dict, dev_id, "binary_sensors", key)
+                self._pw_notification_updater(dev_id, dev_dict)
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    self.update_helper(data, dev_dict, dev_id, "sensors", key)
+                    self._update_helper(data, dev_dict, dev_id, "sensors", key)
                 self.device_state_updater(data, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
-                    self.update_helper(data, dev_dict, dev_id, "switches", key)
+                    self._update_helper(data, dev_dict, dev_id, "switches", key)
 
-    def all_device_data(self):
-        """Helper-function for get_all_devices().
+    def _all_device_data(self):
+        """Helper-function for _get_all_devices().
         Collect initial data for each device and add to self.gw_devices.
         """
         dev_id_list = []
         dev_and_data_list = []
-        for dev_id, dev_dict in self.devices.items():
+        for dev_id, dev_dict in self._devices.items():
             dev_and_data = dev_dict
             temp_bs_list = []
             temp_s_list = []
             temp_sw_list = []
-            data = self.get_device_data(dev_id)
+            data = self._get_device_data(dev_id)
 
-            self.create_lists_from_data(data, temp_bs_list, temp_s_list, temp_sw_list)
-            self.append_special(data, dev_id, temp_bs_list, temp_s_list)
+            self._create_lists_from_data(data, temp_bs_list, temp_s_list, temp_sw_list)
+            self._append_special(data, dev_id, temp_bs_list, temp_s_list)
 
             dev_and_data.update(data)
             if temp_bs_list != []:
@@ -262,39 +262,39 @@ class Smile(SmileHelper):
 
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
-    def get_all_devices(self):
+    def _get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
-        self.devices = {}
-        self.scan_thermostats()
+        self._devices = {}
+        self._scan_thermostats()
 
-        for appliance, details in self.appl_data.items():
+        for appliance, details in self._appl_data.items():
             loc_id = details["location"]
             if loc_id is None:
                 details["location"] = self._home_location
 
             # Override slave thermostat class
-            if loc_id in self.thermo_locs:
-                if "slaves" in self.thermo_locs[loc_id]:
-                    if appliance in self.thermo_locs[loc_id]["slaves"]:
+            if loc_id in self._thermo_locs:
+                if "slaves" in self._thermo_locs[loc_id]:
+                    if appliance in self._thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
-            self.devices[appliance] = details
+            self._devices[appliance] = details
 
-        group_data = self.group_switches()
+        group_data = self._group_switches()
         if group_data is not None:
-            self.devices.update(group_data)
+            self._devices.update(group_data)
 
         # Collect data for each device via helper function
-        self.all_device_data()
+        self._all_device_data()
 
-    def device_data_switching_group(self, details, device_data):
-        """Helper-function for get_device_data().
+    def _device_data_switching_group(self, details, device_data):
+        """Helper-function for _get_device_data().
         Determine switching group device data.
         """
         if details["class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
-                appl_data = self.appliance_data(member)
+                appl_data = self._appliance_data(member)
                 if appl_data["relay"]:
                     counter += 1
 
@@ -305,7 +305,7 @@ class Smile(SmileHelper):
         return device_data
 
     def device_data_anna(self, dev_id, details, device_data):
-        """Helper-function for get_device_data().
+        """Helper-function for _get_device_data().
         Determine Anna and legacy Anna device data.
         """
         # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
@@ -322,7 +322,7 @@ class Smile(SmileHelper):
         return device_data
 
     def device_data_adam(self, details, device_data):
-        """Helper-function for get_device_data().
+        """Helper-function for _get_device_data().
         Determine Adam device data.
         """
         # Adam: indicate heating_state based on valves being open in case of city-provided heating
@@ -336,7 +336,7 @@ class Smile(SmileHelper):
         return device_data
 
     def device_data_climate(self, details, device_data):
-        """Helper-function for get_device_data().
+        """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
         device_data["active_preset"] = self.preset(details["location"])
@@ -354,13 +354,13 @@ class Smile(SmileHelper):
 
         return device_data
 
-    def get_device_data(self, dev_id):
-        """Helper-function for all_device_data() and update_gw_devices().
+    def _get_device_data(self, dev_id):
+        """Helper-function for _all_device_data() and update_gw_devices().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        devices = self.devices
+        devices = self._devices
         details = devices.get(dev_id)
-        device_data = self.appliance_data(dev_id)
+        device_data = self._appliance_data(dev_id)
 
         # Generic
         if details["class"] == "gateway" or dev_id == self.gateway_id:
@@ -378,7 +378,7 @@ class Smile(SmileHelper):
                 device_data.update(power_data)
 
         # Switching groups data
-        device_data = self.device_data_switching_group(details, device_data)
+        device_data = self._device_data_switching_group(details, device_data)
         # Specific, not generic Anna data
         device_data = self.device_data_anna(dev_id, details, device_data)
         # Specific, not generic Adam data
@@ -397,12 +397,12 @@ class Smile(SmileHelper):
         Possible output: None, True, False.
         """
         if self.smile_type != "thermostat":
-            self.thermo_locs = self.match_locations()
+            self._thermo_locs = self.match_locations()
             return None
 
         count = 0
-        self.scan_thermostats()
-        for dummy, data in self.thermo_locs.items():
+        self._scan_thermostats()
+        for dummy, data in self._thermo_locs.items():
             if "master_prio" in data:
                 if data.get("master_prio") > 0:
                     count += 1
@@ -509,7 +509,7 @@ class Smile(SmileHelper):
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             switch_id = self._appliances.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            if self.stretch_v2:
+            if self._stretch_v2:
                 uri = f"{APPLIANCES};id={member}/{switch.device}"
             state = str(state)
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
@@ -533,7 +533,7 @@ class Smile(SmileHelper):
             switch.func = "lock"
             state = "false" if state == "off" else "true"
 
-        if self.stretch_v2:
+        if self._stretch_v2:
             switch.actuator = "actuators"
             switch.func_type = "relay"
 
@@ -543,7 +543,7 @@ class Smile(SmileHelper):
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         switch_id = self._appliances.find(locator).attrib["id"]
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
-        if self.stretch_v2:
+        if self._stretch_v2:
             uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
         data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
