@@ -670,7 +670,9 @@ class SmileHelper:
 
         return data
 
-    def _rank_thermostat(self, thermo_matching, loc_id, appliance_id, appliance_details):
+    def _rank_thermostat(
+        self, thermo_matching, loc_id, appliance_id, appliance_details
+    ):
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
         appl_class = appliance_details["class"]
