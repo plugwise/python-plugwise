@@ -50,9 +50,8 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
     """
     for idx, item in enumerate(d_dict["binary_sensors"]):
         if item[ATTR_ID] == "plugwise_notification":
-            devs[d_id]["binary_sensors"][idx][ATTR_STATE] = (
-                notifs != {}
-            )
+            devs[d_id]["binary_sensors"][idx][ATTR_STATE] = notifs != {}
+
 
 def update_device_state(data, d_dict):
     """Helper-function for _device_state_updater()."""
@@ -87,6 +86,7 @@ def update_device_state(data, d_dict):
         icon = COOLING_ICON
 
     return [state, icon]
+
 
 def update_helper(data, devs, d_dict, d_id, e_type, key):
     """Helper-function for _update_gw_devices()."""
@@ -297,15 +297,23 @@ class Smile(SmileHelper):
                     self.gw_devices[dev_id][key] = value
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    update_helper(data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key)
-                pw_notification_updater(self.gw_devices, dev_id, dev_dict, self.notifications)
+                    update_helper(
+                        data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key
+                    )
+                pw_notification_updater(
+                    self.gw_devices, dev_id, dev_dict, self.notifications
+                )
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    update_helper(data, self.gw_devices, dev_dict, dev_id, "sensors", key)
+                    update_helper(
+                        data, self.gw_devices, dev_dict, dev_id, "sensors", key
+                    )
                 self._device_state_updater(data, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
-                    update_helper(data, self.gw_devices, dev_dict, dev_id, "switches", key)
+                    update_helper(
+                        data, self.gw_devices, dev_dict, dev_id, "switches", key
+                    )
 
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().

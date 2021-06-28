@@ -72,6 +72,7 @@ def _check_model(name, v_name):
     else:
         return name
 
+
 def _schemas_schedule_temp(schedules):
     """Helper-function for schemas().
     Obtain the schedule temperature of the schema/schedule.
@@ -91,6 +92,7 @@ def _schemas_schedule_temp(schedules):
         ):
             if in_between(now, start, end):
                 return temp
+
 
 def _types_finder(data):
     """Detect types within locations from logs."""
