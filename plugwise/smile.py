@@ -350,6 +350,7 @@ class Smile(SmileHelper):
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
+        self._devices = {}
         self._scan_thermostats()
 
         for appliance, details in self._appl_data.items():
