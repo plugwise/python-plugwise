@@ -79,6 +79,25 @@ def _check_model(name, v_name):
     else:
         return name
 
+def _schemas_schedule_temp(schedules):
+    """Helper-function for schemas().
+    Obtain the schedule temperature of the schema/schedule.
+    """
+    for period, temp in schedules.items():
+        moment_1, moment_2 = period.split(",")
+        moment_1 = moment_1.replace("[", "").split(" ")
+        moment_2 = moment_2.replace(")", "").split(" ")
+        result_1 = DAYS.get(moment_1[0], "None")
+        result_2 = DAYS.get(moment_2[0], "None")
+        now = dt.datetime.now().time()
+        start = dt.datetime.strptime(moment_1[1], "%H:%M").time()
+        end = dt.datetime.strptime(moment_2[1], "%H:%M").time()
+        if (
+            result_1 == dt.datetime.now().weekday()
+            or result_2 == dt.datetime.now().weekday()
+        ):
+            if in_between(now, start, end):
+                return temp
 
 def _types_finder(data):
     """Detect types within locations from logs."""
@@ -938,26 +957,6 @@ class SmileHelper:
         available, selected = determine_selected(available, selected, schemas)
         return available, selected, schedule_temperature
 
-    def _schemas_schedule_temp(self, schedules):
-        """Helper-function for schemas().
-        Obtain the schedule temperature of the schema/schedule.
-        """
-        for period, temp in schedules.items():
-            moment_1, moment_2 = period.split(",")
-            moment_1 = moment_1.replace("[", "").split(" ")
-            moment_2 = moment_2.replace(")", "").split(" ")
-            result_1 = DAYS.get(moment_1[0], "None")
-            result_2 = DAYS.get(moment_2[0], "None")
-            now = dt.datetime.now().time()
-            start = dt.datetime.strptime(moment_1[1], "%H:%M").time()
-            end = dt.datetime.strptime(moment_2[1], "%H:%M").time()
-            if (
-                result_1 == dt.datetime.now().weekday()
-                or result_2 == dt.datetime.now().weekday()
-            ):
-                if in_between(now, start, end):
-                    return temp
-
     def _schemas(self, loc_id):
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
@@ -999,7 +998,7 @@ class SmileHelper:
                 else:
                     schedules[directive.attrib["time"]] = float(schedule["setpoint"])
 
-            schedule_temperature = self._schemas_schedule_temp(schedules)
+            schedule_temperature = _schemas_schedule_temp(schedules)
 
         available, selected = determine_selected(available, selected, schemas)
 
