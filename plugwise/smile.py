@@ -290,7 +290,7 @@ class Smile(SmileHelper):
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
                     update_helper(data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key)
-                pw_notification_updater(self.gw_devices, dev_id, dev_dict)
+                pw_notification_updater(self.gw_devices, dev_id, dev_dict, self.notifications)
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
                     update_helper(data, self.gw_devices, dev_dict, dev_id, "sensors", key)
