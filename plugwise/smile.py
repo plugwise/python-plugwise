@@ -15,6 +15,7 @@ import semver
 
 from .constants import (
     APPLIANCES,
+    ATTR_ICON,
     ATTR_ID,
     ATTR_STATE,
     DEFAULT_PORT,
