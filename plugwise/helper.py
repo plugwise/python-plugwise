@@ -15,16 +15,13 @@ import pytz
 
 from .constants import (
     APPLIANCES,
-    ATTR_ICON,
     ATTR_ID,
     ATTR_NAME,
     ATTR_STATE,
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
-    COOLING_ICON,
     DEVICE_MEASUREMENTS,
-    DEVICE_STATE,
     DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -32,7 +29,6 @@ from .constants import (
     HOME_MEASUREMENTS,
     LOCATIONS,
     POWER_WATT,
-    PW_NOTIFICATION,
     SENSORS,
     SWITCH_GROUP_TYPES,
     SWITCHES,
@@ -1068,7 +1064,7 @@ class SmileHelper:
         """Helper-function for smile.py: _all_device_data().
         Create lists of binary_sensors, sensors, switches from the relevant data.
         """
-        for key, value in list(data.items()):
+        for _, value in list(data.items()):
             for item in BINARY_SENSORS:
                 try:
                     data.pop(item[ATTR_ID])
