@@ -37,6 +37,17 @@ from .helper import SmileHelper
 _LOGGER = logging.getLogger(__name__)
 
 
+def update_helper(data, devs, d_dict, d_id, e_type, key):
+    """Helper-function for _update_gw_devices()."""
+    for dummy in d_dict[e_type]:
+        if key != dummy[ATTR_ID]:
+            continue
+        for idx, item in enumerate(devs[d_id][e_type]):
+            if key != item[ATTR_ID]:
+                continue
+            devs[d_id][e_type][idx][ATTR_STATE] = data[key]
+
+
 class Smile(SmileHelper):
     """The Plugwise Smile main class."""
 
@@ -224,15 +235,15 @@ class Smile(SmileHelper):
                     self.gw_devices[dev_id][key] = value
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    self._update_helper(data, dev_dict, dev_id, "binary_sensors", key)
+                    update_helper(data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key)
                 self._pw_notification_updater(dev_id, dev_dict)
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
-                    self._update_helper(data, dev_dict, dev_id, "sensors", key)
+                    update_helper(data, self.gw_devices, dev_dict, dev_id, "sensors", key)
                 self._device_state_updater(data, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
-                    self._update_helper(data, dev_dict, dev_id, "switches", key)
+                    update_helper(data, , dev_dict, dev_id, "switches", key)
 
     def _all_device_data(self):
         """Helper-function for get_all_devices().

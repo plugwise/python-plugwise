@@ -1067,16 +1067,6 @@ class SmileHelper:
 
         return data
 
-    def _update_helper(self, data, d_dict, d_id, e_type, key):
-        """Helper-function for smile.py: _update_gw_devices()."""
-        for dummy in d_dict[e_type]:
-            if key != dummy[ATTR_ID]:
-                continue
-            for idx, item in enumerate(self.gw_devices[d_id][e_type]):
-                if key != item[ATTR_ID]:
-                    continue
-                self.gw_devices[d_id][e_type][idx][ATTR_STATE] = data[key]
-
     def _update_device_state(self, data, d_dict):
         """Helper-function for _device_state_updater()."""
         _cooling_state = False
