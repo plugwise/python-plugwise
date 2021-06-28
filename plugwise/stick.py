@@ -617,7 +617,7 @@ class Stick:
 
                         if self._device_nodes[mac].measures_power:
                             # Request current power usage
-                            self._device_nodes[mac]._request_power_update()
+                            self._device_nodes[mac].request_power_update()
                             # Sync internal clock of power measure nodes once a day
                             if datetime.now().day != day_of_month:
                                 day_of_month = datetime.now().day

@@ -177,7 +177,7 @@ class PlugwiseCircle(PlugwiseNode):
             PRIORITY_HIGH,
         )
 
-    def _request_power_update(self, callback=None):
+    def request_power_update(self, callback=None):
         """Request power usage and power logs of last hour"""
         if self._available:
             self.message_sender(
@@ -213,7 +213,7 @@ class PlugwiseCircle(PlugwiseNode):
                     "Received power update for %s before calibration information is known",
                     self.mac,
                 )
-                self._request_calibration(self._request_power_update)
+                self._request_calibration(self.request_power_update)
         elif isinstance(message, NodeAckLargeResponse):
             self._node_ack_response(message)
         elif isinstance(message, CircleCalibrationResponse):
