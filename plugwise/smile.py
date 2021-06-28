@@ -243,7 +243,7 @@ class Smile(SmileHelper):
                 self._device_state_updater(data, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
-                    update_helper(data, , dev_dict, dev_id, "switches", key)
+                    update_helper(data, self.gw_devices, dev_dict, dev_id, "switches", key)
 
     def _all_device_data(self):
         """Helper-function for get_all_devices().
