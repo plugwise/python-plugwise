@@ -61,7 +61,7 @@ DAYS = {
 }
 
 
-def _check_model(name, v_name):
+def check_model(name, v_name):
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
@@ -73,7 +73,7 @@ def _check_model(name, v_name):
         return name
 
 
-def _schemas_schedule_temp(schedules):
+def schemas_schedule_temp(schedules):
     """Helper-function for schemas().
     Obtain the schedule temperature of the schema/schedule.
     """
@@ -94,7 +94,7 @@ def _schemas_schedule_temp(schedules):
                 return temp
 
 
-def _types_finder(data):
+def types_finder(data):
     """Detect types within locations from logs."""
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
@@ -113,7 +113,7 @@ def _types_finder(data):
     return types
 
 
-def _power_data_local_format(attrs, key_string, val):
+def power_data_local_format(attrs, key_string, val):
     """Format power data."""
     f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
@@ -125,7 +125,7 @@ def _power_data_local_format(attrs, key_string, val):
     return f_val
 
 
-def _power_data_energy_diff(measurement, net_string, f_val, direct_data):
+def power_data_energy_diff(measurement, net_string, f_val, direct_data):
     """Calculate differential energy."""
     if "electricity" in measurement:
         diff = 1
@@ -268,7 +268,7 @@ class SmileHelper:
             self._home_location = loc.id
             loc.types.add("home")
 
-            for location_type in _types_finder(location):
+            for location_type in types_finder(location):
                 loc.types.add(location_type)
 
         # Legacy P1 right location has 'services' filled
@@ -378,7 +378,7 @@ class SmileHelper:
             mod_type = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data[0]
-            appl.model = _check_model(module_data[1], appl.v_name)
+            appl.model = check_model(module_data[1], appl.v_name)
             appl.fw = module_data[3]
             return appl
 
@@ -396,7 +396,7 @@ class SmileHelper:
             if module_data == [None, None, None, None]:
                 module_data = self._get_module_data(appliance, locator2, mod_type)
             appl.v_name = module_data[0]
-            appl.model = _check_model(module_data[1], appl.v_name)
+            appl.model = check_model(module_data[1], appl.v_name)
             if appl.model is None:
                 appl.model = (
                     "Generic heater/cooler" if self._cp_state else "Generic heater"
@@ -414,7 +414,7 @@ class SmileHelper:
         # Appliance with location (i.e. a device)
         if appliance.find("location") is not None:
             appl.location = appliance.find("location").attrib["id"]
-            for appl_type in _types_finder(appliance):
+            for appl_type in types_finder(appliance):
                 appl.types.add(appl_type)
         else:
             # Preset all types applicable to home
@@ -861,7 +861,7 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
-        loc.f_val = _power_data_local_format(loc.attrs, loc.key_string, val)
+        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
 
@@ -898,7 +898,7 @@ class SmileHelper:
                     if not loc.found:
                         continue
 
-                    direct_data = _power_data_energy_diff(
+                    direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
 
@@ -993,7 +993,7 @@ class SmileHelper:
                 else:
                     schedules[directive.attrib["time"]] = float(schedule["setpoint"])
 
-            schedule_temperature = _schemas_schedule_temp(schedules)
+            schedule_temperature = schemas_schedule_temp(schedules)
 
         available, selected = determine_selected(available, selected, schemas)
 
