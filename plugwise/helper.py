@@ -1101,26 +1101,6 @@ class SmileHelper:
 
         return [state, icon]
 
-    def _device_state_updater(self, data, d_id, d_dict):
-        """Helper-function for smile.py: _update_gw_devices().
-        Update the Device_State sensor state.
-        """
-        for idx, item in enumerate(d_dict["sensors"]):
-            if item[ATTR_ID] == "device_state":
-                result = self._update_device_state(data, d_dict)
-                self.gw_devices[d_id]["sensors"][idx][ATTR_STATE] = result[0]
-                self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
-
-    def _pw_notification_updater(self, d_id, d_dict):
-        """Helper-function for smile.py: _update_gw_devices().
-        Update the PW_Notification binary_sensor state.
-        """
-        for idx, item in enumerate(d_dict["binary_sensors"]):
-            if item[ATTR_ID] == "plugwise_notification":
-                self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
-                    self.notifications != {}
-                )
-
     def _create_lists_from_data(self, data, bs_list, s_list, sw_list):
         """Helper-function for smile.py: _all_device_data().
         Create lists of binary_sensors, sensors, switches from the relevant data.
