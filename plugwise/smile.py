@@ -47,6 +47,40 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
                 notifs != {}
             )
 
+def update_device_state(data, d_dict):
+    """Helper-function for _device_state_updater()."""
+    _cooling_state = False
+    _dhw_state = False
+    _heating_state = False
+    state = "idle"
+    icon = IDLE_ICON
+
+    for idx, item in enumerate(d_dict["binary_sensors"]):
+        if item[ATTR_ID] == "dhw_state":
+            if item[ATTR_STATE]:
+                state = "dhw-heating"
+                icon = FLAME_ICON
+                _dhw_state = True
+
+    if "heating_state" in data:
+        if data["heating_state"]:
+            state = "heating"
+            icon = HEATING_ICON
+            _heating_state = True
+    if _heating_state and _dhw_state:
+        state = "dhw and heating"
+        icon = HEATING_ICON
+    if "cooling_state" in data:
+        if data["cooling_state"]:
+            state = "cooling"
+            icon = COOLING_ICON
+            _cooling_state = True
+    if _cooling_state and _dhw_state:
+        state = "dhw and cooling"
+        icon = COOLING_ICON
+
+    return [state, icon]
+
 def update_helper(data, devs, d_dict, d_id, e_type, key):
     """Helper-function for _update_gw_devices()."""
     for dummy in d_dict[e_type]:
@@ -236,7 +270,7 @@ def _device_state_updater(self, data, d_id, d_dict):
     """
     for idx, item in enumerate(d_dict["sensors"]):
         if item[ATTR_ID] == "device_state":
-            result = self._update_device_state(data, d_dict)
+            result = update_device_state(data, d_dict)
             self.gw_devices[d_id]["sensors"][idx][ATTR_STATE] = result[0]
             self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
 
