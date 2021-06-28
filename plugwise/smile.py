@@ -264,15 +264,15 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             self._modules = await self._request(MODULES)
 
-def _device_state_updater(self, data, d_id, d_dict):
-    """Helper-function for _update_gw_devices().
-    Update the Device_State sensor state.
-    """
-    for idx, item in enumerate(d_dict["sensors"]):
-        if item[ATTR_ID] == "device_state":
-            result = update_device_state(data, d_dict)
-            self.gw_devices[d_id]["sensors"][idx][ATTR_STATE] = result[0]
-            self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+    def _device_state_updater(self, data, d_id, d_dict):
+        """Helper-function for _update_gw_devices().
+        Update the Device_State sensor state.
+        """
+        for idx, item in enumerate(d_dict["sensors"]):
+            if item[ATTR_ID] == "device_state":
+                result = update_device_state(data, d_dict)
+                self.gw_devices[d_id]["sensors"][idx][ATTR_STATE] = result[0]
+                self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
 
     async def update_gw_devices(self):
         """Perform an incremental update for updating the various device states."""
