@@ -230,7 +230,7 @@ class SmileHelper:
         self._home_location = 0
 
         # Add Anna appliances
-        for appliance in self._appliances:
+        for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
@@ -283,7 +283,7 @@ class SmileHelper:
             self._locations_legacy()
             return
 
-        for location in self._locations:
+        for location in self._locations.findall("./location"):
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
             loc.types = set()
@@ -450,7 +450,7 @@ class SmileHelper:
             self._cp_state is not None or fl_state is not None or bl_state is not None
         )
 
-        for appliance in self._appliances:
+        for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
