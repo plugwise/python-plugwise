@@ -18,6 +18,7 @@ from .constants import (
     ATTR_ICON,
     ATTR_ID,
     ATTR_STATE,
+    COOLING_ICON,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
