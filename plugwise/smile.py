@@ -62,7 +62,7 @@ def update_device_state(data, d_dict):
     state = "idle"
     icon = IDLE_ICON
 
-    for idx, item in enumerate(d_dict["binary_sensors"]):
+    for _, item in enumerate(d_dict["binary_sensors"]):
         if item[ATTR_ID] == "dhw_state":
             if item[ATTR_STATE]:
                 state = "dhw-heating"
@@ -133,6 +133,7 @@ class Smile(SmileHelper):
 
         self._auth = aiohttp.BasicAuth(username, password=password)
 
+        self._devices = {}
         self._host = host
         self._port = port
         self._endpoint = f"http://{self._host}:{str(self._port)}"
@@ -349,7 +350,6 @@ class Smile(SmileHelper):
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
-        self._devices = {}
         self._scan_thermostats()
 
         for appliance, details in self._appl_data.items():
