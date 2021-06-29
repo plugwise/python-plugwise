@@ -44,41 +44,6 @@ from .helper import SmileHelper, device_state_updater, pw_notification_updater, 
 _LOGGER = logging.getLogger(__name__)
 
 
-def update_device_state(data, d_dict):
-    """Helper-function for _device_state_updater()."""
-    _cooling_state = False
-    _dhw_state = False
-    _heating_state = False
-    state = "idle"
-    icon = IDLE_ICON
-
-    for _, item in enumerate(d_dict["binary_sensors"]):
-        if item[ATTR_ID] == "dhw_state":
-            if item[ATTR_STATE]:
-                state = "dhw-heating"
-                icon = FLAME_ICON
-                _dhw_state = True
-
-    if "heating_state" in data:
-        if data["heating_state"]:
-            state = "heating"
-            icon = HEATING_ICON
-            _heating_state = True
-    if _heating_state and _dhw_state:
-        state = "dhw and heating"
-        icon = HEATING_ICON
-    if "cooling_state" in data:
-        if data["cooling_state"]:
-            state = "cooling"
-            icon = COOLING_ICON
-            _cooling_state = True
-    if _cooling_state and _dhw_state:
-        state = "dhw and cooling"
-        icon = COOLING_ICON
-
-    return [state, icon]
-
-
 class Smile(SmileHelper):
     """The Plugwise Smile main class."""
 

@@ -15,18 +15,23 @@ import pytz
 
 from .constants import (
     APPLIANCES,
+    ATTR_ICON,
     ATTR_ID,
     ATTR_NAME,
     ATTR_STATE,
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
+    COOLING_ICON,
     DEVICE_MEASUREMENTS,
     DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
+    FLAME_ICON,
     HEATER_CENTRAL_MEASUREMENTS,
+    HEATING_ICON,
     HOME_MEASUREMENTS,
+    IDLE_ICON,
     LOCATIONS,
     POWER_WATT,
     SENSORS,
@@ -70,6 +75,41 @@ def device_state_updater(data, devs, d_id, d_dict):
             result = update_device_state(data, d_dict)
             devs[d_id]["sensors"][idx][ATTR_STATE] = result[0]
             devs[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+
+
+def update_device_state(data, d_dict):
+    """Helper-function for _device_state_updater()."""
+    _cooling_state = False
+    _dhw_state = False
+    _heating_state = False
+    state = "idle"
+    icon = IDLE_ICON
+
+    for _, item in enumerate(d_dict["binary_sensors"]):
+        if item[ATTR_ID] == "dhw_state":
+            if item[ATTR_STATE]:
+                state = "dhw-heating"
+                icon = FLAME_ICON
+                _dhw_state = True
+
+    if "heating_state" in data:
+        if data["heating_state"]:
+            state = "heating"
+            icon = HEATING_ICON
+            _heating_state = True
+    if _heating_state and _dhw_state:
+        state = "dhw and heating"
+        icon = HEATING_ICON
+    if "cooling_state" in data:
+        if data["cooling_state"]:
+            state = "cooling"
+            icon = COOLING_ICON
+            _cooling_state = True
+    if _cooling_state and _dhw_state:
+        state = "dhw and cooling"
+        icon = COOLING_ICON
+
+    return [state, icon]
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
