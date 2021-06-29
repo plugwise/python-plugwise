@@ -39,7 +39,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
 )
 from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
-from .helper import SmileHelper
+from .helper import SmileHelper, device_state_updater, pw_notification_updater, update_helper
 
 _LOGGER = logging.getLogger(__name__)
 
