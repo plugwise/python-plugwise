@@ -67,7 +67,7 @@ class GWBinarySensor:
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
 
-        for key, dummy in data.items():
+        for key, _ in data.items():
             if key != "binary_sensors":
                 continue
 
