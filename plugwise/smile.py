@@ -44,6 +44,17 @@ from .helper import SmileHelper
 _LOGGER = logging.getLogger(__name__)
 
 
+def device_state_updater(data, devs, d_id, d_dict):
+    """Helper-function for _update_gw_devices().
+    Update the Device_State sensor state.
+    """
+    for idx, item in enumerate(d_dict["sensors"]):
+        if item[ATTR_ID] == "device_state":
+            result = update_device_state(data, d_dict)
+            devs[d_id]["sensors"][idx][ATTR_STATE] = result[0]
+            devs[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+
+
 def pw_notification_updater(devs, d_id, d_dict, notifs):
     """Helper-function for _update_gw_devices().
     Update the PW_Notification binary_sensor state.
@@ -271,16 +282,6 @@ class Smile(SmileHelper):
         # No need to import modules for P1, no userfull info
         if self.smile_type != "power":
             self._modules = await self._request(MODULES)
-
-    def device_state_updater(data, devs, d_id, d_dict):
-        """Helper-function for _update_gw_devices().
-        Update the Device_State sensor state.
-        """
-        for idx, item in enumerate(d_dict["sensors"]):
-            if item[ATTR_ID] == "device_state":
-                result = update_device_state(data, d_dict)
-                devs[d_id]["sensors"][idx][ATTR_STATE] = result[0]
-                devs[d_id]["sensors"][idx][ATTR_ICON] = result[1]
 
     async def update_gw_devices(self):
         """Perform an incremental update for updating the various device states."""
