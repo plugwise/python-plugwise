@@ -61,6 +61,37 @@ DAYS = {
 }
 
 
+def device_state_updater(data, devs, d_id, d_dict):
+    """Helper-function for _update_gw_devices().
+    Update the Device_State sensor state.
+    """
+    for idx, item in enumerate(d_dict["sensors"]):
+        if item[ATTR_ID] == "device_state":
+            result = update_device_state(data, d_dict)
+            devs[d_id]["sensors"][idx][ATTR_STATE] = result[0]
+            devs[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+
+
+def pw_notification_updater(devs, d_id, d_dict, notifs):
+    """Helper-function for _update_gw_devices().
+    Update the PW_Notification binary_sensor state.
+    """
+    for idx, item in enumerate(d_dict["binary_sensors"]):
+        if item[ATTR_ID] == "plugwise_notification":
+            devs[d_id]["binary_sensors"][idx][ATTR_STATE] = notifs != {}
+
+
+def update_helper(data, devs, d_dict, d_id, e_type, key):
+    """Helper-function for _update_gw_devices()."""
+    for dummy in d_dict[e_type]:
+        if key != dummy[ATTR_ID]:
+            continue
+        for idx, item in enumerate(devs[d_id][e_type]):
+            if key != item[ATTR_ID]:
+                continue
+            devs[d_id][e_type][idx][ATTR_STATE] = data[key]
+
+
 def check_model(name, v_name):
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
