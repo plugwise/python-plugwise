@@ -15,18 +15,11 @@ import semver
 
 from .constants import (
     APPLIANCES,
-    ATTR_ICON,
-    ATTR_ID,
-    ATTR_STATE,
-    COOLING_ICON,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DEVICE_STATE,
     DOMAIN_OBJECTS,
-    FLAME_ICON,
-    HEATING_ICON,
-    IDLE_ICON,
     LOCATIONS,
     MODULES,
     NOTIFICATIONS,
