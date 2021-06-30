@@ -152,8 +152,7 @@ class BaseType:
         return self.length
 
 
-class CompositeType(BaseType):
-    # TODO: super-init-not-called
+class CompositeType:
     def __init__(self):
         self.contents = []
 
