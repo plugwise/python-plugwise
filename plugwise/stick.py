@@ -63,8 +63,7 @@ from .util import validate_mac
 _LOGGER = logging.getLogger(__name__)
 
 
-# TODO: stick should become StickClass be PascalCase style
-class stick:
+class Stick:
     """Plugwise connection stick."""
 
     def __init__(self, port, callback=None):
@@ -618,7 +617,7 @@ class stick:
 
                         if self._device_nodes[mac].measures_power:
                             # Request current power usage
-                            self._device_nodes[mac]._request_power_update()
+                            self._device_nodes[mac].request_power_update()
                             # Sync internal clock of power measure nodes once a day
                             if datetime.now().day != day_of_month:
                                 day_of_month = datetime.now().day

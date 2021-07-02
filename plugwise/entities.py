@@ -1,5 +1,4 @@
 """ Plugwise Entity Classes."""
-import asyncio
 
 from .constants import (
     ATTR_ID,
@@ -12,18 +11,14 @@ from .constants import (
     HVAC_MODE_HEAT_COOL,
     HVAC_MODE_OFF,
     IDLE_ICON,
-    LOCATIONS,
     NO_NOTIFICATION_ICON,
     NOTIFICATION_ICON,
     PRESET_AWAY,
-    PW_NOTIFICATION,
-    RULES,
     SEVERITIES,
 )
-from .smile import Smile
 
 
-class GW_B_Sensor:
+class GWBinarySensor:
     """ Represent the Plugwise Smile/Stretch binary_sensor."""
 
     def __init__(self, api, dev_id, binary_sensor):
@@ -72,11 +67,11 @@ class GW_B_Sensor:
         """Handle update callbacks."""
         data = self._api.gw_devices[self._dev_id]
 
-        for key, value in data.items():
+        for key, _ in data.items():
             if key != "binary_sensors":
                 continue
 
-            for idx, item in enumerate(data["binary_sensors"]):
+            for _, item in enumerate(data["binary_sensors"]):
                 if item[ATTR_ID] != self._binary_sensor:
                     continue
 
@@ -86,7 +81,7 @@ class GW_B_Sensor:
                 if self._binary_sensor != "plugwise_notification":
                     continue
 
-                notify = self._api._notifications
+                notify = self._api.notifications
                 self._notification = {}
                 for severity in SEVERITIES:
                     self._attributes[f"{severity.upper()}_msg"] = []
@@ -100,7 +95,7 @@ class GW_B_Sensor:
                             self._notification[notify_id] = f"{msg_type.title()}: {msg}"
 
 
-class GW_Thermostat:
+class GWThermostat:
     """Represent a Plugwise Thermostat Device."""
 
     def __init__(self, api, dev_id):

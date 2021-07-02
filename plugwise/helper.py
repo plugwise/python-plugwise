@@ -24,7 +24,6 @@ from .constants import (
     BINARY_SENSORS,
     COOLING_ICON,
     DEVICE_MEASUREMENTS,
-    DEVICE_STATE,
     DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -35,7 +34,6 @@ from .constants import (
     IDLE_ICON,
     LOCATIONS,
     POWER_WATT,
-    PW_NOTIFICATION,
     SENSORS,
     SWITCH_GROUP_TYPES,
     SWITCHES,
@@ -68,7 +66,73 @@ DAYS = {
 }
 
 
-def _check_model(name, v_name):
+def device_state_updater(data, devs, d_id, d_dict):
+    """Helper-function for _update_gw_devices().
+    Update the Device_State sensor state.
+    """
+    for idx, item in enumerate(d_dict["sensors"]):
+        if item[ATTR_ID] == "device_state":
+            result = update_device_state(data, d_dict)
+            devs[d_id]["sensors"][idx][ATTR_STATE] = result[0]
+            devs[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+
+
+def update_device_state(data, d_dict):
+    """Helper-function for _device_state_updater()."""
+    _cooling_state = False
+    _dhw_state = False
+    _heating_state = False
+    state = "idle"
+    icon = IDLE_ICON
+
+    for _, item in enumerate(d_dict["binary_sensors"]):
+        if item[ATTR_ID] == "dhw_state":
+            if item[ATTR_STATE]:
+                state = "dhw-heating"
+                icon = FLAME_ICON
+                _dhw_state = True
+
+    if "heating_state" in data:
+        if data["heating_state"]:
+            state = "heating"
+            icon = HEATING_ICON
+            _heating_state = True
+    if _heating_state and _dhw_state:
+        state = "dhw and heating"
+        icon = HEATING_ICON
+    if "cooling_state" in data:
+        if data["cooling_state"]:
+            state = "cooling"
+            icon = COOLING_ICON
+            _cooling_state = True
+    if _cooling_state and _dhw_state:
+        state = "dhw and cooling"
+        icon = COOLING_ICON
+
+    return [state, icon]
+
+
+def pw_notification_updater(devs, d_id, d_dict, notifs):
+    """Helper-function for _update_gw_devices().
+    Update the PW_Notification binary_sensor state.
+    """
+    for idx, item in enumerate(d_dict["binary_sensors"]):
+        if item[ATTR_ID] == "plugwise_notification":
+            devs[d_id]["binary_sensors"][idx][ATTR_STATE] = notifs != {}
+
+
+def update_helper(data, devs, d_dict, d_id, e_type, key):
+    """Helper-function for _update_gw_devices()."""
+    for dummy in d_dict[e_type]:
+        if key != dummy[ATTR_ID]:
+            continue
+        for idx, item in enumerate(devs[d_id][e_type]):
+            if key != item[ATTR_ID]:
+                continue
+            devs[d_id][e_type][idx][ATTR_STATE] = data[key]
+
+
+def check_model(name, v_name):
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
@@ -80,7 +144,28 @@ def _check_model(name, v_name):
         return name
 
 
-def _types_finder(data):
+def schemas_schedule_temp(schedules):
+    """Helper-function for schemas().
+    Obtain the schedule temperature of the schema/schedule.
+    """
+    for period, temp in schedules.items():
+        moment_1, moment_2 = period.split(",")
+        moment_1 = moment_1.replace("[", "").split(" ")
+        moment_2 = moment_2.replace(")", "").split(" ")
+        result_1 = DAYS.get(moment_1[0], "None")
+        result_2 = DAYS.get(moment_2[0], "None")
+        now = dt.datetime.now().time()
+        start = dt.datetime.strptime(moment_1[1], "%H:%M").time()
+        end = dt.datetime.strptime(moment_2[1], "%H:%M").time()
+        if (
+            result_1 == dt.datetime.now().weekday()
+            or result_2 == dt.datetime.now().weekday()
+        ):
+            if in_between(now, start, end):
+                return temp
+
+
+def types_finder(data):
     """Detect types within locations from logs."""
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
@@ -99,7 +184,7 @@ def _types_finder(data):
     return types
 
 
-def _power_data_local_format(attrs, key_string, val):
+def power_data_local_format(attrs, key_string, val):
     """Format power data."""
     f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
@@ -111,7 +196,7 @@ def _power_data_local_format(attrs, key_string, val):
     return f_val
 
 
-def _power_data_energy_diff(measurement, net_string, f_val, direct_data):
+def power_data_energy_diff(measurement, net_string, f_val, direct_data):
     """Calculate differential energy."""
     if "electricity" in measurement:
         diff = 1
@@ -144,7 +229,6 @@ class SmileHelper:
         self._home_location = None
         self._locations = None
         self._modules = None
-        self._notifications = {}
         self._smile_legacy = False
         self._host = None
         self._loc_data = {}
@@ -156,6 +240,7 @@ class SmileHelper:
         self._websession = None
 
         self.gateway_id = None
+        self.notifications = {}
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None
@@ -230,7 +315,7 @@ class SmileHelper:
         self._home_location = 0
 
         # Add Anna appliances
-        for appliance in self._appliances:
+        for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
@@ -254,7 +339,7 @@ class SmileHelper:
             self._home_location = loc.id
             loc.types.add("home")
 
-            for location_type in _types_finder(location):
+            for location_type in types_finder(location):
                 loc.types.add(location_type)
 
         # Legacy P1 right location has 'services' filled
@@ -283,7 +368,7 @@ class SmileHelper:
             self._locations_legacy()
             return
 
-        for location in self._locations:
+        for location in self._locations.findall("./location"):
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
             loc.types = set()
@@ -364,7 +449,7 @@ class SmileHelper:
             mod_type = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data[0]
-            appl.model = _check_model(module_data[1], appl.v_name)
+            appl.model = check_model(module_data[1], appl.v_name)
             appl.fw = module_data[3]
             return appl
 
@@ -382,7 +467,7 @@ class SmileHelper:
             if module_data == [None, None, None, None]:
                 module_data = self._get_module_data(appliance, locator2, mod_type)
             appl.v_name = module_data[0]
-            appl.model = _check_model(module_data[1], appl.v_name)
+            appl.model = check_model(module_data[1], appl.v_name)
             if appl.model is None:
                 appl.model = (
                     "Generic heater/cooler" if self._cp_state else "Generic heater"
@@ -400,7 +485,7 @@ class SmileHelper:
         # Appliance with location (i.e. a device)
         if appliance.find("location") is not None:
             appl.location = appliance.find("location").attrib["id"]
-            for appl_type in _types_finder(appliance):
+            for appl_type in types_finder(appliance):
                 appl.types.add(appl_type)
         else:
             # Preset all types applicable to home
@@ -450,7 +535,7 @@ class SmileHelper:
             self._cp_state is not None or fl_state is not None or bl_state is not None
         )
 
-        for appliance in self._appliances:
+        for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
@@ -588,7 +673,7 @@ class SmileHelper:
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
-        self._notifications = {}
+        self.notifications = {}
         url = f"{self._endpoint}{DOMAIN_OBJECTS}"
         notifications = self._domain_objects.findall(".//notification")
         for notification in notifications:
@@ -596,8 +681,8 @@ class SmileHelper:
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
-                self._notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self._notifications)
+                self.notifications.update({msg_id: {msg_type: msg}})
+                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
             except AttributeError:  # pragma: no cover
                 _LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
@@ -847,7 +932,7 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
-        loc.f_val = _power_data_local_format(loc.attrs, loc.key_string, val)
+        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
 
@@ -884,7 +969,7 @@ class SmileHelper:
                     if not loc.found:
                         continue
 
-                    direct_data = _power_data_energy_diff(
+                    direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
 
@@ -938,26 +1023,6 @@ class SmileHelper:
         available, selected = determine_selected(available, selected, schemas)
         return available, selected, schedule_temperature
 
-    def _schemas_schedule_temp(self, schedules):
-        """Helper-function for schemas().
-        Obtain the schedule temperature of the schema/schedule.
-        """
-        for period, temp in schedules.items():
-            moment_1, moment_2 = period.split(",")
-            moment_1 = moment_1.replace("[", "").split(" ")
-            moment_2 = moment_2.replace(")", "").split(" ")
-            result_1 = DAYS.get(moment_1[0], "None")
-            result_2 = DAYS.get(moment_2[0], "None")
-            now = dt.datetime.now().time()
-            start = dt.datetime.strptime(moment_1[1], "%H:%M").time()
-            end = dt.datetime.strptime(moment_2[1], "%H:%M").time()
-            if (
-                result_1 == dt.datetime.now().weekday()
-                or result_2 == dt.datetime.now().weekday()
-            ):
-                if in_between(now, start, end):
-                    return temp
-
     def _schemas(self, loc_id):
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
@@ -999,7 +1064,7 @@ class SmileHelper:
                 else:
                     schedules[directive.attrib["time"]] = float(schedule["setpoint"])
 
-            schedule_temperature = self._schemas_schedule_temp(schedules)
+            schedule_temperature = schemas_schedule_temp(schedules)
 
         available, selected = determine_selected(available, selected, schemas)
 
@@ -1068,75 +1133,11 @@ class SmileHelper:
 
         return data
 
-    def _update_helper(self, data, d_dict, d_id, e_type, key):
-        """Helper-function for smile.py: _update_gw_devices()."""
-        for dummy in d_dict[e_type]:
-            if key != dummy[ATTR_ID]:
-                continue
-            for idx, item in enumerate(self.gw_devices[d_id][e_type]):
-                if key != item[ATTR_ID]:
-                    continue
-                self.gw_devices[d_id][e_type][idx][ATTR_STATE] = data[key]
-
-    def _update_device_state(self, data, d_dict):
-        """Helper-function for _device_state_updater()."""
-        _cooling_state = False
-        _dhw_state = False
-        _heating_state = False
-        state = "idle"
-        icon = IDLE_ICON
-
-        for idx, item in enumerate(d_dict["binary_sensors"]):
-            if item[ATTR_ID] == "dhw_state":
-                if item[ATTR_STATE]:
-                    state = "dhw-heating"
-                    icon = FLAME_ICON
-                    _dhw_state = True
-
-        if "heating_state" in data:
-            if data["heating_state"]:
-                state = "heating"
-                icon = HEATING_ICON
-                _heating_state = True
-        if _heating_state and _dhw_state:
-            state = "dhw and heating"
-            icon = HEATING_ICON
-        if "cooling_state" in data:
-            if data["cooling_state"]:
-                state = "cooling"
-                icon = COOLING_ICON
-                _cooling_state = True
-        if _cooling_state and _dhw_state:
-            state = "dhw and cooling"
-            icon = COOLING_ICON
-
-        return [state, icon]
-
-    def _device_state_updater(self, data, d_id, d_dict):
-        """Helper-function for smile.py: _update_gw_devices().
-        Update the Device_State sensor state.
-        """
-        for idx, item in enumerate(d_dict["sensors"]):
-            if item[ATTR_ID] == "device_state":
-                result = self._update_device_state(data, d_dict)
-                self.gw_devices[d_id]["sensors"][idx][ATTR_STATE] = result[0]
-                self.gw_devices[d_id]["sensors"][idx][ATTR_ICON] = result[1]
-
-    def _pw_notification_updater(self, d_id, d_dict):
-        """Helper-function for smile.py: _update_gw_devices().
-        Update the PW_Notification binary_sensor state.
-        """
-        for idx, item in enumerate(d_dict["binary_sensors"]):
-            if item[ATTR_ID] == "plugwise_notification":
-                self.gw_devices[d_id]["binary_sensors"][idx][ATTR_STATE] = (
-                    self._notifications != {}
-                )
-
     def _create_lists_from_data(self, data, bs_list, s_list, sw_list):
         """Helper-function for smile.py: _all_device_data().
         Create lists of binary_sensors, sensors, switches from the relevant data.
         """
-        for key, value in list(data.items()):
+        for _, value in list(data.items()):
             for item in BINARY_SENSORS:
                 try:
                     data.pop(item[ATTR_ID])
@@ -1162,16 +1163,3 @@ class SmileHelper:
                 else:
                     item[ATTR_STATE] = value
                     sw_list.append(item)
-
-    def _append_special(self, data, d_id, bs_list, s_list):
-        """Helper-function for smile.py: _all_device_data().
-        When conditions are met, the plugwise_notification binary_sensor
-        and/or the device_state sensor are appended.
-        """
-        if d_id == self.gateway_id:
-            if self.single_master_thermostat() is not None:
-                bs_list.append(PW_NOTIFICATION)
-            if not self._active_device_present and "heating_state" in data:
-                s_list.append(DEVICE_STATE)
-        if d_id == self._heater_id and self.single_master_thermostat() is False:
-            s_list.append(DEVICE_STATE)
