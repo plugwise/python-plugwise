@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.1 - Code improvements
+
+- Smile: improve use of protection for functions and parameter
+- Fix pylint warnings and errors
+
 ## 0.11.0 - Smile: add support for the Plugwise Jip
 
 - Adam, Anna: don't show removed thermostats / thermostats without a location
