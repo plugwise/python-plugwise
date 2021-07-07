@@ -52,7 +52,6 @@ from .messages.responses import (
     NodeResponse,
     StickInitResponse,
 )
-from .nodes import PlugwiseNode
 from .nodes.circle import PlugwiseCircle
 from .nodes.circle_plus import PlugwiseCirclePlus
 from .nodes.scan import PlugwiseScan
