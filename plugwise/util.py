@@ -155,6 +155,7 @@ class BaseType:
 class CompositeType:
     def __init__(self):
         self.contents = []
+        self.value = None
 
     def serialize(self):
         return b"".join(a.serialize() for a in self.contents)
