@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.3 - Stick: Bugfixes
+
+- Stick: Synchronize clock of all plugwise devices once a day
+
 ## 0.11.2 - Fix new and remaining pylint warnings
 
 ## 0.11.1 - Code improvements
