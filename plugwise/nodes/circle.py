@@ -73,7 +73,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._off_noise = None
         self._off_tot = None
         self._measures_power = True
-        self.power_history = {}
+        self._power_history = {}
         self._power_consumption_prev_hour = None
         self._power_consumption_today = None
         self._power_consumption_yesterday = None
@@ -358,7 +358,6 @@ class PlugwiseCircle(PlugwiseNode):
         if log_address is None:
             log_address = self._last_log_address
         if log_address is not None:
-            if bool(self.power_history):
                 # Only request last 2 power buffer logs
                 self.message_sender(
                     CirclePowerBufferRequest(self._mac, log_address - 1),
@@ -372,6 +371,7 @@ class PlugwiseCircle(PlugwiseNode):
                     0,
                     PRIORITY_LOW,
                 )
+            if bool(self._power_history):
             else:
                 # Collect power history info of today and yesterday
                 # Each request contains 4 hours except last request
@@ -400,35 +400,35 @@ class PlugwiseCircle(PlugwiseNode):
             if getattr(message, "logdate%d" % (i,)).value is not None:
                 log_date = getattr(message, "logdate%d" % (i,)).value
                 if getattr(message, "pulses%d" % (i,)).value == 0:
-                    self.power_history[log_date] = 0.0
+                    self._power_history[log_date] = 0.0
                 else:
-                    self.power_history[log_date] = self.pulses_to_kws(
+                    self._power_history[log_date] = self.pulses_to_kws(
                         getattr(message, "pulses%d" % (i,)).value, 3600
                     )
         # Cleanup history for more than 2 day's ago
-        if len(self.power_history.keys()) > 48:
-            for log_date in list(self.power_history.keys()):
+        if len(self._power_history.keys()) > 48:
+            for log_date in list(self._power_history.keys()):
                 if (log_date + self.timezone_delta - timedelta(hours=1)).date() < (
                     datetime.now().today().date() - timedelta(days=1)
                 ):
-                    del self.power_history[log_date]
+                    del self._power_history[log_date]
         # Recalculate power use counters
         last_hour_usage = 0
         today_power = 0
         yesterday_power = 0
-        for log_date in self.power_history:
+        for log_date in self._power_history:
             if (log_date + self.timezone_delta) == datetime.now().today().replace(
                 minute=0, second=0, microsecond=0
             ):
-                last_hour_usage = self.power_history[log_date]
+                last_hour_usage = self._power_history[log_date]
             if (
                 log_date + self.timezone_delta - timedelta(hours=1)
             ).date() == datetime.now().today().date():
-                today_power += self.power_history[log_date]
+                today_power += self._power_history[log_date]
             if (log_date + self.timezone_delta - timedelta(hours=1)).date() == (
                 datetime.now().today().date() - timedelta(days=1)
             ):
-                yesterday_power += self.power_history[log_date]
+                yesterday_power += self._power_history[log_date]
         if self._power_consumption_prev_hour != last_hour_usage:
             self._power_consumption_prev_hour = last_hour_usage
             self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
