@@ -51,7 +51,7 @@ class PlugwiseNode:
         self._firmware_version = None
         self._relay_state = False
         self._last_log_address = None
-        self.last_info_message = None
+        self._last_collected_power_buffer_bucket = 0
         self._device_features = None
 
     @property
@@ -278,9 +278,9 @@ class PlugwiseNode:
         self._hardware_version = message.hw_ver.value.decode(UTF8_DECODE)
         self._firmware_version = message.fw_ver.value
         self._node_type = message.node_type.value
-        self.last_info_message = message.timestamp
         if self._last_log_address != message.last_logaddr.value:
             self._last_log_address = message.last_logaddr.value
+            self._last_collected_power_buffer_bucket = 0
         _LOGGER.debug("Node type        = %s", self.hardware_model)
         if not self._battery_powered:
             _LOGGER.debug("Relay state      = %s", str(self._relay_state))

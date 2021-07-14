@@ -77,7 +77,8 @@ class PlugwiseCircle(PlugwiseNode):
         self._power_consumption_prev_hour = None
         self._power_consumption_today = None
         self._power_consumption_yesterday = None
-        self.last_log_collected = False
+        self._last_log_collected = False
+        self._last_power_buffer_message = datetime.now() - timedelta(hours=61320)
         self.timezone_delta = datetime.now().replace(
             minute=0, second=0, microsecond=0
         ) - datetime.utcnow().replace(minute=0, second=0, microsecond=0)
@@ -184,16 +185,21 @@ class PlugwiseCircle(PlugwiseNode):
                 CirclePowerUsageRequest(self._mac),
                 callback,
             )
-            # Refresh node info once an hour and request last hour power use afterwards
-            if self.last_info_message < (
-                datetime.now().replace(
-                    minute=0,
-                    second=0,
-                    microsecond=0,
-                )
-            ):
-                self._request_info(self.request_power_buffer)
-            if not self.last_log_collected:
+            if bool(self._power_history):
+                # Request last hour power once an hour
+                if self._last_power_buffer_message < (
+                    datetime.now().replace(
+                        minute=1,
+                        second=0,
+                        microsecond=0,
+                    )
+                ):
+                    if self._last_collected_power_buffer_bucket == 4:
+                        # Rollover of buffer bucket, get new memory address first
+                        self._request_info(self.request_power_buffer)
+                    else:
+                        self.request_power_buffer()
+            else:
                 self.request_power_buffer()
 
     def message_for_circle(self, message):
@@ -358,20 +364,19 @@ class PlugwiseCircle(PlugwiseNode):
         if log_address is None:
             log_address = self._last_log_address
         if log_address is not None:
-                # Only request last 2 power buffer logs
-                self.message_sender(
-                    CirclePowerBufferRequest(self._mac, log_address - 1),
-                    None,
-                    0,
-                    PRIORITY_LOW,
-                )
-                self.message_sender(
-                    CirclePowerBufferRequest(self._mac, log_address),
-                    callback,
-                    0,
-                    PRIORITY_LOW,
-                )
             if bool(self._power_history):
+                # Power history already collected
+                if self._last_collected_power_buffer_bucket == 4:
+                    # First new current log address then request power bucket
+                    self._request_info(self.request_power_buffer)
+                else:
+                    # Get new bucket of last hour at last known log address
+                    self.message_sender(
+                        CirclePowerBufferRequest(self._mac, log_address),
+                        None,
+                        0,
+                        PRIORITY_LOW,
+                    )
             else:
                 # Collect power history info of today and yesterday
                 # Each request contains 4 hours except last request
@@ -394,10 +399,13 @@ class PlugwiseCircle(PlugwiseNode):
         each response contains 4 log buffers and each log buffer contains data for 1 hour
         """
         if message.logaddr.value == self._last_log_address:
-            self.last_log_collected = True
+            self._last_power_buffer_message = message.timestamp
+            self._last_collected_power_buffer_bucket = 0
         # Collect logged power usage
         for i in range(1, 5):
             if getattr(message, "logdate%d" % (i,)).value is not None:
+                if message.logaddr.value == self._last_log_address:
+                    self._last_collected_power_buffer_bucket = i
                 log_date = getattr(message, "logdate%d" % (i,)).value
                 if getattr(message, "pulses%d" % (i,)).value == 0:
                     self._power_history[log_date] = 0.0
