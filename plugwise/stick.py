@@ -215,7 +215,8 @@ class Stick:
         self._run_watchdog = False
         self._run_update_thread = False
         self._auto_update_timer = 0
-        self.msg_controller.disconnect_from_stick()
+        if self.msg_controller:
+            self.msg_controller.disconnect_from_stick()
         self.msg_controller = None
 
     def subscribe_stick_callback(self, callback, callback_type):
