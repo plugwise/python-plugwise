@@ -30,7 +30,7 @@ class PlugwiseNode:
     def __init__(self, mac, address, message_sender):
         mac = mac.upper()
         if not validate_mac(mac):
-            _LOGGER.debug(
+            _LOGGER.warning(
                 "MAC address is in unexpected format: %s",
                 str(mac),
             )
@@ -266,7 +266,11 @@ class PlugwiseNode:
 
     def _process_info_response(self, message):
         """Process info response message."""
-        _LOGGER.debug("Response info message for node %s", self.mac)
+        _LOGGER.debug(
+            "Response info message for node %s, last log address %s",
+            self.mac,
+            str(message.last_logaddr.value),
+        )
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
                 self._relay_state = True
