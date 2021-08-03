@@ -150,7 +150,7 @@ PRIORITY_MEDIUM = 2
 
 # Max seconds the internal clock of plugwise nodes
 # are allowed to drift in seconds
-MAX_TIME_DRIFT = 30
+MAX_TIME_DRIFT = 5
 
 # Default sleep time in seconds for watchdog daemon
 WATCHDOG_DEAMON = 60
