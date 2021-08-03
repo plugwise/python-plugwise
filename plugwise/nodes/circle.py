@@ -362,7 +362,7 @@ class PlugwiseCircle(PlugwiseNode):
                 self.mac,
             )
 
-    def _response_power_usage(self, message):
+    def _response_power_usage(self, message: CirclePowerUsageResponse):
         # Sometimes the circle returns -1 for some of the pulse counters
         # likely this means the circle measures very little power and is suffering from
         # rounding errors. Zero these out. However, negative pulse values are valid
@@ -429,7 +429,7 @@ class PlugwiseCircle(PlugwiseNode):
             self._pulses_produced_1h = message.pulse_hour_produced.value
             self.do_callback(FEATURE_POWER_PRODUCTION_CURRENT_HOUR["id"])
 
-    def _response_calibration(self, message):
+    def _response_calibration(self, message: CircleCalibrationResponse):
         """Store calibration properties"""
         for calibration in ("gain_a", "gain_b", "off_noise", "off_tot"):
             val = getattr(message, calibration).value
@@ -486,6 +486,8 @@ class PlugwiseCircle(PlugwiseNode):
             else:
                 # Collect energy counters of today and yesterday
                 # Each request contains will return 4 hours, except last request
+
+                # TODO: validate range of log_addresses
                 for req_log_address in range(log_address - 13, log_address):
                     self.message_sender(
                         CircleEnergyCountersRequest(self._mac, req_log_address),
@@ -593,7 +595,7 @@ class PlugwiseCircle(PlugwiseNode):
             self._power_consumption_yesterday = yesterday_power
             self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
 
-    def _response_clock(self, message):
+    def _response_clock(self, message: CircleClockResponse):
         log_date = datetime(
             datetime.now().year,
             datetime.now().month,
