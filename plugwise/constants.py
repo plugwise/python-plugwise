@@ -244,6 +244,12 @@ FEATURE_AVAILABLE = {
     "state": "available",
     "unit": "state",
 }
+FEATURE_ENERGY_CONSUMPTION_TODAY = {
+    "id": "energy_consumption_today",
+    "name": "Energy consumption today",
+    "state": "Energy_consumption_today",
+    "unit": ENERGY_KILO_WATT_HOUR,
+}
 FEATURE_HUMIDITY = {
     "id": "humidity",
     "name": "Humidity",
