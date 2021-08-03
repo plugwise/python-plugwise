@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.11.3 - Stick: Bugfixes
+## 0.12.0 - Stick: Bugfixes and 'Energy Today' counter
 
+- Stick: Add new Energy Today counter to be used in new Energy dashboard introduced in Home Assistant 2021.8
 - Stick: Synchronize clock of all plugwise devices once a day
+- Stick: Reduce local clock drift from 30 to 5 seconds
 
 ## 0.11.2 - Fix new and remaining pylint warnings
 
