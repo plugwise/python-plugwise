@@ -26,14 +26,14 @@ from ..messages.requests import (
     CircleCalibrationRequest,
     CircleClockGetRequest,
     CircleClockSetRequest,
-    CirclePowerBufferRequest,
+    CircleEnergyCountersRequest,
     CirclePowerUsageRequest,
     CircleSwitchRelayRequest,
 )
 from ..messages.responses import (
     CircleCalibrationResponse,
     CircleClockResponse,
-    CirclePowerBufferResponse,
+    CircleEnergyCountersResponse,
     CirclePowerUsageResponse,
     NodeAckLargeResponse,
 )
@@ -224,15 +224,15 @@ class PlugwiseCircle(PlugwiseNode):
             self._node_ack_response(message)
         elif isinstance(message, CircleCalibrationResponse):
             self._response_calibration(message)
-        elif isinstance(message, CirclePowerBufferResponse):
+        elif isinstance(message, CircleEnergyCountersResponse):
             if self.calibration:
-                self._response_power_buffer(message)
+                self._response_energy_counters(message)
             else:
                 _LOGGER.debug(
                     "Received power buffer log for %s before calibration information is known",
                     self.mac,
                 )
-                self._request_calibration(self.request_power_buffer)
+                self._request_calibration(self.request_energy_counters)
         elif isinstance(message, CircleClockResponse):
             self._response_clock(message)
         else:
@@ -359,10 +359,10 @@ class PlugwiseCircle(PlugwiseNode):
             calc_value = 0.0
         return calc_value
 
-    def request_power_buffer(self, log_address=None, callback=None):
+    def request_energy_counters(self, log_address=None, callback=None):
         """Request power log of specified address"""
         _LOGGER.debug(
-            "request_power_buffer for %s of address %s", self.mac, str(log_address)
+            "request_energy_counters for %s of address %s", self.mac, str(log_address)
         )
         if log_address is None:
             log_address = self._last_log_address
@@ -375,7 +375,7 @@ class PlugwiseCircle(PlugwiseNode):
                 else:
                     # Get new bucket of last hour at last known log address
                     self.message_sender(
-                        CirclePowerBufferRequest(self._mac, log_address),
+                        CircleEnergyCountersRequest(self._mac, log_address),
                         None,
                         0,
                         PRIORITY_LOW,
@@ -385,21 +385,23 @@ class PlugwiseCircle(PlugwiseNode):
                 # Each bucket request contains 4 hours except last request
                 for req_log_address in range(log_address - 13, log_address):
                     self.message_sender(
-                        CirclePowerBufferRequest(self._mac, req_log_address),
+                        CircleEnergyCountersRequest(self._mac, req_log_address),
                         None,
                         0,
                         PRIORITY_LOW,
                     )
                 self.message_sender(
-                    CirclePowerBufferRequest(self._mac, log_address),
+                    CircleEnergyCountersRequest(self._mac, log_address),
                     callback,
                     0,
                     PRIORITY_LOW,
                 )
 
-    def _response_power_buffer(self, message):
-        """returns information about historical power usage
-        each response contains 4 log buffers and each log buffer contains data for 1 hour
+    def _response_energy_counters(self, message: CircleEnergyCountersResponse):
+        """
+        Save historical energy information in local counters
+        Each response message contains 4 log counters (slots)
+        of the energy pulses collected during the previous hour of given timestamp
         """
         if message.logaddr.value == self._last_log_address:
             self._last_power_buffer_message = message.timestamp

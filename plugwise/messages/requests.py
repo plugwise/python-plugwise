@@ -339,11 +339,11 @@ class NodeBroadcastGroupSwitchRequest(NodeRequest):
         self.args.append(Int(val, length=2))
 
 
-class CirclePowerBufferRequest(NodeRequest):
+class CircleEnergyCountersRequest(NodeRequest):
     """
-    Request power usage storaged a given memory address
+    Request energy usage counters storaged a given memory address
 
-    Response message: CirclePowerBufferResponse
+    Response message: CircleEnergyCountersResponse
     """
 
     ID = b"0048"
