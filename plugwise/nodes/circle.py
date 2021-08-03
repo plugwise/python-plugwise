@@ -139,6 +139,7 @@ class PlugwiseCircle(PlugwiseNode):
                 # is happening due to small clock drifts
                 if self._pulses_consumed_1h < self._energy_current_hour_pulses:
                     # Request new counters and skip this request
+                    self._energy_current_hour_pulses = self._pulses_consumed_1h
                     self.request_energy_counters()
                     return None
 
