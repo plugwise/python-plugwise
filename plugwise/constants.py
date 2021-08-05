@@ -4,10 +4,10 @@ import datetime as dt
 
 # Copied homeassistant.consts
 ATTR_DEVICE_CLASS = "device_class"
-ATTR_LAST_RESET: Final = "last_reset"
+ATTR_LAST_RESET = "last_reset"
 ATTR_NAME = "name"
 ATTR_STATE = "state"
-ATTR_STATE_CLASS: Final = "state_class"
+ATTR_STATE_CLASS = "state_class"
 ATTR_UNIT_OF_MEASUREMENT = "unit_of_measurement"
 DEGREE = "°"
 HVAC_MODE_AUTO = "auto"
