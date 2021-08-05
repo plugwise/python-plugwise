@@ -63,14 +63,16 @@ class PlugwiseCircle(PlugwiseNode):
             FEATURE_RSSI_OUT["id"],
             FEATURE_RELAY["id"],
         )
-        self._energy_consumption_today_reset = None
+        self._energy_consumption_today_reset = datetime.now().replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
         self._energy_counter_collect_in_progress = False
-        self._energy_current_hour_pulses = 0
         self._energy_history = {}
         self._energy_last_collected_timestamp = datetime(2000, 1, 1)
+        self._energy_last_hour_pulses = 0
+        self._energy_last_local_hour = datetime.now().hour
         self._energy_last_populated_slot = 0
-        self._energy_pulses_today = {}
-        self._energy_today_do_rollover = False
+        self._energy_pulse_counter_today = None
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
         self._pulses_1s = None
@@ -118,90 +120,12 @@ class PlugwiseCircle(PlugwiseNode):
     @property
     def energy_consumption_today(self) -> float:
         """Returns total energy consumption since midnight in kWh"""
-
-        # Only return a value if energy information is available
-        if (
-            self._pulses_consumed_1h is not None
-            and not self._energy_counter_collect_in_progress
-        ):
-            _energy_history_invalid = False
-            _current_local_timestamp = datetime.now()
-            _current_local_hour = _current_local_timestamp.hour
-            _current_utc_timestamp = datetime.utcnow().replace(
-                minute=0, second=0, microsecond=0
-            )
-            _todays_energy_pulses = 0
-
-            # Validate if last info is available
-            if self._energy_last_collected_timestamp == _current_utc_timestamp:
-
-                # Validate if unexpected rollover (aka: a reset of current hour pulses)
-                # is happening due to small clock drifts
-                if self._pulses_consumed_1h < self._energy_current_hour_pulses:
-                    # Request new counters and skip this request
-                    self._energy_current_hour_pulses = self._pulses_consumed_1h
-                    self.request_energy_counters()
-                    return None
-
-                if _current_local_hour == 0:
-                    if self._energy_today_do_rollover:
-                        _current_local_hour = 24
-                        _LOGGER.debug(
-                            "energy_consumption_today for %s | do rollover ",
-                            self.mac,
-                        )
-                    else:
-                        self._energy_consumption_today_reset = (
-                            _current_local_timestamp.replace(
-                                minute=0, second=0, microsecond=0
-                            )
-                        )
-
-                for hour in range(0, _current_local_hour):
-                    _log_timestamp = _current_utc_timestamp - timedelta(hours=hour)
-                    if self._energy_history.get(_log_timestamp):
-                        _todays_energy_pulses += self._energy_history[_log_timestamp]
-                        _LOGGER.debug(
-                            "energy_consumption_today for %s | pulses %s = %s, total = %s",
-                            self.mac,
-                            str(_log_timestamp),
-                            str(self._energy_history[_log_timestamp]),
-                            str(_todays_energy_pulses),
-                        )
-                    else:
-                        _LOGGER.debug(
-                            "Energy pulse history info for %s at %s not found !",
-                            self.mac,
-                            str(_log_timestamp),
-                        )
-                        _energy_history_invalid = True
-
-                # Validate all history values where present
-                if not _energy_history_invalid:
-                    if not self._energy_today_do_rollover:
-                        _todays_energy_pulses += self._pulses_consumed_1h
-                    else:
-                        self._energy_today_do_rollover = False
-                    self._energy_current_hour_pulses = self._pulses_consumed_1h
-                    _LOGGER.debug(
-                        "energy_consumption_today for %s | return: %s kWh",
-                        self.mac,
-                        str(self.pulses_to_kws(_todays_energy_pulses, 3600)),
-                    )
-                    return self.pulses_to_kws(_todays_energy_pulses, 3600)
-            else:
-                _LOGGER.debug(
-                    "energy_consumption_today for %s | last:%s != current:%s",
-                    self.mac,
-                    str(self._energy_last_collected_timestamp),
-                    str(_current_utc_timestamp),
-                )
-                # Request to update counters
-                self.request_energy_counters()
+        if self._energy_pulse_counter_today is not None:
+            return self.pulses_to_kws(self._energy_pulse_counter_today, 3600)
         return None
 
     @property
-    def energy_consumption_last_reset(self):
+    def energy_consumption_today_last_reset(self):
         """Last reset of total energy consumption today"""
         return self._energy_consumption_today_reset
 
@@ -324,6 +248,7 @@ class PlugwiseCircle(PlugwiseNode):
         elif isinstance(message, CircleEnergyCountersResponse):
             if self.calibration:
                 self._response_energy_counters(message)
+                self._response_energy_counters_old(message)
             else:
                 _LOGGER.debug(
                     "Received power buffer log for %s before calibration information is known",
@@ -418,7 +343,14 @@ class PlugwiseCircle(PlugwiseNode):
         if self._pulses_consumed_1h != message.pulse_hour_consumed.value:
             self._pulses_consumed_1h = message.pulse_hour_consumed.value
             self.do_callback(FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"])
+
+        # Update energy consumption today
+        _new_energy_pulse_counter_today = self._update_todays_energy_pulses()
+
+        if self._energy_pulse_counter_today != _new_energy_pulse_counter_today:
+            self._energy_pulse_counter_today = _new_energy_pulse_counter_today
             self.do_callback(FEATURE_ENERGY_CONSUMPTION_TODAY["id"])
+
         # Power produced current hour
         if message.pulse_hour_produced.value == -1:
             message.pulse_hour_produced.value = 0
@@ -457,6 +389,124 @@ class PlugwiseCircle(PlugwiseNode):
             calc_value = 0.0
         return calc_value
 
+    def _collect_energy_pulses(self, start_utc: datetime, end_utc: datetime):
+        """Return energy pulses of given hours"""
+
+        if start_utc == end_utc:
+            hours = 0
+        else:
+            hours = int((end_utc - start_utc).seconds / 3600)
+        _energy_history_invalid = False
+        _energy_pulses = 0
+        for hour in range(0, hours + 1):
+            _log_timestamp = start_utc + timedelta(hours=hour)
+            if self._energy_history.get(_log_timestamp):
+                _energy_pulses += self._energy_history[_log_timestamp]
+                _LOGGER.debug(
+                    "_collect_energy_pulses for %s | %s : %s, total = %s",
+                    self.mac,
+                    str(_log_timestamp),
+                    str(self._energy_history[_log_timestamp]),
+                    str(_energy_pulses),
+                )
+            else:
+                _LOGGER.debug(
+                    "_collect_energy_pulses for %s at %s not found",
+                    self.mac,
+                    str(_log_timestamp),
+                )
+                self.request_energy_counters(-1)
+                self.request_energy_counters()
+                _energy_history_invalid = True
+
+        # Validate all history values where present
+        if not _energy_history_invalid:
+            return _energy_pulses
+        return None
+
+    def _update_todays_energy_pulses(self):
+        """Update energy consumption today pulse counter"""
+
+        # Only return a value if energy information is available
+        if self._energy_counter_collect_in_progress or self._pulses_consumed_1h is None:
+            _LOGGER.debug(
+                "energy_consumption_today for %s | skip progress=%s, pulses_consumed_1h=%s",
+                self.mac,
+                str(self._energy_counter_collect_in_progress),
+                str(self._pulses_consumed_1h),
+            )
+            return None
+
+        _current_local_timestamp = datetime.now()
+        _current_local_hour = _current_local_timestamp.hour
+        _end_utc_timestamp = datetime.utcnow().replace(
+            minute=0, second=0, microsecond=0
+        )
+        _start_utc_timestamp = _end_utc_timestamp - timedelta(
+            hours=_current_local_hour - 1
+        )
+
+        # Validate if last energy counter is already available to use
+        if self._energy_last_collected_timestamp != _end_utc_timestamp:
+            _LOGGER.debug(
+                "energy_consumption_today for %s | expected counter (%s) is not available, last available counter (%s)",
+                self.mac,
+                str(_end_utc_timestamp),
+                str(self._energy_last_collected_timestamp),
+            )
+            self._request_info(self.request_energy_counters)
+            return None
+
+        # Handle post hour rollover, possible due to small clock drifts
+        if self._energy_last_local_hour != _current_local_hour:
+            if self._pulses_consumed_1h < self._energy_last_hour_pulses:
+                _LOGGER.debug(
+                    "energy_consumption_today for %s | post hour rollover reset (hour:%s=>%s, pulses:%s=>%s)",
+                    self.mac,
+                    str(self._energy_last_local_hour),
+                    str(_current_local_hour),
+                    str(self._energy_last_hour_pulses),
+                    str(self._pulses_consumed_1h),
+                )
+                self._energy_last_local_hour = _current_local_hour
+                self._energy_last_hour_pulses = self._pulses_consumed_1h
+
+        # Skip pre hour rollover, possible due to small clock drifts
+        if self._pulses_consumed_1h < self._energy_last_hour_pulses:
+            _LOGGER.debug(
+                "energy_consumption_today for %s | Skip for pre hour rollover",
+                self.mac,
+            )
+            self._request_info(self.request_energy_counters)
+            return None
+        else:
+            self._energy_last_hour_pulses = self._pulses_consumed_1h
+
+        # Return current energy counter
+        if _current_local_hour == 0:
+            return self._energy_last_hour_pulses
+
+        # Sum of collected hour counters
+        _energy_pulses = self._collect_energy_pulses(
+            _start_utc_timestamp, _end_utc_timestamp
+        )
+        if _energy_pulses is None:
+            _LOGGER.debug(
+                "energy_consumption_today for %s | FAILED collecting energy pulses from %s to %s",
+                self.mac,
+                str(_start_utc_timestamp),
+                str(_end_utc_timestamp),
+            )
+            return None
+
+        _energy_use = _energy_pulses + self._energy_last_hour_pulses
+        _LOGGER.debug(
+            "energy_consumption_today for %s | return %s kWh",
+            self.mac,
+            str(_energy_use),
+        )
+        return _energy_use
+
     def _energy_counters_collect_finished(self):
         """Helper to indicate power buffer is collected."""
         self._energy_counter_collect_in_progress = False
@@ -469,6 +519,8 @@ class PlugwiseCircle(PlugwiseNode):
         if log_address is None:
             log_address = self._last_log_address
         if log_address is not None:
+            if log_address < 0:
+                log_address = self._last_log_address - log_address
             if bool(self._energy_history):
                 # Energy history already collected
 
@@ -517,31 +569,42 @@ class PlugwiseCircle(PlugwiseNode):
         _utc_hour_timestamp = datetime.utcnow().replace(
             minute=0, second=0, microsecond=0
         )
+        _local_midnight_timestamp = datetime.now().replace(
+            hour=0, minute=0, second=0, microsecond=0
+        )
+        _local_hour = datetime.now().hour
         for _slot in range(1, 5):
-            if getattr(message, "logdate%d" % (_slot,)).value is not None:
-                _log_timestamp = getattr(message, "logdate%d" % (_slot,)).value
-                self._energy_history[_log_timestamp] = getattr(
-                    message, "pulses%d" % (_slot,)
-                ).value
+            _log_timestamp = getattr(message, "logdate%d" % (_slot,)).value
+            if _log_timestamp is None:
+                break
+            self._energy_history[_log_timestamp] = getattr(
+                message, "pulses%d" % (_slot,)
+            ).value
 
-                # Store last populated _slot
-                if message.logaddr.value == self._last_log_address:
-                    self._energy_last_populated_slot = _slot
+            # Store last populated _slot
+            if message.logaddr.value == self._last_log_address:
+                self._energy_last_populated_slot = _slot
 
-                # Store most recent timestamp of collected pulses
-                if self._energy_last_collected_timestamp < _log_timestamp:
-                    self._energy_last_collected_timestamp = _log_timestamp
+            # Store most recent timestamp of collected pulses
+            if self._energy_last_collected_timestamp < _log_timestamp:
+                self._energy_last_collected_timestamp = _log_timestamp
+                if not self._energy_counter_collect_in_progress:
+                    self._update_todays_energy_pulses()
 
-                # Check for midnight rollover
-                if (
-                    _log_timestamp
-                    == (_utc_hour_timestamp - timedelta(hours=datetime.now().hour))
-                    and self._energy_consumption_today_reset
-                    != datetime.now().replace(minute=0, second=0, microsecond=0)
-                    and not self._energy_counter_collect_in_progress
-                ):
-                    self._energy_today_do_rollover = True
-                    self.do_callback(FEATURE_ENERGY_CONSUMPTION_TODAY["id"])
+            # Check for midnight rollover
+            if (
+                _log_timestamp == (_utc_hour_timestamp - timedelta(hours=_local_hour))
+                and self._energy_consumption_today_reset != _local_midnight_timestamp
+                and not self._energy_counter_collect_in_progress
+            ):
+                _LOGGER.debug(
+                    "_response_energy_counters for %s | midnight rollover, reset date to %s",
+                    self.mac,
+                    str(_local_midnight_timestamp),
+                )
+                self._energy_consumption_today_reset = _local_midnight_timestamp
+                self._update_todays_energy_pulses()
+                self.do_callback(FEATURE_ENERGY_CONSUMPTION_TODAY["id"])
 
         # Cleanup energy history for more than 8 day's ago
         _8_days_ago = datetime.utcnow().replace(
@@ -550,6 +613,8 @@ class PlugwiseCircle(PlugwiseNode):
         for log_timestamp in list(self._energy_history.keys()):
             if log_timestamp < _8_days_ago:
                 del self._energy_history[log_timestamp]
+
+    def _response_energy_counters_old(self, message: CircleEnergyCountersResponse):
 
         # TODO : TO BE DEPRECATED
         # Collect logged kWh power usage
