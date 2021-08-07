@@ -6,6 +6,7 @@ import datetime as dt
 import logging
 
 import async_timeout
+from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -721,7 +722,10 @@ class SmileHelper:
             if appliance.find(i_locator) is not None:
                 name = f"{measurement}_interval"
                 measure = appliance.find(i_locator).text
-                data[name] = format_measure(measure, ENERGY_WATT_HOUR)
+                log_date = parse(appliance.find(i_locator).get("log_date"))
+                log_date = log_date.astimezone(tz.gettz('UTC')).replace(tzinfo=None)
+                log_date = log_date.strftime("%Y-%m-%d %H:%M:%S")
+                data[name] = [format_measure(measure, ENERGY_WATT_HOUR), log_date]
 
         return data
 
@@ -1137,29 +1141,22 @@ class SmileHelper:
         """Helper-function for smile.py: _all_device_data().
         Create lists of binary_sensors, sensors, switches from the relevant data.
         """
-        for _, value in list(data.items()):
+        for key, value in list(data.items()):
             for item in BINARY_SENSORS:
-                try:
-                    data.pop(item[ATTR_ID])
-                except KeyError:
-                    pass
-                else:
+                if item[ATTR_ID] == key:
                     if self._active_device_present:
                         item[ATTR_STATE] = value
                         bs_list.append(item)
             for item in SENSORS:
-                try:
-                    data.pop(item[ATTR_ID])
-                except KeyError:
-                    pass
-                else:
+                if item[ATTR_ID] == key:
+                    if "interval" in item[ATTR_ID]:
+                        if type(value) is list:
+                            log_date = value[1]
+                            value = value[0]
+                            item["last_reset"] = log_date                    
                     item[ATTR_STATE] = value
                     s_list.append(item)
             for item in SWITCHES:
-                try:
-                    data.pop(item[ATTR_ID])
-                except KeyError:
-                    pass
-                else:
+                if item[ATTR_ID] == key:
                     item[ATTR_STATE] = value
                     sw_list.append(item)
