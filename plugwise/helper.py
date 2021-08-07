@@ -1144,19 +1144,23 @@ class SmileHelper:
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
                 if item[ATTR_ID] == key:
+                    data.pop(item[ATTR_ID])
                     if self._active_device_present:
                         item[ATTR_STATE] = value
                         bs_list.append(item)
             for item in SENSORS:
                 if item[ATTR_ID] == key:
+                    data.pop(item[ATTR_ID])
+                    temp_value = None
                     if "interval" in item[ATTR_ID]:
                         if type(value) is list:
                             log_date = value[1]
-                            value = value[0]
-                            item["last_reset"] = log_date
-                    item[ATTR_STATE] = value
+                            temp_value = value[0]
+                            item["last_reset"] = log_date  
+                    item[ATTR_STATE] = temp_value
                     s_list.append(item)
             for item in SWITCHES:
                 if item[ATTR_ID] == key:
+                    data.pop(item[ATTR_ID])
                     item[ATTR_STATE] = value
                     sw_list.append(item)
