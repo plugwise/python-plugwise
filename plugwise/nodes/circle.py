@@ -344,7 +344,7 @@ class PlugwiseCircle(PlugwiseNode):
             self.do_callback(FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"])
 
         # Update energy consumption today
-        self._update_today_energy()
+        self._update_energy_today_now()
 
         # Power produced current hour
         if message.pulse_hour_produced.value == -1:
@@ -500,68 +500,75 @@ class PlugwiseCircle(PlugwiseNode):
         )
         return _energy_use
 
-    def _update_today_energy(self):
-        """Update cumulative energy consumption (kWh) of today"""
-        _new_energy_pulse_counter_today = self._calc_todays_energy_pulses()
+    def _update_energy_today_now(self):
+        """Update energy consumption (kWh) of today up to now"""
+        _pulses_today_now = self._calc_todays_energy_pulses()
         _LOGGER.debug(
-            "_update_today_energy for %s | counter = %s, update= %s",
+            "_update_energy_today_now for %s | counter = %s, update= %s",
             self.mac,
             str(self._energy_pulses_today_now),
-            str(_new_energy_pulse_counter_today),
+            str(_pulses_today_now),
         )
         if (
             self._energy_pulses_today_now is None
-            or self._energy_pulses_today_now != _new_energy_pulse_counter_today
+            or self._energy_pulses_today_now != _pulses_today_now
         ):
-            self._energy_pulses_today_now = _new_energy_pulse_counter_today
+            self._energy_pulses_today_now = _pulses_today_now
             self.do_callback(FEATURE_ENERGY_CONSUMPTION_TODAY["id"])
 
-    def _update_previous_hour_power(self, prev_hour: datetime):
-        """Update energy consumption (kWh) of previous hour"""
-        _prev_hour_pulses = self._collect_energy_pulses(prev_hour, prev_hour)
-        if (
-            self._energy_pulses_prev_hour is None
-            or self._energy_pulses_prev_hour != _prev_hour_pulses
-        ):
-            self._energy_pulses_prev_hour = _prev_hour_pulses
-            self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
-
-    def _update_yesterday_power(
-        self, start_yesterday: datetime, end_yesterday: datetime
-    ):
-        """Update energy consumption (kWh) of yesterday"""
-        _yesterday_pulses = self._collect_energy_pulses(start_yesterday, end_yesterday)
+    def _update_energy_previous_hour(self, prev_hour: datetime):
+        """Update energy consumption (pulses) of previous hour"""
+        _pulses_prev_hour = self._collect_energy_pulses(prev_hour, prev_hour)
         _LOGGER.debug(
-            "_update_yesterday_power for %s | counter = %s, update= %s, range %s to %s",
+            "_update_energy_previous_hour for %s | counter = %s, update= %s, timestamp %s",
             self.mac,
             str(self._energy_pulses_yesterday),
-            str(_yesterday_pulses),
+            str(_pulses_prev_hour),
+            str(prev_hour),
+        )
+        if (
+            self._energy_pulses_prev_hour is None
+            or self._energy_pulses_prev_hour != _pulses_prev_hour
+        ):
+            self._energy_pulses_prev_hour = _pulses_prev_hour
+            self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
+
+    def _update_energy_yesterday(
+        self, start_yesterday: datetime, end_yesterday: datetime
+    ):
+        """Update energy consumption (pulses) of yesterday"""
+        _pulses_yesterday = self._collect_energy_pulses(start_yesterday, end_yesterday)
+        _LOGGER.debug(
+            "_update_energy_yesterday for %s | counter = %s, update= %s, range %s to %s",
+            self.mac,
+            str(self._energy_pulses_yesterday),
+            str(_pulses_yesterday),
             str(start_yesterday),
             str(end_yesterday),
         )
         if (
             self._energy_pulses_yesterday is None
-            or self._energy_pulses_yesterday != _yesterday_pulses
+            or self._energy_pulses_yesterday != _pulses_yesterday
         ):
-            self._energy_pulses_yesterday = _yesterday_pulses
+            self._energy_pulses_yesterday = _pulses_yesterday
             self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
 
-    def _update_today_power(self, start_today: datetime, end_today: datetime):
-        """Update energy consumption (kWh) of today"""
-        _today_pulses = self._collect_energy_pulses(start_today, end_today)
+    def _update_energy_today_hourly(self, start_today: datetime, end_today: datetime):
+        """Update energy consumption (pulses) of today up to last hour"""
+        _pulses_today_hourly = self._collect_energy_pulses(start_today, end_today)
         _LOGGER.debug(
-            "_update_today_power for %s | counter = %s, update= %s, range %s to %s",
+            "_update_energy_today_hourly for %s | counter = %s, update= %s, range %s to %s",
             self.mac,
             str(self._energy_pulses_today_hourly),
-            str(_today_pulses),
+            str(_pulses_today_hourly),
             str(start_today),
             str(end_today),
         )
         if (
             self._energy_pulses_today_hourly is None
-            or self._energy_pulses_today_hourly != _today_pulses
+            or self._energy_pulses_today_hourly != _pulses_today_hourly
         ):
-            self._energy_pulses_today_hourly = _today_pulses
+            self._energy_pulses_today_hourly = _pulses_today_hourly
             self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
 
     def request_energy_counters(self, log_address=None, callback=None):
@@ -665,16 +672,16 @@ class PlugwiseCircle(PlugwiseNode):
 
         # Update energy counters
         if not self._energy_counter_collect_in_progress:
-            self._update_previous_hour_power(_utc_hour_timestamp)
-            self._update_today_power(
+            self._update_energy_previous_hour(_utc_hour_timestamp)
+            self._update_energy_today_hourly(
                 _utc_midnight_timestamp + timedelta(hours=1),
                 _utc_hour_timestamp,
             )
-            self._update_yesterday_power(
+            self._update_energy_yesterday(
                 _utc_midnight_timestamp - timedelta(hours=23),
                 _utc_midnight_timestamp,
             )
-            self._update_today_energy()
+            self._update_energy_today_now()
 
         # Cleanup energy history for more than 8 day's ago
         _8_days_ago = datetime.utcnow().replace(
