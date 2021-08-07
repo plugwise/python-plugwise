@@ -669,7 +669,11 @@ class PlugwiseCircle(PlugwiseNode):
                 self._energy_last_collected_timestamp = _log_timestamp
 
         # Reset energy collection progress
-        if self._energy_history_collecting and len(self._energy_history) > 48:
+        if (
+            self._energy_history_collecting
+            and len(self._energy_history) > 48
+            and self._energy_last_collected_timestamp == _utc_hour_timestamp
+        ):
             self._energy_history_collecting = False
 
         # Update energy counters
