@@ -391,7 +391,7 @@ class PlugwiseCircle(PlugwiseNode):
             hours = 0
         else:
             hours = int((end_utc - start_utc).seconds / 3600)
-        _energy_history_invalid = False
+        _energy_history_failed = False
         _energy_pulses = 0
         for hour in range(0, hours + 1):
             _log_timestamp = start_utc + timedelta(hours=hour)
@@ -415,10 +415,10 @@ class PlugwiseCircle(PlugwiseNode):
                     str(self._energy_last_populated_slot),
                 )
                 self.request_energy_counters(_mem_address)
-                _energy_history_invalid = True
+                _energy_history_failed = True
 
         # Validate all history values where present
-        if not _energy_history_invalid:
+        if not _energy_history_failed:
             return _energy_pulses
         return None
 
