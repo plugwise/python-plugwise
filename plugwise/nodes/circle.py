@@ -75,6 +75,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._energy_pulse_counter_today = None
         self._energy_pulses_prev_hour = None
         self._energy_pulses_today = None
+        self._energy_pulses_yesterday = None
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
         self._pulses_1s = None
@@ -87,7 +88,6 @@ class PlugwiseCircle(PlugwiseNode):
         self._off_noise = None
         self._off_tot = None
         self._measures_power = True
-        self._power_consumption_yesterday = None
         self._last_log_collected = False
         self.timezone_delta = datetime.now().replace(
             minute=0, second=0, microsecond=0
@@ -155,7 +155,9 @@ class PlugwiseCircle(PlugwiseNode):
     @property
     def power_consumption_yesterday(self):
         """Total power consumption of yesterday in kWh"""
-        return self._power_consumption_yesterday
+        if self._energy_pulses_yesterday is not None:
+            return self.pulses_to_kws(self._energy_pulses_yesterday, 3600)
+        return None
 
     @property
     def power_production_current_hour(self):
@@ -532,17 +534,16 @@ class PlugwiseCircle(PlugwiseNode):
         _LOGGER.debug(
             "_update_yesterday_power for %s | counter = %s, update= %s, range %s to %s",
             self.mac,
-            str(self._power_consumption_yesterday),
+            str(self._energy_pulses_yesterday),
             str(_yesterday_pulses),
             str(start_yesterday),
             str(end_yesterday),
         )
-        _yesterday_energy = self.pulses_to_kws(_yesterday_pulses, 3600)
         if (
-            self._power_consumption_yesterday is None
-            or self._power_consumption_yesterday != _yesterday_energy
+            self._energy_pulses_yesterday is None
+            or self._energy_pulses_yesterday != _yesterday_pulses
         ):
-            self._power_consumption_yesterday = _yesterday_energy
+            self._energy_pulses_yesterday = _yesterday_pulses
             self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
 
     def _update_today_power(self, start_today: datetime, end_today: datetime):
