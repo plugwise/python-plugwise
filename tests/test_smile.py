@@ -458,7 +458,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     if a_item["id"] != b_item["id"]:
                                         continue
 
-                                    assert a_item["state"] == b_item["state"]
+                                    if type(a_item["state"]) is list:
+                                        assert a_item["state"][0] == b_item["state"]
+                                    else:
+                                        assert a_item["state"] == b_item["state"]
                                     b_sensor = None
                                     if measure_key == "binary_sensors":
                                         b_sensor = pw_entities.GWBinarySensor(
