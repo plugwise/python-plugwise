@@ -724,7 +724,6 @@ class SmileHelper:
                 measure = appliance.find(i_locator).text
                 log_date = parse(appliance.find(i_locator).get("log_date"))
                 log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
-                log_date = log_date.isoformat()
                 data[name] = [format_measure(measure, ENERGY_WATT_HOUR), log_date]
 
         return data
