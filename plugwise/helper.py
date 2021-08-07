@@ -723,7 +723,7 @@ class SmileHelper:
                 name = f"{measurement}_interval"
                 measure = appliance.find(i_locator).text
                 log_date = parse(appliance.find(i_locator).get("log_date"))
-                log_date = log_date.astimezone(tz.gettz('UTC')).replace(tzinfo=None)
+                log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
                 log_date = log_date.strftime("%Y-%m-%d %H:%M:%S")
                 data[name] = [format_measure(measure, ENERGY_WATT_HOUR), log_date]
 
@@ -1153,7 +1153,7 @@ class SmileHelper:
                         if type(value) is list:
                             log_date = value[1]
                             value = value[0]
-                            item["last_reset"] = log_date                    
+                            item["last_reset"] = log_date
                     item[ATTR_STATE] = value
                     s_list.append(item)
             for item in SWITCHES:
