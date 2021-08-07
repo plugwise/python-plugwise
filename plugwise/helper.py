@@ -1153,12 +1153,13 @@ class SmileHelper:
                 if item[ATTR_ID] == key:
                     data.pop(item[ATTR_ID])
                     temp_value = None
+                    item[ATTR_STATE] = value
                     if "interval" in item[ATTR_ID]:
                         if type(value) is list:
                             log_date = value[1]
                             temp_value = value[0]
                             item["last_reset"] = log_date
-                    item[ATTR_STATE] = temp_value
+                            item[ATTR_STATE] = temp_value
                     s_list.append(item)
             for item in SWITCHES:
                 if item[ATTR_ID] == key:
