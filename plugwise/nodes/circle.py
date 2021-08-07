@@ -434,14 +434,15 @@ class PlugwiseCircle(PlugwiseNode):
             str(_pulses_cur_hour),
         )
         _hour_rollover = False
-        if (
-            self._energy_pulses_current_hour is None
-            or self._energy_pulses_current_hour != _pulses_cur_hour
-        ):
-            if _pulses_cur_hour < self._energy_pulses_current_hour:
-                _hour_rollover = True
+        if self._energy_pulses_current_hour is None:
             self._energy_pulses_current_hour = _pulses_cur_hour
             self.do_callback(FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"])
+        else:
+            if self._energy_pulses_current_hour != _pulses_cur_hour:
+                if _pulses_cur_hour < self._energy_pulses_current_hour:
+                    _hour_rollover = True
+                self._energy_pulses_current_hour = _pulses_cur_hour
+                self.do_callback(FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"])
 
         # Update today
         self._update_energy_today_now(_hour_rollover, False, False)
@@ -501,11 +502,12 @@ class PlugwiseCircle(PlugwiseNode):
             str(self._energy_pulses_today_hourly),
             str(self._energy_pulses_current_hour),
         )
-        if _pulses_today_now is not None:
-            if (
-                self._energy_pulses_today_now is None
-                or self._energy_pulses_today_now != _pulses_today_now
-            ):
+        if self._energy_pulses_today_now is None:
+            self._energy_pulses_today_now = _pulses_today_now
+            if self._energy_pulses_today_now is not None:
+                self.do_callback(FEATURE_ENERGY_CONSUMPTION_TODAY["id"])
+        else:
+            if self._energy_pulses_today_now != _pulses_today_now:
                 self._energy_pulses_today_now = _pulses_today_now
                 self.do_callback(FEATURE_ENERGY_CONSUMPTION_TODAY["id"])
 
@@ -519,12 +521,14 @@ class PlugwiseCircle(PlugwiseNode):
             str(_pulses_prev_hour),
             str(prev_hour),
         )
-        if (
-            self._energy_pulses_prev_hour is None
-            or self._energy_pulses_prev_hour != _pulses_prev_hour
-        ):
+        if self._energy_pulses_prev_hour is None:
             self._energy_pulses_prev_hour = _pulses_prev_hour
-            self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
+            if self._energy_pulses_prev_hour is not None:
+                self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
+        else:
+            if self._energy_pulses_prev_hour != _pulses_prev_hour:
+                self._energy_pulses_prev_hour = _pulses_prev_hour
+                self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
 
     def _update_energy_yesterday(
         self, start_yesterday: datetime, end_yesterday: datetime
@@ -539,12 +543,14 @@ class PlugwiseCircle(PlugwiseNode):
             str(start_yesterday),
             str(end_yesterday),
         )
-        if (
-            self._energy_pulses_yesterday is None
-            or self._energy_pulses_yesterday != _pulses_yesterday
-        ):
+        if self._energy_pulses_yesterday is None:
             self._energy_pulses_yesterday = _pulses_yesterday
-            self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
+            if self._energy_pulses_yesterday is not None:
+                self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
+        else:
+            if self._energy_pulses_yesterday != _pulses_yesterday:
+                self._energy_pulses_yesterday = _pulses_yesterday
+                self.do_callback(FEATURE_POWER_CONSUMPTION_YESTERDAY["id"])
 
     def _update_energy_today_hourly(self, start_today: datetime, end_today: datetime):
         """Update energy consumption (pulses) of today up to last hour"""
@@ -560,12 +566,14 @@ class PlugwiseCircle(PlugwiseNode):
             str(start_today),
             str(end_today),
         )
-        if (
-            self._energy_pulses_today_hourly is None
-            or self._energy_pulses_today_hourly != _pulses_today_hourly
-        ):
+        if self._energy_pulses_today_hourly is None:
             self._energy_pulses_today_hourly = _pulses_today_hourly
-            self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
+            if self._energy_pulses_today_hourly is not None:
+                self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
+        else:
+            if self._energy_pulses_today_hourly != _pulses_today_hourly:
+                self._energy_pulses_today_hourly = _pulses_today_hourly
+                self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
 
     def request_energy_counters(self, log_address=None, callback=None):
         """Request power log of specified address"""
