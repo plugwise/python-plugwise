@@ -73,6 +73,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._energy_last_local_hour = datetime.now().hour
         self._energy_last_populated_slot = 0
         self._energy_pulse_counter_today = None
+        self._energy_pulses_prev_hour = None
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
         self._pulses_1s = None
@@ -85,7 +86,6 @@ class PlugwiseCircle(PlugwiseNode):
         self._off_noise = None
         self._off_tot = None
         self._measures_power = True
-        self._power_consumption_prev_hour = None
         self._power_consumption_today = None
         self._power_consumption_yesterday = None
         self._last_log_collected = False
@@ -141,7 +141,9 @@ class PlugwiseCircle(PlugwiseNode):
     @property
     def power_consumption_previous_hour(self):
         """Returns power consumption during the previous hour in kWh"""
-        return self._power_consumption_prev_hour
+        if self._energy_pulses_prev_hour is not None:
+            return self.pulses_to_kws(self._energy_pulses_prev_hour, 3600)
+        return None
 
     @property
     def power_consumption_today(self):
@@ -513,12 +515,11 @@ class PlugwiseCircle(PlugwiseNode):
     def _update_previous_hour_power(self, prev_hour: datetime):
         """Update energy consumption (kWh) of previous hour"""
         _prev_hour_pulses = self._collect_energy_pulses(prev_hour, prev_hour)
-        _prev_hour_energy = self.pulses_to_kws(_prev_hour_pulses, 3600)
         if (
-            self._power_consumption_prev_hour is None
-            or self._power_consumption_prev_hour != _prev_hour_energy
+            self._energy_pulses_prev_hour is None
+            or self._energy_pulses_prev_hour != _prev_hour_pulses
         ):
-            self._power_consumption_prev_hour = _prev_hour_energy
+            self._energy_pulses_prev_hour = _prev_hour_pulses
             self.do_callback(FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"])
 
     def _update_yesterday_power(
