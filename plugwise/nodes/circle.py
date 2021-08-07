@@ -74,6 +74,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._energy_last_populated_slot = 0
         self._energy_pulse_counter_today = None
         self._energy_pulses_prev_hour = None
+        self._energy_pulses_today = None
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
         self._pulses_1s = None
@@ -86,7 +87,6 @@ class PlugwiseCircle(PlugwiseNode):
         self._off_noise = None
         self._off_tot = None
         self._measures_power = True
-        self._power_consumption_today = None
         self._power_consumption_yesterday = None
         self._last_log_collected = False
         self.timezone_delta = datetime.now().replace(
@@ -148,7 +148,9 @@ class PlugwiseCircle(PlugwiseNode):
     @property
     def power_consumption_today(self):
         """Total power consumption during today in kWh"""
-        return self._power_consumption_today
+        if self._energy_pulses_today is not None:
+            return self.pulses_to_kws(self._energy_pulses_today, 3600)
+        return None
 
     @property
     def power_consumption_yesterday(self):
@@ -549,17 +551,16 @@ class PlugwiseCircle(PlugwiseNode):
         _LOGGER.debug(
             "_update_today_power for %s | counter = %s, update= %s, range %s to %s",
             self.mac,
-            str(self._power_consumption_today),
+            str(self._energy_pulses_today),
             str(_today_pulses),
             str(start_today),
             str(end_today),
         )
-        _today_energy = self.pulses_to_kws(_today_pulses, 3600)
         if (
-            self._power_consumption_today is None
-            or self._power_consumption_today != _today_energy
+            self._energy_pulses_today is None
+            or self._energy_pulses_today != _today_pulses
         ):
-            self._power_consumption_today = _today_energy
+            self._energy_pulses_today = _today_pulses
             self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
 
     def request_energy_counters(self, log_address=None, callback=None):
