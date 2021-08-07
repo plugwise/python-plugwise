@@ -66,7 +66,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._energy_consumption_today_reset = datetime.now().replace(
             hour=0, minute=0, second=0, microsecond=0
         )
-        self._energy_counter_collect_in_progress = False
+        self._energy_history_collecting = False
         self._energy_history = {}
         self._energy_last_collected_timestamp = datetime(2000, 1, 1)
         self._energy_last_hour_pulses = 0
@@ -594,7 +594,7 @@ class PlugwiseCircle(PlugwiseNode):
         if log_address is not None:
             if (
                 len(self._energy_history) > 48
-                or self._energy_counter_collect_in_progress
+                or self._energy_history_collecting
             ):
                 # Energy history already collected
                 if (
@@ -617,7 +617,7 @@ class PlugwiseCircle(PlugwiseNode):
                 # Each request contains will return 4 hours, except last request
 
                 # TODO: validate range of log_addresses
-                self._energy_counter_collect_in_progress = True
+                self._energy_history_collecting = True
                 for req_log_address in range(log_address - 13, log_address):
                     self.message_sender(
                         CircleEnergyCountersRequest(self._mac, req_log_address),
@@ -680,11 +680,11 @@ class PlugwiseCircle(PlugwiseNode):
                 self._energy_last_collected_timestamp = _log_timestamp
 
         # Reset energy collection progress
-        if self._energy_counter_collect_in_progress and len(self._energy_history) > 48:
-            self._energy_counter_collect_in_progress = False
+        if self._energy_history_collecting and len(self._energy_history) > 48:
+            self._energy_history_collecting = False
 
         # Update energy counters
-        if not self._energy_counter_collect_in_progress:
+        if not self._energy_history_collecting:
             self._update_energy_previous_hour(_utc_hour_timestamp)
             self._update_energy_today_hourly(
                 _utc_midnight_timestamp + timedelta(hours=1),
