@@ -334,14 +334,12 @@ class PlugwiseCircle(PlugwiseNode):
         self.do_callback(FEATURE_POWER_USE_LAST_8_SEC["id"])
         # Power consumption current hour
         if message.pulse_hour_consumed.value == -1:
-            message.pulse_hour_consumed.value = 0
             _LOGGER.debug(
-                "1 hour consumption power pulse counter for node %s has value of -1, corrected to 0",
+                "1 hour consumption power pulse counter for node %s has value of -1, drop value",
                 self.mac,
             )
-        if self._energy_pulses_current_hour != message.pulse_hour_consumed.value:
-            self._energy_pulses_current_hour = message.pulse_hour_consumed.value
-            self.do_callback(FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"])
+        else:
+            self._update_energy_current_hour(message.pulse_hour_consumed.value)
 
         # Update energy consumption today
         self._update_energy_today_now()
@@ -500,8 +498,23 @@ class PlugwiseCircle(PlugwiseNode):
         )
         return _energy_use
 
+    def _update_energy_current_hour(self, _pulses_cur_hour):
+        """Update energy consumption (pulses) of current hour"""
+        _LOGGER.debug(
+            "_update_energy_current_hour for %s | counter = %s, update= %s",
+            self.mac,
+            str(self._energy_pulses_current_hour),
+            str(_pulses_cur_hour),
+        )
+        if (
+            self._energy_pulses_current_hour is None
+            or self._energy_pulses_current_hour != _pulses_cur_hour
+        ):
+            self._energy_pulses_current_hour = _pulses_cur_hour
+            self.do_callback(FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"])
+
     def _update_energy_today_now(self):
-        """Update energy consumption (kWh) of today up to now"""
+        """Update energy consumption (pulses) of today up to now"""
         _pulses_today_now = self._calc_todays_energy_pulses()
         _LOGGER.debug(
             "_update_energy_today_now for %s | counter = %s, update= %s",
