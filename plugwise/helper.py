@@ -134,6 +134,7 @@ def update_helper(data, devs, d_dict, d_id, e_type, key):
             if type(data[key]) is list:
                 devs[d_id][e_type][idx][ATTR_STATE] = data[key][0]
 
+
 def check_model(name, v_name):
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
