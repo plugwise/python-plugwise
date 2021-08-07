@@ -72,9 +72,9 @@ class PlugwiseCircle(PlugwiseNode):
         self._energy_last_hour_pulses = 0
         self._energy_last_local_hour = datetime.now().hour
         self._energy_last_populated_slot = 0
-        self._energy_pulse_counter_today = None
         self._energy_pulses_prev_hour = None
-        self._energy_pulses_today = None
+        self._energy_pulses_today_hourly = None
+        self._energy_pulses_today_now = None
         self._energy_pulses_yesterday = None
         self._new_relay_state = False
         self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
@@ -119,8 +119,8 @@ class PlugwiseCircle(PlugwiseNode):
     @property
     def energy_consumption_today(self) -> float:
         """Returns total energy consumption since midnight in kWh"""
-        if self._energy_pulse_counter_today is not None:
-            return self.pulses_to_kws(self._energy_pulse_counter_today, 3600)
+        if self._energy_pulses_today_now is not None:
+            return self.pulses_to_kws(self._energy_pulses_today_now, 3600)
         return None
 
     @property
@@ -148,8 +148,8 @@ class PlugwiseCircle(PlugwiseNode):
     @property
     def power_consumption_today(self):
         """Total power consumption during today in kWh"""
-        if self._energy_pulses_today is not None:
-            return self.pulses_to_kws(self._energy_pulses_today, 3600)
+        if self._energy_pulses_today_hourly is not None:
+            return self.pulses_to_kws(self._energy_pulses_today_hourly, 3600)
         return None
 
     @property
@@ -506,14 +506,14 @@ class PlugwiseCircle(PlugwiseNode):
         _LOGGER.debug(
             "_update_today_energy for %s | counter = %s, update= %s",
             self.mac,
-            str(self._energy_pulse_counter_today),
+            str(self._energy_pulses_today_now),
             str(_new_energy_pulse_counter_today),
         )
         if (
-            self._energy_pulse_counter_today is None
-            or self._energy_pulse_counter_today != _new_energy_pulse_counter_today
+            self._energy_pulses_today_now is None
+            or self._energy_pulses_today_now != _new_energy_pulse_counter_today
         ):
-            self._energy_pulse_counter_today = _new_energy_pulse_counter_today
+            self._energy_pulses_today_now = _new_energy_pulse_counter_today
             self.do_callback(FEATURE_ENERGY_CONSUMPTION_TODAY["id"])
 
     def _update_previous_hour_power(self, prev_hour: datetime):
@@ -552,16 +552,16 @@ class PlugwiseCircle(PlugwiseNode):
         _LOGGER.debug(
             "_update_today_power for %s | counter = %s, update= %s, range %s to %s",
             self.mac,
-            str(self._energy_pulses_today),
+            str(self._energy_pulses_today_hourly),
             str(_today_pulses),
             str(start_today),
             str(end_today),
         )
         if (
-            self._energy_pulses_today is None
-            or self._energy_pulses_today != _today_pulses
+            self._energy_pulses_today_hourly is None
+            or self._energy_pulses_today_hourly != _today_pulses
         ):
-            self._energy_pulses_today = _today_pulses
+            self._energy_pulses_today_hourly = _today_pulses
             self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
 
     def request_energy_counters(self, log_address=None, callback=None):
