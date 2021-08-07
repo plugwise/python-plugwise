@@ -656,6 +656,8 @@ class PlugwiseCircle(PlugwiseNode):
         )
         _local_hour = datetime.now().hour
         _utc_midnight_timestamp = _utc_hour_timestamp - timedelta(hours=_local_hour)
+        _midnight_rollover = False
+
         for _slot in range(1, 5):
             _log_timestamp = getattr(message, "logdate%d" % (_slot,)).value
             if _log_timestamp is None:
@@ -668,7 +670,11 @@ class PlugwiseCircle(PlugwiseNode):
             if message.logaddr.value == self._last_log_address:
                 self._energy_last_populated_slot = _slot
 
-            # Check for midnight rollover
+            # Store most recent timestamp of collected pulses
+            if self._energy_last_collected_timestamp < _log_timestamp:
+                self._energy_last_collected_timestamp = _log_timestamp
+
+            # Trigger midnight rollover
             if (
                 _log_timestamp == _utc_midnight_timestamp
                 and not self._energy_rollover_day_finished
@@ -679,11 +685,7 @@ class PlugwiseCircle(PlugwiseNode):
                     str(_local_midnight_timestamp),
                 )
                 self._energy_consumption_today_reset = _local_midnight_timestamp
-                self._update_energy_today_now(False, True, True)
-
-            # Store most recent timestamp of collected pulses
-            if self._energy_last_collected_timestamp < _log_timestamp:
-                self._energy_last_collected_timestamp = _log_timestamp
+                _midnight_rollover = True
 
         # Reset energy collection progress
         if (
@@ -704,7 +706,10 @@ class PlugwiseCircle(PlugwiseNode):
                 _utc_midnight_timestamp - timedelta(hours=23),
                 _utc_midnight_timestamp,
             )
-            self._update_energy_today_now(False, False, False)
+            if _midnight_rollover:
+                self._update_energy_today_now(False, True, True)
+            else:
+                self._update_energy_today_now(False, False, False)
 
         # Cleanup energy history for more than 8 day's ago
         _8_days_ago = datetime.utcnow().replace(
