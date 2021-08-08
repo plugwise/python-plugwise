@@ -813,7 +813,7 @@ class PlugwiseCircle(PlugwiseNode):
         if utc_timestamp > _utc_now_timestamp:
             return None
 
-        _seconds_offset = _utc_now_timestamp.second
+        _seconds_offset = (_utc_now_timestamp - utc_timestamp).seconds
         _hours_offset = _seconds_offset / 3600
 
         _slot = self._energy_last_populated_slot
