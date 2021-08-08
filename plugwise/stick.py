@@ -215,7 +215,8 @@ class Stick:
         self._run_watchdog = False
         self._run_update_thread = False
         self._auto_update_timer = 0
-        self.msg_controller.disconnect_from_stick()
+        if self.msg_controller:
+            self.msg_controller.disconnect_from_stick()
         self.msg_controller = None
 
     def subscribe_stick_callback(self, callback, callback_type):
@@ -602,9 +603,13 @@ class Stick:
         """
         self._run_update_thread = True
         _discover_counter = 0
+        _sync_clock = False
         day_of_month = datetime.now().day
         try:
             while self._run_update_thread:
+                if datetime.now().day != day_of_month:
+                    day_of_month = datetime.now().day
+                    _sync_clock = True
                 for mac in self._device_nodes:
                     if self._device_nodes[mac]:
                         if self._device_nodes[mac].battery_powered:
@@ -618,9 +623,9 @@ class Stick:
                             # Request current power usage
                             self._device_nodes[mac].request_power_update()
                             # Sync internal clock of power measure nodes once a day
-                            if datetime.now().day != day_of_month:
-                                day_of_month = datetime.now().day
+                            if _sync_clock:
                                 self._device_nodes[mac].sync_clock()
+                _sync_clock = False
 
                 # Do a single ping for undiscovered nodes once per 10 update cycles
                 if _discover_counter == 10:

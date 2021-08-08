@@ -157,7 +157,7 @@ PRIORITY_MEDIUM = 2
 
 # Max seconds the internal clock of plugwise nodes
 # are allowed to drift in seconds
-MAX_TIME_DRIFT = 30
+MAX_TIME_DRIFT = 5
 
 # Default sleep time in seconds for watchdog daemon
 WATCHDOG_DEAMON = 60
@@ -250,6 +250,12 @@ FEATURE_AVAILABLE = {
     "name": "Available",
     "state": "available",
     "unit": "state",
+}
+FEATURE_ENERGY_CONSUMPTION_TODAY = {
+    "id": "energy_consumption_today",
+    "name": "Energy consumption today",
+    "state": "Energy_consumption_today",
+    "unit": ENERGY_KILO_WATT_HOUR,
 }
 FEATURE_HUMIDITY = {
     "id": "humidity",
