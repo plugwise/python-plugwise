@@ -409,7 +409,7 @@ class PlugwiseCircle(PlugwiseNode):
                 )
             else:
                 _mem_address = self._energy_timestamp_memory_address(_log_timestamp)
-                _LOGGER.warning(
+                _LOGGER.info(
                     "_collect_energy_pulses for %s at %s not found, request counter from memory %s (from mem=%s, slot=%s, timestamp=%s)",
                     self.mac,
                     str(_log_timestamp),
