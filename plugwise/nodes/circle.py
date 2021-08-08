@@ -806,7 +806,7 @@ class PlugwiseCircle(PlugwiseNode):
                 self.set_clock()
 
     def _energy_timestamp_memory_address(self, utc_timestamp: datetime):
-        """Return memory addres for given energy counter timestamp"""
+        """Return memory address for given energy counter timestamp"""
         _utc_now_timestamp = datetime.utcnow().replace(
             minute=0, second=0, microsecond=0
         )
