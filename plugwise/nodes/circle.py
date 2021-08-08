@@ -398,7 +398,7 @@ class PlugwiseCircle(PlugwiseNode):
         _energy_pulses = 0
         for hour in range(0, hours + 1):
             _log_timestamp = start_utc + timedelta(hours=hour)
-            if self._energy_history.get(_log_timestamp):
+            if self._energy_history.get(_log_timestamp) is not None:
                 _energy_pulses += self._energy_history[_log_timestamp]
                 _LOGGER.debug(
                     "_collect_energy_pulses for %s | %s : %s, total = %s",
