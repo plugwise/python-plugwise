@@ -475,10 +475,16 @@ class PlugwiseCircle(PlugwiseNode):
                     self._energy_rollover_day_finished = True
                 else:
                     # Hour rollover, reset to hour history with current hour
-                    _pulses_today_now = (
-                        self._energy_pulses_today_hourly
-                        + self._energy_pulses_current_hour
-                    )
+                    if (
+                        self._energy_pulses_today_hourly is None
+                        or self._energy_pulses_current_hour is None
+                    ):
+                        _pulses_today_now = None
+                    else:
+                        _pulses_today_now = (
+                            self._energy_pulses_today_hourly
+                            + self._energy_pulses_current_hour
+                        )
                 self._energy_rollover_hour_started = False
                 self._energy_rollover_hour_finished = True
                 self._energy_rollover_history_started = False
