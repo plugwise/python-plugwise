@@ -726,7 +726,7 @@ class PlugwiseCircle(PlugwiseNode):
             _midnight_rollover = False
         else:
             _LOGGER.info(
-                "_response_energy_counters for %s | collection runninglen=%s, timestamp:%s=%s",
+                "_response_energy_counters for %s | collection not running, len=%s, timestamp:%s=%s",
                 self.mac,
                 str(len(self._energy_history)),
                 str(self._energy_last_collected_timestamp),
