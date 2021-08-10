@@ -833,7 +833,7 @@ class PlugwiseCircle(PlugwiseNode):
             _slot -= 1
             if _slot == 0:
                 _address -= 1
-                _slot == 4
+                _slot = 4
             _hours += 1
 
         return _address
