@@ -1517,8 +1517,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "state": 10263.159,
                     },
                     {
-                        "id": "electricity_produced_peak_interval", "state": 179,
-                        "last_reset": dt.datetime(2020, 3, 12, 19, 45)
+                        "id": "electricity_produced_peak_interval",
+                        "state": 179,
+                        "last_reset": dt.datetime(2020, 3, 12, 19, 45),
                     },
                 ]
             }
@@ -1762,8 +1763,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "aac7b735042c4832ac9ff33aae4f453b": {
                 "sensors": [
                     {
-                        "id": "electricity_consumed_interval", "state": 0.71,
-                        "last_reset": dt.datetime(2020, 9, 6, 12, 00)
+                        "id": "electricity_consumed_interval",
+                        "state": 0.71,
+                        "last_reset": dt.datetime(2020, 9, 6, 12, 00),
                     }
                 ]
             },
@@ -1806,8 +1808,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
                 "sensors": [
                     {
-                        "id": "electricity_consumed_interval", "state": 0.21,
-                        "last_reset": dt.datetime(2020, 8, 3, 20, 00)
+                        "id": "electricity_consumed_interval",
+                        "state": 0.21,
+                        "last_reset": dt.datetime(2020, 8, 3, 20, 00),
                     }
                 ]
             },
