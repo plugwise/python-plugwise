@@ -461,7 +461,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
                                     if type(b_item["state"]) is list:
                                         assert a_item["state"] == b_item["state"][0]
-                                        assert a_item["last_reset"] == b_item["state"][1]
+                                        assert (
+                                            a_item["last_reset"] == b_item["state"][1]
+                                        )
                                     else:
                                         assert a_item["state"] == b_item["state"]
                                     b_sensor = None
