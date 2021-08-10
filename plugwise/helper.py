@@ -131,7 +131,7 @@ def update_helper(data, devs, d_dict, d_id, e_type, key):
             if key != item[ATTR_ID]:
                 continue
             devs[d_id][e_type][idx][ATTR_STATE] = data[key]
-            if type(data[key]) is list:
+            if isinstance(data[key], list):
                 devs[d_id][e_type][idx][ATTR_STATE] = data[key][0]
 
 
@@ -1159,7 +1159,7 @@ class SmileHelper:
                     temp_value = None
                     item[ATTR_STATE] = value
                     if "interval" in item[ATTR_ID]:
-                        if type(value) is list:
+                        if isinstance(value, list):
                             log_date = value[1]
                             temp_value = value[0]
                             item["last_reset"] = log_date
