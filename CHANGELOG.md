@@ -6,6 +6,9 @@
 - Stick: Synchronize clock of all plugwise devices once a day
 - Stick: Reduced local clock drift from 30 to 5 seconds
 - Stick: Optimized retrieval and handling of energy history
+- Smile: add the required sensor attributes for Energy support
+- Smile: add last_reset timestamps for interval-sensors and cumulative sensors
+- Smile: fix the unit_of_measurement of electrical-cumulative-sensors (Wh --> kWh)
 
 ## 0.11.2 - Fix new and remaining pylint warnings
 
