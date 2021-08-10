@@ -937,6 +937,8 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
+        log_date = parse(loc.logs.find(loc.locator).get("log_date"))
+        loc.log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
@@ -979,6 +981,8 @@ class SmileHelper:
                     )
 
                     direct_data[loc.key_string] = loc.f_val
+                    if "interval" in loc.key_string:
+                        direct_data[loc.key_string] = [loc.f_val, loc.log_date]
 
         if direct_data != {}:
             return direct_data
