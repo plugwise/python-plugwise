@@ -1,9 +1,13 @@
 """Plugwise Stick and Smile constants."""
 
+import datetime as dt
+
 # Copied homeassistant.consts
 ATTR_DEVICE_CLASS = "device_class"
+ATTR_LAST_RESET = "last_reset"
 ATTR_NAME = "name"
 ATTR_STATE = "state"
+ATTR_STATE_CLASS = "state_class"
 ATTR_UNIT_OF_MEASUREMENT = "unit_of_measurement"
 DEGREE = "°"
 HVAC_MODE_AUTO = "auto"
@@ -21,6 +25,9 @@ TEMP_CELSIUS = "°C"
 TIME_MILLISECONDS = "ms"
 VOLUME_CUBIC_METERS = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
+
+UTC = dt.timezone.utc
+LR_TIME_0 = dt.datetime.utcfromtimestamp(0).replace(tzinfo=UTC)
 
 ### Stick constants ###
 
@@ -150,7 +157,7 @@ PRIORITY_MEDIUM = 2
 
 # Max seconds the internal clock of plugwise nodes
 # are allowed to drift in seconds
-MAX_TIME_DRIFT = 30
+MAX_TIME_DRIFT = 5
 
 # Default sleep time in seconds for watchdog daemon
 WATCHDOG_DEAMON = 60
@@ -243,6 +250,12 @@ FEATURE_AVAILABLE = {
     "name": "Available",
     "state": "available",
     "unit": "state",
+}
+FEATURE_ENERGY_CONSUMPTION_TODAY = {
+    "id": "energy_consumption_today",
+    "name": "Energy consumption today",
+    "state": "Energy_consumption_today",
+    "unit": ENERGY_KILO_WATT_HOUR,
 }
 FEATURE_HUMIDITY = {
     "id": "humidity",
@@ -564,6 +577,8 @@ BATTERY = {
     ATTR_NAME: "Battery",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "battery",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
 }
@@ -573,6 +588,8 @@ CURRENT_TEMP = {
     ATTR_NAME: "Temperature",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
@@ -582,6 +599,8 @@ DEVICE_STATE = {
     ATTR_NAME: "Device State",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: None,
+    ATTR_STATE_CLASS: None,
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: None,
 }
@@ -591,6 +610,8 @@ EL_CONSUMED = {
     ATTR_NAME: "Electricity Consumed",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
@@ -600,6 +621,8 @@ EL_CONSUMED_INTERVAL = {
     ATTR_NAME: "Electricity Consumed Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -609,8 +632,10 @@ EL_CONSUMED_OFF_PEAK_CUMULATIVE = {
     ATTR_NAME: "Electricity Consumed Off Peak Cumulative",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: LR_TIME_0,
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_KILO_WATT_HOUR,
 }
 EL_CONSUMED_OFF_PEAK_INTERVAL = {
     ATTR_ID: "electricity_consumed_off_peak_interval",
@@ -618,6 +643,8 @@ EL_CONSUMED_OFF_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Consumed Off Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -627,6 +654,8 @@ EL_CONSUMED_OFF_PEAK_POINT = {
     ATTR_NAME: "Electricity Consumed Off Peak Point",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
@@ -636,8 +665,10 @@ EL_CONSUMED_PEAK_CUMULATIVE = {
     ATTR_NAME: "Electricity Consumed Peak Cumulative",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: LR_TIME_0,
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_KILO_WATT_HOUR,
 }
 EL_CONSUMED_PEAK_INTERVAL = {
     ATTR_ID: "electricity_consumed_peak_interval",
@@ -645,6 +676,8 @@ EL_CONSUMED_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Consumed Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -654,6 +687,8 @@ EL_CONSUMED_PEAK_POINT = {
     ATTR_NAME: "Electricity Consumed Peak Point",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
@@ -663,6 +698,8 @@ EL_PRODUCED = {
     ATTR_NAME: "Electricity Produced",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
@@ -672,6 +709,8 @@ EL_PRODUCED_INTERVAL = {
     ATTR_NAME: "Electricity Produced Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -681,8 +720,10 @@ EL_PRODUCED_OFF_PEAK_CUMULATIVE = {
     ATTR_NAME: "Electricity Produced Off Peak Cumulative",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: LR_TIME_0,
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_KILO_WATT_HOUR,
 }
 EL_PRODUCED_OFF_PEAK_INTERVAL = {
     ATTR_ID: "electricity_produced_off_peak_interval",
@@ -690,6 +731,8 @@ EL_PRODUCED_OFF_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Produced Off Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -699,6 +742,8 @@ EL_PRODUCED_OFF_PEAK_POINT = {
     ATTR_NAME: "Electricity Produced Off Peak Point",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
@@ -708,8 +753,10 @@ EL_PRODUCED_PEAK_CUMULATIVE = {
     ATTR_NAME: "Electricity Produced Peak Cumulative",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: LR_TIME_0,
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_KILO_WATT_HOUR,
 }
 EL_PRODUCED_PEAK_INTERVAL = {
     ATTR_ID: "electricity_produced_peak_interval",
@@ -717,6 +764,8 @@ EL_PRODUCED_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Produced Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -726,6 +775,8 @@ EL_PRODUCED_PEAK_POINT = {
     ATTR_NAME: "Electricity Produced Peak Point",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
@@ -735,6 +786,8 @@ GAS_CONSUMED_CUMULATIVE = {
     ATTR_NAME: "Gas Consumed Cumulative",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: None,
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: LR_TIME_0,
     ATTR_ICON: FLAME_ICON,
     ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
 }
@@ -744,6 +797,8 @@ GAS_CONSUMED_INTERVAL = {
     ATTR_NAME: "Gas Consumed Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: None,
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: FLAME_ICON,
     ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
 }
@@ -753,6 +808,8 @@ HUMIDITY = {
     ATTR_NAME: "Relative Humidity",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "humidity",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
 }
@@ -762,6 +819,8 @@ ILLUMINANCE = {
     ATTR_NAME: "Illuminance",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "illuminance",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN,
 }
@@ -771,6 +830,8 @@ INTENDED_BOILER_TEMP = {
     ATTR_NAME: "Intended Boiler Temperature",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
@@ -780,6 +841,8 @@ MOD_LEVEL = {
     ATTR_NAME: "Modulation Level",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: None,
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: "mdi:percent",
     ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
 }
@@ -789,8 +852,10 @@ NET_EL_CUMULATIVE = {
     ATTR_NAME: "Net Electricity Cumulative",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: LR_TIME_0,
     ATTR_ICON: None,
-    ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
+    ATTR_UNIT_OF_MEASUREMENT: ENERGY_KILO_WATT_HOUR,
 }
 NET_EL_POINT = {
     ATTR_ID: "net_electricity_point",
@@ -798,6 +863,8 @@ NET_EL_POINT = {
     ATTR_NAME: "Net Electricity Point",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
@@ -807,6 +874,8 @@ OUTDOOR_TEMP = {
     ATTR_NAME: "Outdoor Temperature",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
@@ -816,6 +885,8 @@ RETURN_TEMP = {
     ATTR_NAME: "Return Temperature",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
@@ -825,6 +896,8 @@ TARGET_TEMP = {
     ATTR_NAME: "Setpoint",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }
@@ -834,6 +907,8 @@ TEMP_DIFF = {
     ATTR_NAME: "Temperature Difference",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: None,
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: TEMP_KELVIN,
 }
@@ -843,6 +918,8 @@ VALVE_POS = {
     ATTR_NAME: "Valve Position",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: None,
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: "mdi:valve",
     ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE,
 }
@@ -852,6 +929,8 @@ WATER_PRESSURE = {
     ATTR_NAME: "Water Pressure",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "pressure",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
 }
@@ -861,6 +940,8 @@ WATER_TEMP = {
     ATTR_NAME: "Water Temperature",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "temperature",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
 }

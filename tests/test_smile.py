@@ -1,6 +1,7 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 
 import asyncio
+import datetime as dt
 import importlib
 
 # Fixture writing
@@ -458,7 +459,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     if a_item["id"] != b_item["id"]:
                                         continue
 
-                                    assert a_item["state"] == b_item["state"]
+                                    if isinstance(b_item["state"], list):
+                                        assert a_item["state"] == b_item["state"][0]
+                                        assert (
+                                            a_item["last_reset"] == b_item["state"][1]
+                                        )
+                                    else:
+                                        assert a_item["state"] == b_item["state"]
                                     b_sensor = None
                                     if measure_key == "binary_sensors":
                                         b_sensor = pw_entities.GWBinarySensor(
@@ -1512,6 +1519,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "id": "electricity_consumed_off_peak_cumulative",
                         "state": 10263.159,
                     },
+                    {
+                        "id": "electricity_consumed_peak_interval",
+                        "state": [179, dt.datetime(2020, 3, 12, 19, 45)],
+                    },
                 ]
             }
         }
@@ -1752,7 +1763,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Vaatwasser
             "aac7b735042c4832ac9ff33aae4f453b": {
-                "sensors": [{"id": "electricity_consumed_interval", "state": 0.71}]
+                "sensors": [
+                    {
+                        "id": "electricity_consumed_interval",
+                        "state": [0.71, dt.datetime(2020, 9, 6, 12, 00)],
+                    }
+                ]
             },
         }
 
@@ -1791,7 +1807,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Wasdroger 043AECA
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "sensors": [{"id": "electricity_consumed_interval", "state": 0.21}]
+                "sensors": [
+                    {
+                        "id": "electricity_consumed_interval",
+                        "state": [0.21, dt.datetime(2020, 8, 3, 20, 00)],
+                    }
+                ]
             },
         }
 

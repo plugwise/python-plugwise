@@ -6,6 +6,7 @@ import datetime as dt
 import logging
 
 import async_timeout
+from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -130,6 +131,8 @@ def update_helper(data, devs, d_dict, d_id, e_type, key):
             if key != item[ATTR_ID]:
                 continue
             devs[d_id][e_type][idx][ATTR_STATE] = data[key]
+            if isinstance(data[key], list):
+                devs[d_id][e_type][idx][ATTR_STATE] = data[key][0]
 
 
 def check_model(name, v_name):
@@ -721,7 +724,9 @@ class SmileHelper:
             if appliance.find(i_locator) is not None:
                 name = f"{measurement}_interval"
                 measure = appliance.find(i_locator).text
-                data[name] = format_measure(measure, ENERGY_WATT_HOUR)
+                log_date = parse(appliance.find(i_locator).get("log_date"))
+                log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
+                data[name] = [format_measure(measure, ENERGY_WATT_HOUR), log_date]
 
         return data
 
@@ -932,6 +937,8 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
+        log_date = parse(loc.logs.find(loc.locator).get("log_date"))
+        loc.log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
@@ -974,6 +981,8 @@ class SmileHelper:
                     )
 
                     direct_data[loc.key_string] = loc.f_val
+                    if "interval" in loc.key_string:
+                        direct_data[loc.key_string] = [loc.f_val, loc.log_date]
 
         if direct_data != {}:
             return direct_data
@@ -1137,29 +1146,27 @@ class SmileHelper:
         """Helper-function for smile.py: _all_device_data().
         Create lists of binary_sensors, sensors, switches from the relevant data.
         """
-        for _, value in list(data.items()):
+        for key, value in list(data.items()):
             for item in BINARY_SENSORS:
-                try:
+                if item[ATTR_ID] == key:
                     data.pop(item[ATTR_ID])
-                except KeyError:
-                    pass
-                else:
                     if self._active_device_present:
                         item[ATTR_STATE] = value
                         bs_list.append(item)
             for item in SENSORS:
-                try:
+                if item[ATTR_ID] == key:
                     data.pop(item[ATTR_ID])
-                except KeyError:
-                    pass
-                else:
+                    temp_value = None
                     item[ATTR_STATE] = value
+                    if "interval" in item[ATTR_ID]:
+                        if isinstance(value, list):
+                            log_date = value[1]
+                            temp_value = value[0]
+                            item["last_reset"] = log_date
+                            item[ATTR_STATE] = temp_value
                     s_list.append(item)
             for item in SWITCHES:
-                try:
+                if item[ATTR_ID] == key:
                     data.pop(item[ATTR_ID])
-                except KeyError:
-                    pass
-                else:
                     item[ATTR_STATE] = value
                     sw_list.append(item)

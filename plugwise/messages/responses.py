@@ -406,12 +406,12 @@ class CircleClockResponse(NodeResponse):
         self.params += [self.time, self.day_of_week, self.unknown, self.unknown2]
 
 
-class CirclePowerBufferResponse(NodeResponse):
+class CircleEnergyCountersResponse(NodeResponse):
     """
-    returns information about historical power usage
-    each response contains 4 log buffers and each log buffer contains data for 1 hour
+    Returns historical energy usage of requested memory address
+    Each response contains 4 energy counters at specified 1 hour timestamp
 
-    Response to: CirclePowerBufferRequest
+    Response to: CircleEnergyCountersRequest
     """
 
     ID = b"0049"
@@ -576,7 +576,7 @@ id_to_message = {
     b"0027": CircleCalibrationResponse(),
     b"003A": CirclePlusRealTimeClockResponse(),
     b"003F": CircleClockResponse(),
-    b"0049": CirclePowerBufferResponse(),
+    b"0049": CircleEnergyCountersResponse(),
     b"0060": NodeFeaturesResponse(),
     b"0100": NodeAckResponse(),
     b"0105": SenseReportResponse(),

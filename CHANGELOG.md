@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.12.0 - Energy support and bugfixes
+
+- Stick: Add new properties `energy_consumption_today` counter and `energy_consumption_today_last_reset` timestamp. These properties can be used to properly measure the used energy. Very useful for the 'Energy' capabilities introduced in Home Assistant 2021.8
+- Stick: Synchronize clock of all plugwise devices once a day
+- Stick: Reduced local clock drift from 30 to 5 seconds
+- Stick: Optimized retrieval and handling of energy history
+- Smile: add the required sensor attributes for Energy support
+- Smile: add last_reset timestamps for interval-sensors and cumulative sensors
+- Smile: fix the unit_of_measurement of electrical-cumulative-sensors (Wh --> kWh)
+
 ## 0.11.2 - Fix new and remaining pylint warnings
 
 ## 0.11.1 - Code improvements
