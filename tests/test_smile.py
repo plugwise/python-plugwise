@@ -459,8 +459,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     if a_item["id"] != b_item["id"]:
                                         continue
 
-                                    if type(a_item["state"]) is list:
-                                        assert a_item["state"][0] == b_item["state"]
+                                    if type(b_item["state"]) is list:
+                                        assert a_item["state"] == b_item["state"][0]
+                                        assert a_item["last_reset"] == b_item["state"][1]
                                     else:
                                         assert a_item["state"] == b_item["state"]
                                     b_sensor = None
@@ -1517,9 +1518,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "state": 10263.159,
                     },
                     {
-                        "id": "electricity_produced_peak_interval",
-                        "state": 179,
-                        "last_reset": dt.datetime(2020, 3, 12, 19, 45),
+                        "id": "electricity_consumed_peak_interval",
+                        "state": [179, dt.datetime(2020, 3, 12, 19, 45)],
                     },
                 ]
             }
@@ -1764,8 +1764,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": [
                     {
                         "id": "electricity_consumed_interval",
-                        "state": 0.71,
-                        "last_reset": dt.datetime(2020, 9, 6, 12, 00),
+                        "state": [0.71, dt.datetime(2020, 9, 6, 12, 00)],
                     }
                 ]
             },
@@ -1809,8 +1808,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": [
                     {
                         "id": "electricity_consumed_interval",
-                        "state": 0.21,
-                        "last_reset": dt.datetime(2020, 8, 3, 20, 00),
+                        "state": [0.21, dt.datetime(2020, 8, 3, 20, 00)],
                     }
                 ]
             },
