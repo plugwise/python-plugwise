@@ -1,6 +1,7 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 
 import asyncio
+import datetime as dt
 import importlib
 
 # Fixture writing
@@ -1755,7 +1756,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Vaatwasser
             "aac7b735042c4832ac9ff33aae4f453b": {
-                "sensors": [{"id": "electricity_consumed_interval", "state": 0.71, "last_reset": datetime.datetime(2020, 9, 6, 12, 00)}]
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.71, "last_reset": dt.datetime(2020, 9, 6, 12, 00)}]
             },
         }
 
@@ -1794,7 +1795,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Wasdroger 043AECA
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "sensors": [{"id": "electricity_consumed_interval", "state": 0.21, "last_reset": datetime.datetime(2020, 8, 3, 20, 00)}]
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.21, "last_reset": dt.datetime(2020, 8, 3, 20, 00)}]
             },
         }
 
