@@ -740,6 +740,9 @@ class SmileHelper:
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         data = {}
+        if self._smile_legacy and self.smile_type == "power":
+            return data
+
         search = self._appliances
         if self._smile_legacy and self.smile_type != "stretch":
             search = self._domain_objects
