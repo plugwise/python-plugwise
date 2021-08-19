@@ -1513,7 +1513,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
                 "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 650.0},
+                    {"id": "electricity_consumed_peak_point", "state": 636.0},
                     {"id": "electricity_produced_peak_cumulative", "state": 0.0},
                     {
                         "id": "electricity_consumed_off_peak_cumulative",
@@ -1554,13 +1554,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
                 "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 644.0},
+                    {"id": "electricity_consumed_peak_point", "state": 636.0},
                     {"id": "electricity_produced_peak_cumulative", "state": 20.0},
                     {
                         "id": "electricity_consumed_off_peak_cumulative",
                         "state": 10263.159,
                     },
-                    {"id": "net_electricity_point", "state": 244},
+                    {"id": "net_electricity_point", "state": 636},
                 ]
             }
         }
@@ -1596,8 +1596,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {"id": "electricity_consumed_peak_point", "state": 0.0},
                     {"id": "electricity_produced_peak_cumulative", "state": 396.559},
                     {"id": "electricity_consumed_off_peak_cumulative", "state": 551.09},
-                    {"id": "electricity_produced_peak_point", "state": 2761},
-                    {"id": "net_electricity_point", "state": -2761},
+                    {"id": "electricity_produced_peak_point", "state": 2816},
+                    {"id": "net_electricity_point", "state": -2816},
                     {"id": "gas_consumed_cumulative", "state": 584.85},
                 ]
             }
@@ -1855,7 +1855,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
                 "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 571},
+                    {"id": "electricity_consumed_peak_point", "state": 548},
                     {"id": "electricity_produced_peak_cumulative", "state": 0.0},
                 ]
             }
