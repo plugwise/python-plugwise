@@ -856,7 +856,7 @@ class SmileHelper:
         Collect switching- or pump-group info.
         """
         switch_groups = {}
-        if self.smile_type == "power" and self.smile_name == "Anna":
+        if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
         search = self._domain_objects
