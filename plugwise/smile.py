@@ -398,7 +398,7 @@ class Smile(SmileHelper):
         # Generic
         if details["class"] == "gateway" or dev_id == self.gateway_id:
             # Anna: outdoor_temperature only present in domain_objects
-            if "outdoor_temperature" not in device_data:
+            if self.smile_name == "Anna" and "outdoor_temperature" not in device_data:
                 outdoor_temperature = self._object_value(
                     "location", self._home_location, "outdoor_temperature"
                 )
