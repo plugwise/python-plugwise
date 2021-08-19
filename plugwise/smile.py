@@ -345,9 +345,10 @@ class Smile(SmileHelper):
             device_data.pop("intended_boiler_state", None)
 
         # Anna specific
-        illuminance = self._object_value("appliance", dev_id, "illuminance")
-        if illuminance is not None:
-            device_data["illuminance"] = illuminance
+        if self.smile_name == "Anna":
+            illuminance = self._object_value("appliance", dev_id, "illuminance")
+            if illuminance is not None:
+                device_data["illuminance"] = illuminance
 
         return device_data
 
