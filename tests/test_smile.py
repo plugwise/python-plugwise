@@ -796,7 +796,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {"id": "electricity_consumed_peak_point", "state": 456.0},
                     {"id": "net_electricity_point", "state": 456.0},
                     {"id": "gas_consumed_cumulative", "state": 584.431},
-                    {"id": "electricity_produced_peak_cumulative", "state": 0.0},
+                    {"id": "electricity_produced_peak_cumulative", "state": 1296.136},
                 ]
             }
         }
