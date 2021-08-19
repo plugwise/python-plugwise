@@ -392,6 +392,10 @@ class SmileHelper:
                 "members": loc.members,
             }
 
+            # Smile P1 has one valid location, filter any left-overs
+            if self.smile_type == "power":
+                return
+
         return
 
     def _get_module_data(self, appliance, locator, mod_type):
@@ -953,6 +957,7 @@ class SmileHelper:
         search = self._domain_objects
         t_string = "tariff"
         if self._smile_legacy and self.smile_type == "power":
+            search = self._locations
             t_string = "tariff_indicator"
 
         loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
