@@ -759,7 +759,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "id": "electricity_produced_off_peak_cumulative",
                         "state": 482.598,
                     },
-                    {"id": "net_electricity_cumulative", "state": 1019.151},
+                    {"id": "net_electricity_cumulative", "state": 1019.161},
                 ]
             }
         }
