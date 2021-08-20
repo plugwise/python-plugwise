@@ -925,6 +925,7 @@ class SmileHelper:
     def _power_data_peak_value(self, loc):
         """Helper-function for _power_data_from_location()."""
         loc.found = True
+        loc.net_string = None
 
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
@@ -949,7 +950,10 @@ class SmileHelper:
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
-        loc.net_string = f"net_electricity_{log_found}"
+        if "interval" not in log_found:
+            loc.net_string = (
+                f"net_electricity_{log_found}"  # Don't create net_elec_interval sensor!
+            )
         val = loc.logs.find(loc.locator).text
         log_date = parse(loc.logs.find(loc.locator).get("log_date"))
         loc.log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
