@@ -950,9 +950,10 @@ class SmileHelper:
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
-        if "interval" not in log_found:
+        # Don't create net_elec_interval sensor!
+        if "electricity" in log_found and "interval" not in log_found: 
             loc.net_string = (
-                f"net_electricity_{log_found}"  # Don't create net_elec_interval sensor!
+                f"net_electricity_{log_found}" 
             )
         val = loc.logs.find(loc.locator).text
         log_date = parse(loc.logs.find(loc.locator).get("log_date"))
