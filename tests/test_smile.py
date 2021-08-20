@@ -1523,6 +1523,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "id": "electricity_consumed_peak_interval",
                         "state": [179, dt.datetime(2020, 3, 12, 19, 45)],
                     },
+                    {"id": "net_electricity_cumulative", "state": 17965.326},
                 ]
             }
         }
