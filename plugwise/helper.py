@@ -392,7 +392,7 @@ class SmileHelper:
                 "members": loc.members,
             }
 
-            # Smile P1 has one valid location, filter any left-overs
+            # Smile P1 has one valid location, skip any left-overs
             if self.smile_type == "power":
                 return
 
@@ -522,11 +522,13 @@ class SmileHelper:
             # Inject home_location as device id for legacy so
             # appl_data can use the location id as device id.
             self._appl_data[self._home_location] = {
-                "name": "P1",
-                "model": "Smile P1",
-                "types": {"power", "home"},
                 "class": "gateway",
+                "fw": None,
                 "location": self._home_location,
+                "model": "Smile P1",
+                "name": "P1",
+                "types": {"power", "home"},
+                "vendor": "Plugwise B.V.",
             }
             self.gateway_id = self._home_location
 
