@@ -211,7 +211,8 @@ def power_data_energy_diff(measurement, net_string, f_val, direct_data):
         if isinstance(f_val, int):
             direct_data[net_string] += f_val * diff
         else:
-            direct_data[net_string] += float(f_val * diff)
+        direct_data[net_string] += float(f_val * diff)
+        direct_data[net_string] = float(f"{round(direct_data[net_string], 3):.3f}")
 
     return direct_data
 
