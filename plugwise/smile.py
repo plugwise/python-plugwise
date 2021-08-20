@@ -211,7 +211,7 @@ class Smile(SmileHelper):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
-        # No need to import domain_objects and modules for P1, no userfull info
+        # No need to import domain_objects and modules for P1, no useful info
         if self.smile_type != "power":
             await self._update_domain_objects()
 
