@@ -742,6 +742,7 @@ class SmileHelper:
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         data = {}
+        # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
 
@@ -861,6 +862,7 @@ class SmileHelper:
         Collect switching- or pump-group info.
         """
         switch_groups = {}
+        # P1 and Anna don't have switch groups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
@@ -926,7 +928,7 @@ class SmileHelper:
 
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
-            # Skip peak if not split (P1 Legacy)
+            # Skip peak if not split (P1 Legacy), this also results in one (peak_)point sensor for all P1's.
             if loc.peak_select == "nl_offpeak":
                 loc.found = False
                 return loc
@@ -965,6 +967,7 @@ class SmileHelper:
         search = self._domain_objects
         t_string = "tariff"
         if self.smile_type == "power":
+            # P1: use data from LOCATIONS
             search = self._locations
             if self._smile_legacy:
                 t_string = "tariff_indicator"
