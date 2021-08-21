@@ -751,7 +751,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
                 "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 456.0},
+                    {"id": "electricity_consumed_point", "state": 456.0},
                     {"id": "net_electricity_point", "state": 456.0},
                     {"id": "gas_consumed_cumulative", "state": 584.431},
                     {"id": "electricity_produced_peak_cumulative", "state": 1296.136},
