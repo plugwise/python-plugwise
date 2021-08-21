@@ -692,6 +692,17 @@ EL_CONSUMED_PEAK_POINT = {
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
 }
+EL_CONSUMED_POINT = {
+    ATTR_ID: "electricity_consumed_point",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Consumed Point",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+}
 EL_PRODUCED = {
     ATTR_ID: "electricity_produced",
     ATTR_ENABLED: False,
@@ -773,6 +784,17 @@ EL_PRODUCED_PEAK_POINT = {
     ATTR_ID: "electricity_produced_peak_point",
     ATTR_ENABLED: True,
     ATTR_NAME: "Electricity Produced Peak Point",
+    ATTR_STATE: None,
+    ATTR_DEVICE_CLASS: "power",
+    ATTR_STATE_CLASS: "measurement",
+    ATTR_LAST_RESET: None,
+    ATTR_ICON: None,
+    ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+}
+EL_PRODUCED_POINT = {
+    ATTR_ID: "electricity_produced_point",
+    ATTR_ENABLED: True,
+    ATTR_NAME: "Electricity Produced Point",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "power",
     ATTR_STATE_CLASS: "measurement",
