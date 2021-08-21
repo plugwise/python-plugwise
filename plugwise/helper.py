@@ -201,17 +201,18 @@ def power_data_local_format(attrs, key_string, val):
 
 def power_data_energy_diff(measurement, net_string, f_val, direct_data):
     """Calculate differential energy."""
-    diff = 1
-    if "produced" in measurement:
-        diff = -1
-    if net_string not in direct_data:
-        direct_data[net_string] = 0
+    if "electricity" in measurement and "interval" not in net_string:
+        diff = 1
+        if "produced" in measurement:
+            diff = -1
+        if net_string not in direct_data:
+            direct_data[net_string] = 0
 
-    if isinstance(f_val, int):
-        direct_data[net_string] += f_val * diff
-    else:
-        direct_data[net_string] += float(f_val * diff)
-        direct_data[net_string] = float(f"{round(direct_data[net_string], 3):.3f}")
+        if isinstance(f_val, int):
+            direct_data[net_string] += f_val * diff
+        else:
+            direct_data[net_string] += float(f_val * diff)
+            direct_data[net_string] = float(f"{round(direct_data[net_string], 3):.3f}")
 
     return direct_data
 
@@ -925,7 +926,6 @@ class SmileHelper:
     def _power_data_peak_value(self, loc):
         """Helper-function for _power_data_from_location()."""
         loc.found = True
-        loc.net_string = "dummy"
 
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
@@ -950,9 +950,7 @@ class SmileHelper:
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
-        # Don't create net_elec_interval sensor
-        if "electricity" in loc.measurement and "interval" not in log_found:
-            loc.net_string = f"net_electricity_{log_found}"
+        loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         log_date = parse(loc.logs.find(loc.locator).get("log_date"))
         loc.log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
@@ -1005,7 +1003,6 @@ class SmileHelper:
                         direct_data[loc.key_string] = [loc.f_val, loc.log_date]
 
         if direct_data != {}:
-            direct_data.pop("dummy")
             return direct_data
 
     def _preset(self, loc_id):
