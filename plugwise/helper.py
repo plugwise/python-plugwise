@@ -201,7 +201,7 @@ def power_data_local_format(attrs, key_string, val):
 
 def power_data_energy_diff(measurement, net_string, f_val, direct_data):
     """Calculate differential energy."""
-    if "electricity" in measurement:
+    if "electricity" in measurement and "interval" not in net_string:
         diff = 1
         if "produced" in measurement:
             diff = -1
@@ -212,6 +212,7 @@ def power_data_energy_diff(measurement, net_string, f_val, direct_data):
             direct_data[net_string] += f_val * diff
         else:
             direct_data[net_string] += float(f_val * diff)
+            direct_data[net_string] = float(f"{round(direct_data[net_string], 3):.3f}")
 
     return direct_data
 
@@ -392,6 +393,10 @@ class SmileHelper:
                 "members": loc.members,
             }
 
+            # Smile P1 has one valid location, skip any left-overs
+            if self.smile_type == "power":
+                return
+
         return
 
     def _get_module_data(self, appliance, locator, mod_type):
@@ -518,11 +523,13 @@ class SmileHelper:
             # Inject home_location as device id for legacy so
             # appl_data can use the location id as device id.
             self._appl_data[self._home_location] = {
-                "name": "P1",
-                "model": "Smile P1",
-                "types": {"power", "home"},
                 "class": "gateway",
+                "fw": None,
                 "location": self._home_location,
+                "model": "Smile P1",
+                "name": "P1",
+                "types": {"power", "home"},
+                "vendor": "Plugwise B.V.",
             }
             self.gateway_id = self._home_location
 
@@ -736,6 +743,10 @@ class SmileHelper:
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         data = {}
+        # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
+        if self._smile_legacy and self.smile_type == "power":
+            return data
+
         search = self._appliances
         if self._smile_legacy and self.smile_type != "stretch":
             search = self._domain_objects
@@ -852,6 +863,10 @@ class SmileHelper:
         Collect switching- or pump-group info.
         """
         switch_groups = {}
+        # P1 and Anna don't have switch groups
+        if self.smile_type == "power" or self.smile_name == "Anna":
+            return switch_groups
+
         search = self._domain_objects
 
         appliances = search.findall("./appliance")
@@ -914,7 +929,7 @@ class SmileHelper:
 
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
-            # Skip peak if not split (P1 Legacy)
+            # Skip peak if not split (P1 Legacy), this also results in one (peak_)point sensor for all P1's.
             if loc.peak_select == "nl_offpeak":
                 loc.found = False
                 return loc
@@ -952,8 +967,11 @@ class SmileHelper:
 
         search = self._domain_objects
         t_string = "tariff"
-        if self._smile_legacy and self.smile_type == "power":
-            t_string = "tariff_indicator"
+        if self.smile_type == "power":
+            # P1: use data from LOCATIONS
+            search = self._locations
+            if self._smile_legacy:
+                t_string = "tariff_indicator"
 
         loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
 

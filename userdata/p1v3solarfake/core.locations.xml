@@ -28,8 +28,8 @@
 				<unit>Wh</unit>
 				<last_consecutive_log_date>2020-03-12T21:00:00+01:00</last_consecutive_log_date>
 				<period start_date="2020-03-12T21:00:00+01:00" end_date="2020-03-12T21:00:00+01:00">
-					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_peak">0.00</measurement>
-					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_offpeak">0.00</measurement>
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_peak">20000.00</measurement>
+					<measurement log_date="2020-03-12T21:00:00+01:00" tariff="nl_offpeak">3000.00</measurement>
 				</period>
 				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
 			</cumulative_log>
@@ -62,7 +62,7 @@
 				<interval>PT15M</interval>
 				<period start_date="2020-03-12T20:45:00+01:00" end_date="2020-03-12T20:45:00+01:00" interval="PT15M">
 					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_peak">0.00</measurement>
-					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_offpeak">0.00</measurement>
+					<measurement log_date="2020-03-12T20:45:00+01:00" tariff="nl_offpeak">20.00</measurement>
 				</period>
 				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
 			</interval_log>

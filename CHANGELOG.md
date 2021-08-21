@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.13.0 - Smile: fully support P1 legacy (specifically with firmware v2.1.13)
+
 ## 0.12.0 - Energy support and bugfixes
 
 - Stick: Add new properties `energy_consumption_today` counter and `energy_consumption_today_last_reset` timestamp. These properties can be used to properly measure the used energy. Very useful for the 'Energy' capabilities introduced in Home Assistant 2021.8

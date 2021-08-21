@@ -204,20 +204,23 @@ class Smile(SmileHelper):
 
     async def _full_update_device(self):
         """Perform a first fetch of all XML data, needed for initialization."""
-        await self._update_domain_objects()
         self._locations = await self._request(LOCATIONS)
+        self._modules = await self._request(MODULES)
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
-        # No need to import modules for P1, no userfull info
+        # No need to import domain_objects and modules for P1, no useful info
         if self.smile_type != "power":
-            self._modules = await self._request(MODULES)
+            await self._update_domain_objects()
 
     async def update_gw_devices(self):
         """Perform an incremental update for updating the various device states."""
-        await self._update_domain_objects()
+        if self.smile_type != "power":
+            await self._update_domain_objects()
+        else:
+            self._locations = await self._request(LOCATIONS)
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
@@ -342,9 +345,10 @@ class Smile(SmileHelper):
             device_data.pop("intended_boiler_state", None)
 
         # Anna specific
-        illuminance = self._object_value("appliance", dev_id, "illuminance")
-        if illuminance is not None:
-            device_data["illuminance"] = illuminance
+        if self.smile_name == "Anna":
+            illuminance = self._object_value("appliance", dev_id, "illuminance")
+            if illuminance is not None:
+                device_data["illuminance"] = illuminance
 
         return device_data
 
@@ -395,7 +399,10 @@ class Smile(SmileHelper):
         # Generic
         if details["class"] == "gateway" or dev_id == self.gateway_id:
             # Anna: outdoor_temperature only present in domain_objects
-            if "outdoor_temperature" not in device_data:
+            if (
+                self.smile_type == "thermostat"
+                and "outdoor_temperature" not in device_data
+            ):
                 outdoor_temperature = self._object_value(
                     "location", self._home_location, "outdoor_temperature"
                 )
