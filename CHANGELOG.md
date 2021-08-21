@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.xy.z - Smile: fully support P1 legacy (with firmware v2.1.13 specifically)
+## 0.13.0 - Smile: fully support P1 legacy (specifically with firmware v2.1.13)
 
 ## 0.12.0 - Energy support and bugfixes
 
