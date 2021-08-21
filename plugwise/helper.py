@@ -926,9 +926,11 @@ class SmileHelper:
     def _power_data_peak_value(self, loc):
         """Helper-function for _power_data_from_location()."""
         loc.found = True
+        no_tariffs = False
 
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
+            no_tariffs = True
             # Skip peak if not split (P1 Legacy), this also results in one (peak_)point sensor for all P1's.
             if loc.peak_select == "nl_offpeak":
                 loc.found = False
@@ -948,6 +950,8 @@ class SmileHelper:
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+        if no_tariffs:
+            loc.key_string = f"{loc.measurement}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
