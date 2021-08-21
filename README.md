@@ -74,7 +74,7 @@ Origins (from newest to oldest):
 - Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via <https://github.com/laetificat> (Kevin)
 - USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
 - USB-plugwise module - `plugwise` by <https://github.com/cyberjunky/python-plugwise> (Ron) originally by <https://github.com/aequitas/python-plugwise> (Johan) (with reference only in license to Sven)
-- Sensor for Plugwise Smile P1 integration - `home-assistant-sensor-plugwise-smile-p1` by <https://bitbucket.org/jvdschoot/home-assistant-sensor-plugwise-smile-p1> (Jeroen van der SChoot) 
+- Sensor for Plugwise Smile P1 integration - `home-assistant-sensor-plugwise-smile-p1` by <https://bitbucket.org/jvdschoot/home-assistant-sensor-plugwise-smile-p1> (Jeroen van der Schoot) 
 
 ## Thanks
 
