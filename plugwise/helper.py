@@ -950,6 +950,7 @@ class SmileHelper:
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+        # P1 with fw 2.x does not have tariff indicators for point_log values
         if no_tariffs:
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "gas" in loc.measurement:
