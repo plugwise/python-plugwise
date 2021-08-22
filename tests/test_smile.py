@@ -405,7 +405,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "zone_thermostat",
             "thermostatic_radiator_valve",
         ]
-        sw_list = ["sensors", "switches"]
+        bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
         await smile.update_gw_devices()
         device_list = smile.gw_devices
@@ -458,7 +458,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             ),
                         )
                         tests += 1
-                        if measure_key in sw_list:
+                        if measure_key in bsw_list:
                             tests -= 1
                             for a, a_item in enumerate(measure_assert):
                                 tests += 1
@@ -476,25 +476,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         )
                                     else:
                                         asserts += 1
-                                        assert b_item["state"] == a_item["state"]
-                                    b_sensor = None
-                        elif measure_key == "binary_sensors":
-                            tests -= 1
-                            for a, a_item in enumerate(measure_assert):
-                                tests += 1
-                                for b, b_item in enumerate(data[measure_key]):
-                                    if a_item["id"] != b_item["id"]:
-                                        continue
-
-                                    b_sensor = pw_entities.GWBinarySensor(
-                                        smile, dev_id, a_item["id"]
-                                    )
-                                    b_sensor.update_data()
-                                    asserts += 1
-                                    assert (
-                                        self.bs_prop_selector("state", b_sensor)
-                                        == a_item["state"]
-                                    )
+                                        if measure_key == "binary_sensors":
+                                            b_sensor = None
+                                            b_sensor = pw_entities.GWBinarySensor(
+                                                smile, dev_id, a_item["id"]
+                                            )
+                                            b_sensor.update_data()
+                                            assert (
+                                                self.bs_prop_selector("state", b_sensor)
+                                                == a_item["state"]
+                                            )
+                                        else:
+                                            assert b_item["state"] == a_item["state"]
                         elif self.th_prop_selector(measure_key, thermostat):
                             asserts += 1
                             assert (
