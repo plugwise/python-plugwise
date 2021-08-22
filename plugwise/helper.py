@@ -528,7 +528,7 @@ class SmileHelper:
             # appl_data can use the location id as device id.
             self._appl_data[self._home_location] = {
                 "class": "gateway",
-                "fw": None,
+                "fw": self.smile_version[0],
                 "location": self._home_location,
                 "model": "Smile P1",
                 "name": "P1",
