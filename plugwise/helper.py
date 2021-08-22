@@ -931,7 +931,7 @@ class SmileHelper:
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
             no_tariffs = True
-            # Skip peak if not split (P1 Legacy), this also results in one (peak_)point sensor for all P1's.
+            # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
             if loc.peak_select == "nl_offpeak":
                 loc.found = False
                 return loc
