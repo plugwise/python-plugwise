@@ -379,7 +379,7 @@ class SmileHelper:
             if self._smile_legacy and self.smile_type == "power":
                 locator = "./services/electricity_point_meter"
                 try:
-                    services = location.find(locator).attrib["id"]
+                    location.find(locator).attrib["id"]
                 except AttributeError:
                     return
 
