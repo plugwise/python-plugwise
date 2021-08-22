@@ -382,7 +382,7 @@ class SmileHelper:
                     services = location.find(locator).attrib["id"]
                 except AttributeError:
                     return
-        
+
             loc.types = set()
             loc.members = set()
 
