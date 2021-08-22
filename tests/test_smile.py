@@ -461,7 +461,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         if measure_key in sw_list:
                             tests -= 1
                             for a, a_item in enumerate(measure_assert):
-                                tests +=1
+                                tests += 1
                                 for b, b_item in enumerate(data[measure_key]):
                                     if a_item["id"] != b_item["id"]:
                                         continue
@@ -481,7 +481,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         elif measure_key == "binary_sensors":
                             tests -= 1
                             for a, a_item in enumerate(measure_assert):
-                                tests +=1
+                                tests += 1
                                 for b, b_item in enumerate(data[measure_key]):
                                     if a_item["id"] != b_item["id"]:
                                         continue
@@ -1299,9 +1299,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
-                "sensors": [
-                    {"id": "electricity_consumed", "state": 35.8}
-                ],
+                "sensors": [{"id": "electricity_consumed", "state": 35.8}],
                 "switches": [
                     {"id": "relay", "state": True},
                 ],
