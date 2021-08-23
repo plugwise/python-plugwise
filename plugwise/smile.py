@@ -434,7 +434,6 @@ class Smile(SmileHelper):
         Possible output: None, True, False.
         """
         if self.smile_type != "thermostat":
-            self._thermo_locs = self._match_locations()
             return None
 
         count = 0

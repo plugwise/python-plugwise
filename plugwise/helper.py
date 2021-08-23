@@ -375,6 +375,14 @@ class SmileHelper:
         for location in self._locations.findall("./location"):
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
+            # Filter the valid single location for P1 legacy
+            if self._smile_legacy and self.smile_type == "power":
+                locator = "./services/electricity_point_meter"
+                try:
+                    location.find(locator).attrib["id"]
+                except AttributeError:
+                    return
+
             loc.types = set()
             loc.members = set()
 
@@ -392,10 +400,6 @@ class SmileHelper:
                 "types": loc.types,
                 "members": loc.members,
             }
-
-            # Smile P1 has one valid location, skip any left-overs
-            if self.smile_type == "power":
-                return
 
         return
 
@@ -524,7 +528,7 @@ class SmileHelper:
             # appl_data can use the location id as device id.
             self._appl_data[self._home_location] = {
                 "class": "gateway",
-                "fw": None,
+                "fw": self.smile_version[0],
                 "location": self._home_location,
                 "model": "Smile P1",
                 "name": "P1",
@@ -926,10 +930,12 @@ class SmileHelper:
     def _power_data_peak_value(self, loc):
         """Helper-function for _power_data_from_location()."""
         loc.found = True
+        no_tariffs = False
 
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
-            # Skip peak if not split (P1 Legacy), this also results in one (peak_)point sensor for all P1's.
+            no_tariffs = True
+            # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
             if loc.peak_select == "nl_offpeak":
                 loc.found = False
                 return loc
@@ -948,6 +954,9 @@ class SmileHelper:
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+        # P1 with fw 2.x does not have tariff indicators for point_log values
+        if no_tariffs:
+            loc.key_string = f"{loc.measurement}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"

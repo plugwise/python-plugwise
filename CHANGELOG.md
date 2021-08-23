@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.13.1 - Smile: fix point-sensor-names for P1 v2
+
 ## 0.13.0 - Smile: fully support P1 legacy (specifically with firmware v2.1.13)
 
 ## 0.12.0 - Energy support and bugfixes

@@ -405,7 +405,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "zone_thermostat",
             "thermostatic_radiator_valve",
         ]
-        bsw_lists = ["binary_sensors", "sensors", "switches"]
+        bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
         await smile.update_gw_devices()
         device_list = smile.gw_devices
@@ -419,7 +419,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.show_setup(location_list, device_list)
         pp4 = PrettyPrinter(indent=4)
 
+        tests = 0
+        asserts = 0
         for testdevice, measurements in testdata.items():
+            tests += 1
+            asserts += 1
             assert testdevice in device_list
             # if testdevice not in device_list:
             #    _LOGGER.info("Device {} to test against {} not found in device_list for {}".format(testdevice,measurements,self.smile_setup))
@@ -453,37 +457,49 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 measure_key, measure_assert
                             ),
                         )
-                        if measure_key in bsw_lists:
-                            for a, a_item in enumerate(data[measure_key]):
-                                for b, b_item in enumerate(measure_assert):
+                        tests += 1
+                        if measure_key in bsw_list:
+                            tests -= 1
+                            for a, a_item in enumerate(measure_assert):
+                                tests += 1
+                                for b, b_item in enumerate(data[measure_key]):
                                     if a_item["id"] != b_item["id"]:
                                         continue
 
-                                    if isinstance(b_item["state"], list):
-                                        assert a_item["state"] == b_item["state"][0]
+                                    if isinstance(a_item["state"], list):
+                                        tests += 1
+                                        asserts += 1
+                                        assert b_item["state"] == a_item["state"][0]
+                                        asserts += 1
                                         assert (
-                                            a_item["last_reset"] == b_item["state"][1]
+                                            b_item["last_reset"] == a_item["state"][1]
                                         )
                                     else:
-                                        assert a_item["state"] == b_item["state"]
-                                    b_sensor = None
-                                    if measure_key == "binary_sensors":
-                                        b_sensor = pw_entities.GWBinarySensor(
-                                            smile, dev_id, a_item["id"]
-                                        )
-                                        b_sensor.update_data()
-                                        assert (
-                                            self.bs_prop_selector("state", b_sensor)
-                                            == b_item["state"]
-                                        )
+                                        asserts += 1
+                                        if measure_key == "binary_sensors":
+                                            b_sensor = None
+                                            b_sensor = pw_entities.GWBinarySensor(
+                                                smile, dev_id, a_item["id"]
+                                            )
+                                            b_sensor.update_data()
+                                            assert (
+                                                self.bs_prop_selector("state", b_sensor)
+                                                == a_item["state"]
+                                            )
+                                        else:
+                                            assert b_item["state"] == a_item["state"]
+                        elif self.th_prop_selector(measure_key, thermostat):
+                            asserts += 1
+                            assert (
+                                self.th_prop_selector(measure_key, thermostat)
+                                == measure_assert
+                            )
                         else:
                             if measure_key in data:
+                                asserts += 1
                                 assert data[measure_key] == measure_assert
-                            if self.th_prop_selector(measure_key, thermostat):
-                                assert (
-                                    self.th_prop_selector(measure_key, thermostat)
-                                    == measure_assert
-                                )
+
+        assert tests == asserts
 
     @pytest.mark.asyncio
     async def tinker_switch(
@@ -616,7 +632,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "no_frost": [10.0, 0],
                     "vacation": [15.0, 0],
                 },
-                "preset_mode": "home",
+                "active_preset": "home",
                 "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
                 "schedule_temperature": 20.0,
                 "sensors": [
@@ -751,7 +767,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
                 "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 456.0},
+                    {"id": "electricity_consumed_point", "state": 456.0},
                     {"id": "net_electricity_point", "state": 456.0},
                     {"id": "gas_consumed_cumulative", "state": 584.431},
                     {"id": "electricity_produced_peak_cumulative", "state": 1296.136},
@@ -794,7 +810,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Gateway / P1 itself
             "199aa40f126840f392983d171374ab0b": {
                 "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 456.0},
+                    {"id": "electricity_consumed_point", "state": 456.0},
                     {"id": "net_electricity_point", "state": 456.0},
                     {"id": "gas_consumed_cumulative", "state": 584.431},
                     {"id": "electricity_produced_peak_cumulative", "state": 1296.136},
@@ -1276,11 +1292,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
-                "sensors": [
-                    {"id": "electricity_consumed", "state": 35.8},
-                    {"id": "temperature", "state": 26.2},
-                    {"id": "valve_position", "state": 0},
-                ],
+                "sensors": [{"id": "electricity_consumed", "state": 35.8}],
                 "switches": [
                     {"id": "relay", "state": True},
                 ],
