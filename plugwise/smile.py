@@ -215,7 +215,7 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             await self._update_domain_objects()
 
-    async def update_gw_devices(self):
+    async def update(self):
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -391,7 +391,7 @@ class Smile(SmileHelper):
         return device_data
 
     def _get_device_data(self, dev_id):
-        """Helper-function for _all_device_data() and update_gw_devices().
+        """Helper-function for _all_device_data() and update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         devices = self._devices

@@ -68,7 +68,7 @@ DAYS = {
 
 
 def device_state_updater(data, devs, d_id, d_dict):
-    """Helper-function for _update_gw_devices().
+    """Helper-function for update().
     Update the Device_State sensor state.
     """
     for idx, item in enumerate(d_dict["sensors"]):
@@ -114,7 +114,7 @@ def update_device_state(data, d_dict):
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
-    """Helper-function for _update_gw_devices().
+    """Helper-function for update().
     Update the PW_Notification binary_sensor state.
     """
     for idx, item in enumerate(d_dict["binary_sensors"]):
@@ -123,7 +123,7 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
 
 
 def update_helper(data, devs, d_dict, d_id, e_type, key):
-    """Helper-function for _update_gw_devices()."""
+    """Helper-function for update()."""
     for dummy in d_dict[e_type]:
         if key != dummy[ATTR_ID]:
             continue
@@ -681,7 +681,7 @@ class SmileHelper:
             return schema_ids
 
     async def _update_domain_objects(self):
-        """Helper-function for smile.py: full_update_device() and update_gw_devices().
+        """Helper-function for smile.py: full_update_device() and update().
         Request domain_objects data.
         """
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
