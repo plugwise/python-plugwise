@@ -226,6 +226,8 @@ class Smile(SmileHelper):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
+        self.gw_data["notifications"] = self.notifications
+        
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
             for key, value in list(data.items()):
@@ -251,7 +253,7 @@ class Smile(SmileHelper):
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
 
-        return self.gw_devices
+        return {**self.gw_data, **self.gw_devices}
 
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().
@@ -270,6 +272,7 @@ class Smile(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_devices.
         """
+        self.gw_data = {}
         dev_id_list = []
         dev_and_data_list = []
         for dev_id, dev_dict in self._devices.items():
@@ -293,6 +296,12 @@ class Smile(SmileHelper):
             dev_and_data_list.append(copy.deepcopy(dev_and_data))
 
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
+
+        self.gw_data["gateway"] = self.gateway_id
+        self.gw_data["heater"] = self._heater_id
+        self.gw_data["name"] = self.smile_name
+        self.gw_data["active_device"] = self._active_device_present
+        self.gw_data["single_master"] = self.single_master_thermostat()
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
