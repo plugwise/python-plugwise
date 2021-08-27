@@ -409,7 +409,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         smile.get_all_devices()
         device_list = await smile.update()
         self._write_json("all_devices", device_list)
-        self._write_json("notifications", device_list["notifications"]
+        self._write_json("notifications", device_list["notifications"])
 
         location_list = smile._thermo_locs
 
