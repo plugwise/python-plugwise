@@ -442,7 +442,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     )
                     _LOGGER.info("  + Device data: %s", data)
                     if data["class"] in MASTER_THERMOSTATS:
-                        thermostat = pw_entities.GWThermostat(extra, dev_id)
+                        thermostat = pw_entities.GWThermostat(data, dev_id)
                         thermostat.update_data()
                         _LOGGER.info(
                             "%s",
@@ -477,7 +477,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         if measure_key == "binary_sensors":
                                             b_sensor = None
                                             b_sensor = pw_entities.GWBinarySensor(
-                                                extra, dev_id, a_item["id"]
+                                                data, dev_id, a_item["id"]
                                             )
                                             b_sensor.update_data()
                                             assert (
