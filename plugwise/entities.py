@@ -65,7 +65,7 @@ class GWBinarySensor:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._data[self._dev_id]
+        data = self._data[1][self._dev_id]
 
         for key, _ in data.items():
             if key != "binary_sensors":
@@ -81,7 +81,7 @@ class GWBinarySensor:
                 if self._binary_sensor != "plugwise_notification":
                     continue
 
-                notify = self._data["notifications"]
+                notify = self._data[0]["notifications"]
                 self._notification = {}
                 for severity in SEVERITIES:
                     self._attributes[f"{severity.upper()}_msg"] = []
@@ -120,9 +120,9 @@ class GWThermostat:
         self._smile_class = None
         self._temperature = None
 
-        self._active_device = self._data["active_device"]
-        self._heater_id = self._data["heater"]
-        self._sm_thermostat = self._data["single_master"]
+        self._active_device = self._data[0]["active_device"]
+        self._heater_id = self._data[0]["heater"]
+        self._sm_thermostat = self._data[0]["single_master"]
 
     @property
     def compressor_state(self):
@@ -186,7 +186,7 @@ class GWThermostat:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._data[self._dev_id]
+        data = self._data[1][self._dev_id]
 
         # current & target_temps, heater_central data when required
         s_list = data["sensors"]
