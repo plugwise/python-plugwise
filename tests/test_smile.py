@@ -407,14 +407,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         ]
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
-        await smile.update_gw_devices()
-        device_list = smile.gw_devices
+        device_list = await smile.update()
         self._write_json("all_devices", device_list)
-        self._write_json("notifications", smile.notifications)
+        self._write_json("notifications", device_list["notifications"]
 
         location_list = smile._thermo_locs
 
-        _LOGGER.info("Gateway id = %s", smile.gateway_id)
+        _LOGGER.info("Gateway id = %s", device_list["gateway"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         self.show_setup(location_list, device_list)
         pp4 = PrettyPrinter(indent=4)
@@ -432,7 +431,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
                     thermostat = None
-                    data = smile.gw_devices[dev_id]
+                    data = device_list[dev_id]
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
@@ -441,7 +440,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     )
                     _LOGGER.info("  + Device data: %s", data)
                     if data["class"] in MASTER_THERMOSTATS:
-                        thermostat = pw_entities.GWThermostat(smile, dev_id)
+                        thermostat = pw_entities.GWThermostat(device_list, dev_id)
                         thermostat.update_data()
                         _LOGGER.info(
                             "%s",
@@ -476,7 +475,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         if measure_key == "binary_sensors":
                                             b_sensor = None
                                             b_sensor = pw_entities.GWBinarySensor(
-                                                smile, dev_id, a_item["id"]
+                                                device_list, dev_id, a_item["id"]
                                             )
                                             b_sensor.update_data()
                                             assert (
