@@ -433,15 +433,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
                     thermostat = None
-                    data = device_list[dev_id]
+                    dev_data = device_list[dev_id]
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
                             details["name"], dev_id
                         ),
                     )
-                    _LOGGER.info("  + Device data: %s", data)
-                    if data["class"] in MASTER_THERMOSTATS:
+                    _LOGGER.info("  + Device data: %s", dev_data)
+                    if dev_data["class"] in MASTER_THERMOSTATS:
                         thermostat = pw_entities.GWThermostat(data, dev_id)
                         thermostat.update_data()
                         _LOGGER.info(
@@ -463,7 +463,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             tests -= 1
                             for a, a_item in enumerate(measure_assert):
                                 tests += 1
-                                for b, b_item in enumerate(data[measure_key]):
+                                for b, b_item in enumerate(dev_data[measure_key]):
                                     if a_item["id"] != b_item["id"]:
                                         continue
 
@@ -493,9 +493,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 == measure_assert
                             )
                         else:
-                            if measure_key in data:
+                            if measure_key in dev_data:
                                 asserts += 1
-                                assert data[measure_key] == measure_assert
+                                assert dev_data[measure_key] == measure_assert
 
         assert tests == asserts
 
