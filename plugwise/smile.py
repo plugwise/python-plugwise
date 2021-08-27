@@ -82,7 +82,7 @@ class Smile(SmileHelper):
         self._endpoint = f"http://{self._host}:{str(self._port)}"
         self._timeout = timeout
 
-        self.gw_devices = {}
+        self.gw_data = self.gw_devices = {}
 
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
@@ -270,9 +270,8 @@ class Smile(SmileHelper):
 
     def _all_device_data(self):
         """Helper-function for get_all_devices().
-        Collect initial data for each device and add to self.gw_devices.
+        Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        self.gw_data = {}
         dev_id_list = []
         dev_and_data_list = []
         for dev_id, dev_dict in self._devices.items():
