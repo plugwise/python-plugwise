@@ -197,7 +197,7 @@ class GWThermostat:
                 self._setpoint = s_list[idx][ATTR_STATE]
         self._schedule_temp = data.get("schedule_temperature")
         if self._active_device:
-            hc_data = self._data[self._heater_id]
+            hc_data = self._data[1][self._heater_id]
             self._compressor_state = hc_data.get("compressor_state")
             if self._sm_thermostat:
                 self._cooling_state = hc_data.get("cooling_state")
