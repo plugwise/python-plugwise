@@ -21,10 +21,10 @@ from .constants import (
 class GWBinarySensor:
     """ Represent the Plugwise Smile/Stretch binary_sensor."""
 
-    def __init__(self, api, dev_id, binary_sensor):
+    def __init__(self, coordinator, dev_id, binary_sensor):
         """Initialize the Gateway."""
-        self._api = api
         self._binary_sensor = binary_sensor
+        self._cdata = coordinator.data
         self._dev_id = dev_id
         self._attributes = {}
         self._icon = None
@@ -65,7 +65,7 @@ class GWBinarySensor:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._api.gw_devices[self._dev_id]
+        data = self._cdata[self._dev_id]
 
         for key, _ in data.items():
             if key != "binary_sensors":
@@ -81,7 +81,7 @@ class GWBinarySensor:
                 if self._binary_sensor != "plugwise_notification":
                     continue
 
-                notify = self._api.notifications
+                notify = self._cdata["notifications"]
                 self._notification = {}
                 for severity in SEVERITIES:
                     self._attributes[f"{severity.upper()}_msg"] = []
@@ -98,10 +98,10 @@ class GWBinarySensor:
 class GWThermostat:
     """Represent a Plugwise Thermostat Device."""
 
-    def __init__(self, api, dev_id):
+    def __init__(self, coordinator, dev_id):
         """Initialize the Thermostat."""
 
-        self._api = api
+        self._cdata = coordinator.data
         self._compressor_state = None
         self._cooling_state = None
         self._dev_id = dev_id
@@ -120,9 +120,9 @@ class GWThermostat:
         self._smile_class = None
         self._temperature = None
 
-        self._active_device = self._api._active_device_present
-        self._heater_id = self._api._heater_id
-        self._sm_thermostat = self._api.single_master_thermostat()
+        self._active_device = self._cdata["active_device"]
+        self._heater_id = self._cdata["heater"]
+        self._sm_thermostat = self._cdata["single_master"]
 
     @property
     def compressor_state(self):
@@ -186,7 +186,7 @@ class GWThermostat:
 
     def update_data(self):
         """Handle update callbacks."""
-        data = self._api.gw_devices[self._dev_id]
+        data = self._cdata[self._dev_id]
 
         # current & target_temps, heater_central data when required
         s_list = data["sensors"]
@@ -197,7 +197,7 @@ class GWThermostat:
                 self._setpoint = s_list[idx][ATTR_STATE]
         self._schedule_temp = data.get("schedule_temperature")
         if self._active_device:
-            hc_data = self._api.gw_devices[self._heater_id]
+            hc_data = self._cdata[self._heater_id]
             self._compressor_state = hc_data.get("compressor_state")
             if self._sm_thermostat:
                 self._cooling_state = hc_data.get("cooling_state")
