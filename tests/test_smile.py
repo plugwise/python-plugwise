@@ -407,13 +407,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         ]
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
-        device_list = await smile.update()
+        data = await smile.update()
+        extra = data[0]
+        device_list = data[1]
         self._write_json("all_devices", device_list)
-        self._write_json("notifications", device_list["notifications"])
+        self._write_json("notifications", extra["notifications"])
 
         location_list = smile._thermo_locs
 
-        _LOGGER.info("Gateway id = %s", device_list["gateway"])
+        _LOGGER.info("Gateway id = %s", extra["gateway"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         self.show_setup(location_list, device_list)
         pp4 = PrettyPrinter(indent=4)
@@ -440,7 +442,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     )
                     _LOGGER.info("  + Device data: %s", data)
                     if data["class"] in MASTER_THERMOSTATS:
-                        thermostat = pw_entities.GWThermostat(device_list, dev_id)
+                        thermostat = pw_entities.GWThermostat(extra, dev_id)
                         thermostat.update_data()
                         _LOGGER.info(
                             "%s",
@@ -475,7 +477,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         if measure_key == "binary_sensors":
                                             b_sensor = None
                                             b_sensor = pw_entities.GWBinarySensor(
-                                                device_list, dev_id, a_item["id"]
+                                                extra, dev_id, a_item["id"]
                                             )
                                             b_sensor.update_data()
                                             assert (
