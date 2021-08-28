@@ -407,7 +407,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         ]
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
-        data = await smile.update()
+        data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
         self._write_json("all_devices", device_list)
@@ -415,7 +415,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         location_list = smile._thermo_locs
 
-        _LOGGER.info("Gateway id = %s", extra["gateway"])
+        _LOGGER.info("Gateway id = %s", extra["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         self.show_setup(location_list, device_list)
         pp4 = PrettyPrinter(indent=4)
