@@ -254,8 +254,7 @@ class Smile(SmileHelper):
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
 
-        data = [self.gw_data, self.gw_devices]
-        return data
+        return  [self.gw_data, self.gw_devices]
 
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().
