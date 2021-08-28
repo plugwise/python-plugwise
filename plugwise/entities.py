@@ -121,8 +121,8 @@ class GWThermostat:
         self._temperature = None
 
         self._active_device = self._data[0]["active_device"]
-        self._heater_id = self._data[0]["heater"]
-        self._sm_thermostat = self._data[0]["single_master"]
+        self._heater_id = self._data[0]["heater_id"]
+        self._sm_thermostat = self._data[0]["single_master_thermostat"]
 
     @property
     def compressor_state(self):
