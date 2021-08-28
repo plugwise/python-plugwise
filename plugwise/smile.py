@@ -215,7 +215,7 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             await self._update_domain_objects()
 
-    async def update(self):
+    async def async_update(self):
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -226,6 +226,7 @@ class Smile(SmileHelper):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
+        data = []
         self.gw_data["notifications"] = self.notifications
         
         for dev_id, dev_dict in self.gw_devices.items():
@@ -253,7 +254,8 @@ class Smile(SmileHelper):
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
 
-        return [self.gw_data, self.gw_devices]
+        data = [self.gw_data, self.gw_devices]
+        return data
 
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().
@@ -296,11 +298,11 @@ class Smile(SmileHelper):
 
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
-        self.gw_data["gateway"] = self.gateway_id
-        self.gw_data["heater"] = self._heater_id
-        self.gw_data["name"] = self.smile_name
-        self.gw_data["active_device"] = self._active_device_present
-        self.gw_data["single_master"] = self.single_master_thermostat()
+        self.gw_data["gateway_id"] = self.gateway_id
+        self.gw_data["heater_id"] = self._heater_id
+        self.gw_data["smile_name"] = self.smile_name
+        self.gw_data["heat_cool_device"] = self._active_device_present
+        self.gw_data["single_thermostat"] = self.single_master_thermostat()
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
