@@ -320,7 +320,7 @@ class SmileHelper:
     """The SmileHelper class."""
 
     def __init__(self):
-        
+
         self._cp_state = None
         self._loc_data = {}
 

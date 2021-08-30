@@ -426,6 +426,7 @@ class SmileConnect(SmileComm):
 
 class Smile(SmileConnect, SmileHelper):
     """The Plugwise Smile main class."""
+
     def __init__(
         self,
         host,
@@ -434,7 +435,7 @@ class Smile(SmileConnect, SmileHelper):
         port=DEFAULT_PORT,
         timeout=DEFAULT_TIMEOUT,
         websession: aiohttp.ClientSession = None,
-    ):        
+    ):
         super().__init__(
             host,
             password,
@@ -667,5 +668,3 @@ class Smile(SmileConnect, SmileHelper):
         if count == 1:
             return True
         return False
-
-
