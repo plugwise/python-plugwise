@@ -33,6 +33,7 @@ from .constants import (
 )
 from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
 from .helper import (
+    SmileComm,
     SmileHelper,
     device_state_updater,
     pw_notification_updater,
@@ -42,8 +43,8 @@ from .helper import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class Smile(SmileHelper):
-    """The Plugwise Smile main class."""
+class SmileConnect(SmileComm):
+    """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 
@@ -51,40 +52,22 @@ class Smile(SmileHelper):
         self,
         host,
         password,
-        username=DEFAULT_USERNAME,
-        port=DEFAULT_PORT,
-        timeout=DEFAULT_TIMEOUT,
-        websession: aiohttp.ClientSession = None,
+        username,
+        port,
+        timeout,
+        websession,
     ):
         """Set the constructor for this class."""
-        super().__init__()
+        super().__init__(
+            host,
+            password,
+            username,
+            port,
+            timeout,
+            websession,
+        )
 
-        if not websession:
-
-            async def _create_session() -> aiohttp.ClientSession:
-                return aiohttp.ClientSession()  # pragma: no cover
-
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                self._websession = aiohttp.ClientSession()
-            else:
-                self._websession = loop.run_until_complete(
-                    _create_session()
-                )  # pragma: no cover
-        else:
-            self._websession = websession
-
-        self._auth = aiohttp.BasicAuth(username, password=password)
-
-        self._devices = {}
-        self._host = host
-        self._port = port
-        self._endpoint = f"http://{self._host}:{str(self._port)}"
-        self._timeout = timeout
-
-        self.gw_devices = {}
-
-    async def connect(self):
+    async def _connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
         names = []
 
@@ -198,10 +181,6 @@ class Smile(SmileHelper):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-    async def close_connection(self):
-        """Close the Plugwise connection."""
-        await self._websession.close()
-
     async def _full_update_device(self):
         """Perform a first fetch of all XML data, needed for initialization."""
         self._locations = await self._request(LOCATIONS)
@@ -214,6 +193,29 @@ class Smile(SmileHelper):
         # No need to import domain_objects and modules for P1, no useful info
         if self.smile_type != "power":
             await self._update_domain_objects()
+
+    async def _update_domain_objects(self):
+        """Helper-function for smile.py: full_update_device() and update_gw_devices().
+        Request domain_objects data.
+        """
+        self._domain_objects = await self._request(DOMAIN_OBJECTS)
+
+        # If Plugwise notifications present:
+        self.notifications = {}
+        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
+        notifications = self._domain_objects.findall(".//notification")
+        for notification in notifications:
+            try:
+                msg_id = notification.attrib["id"]
+                msg_type = notification.find("type").text
+                msg = notification.find("message").text
+                self.notifications.update({msg_id: {msg_type: msg}})
+                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
+            except AttributeError:  # pragma: no cover
+                _LOGGER.info(
+                    "Plugwise notification present but unable to process, manually investigate: %s",
+                    url,
+                )
 
     async def update_gw_devices(self):
         """Perform an incremental update for updating the various device states."""
@@ -250,6 +252,225 @@ class Smile(SmileHelper):
                     update_helper(
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
+
+    async def _set_schedule_state_legacy(self, name, state):
+        """Helper-function for set_schedule_state()."""
+        schema_rule_id = None
+        for rule in self._domain_objects.findall("rule"):
+            if rule.find("name").text == name:
+                schema_rule_id = rule.attrib["id"]
+
+        if schema_rule_id is None:
+            return False
+
+        template_id = None
+        state = str(state)
+        locator = f'.//*[@id="{schema_rule_id}"]/template'
+        for rule in self._domain_objects.findall(locator):
+            template_id = rule.attrib["id"]
+
+        uri = f"{RULES};id={schema_rule_id}"
+        data = (
+            "<rules><rule"
+            f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+            f' id="{template_id}" /><active>{state}</active></rule></rules>'
+        )
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def set_schedule_state(self, loc_id, name, state):
+        """Set the Schedule, with the given name, on the relevant Thermostat.
+        Determined from - DOMAIN_OBJECTS.
+        """
+        if self._smile_legacy:
+            return await self._set_schedule_state_legacy(name, state)
+
+        schema_rule_ids = self._rule_ids_by_name(str(name), loc_id)
+        if schema_rule_ids == {} or schema_rule_ids is None:
+            return False
+
+        for schema_rule_id, location_id in schema_rule_ids.items():
+            template_id = None
+            if location_id == loc_id:
+                state = str(state)
+                locator = f'.//*[@id="{schema_rule_id}"]/template'
+                for rule in self._domain_objects.findall(locator):
+                    template_id = rule.attrib["id"]
+
+                uri = f"{RULES};id={schema_rule_id}"
+                data = (
+                    "<rules><rule"
+                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+                    f' id="{template_id}"/><active>{state}</active></rule></rules>'
+                )
+
+                await self._request(uri, method="put", data=data)
+
+        return True
+
+    async def set_preset(self, loc_id, preset):
+        """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
+        if self._smile_legacy:
+            return await self._set_preset_legacy(preset)
+
+        current_location = self._locations.find(f'location[@id="{loc_id}"]')
+        location_name = current_location.find("name").text
+        location_type = current_location.find("type").text
+
+        if preset not in self._presets(loc_id):
+            return False
+
+        uri = f"{LOCATIONS};id={loc_id}"
+        data = (
+            "<locations><location"
+            f' id="{loc_id}"><name>{location_name}</name><type>{location_type}'
+            f"</type><preset>{preset}</preset></location></locations>"
+        )
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def set_temperature(self, loc_id, temperature):
+        """Set the given Temperature on the relevant Thermostat."""
+        temperature = str(temperature)
+        uri = self._temperature_uri(loc_id)
+        data = (
+            "<thermostat_functionality><setpoint>"
+            f"{temperature}</setpoint></thermostat_functionality>"
+        )
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def _set_groupswitch_member_state(self, members, state, switch):
+        """Helper-function for set_switch_state() .
+        Set the given State of the relevant Switch within a group of members.
+        """
+        for member in members:
+            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
+            switch_id = self._appliances.find(locator).attrib["id"]
+            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
+            if self._stretch_v2:
+                uri = f"{APPLIANCES};id={member}/{switch.device}"
+            state = str(state)
+            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
+
+            await self._request(uri, method="put", data=data)
+
+        return True
+
+    async def set_switch_state(self, appl_id, members, model, state):
+        """Set the given State of the relevant Switch."""
+        switch = Munch()
+        switch.actuator = "actuator_functionalities"
+        switch.device = "relay"
+        switch.func_type = "relay_functionality"
+        switch.func = "state"
+        if model == "dhw_cm_switch":
+            switch.device = "toggle"
+            switch.func_type = "toggle_functionality"
+
+        if model == "lock":
+            switch.func = "lock"
+            state = "false" if state == "off" else "true"
+
+        if self._stretch_v2:
+            switch.actuator = "actuators"
+            switch.func_type = "relay"
+
+        if members is not None:
+            return await self._set_groupswitch_member_state(members, state, switch)
+
+        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
+        switch_id = self._appliances.find(locator).attrib["id"]
+        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
+        if self._stretch_v2:
+            uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
+        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
+
+        if model == "relay":
+            locator = (
+                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
+            )
+            lock_state = self._appliances.find(locator).text
+            # Don't bother switching a relay when the corresponding lock-state is true
+            if lock_state == "true":
+                return False
+            await self._request(uri, method="put", data=data)
+            return True
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def _set_preset_legacy(self, preset):
+        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
+        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
+        rule = self._domain_objects.find(locator)
+        if rule is None:
+            return False
+
+        uri = f"{RULES}"
+        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def delete_notification(self):
+        """Delete the active Plugwise Notification."""
+        uri = f"{NOTIFICATIONS}"
+
+        await self._request(uri, method="delete")
+        return True
+
+
+class Smile(SmileConnect, SmileHelper):
+    """The Plugwise Smile main class."""
+    def __init__(
+        self,
+        host,
+        password,
+        username=DEFAULT_USERNAME,
+        port=DEFAULT_PORT,
+        timeout=DEFAULT_TIMEOUT,
+        websession: aiohttp.ClientSession = None,
+    ):        
+        super().__init__(
+            host,
+            password,
+            username,
+            port,
+            timeout,
+            websession,
+        )
+
+        self._active_device_present = None
+        self._appl_data = {}
+        self._appliances = None
+        self._domain_objects = None
+        self._heater_id = None
+        self._home_location = None
+        self._locations = None
+        self._modules = None
+        self._smile_legacy = False
+        self._stretch_v2 = False
+        self._stretch_v3 = False
+        self._thermo_locs = None
+
+        self.gateway_id = None
+        self.notifications = {}
+        self.smile_hostname = None
+        self.smile_name = None
+        self.smile_type = None
+        self.smile_version = ()
+
+        self.gw_devices = {}
+
+    async def connect(self):
+        """Connect to Plugwise device and determine its name, type and version."""
+
+        connected = await self._connect()
+        return connected
 
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().
@@ -447,172 +668,4 @@ class Smile(SmileHelper):
             return True
         return False
 
-    async def _set_schedule_state_legacy(self, name, state):
-        """Helper-function for set_schedule_state()."""
-        schema_rule_id = None
-        for rule in self._domain_objects.findall("rule"):
-            if rule.find("name").text == name:
-                schema_rule_id = rule.attrib["id"]
 
-        if schema_rule_id is None:
-            return False
-
-        template_id = None
-        state = str(state)
-        locator = f'.//*[@id="{schema_rule_id}"]/template'
-        for rule in self._domain_objects.findall(locator):
-            template_id = rule.attrib["id"]
-
-        uri = f"{RULES};id={schema_rule_id}"
-        data = (
-            "<rules><rule"
-            f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-            f' id="{template_id}" /><active>{state}</active></rule></rules>'
-        )
-
-        await self._request(uri, method="put", data=data)
-        return True
-
-    async def set_schedule_state(self, loc_id, name, state):
-        """Set the Schedule, with the given name, on the relevant Thermostat.
-        Determined from - DOMAIN_OBJECTS.
-        """
-        if self._smile_legacy:
-            return await self._set_schedule_state_legacy(name, state)
-
-        schema_rule_ids = self._rule_ids_by_name(str(name), loc_id)
-        if schema_rule_ids == {} or schema_rule_ids is None:
-            return False
-
-        for schema_rule_id, location_id in schema_rule_ids.items():
-            template_id = None
-            if location_id == loc_id:
-                state = str(state)
-                locator = f'.//*[@id="{schema_rule_id}"]/template'
-                for rule in self._domain_objects.findall(locator):
-                    template_id = rule.attrib["id"]
-
-                uri = f"{RULES};id={schema_rule_id}"
-                data = (
-                    "<rules><rule"
-                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                    f' id="{template_id}"/><active>{state}</active></rule></rules>'
-                )
-
-                await self._request(uri, method="put", data=data)
-
-        return True
-
-    async def set_preset(self, loc_id, preset):
-        """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
-        if self._smile_legacy:
-            return await self._set_preset_legacy(preset)
-
-        current_location = self._locations.find(f'location[@id="{loc_id}"]')
-        location_name = current_location.find("name").text
-        location_type = current_location.find("type").text
-
-        if preset not in self._presets(loc_id):
-            return False
-
-        uri = f"{LOCATIONS};id={loc_id}"
-        data = (
-            "<locations><location"
-            f' id="{loc_id}"><name>{location_name}</name><type>{location_type}'
-            f"</type><preset>{preset}</preset></location></locations>"
-        )
-
-        await self._request(uri, method="put", data=data)
-        return True
-
-    async def set_temperature(self, loc_id, temperature):
-        """Set the given Temperature on the relevant Thermostat."""
-        temperature = str(temperature)
-        uri = self._temperature_uri(loc_id)
-        data = (
-            "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
-        )
-
-        await self._request(uri, method="put", data=data)
-        return True
-
-    async def _set_groupswitch_member_state(self, members, state, switch):
-        """Helper-function for set_switch_state() .
-        Set the given State of the relevant Switch within a group of members.
-        """
-        for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._appliances.find(locator).attrib["id"]
-            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            if self._stretch_v2:
-                uri = f"{APPLIANCES};id={member}/{switch.device}"
-            state = str(state)
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
-            await self._request(uri, method="put", data=data)
-
-        return True
-
-    async def set_switch_state(self, appl_id, members, model, state):
-        """Set the given State of the relevant Switch."""
-        switch = Munch()
-        switch.actuator = "actuator_functionalities"
-        switch.device = "relay"
-        switch.func_type = "relay_functionality"
-        switch.func = "state"
-        if model == "dhw_cm_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
-
-        if model == "lock":
-            switch.func = "lock"
-            state = "false" if state == "off" else "true"
-
-        if self._stretch_v2:
-            switch.actuator = "actuators"
-            switch.func_type = "relay"
-
-        if members is not None:
-            return await self._set_groupswitch_member_state(members, state, switch)
-
-        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        switch_id = self._appliances.find(locator).attrib["id"]
-        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
-        if self._stretch_v2:
-            uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
-        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
-        if model == "relay":
-            locator = (
-                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
-            )
-            lock_state = self._appliances.find(locator).text
-            # Don't bother switching a relay when the corresponding lock-state is true
-            if lock_state == "true":
-                return False
-            await self._request(uri, method="put", data=data)
-            return True
-
-        await self._request(uri, method="put", data=data)
-        return True
-
-    async def _set_preset_legacy(self, preset):
-        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = self._domain_objects.find(locator)
-        if rule is None:
-            return False
-
-        uri = f"{RULES}"
-        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
-
-        await self._request(uri, method="put", data=data)
-        return True
-
-    async def delete_notification(self):
-        """Delete the active Plugwise Notification."""
-        uri = f"{NOTIFICATIONS}"
-
-        await self._request(uri, method="delete")
-        return True
