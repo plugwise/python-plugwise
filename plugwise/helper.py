@@ -6,7 +6,7 @@ import datetime as dt
 import logging
 
 import aiohttp
-from async_timeout import timeout
+import async_timeout
 from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
@@ -289,7 +289,7 @@ class SmileComm:
         url = f"{self._endpoint}{command}"
 
         try:
-            with timeout(self._timeout):
+            with async_timeout.timeout(self._timeout):
                 if method == "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
                     headers = {"Accept-Encoding": "gzip"}
