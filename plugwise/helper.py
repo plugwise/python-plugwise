@@ -1,11 +1,11 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise Smile protocol helpers.
 """
-import aiohttp
 import asyncio
 import datetime as dt
 import logging
 
+import aiohttp
 from async_timeout import timeout
 from dateutil import tz
 from dateutil.parser import parse
