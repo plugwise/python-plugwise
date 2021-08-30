@@ -95,6 +95,10 @@ class SmileConnect(SmileComm):
 
         return True
 
+    async def close_connection(self):
+        """Close the Plugwise connection."""
+        await self._websession.close()
+
     async def _smile_detect_legacy(self, result, dsmrmain):
         """Helper-function for _smile_detect()."""
         network = result.find(".//module/protocols/network_router/network")

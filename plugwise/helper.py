@@ -311,10 +311,6 @@ class SmileComm:
 
         return await self._request_validate(resp, method)
 
-    async def close_connection(self):
-        """Close the Plugwise connection."""
-        await self._websession.close()
-
 
 class SmileHelper:
     """The SmileHelper class."""
