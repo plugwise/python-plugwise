@@ -289,7 +289,7 @@ class SmileComm:
         url = f"{self._endpoint}{command}"
 
         try:
-            with async_timeout.timeout(self._timeout):
+            async with async_timeout.timeout(self._timeout):
                 if method == "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
                     headers = {"Accept-Encoding": "gzip"}
