@@ -1,10 +1,12 @@
 # Changelog
 
-## 0.13.1 - Smile: fix point-sensor-names for P1 v2
+## v0.14.0 - Smile: sensor-platform updates - 2021.9 compatible
 
-## 0.13.0 - Smile: fully support P1 legacy (specifically with firmware v2.1.13)
+## v0.13.1 - Smile: fix point-sensor-names for P1 v2
 
-## 0.12.0 - Energy support and bugfixes
+## v0.13.0 - Smile: fully support P1 legacy (specifically with firmware v2.1.13)
+
+## v0.12.0 - Energy support and bugfixes
 
 - Stick: Add new properties `energy_consumption_today` counter and `energy_consumption_today_last_reset` timestamp. These properties can be used to properly measure the used energy. Very useful for the 'Energy' capabilities introduced in Home Assistant 2021.8
 - Stick: Synchronize clock of all plugwise devices once a day
