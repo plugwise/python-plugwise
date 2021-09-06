@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.14.1 - Smile: removing further `last_reset`s
+
+ - As per https://developers.home-assistant.io/blog/2021/08/16/state_class_total
+
 ## v0.14.0 - Smile: sensor-platform updates - 2021.9 compatible
 
 ## v0.13.1 - Smile: fix point-sensor-names for P1 v2
