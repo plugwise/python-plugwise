@@ -472,6 +472,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         asserts += 1
                                         assert b_item["state"] == a_item["state"][0]
                                         asserts += 1
+                                        assert (
+                                            b_item["last_reset"] == a_item["state"][1]
+                                        )
+
                                     else:
                                         asserts += 1
                                         if measure_key == "binary_sensors":
