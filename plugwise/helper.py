@@ -736,7 +736,7 @@ class SmileHelper:
                 name = f"{measurement}_interval"
                 measure = appliance.find(i_locator).text
                 log_date = parse(appliance.find(i_locator).get("log_date"))
-                log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
+                log_date = log_date.astimezone(pytz.UTC)
                 data[name] = [format_measure(measure, ENERGY_WATT_HOUR), log_date]
 
         return data
@@ -962,7 +962,7 @@ class SmileHelper:
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         log_date = parse(loc.logs.find(loc.locator).get("log_date"))
-        loc.log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
+        loc.log_date = log_date.astimezone(pytz.UTC)
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
