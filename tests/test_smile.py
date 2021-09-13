@@ -2,7 +2,6 @@
 
 import asyncio
 import datetime as dt
-from dateutil import tz
 import importlib
 
 # Fixture writing
@@ -17,6 +16,7 @@ from unittest.mock import patch
 
 # Testing
 import aiohttp
+from dateutil import tz
 import jsonpickle as json
 import pytest
 
