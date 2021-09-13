@@ -2,6 +2,7 @@
 
 import asyncio
 import datetime as dt
+from dateutil import tz
 import importlib
 
 # Fixture writing
@@ -1536,7 +1537,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     },
                     {
                         "id": "electricity_consumed_peak_interval",
-                        "state": [179, dt.datetime(2020, 3, 12, 19, 45)],
+                        "state": [179, dt.datetime(2020, 3, 12, 19, 45, tzinfo=tz.tzutc())],
                     },
                     {"id": "net_electricity_cumulative", "state": 17965.326},
                 ]
@@ -1782,7 +1783,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": [
                     {
                         "id": "electricity_consumed_interval",
-                        "state": [0.71, dt.datetime(2020, 9, 6, 12, 00)],
+                        "state": [0.71, dt.datetime(2020, 9, 6, 12, 00, tzinfo=tz.tzutc())],
                     }
                 ]
             },
@@ -1826,7 +1827,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": [
                     {
                         "id": "electricity_consumed_interval",
-                        "state": [0.21, dt.datetime(2020, 8, 3, 20, 00)],
+                        "state": [0.21, dt.datetime(2020, 8, 3, 20, 00, tzinfo=tz.tzutc())],
                     }
                 ]
             },
