@@ -69,7 +69,7 @@ DAYS = {
 
 
 def device_state_updater(data, devs, d_id, d_dict):
-    """Helper-function for update().
+    """Helper-function for async_update().
     Update the Device_State sensor state.
     """
     for idx, item in enumerate(d_dict["sensors"]):
@@ -115,7 +115,7 @@ def update_device_state(data, d_dict):
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
-    """Helper-function for update().
+    """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
     """
     for idx, item in enumerate(d_dict["binary_sensors"]):
@@ -124,7 +124,7 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
 
 
 def update_helper(data, devs, d_dict, d_id, e_type, key):
-    """Helper-function for update()."""
+    """Helper-function for async_update()."""
     for dummy in d_dict[e_type]:
         if key != dummy[ATTR_ID]:
             continue

@@ -195,7 +195,7 @@ class SmileConnect(SmileComm):
             await self._update_domain_objects()
 
     async def _update_domain_objects(self):
-        """Helper-function for smile.py: full_update_device() and update_gw_devices().
+        """Helper-function for smile.py: full_update_device() and async_update().
         Request domain_objects data.
         """
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
@@ -623,7 +623,7 @@ class Smile(SmileConnect, SmileHelper):
         return device_data
 
     def _get_device_data(self, dev_id):
-        """Helper-function for _all_device_data() and update().
+        """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         devices = self._devices
