@@ -132,8 +132,6 @@ def update_helper(data, devs, d_dict, d_id, e_type, key):
             if key != item[ATTR_ID]:
                 continue
             devs[d_id][e_type][idx][ATTR_STATE] = data[key]
-            if isinstance(data[key], list):
-                devs[d_id][e_type][idx][ATTR_STATE] = data[key][0]
 
 
 def check_model(name, v_name):
