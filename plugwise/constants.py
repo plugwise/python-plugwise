@@ -2,7 +2,6 @@
 
 # Copied homeassistant.consts
 ATTR_DEVICE_CLASS = "device_class"
-ATTR_LAST_REST = "last_reset"
 ATTR_NAME = "name"
 ATTR_STATE = "state"
 ATTR_STATE_CLASS = "state_class"
