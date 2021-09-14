@@ -1,7 +1,6 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 
 import asyncio
-import datetime as dt
 import importlib
 
 # Fixture writing
@@ -468,29 +467,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     if a_item["id"] != b_item["id"]:
                                         continue
 
-                                    if isinstance(a_item["state"], list):
-                                        tests += 1
-                                        asserts += 1
-                                        assert b_item["state"] == a_item["state"][0]
-                                        asserts += 1
-                                        assert (
-                                            b_item["last_reset"] == a_item["state"][1]
+                                    asserts += 1
+                                    if measure_key == "binary_sensors":
+                                        b_sensor = None
+                                        b_sensor = pw_entities.GWBinarySensor(
+                                            data, dev_id, a_item["id"]
                                         )
-
+                                        b_sensor.update_data()
+                                        assert (
+                                            self.bs_prop_selector("state", b_sensor)
+                                            == a_item["state"]
+                                        )
                                     else:
-                                        asserts += 1
-                                        if measure_key == "binary_sensors":
-                                            b_sensor = None
-                                            b_sensor = pw_entities.GWBinarySensor(
-                                                data, dev_id, a_item["id"]
-                                            )
-                                            b_sensor.update_data()
-                                            assert (
-                                                self.bs_prop_selector("state", b_sensor)
-                                                == a_item["state"]
-                                            )
-                                        else:
-                                            assert b_item["state"] == a_item["state"]
+                                        assert b_item["state"] == a_item["state"]
                         elif self.th_prop_selector(measure_key, thermostat):
                             asserts += 1
                             assert (
@@ -1535,13 +1524,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "id": "electricity_consumed_off_peak_cumulative",
                         "state": 10263.159,
                     },
-                    {
-                        "id": "electricity_consumed_peak_interval",
-                        "state": [
-                            179,
-                            dt.datetime(2020, 3, 12, 19, 45, tzinfo=tz.tzutc()),
-                        ],
-                    },
+                    {"id": "electricity_consumed_peak_interval", "state": 179},
                     {"id": "net_electricity_cumulative", "state": 17965.326},
                 ]
             }
@@ -1784,13 +1767,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Vaatwasser
             "aac7b735042c4832ac9ff33aae4f453b": {
                 "sensors": [
-                    {
-                        "id": "electricity_consumed_interval",
-                        "state": [
-                            0.71,
-                            dt.datetime(2020, 9, 6, 12, 00, tzinfo=tz.tzutc()),
-                        ],
-                    }
+                    {"id": "electricity_consumed_interval", "state": 0.71}
                 ]
             },
         }
@@ -1830,15 +1807,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Wasdroger 043AECA
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "sensors": [
-                    {
-                        "id": "electricity_consumed_interval",
-                        "state": [
-                            0.21,
-                            dt.datetime(2020, 8, 3, 20, 00, tzinfo=tz.tzutc()),
-                        ],
-                    }
-                ]
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.21}]
             },
         }
 
