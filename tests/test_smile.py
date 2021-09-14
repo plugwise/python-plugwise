@@ -1766,9 +1766,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Vaatwasser
             "aac7b735042c4832ac9ff33aae4f453b": {
-                "sensors": [
-                    {"id": "electricity_consumed_interval", "state": 0.71}
-                ]
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.71}]
             },
         }
 
