@@ -319,10 +319,6 @@ class SmileComm:
 class SmileHelper:
     """The SmileHelper class."""
 
-    def __init__(self):
-
-        self._cp_state = None
-
     def _locations_legacy(self):
         """Helper-function for _all_locations().
         Create locations for legacy devices.
@@ -531,6 +527,7 @@ class SmileHelper:
     def _all_appliances(self):
         """Collect all appliances with relevant info."""
         self._appl_data = {}
+        self._cp_state = None
 
         self._all_locations()
 
