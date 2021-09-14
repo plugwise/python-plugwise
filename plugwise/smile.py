@@ -470,6 +470,7 @@ class Smile(SmileConnect, SmileHelper):
         self.smile_type = None
         self.smile_version = ()
 
+        self.gw_data = {}
         self.gw_devices = {}
 
     async def connect(self):
