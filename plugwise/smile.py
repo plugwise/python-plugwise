@@ -256,6 +256,8 @@ class SmileConnect(SmileComm):
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
 
+        return [self.gw_data, self.gw_devices]
+
     async def _set_schedule_state_legacy(self, name, state):
         """Helper-function for set_schedule_state()."""
         schema_rule_id = None
