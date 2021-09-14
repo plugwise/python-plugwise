@@ -322,7 +322,6 @@ class SmileHelper:
     def __init__(self):
 
         self._cp_state = None
-        self._loc_data = {}
 
     def _locations_legacy(self):
         """Helper-function for _all_locations().
