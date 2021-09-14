@@ -5,6 +5,7 @@ import asyncio
 import datetime as dt
 import logging
 
+import aiohttp
 import async_timeout
 from dateutil import tz
 from dateutil.parser import parse
@@ -217,38 +218,37 @@ def power_data_energy_diff(measurement, net_string, f_val, direct_data):
     return direct_data
 
 
-class SmileHelper:
-    """The SmileHelper class."""
+class SmileComm:
+    """The SmileComm class."""
 
-    def __init__(self):
+    def __init__(
+        self,
+        host,
+        password,
+        username,
+        port,
+        timeout,
+        websession,
+    ):
         """Set the constructor for this class."""
-        self._active_device_present = None
-        self._appl_data = {}
-        self._appliances = None
-        self._auth = None
-        self._cp_state = None
-        self._domain_objects = None
-        self._endpoint = None
-        self._heater_id = None
-        self._home_location = None
-        self._locations = None
-        self._modules = None
-        self._smile_legacy = False
-        self._host = None
-        self._loc_data = {}
-        self._port = None
-        self._stretch_v2 = False
-        self._stretch_v3 = False
-        self._thermo_locs = None
-        self._timeout = None
-        self._websession = None
+        if not websession:
 
-        self.gateway_id = None
-        self.notifications = {}
-        self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
+            async def _create_session() -> aiohttp.ClientSession:
+                return aiohttp.ClientSession()  # pragma: no cover
+
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                self._websession = aiohttp.ClientSession()
+            else:
+                self._websession = loop.run_until_complete(
+                    _create_session()
+                )  # pragma: no cover
+        else:
+            self._websession = websession
+
+        self._auth = aiohttp.BasicAuth(username, password=password)
+        self._endpoint = f"http://{host}:{str(port)}"
+        self._timeout = timeout
 
     async def _request_validate(self, resp, method):
         """Helper-function for _request(): validate the returned data."""
@@ -289,7 +289,7 @@ class SmileHelper:
         url = f"{self._endpoint}{command}"
 
         try:
-            with async_timeout.timeout(self._timeout):
+            async with async_timeout.timeout(self._timeout):
                 if method == "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
                     headers = {"Accept-Encoding": "gzip"}
@@ -310,6 +310,19 @@ class SmileHelper:
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
+
+    async def close_connection(self):
+        """Close the Plugwise connection."""
+        await self._websession.close()
+
+
+class SmileHelper:
+    """The SmileHelper class."""
+
+    def __init__(self):
+
+        self._cp_state = None
+        self._loc_data = {}
 
     def _locations_legacy(self):
         """Helper-function for _all_locations().
@@ -679,29 +692,6 @@ class SmileHelper:
 
         if schema_ids != {}:
             return schema_ids
-
-    async def _update_domain_objects(self):
-        """Helper-function for smile.py: full_update_device() and update().
-        Request domain_objects data.
-        """
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-
-        # If Plugwise notifications present:
-        self.notifications = {}
-        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
-        notifications = self._domain_objects.findall(".//notification")
-        for notification in notifications:
-            try:
-                msg_id = notification.attrib["id"]
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
-                self.notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
-            except AttributeError:  # pragma: no cover
-                _LOGGER.info(
-                    "Plugwise notification present but unable to process, manually investigate: %s",
-                    url,
-                )
 
     def _appliance_measurements(self, appliance, data, measurements):
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
