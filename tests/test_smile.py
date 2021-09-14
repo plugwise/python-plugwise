@@ -15,7 +15,6 @@ from unittest.mock import patch
 
 # Testing
 import aiohttp
-from dateutil import tz
 import jsonpickle as json
 import pytest
 
