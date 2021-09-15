@@ -46,14 +46,6 @@ _LOGGER = logging.getLogger(__name__)
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def __init__(self):
-
-        self._appl_data = {}
-        self._home_location = None
-        self._thermo_locs = None
-
-        self.gateway_id = None
-
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().
         When conditions are met, the plugwise_notification binary_sensor
@@ -283,14 +275,18 @@ class Smile(SmileComm, SmileData):
 
         self._active_device_present = None
         self._appliances = None
+        self._appl_data = {}
         self._domain_objects = None
         self._heater_id = None
+        self._home_location = None
         self._locations = None
         self._modules = None
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
+        self._thermo_locs = None
 
+        self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}
         self.notifications = {}
@@ -298,6 +294,7 @@ class Smile(SmileComm, SmileData):
         self.smile_name = None
         self.smile_type = None
         self.smile_version = ()
+
 
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
