@@ -295,7 +295,6 @@ class Smile(SmileComm, SmileData):
         self.smile_type = None
         self.smile_version = ()
 
-
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
         names = []
