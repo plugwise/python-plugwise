@@ -376,12 +376,13 @@ class SmileHelper:
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
             # Filter the valid single location for P1 legacy
-            if self._smile_legacy and self.smile_type == "power":
-                locator = "./services/electricity_point_meter"
-                try:
-                    location.find(locator).attrib["id"]
-                except AttributeError:
-                    return
+            locator = ".//services"
+            if (
+                self._smile_legacy 
+                and self.smile_type == "power"
+                and len(location.find(locator)) = 0
+            ):
+                continue
 
             loc.types = set()
             loc.members = set()
