@@ -380,7 +380,7 @@ class SmileHelper:
             if (
                 self._smile_legacy 
                 and self.smile_type == "power"
-                and len(location.find(locator)) = 0
+                and len(location.find(locator)) == 0
             ):
                 continue
 
