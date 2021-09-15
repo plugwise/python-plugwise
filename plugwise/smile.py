@@ -56,7 +56,6 @@ class SmileConnect(SmileComm, SmileData):
         port=DEFAULT_PORT,
         timeout=DEFAULT_TIMEOUT,
         websession: aiohttp.ClientSession = None,
-        websession,
     ):
         """Set the constructor for this class."""
         super().__init__(
