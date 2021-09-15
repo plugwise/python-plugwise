@@ -43,7 +43,7 @@ from .helper import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class SmileConnect(SmileComm):
+class SmileConnect(SmileComm, SmileData):
     """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
@@ -52,9 +52,10 @@ class SmileConnect(SmileComm):
         self,
         host,
         password,
-        username,
-        port,
-        timeout,
+        username=DEFAULT_USERNAME,
+        port=DEFAULT_PORT,
+        timeout=DEFAULT_TIMEOUT,
+        websession: aiohttp.ClientSession = None,
         websession,
     ):
         """Set the constructor for this class."""
@@ -67,7 +68,7 @@ class SmileConnect(SmileComm):
             websession,
         )
 
-    async def _connect(self):
+    async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
         names = []
 
@@ -429,26 +430,10 @@ class SmileConnect(SmileComm):
         return True
 
 
-class Smile(SmileConnect, SmileHelper):
+class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def __init__(
-        self,
-        host,
-        password,
-        username=DEFAULT_USERNAME,
-        port=DEFAULT_PORT,
-        timeout=DEFAULT_TIMEOUT,
-        websession: aiohttp.ClientSession = None,
-    ):
-        super().__init__(
-            host,
-            password,
-            username,
-            port,
-            timeout,
-            websession,
-        )
+    def __init__(self):
 
         self._active_device_present = None
         self._appl_data = {}
@@ -473,11 +458,6 @@ class Smile(SmileConnect, SmileHelper):
         self.gw_data = {}
         self.gw_devices = {}
 
-    async def connect(self):
-        """Connect to Plugwise device and determine its name, type and version."""
-
-        connected = await self._connect()
-        return connected
 
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().
