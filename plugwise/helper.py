@@ -378,7 +378,7 @@ class SmileHelper:
             # Filter the valid single location for P1 legacy
             locator = ".//services"
             if (
-                self._smile_legacy 
+                self._smile_legacy
                 and self.smile_type == "power"
                 and len(location.find(locator)) == 0
             ):
