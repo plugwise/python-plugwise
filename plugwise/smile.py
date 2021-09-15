@@ -275,7 +275,7 @@ class SmileData(SmileHelper):
         return False
 
 
-class SmileConnect(SmileComm, SmileData):
+class Smile(SmileComm, SmileData):
     """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
