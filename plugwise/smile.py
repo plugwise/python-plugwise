@@ -48,29 +48,11 @@ class SmileData(SmileHelper):
 
     def __init__(self):
 
-        self._active_device_present = None
         self._appl_data = {}
-        self._appliances = None
-        self._domain_objects = None
-        self._heater_id = None
         self._home_location = None
-        self._locations = None
-        self._modules = None
-        self._smile_legacy = False
-        self._stretch_v2 = False
-        self._stretch_v3 = False
         self._thermo_locs = None
 
         self.gateway_id = None
-        self.notifications = {}
-        self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
-
-        self.gw_data = {}
-        self.gw_devices = {}
-
 
     def _append_special(self, data, d_id, bs_list, s_list):
         """Helper-function for smile.py: _all_device_data().
@@ -298,6 +280,24 @@ class Smile(SmileComm, SmileData):
             timeout,
             websession,
         )
+
+        self._active_device_present = None
+        self._appliances = None
+        self._domain_objects = None
+        self._heater_id = None
+        self._locations = None
+        self._modules = None
+        self._smile_legacy = False
+        self._stretch_v2 = False
+        self._stretch_v3 = False
+
+        self.gw_data = {}
+        self.gw_devices = {}
+        self.notifications = {}
+        self.smile_hostname = None
+        self.smile_name = None
+        self.smile_type = None
+        self.smile_version = ()
 
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
