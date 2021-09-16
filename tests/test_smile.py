@@ -775,7 +775,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "state": 482.598,
                     },
                     {"id": "net_electricity_cumulative", "state": 1019.161},
-                ]
+                ],
             }
         }
 
@@ -962,7 +962,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "location": "0f4f2ada20734a339fe353348fe87b96",
-                "sensors": [{"id": "outdoor_temperature", "state": 10.8}]
+                "sensors": [{"id": "outdoor_temperature", "state": 10.8}],
             },
             # # Central
             # "c46b4794d28149699eacf053deedd003": {
