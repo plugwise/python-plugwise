@@ -622,6 +622,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "selected_schema": "Thermostat schedule",
                 },
                 "last_used": "Thermostat schedule",
+                "location": 0,
                 "presets": {
                     "asleep": [19.0, 0],
                     "away": [19.0, 0],
@@ -763,6 +764,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
+                "location": "199aa40f126840f392983d171374ab0b",
                 "sensors": [
                     {"id": "electricity_consumed_point", "state": 456.0},
                     {"id": "net_electricity_point", "state": 456.0},
