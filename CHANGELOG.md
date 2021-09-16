@@ -1,5 +1,7 @@
 # Changelog
 
+## v0.14.2 - Smile: fix P1 legacy location handling error
+
 ## v0.14.1 - Smile: removing further `last_reset`s
 
  - As per https://developers.home-assistant.io/blog/2021/08/16/state_class_total
