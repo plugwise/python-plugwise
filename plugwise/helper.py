@@ -352,15 +352,8 @@ class SmileHelper:
             for location_type in types_finder(location):
                 loc.types.add(location_type)
 
-        # Legacy P1 right location has 'services' filled
-        # test data has 5 for example
-        locator = ".//services"
-        if (
-            self._smile_legacy
-            and self.smile_type == "power"
-            and len(location.find(locator)) > 0
-        ):
-            # Override location name found to match
+        # Replace location-name for P1 legacy, can contain privacy-related info
+        if self._smile_legacy and self.smile_type == "power":
             loc.name = "Home"
             self._home_location = loc.id
             loc.types.add("home")
@@ -381,13 +374,14 @@ class SmileHelper:
         for location in self._locations.findall("./location"):
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
-            # Filter the valid single location for P1 legacy
-            if self._smile_legacy and self.smile_type == "power":
-                locator = "./services/electricity_point_meter"
-                try:
-                    location.find(locator).attrib["id"]
-                except AttributeError:
-                    return
+            # Filter the valid single location for P1 legacy: services not empty
+            locator = ".//services"
+            if (
+                self._smile_legacy
+                and self.smile_type == "power"
+                and len(location.find(locator)) == 0
+            ):
+                continue
 
             loc.types = set()
             loc.members = set()
