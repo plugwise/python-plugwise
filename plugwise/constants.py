@@ -611,7 +611,7 @@ EL_CONSUMED_INTERVAL = {
     ATTR_NAME: "Electricity Consumed Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -631,7 +631,7 @@ EL_CONSUMED_OFF_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Consumed Off Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -661,7 +661,7 @@ EL_CONSUMED_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Consumed Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -701,7 +701,7 @@ EL_PRODUCED_INTERVAL = {
     ATTR_NAME: "Electricity Produced Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -721,7 +721,7 @@ EL_PRODUCED_OFF_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Produced Off Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -751,7 +751,7 @@ EL_PRODUCED_PEAK_INTERVAL = {
     ATTR_NAME: "Electricity Produced Peak Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_WATT_HOUR,
 }
@@ -791,7 +791,7 @@ GAS_CONSUMED_INTERVAL = {
     ATTR_NAME: "Gas Consumed Interval",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "gas",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: FLAME_ICON,
     ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
 }
@@ -841,7 +841,7 @@ NET_EL_CUMULATIVE = {
     ATTR_NAME: "Net Electricity Cumulative",
     ATTR_STATE: None,
     ATTR_DEVICE_CLASS: "energy",
-    ATTR_STATE_CLASS: "measurement",
+    ATTR_STATE_CLASS: "total",
     ATTR_ICON: None,
     ATTR_UNIT_OF_MEASUREMENT: ENERGY_KILO_WATT_HOUR,
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.14.5 - Smile: prepare for using the HA Core DataUpdateCoordintor in Plugwise-beta
+
+- Change the output to enable the use of the HA Core DUC in plugwise-beta.
+- Change state_class to "total" for interval- and net_cumulative sensors (following the HA Core sensor platform updates).
+- Remove all remnant code related to last_reset (log_date)
+- Restructure: introduce additional classes: SmileComm and SmileConnect
+
 ## v0.14.2 - Smile: fix P1 legacy location handling error
 
 ## v0.14.1 - Smile: removing further `last_reset`s

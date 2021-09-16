@@ -1,7 +1,6 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 
 import asyncio
-import datetime as dt
 import importlib
 
 # Fixture writing
@@ -407,14 +406,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         ]
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
-        await smile.update_gw_devices()
-        device_list = smile.gw_devices
-        self._write_json("all_devices", device_list)
-        self._write_json("notifications", smile.notifications)
+        data = await smile.async_update()
+        extra = data[0]
+        device_list = data[1]
+        self._write_json("all_data", data)
+        self._write_json("notifications", extra["notifications"])
 
         location_list = smile._thermo_locs
 
-        _LOGGER.info("Gateway id = %s", smile.gateway_id)
+        _LOGGER.info("Gateway id = %s", extra["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         self.show_setup(location_list, device_list)
         pp4 = PrettyPrinter(indent=4)
@@ -432,16 +432,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
                     thermostat = None
-                    data = smile.gw_devices[dev_id]
+                    dev_data = device_list[dev_id]
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
                             details["name"], dev_id
                         ),
                     )
-                    _LOGGER.info("  + Device data: %s", data)
-                    if data["class"] in MASTER_THERMOSTATS:
-                        thermostat = pw_entities.GWThermostat(smile, dev_id)
+                    _LOGGER.info("  + Device data: %s", dev_data)
+                    if dev_data["class"] in MASTER_THERMOSTATS:
+                        thermostat = pw_entities.GWThermostat(data, dev_id)
                         thermostat.update_data()
                         _LOGGER.info(
                             "%s",
@@ -462,29 +462,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             tests -= 1
                             for a, a_item in enumerate(measure_assert):
                                 tests += 1
-                                for b, b_item in enumerate(data[measure_key]):
+                                for b, b_item in enumerate(dev_data[measure_key]):
                                     if a_item["id"] != b_item["id"]:
                                         continue
 
-                                    if isinstance(a_item["state"], list):
-                                        tests += 1
-                                        asserts += 1
-                                        assert b_item["state"] == a_item["state"][0]
-                                        asserts += 1
+                                    asserts += 1
+                                    if measure_key == "binary_sensors":
+                                        b_sensor = None
+                                        b_sensor = pw_entities.GWBinarySensor(
+                                            data, dev_id, a_item["id"]
+                                        )
+                                        b_sensor.update_data()
+                                        assert (
+                                            self.bs_prop_selector("state", b_sensor)
+                                            == a_item["state"]
+                                        )
                                     else:
-                                        asserts += 1
-                                        if measure_key == "binary_sensors":
-                                            b_sensor = None
-                                            b_sensor = pw_entities.GWBinarySensor(
-                                                smile, dev_id, a_item["id"]
-                                            )
-                                            b_sensor.update_data()
-                                            assert (
-                                                self.bs_prop_selector("state", b_sensor)
-                                                == a_item["state"]
-                                            )
-                                        else:
-                                            assert b_item["state"] == a_item["state"]
+                                        assert b_item["state"] == a_item["state"]
                         elif self.th_prop_selector(measure_key, thermostat):
                             asserts += 1
                             assert (
@@ -492,9 +486,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 == measure_assert
                             )
                         else:
-                            if measure_key in data:
+                            if measure_key in dev_data:
                                 asserts += 1
-                                assert data[measure_key] == measure_assert
+                                assert dev_data[measure_key] == measure_assert
 
         assert tests == asserts
 
@@ -1533,10 +1527,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "id": "electricity_consumed_off_peak_cumulative",
                         "state": 10263.159,
                     },
-                    {
-                        "id": "electricity_consumed_peak_interval",
-                        "state": [179, dt.datetime(2020, 3, 12, 19, 45)],
-                    },
+                    {"id": "electricity_consumed_peak_interval", "state": 179},
                     {"id": "net_electricity_cumulative", "state": 17965.326},
                 ]
             }
@@ -1778,12 +1769,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Vaatwasser
             "aac7b735042c4832ac9ff33aae4f453b": {
-                "sensors": [
-                    {
-                        "id": "electricity_consumed_interval",
-                        "state": [0.71, dt.datetime(2020, 9, 6, 12, 00)],
-                    }
-                ]
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.71}]
             },
         }
 
@@ -1822,12 +1808,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Wasdroger 043AECA
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "sensors": [
-                    {
-                        "id": "electricity_consumed_interval",
-                        "state": [0.21, dt.datetime(2020, 8, 3, 20, 00)],
-                    }
-                ]
+                "sensors": [{"id": "electricity_consumed_interval", "state": 0.21}]
             },
         }
 

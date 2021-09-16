@@ -33,6 +33,7 @@ from .constants import (
 )
 from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
 from .helper import (
+    SmileComm,
     SmileHelper,
     device_state_updater,
     pw_notification_updater,
@@ -42,8 +43,214 @@ from .helper import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class Smile(SmileHelper):
+class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
+
+    def _append_special(self, data, d_id, bs_list, s_list):
+        """Helper-function for smile.py: _all_device_data().
+        When conditions are met, the plugwise_notification binary_sensor
+        and/or the device_state sensor are appended.
+        """
+        if d_id == self.gateway_id:
+            if self.single_master_thermostat() is not None:
+                bs_list.append(PW_NOTIFICATION)
+            if not self._active_device_present and "heating_state" in data:
+                s_list.append(DEVICE_STATE)
+        if d_id == self._heater_id and self.single_master_thermostat() is False:
+            s_list.append(DEVICE_STATE)
+
+    def _all_device_data(self):
+        """Helper-function for get_all_devices().
+        Collect initial data for each device and add to self.gw_data and self.gw_devices.
+        """
+        dev_id_list = []
+        dev_and_data_list = []
+        for dev_id, dev_dict in self._devices.items():
+            dev_and_data = dev_dict
+            temp_bs_list = []
+            temp_s_list = []
+            temp_sw_list = []
+            data = self._get_device_data(dev_id)
+
+            self._create_lists_from_data(data, temp_bs_list, temp_s_list, temp_sw_list)
+            self._append_special(data, dev_id, temp_bs_list, temp_s_list)
+
+            dev_and_data.update(data)
+            if temp_bs_list != []:
+                dev_and_data["binary_sensors"] = temp_bs_list
+            if temp_s_list != []:
+                dev_and_data["sensors"] = temp_s_list
+            if temp_sw_list != []:
+                dev_and_data["switches"] = temp_sw_list
+            dev_id_list.append(dev_id)
+            dev_and_data_list.append(copy.deepcopy(dev_and_data))
+
+        self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
+
+        self.gw_data["gateway_id"] = self.gateway_id
+        self.gw_data["heater_id"] = self._heater_id
+        self.gw_data["smile_name"] = self.smile_name
+        self.gw_data["active_device"] = self._active_device_present
+        self.gw_data["single_master_thermostat"] = self.single_master_thermostat()
+
+    def get_all_devices(self):
+        """Determine the devices present from the obtained XML-data."""
+        self._devices = {}
+        self._scan_thermostats()
+
+        for appliance, details in self._appl_data.items():
+            loc_id = details["location"]
+            if loc_id is None:
+                details["location"] = self._home_location
+
+            # Override slave thermostat class
+            if loc_id in self._thermo_locs:
+                if "slaves" in self._thermo_locs[loc_id]:
+                    if appliance in self._thermo_locs[loc_id]["slaves"]:
+                        details["class"] = "thermo_sensor"
+
+            self._devices[appliance] = details
+
+        group_data = self._group_switches()
+        if group_data is not None:
+            self._devices.update(group_data)
+
+        # Collect data for each device via helper function
+        self._all_device_data()
+
+    def _device_data_switching_group(self, details, device_data):
+        """Helper-function for _get_device_data().
+        Determine switching group device data.
+        """
+        if details["class"] in SWITCH_GROUP_TYPES:
+            counter = 0
+            for member in details["members"]:
+                appl_data = self._get_appliance_data(member)
+                if appl_data["relay"]:
+                    counter += 1
+
+            device_data["relay"] = True
+            if counter == 0:
+                device_data["relay"] = False
+
+        return device_data
+
+    def _device_data_anna(self, dev_id, details, device_data):
+        """Helper-function for _get_device_data().
+        Determine Anna and legacy Anna device data.
+        """
+        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
+        if "boiler_state" in device_data:
+            device_data["heating_state"] = device_data["intended_boiler_state"]
+            device_data.pop("boiler_state", None)
+            device_data.pop("intended_boiler_state", None)
+
+        # Anna specific
+        if self.smile_name == "Anna":
+            illuminance = self._object_value("appliance", dev_id, "illuminance")
+            if illuminance is not None:
+                device_data["illuminance"] = illuminance
+
+        return device_data
+
+    def _device_data_adam(self, details, device_data):
+        """Helper-function for _get_device_data().
+        Determine Adam device data.
+        """
+        # Adam: indicate heating_state based on valves being open in case of city-provided heating
+        if self.smile_name == "Adam":
+            if details["class"] == "gateway":
+                if (
+                    not self._active_device_present
+                    and self._heating_valves() is not None
+                ):
+                    device_data["heating_state"] = True
+                    if self._heating_valves() == 0:
+                        device_data["heating_state"] = False
+
+        return device_data
+
+    def _device_data_climate(self, details, device_data):
+        """Helper-function for _get_device_data().
+        Determine climate-control device data.
+        """
+        device_data["active_preset"] = self._preset(details["location"])
+        device_data["presets"] = self._presets(details["location"])
+
+        avail_schemas, sel_schema, sched_setpoint = self._schemas(details["location"])
+        if not self._smile_legacy:
+            device_data["schedule_temperature"] = sched_setpoint
+        device_data["available_schedules"] = avail_schemas
+        device_data["selected_schedule"] = sel_schema
+        if self._smile_legacy:
+            device_data["last_used"] = "".join(map(str, avail_schemas))
+        else:
+            device_data["last_used"] = self._last_active_schema(details["location"])
+
+        return device_data
+
+    def _get_device_data(self, dev_id):
+        """Helper-function for _all_device_data() and async_update().
+        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
+        """
+        devices = self._devices
+        details = devices.get(dev_id)
+        device_data = self._get_appliance_data(dev_id)
+
+        # Generic
+        if details["class"] == "gateway" or dev_id == self.gateway_id:
+            # Anna: outdoor_temperature only present in domain_objects
+            if (
+                self.smile_type == "thermostat"
+                and "outdoor_temperature" not in device_data
+            ):
+                outdoor_temperature = self._object_value(
+                    "location", self._home_location, "outdoor_temperature"
+                )
+                if outdoor_temperature is not None:
+                    device_data["outdoor_temperature"] = outdoor_temperature
+
+            # Try to get P1 data and 2nd outdoor_temperature, when present
+            power_data = self._power_data_from_location(details["location"])
+            if power_data is not None:
+                device_data.update(power_data)
+
+        # Switching groups data
+        device_data = self._device_data_switching_group(details, device_data)
+        # Specific, not generic Anna data
+        device_data = self._device_data_anna(dev_id, details, device_data)
+        # Specific, not generic Adam data
+        device_data = self._device_data_adam(details, device_data)
+        # Unless thermostat based, no need to walk presets
+        if details["class"] not in THERMOSTAT_CLASSES:
+            return device_data
+
+        # Climate based data (presets, temperatures etc)
+        device_data = self._device_data_climate(details, device_data)
+
+        return device_data
+
+    def single_master_thermostat(self):
+        """Determine if there is a single master thermostat in the setup.
+        Possible output: None, True, False.
+        """
+        if self.smile_type != "thermostat":
+            return None
+
+        count = 0
+        self._scan_thermostats()
+        for dummy, data in self._thermo_locs.items():
+            if "master_prio" in data:
+                if data.get("master_prio") > 0:
+                    count += 1
+
+        if count == 1:
+            return True
+        return False
+
+
+class Smile(SmileComm, SmileData):
+    """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 
@@ -57,32 +264,36 @@ class Smile(SmileHelper):
         websession: aiohttp.ClientSession = None,
     ):
         """Set the constructor for this class."""
-        super().__init__()
+        super().__init__(
+            host,
+            password,
+            username,
+            port,
+            timeout,
+            websession,
+        )
 
-        if not websession:
+        self._active_device_present = None
+        self._appliances = None
+        self._appl_data = {}
+        self._domain_objects = None
+        self._heater_id = None
+        self._home_location = None
+        self._locations = None
+        self._modules = None
+        self._smile_legacy = False
+        self._stretch_v2 = False
+        self._stretch_v3 = False
+        self._thermo_locs = None
 
-            async def _create_session() -> aiohttp.ClientSession:
-                return aiohttp.ClientSession()  # pragma: no cover
-
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                self._websession = aiohttp.ClientSession()
-            else:
-                self._websession = loop.run_until_complete(
-                    _create_session()
-                )  # pragma: no cover
-        else:
-            self._websession = websession
-
-        self._auth = aiohttp.BasicAuth(username, password=password)
-
-        self._devices = {}
-        self._host = host
-        self._port = port
-        self._endpoint = f"http://{self._host}:{str(self._port)}"
-        self._timeout = timeout
-
+        self.gateway_id = None
+        self.gw_data = {}
         self.gw_devices = {}
+        self.notifications = {}
+        self.smile_hostname = None
+        self.smile_name = None
+        self.smile_type = None
+        self.smile_version = ()
 
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
@@ -198,10 +409,6 @@ class Smile(SmileHelper):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-    async def close_connection(self):
-        """Close the Plugwise connection."""
-        await self._websession.close()
-
     async def _full_update_device(self):
         """Perform a first fetch of all XML data, needed for initialization."""
         self._locations = await self._request(LOCATIONS)
@@ -215,7 +422,30 @@ class Smile(SmileHelper):
         if self.smile_type != "power":
             await self._update_domain_objects()
 
-    async def update_gw_devices(self):
+    async def _update_domain_objects(self):
+        """Helper-function for smile.py: full_update_device() and async_update().
+        Request domain_objects data.
+        """
+        self._domain_objects = await self._request(DOMAIN_OBJECTS)
+
+        # If Plugwise notifications present:
+        self.notifications = {}
+        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
+        notifications = self._domain_objects.findall(".//notification")
+        for notification in notifications:
+            try:
+                msg_id = notification.attrib["id"]
+                msg_type = notification.find("type").text
+                msg = notification.find("message").text
+                self.notifications.update({msg_id: {msg_type: msg}})
+                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
+            except AttributeError:  # pragma: no cover
+                _LOGGER.info(
+                    "Plugwise notification present but unable to process, manually investigate: %s",
+                    url,
+                )
+
+    async def async_update(self):
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -225,6 +455,9 @@ class Smile(SmileHelper):
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
+
+        data = []
+        self.gw_data["notifications"] = self.notifications
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
@@ -251,201 +484,7 @@ class Smile(SmileHelper):
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
 
-    def _append_special(self, data, d_id, bs_list, s_list):
-        """Helper-function for smile.py: _all_device_data().
-        When conditions are met, the plugwise_notification binary_sensor
-        and/or the device_state sensor are appended.
-        """
-        if d_id == self.gateway_id:
-            if self.single_master_thermostat() is not None:
-                bs_list.append(PW_NOTIFICATION)
-            if not self._active_device_present and "heating_state" in data:
-                s_list.append(DEVICE_STATE)
-        if d_id == self._heater_id and self.single_master_thermostat() is False:
-            s_list.append(DEVICE_STATE)
-
-    def _all_device_data(self):
-        """Helper-function for get_all_devices().
-        Collect initial data for each device and add to self.gw_devices.
-        """
-        dev_id_list = []
-        dev_and_data_list = []
-        for dev_id, dev_dict in self._devices.items():
-            dev_and_data = dev_dict
-            temp_bs_list = []
-            temp_s_list = []
-            temp_sw_list = []
-            data = self._get_device_data(dev_id)
-
-            self._create_lists_from_data(data, temp_bs_list, temp_s_list, temp_sw_list)
-            self._append_special(data, dev_id, temp_bs_list, temp_s_list)
-
-            dev_and_data.update(data)
-            if temp_bs_list != []:
-                dev_and_data["binary_sensors"] = temp_bs_list
-            if temp_s_list != []:
-                dev_and_data["sensors"] = temp_s_list
-            if temp_sw_list != []:
-                dev_and_data["switches"] = temp_sw_list
-            dev_id_list.append(dev_id)
-            dev_and_data_list.append(copy.deepcopy(dev_and_data))
-
-        self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
-
-    def get_all_devices(self):
-        """Determine the devices present from the obtained XML-data."""
-        self._devices = {}
-        self._scan_thermostats()
-
-        for appliance, details in self._appl_data.items():
-            loc_id = details["location"]
-            if loc_id is None:
-                details["location"] = self._home_location
-
-            # Override slave thermostat class
-            if loc_id in self._thermo_locs:
-                if "slaves" in self._thermo_locs[loc_id]:
-                    if appliance in self._thermo_locs[loc_id]["slaves"]:
-                        details["class"] = "thermo_sensor"
-
-            self._devices[appliance] = details
-
-        group_data = self._group_switches()
-        if group_data is not None:
-            self._devices.update(group_data)
-
-        # Collect data for each device via helper function
-        self._all_device_data()
-
-    def _device_data_switching_group(self, details, device_data):
-        """Helper-function for _get_device_data().
-        Determine switching group device data.
-        """
-        if details["class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in details["members"]:
-                appl_data = self._get_appliance_data(member)
-                if appl_data["relay"]:
-                    counter += 1
-
-            device_data["relay"] = True
-            if counter == 0:
-                device_data["relay"] = False
-
-        return device_data
-
-    def _device_data_anna(self, dev_id, details, device_data):
-        """Helper-function for _get_device_data().
-        Determine Anna and legacy Anna device data.
-        """
-        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
-        if "boiler_state" in device_data:
-            device_data["heating_state"] = device_data["intended_boiler_state"]
-            device_data.pop("boiler_state", None)
-            device_data.pop("intended_boiler_state", None)
-
-        # Anna specific
-        if self.smile_name == "Anna":
-            illuminance = self._object_value("appliance", dev_id, "illuminance")
-            if illuminance is not None:
-                device_data["illuminance"] = illuminance
-
-        return device_data
-
-    def _device_data_adam(self, details, device_data):
-        """Helper-function for _get_device_data().
-        Determine Adam device data.
-        """
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
-        if self.smile_name == "Adam":
-            if details["class"] == "gateway":
-                if (
-                    not self._active_device_present
-                    and self._heating_valves() is not None
-                ):
-                    device_data["heating_state"] = True
-                    if self._heating_valves() == 0:
-                        device_data["heating_state"] = False
-
-        return device_data
-
-    def _device_data_climate(self, details, device_data):
-        """Helper-function for _get_device_data().
-        Determine climate-control device data.
-        """
-        device_data["active_preset"] = self._preset(details["location"])
-        device_data["presets"] = self._presets(details["location"])
-
-        avail_schemas, sel_schema, sched_setpoint = self._schemas(details["location"])
-        if not self._smile_legacy:
-            device_data["schedule_temperature"] = sched_setpoint
-        device_data["available_schedules"] = avail_schemas
-        device_data["selected_schedule"] = sel_schema
-        if self._smile_legacy:
-            device_data["last_used"] = "".join(map(str, avail_schemas))
-        else:
-            device_data["last_used"] = self._last_active_schema(details["location"])
-
-        return device_data
-
-    def _get_device_data(self, dev_id):
-        """Helper-function for _all_device_data() and update_gw_devices().
-        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
-        """
-        devices = self._devices
-        details = devices.get(dev_id)
-        device_data = self._get_appliance_data(dev_id)
-
-        # Generic
-        if details["class"] == "gateway" or dev_id == self.gateway_id:
-            # Anna: outdoor_temperature only present in domain_objects
-            if (
-                self.smile_type == "thermostat"
-                and "outdoor_temperature" not in device_data
-            ):
-                outdoor_temperature = self._object_value(
-                    "location", self._home_location, "outdoor_temperature"
-                )
-                if outdoor_temperature is not None:
-                    device_data["outdoor_temperature"] = outdoor_temperature
-
-            # Try to get P1 data and 2nd outdoor_temperature, when present
-            power_data = self._power_data_from_location(details["location"])
-            if power_data is not None:
-                device_data.update(power_data)
-
-        # Switching groups data
-        device_data = self._device_data_switching_group(details, device_data)
-        # Specific, not generic Anna data
-        device_data = self._device_data_anna(dev_id, details, device_data)
-        # Specific, not generic Adam data
-        device_data = self._device_data_adam(details, device_data)
-        # Unless thermostat based, no need to walk presets
-        if details["class"] not in THERMOSTAT_CLASSES:
-            return device_data
-
-        # Climate based data (presets, temperatures etc)
-        device_data = self._device_data_climate(details, device_data)
-
-        return device_data
-
-    def single_master_thermostat(self):
-        """Determine if there is a single master thermostat in the setup.
-        Possible output: None, True, False.
-        """
-        if self.smile_type != "thermostat":
-            return None
-
-        count = 0
-        self._scan_thermostats()
-        for dummy, data in self._thermo_locs.items():
-            if "master_prio" in data:
-                if data.get("master_prio") > 0:
-                    count += 1
-
-        if count == 1:
-            return True
-        return False
+        return [self.gw_data, self.gw_devices]
 
     async def _set_schedule_state_legacy(self, name, state):
         """Helper-function for set_schedule_state()."""

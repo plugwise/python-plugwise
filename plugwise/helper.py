@@ -5,6 +5,7 @@ import asyncio
 import datetime as dt
 import logging
 
+import aiohttp
 import async_timeout
 from dateutil import tz
 from dateutil.parser import parse
@@ -68,7 +69,7 @@ DAYS = {
 
 
 def device_state_updater(data, devs, d_id, d_dict):
-    """Helper-function for _update_gw_devices().
+    """Helper-function for async_update().
     Update the Device_State sensor state.
     """
     for idx, item in enumerate(d_dict["sensors"]):
@@ -114,7 +115,7 @@ def update_device_state(data, d_dict):
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
-    """Helper-function for _update_gw_devices().
+    """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
     """
     for idx, item in enumerate(d_dict["binary_sensors"]):
@@ -123,7 +124,7 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
 
 
 def update_helper(data, devs, d_dict, d_id, e_type, key):
-    """Helper-function for _update_gw_devices()."""
+    """Helper-function for async_update()."""
     for dummy in d_dict[e_type]:
         if key != dummy[ATTR_ID]:
             continue
@@ -131,8 +132,6 @@ def update_helper(data, devs, d_dict, d_id, e_type, key):
             if key != item[ATTR_ID]:
                 continue
             devs[d_id][e_type][idx][ATTR_STATE] = data[key]
-            if isinstance(data[key], list):
-                devs[d_id][e_type][idx][ATTR_STATE] = data[key][0]
 
 
 def check_model(name, v_name):
@@ -217,38 +216,37 @@ def power_data_energy_diff(measurement, net_string, f_val, direct_data):
     return direct_data
 
 
-class SmileHelper:
-    """The SmileHelper class."""
+class SmileComm:
+    """The SmileComm class."""
 
-    def __init__(self):
+    def __init__(
+        self,
+        host,
+        password,
+        username,
+        port,
+        timeout,
+        websession,
+    ):
         """Set the constructor for this class."""
-        self._active_device_present = None
-        self._appl_data = {}
-        self._appliances = None
-        self._auth = None
-        self._cp_state = None
-        self._domain_objects = None
-        self._endpoint = None
-        self._heater_id = None
-        self._home_location = None
-        self._locations = None
-        self._modules = None
-        self._smile_legacy = False
-        self._host = None
-        self._loc_data = {}
-        self._port = None
-        self._stretch_v2 = False
-        self._stretch_v3 = False
-        self._thermo_locs = None
-        self._timeout = None
-        self._websession = None
+        if not websession:
 
-        self.gateway_id = None
-        self.notifications = {}
-        self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
+            async def _create_session() -> aiohttp.ClientSession:
+                return aiohttp.ClientSession()  # pragma: no cover
+
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                self._websession = aiohttp.ClientSession()
+            else:
+                self._websession = loop.run_until_complete(
+                    _create_session()
+                )  # pragma: no cover
+        else:
+            self._websession = websession
+
+        self._auth = aiohttp.BasicAuth(username, password=password)
+        self._endpoint = f"http://{host}:{str(port)}"
+        self._timeout = timeout
 
     async def _request_validate(self, resp, method):
         """Helper-function for _request(): validate the returned data."""
@@ -289,7 +287,7 @@ class SmileHelper:
         url = f"{self._endpoint}{command}"
 
         try:
-            with async_timeout.timeout(self._timeout):
+            async with async_timeout.timeout(self._timeout):
                 if method == "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
                     headers = {"Accept-Encoding": "gzip"}
@@ -310,6 +308,14 @@ class SmileHelper:
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
+
+    async def close_connection(self):
+        """Close the Plugwise connection."""
+        await self._websession.close()
+
+
+class SmileHelper:
+    """The SmileHelper class."""
 
     def _locations_legacy(self):
         """Helper-function for _all_locations().
@@ -513,6 +519,7 @@ class SmileHelper:
     def _all_appliances(self):
         """Collect all appliances with relevant info."""
         self._appl_data = {}
+        self._cp_state = None
 
         self._all_locations()
 
@@ -674,29 +681,6 @@ class SmileHelper:
         if schema_ids != {}:
             return schema_ids
 
-    async def _update_domain_objects(self):
-        """Helper-function for smile.py: full_update_device() and update_gw_devices().
-        Request domain_objects data.
-        """
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-
-        # If Plugwise notifications present:
-        self.notifications = {}
-        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
-        notifications = self._domain_objects.findall(".//notification")
-        for notification in notifications:
-            try:
-                msg_id = notification.attrib["id"]
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
-                self.notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
-            except AttributeError:  # pragma: no cover
-                _LOGGER.info(
-                    "Plugwise notification present but unable to process, manually investigate: %s",
-                    url,
-                )
-
     def _appliance_measurements(self, appliance, data, measurements):
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements:
@@ -729,9 +713,7 @@ class SmileHelper:
             if appliance.find(i_locator) is not None:
                 name = f"{measurement}_interval"
                 measure = appliance.find(i_locator).text
-                log_date = parse(appliance.find(i_locator).get("log_date"))
-                log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
-                data[name] = [format_measure(measure, ENERGY_WATT_HOUR), log_date]
+                data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
         return data
 
@@ -955,8 +937,6 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
-        log_date = parse(loc.logs.find(loc.locator).get("log_date"))
-        loc.log_date = log_date.astimezone(tz.gettz("UTC")).replace(tzinfo=None)
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
@@ -1002,8 +982,6 @@ class SmileHelper:
                     )
 
                     direct_data[loc.key_string] = loc.f_val
-                    if "interval" in loc.key_string:
-                        direct_data[loc.key_string] = [loc.f_val, loc.log_date]
 
         if direct_data != {}:
             return direct_data
@@ -1178,8 +1156,6 @@ class SmileHelper:
                 if item[ATTR_ID] == key:
                     data.pop(item[ATTR_ID])
                     item[ATTR_STATE] = value
-                    if "interval" in item[ATTR_ID] and isinstance(value, list):
-                        item[ATTR_STATE] = value[0]
                     s_list.append(item)
             for item in SWITCHES:
                 if item[ATTR_ID] == key:
