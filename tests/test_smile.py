@@ -764,7 +764,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
-                "location": "199aa40f126840f392983d171374ab0b",
+                "location": "938696c4bcdb4b8a9a595cb38ed43913",
                 "sensors": [
                     {"id": "electricity_consumed_point", "state": 456.0},
                     {"id": "net_electricity_point", "state": 456.0},
@@ -955,11 +955,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
+                "location": "c34c6864216446528e95d88985e714cc",
                 "selected_schedule": "Normal",
                 "active_preset": "away",
                 "sensors": [{"id": "illuminance", "state": 35.0}],
             },
             "a270735e4ccd45239424badc0578a2b1": {
+                "location": "0f4f2ada20734a339fe353348fe87b96",
                 "sensors": [{"id": "outdoor_temperature", "state": 10.8}]
             },
             # # Central
