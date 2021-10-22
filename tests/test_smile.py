@@ -364,12 +364,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
-        MASTER_THERMOSTATS = [
-            "thermostat",
-            "zone_thermometer",
-            "zone_thermostat",
-            "thermostatic_radiator_valve",
-        ]
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
         data = await smile.async_update()
@@ -397,7 +391,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
-                    thermostat = None
                     dev_data = device_list[dev_id]
                     _LOGGER.info(
                         "%s",
@@ -406,7 +399,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         ),
                     )
                     _LOGGER.info("  + Device data: %s", dev_data)
-
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
@@ -426,9 +418,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     asserts += 1
                                     assert b_item["state"] == a_item["state"]
                         else:
-                            if measure_key in dev_data:
-                                asserts += 1
-                                assert dev_data[measure_key] == measure_assert
+                            asserts += 1
+                            assert dev_data[measure_key] == measure_assert
 
         assert tests == asserts
 
