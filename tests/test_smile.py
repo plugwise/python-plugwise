@@ -543,7 +543,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
                 "available_schedules": ["Thermostat schedule"],
-                "selected_schedules": "Thermostat schedule",
+                "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
                 "location": 0,
                 "presets": {
@@ -554,7 +554,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "vacation": [15.0, 0],
                 },
                 "active_preset": "home",
-                "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
                 "schedule_temperature": 20.0,
                 "sensors": [
                     {"id": "illuminance", "state": 151},
