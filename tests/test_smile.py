@@ -777,7 +777,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "heating_state": True,
-                "binary_sensors": [{"id": "flame_state","state": True}],
+                "binary_sensors": [{"id": "flame_state", "state": True}],
                 "sensors": [
                     {"id": "water_pressure", "state": 2.1},
                     {"id": "water_temperature", "state": 52.0},
