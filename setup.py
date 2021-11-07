@@ -37,7 +37,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "aiohttp",
-        "async_timeout<4.0",
+        "async_timeout",
         "crcmod",
         "defusedxml",
         "munch",
