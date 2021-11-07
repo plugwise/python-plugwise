@@ -623,12 +623,16 @@ class Smile(SmileComm, SmileData):
         data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
         if model == "relay":
-            locator = (
+            locator1 = (
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
-            lock_state = self._appliances.find(locator).text
-            # Don't bother switching a relay when the corresponding lock-state is true
-            if lock_state == "true":
+            locator2 = (
+                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/state'
+            )
+            lock_state = self._appliances.find(locator1).text
+            state_state = self._appliances.find(locator2).text
+            # Don't bother switching a relay when switching is inhibited or when the corresponding lock-state is true.
+            if state_state == "off" or lock_state == "true":
                 return False
             await self._request(uri, method="put", data=data)
             return True
