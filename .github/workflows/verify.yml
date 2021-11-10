@@ -192,6 +192,14 @@ jobs:
       - name: Create full Python ${{ matrix.python-version }} virtual environment
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
+          echo "Debug:"
+          ls -l /home/runner/work/python-plugwise/python-plugwise/venv/bin/python
+          ls -l /home/runner/work/python-plugwise/python-plugwise/venv/bin
+          ls -l /home/runner/work/python-plugwise/python-plugwise/venv/
+          ls -l /home/runner/work/python-plugwise/python-plugwise/
+          ls -l /home/runner/work/python-plugwise/
+          which python
+          echo "/Debug:"
           python -m venv venv
           . venv/bin/activate
           pip install -U pip setuptools wheel
