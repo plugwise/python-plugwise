@@ -102,7 +102,7 @@ jobs:
         if: failure()
         run: |
           . venv/bin/activate
-          black .
+          black --exclude venv .
           git config --global user.name 'autoblack'
           git config --global user.email 'plugwise@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.PAT_CT }}@github.com/$GITHUB_REPOSITORY
