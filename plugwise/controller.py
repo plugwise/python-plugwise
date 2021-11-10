@@ -45,7 +45,7 @@ class StickMessageController:
     """Handle connection and message sending and receiving"""
 
     def __init__(self, port: str, message_processor, node_state):
-        """Initialize message controller """
+        """Initialize message controller"""
         self.connection = None
         self.discovery_finished = False
         self.expected_responses = {}

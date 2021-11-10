@@ -606,7 +606,7 @@ class SmileHelper:
         return matched_locations
 
     def _presets_legacy(self):
-        """ Helper-function for presets() - collect Presets for a legacy Anna."""
+        """Helper-function for presets() - collect Presets for a legacy Anna."""
         preset_dictionary = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
             if directive is not None and "icon" in directive.keys():

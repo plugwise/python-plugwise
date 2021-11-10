@@ -69,7 +69,7 @@ class NodeSED(PlugwiseNode):
         """Pass messages to PlugwiseSense class"""
 
     def _process_awake_response(self, message):
-        """"Process awake message"""
+        """ "Process awake message"""
         _LOGGER.debug(
             "Awake message type '%s' received from %s",
             str(message.awake_type.value),
