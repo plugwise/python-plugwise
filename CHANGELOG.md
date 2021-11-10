@@ -1,5 +1,7 @@
 # Changelog
 
+## v0.15.0 - Smile: remove all HA Core related-information from the provided output
+
 ## v0.14.5 - Smile: prepare for using the HA Core DataUpdateCoordintor in Plugwise-beta
 
 - Change the output to enable the use of the HA Core DUC in plugwise-beta.

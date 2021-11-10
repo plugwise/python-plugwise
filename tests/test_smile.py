@@ -21,7 +21,6 @@ import pytest
 pw_exceptions = importlib.import_module("plugwise.exceptions")
 pw_smile = importlib.import_module("plugwise.smile")
 pw_constants = importlib.import_module("plugwise.constants")
-pw_entities = importlib.import_module("plugwise.entities")
 
 pp = PrettyPrinter(indent=8)
 
@@ -361,49 +360,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if device_count == 0:
                 _LOGGER.info("      ! no devices found in this location")
 
-    @staticmethod
-    def th_prop_selector(arg, thermostat):
-        """GWThermostat property selector function for device_test()."""
-        if thermostat is None:
-            return False
-
-        selector = {
-            "attributes": thermostat.extra_state_attributes,
-            "compressor_state": thermostat.compressor_state,
-            "cooling_state": thermostat.cooling_state,
-            "heating_state": thermostat.heating_state,
-            "hvac_mode": thermostat.hvac_mode,
-            "presets": thermostat.presets,
-            "active_preset": thermostat.preset_mode,
-            "preset_modes": thermostat.preset_modes,
-            "last_used": thermostat.last_active_schema,
-            "schedule_temperature": thermostat.schedule_temperature,
-            "setpoint": thermostat.target_temperature,
-            "temperature": thermostat.current_temperature,
-        }
-        return selector.get(arg)
-
-    @staticmethod
-    def bs_prop_selector(arg, b_sensor):
-        """GWBinarySensor property selector function for device_test()."""
-        selector = {
-            "attributes": b_sensor.extra_state_attributes,
-            "icon": b_sensor.icon,
-            "state": b_sensor.is_on,
-            "notification": b_sensor.notification,
-        }
-        return selector.get(arg)
-
     @pytest.mark.asyncio
     async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
-        MASTER_THERMOSTATS = [
-            "thermostat",
-            "zone_thermometer",
-            "zone_thermostat",
-            "thermostatic_radiator_valve",
-        ]
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
         data = await smile.async_update()
@@ -417,7 +377,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Gateway id = %s", extra["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         self.show_setup(location_list, device_list)
-        pp4 = PrettyPrinter(indent=4)
 
         tests = 0
         asserts = 0
@@ -431,7 +390,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
-                    thermostat = None
                     dev_data = device_list[dev_id]
                     _LOGGER.info(
                         "%s",
@@ -440,16 +398,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         ),
                     )
                     _LOGGER.info("  + Device data: %s", dev_data)
-                    if dev_data["class"] in MASTER_THERMOSTATS:
-                        thermostat = pw_entities.GWThermostat(data, dev_id)
-                        thermostat.update_data()
-                        _LOGGER.info(
-                            "%s",
-                            "Thermostat properties for {}:\n{}".format(
-                                dev_id, pp4.pformat(thermostat.__dict__)
-                            ),
-                        )
-
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
@@ -467,28 +415,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         continue
 
                                     asserts += 1
-                                    if measure_key == "binary_sensors":
-                                        b_sensor = None
-                                        b_sensor = pw_entities.GWBinarySensor(
-                                            data, dev_id, a_item["id"]
-                                        )
-                                        b_sensor.update_data()
-                                        assert (
-                                            self.bs_prop_selector("state", b_sensor)
-                                            == a_item["state"]
-                                        )
-                                    else:
-                                        assert b_item["state"] == a_item["state"]
-                        elif self.th_prop_selector(measure_key, thermostat):
-                            asserts += 1
-                            assert (
-                                self.th_prop_selector(measure_key, thermostat)
-                                == measure_assert
-                            )
+                                    assert b_item["state"] == a_item["state"]
                         else:
-                            if measure_key in dev_data:
-                                asserts += 1
-                                assert dev_data[measure_key] == measure_assert
+                            asserts += 1
+                            assert dev_data[measure_key] == measure_assert
 
         assert tests == asserts
 
@@ -611,10 +541,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
-                "attributes": {
-                    "available_schemas": ["Thermostat schedule"],
-                    "selected_schema": "Thermostat schedule",
-                },
+                "available_schedules": ["Thermostat schedule"],
+                "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
                 "location": 0,
                 "presets": {
@@ -625,7 +553,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "vacation": [15.0, 0],
                 },
                 "active_preset": "home",
-                "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
                 "schedule_temperature": 20.0,
                 "sensors": [
                     {"id": "illuminance", "state": 151},
@@ -849,13 +776,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "heating_state": True,
-                "binary_sensors": [
-                    {
-                        "id": "flame_state",
-                        "state": True,
-                        "icon": pw_constants.FLAME_ICON,
-                    }
-                ],
+                "binary_sensors": [{"id": "flame_state", "state": True}],
                 "sensors": [
                     {"id": "water_pressure", "state": 2.1},
                     {"id": "water_temperature", "state": 52.0},
@@ -1080,7 +1001,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {
                         "id": "flame_state",
                         "state": False,
-                        "icon": pw_constants.IDLE_ICON,
                     }
                 ],
             },
@@ -1150,7 +1070,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {
                         "id": "dhw_state",
                         "state": True,
-                        "icon": pw_constants.FLOW_ON_ICON,
                     }
                 ]
             },
@@ -1207,7 +1126,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {
                         "id": "dhw_state",
                         "state": True,
-                        "icon": pw_constants.FLOW_ON_ICON,
                     }
                 ],
             }
@@ -1250,7 +1168,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {
                         "id": "dhw_state",
                         "state": True,
-                        "icon": pw_constants.FLOW_ON_ICON,
                     }
                 ],
             }
@@ -1307,7 +1224,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {
                         "id": "plugwise_notification",
                         "state": True,
-                        "icon": pw_entities.NOTIFICATION_ICON,
                     }
                 ],
                 "sensors": [
@@ -1646,7 +1562,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {
                         "id": "dhw_state",
                         "state": False,
-                        "icon": pw_constants.FLOW_OFF_ICON,
                     }
                 ],
                 "sensors": [
@@ -1698,7 +1613,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {
                         "id": "dhw_state",
                         "state": False,
-                        "icon": pw_constants.FLOW_ON_ICON,
                     }
                 ],
                 "sensors": [

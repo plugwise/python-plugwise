@@ -75,8 +75,7 @@ def device_state_updater(data, devs, d_id, d_dict):
     for idx, item in enumerate(d_dict["sensors"]):
         if item[ATTR_ID] == "device_state":
             result = update_device_state(data, d_dict)
-            devs[d_id]["sensors"][idx][ATTR_STATE] = result[0]
-            devs[d_id]["sensors"][idx][ATTR_ICON] = result[1]
+            devs[d_id]["sensors"][idx][ATTR_STATE] = result
 
 
 def update_device_state(data, d_dict):
@@ -85,33 +84,27 @@ def update_device_state(data, d_dict):
     _dhw_state = False
     _heating_state = False
     state = "idle"
-    icon = IDLE_ICON
 
     for _, item in enumerate(d_dict["binary_sensors"]):
         if item[ATTR_ID] == "dhw_state":
             if item[ATTR_STATE]:
                 state = "dhw-heating"
-                icon = FLAME_ICON
                 _dhw_state = True
 
     if "heating_state" in data:
         if data["heating_state"]:
             state = "heating"
-            icon = HEATING_ICON
             _heating_state = True
     if _heating_state and _dhw_state:
         state = "dhw and heating"
-        icon = HEATING_ICON
     if "cooling_state" in data:
         if data["cooling_state"]:
             state = "cooling"
-            icon = COOLING_ICON
             _cooling_state = True
     if _cooling_state and _dhw_state:
         state = "dhw and cooling"
-        icon = COOLING_ICON
 
-    return [state, icon]
+    return state
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
