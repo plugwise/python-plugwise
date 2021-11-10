@@ -1,9 +1,6 @@
 # Changelog
 
-## v0.15.0 - Smile: remove all HA core-related code
-
-- Remove all HA Core related-information from the provided output
-- Add extra check in the relay-related code (Plug, Circle, etc.): don't allow switching when locking/unlocking is not allowed
+## v0.15.0 - Smile: remove all HA Core related-information from the provided output
 
 ## v0.14.5 - Smile: prepare for using the HA Core DataUpdateCoordintor in Plugwise-beta
 
