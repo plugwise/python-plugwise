@@ -204,7 +204,9 @@ class SmileData(SmileHelper):
                 self.smile_type == "thermostat"
                 and "outdoor_temperature" not in device_data
             ):
-                outdoor_temperature = self._object_value( "location", self._home_location, "outdoor_temperature")
+                outdoor_temperature = self._object_value(
+                    "location", self._home_location, "outdoor_temperature"
+                )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
