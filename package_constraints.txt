@@ -1,0 +1,9 @@
+# Use HA constraints
+-c https://github.com/home-assistant/core/blob/dev/homeassistant/package_constraints.txt
+# Plugwise package constraints
+
+# Test constraints
+#jsonpickle==1.4.1
+pytest-asyncio==0.14.0
+pytest-cover==3.0.0
+radon==4.5.0

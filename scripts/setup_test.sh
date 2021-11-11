@@ -16,9 +16,6 @@ for venv in venv .venv .; do
   if [ -f "${my_path}/${venv}/bin/activate" ]; then
     . "${my_path}/${venv}/bin/activate"
 
-    # Install module requirements
-    python setup.py install
-    pip install -e .
     # Install testing requirements
     pip install --upgrade -r requirements_test.txt 
     # Install pre-commit hook
