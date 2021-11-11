@@ -5,8 +5,7 @@ import asyncio
 import datetime as dt
 import logging
 
-import aiohttp
-import async_timeout
+from aiohttp import BasicAuth, ClientSession, ClientTimeout, client_exceptions
 from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
@@ -224,12 +223,14 @@ class SmileComm:
         """Set the constructor for this class."""
         if not websession:
 
-            async def _create_session() -> aiohttp.ClientSession:
-                return aiohttp.ClientSession()  # pragma: no cover
+            aio_timeout = ClientTimeout(total=timeout)
+
+            async def _create_session() -> ClientSession:
+                return ClientSession(timeout=aio_timeout)  # pragma: no cover
 
             loop = asyncio.get_event_loop()
             if loop.is_running():
-                self._websession = aiohttp.ClientSession()
+                self._websession = ClientSession()
             else:
                 self._websession = loop.run_until_complete(
                     _create_session()
@@ -237,7 +238,7 @@ class SmileComm:
         else:
             self._websession = websession
 
-        self._auth = aiohttp.BasicAuth(username, password=password)
+        self._auth = BasicAuth(username, password=password)
         self._endpoint = f"http://{host}:{str(port)}"
         self._timeout = timeout
 
@@ -280,25 +281,25 @@ class SmileComm:
         url = f"{self._endpoint}{command}"
 
         try:
-            async with async_timeout.timeout(self._timeout):
-                if method == "get":
-                    # Work-around for Stretchv2, should not hurt the other smiles
-                    headers = {"Accept-Encoding": "gzip"}
-                    resp = await self._websession.get(
-                        url, auth=self._auth, headers=headers
-                    )
-                if method == "put":
-                    headers = {"Content-type": "text/xml"}
-                    resp = await self._websession.put(
-                        url, data=data, headers=headers, auth=self._auth
-                    )
-                if method == "delete":
-                    resp = await self._websession.delete(url, auth=self._auth)
-        except asyncio.TimeoutError:
+
+            if method == "get":
+                # Work-around for Stretchv2, should not hurt the other smiles
+                headers = {"Accept-Encoding": "gzip"}
+                resp = await self._websession.get(url, auth=self._auth, headers=headers)
+            if method == "put":
+                headers = {"Content-type": "text/xml"}
+                resp = await self._websession.put(
+                    url, data=data, headers=headers, auth=self._auth
+                )
+            if method == "delete":
+                resp = await self._websession.delete(url, auth=self._auth)
+        except client_exceptions.ServerTimeoutError:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
                 raise DeviceTimeoutError
             return await self._request(command, retry - 1)
+        except Exception as e:
+            _LOGGER.error("HOIHOIHOI" + resp(e))
 
         return await self._request_validate(resp, method)
 
