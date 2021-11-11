@@ -1,8 +1,11 @@
-black
+# In addition to Upstream HA (devbranch)
+-r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
+# Import from setup.py
+-e .
+# Minimal requirements for committing
 coverage
 flake8-black
 mypy
 pre-commit
-pydocstyle
 pylint
 pylint_strict_informational

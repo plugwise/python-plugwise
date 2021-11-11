@@ -6,7 +6,7 @@ Needed:
 
  - [ ] Github account (or organisation and account(s))
  - [ ] Codecov account (just choose 'login with github')
- - [ ] Travis CI account (again, login with github)
+ - [ ] CodeFactor account (again, login with github)
  - [ ] Add codecov as an integration from Github's integrations (basically 'buy' it, except its at no cost)
 
 ## Configuration
@@ -15,7 +15,6 @@ After the initial setup of the repo/initial commit, walk the repo-settings on Gi
 
  - [ ] [Set the product image, turn off wiki and automatically delete branches (from defaults)](https://github.com/plugwise/python-plugwise/settings)
  - [ ] [Activate both dependabots and keep dependency graph open](https://github.com/plugwise/python-plugwise/settings/security_analysis)
- - [ ] [Webhooks, create one to https://notify.travis-ci.org/](https://github.com/plugwise/Plugwise-Smile/settings/hooks)
  - [ ] [Integrations, configure codecov (should show up from organisation)](https://github.com/plugwise/python-plugwise/settings/installations)
 
 For this step you might need to follow [this publishing guide](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/) taking you through most of the steps. Note that the projects on PyPi already [**need to exist**](https://packaging.python.org/tutorials/packaging-projects/) so use a generic token first and later adjust that to only this project (as explained on that howto):
@@ -28,8 +27,7 @@ Once the project is ready for upload to test (i.e. version number ending in `a0`
 
 Prepare:
 
- - [ ] `python3.8 -m venv venv ; source venv/bin/activate ; pip install --upgrade pip; pip install -r requirements.txt ; pip install -r requirements_test.txt ; pip install --upgrade setuptools wheel
-twine`
+ - [ ] `python3.9 -m venv venv ; source venv/bin/activate ; pip install --upgrade pip; pip install -r requirements_test.txt ; pip install --upgrade setuptools wheel twine`
 
 Package: (** ensure you are in your venv**)
 
@@ -42,22 +40,13 @@ Then reconfigure your tokens on the pypi website accordingly (only allowing proj
 
 **Important** now go to (test) PyPi and actually invite the other members as owners (or at least maintainers) so everything can live on if yours makes other choices.
 
-## Travis
+## Github Actions
 
-Go to [travis repositories](https://travis-ci.org/account/repositories) and click on the 'organisations' to view what's in our organisation.
+We use Github actions to verify code and perform tests before pushing to (test) PyPi.
 
-Travis needs the PYPI production token for [PyPI deployment](https://docs.travis-ci.com/user/deployment/pypi/)
+## CodeFactor & CodeCov
 
-Todo: (** ensure you are in your venv**)
-
- - [ ] `gem install travis`
- - [ ] Edit '.travis.yml` and make sure it looks like:
-
-```
-  user: "__token__"
-  password: "pypi-..."
-```
- - [ ] `travis encrypt {TOKENHERE} --add deploy.password`
+We use - besides testing, linting and flaking - also CodeFactor.io to determine our code quality and CodeCov.io for coverage reporting.
 
 ## Test
 
