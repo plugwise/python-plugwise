@@ -5,6 +5,7 @@ import asyncio
 import datetime as dt
 import logging
 
+# This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientSession, ClientTimeout, ServerTimeoutError
 from dateutil import tz
 from dateutil.parser import parse
