@@ -1832,6 +1832,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             await self.connect_wrapper()
             assert False  # pragma: no cover
+        except aiohttp.client_exceptions.ServerTimeoutError:
+            assert True
         except pw_exceptions.DeviceTimeoutError:
             assert True
 
