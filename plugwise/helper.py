@@ -5,7 +5,7 @@ import asyncio
 import datetime as dt
 import logging
 
-from aiohttp import BasicAuth, ClientSession, ClientTimeout, client_exceptions
+from aiohttp import BasicAuth, ClientSession, ClientTimeout, ServerTimeoutError
 from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
@@ -292,7 +292,7 @@ class SmileComm:
                 )
             if method == "delete":
                 resp = await self._websession.delete(url, auth=self._auth)
-        except client_exceptions.ServerTimeoutError:
+        except ServerTimeoutError:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
                 raise DeviceTimeoutError

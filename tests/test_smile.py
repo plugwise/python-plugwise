@@ -230,6 +230,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         port = aiohttp.test_utils.unused_port()
         test_password = "".join(random.choice(string.ascii_lowercase) for i in range(8))
 
+        _LOGGER.debug("HOI 1")
         # Happy flow
         app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
 
@@ -244,10 +245,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         url = "{}://{}:{}/core/locations".format(
             server.scheme, server.host, server.port
         )
-        resp = await websession.get(url)
-
-        assumed_status = self.connect_status(broken, timeout, fail_auth)
-        assert resp.status == assumed_status
+        _LOGGER.debug("HOI 1b")
+        try:
+            resp = await websession.get(url)
+            _LOGGER.debug("HOI 2")
+            assumed_status = self.connect_status(broken, timeout, fail_auth)
+            assert resp.status == assumed_status
+        except Exception as e:
+            _LOGGER.error("HOI broke on " + repr(e))
 
         if not broken and not timeout and not fail_auth:
             text = await resp.text()
@@ -265,6 +270,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert False
         except Exception:  # pylint disable=broad-except
             assert True
+
+        _LOGGER.debug("HOI 3")
 
         smile = pw_smile.Smile(
             host=server.host,
@@ -1825,15 +1832,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert True
 
     # Test connect for timeout
-    @patch("async_timeout.timeout", side_effect=asyncio.TimeoutError)
+    @patch("plugwise.helper.ClientSession.get", side_effect=aiohttp.ServerTimeoutError)
     async def test_connect_timeout(self, timeout_test):
         """Wrap connect to raise timeout during get."""
 
         try:
-            await self.connect_wrapper()
+            self.smile_setup = "p1v4"
+            server, smile, client = await self.connect_wrapper()
             assert False  # pragma: no cover
-        except aiohttp.client_exceptions.ServerTimeoutError:
-            assert True
         except pw_exceptions.DeviceTimeoutError:
             assert True
 
