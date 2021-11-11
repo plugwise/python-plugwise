@@ -230,7 +230,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         port = aiohttp.test_utils.unused_port()
         test_password = "".join(random.choice(string.ascii_lowercase) for i in range(8))
 
-        _LOGGER.debug("HOI 1")
         # Happy flow
         app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
 
@@ -245,14 +244,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         url = "{}://{}:{}/core/locations".format(
             server.scheme, server.host, server.port
         )
-        _LOGGER.debug("HOI 1b")
+
+        # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
             resp = await websession.get(url)
-            _LOGGER.debug("HOI 2")
             assumed_status = self.connect_status(broken, timeout, fail_auth)
             assert resp.status == assumed_status
-        except Exception as e:
-            _LOGGER.error("HOI broke on " + repr(e))
+        except Exception:  # pylint disable=broad-except
+            assert True
 
         if not broken and not timeout and not fail_auth:
             text = await resp.text()
@@ -270,8 +269,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert False
         except Exception:  # pylint disable=broad-except
             assert True
-
-        _LOGGER.debug("HOI 3")
 
         smile = pw_smile.Smile(
             host=server.host,
