@@ -1,5 +1,7 @@
 # Changelog
 
+## v0.15.1 - Smile: Dependency update (aiohttp 3.8.0) and aligning other HA dependencies
+
 ## v0.15.0 - Smile: remove all HA Core related-information from the provided output
 
 ## v0.14.5 - Smile: prepare for using the HA Core DataUpdateCoordintor in Plugwise-beta
