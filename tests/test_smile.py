@@ -367,7 +367,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def device_test(self, smile=pw_smile.Smile, testdata=None, preset=False):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
-        bsw_list = ["binary_sensors", "sensors", "switches"]
+        bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         smile.get_all_devices()
         # Preset smile.cooling_active for testing of a state-change
         smile.cooling_active = False
@@ -421,14 +421,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         tests += 1
                         if measure_key in bsw_list:
                             tests -= 1
-                            for a, a_item in enumerate(measure_assert):
+                            for key_1, val_1 in measure_assert.items():
                                 tests += 1
-                                for b, b_item in enumerate(dev_data[measure_key]):
-                                    if a_item["id"] != b_item["id"]:
+                                for key_2, val_2 in dev_data[measure_key].items():
+                                    if key_1 != key_2:
                                         continue
 
                                     asserts += 1
-                                    assert b_item["state"] == a_item["state"]
+                                    assert val_1 == val_2
                         else:
                             asserts += 1
                             # The schedule temperature changes accordung to the set schedule,
