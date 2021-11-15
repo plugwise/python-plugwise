@@ -215,6 +215,16 @@ class SmileData(SmileHelper):
             if power_data is not None:
                 device_data.update(power_data)
 
+        # Elga doesn't use intended_cental_heating_state to show the generic heating state
+        device_data["heating"] = False
+        if not device_data["i_heating"]:
+            if device_data["c_heating"]:
+                device_data["heating"] = True
+        else:
+            device_data["heating"] = True
+        device_data.pop("i_heating")
+        device_data.pop("c_heating")
+
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
         # Specific, not generic Anna data
