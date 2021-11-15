@@ -437,6 +437,10 @@ HEATER_CENTRAL_MEASUREMENTS = {
     "intended_boiler_temperature": {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
     },  # non-zero when heating, zero when dhw-heating
+    "central_heating_state": {
+        ATTR_NAME: "c_heating_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },  # for Elga (heatpump) use this instead of intended_central_heating_state
     "intended_central_heating_state": {
         ATTR_NAME: "heating_state",
         ATTR_UNIT_OF_MEASUREMENT: None,
