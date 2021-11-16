@@ -220,7 +220,7 @@ class SmileData(SmileHelper):
             if "c_heating" in device_data:
                 if device_data["c_heating"]:
                     device_data["heating"] = True
-                device_data.pop("c_heating")
+                    device_data.pop("c_heating")
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
