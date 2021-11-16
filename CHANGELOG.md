@@ -1,6 +1,8 @@
 # Changelog
 
-## v0.15.1 - Smile: Dependency update (aiohttp 3.8.0) and aligning other HA dependencies
+## v0.15.2 - Smile: Implement possible fix for HA Core issue #59711
+
+## v0.15.1 - Smile: Dependency update (aiohttp 3.8.0) and aligning other HA Core dependencies
 
 ## v0.15.0 - Smile: remove all HA Core related-information from the provided output
 
