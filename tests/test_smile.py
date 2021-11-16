@@ -1562,6 +1562,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "heating_state": True,
                 "binary_sensors": [
                     {
                         "id": "dhw_state",
@@ -1613,6 +1614,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "cooling_state": True,
                 "binary_sensors": [
                     {
                         "id": "dhw_state",
