@@ -459,10 +459,10 @@ class SmileHelper:
 
         if appl.pwclass == "heater_central":
             # Remove heater_central when no active device present
-            if not self.active_device_present:
+            if not self._active_device_present:
                 return None
 
-            self.heater_id = appliance.attrib["id"]
+            self._heater_id = appliance.attrib["id"]
             appl.name = "Auxiliary"
             locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
             locator2 = ".//services/boiler_state"
@@ -538,7 +538,7 @@ class SmileHelper:
         )
         fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
         bl_state = self._appliances.find(".//services/boiler_state")
-        self.active_device_present = (
+        self._active_device_present = (
             self._cp_state is not None or fl_state is not None or bl_state is not None
         )
 
@@ -585,7 +585,7 @@ class SmileHelper:
 
         # For legacy Anna gateway and heater_central is the same device
         if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self.heater_id
+            self.gateway_id = self._heater_id
 
     def _match_locations(self):
         """Helper-function for _scan_thermostats().
@@ -727,7 +727,7 @@ class SmileHelper:
 
         for appliance in appliances:
             measurements = DEVICE_MEASUREMENTS.items()
-            if self.active_device_present:
+            if self._active_device_present:
                 measurements = {
                     **DEVICE_MEASUREMENTS,
                     **HEATER_CENTRAL_MEASUREMENTS,
@@ -1141,7 +1141,7 @@ class SmileHelper:
             for item in BINARY_SENSORS:
                 if item[ATTR_ID] == key:
                     data.pop(item[ATTR_ID])
-                    if self.active_device_present:
+                    if self._active_device_present:
                         item[ATTR_STATE] = value
                         bs_list.append(item)
             for item in SENSORS:

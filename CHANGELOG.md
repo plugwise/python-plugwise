@@ -1,7 +1,5 @@
 # Changelog
 
-## v0.15.3 - Smile: fix pylint warning
-
 ## v0.15.2 - Smile: Implement possible fix for HA Core issue #59711
 
 ## v0.15.1 - Smile: Dependency update (aiohttp 3.8.0) and aligning other HA Core dependencies
