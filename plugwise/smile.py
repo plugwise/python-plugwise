@@ -54,9 +54,9 @@ class SmileData(SmileHelper):
         if d_id == self.gateway_id:
             if self.single_master_thermostat() is not None:
                 bs_list.append(PW_NOTIFICATION)
-            if not self.active_device_present and "heating_state" in data:
+            if not self._active_device_present and "heating_state" in data:
                 s_list.append(DEVICE_STATE)
-        if d_id == self.heater_id and self.single_master_thermostat() is False:
+        if d_id == self._heater_id and self.single_master_thermostat() is False:
             s_list.append(DEVICE_STATE)
 
     def _all_device_data(self):
@@ -88,9 +88,9 @@ class SmileData(SmileHelper):
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
         self.gw_data["gateway_id"] = self.gateway_id
-        self.gw_data["heater_id"] = self.heater_id
+        self.gw_data["heater_id"] = self._heater_id
         self.gw_data["smile_name"] = self.smile_name
-        self.gw_data["active_device"] = self.active_device_present
+        self.gw_data["active_device"] = self._active_device_present
         self.gw_data["single_master_thermostat"] = self.single_master_thermostat()
 
     def get_all_devices(self):
@@ -161,7 +161,7 @@ class SmileData(SmileHelper):
         if self.smile_name == "Adam":
             if details["class"] == "gateway":
                 if (
-                    not self.active_device_present
+                    not self._active_device_present
                     and self._heating_valves() is not None
                 ):
                     device_data["heating_state"] = True
@@ -279,9 +279,11 @@ class Smile(SmileComm, SmileData):
             websession,
         )
 
+        self._active_device_present = None
         self._appliances = None
         self._appl_data = {}
         self._domain_objects = None
+        self._heater_id = None
         self._home_location = None
         self._locations = None
         self._modules = None
@@ -290,11 +292,9 @@ class Smile(SmileComm, SmileData):
         self._stretch_v3 = False
         self._thermo_locs = None
 
-        self.active_device_present = None
         self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}
-        self.heater_id = None
         self.notifications = {}
         self.smile_hostname = None
         self.smile_name = None

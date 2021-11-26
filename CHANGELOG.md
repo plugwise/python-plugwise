@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.15.3 - Smile: fix pylint warning
+## v0.15.3 - Skipping, not released
 
 ## v0.15.2 - Smile: Implement possible fix for HA Core issue #59711
 
