@@ -314,20 +314,21 @@ class SmileHelper:
         Create locations for legacy devices.
         """
         appliances = set()
-        self._home_location = 0
+        fake_loc_id = "0000aaaa0000aaaa0000aaaa0000aa00"
+        self._home_location = fake_loc_id
 
         # Add Anna appliances
         for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._loc_data[0] = {
+            self._loc_data[fake_loc_id] = {
                 "name": "Legacy Anna",
                 "types": {"temperature"},
                 "members": appliances,
             }
         if self.smile_type == "stretch":
-            self._loc_data[0] = {
+            self._loc_data[fake_loc_id] = {
                 "name": "Legacy Stretch",
                 "types": {"power"},
                 "members": appliances,
