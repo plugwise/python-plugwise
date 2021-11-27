@@ -868,11 +868,11 @@ class SmileHelper:
                     "class": group_type,
                     "fw": None,
                     "location": None,
-                    "members": members,
                     "model": "Group Switch",
                     "name": group_name,
+                    "members": members,
                     "types": {"switch_group"},
-                    "vendor": "Plugwise",
+                    "vendor": None,
                 }
 
             switch_groups.update(group_appl)
