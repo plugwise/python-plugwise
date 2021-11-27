@@ -550,7 +550,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
-                "location": 0,
                 "presets": {
                     "asleep": [19.0, 0],
                     "away": [19.0, 0],
@@ -568,6 +567,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
+                "location": 0,
                 "heating_state": True,
                 "sensors": [
                     {"id": "water_temperature", "state": 23.6},
