@@ -493,7 +493,11 @@ class SmileHelper:
             for appl_type in types_finder(appliance):
                 appl.types.add(appl_type)
         else:
-            # Preset all types applicable to home
+            # Provide a home_location for legacy_anna, preset all types applicable to home
+            if self._smile_legacy and self.smile_type == "thermostat":
+                appl.location = self._home_location
+                # For legacy_anna gateway and heater_central is the same device
+                self.gateway_id = self._heater_id
             appl.types = self._loc_data[self._home_location]["types"]
 
         # Determine appliance_type from functionality
@@ -583,10 +587,6 @@ class SmileHelper:
                 and appl.location is None
             ):
                 self._appl_data.pop(appl.id)
-
-        # For legacy Anna gateway and heater_central is the same device
-        if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self._heater_id
 
     def _match_locations(self):
         """Helper-function for _scan_thermostats().
