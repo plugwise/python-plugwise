@@ -100,7 +100,7 @@ class SmileData(SmileHelper):
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
-            if loc_id is None:
+            if loc_id is None and details["class"] not in THERMOSTAT_CLASSES:
                 details["location"] = self._home_location
 
             # Override slave thermostat class
@@ -109,7 +109,8 @@ class SmileData(SmileHelper):
                     if appliance in self._thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
-            self._devices[appliance] = details
+            if details["location"] is not None:
+                self._devices[appliance] = details
 
         group_data = self._group_switches()
         if group_data is not None:
