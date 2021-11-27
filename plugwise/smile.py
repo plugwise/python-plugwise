@@ -111,9 +111,7 @@ class SmileData(SmileHelper):
                         details["class"] = "thermo_sensor"
 
             # Filter for thermostat-devices without a location
-            if details["location"] is not None or (
-                self._smile_legacy and details["class"] == "thermostat"
-            ):
+            if details["location"] is not None:
                 self._devices[appliance] = details
 
         group_data = self._group_switches()
