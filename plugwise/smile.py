@@ -56,7 +56,7 @@ class SmileData(SmileHelper):
                 bs_list.append(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
                 s_list.append(DEVICE_STATE)
-        if d_id == self._heater_id and self.single_master_thermostat() is False:
+        if d_id == self._heater_id and self.single_master_thermostat() is not None:
             s_list.append(DEVICE_STATE)
 
     def _all_device_data(self):
