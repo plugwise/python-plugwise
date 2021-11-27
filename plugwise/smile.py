@@ -100,6 +100,7 @@ class SmileData(SmileHelper):
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
+            # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if loc_id is None and details["class"] not in THERMOSTAT_CLASSES:
                 details["location"] = self._home_location
 
@@ -109,6 +110,7 @@ class SmileData(SmileHelper):
                     if appliance in self._thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
+            # Filter for thermostat-devices without a location
             if details["location"] is not None:
                 self._devices[appliance] = details
 
