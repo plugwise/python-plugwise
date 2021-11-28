@@ -365,6 +365,7 @@ ATTR_TYPE = "type"
 DEFAULT_TIMEOUT = 30
 DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80
+FAKE_LOC = "0000aaaa0000aaaa0000aaaa0000aa00"
 
 SEVERITIES = ["other", "info", "warning", "error"]
 SWITCH_GROUP_TYPES = ["switching", "report"]
@@ -396,8 +397,6 @@ HOME_MEASUREMENTS = {
 # Excluded:
 # zone_thermosstat 'temperature_offset'
 # radiator_valve 'uncorrected_temperature', 'temperature_offset'
-
-
 DEVICE_MEASUREMENTS = {
     # HA Core current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},

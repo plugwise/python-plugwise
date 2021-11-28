@@ -380,6 +380,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         _LOGGER.info("Gateway id = %s", extra["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
+        _LOGGER.info("Extra = %s", extra)
+        _LOGGER.info("Device list = %s", device_list)
         self.show_setup(location_list, device_list)
 
         tests = 0
@@ -548,7 +550,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
-                "location": 0,
                 "presets": {
                     "asleep": [19.0, 0],
                     "away": [19.0, 0],
@@ -566,6 +567,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
+                "location": pw_constants.FAKE_LOC,
                 "heating_state": True,
                 "sensors": [
                     {"id": "water_temperature", "state": 23.6},
@@ -573,6 +575,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {"id": "modulation_level", "state": 0.0},
                     {"id": "return_temperature", "state": 21.7},
                     {"id": "water_pressure", "state": 1.2},
+                    {"id": "device_state", "state": "heating"},
                 ],
             },
         }
@@ -784,6 +787,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": [
                     {"id": "water_pressure", "state": 2.1},
                     {"id": "water_temperature", "state": 52.0},
+                    {"id": "device_state", "state": "heating"},
                 ],
             },
             "0466eae8520144c78afb29628384edeb": {
@@ -1001,12 +1005,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "heating_state": False,
-                "binary_sensors": [
-                    {
-                        "id": "flame_state",
-                        "state": False,
-                    }
-                ],
+                "binary_sensors": [{"id": "flame_state", "state": False}],
+                "sensors": [{"id": "device_state", "state": "idle"}],
             },
             "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
                 "sensors": [{"id": "outdoor_temperature", "state": 11.9}]
@@ -1070,12 +1070,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": [
-                    {
-                        "id": "dhw_state",
-                        "state": True,
-                    }
-                ]
+                "binary_sensors": [{"id": "dhw_state", "state": True}],
+                "sensors": [{"id": "device_state", "state": "dhw-heating"}],
             },
             # Test Switch
             "b83f9f9758064c0fab4af6578cba4c6d": {
@@ -1126,12 +1122,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "heating_state": True,
-                "binary_sensors": [
-                    {
-                        "id": "dhw_state",
-                        "state": True,
-                    }
-                ],
+                "binary_sensors": [{"id": "dhw_state", "state": True}],
+                "sensors": [{"id": "device_state", "state": "dhw and heating"}],
             }
         }
 
@@ -1150,6 +1142,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "cooling_state": True,
+                "sensors": [{"id": "device_state", "state": "cooling"}],
             },
         }
 
@@ -1168,12 +1161,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "cooling_state": True,
-                "binary_sensors": [
-                    {
-                        "id": "dhw_state",
-                        "state": True,
-                    }
-                ],
+                "binary_sensors": [{"id": "dhw_state", "state": True}],
+                "sensors": [{"id": "device_state", "state": "dhw and cooling"}],
             }
         }
 
@@ -1232,6 +1221,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "sensors": [
                     {"id": "outdoor_temperature", "state": 7.69},
+                    {"id": "device_state", "state": "idle"},
                 ],
             },
             # Modem
@@ -1346,6 +1336,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "heating_state": True,
                 "sensors": [
                     {"id": "outdoor_temperature", "state": 7.81},
+                    {"id": "device_state", "state": "heating"},
                 ],
             },
             # Modem

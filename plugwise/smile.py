@@ -56,7 +56,7 @@ class SmileData(SmileHelper):
                 bs_list.append(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
                 s_list.append(DEVICE_STATE)
-        if d_id == self._heater_id and self.single_master_thermostat() is False:
+        if d_id == self._heater_id and self.single_master_thermostat() is not None:
             s_list.append(DEVICE_STATE)
 
     def _all_device_data(self):
@@ -100,7 +100,8 @@ class SmileData(SmileHelper):
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
-            if loc_id is None:
+            # Don't assign the _home_location to thermostat-devices without a location, they are not active
+            if loc_id is None and details["class"] not in THERMOSTAT_CLASSES:
                 details["location"] = self._home_location
 
             # Override slave thermostat class
@@ -109,7 +110,9 @@ class SmileData(SmileHelper):
                     if appliance in self._thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
-            self._devices[appliance] = details
+            # Filter for thermostat-devices without a location
+            if details["location"] is not None:
+                self._devices[appliance] = details
 
         group_data = self._group_switches()
         if group_data is not None:

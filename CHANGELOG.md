@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.15.4 - Smile - Bugfix: handle removed thermostats
+  - Recognize when a thermostat has been removed from a zone and don't show it in Core
+  - Rename Group Switch to Switchgroup, remove vendor name
+
 ## v0.15.3 - Skipping, not released
 
 ## v0.15.2 - Smile: Implement possible fix for HA Core issue #59711

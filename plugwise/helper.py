@@ -29,6 +29,7 @@ from .constants import (
     DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
+    FAKE_LOC,
     FLAME_ICON,
     HEATER_CENTRAL_MEASUREMENTS,
     HEATING_ICON,
@@ -314,20 +315,20 @@ class SmileHelper:
         Create locations for legacy devices.
         """
         appliances = set()
-        self._home_location = 0
+        self._home_location = FAKE_LOC
 
         # Add Anna appliances
         for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._loc_data[0] = {
+            self._loc_data[FAKE_LOC] = {
                 "name": "Legacy Anna",
                 "types": {"temperature"},
                 "members": appliances,
             }
         if self.smile_type == "stretch":
-            self._loc_data[0] = {
+            self._loc_data[FAKE_LOC] = {
                 "name": "Legacy Stretch",
                 "types": {"power"},
                 "members": appliances,
@@ -421,7 +422,7 @@ class SmileHelper:
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data[0]
-            if appl.model != "Group Switch":
+            if appl.model != "Switchgroup":
                 appl.model = None
             if module_data[2] is not None:
                 hw_version = module_data[2].replace("-", "")
@@ -492,7 +493,11 @@ class SmileHelper:
             for appl_type in types_finder(appliance):
                 appl.types.add(appl_type)
         else:
-            # Preset all types applicable to home
+            # Provide a home_location for legacy_anna, preset all types applicable to home
+            if self._smile_legacy and self.smile_type == "thermostat":
+                appl.location = self._home_location
+                # For legacy_anna gateway and heater_central is the same device
+                self.gateway_id = self._heater_id
             appl.types = self._loc_data[self._home_location]["types"]
 
         # Determine appliance_type from functionality
@@ -582,10 +587,6 @@ class SmileHelper:
                 and appl.location is None
             ):
                 self._appl_data.pop(appl.id)
-
-        # For legacy Anna gateway and heater_central is the same device
-        if self._smile_legacy and self.smile_type == "thermostat":
-            self.gateway_id = self._heater_id
 
     def _match_locations(self):
         """Helper-function for _scan_thermostats().
@@ -835,7 +836,7 @@ class SmileHelper:
         Collect switching- or pump-group info.
         """
         switch_groups = {}
-        # P1 and Anna don't have switch groups
+        # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
@@ -867,11 +868,11 @@ class SmileHelper:
                     "class": group_type,
                     "fw": None,
                     "location": None,
-                    "members": members,
-                    "model": "Group Switch",
+                    "model": "Switchgroup",
                     "name": group_name,
+                    "members": members,
                     "types": {"switch_group"},
-                    "vendor": "Plugwise",
+                    "vendor": None,
                 }
 
             switch_groups.update(group_appl)
