@@ -29,6 +29,7 @@ from .constants import (
     DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
+    FAKE_LOC,
     FLAME_ICON,
     HEATER_CENTRAL_MEASUREMENTS,
     HEATING_ICON,
@@ -314,21 +315,20 @@ class SmileHelper:
         Create locations for legacy devices.
         """
         appliances = set()
-        fake_loc_id = "0000aaaa0000aaaa0000aaaa0000aa00"
-        self._home_location = fake_loc_id
+        self._home_location = FAKE_LOC
 
         # Add Anna appliances
         for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._loc_data[fake_loc_id] = {
+            self._loc_data[FAKE_LOC] = {
                 "name": "Legacy Anna",
                 "types": {"temperature"},
                 "members": appliances,
             }
         if self.smile_type == "stretch":
-            self._loc_data[fake_loc_id] = {
+            self._loc_data[FAKE_LOC] = {
                 "name": "Legacy Stretch",
                 "types": {"power"},
                 "members": appliances,
