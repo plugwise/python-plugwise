@@ -567,7 +567,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "location": pw_constants.FAKE_LOC,
                 "heating_state": True,
                 "sensors": [
                     {"id": "water_temperature", "state": 23.6},
