@@ -422,7 +422,7 @@ class SmileHelper:
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data[0]
-            if appl.model != "Group Switch":
+            if appl.model != "Switchgroup":
                 appl.model = None
             if module_data[2] is not None:
                 hw_version = module_data[2].replace("-", "")
@@ -836,7 +836,7 @@ class SmileHelper:
         Collect switching- or pump-group info.
         """
         switch_groups = {}
-        # P1 and Anna don't have switch groups
+        # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
@@ -868,7 +868,7 @@ class SmileHelper:
                     "class": group_type,
                     "fw": None,
                     "location": None,
-                    "model": "Group Switch",
+                    "model": "Switchgroup",
                     "name": group_name,
                     "members": members,
                     "types": {"switch_group"},
