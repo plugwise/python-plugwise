@@ -190,8 +190,9 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = self._last_active_schema(details["location"])
 
-        # Find the thermostat control_state of a location, from domain_objects
-        control_state = None
+        # Adam: find the thermostat control_state of a location, from domain_objects
+        #       The control_state represents the heating/cooling demand-state of a master thermostat
+        #       Note: heating or cooling can still be active when the setpoint has been reached
         location = self._domain_objects.find(f'location[@id="{details["location"]}"]')
         if location is not None:
             locator = ".//actuator_functionalities/thermostat_functionality"
@@ -199,9 +200,8 @@ class SmileData(SmileHelper):
             if therm_func is not None:
                 ctrl_state = therm_func.find("control_state")
                 if ctrl_state is not None:
-                    control_state = ctrl_state.text
-                    device_data["heating_state"] = control_state == "heating_state"
-                    device_data["cooling_state"] = control_state == "cooling_state"
+                    device_data["heating_state"] = ctrl_state.text == "heating_state"
+                    device_data["cooling_state"] = ctrl_state.text == "cooling_state"
 
         return device_data
 
