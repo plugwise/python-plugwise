@@ -191,18 +191,19 @@ class SmileData(SmileHelper):
             device_data["last_used"] = self._last_active_schema(details["location"])
 
         # Find the thermostat control_state of a location, from domain_objects
-        location = self._domain_objects.find(f'location[@id="{details["location"]}"]')
-        loc_name = location.find("name").text
         control_state = None
-        locator = ".//actuator_functionalities/thermostat_functionality"
-        therm_func = location.find(locator)
-        if therm_func is not None:
-            ctrl_state = therm_func.find("control_state")
-            if ctrl_state is not None:
-                control_state = ctrl_state.text
-                device_data["control_state"] = control_state
-            _LOGGER.debug("Location: %s", loc_name)
-            _LOGGER.debug("Control state: %s", control_state)
+        location = self._domain_objects.find(f'location[@id="{details["location"]}"]')
+        if location is not None:
+            loc_name = location.find("name").text
+            locator = ".//actuator_functionalities/thermostat_functionality"
+            therm_func = location.find(locator)
+            if therm_func is not None:
+                ctrl_state = therm_func.find("control_state")
+                if ctrl_state is not None:
+                    control_state = ctrl_state.text
+                    device_data["control_state"] = control_state
+                _LOGGER.debug("Location: %s", loc_name)
+                _LOGGER.debug("Control state: %s", control_state)
 
         return device_data
 
