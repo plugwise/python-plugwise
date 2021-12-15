@@ -179,12 +179,12 @@ class SmileData(SmileHelper):
                 f'location[@id="{details["location"]}"]'
             )
             if location is not None:
-                locator = ".//actuator_functionalities/thermostat_functionality"
-                therm_func = location.find(locator)
-                if therm_func is not None:
-                    ctrl_state = therm_func.find("control_state")
-                    if ctrl_state is not None:
-                        device_data["control_state"] = ctrl_state.text
+                locator = (
+                    ".//actuator_functionalities/thermostat_functionality/control_state"
+                )
+                ctrl_state = location.find(locator)
+                if ctrl_state is not None:
+                    device_data["control_state"] = ctrl_state.text
 
         return device_data
 
