@@ -1068,6 +1068,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_adam_plus_anna_new(self):
         """Test Adam with Anna and a switch-group setup."""
         testdata = {
+            # Anna
+            "ee62cad889f94e8ca3d09021f03a660b": {"control_state": "off"},
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "binary_sensors": [{"id": "dhw_state", "state": True}],
