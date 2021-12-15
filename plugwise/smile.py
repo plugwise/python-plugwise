@@ -200,7 +200,8 @@ class SmileData(SmileHelper):
                 ctrl_state = therm_func.find("control_state")
                 if ctrl_state is not None:
                     control_state = ctrl_state.text
-                    device_data["control_state"] = control_state
+                    device_data["heating_state"] = control_state == "heating_state"
+                    device_data["cooling_state"] = control_state == "cooling_state"
 
         return device_data
 
