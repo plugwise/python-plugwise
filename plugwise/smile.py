@@ -160,8 +160,9 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
+
+            # Indicate heating_state based on valves being open in case of city-provided heating
             if details["class"] == "gateway":
                 if (
                     not self._active_device_present
@@ -170,6 +171,20 @@ class SmileData(SmileHelper):
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
+
+            # Find the thermostat control_state of a location, from domain_objects
+            # The control_state represents the heating/cooling demand-state of the master thermostat
+            # Note: heating or cooling can still be active when the setpoint has been reached
+            location = self._domain_objects.find(
+                f'location[@id="{details["location"]}"]'
+            )
+            if location is not None:
+                locator = ".//actuator_functionalities/thermostat_functionality"
+                therm_func = location.find(locator)
+                if therm_func is not None:
+                    ctrl_state = therm_func.find("control_state")
+                    if ctrl_state is not None:
+                        device_data["control_state"] = ctrl_state.text
 
         return device_data
 
@@ -189,18 +204,6 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
             device_data["last_used"] = self._last_active_schema(details["location"])
-
-        # Adam: find the thermostat control_state of a location, from domain_objects
-        #       The control_state represents the heating/cooling demand-state of a master thermostat
-        #       Note: heating or cooling can still be active when the setpoint has been reached
-        location = self._domain_objects.find(f'location[@id="{details["location"]}"]')
-        if location is not None:
-            locator = ".//actuator_functionalities/thermostat_functionality"
-            therm_func = location.find(locator)
-            if therm_func is not None:
-                ctrl_state = therm_func.find("control_state")
-                if ctrl_state is not None:
-                    device_data["control_state"] = ctrl_state.text
 
         return device_data
 
