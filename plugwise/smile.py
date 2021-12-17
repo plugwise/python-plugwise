@@ -309,6 +309,7 @@ class Smile(SmileComm, SmileData):
         self._stretch_v3 = False
         self._thermo_locs = None
 
+        self.cooling_present = False
         self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}
