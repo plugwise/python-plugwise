@@ -1675,8 +1675,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         assert "3d28a20e17cb47dca210a132463721d5" in smile.notifications
 
-        _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
         await smile.close_connection()
         await self.disconnect(server, client)
 
