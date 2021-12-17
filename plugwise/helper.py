@@ -955,7 +955,7 @@ class SmileHelper:
         loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
 
         if loc.logs is None:
-            return
+            return  # pragma: no cover
 
         log_list = ["point_log", "cumulative_log", "interval_log"]
         peak_list = ["nl_peak", "nl_offpeak"]
