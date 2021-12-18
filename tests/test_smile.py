@@ -832,6 +832,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_v4_no_tag(self):
         """Test an Anna firmware 4 setup without a boiler - no presets."""
+        testdata = {
+            # Anna
+            "01b85360fdd243d0aaad4d6ac2a5ba7e": {
+                "active_preset": "home",
+            }
+        }
         self.smile_setup = "anna_v4_no_tag"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
@@ -843,8 +849,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.0.15"
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
-        # _LOGGER.info(" # Assert master thermostat")
-        # assert smile.single_master_thermostat()
+
+        await self.device_test(smile, testdata)
+        _LOGGER.info(" # Assert master thermostat")
+        assert smile.sm_thermostat
 
         await self.tinker_thermostat(
             smile,
