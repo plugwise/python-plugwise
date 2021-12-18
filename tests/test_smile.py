@@ -1651,7 +1651,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_copy_with_error_domain_added(self):
         """Test erroneous domain_objects file from user."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
+        testdata = {
+            # Central
+            "2743216f626f43948deec1f7ab3b3d70": {
+                "heating_state": False,
+            },
+        }
 
         self.smile_setup = "adam_plus_anna_copy_with_error_domain_added"
         server, smile, client = await self.connect_wrapper()
@@ -1664,8 +1669,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "3.0.23"
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
-        # _LOGGER.info(" # Assert master thermostat")
-        # assert smile.single_master_thermostat()
+
+        await self.device_test(smile, testdata)
+        _LOGGER.info(" # Assert master thermostat")
+        assert smile.sm_thermostat
 
         assert "3d28a20e17cb47dca210a132463721d5" in smile.notifications
 
