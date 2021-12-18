@@ -86,10 +86,11 @@ def update_device_state(data, d_dict):
     _heating_state = False
     state = "idle"
 
-    for _, item in enumerate(d_dict["binary_sensors"]):
-        if item[ATTR_ID] == "dhw_state":
-            if item[ATTR_STATE]:
-                state = "dhw-heating"
+    if "binary_sensors" in d_dict:
+        for _, item in enumerate(d_dict["binary_sensors"]):
+            if item[ATTR_ID] == "dhw_state":
+                if item[ATTR_STATE]:
+                    state = "dhw-heating"
                 _dhw_state = True
 
     if "heating_state" in data:
