@@ -451,7 +451,6 @@ class SmileHelper:
 
             # Adam: check for cooling capability, assume heating capability is always present
             mode_list = []
-            self.cooling_present = False
             locator = "./actuator_functionalities/regulation_mode_control_functionality/allowed_modes"
             if appliance.find(locator) is not None:
                 for mode in appliance.find(locator):
