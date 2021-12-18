@@ -630,6 +630,8 @@ class SmileHelper:
         rule_ids = self._rule_ids_by_tag(tag, loc_id)
         if rule_ids is None:
             rule_ids = self._rule_ids_by_name("Thermostat presets", loc_id)
+            if rule_ids is None:
+                return presets
 
         for rule_id in rule_ids:
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
