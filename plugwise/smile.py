@@ -187,6 +187,10 @@ class SmileData(SmileHelper):
                 if ctrl_state is not None:
                     device_data["control_state"] = ctrl_state.text
 
+            # Show presence of cooling function
+            # TODO: add for ANNA
+            device_data["cooling_present"] = self.cooling_present
+
         return device_data
 
     def _device_data_climate(self, details, device_data):
