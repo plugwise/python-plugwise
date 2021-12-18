@@ -52,11 +52,11 @@ class SmileData(SmileHelper):
         and/or the device_state sensor are appended.
         """
         if d_id == self.gateway_id:
-            if self.single_master_thermostat() is not None:
+            if self.sm_thermostat is not None:
                 bs_list.append(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
                 s_list.append(DEVICE_STATE)
-        if d_id == self._heater_id and self.single_master_thermostat() is not None:
+        if d_id == self._heater_id and self.sm_thermostat is not None:
             s_list.append(DEVICE_STATE)
 
     def _all_device_data(self):
@@ -91,12 +91,13 @@ class SmileData(SmileHelper):
         self.gw_data["heater_id"] = self._heater_id
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["active_device"] = self._active_device_present
-        self.gw_data["single_master_thermostat"] = self.single_master_thermostat()
+        self.gw_data["single_master_thermostat"] = self.sm_thermostat
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
         self._devices = {}
         self._scan_thermostats()
+        self.single_master_thermostat()
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
@@ -258,19 +259,17 @@ class SmileData(SmileHelper):
         """Determine if there is a single master thermostat in the setup.
         Possible output: None, True, False.
         """
-        if self.smile_type != "thermostat":
-            return None
+        if self.smile_type == "thermostat":
+            count = 0
+            for dummy, data in self._thermo_locs.items():
+                if "master_prio" in data:
+                    if data.get("master_prio") > 0:
+                        count += 1
 
-        count = 0
-        self._scan_thermostats()
-        for dummy, data in self._thermo_locs.items():
-            if "master_prio" in data:
-                if data.get("master_prio") > 0:
-                    count += 1
-
-        if count == 1:
-            return True
-        return False
+            if count == 1:
+                self.sm_thermostat = True
+            if count > 1:
+                self.sm_thermostat = False
 
 
 class Smile(SmileComm, SmileData):
@@ -314,6 +313,7 @@ class Smile(SmileComm, SmileData):
         self.gw_data = {}
         self.gw_devices = {}
         self.notifications = {}
+        self.sm_thermostat = None
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None
