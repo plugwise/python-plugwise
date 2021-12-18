@@ -91,7 +91,7 @@ def update_device_state(data, d_dict):
             if item[ATTR_ID] == "dhw_state":
                 if item[ATTR_STATE]:
                     state = "dhw-heating"
-                _dhw_state = True
+                    _dhw_state = True
 
     if "heating_state" in data:
         if data["heating_state"]:
