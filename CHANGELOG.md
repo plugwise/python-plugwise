@@ -1,5 +1,13 @@
 # Changelog
 
+# v0.15.6 - Smile - Various fixes and improvements
+  - Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
+  - Adam: collect `allowed_modes` and look for cooling, indicating cooling capability being available
+  - Optimize the `single_master_thermostat`-function
+  - Add and adapt testcode
+
+# v0.15.5 - Skipping, not released
+
 ## In progress
   - Add testing for python 3.10, improve dependencies (github workflow)
   - Bump aiohttp to 3.8.1, remove fixed dependencies
