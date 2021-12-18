@@ -172,9 +172,10 @@ class SmileData(SmileHelper):
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
 
-            # Show presence of cooling function
-            # TODO: add for ANNA
-            device_data["cooling_present"] = self.cooling_present
+            # Adam: add cooling_present to heater_central
+            # To Do: add for ANNA
+            if details["class"] == "heater_central":
+                device_data["cooling_present"] = self.cooling_present
 
         return device_data
 
