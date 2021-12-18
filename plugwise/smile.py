@@ -162,7 +162,6 @@ class SmileData(SmileHelper):
         Determine Adam device data.
         """
         if self.smile_name == "Adam":
-
             # Indicate heating_state based on valves being open in case of city-provided heating
             if details["class"] == "gateway":
                 if (
@@ -172,20 +171,6 @@ class SmileData(SmileHelper):
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
-
-            # Find the thermostat control_state of a location, from domain_objects
-            # The control_state represents the heating/cooling demand-state of the master thermostat
-            # Note: heating or cooling can still be active when the setpoint has been reached
-            location = self._domain_objects.find(
-                f'location[@id="{details["location"]}"]'
-            )
-            if location is not None:
-                locator = (
-                    ".//actuator_functionalities/thermostat_functionality/control_state"
-                )
-                ctrl_state = location.find(locator)
-                if ctrl_state is not None:
-                    device_data["control_state"] = ctrl_state.text
 
             # Show presence of cooling function
             # TODO: add for ANNA
@@ -209,6 +194,18 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
             device_data["last_used"] = self._last_active_schema(details["location"])
+
+        # Find the thermostat control_state of a location, from domain_objects
+        # The control_state represents the heating/cooling demand-state of the master thermostat
+        # Note: heating or cooling can still be active when the setpoint has been reached
+        location = self._domain_objects.find(f'location[@id="{details["location"]}"]')
+        if location is not None:
+            locator = (
+                ".//actuator_functionalities/thermostat_functionality/control_state"
+            )
+            ctrl_state = location.find(locator)
+            if ctrl_state is not None:
+                device_data["control_state"] = ctrl_state.text
 
         return device_data
 
