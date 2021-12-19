@@ -296,7 +296,7 @@ class Smile(SmileComm, SmileData):
 
         self._active_device_present = None
         self._appliances = None
-        self._appl_data = {}
+        self._appl_data = None
         self._cooling_present = None
         self._domain_objects = None
         self._gateway_id = None
