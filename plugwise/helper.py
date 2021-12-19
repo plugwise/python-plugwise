@@ -453,6 +453,7 @@ class SmileHelper:
             mode_list = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality/allowed_modes"
             if appliance.find(locator) is not None:
+                self._cooling_present = False
                 for mode in appliance.find(locator):
                     mode_list.append(mode.text)
                 self._cooling_present = "cooling" in mode_list
