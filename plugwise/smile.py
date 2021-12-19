@@ -52,11 +52,11 @@ class SmileData(SmileHelper):
         and/or the device_state sensor are appended.
         """
         if d_id == self.gateway_id:
-            if self.sm_thermostat is not None:
+            if self._sm_thermostat is not None:
                 bs_list.append(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
                 s_list.append(DEVICE_STATE)
-        if d_id == self._heater_id and self.sm_thermostat is not None:
+        if d_id == self._heater_id and self._sm_thermostat is not None:
             s_list.append(DEVICE_STATE)
 
     def _all_device_data(self):
@@ -91,7 +91,7 @@ class SmileData(SmileHelper):
         self.gw_data["heater_id"] = self._heater_id
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["active_device"] = self._active_device_present
-        self.gw_data["single_master_thermostat"] = self.sm_thermostat
+        self.gw_data["single_master_thermostat"] = self._sm_thermostat
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
@@ -269,9 +269,9 @@ class SmileData(SmileHelper):
                         count += 1
 
             if count == 1:
-                self.sm_thermostat = True
+                self._sm_thermostat = True
             if count > 1:
-                self.sm_thermostat = False
+                self._sm_thermostat = False
 
 
 class Smile(SmileComm, SmileData):
@@ -316,7 +316,7 @@ class Smile(SmileComm, SmileData):
         self.gw_data = {}
         self.gw_devices = {}
         self.notifications = {}
-        self.sm_thermostat = None
+        self._sm_thermostat = None
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None
