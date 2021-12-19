@@ -174,7 +174,7 @@ class SmileData(SmileHelper):
             # Adam: add cooling_present to heater_central
             # To Do: add for ANNA
             if details["class"] == "heater_central":
-                device_data["cooling_present"] = self.cooling_present
+                device_data["cooling_present"] = self._cooling_present
 
         return device_data
 
@@ -300,6 +300,7 @@ class Smile(SmileComm, SmileData):
         self._active_device_present = None
         self._appliances = None
         self._appl_data = {}
+        self._cooling_present = False
         self._domain_objects = None
         self._heater_id = None
         self._home_location = None
@@ -310,7 +311,6 @@ class Smile(SmileComm, SmileData):
         self._stretch_v3 = False
         self._thermo_locs = None
 
-        self.cooling_present = False
         self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}

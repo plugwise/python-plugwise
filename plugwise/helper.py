@@ -455,7 +455,7 @@ class SmileHelper:
             if appliance.find(locator) is not None:
                 for mode in appliance.find(locator):
                     mode_list.append(mode.text)
-                self.cooling_present = "cooling" in mode_list
+                self._cooling_present = "cooling" in mode_list
 
             return appl
 
