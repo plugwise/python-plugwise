@@ -373,6 +373,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
+        self.sm_thermostat = extra["single_master_thermostat"]
         self._write_json("all_data", data)
         self._write_json("notifications", extra["notifications"])
 
@@ -594,7 +595,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert smile._active_device_present
         assert not smile.notifications
 
@@ -657,7 +658,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert smile._active_device_present
         assert not smile.notifications
 
@@ -719,7 +720,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
         assert not smile.notifications
 
         await smile.close_connection()
@@ -757,7 +758,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
         assert not smile.notifications
 
         await smile.close_connection()
@@ -807,7 +808,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert smile._active_device_present
         assert not smile.notifications
 
@@ -852,7 +853,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
 
         await self.tinker_thermostat(
             smile,
@@ -912,7 +913,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert not smile._active_device_present
         assert not smile.notifications
 
@@ -970,7 +971,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert not smile._active_device_present
         assert not smile.notifications
 
@@ -1038,7 +1039,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert smile._active_device_present
         assert not smile.notifications
 
@@ -1096,7 +1097,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile.sm_thermostat
+        assert not self.sm_thermostat
         assert smile._active_device_present
 
         switch_change = await self.tinker_switch(
@@ -1254,7 +1255,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile.sm_thermostat
+        assert not self.sm_thermostat
         assert not smile._active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in smile.notifications
@@ -1369,7 +1370,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile.sm_thermostat
+        assert not self.sm_thermostat
         assert not smile._active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in smile.notifications
@@ -1461,7 +1462,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
         await self.device_test(smile, testdata)
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
         assert not smile.notifications
 
         await smile.close_connection()
@@ -1500,7 +1501,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert nomaster thermostat")
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
         assert not smile.notifications
 
         await smile.close_connection()
@@ -1538,7 +1539,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
         assert not smile.notifications
 
         await smile.close_connection()
@@ -1589,7 +1590,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert smile._active_device_present
         assert not smile.notifications
 
@@ -1641,7 +1642,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
         assert smile._active_device_present
         assert not smile.notifications
 
@@ -1672,7 +1673,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile.sm_thermostat
+        assert self.sm_thermostat
 
         assert "3d28a20e17cb47dca210a132463721d5" in smile.notifications
 
@@ -1709,7 +1710,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
 
         # smile.get_all_devices()
 
@@ -1749,7 +1750,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
 
         switch_change = await self.tinker_switch(
             smile, "2587a7fcdd7e482dab03fda256076b4b"
@@ -1795,7 +1796,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile.sm_thermostat is None  # it's not a thermostat :)
+        assert self.sm_thermostat is None  # it's not a thermostat :)
         assert not smile.notifications
 
         await smile.close_connection()
