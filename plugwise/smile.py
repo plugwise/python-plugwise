@@ -87,10 +87,11 @@ class SmileData(SmileHelper):
 
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
+        self.gw_data["active_device"] = self._active_device_present
+        self.gw_data["cooling_present"] = self._cooling_present
         self.gw_data["gateway_id"] = self.gateway_id
         self.gw_data["heater_id"] = self._heater_id
         self.gw_data["smile_name"] = self.smile_name
-        self.gw_data["active_device"] = self._active_device_present
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
@@ -170,11 +171,6 @@ class SmileData(SmileHelper):
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
-
-            # Adam: add cooling_present to heater_central
-            # To Do: add for ANNA
-            if details["class"] == "heater_central":
-                device_data["cooling_present"] = self._cooling_present
 
         return device_data
 
