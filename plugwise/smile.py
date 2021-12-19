@@ -91,7 +91,6 @@ class SmileData(SmileHelper):
         self.gw_data["heater_id"] = self._heater_id
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["active_device"] = self._active_device_present
-        self.gw_data["single_master_thermostat"] = self._sm_thermostat
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
