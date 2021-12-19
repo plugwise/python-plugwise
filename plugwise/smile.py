@@ -51,7 +51,7 @@ class SmileData(SmileHelper):
         When conditions are met, the plugwise_notification binary_sensor
         and/or the device_state sensor are appended.
         """
-        if d_id == self.gateway_id:
+        if d_id == self._gateway_id:
             if self._sm_thermostat is not None:
                 bs_list.append(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
@@ -89,7 +89,7 @@ class SmileData(SmileHelper):
 
         self.gw_data["active_device"] = self._active_device_present
         self.gw_data["cooling_present"] = self._cooling_present
-        self.gw_data["gateway_id"] = self.gateway_id
+        self.gw_data["gateway_id"] = self._gateway_id
         self.gw_data["heater_id"] = self._heater_id
         self.gw_data["single_master_thermostat"] = self._sm_thermostat
         self.gw_data["smile_name"] = self.smile_name
@@ -215,7 +215,7 @@ class SmileData(SmileHelper):
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
-        if details["class"] == "gateway" or dev_id == self.gateway_id:
+        if details["class"] == "gateway" or dev_id == self._gateway_id:
             # Anna: outdoor_temperature only present in domain_objects
             if (
                 self.smile_type == "thermostat"
@@ -299,20 +299,20 @@ class Smile(SmileComm, SmileData):
         self._appl_data = {}
         self._cooling_present = None
         self._domain_objects = None
+        self._gateway_id = None
         self._heater_id = None
         self._home_location = None
         self._locations = None
         self._modules = None
+        self._sm_thermostat = None
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._thermo_locs = None
 
-        self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}
         self.notifications = {}
-        self._sm_thermostat = None
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None
@@ -377,7 +377,7 @@ class Smile(SmileComm, SmileData):
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
-                    self.gateway_id = network.attrib["id"]
+                    self._gateway_id = network.attrib["id"]
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
