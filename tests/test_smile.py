@@ -374,6 +374,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         extra = data[0]
         device_list = data[1]
         self.active_device_present = extra["active_device"]
+        self.cooling_present = extra["cooling_present"]
         self.notifications = extra["notifications"]
         self._write_json("all_data", data)
         self._write_json("notifications", extra["notifications"])
@@ -1076,7 +1077,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ee62cad889f94e8ca3d09021f03a660b": {"control_state": "off"},
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "cooling_present": False,
                 "binary_sensors": [{"id": "dhw_state", "state": True}],
                 "sensors": [{"id": "device_state", "state": "dhw-heating"}],
             },
@@ -1100,6 +1100,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert master thermostat")
         assert not smile._sm_thermostat
         assert self.active_device_present
+        assert not self.cooling_present
 
         switch_change = await self.tinker_switch(
             smile,
