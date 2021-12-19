@@ -312,7 +312,6 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data = {}
         self.gw_devices = {}
-        self.notifications = {}
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None
@@ -452,7 +451,7 @@ class Smile(SmileComm, SmileData):
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
-        self.notifications = {}
+        self._notifications = {}
         url = f"{self._endpoint}{DOMAIN_OBJECTS}"
         notifications = self._domain_objects.findall(".//notification")
         for notification in notifications:
@@ -460,8 +459,8 @@ class Smile(SmileComm, SmileData):
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
-                self.notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
+                self._notifications.update({msg_id: {msg_type: msg}})
+                _LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
                 _LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
@@ -480,7 +479,7 @@ class Smile(SmileComm, SmileData):
             self._appliances = await self._request(APPLIANCES)
 
         data = []
-        self.gw_data["notifications"] = self.notifications
+        self.gw_data["notifications"] = self._notifications
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
@@ -493,7 +492,7 @@ class Smile(SmileComm, SmileData):
                         data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key
                     )
                 pw_notification_updater(
-                    self.gw_devices, dev_id, dev_dict, self.notifications
+                    self.gw_devices, dev_id, dev_dict, self._notifications
                 )
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
