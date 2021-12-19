@@ -304,7 +304,7 @@ class Smile(SmileComm, SmileData):
         self._home_location = None
         self._locations = None
         self._modules = None
-        self._notifications = {}
+        self._notifications = None
         self._sm_thermostat = None
         self._smile_legacy = False
         self._stretch_v2 = False
@@ -453,7 +453,6 @@ class Smile(SmileComm, SmileData):
 
         # If Plugwise notifications present:
         self._notifications = {}
-        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
         notifications = self._domain_objects.findall(".//notification")
         for notification in notifications:
             try:
@@ -465,7 +464,7 @@ class Smile(SmileComm, SmileData):
             except AttributeError:  # pragma: no cover
                 _LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
-                    url,
+                    f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
     async def async_update(self):
