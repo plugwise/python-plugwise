@@ -304,6 +304,7 @@ class Smile(SmileComm, SmileData):
         self._home_location = None
         self._locations = None
         self._modules = None
+        self._notifications = {}
         self._sm_thermostat = None
         self._smile_legacy = False
         self._stretch_v2 = False
