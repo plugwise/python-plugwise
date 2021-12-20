@@ -150,7 +150,7 @@ class SmileData(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Anna specific
+        # Anna specific (@bouwew, can be removed, illuminance is present in /core/appliances?)
         if self.smile_name == "Anna":
             illuminance = self._object_value("appliance", dev_id, "illuminance")
             if illuminance is not None:
@@ -221,13 +221,16 @@ class SmileData(SmileHelper):
                 self.smile_type == "thermostat"
                 and "outdoor_temperature" not in device_data
             ):
+                # (@bouwew: no need to look in /core/domain_obj, also present in /core/locations)
+                # (@bouwew: can be removed, outdoor_temperature is present in /core/appliances? )
+                # (@bouwew: outdoor_temp is also added to gateway via _power_data_from_location()?)
                 outdoor_temperature = self._object_value(
                     "location", self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
-            # Try to get P1 data and 2nd outdoor_temperature, when present
+            # Try to get P1 data and Smile outdoor_temperature, when present
             power_data = self._power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
