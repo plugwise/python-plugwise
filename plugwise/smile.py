@@ -216,15 +216,13 @@ class SmileData(SmileHelper):
 
         # Generic
         if details["class"] == "gateway" or dev_id == self._gateway_id:
-            # Anna: outdoor_temperature only present in domain_objects
+            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+            # (@bouwew: outdoor_temp is also added to gateway via _power_data_from_location(), so one method can be removed?)
             if (
                 self.smile_type == "thermostat"
                 and "outdoor_temperature" not in device_data
             ):
-                # (@bouwew: no need to look in /core/domain_obj, also present in /core/locations)
-                # (@bouwew: can be removed, outdoor_temperature is present in /core/appliances?)
-                # (@bouwew: outdoor_temp is also added to gateway via _power_data_from_location(),
-                # so one method can be removed?)
                 outdoor_temperature = self._object_value(
                     "location", self._home_location, "outdoor_temperature"
                 )
