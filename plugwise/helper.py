@@ -1109,14 +1109,14 @@ class SmileHelper:
 
         return last_modified
 
-    def _object_value(self, obj_type, obj_id, measurement):
+    def _object_value(self, obj_id, measurement):
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
         Obtain the value/state for the given object.
         """
-        search = self._domain_objects
+        search = self._locations
 
         locator = (
-            f'.//{obj_type}[@id="{obj_id}"]/logs/point_log'
+            f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
         if search.find(locator) is not None:
