@@ -169,10 +169,6 @@ def types_finder(data):
         locator = f".//logs/point_log[type='{measure}']"
         if data.find(locator) is not None:
             log = data.find(locator)
-
-            if measure == "outdoor_temperature":
-                types.add(attrs[ATTR_TYPE])
-
             p_locator = ".//electricity_point_meter"
             if log.find(p_locator) is not None:
                 if log.find(p_locator).get("id"):
