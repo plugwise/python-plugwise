@@ -1627,7 +1627,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
             },
             "015ae9ea3f964e668e490fa39da3870b": {
-                "sensors": [{"id": "outdoor_temperature", "state": 22.0}]
+                "sensors": [{"id": "outdoor_temperature", "state": 20.2}]
             },
         }
 
