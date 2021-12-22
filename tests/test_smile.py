@@ -779,7 +779,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
                 "selected_schedule": None,
                 "active_preset": "home",
-                "sensors": [{"id": "illuminance", "state": 60.0}],
+                "sensors": [{"id": "illuminance", "state": 40.5}],
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
@@ -1609,7 +1609,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": None,
                 "active_preset": "home",
-                "sensors": [{"id": "illuminance", "state": 24.5}],
+                "sensors": [{"id": "illuminance", "state": 25.5}],
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
