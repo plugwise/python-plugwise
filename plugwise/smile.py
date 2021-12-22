@@ -150,12 +150,6 @@ class SmileData(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Anna specific (@bouwew, can be removed, illuminance is present in /core/appliances?)
-        if self.smile_name == "Anna":
-            illuminance = self._object_value("appliance", dev_id, "illuminance")
-            if illuminance is not None:
-                device_data["illuminance"] = illuminance
-
         return device_data
 
     def _device_data_adam(self, details, device_data):
