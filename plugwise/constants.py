@@ -391,10 +391,6 @@ HOME_MEASUREMENTS = {
         ATTR_TYPE: "gas",
         ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
     },
-    "outdoor_temperature": {
-        ATTR_TYPE: "temperature",
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
-    },
 }
 
 # Excluded:
