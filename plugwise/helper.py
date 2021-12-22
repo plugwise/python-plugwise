@@ -954,13 +954,10 @@ class SmileHelper:
         direct_data = {}
         loc = Munch()
 
-        search = self._domain_objects
+        search = self._locations
         t_string = "tariff"
-        if self.smile_type == "power":
-            # P1: use data from LOCATIONS
-            search = self._locations
-            if self._smile_legacy:
-                t_string = "tariff_indicator"
+        if self._smile_legacy and self.smile_type == "power":
+            t_string = "tariff_indicator"
 
         loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
 
