@@ -2,8 +2,12 @@
 
 # v0.15.6 - Smile - Various fixes and improvements
   - Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
-  - Adam: collect `allowed_modes` and look for cooling, indicating cooling capability being available
-  - Optimize the `single_master_thermostat`-function
+  - Adam: collect `allowed_modes` and look for `cooling`, indicating cooling capability being available
+  - Optimize code: use `_all_appliances()` once instead of 3 times, by updating/changing `single_master_thermostat()`,
+  - Protect several more variables,
+  - Change/improve how `illuminance` and `outdoor_temperature` are obtained,
+  - Use walrus operator where applicable,
+  - Various small code improvements,
   - Add and adapt testcode
 
 # v0.15.5 - Skipping, not released
