@@ -1096,7 +1096,11 @@ class SmileHelper:
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
-        return format_measure(search.find(locator).text, None)
+        if search.find(locator) is not None:
+            val = format_measure(search.find(locator).text, None)
+            return val
+
+        return None
 
     def _get_lock_state(self, xml):
         """Helper-function for _get_appliance_data().
