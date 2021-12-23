@@ -944,21 +944,16 @@ class SmileHelper:
         loc = Munch()
 
         if self.smile_type != "power":
-            return direct_data
+            return
 
         search = self._locations
+        log_list = ["point_log", "cumulative_log", "interval_log"]
+        peak_list = ["nl_peak", "nl_offpeak"]
         t_string = "tariff"
         if self._smile_legacy:
             t_string = "tariff_indicator"
 
         loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
-
-        if loc.logs is None:
-            return
-
-        log_list = ["point_log", "cumulative_log", "interval_log"]
-        peak_list = ["nl_peak", "nl_offpeak"]
-
         # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in HOME_MEASUREMENTS.items():
             for loc.log_type in log_list:
@@ -967,7 +962,6 @@ class SmileHelper:
                         f'.//{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
-
                     loc = self._power_data_peak_value(loc)
                     if not loc.found:
                         continue
@@ -975,11 +969,9 @@ class SmileHelper:
                     direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
-
                     direct_data[loc.key_string] = loc.f_val
 
-        if direct_data != {}:
-            return direct_data
+        return direct_data
 
     def _preset(self, loc_id):
         """Helper-function for smile.py: device_data_climate().
