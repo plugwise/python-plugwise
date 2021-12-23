@@ -1091,7 +1091,7 @@ class SmileHelper:
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
         Obtain the value/state for the given object.
         """
-        search = self._locations
+        search = self._domain_objects
         locator = (
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
