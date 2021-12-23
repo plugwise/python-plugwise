@@ -1029,9 +1029,7 @@ class SmileHelper:
 
         # Current schemas
         tag = "zone_preset_based_on_time_and_presence_with_override"
-        rule_ids = self._rule_ids_by_tag(tag, loc_id)
-
-        if rule_ids is None:
+        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
             return available, selected, schedule_temperature
 
         for rule_id, dummy in rule_ids.items():
@@ -1071,7 +1069,7 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
 
-        if (rule_ids := self._rule_ids_by_tag(tag, loc_id)) is None:
+        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
             return
 
         for rule_id, dummy in rule_ids.items():
