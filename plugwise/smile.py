@@ -116,8 +116,7 @@ class SmileData(SmileHelper):
             if details["location"] is not None:
                 self._devices[appliance] = details
 
-        group_data = self._group_switches()
-        if group_data is not None:
+        if (group_data := self._group_switches()) is not None:
             self._devices.update(group_data)
 
         # Collect data for each device via helper function
@@ -189,13 +188,12 @@ class SmileData(SmileHelper):
         # Find the thermostat control_state of a location, from domain_objects
         # The control_state represents the heating/cooling demand-state of the master thermostat
         # Note: heating or cooling can still be active when the setpoint has been reached
-        location = self._domain_objects.find(f'location[@id="{details["location"]}"]')
-        if location is not None:
+        locator = f'location[@id="{details["location"]}"]'
+        if (location := self._domain_objects.find(locator)) is not None:
             locator = (
                 ".//actuator_functionalities/thermostat_functionality/control_state"
             )
-            ctrl_state = location.find(locator)
-            if ctrl_state is not None:
+            if (ctrl_state := location.find(locator)) is not None:
                 device_data["control_state"] = ctrl_state.text
 
         return device_data
@@ -384,9 +382,7 @@ class Smile(SmileComm, SmileData):
         Detect which type of Smile is connected.
         """
         model = None
-        gateway = result.find(".//gateway")
-
-        if gateway is not None:
+        if (gateway := result.find(".//gateway")) is not None:
             model = result.find(".//gateway/vendor_model").text
             version = result.find(".//gateway/firmware_version").text
             if gateway.find("hostname") is not None:
@@ -401,9 +397,7 @@ class Smile(SmileComm, SmileData):
 
         ver = semver.VersionInfo.parse(version)
         target_smile = f"{model}_v{ver.major}"
-
         _LOGGER.debug("Plugwise identified as %s", target_smile)
-
         if target_smile not in SMILES:
             _LOGGER.error(
                 'Your version Smile identified as "%s" seems\
@@ -653,8 +647,7 @@ class Smile(SmileComm, SmileData):
     async def _set_preset_legacy(self, preset):
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = self._domain_objects.find(locator)
-        if rule is None:
+        if (rule := self._domain_objects.find(locator)) is None:
             return False
 
         uri = f"{RULES}"
