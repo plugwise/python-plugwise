@@ -686,7 +686,6 @@ class SmileHelper:
     def _appliance_measurements(self, appliance, data, measurements):
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements:
-
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if appliance.find(p_locator) is not None:
                 if self._smile_legacy:
@@ -729,12 +728,7 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        search = self._appliances
-        if self._smile_legacy and self.smile_type != "stretch":
-            search = self._domain_objects
-
-        appliances = search.findall(f'.//appliance[@id="{d_id}"]')
-
+        appliances = self._appliances.findall(f'.//appliance[@id="{d_id}"]')
         for appliance in appliances:
             measurements = DEVICE_MEASUREMENTS.items()
             if self._active_device_present:
@@ -744,7 +738,6 @@ class SmileHelper:
                 }.items()
 
             data = self._appliance_measurements(appliance, data, measurements)
-
             data.update(self._get_lock_state(appliance))
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
