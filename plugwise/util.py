@@ -96,6 +96,8 @@ def format_measure(measure, unit):
     """Format measure to correct type."""
     try:
         measure = int(measure)
+    except TypeError:
+        return None
     except ValueError:
         if unit == PERCENTAGE:
             if 0 < float(measure) <= 1:
