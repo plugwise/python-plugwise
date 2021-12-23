@@ -1098,16 +1098,11 @@ class SmileHelper:
         Obtain the value/state for the given object.
         """
         search = self._locations
-
         locator = (
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
-        if search.find(locator) is not None:
-            val = format_measure(search.find(locator).text, None)
-            return val
-
-        return None
+        return format_measure(search.find(locator).text, None)
 
     def _get_lock_state(self, xml):
         """Helper-function for _get_appliance_data().
