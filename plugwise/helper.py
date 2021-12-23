@@ -400,8 +400,8 @@ class SmileHelper:
         appl_search = appliance.find(locator)
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
-            module = self._modules.find(f".//{mod_type}[@id='{link_id}']....")
-            if module is not None:
+            locator = f".//{mod_type}[@id='{link_id}']...."
+            if (module := self._modules.find(locator)) is not None:
                 v_name = module.find("vendor_name").text
                 v_model = module.find("vendor_model").text
                 hw_version = module.find("hardware_version").text
@@ -628,15 +628,14 @@ class SmileHelper:
     def _presets(self, loc_id):
         """Collect Presets for a Thermostat based on location_id."""
         presets = {}
-        tag = "zone_setpoint_and_state_based_on_preset"
+        tag_1 = "zone_setpoint_and_state_based_on_preset"
+        tag_2 = "Thermostat presets"
 
         if self._smile_legacy:
             return self._presets_legacy()
 
-        rule_ids = self._rule_ids_by_tag(tag, loc_id)
-        if rule_ids is None:
-            rule_ids = self._rule_ids_by_name("Thermostat presets", loc_id)
-            if rule_ids is None:
+        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
+            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
                 return presets
 
         for rule_id in rule_ids:
@@ -665,8 +664,7 @@ class SmileHelper:
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
 
-        if schema_ids != {}:
-            return schema_ids
+        return schema_ids
 
     def _rule_ids_by_tag(self, tag, loc_id):
         """Helper-function for _presets(), _schemas() and _last_active_schema().
@@ -680,8 +678,7 @@ class SmileHelper:
                 if rule.find(locator2) is not None:
                     schema_ids[rule.attrib["id"]] = loc_id
 
-        if schema_ids != {}:
-            return schema_ids
+        return schema_ids
 
     def _appliance_measurements(self, appliance, data, measurements):
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
@@ -920,8 +917,7 @@ class SmileHelper:
             loc.found = False
             return loc
 
-        peak = loc.peak_select.split("_")[1]
-        if peak == "offpeak":
+        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
@@ -1001,8 +997,7 @@ class SmileHelper:
         selected = None
 
         for schema in self._domain_objects.findall(".//rule"):
-            rule_name = schema.find("name").text
-            if rule_name:
+            if rule_name := schema.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
 
@@ -1076,8 +1071,7 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
 
-        rule_ids = self._rule_ids_by_tag(tag, loc_id)
-        if rule_ids is None:
+        if (rule_ids := self._rule_ids_by_tag(tag, loc_id)) is None:
             return
 
         for rule_id, dummy in rule_ids.items():
