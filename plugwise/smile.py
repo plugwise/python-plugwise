@@ -6,14 +6,7 @@ import copy
 import logging
 
 import aiohttp
-
-# Dict as class
-from munch import Munch
-
-# Version detection
-import semver
-
-from .constants import (
+from constants import (
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -31,14 +24,20 @@ from .constants import (
     SYSTEM,
     THERMOSTAT_CLASSES,
 )
-from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
-from .helper import (
+from exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
+from helper import (
     SmileComm,
     SmileHelper,
     device_state_updater,
     pw_notification_updater,
     update_helper,
 )
+
+# Dict as class
+from munch import Munch
+
+# Version detection
+import semver
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,39 +52,35 @@ class SmileData(SmileHelper):
         """
         if d_id == self.gateway_id:
             if self._sm_thermostat is not None:
-                bs_list.append(PW_NOTIFICATION)
+                bs_list.update(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
-                s_list.append(DEVICE_STATE)
+                s_list.update(DEVICE_STATE)
         if d_id == self._heater_id and self._sm_thermostat is not None:
-            s_list.append(DEVICE_STATE)
+            s_list.update(DEVICE_STATE)
 
     def _all_device_data(self):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        dev_id_list = []
-        dev_and_data_list = []
         for dev_id, dev_dict in self._devices.items():
             dev_and_data = dev_dict
-            temp_bs_list = []
-            temp_s_list = []
-            temp_sw_list = []
+            temp_bs_dict = {}
+            temp_s_dict = {}
+            temp_sw_dict = {}
             data = self._get_device_data(dev_id)
 
-            self._create_lists_from_data(data, temp_bs_list, temp_s_list, temp_sw_list)
-            self._append_special(data, dev_id, temp_bs_list, temp_s_list)
+            self._create_dicts_from_data(data, temp_bs_dict, temp_s_dict, temp_sw_dict)
+            self._append_special(data, dev_id, temp_bs_dict, temp_s_dict)
 
             dev_and_data.update(data)
-            if temp_bs_list != []:
-                dev_and_data["binary_sensors"] = temp_bs_list
-            if temp_s_list != []:
-                dev_and_data["sensors"] = temp_s_list
-            if temp_sw_list != []:
-                dev_and_data["switches"] = temp_sw_list
-            dev_id_list.append(dev_id)
-            dev_and_data_list.append(copy.deepcopy(dev_and_data))
+            if temp_bs_dict != {}:
+                dev_and_data["binary_sensors"] = temp_bs_dict
+            if temp_s_dict != {}:
+                dev_and_data["sensors"] = temp_s_dict
+            if temp_sw_dict != {}:
+                dev_and_data["switches"] = temp_sw_dict
 
-        self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
+            self.gw_devices[dev_id] = dev_and_data
 
         self.gw_data["active_device"] = self._active_device_present
         self.gw_data["cooling_present"] = self._cooling_present
@@ -488,30 +483,25 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data["notifications"] = self._notifications
 
+        dict_types = ["binary_sensors", "central", "climate", "sensors", "switches"]
+
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
-            for key, value in list(data.items()):
-                if key in dev_dict:
-                    self.gw_devices[dev_id][key] = value
-            if "binary_sensors" in dev_dict:
-                for key, value in list(data.items()):
-                    update_helper(
-                        data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key
-                    )
-                pw_notification_updater(
-                    self.gw_devices, dev_id, dev_dict, self._notifications
-                )
-            if "sensors" in dev_dict:
-                for key, value in list(data.items()):
-                    update_helper(
-                        data, self.gw_devices, dev_dict, dev_id, "sensors", key
-                    )
-                device_state_updater(data, self.gw_devices, dev_id, dev_dict)
-            if "switches" in dev_dict:
-                for key, value in list(data.items()):
-                    update_helper(
-                        data, self.gw_devices, dev_dict, dev_id, "switches", key
-                    )
+
+            for type in dict_types:
+                if type in dev_dict:
+                    for key, value in list(data.items()):
+                        update_helper(
+                            data, self.gw_devices, dev_dict, dev_id, type, key
+                        )
+                        if type == "binary_sensors":
+                            pw_notification_updater(
+                                self.gw_devices, dev_id, dev_dict, self.notifications
+                            )
+                        if type == "sensors":
+                            device_state_updater(
+                                data, self.gw_devices, dev_id, dev_dict
+                            )
 
         return [self.gw_data, self.gw_devices]
 
