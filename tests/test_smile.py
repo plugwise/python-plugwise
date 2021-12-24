@@ -1061,7 +1061,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test Adam with Anna and a switch-group setup."""
         testdata = {
             # Anna
-            "ee62cad889f94e8ca3d09021f03a660b": {"control_state": "off"},
+            "ee62cad889f94e8ca3d09021f03a660b": {
+                "control_state": "off",
+                "available_schedules": ["Weekschema"],
+                "selected_schedule": "Weekschema",
+                "last_used": "Weekschema",
+                "presets": {
+                    "asleep": [18.0, 24.0],
+                    "away": [15.0, 25.0],
+                    "home": [20.0, 22.0],
+                    "no_frost": [10.0, 30.0],
+                    "vacation": [15.0, 28.0],
+                },
+                "active_preset": "home",
+                "schedule_temperature": 20.0,
+            },
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "binary_sensors": {"dhw_state": True},
