@@ -1125,7 +1125,7 @@ class SmileHelper:
 
         return data
 
-    def _create_lists_from_data(self, data, bs_list, s_list, sw_list):
+    def _create_dicts_from_data(self, data, bs_list, s_list, sw_list):
         """Helper-function for smile.py: _all_device_data().
         Create dicts of binary_sensors, sensors, switches from the relevant data.
         """
