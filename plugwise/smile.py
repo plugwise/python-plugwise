@@ -497,7 +497,7 @@ class Smile(SmileComm, SmileData):
                         )
                         if type == "binary_sensors":
                             pw_notification_updater(
-                                self.gw_devices, dev_id, dev_dict, self.notifications
+                                self.gw_devices, dev_id, dev_dict, self._notifications
                             )
                         if type == "sensors":
                             device_state_updater(
