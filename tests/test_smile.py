@@ -1074,7 +1074,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "vacation": [15.0, 28.0],
                 },
                 "active_preset": "home",
-                "schedule_temperature": 20.0,
+                "schedule_temperature": 20.5,
             },
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
