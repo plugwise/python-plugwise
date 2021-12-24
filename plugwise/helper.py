@@ -73,10 +73,10 @@ def device_state_updater(data, devs, d_id, d_dict):
     """Helper-function for async_update().
     Update the Device_State sensor state.
     """
-    for idx, item in enumerate(d_dict["sensors"]):
-        if item[ATTR_ID] == "device_state":
+    for id in d_dict["sensors"]:
+        if id == "device_state":
             result = update_device_state(data, d_dict)
-            devs[d_id]["sensors"][idx][ATTR_STATE] = result
+            devs[d_id]["sensors"][id] = result
 
 
 def update_device_state(data, d_dict):
@@ -87,22 +87,19 @@ def update_device_state(data, d_dict):
     state = "idle"
 
     if "binary_sensors" in d_dict:
-        for _, item in enumerate(d_dict["binary_sensors"]):
-            if item[ATTR_ID] == "dhw_state":
-                if item[ATTR_STATE]:
-                    state = "dhw-heating"
-                    _dhw_state = True
+        for item, state in d_dict["binary_sensors"].items():
+            if item == "dhw_state" and state:
+                state = "dhw-heating"
+                _dhw_state = True
 
-    if "heating_state" in data:
-        if data["heating_state"]:
-            state = "heating"
-            _heating_state = True
+    if "heating_state" in data and data["heating_state"]:
+        state = "heating"
+        _heating_state = True
     if _heating_state and _dhw_state:
         state = "dhw and heating"
-    if "cooling_state" in data:
-        if data["cooling_state"]:
-            state = "cooling"
-            _cooling_state = True
+    if "cooling_state" in data and data["cooling_state"]:
+        state = "cooling"
+        _cooling_state = True
     if _cooling_state and _dhw_state:
         state = "dhw and cooling"
 
@@ -113,20 +110,20 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
     """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
     """
-    for idx, item in enumerate(d_dict["binary_sensors"]):
-        if item[ATTR_ID] == "plugwise_notification":
-            devs[d_id]["binary_sensors"][idx][ATTR_STATE] = notifs != {}
+    for id in d_dict["binary_sensors"]:
+        if id == "plugwise_notification":
+            devs[d_id]["binary_sensors"][id] = notifs != {}
 
 
 def update_helper(data, devs, d_dict, d_id, e_type, key):
     """Helper-function for async_update()."""
     for dummy in d_dict[e_type]:
-        if key != dummy[ATTR_ID]:
+        if key != dummy:
             continue
-        for idx, item in enumerate(devs[d_id][e_type]):
-            if key != item[ATTR_ID]:
+        for id in devs[d_id][e_type]:
+            if key != id:
                 continue
-            devs[d_id][e_type][idx][ATTR_STATE] = data[key]
+            devs[d_id][e_type][id] = data[key]
 
 
 def check_model(name, v_name):
@@ -1130,22 +1127,19 @@ class SmileHelper:
 
     def _create_lists_from_data(self, data, bs_list, s_list, sw_list):
         """Helper-function for smile.py: _all_device_data().
-        Create lists of binary_sensors, sensors, switches from the relevant data.
+        Create dicts of binary_sensors, sensors, switches from the relevant data.
         """
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
-                if item[ATTR_ID] == key:
-                    data.pop(item[ATTR_ID])
+                if list(item.keys())[0] == key:
+                    data.pop(key)
                     if self._active_device_present:
-                        item[ATTR_STATE] = value
-                        bs_list.append(item)
+                        bs_list[key] = value
             for item in SENSORS:
-                if item[ATTR_ID] == key:
-                    data.pop(item[ATTR_ID])
-                    item[ATTR_STATE] = value
-                    s_list.append(item)
+                if list(item.keys())[0] == key:
+                    data.pop(key)
+                    s_list[key] = value
             for item in SWITCHES:
-                if item[ATTR_ID] == key:
-                    data.pop(item[ATTR_ID])
-                    item[ATTR_STATE] = value
-                    sw_list.append(item)
+                if list(item.keys())[0] == key:
+                    data.pop(key)
+                    sw_list[key] = value
