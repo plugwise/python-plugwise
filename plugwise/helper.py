@@ -73,10 +73,10 @@ def device_state_updater(data, devs, d_id, d_dict):
     """Helper-function for async_update().
     Update the Device_State sensor state.
     """
-    for id in d_dict["sensors"]:
-        if id == "device_state":
+    for item in d_dict["sensors"]:
+        if item == "device_state":
             result = update_device_state(data, d_dict)
-            devs[d_id]["sensors"][id] = result
+            devs[d_id]["sensors"][item] = result
 
 
 def update_device_state(data, d_dict):
