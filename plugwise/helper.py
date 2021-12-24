@@ -84,26 +84,26 @@ def update_device_state(data, d_dict):
     _cooling_state = False
     _dhw_state = False
     _heating_state = False
-    state = "idle"
+    result = "idle"
 
     if "binary_sensors" in d_dict:
         for item, state in d_dict["binary_sensors"].items():
             if item == "dhw_state" and state:
-                state = "dhw-heating"
+                result = "dhw-heating"
                 _dhw_state = True
 
     if "heating_state" in data and data["heating_state"]:
-        state = "heating"
+        result = "heating"
         _heating_state = True
     if _heating_state and _dhw_state:
-        state = "dhw and heating"
+        result = "dhw and heating"
     if "cooling_state" in data and data["cooling_state"]:
-        state = "cooling"
+        result = "cooling"
         _cooling_state = True
     if _cooling_state and _dhw_state:
-        state = "dhw and cooling"
+        result = "dhw and cooling"
 
-    return state
+    return result
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
