@@ -46,18 +46,18 @@ _LOGGER = logging.getLogger(__name__)
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def _append_special(self, data, d_id, bs_list, s_list):
+    def _append_special(self, data, d_id, bs_dict, s_dict):
         """Helper-function for smile.py: _all_device_data().
         When conditions are met, the plugwise_notification binary_sensor
         and/or the device_state sensor are appended.
         """
         if d_id == self.gateway_id:
             if self._sm_thermostat is not None:
-                bs_list.update(PW_NOTIFICATION)
+                bs_dict.update(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
-                s_list.update(DEVICE_STATE)
+                s_dict.update(DEVICE_STATE)
         if d_id == self._heater_id and self._sm_thermostat is not None:
-            s_list.update(DEVICE_STATE)
+            s_dict.update(DEVICE_STATE)
 
     def _all_device_data(self):
         """Helper-function for get_all_devices().
