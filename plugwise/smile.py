@@ -484,25 +484,30 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data["notifications"] = self._notifications
 
-        dict_types = ["binary_sensors", "central", "climate", "sensors", "switches"]
-
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
-
-            for type in dict_types:
-                if type in dev_dict:
-                    for key, value in list(data.items()):
-                        update_helper(
-                            data, self.gw_devices, dev_dict, dev_id, type, key
-                        )
-                        if type == "binary_sensors":
-                            pw_notification_updater(
-                                self.gw_devices, dev_id, dev_dict, self._notifications
-                            )
-                        if type == "sensors":
-                            device_state_updater(
-                                data, self.gw_devices, dev_id, dev_dict
-                            )
+            for key, value in list(data.items()):
+                if key in dev_dict:
+                    self.gw_devices[dev_id][key] = value
+            if "binary_sensors" in dev_dict:
+                for key, value in list(data.items()):
+                    update_helper(
+                        data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key
+                    )
+                pw_notification_updater(
+                    self.gw_devices, dev_id, dev_dict, self._notifications
+                )
+            if "sensors" in dev_dict:
+                for key, value in list(data.items()):
+                    update_helper(
+                        data, self.gw_devices, dev_dict, dev_id, "sensors", key
+                    )
+                device_state_updater(data, self.gw_devices, dev_id, dev_dict)
+            if "switches" in dev_dict:
+                for key, value in list(data.items()):
+                    update_helper(
+                        data, self.gw_devices, dev_dict, dev_id, "switches", key
+                    )
 
         return [self.gw_data, self.gw_devices]
 
