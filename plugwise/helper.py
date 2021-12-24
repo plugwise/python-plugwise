@@ -1125,7 +1125,7 @@ class SmileHelper:
 
         return data
 
-    def _create_dicts_from_data(self, data, bs_list, s_list, sw_list):
+    def _create_dicts_from_data(self, data, bs_dict, s_dict, sw_dict):
         """Helper-function for smile.py: _all_device_data().
         Create dicts of binary_sensors, sensors, switches from the relevant data.
         """
@@ -1134,12 +1134,12 @@ class SmileHelper:
                 if list(item.keys())[0] == key:
                     data.pop(key)
                     if self._active_device_present:
-                        bs_list[key] = value
+                        bs_dict[key] = value
             for item in SENSORS:
                 if list(item.keys())[0] == key:
                     data.pop(key)
-                    s_list[key] = value
+                    s_dict[key] = value
             for item in SWITCHES:
                 if list(item.keys())[0] == key:
                     data.pop(key)
-                    sw_list[key] = value
+                    sw_dict[key] = value
