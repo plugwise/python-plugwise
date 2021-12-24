@@ -1064,7 +1064,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ee62cad889f94e8ca3d09021f03a660b": {"control_state": "off"},
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"dhw_state": False},
+                "binary_sensors": {"dhw_state": True},
                 "sensors": {"device_state": "dhw-heating"},
                 "cooling_active": False,
             },
