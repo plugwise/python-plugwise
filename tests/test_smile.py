@@ -427,7 +427,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     assert b_item["state"] == a_item["state"]
                         else:
                             asserts += 1
-                            assert dev_data[measure_key] == measure_assert
+                            # The schedule temperature changes accordung to the set schedule,
+                            # so the value can differ when testing at different times during the day.
+                            if measure_key == "schedule_temperature":
+                                _LOGGER.debug(
+                                    "Schedule temperature = %s", dev_data[measure_key]
+                                )
+                                assert isinstance(dev_data[measure_key], float)
+                            else:
+                                assert dev_data[measure_key] == measure_assert
 
         assert tests == asserts
 
