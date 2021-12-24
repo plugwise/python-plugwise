@@ -110,9 +110,9 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
     """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
     """
-    for id in d_dict["binary_sensors"]:
-        if id == "plugwise_notification":
-            devs[d_id]["binary_sensors"][id] = notifs != {}
+    for item in d_dict["binary_sensors"]:
+        if item == "plugwise_notification":
+            devs[d_id]["binary_sensors"][item] = notifs != {}
 
 
 def update_helper(data, devs, d_dict, d_id, e_type, key):
@@ -120,10 +120,10 @@ def update_helper(data, devs, d_dict, d_id, e_type, key):
     for dummy in d_dict[e_type]:
         if key != dummy:
             continue
-        for id in devs[d_id][e_type]:
-            if key != id:
+        for item in devs[d_id][e_type]:
+            if key != item:
                 continue
-            devs[d_id][e_type][id] = data[key]
+            devs[d_id][e_type][item] = data[key]
 
 
 def check_model(name, v_name):
