@@ -734,8 +734,9 @@ class SmileHelper:
                 **HEATER_CENTRAL_MEASUREMENTS,
             }.items()
 
-        data = self._appliance_measurements(appliance, data, measurements)
-        data.update(self._get_lock_state(appliance))
+        if appliance is not None:
+            data = self._appliance_measurements(appliance, data, measurements)
+            data.update(self._get_lock_state(appliance))
 
         # Anna: check for cooling capability
         if "cooling_activation_outdoor_temperature" in data:
