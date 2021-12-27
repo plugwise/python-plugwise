@@ -726,17 +726,16 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        appliances = self._appliances.findall(f'.//appliance[@id="{d_id}"]')
-        for appliance in appliances:
-            measurements = DEVICE_MEASUREMENTS.items()
-            if self._active_device_present:
-                measurements = {
-                    **DEVICE_MEASUREMENTS,
-                    **HEATER_CENTRAL_MEASUREMENTS,
-                }.items()
+        appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
+        measurements = DEVICE_MEASUREMENTS.items()
+        if self._active_device_present:
+            measurements = {
+                **DEVICE_MEASUREMENTS,
+                **HEATER_CENTRAL_MEASUREMENTS,
+            }.items()
 
-            data.update(self._appliance_measurements(appliance, data, measurements))
-            data.update(self._get_lock_state(appliance))
+        data = self._appliance_measurements(appliance, data, measurements)
+        data.update(self._get_lock_state(appliance))
 
         # Anna: check for cooling capability
         if "cooling_activation_outdoor_temperature" in data:
