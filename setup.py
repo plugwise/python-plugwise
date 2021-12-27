@@ -36,7 +36,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     install_requires=[
-        "aiohttp==3.8.1",
+        "aiohttp",
         "async_timeout",
         "crcmod",
         "defusedxml",
