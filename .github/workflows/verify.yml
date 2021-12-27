@@ -167,7 +167,7 @@ jobs:
     needs: commitcheck
     strategy:
       matrix:
-        python-version: [3.8, 3.9, 3.10]
+        python-version: [3.8, 3.9, "3.10"]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v2
@@ -204,7 +204,7 @@ jobs:
     needs: prepare-test-cache
     strategy:
       matrix:
-        python-version: [3.8, 3.9, 3.10]
+        python-version: [3.8, 3.9, "3.10"]
 
     steps:
       - name: Check out committed code
