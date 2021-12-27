@@ -735,7 +735,7 @@ class SmileHelper:
                     **HEATER_CENTRAL_MEASUREMENTS,
                 }.items()
 
-            data = self._appliance_measurements(appliance, data, measurements)
+            data.update(self._appliance_measurements(appliance, data, measurements))
             data.update(self._get_lock_state(appliance))
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
