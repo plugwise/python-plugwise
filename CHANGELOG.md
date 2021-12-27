@@ -1,5 +1,9 @@
 # Changelog
 
+## In progress
+  - Add testing for python 3.10
+  - Bump aiohttp to 3.8.1
+
 ## v0.15.4 - Smile - Bugfix: handle removed thermostats
   - Recognize when a thermostat has been removed from a zone and don't show it in Core
   - Rename Group Switch to Switchgroup, remove vendor name
