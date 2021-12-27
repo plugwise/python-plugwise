@@ -744,9 +744,10 @@ class SmileHelper:
             self._cooling_present = True
 
         # Elga doesn't use intended_cental_heating_state to show the generic heating state
-        if "c_heating_state" in data and "heating_state" in data:
-            if data["c_heating_state"] and not data["heating_state"]:
-                data["heating_state"] = True
+        if "c_heating_state" in data:
+            if "heating_state" in data:
+                if data["c_heating_state"] and not data["heating_state"]:
+                    data["heating_state"] = True
             data.pop("c_heating_state")
 
         # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
