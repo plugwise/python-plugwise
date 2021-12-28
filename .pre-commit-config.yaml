@@ -1,7 +1,7 @@
 repos:
   # Run manually in CI skipping the branch checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.1.0
     hooks:
       - id: check-executables-have-shebangs
         stages: [manual]
@@ -9,12 +9,12 @@ repos:
         args:
           - --branch=main
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.7.2
+    rev: v2.30.0
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
   - repo: https://github.com/psf/black
-    rev: 21.10b0
+    rev: 21.12b0
     hooks:
       - id: black
         args:
@@ -22,7 +22,7 @@ repos:
           - --quiet
         files: ^((plugwise|tests)/.+)?[^/]+\.py$
   - repo: https://github.com/codespell-project/codespell
-    rev: v1.17.1
+    rev: v2.1.0
     hooks:
       - id: codespell
         args:
@@ -31,7 +31,7 @@ repos:
           - --quiet-level=2
         exclude_types: [csv, json]
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.4
+    rev: 3.9.2
     hooks:
       - id: flake8
         additional_dependencies:
@@ -39,7 +39,7 @@ repos:
           - pydocstyle==5.1.1
         files: ^(plugwise|tests)/.+\.py$
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.6.2
+    rev: 1.7.1
     hooks:
       - id: bandit
         args:
@@ -48,11 +48,11 @@ repos:
           - --configfile=tests/bandit.yaml
         files: ^(plugwise|tests)/.+\.py$
   - repo: https://github.com/PyCQA/isort
-    rev: 5.5.3
+    rev: 5.10.1
     hooks:
       - id: isort
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.24.2
+    rev: v1.26.3
     hooks:
       - id: yamllint
   - repo: https://github.com/prettier/prettier
