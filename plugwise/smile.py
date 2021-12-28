@@ -265,7 +265,7 @@ class Smile(SmileComm, SmileData):
             websession,
         )
 
-        self._active_device_present = None
+        self._active_device_present = False
         self._appliances = None
         self._appl_data = None
         self._cooling_present = False
