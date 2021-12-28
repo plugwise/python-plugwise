@@ -9,12 +9,10 @@
   - Use walrus operator where applicable,
   - Various small code improvements,
   - Add and adapt testcode
-
-# v0.15.5 - Skipping, not released
-
-## In progress
   - Add testing for python 3.10, improve dependencies (github workflow)
   - Bump aiohttp to 3.8.1, remove fixed dependencies
+
+# v0.15.5 - Skipping, not released
 
 ## v0.15.4 - Smile - Bugfix: handle removed thermostats
   - Recognize when a thermostat has been removed from a zone and don't show it in Core
