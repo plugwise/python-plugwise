@@ -56,10 +56,6 @@ repos:
     hooks:
       - id: prettier
         stages: [manual]
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
   - repo: local
     hooks:
       # Run mypy through our wrapper script in order to get the possible
@@ -79,3 +75,7 @@ repos:
         types: [python]
         require_serial: true
         files: ^plugwise/.+\.py$
+#  - repo: https://github.com/PyCQA/isort
+#    rev: 5.10.1
+#    hooks:
+#      - id: isort

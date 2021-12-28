@@ -156,7 +156,7 @@ jobs:
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual black
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual codespell
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual flake8
-          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual isort
+          #pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual isort
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual mypy
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual userdata
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual yamllint
