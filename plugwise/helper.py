@@ -567,7 +567,6 @@ class SmileHelper:
                 "types": {"power", "home"},
                 "vendor": "Plugwise B.V.",
             }
-            return
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
         self._cp_state = self._appliances.find(
