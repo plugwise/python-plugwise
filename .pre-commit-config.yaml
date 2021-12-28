@@ -47,11 +47,6 @@ repos:
           - --format=custom
           - --configfile=tests/bandit.yaml
         files: ^(plugwise|tests)/.+\.py$
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
-        additional_dependencies: ['.[pyproject]']
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.26.3
     hooks:
@@ -61,6 +56,10 @@ repos:
     hooks:
       - id: prettier
         stages: [manual]
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
   - repo: local
     hooks:
       # Run mypy through our wrapper script in order to get the possible
