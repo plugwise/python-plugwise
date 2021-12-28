@@ -4,6 +4,5 @@
 # and setup
 -e .
 # pytest-asyncio
-setuptools
 pytest-cover
 radon

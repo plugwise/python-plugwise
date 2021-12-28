@@ -3,7 +3,6 @@
 # Import from setup.py
 -e .
 # Minimal requirements for committing
-setuptools
 coverage
 flake8-black
 mypy

@@ -51,6 +51,7 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
+        additional_dependencies: ['.[pyproject]']
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.26.3
     hooks:
