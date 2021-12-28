@@ -440,7 +440,7 @@ class SmileHelper:
         """Collect device info (Smile/Stretch, Thermostats, Auxiliary): firmware, model and vendor name."""
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
-            self._gateway_id = appliance.attrib["id"]
+            self.gateway_id = appliance.attrib["id"]
             appl.fw = self.smile_version[0]
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
@@ -504,7 +504,7 @@ class SmileHelper:
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
                 # For legacy_anna gateway and heater_central is the same device
-                self._gateway_id = self._heater_id
+                self.gateway_id = self._heater_id
             appl.types = self._loc_data[self._home_location]["types"]
 
         # Determine appliance_type from functionality
@@ -540,7 +540,7 @@ class SmileHelper:
                 "types": {"power", "home"},
                 "vendor": "Plugwise B.V.",
             }
-            self._gateway_id = self._home_location
+            self.gateway_id = self._home_location
 
             return
 
