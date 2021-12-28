@@ -1,10 +1,10 @@
 # In addition to Upstream HA (devbranch)
 -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt
 # and commit
--r requirements_commit.txt
+# -r requirements_commit.txt
 # and setup
 -e .
 #
-pytest-asyncio
+# pytest-asyncio
 pytest-cover
 radon
