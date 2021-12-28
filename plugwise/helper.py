@@ -558,7 +558,7 @@ class SmileHelper:
 
         # Create a gateway for the Stretches
         if self.smile_type == "stretch":
-            self._appl_data[self._home_location] = {
+            self._appl_data[self._gateway_id] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "location": self._home_location,
