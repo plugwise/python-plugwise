@@ -4,8 +4,8 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 15
-  DEFAULT_PYTHON: "3.10"
+  CACHE_VERSION: 16
+  DEFAULT_PYTHON: "3.9"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
 
 on:
@@ -45,11 +45,24 @@ jobs:
       - name: Create Python virtual environment
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
+          pip install virtualenv --upgrade
           python -m venv venv
           . venv/bin/activate
           pip install -U pip setuptools wheel
-          pip install -e .
           pip install -r requirements_test.txt
+      - name: Restore pre-commit environment from cache
+        id: cache-precommit
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.PRE_COMMIT_HOME }}
+          key: |
+            ${{ env.CACHE_VERSION}}-${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            ${{ env.CACHE_VERSION}}-${{ runner.os }}-pre-commit-
+      - name: Install pre-commit dependencies
+        if: steps.cache-precommit.outputs.cache-hit != 'true'
+        run: |
+          . venv/bin/activate
           pre-commit install-hooks
 
   black:
@@ -182,7 +195,6 @@ jobs:
           python -m venv venv
           . venv/bin/activate
           pip install -U pip setuptools wheel
-          pip install -e .
           pip install -r requirements_test.txt
 
   pytest:
