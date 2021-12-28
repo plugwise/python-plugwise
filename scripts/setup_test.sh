@@ -17,7 +17,7 @@ for venv in venv .venv .; do
     . "${my_path}/${venv}/bin/activate"
 
     # Install testing requirements
-    pip install --upgrade -r requirements_test.txt 
+    pip install --upgrade -r requirements_test.txt
     # Install pre-commit hook
     ${my_path}/${venv}/bin/pre-commit install
   fi
