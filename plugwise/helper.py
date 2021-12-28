@@ -526,9 +526,9 @@ class SmileHelper:
 
         self._all_locations()
 
-        # For legacy P1
-        # Inject home_location as device id for legacy so
-        # appl_data can use the location id as device id.
+        # Create a gateway for legacy P1 and Anna
+        # And inject a home_location as device id for legacy so
+        # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
             if self.smile_type == "power":
                 self._appl_data[self._home_location] = {
@@ -555,6 +555,19 @@ class SmileHelper:
                     "vendor": "Plugwise B.V.",
                 }
                 self._gateway_id = self._home_location
+
+        # Create a gateway for the Stretches
+        if self.smile_type == "stretch":
+            self._appl_data[self._home_location] = {
+                "class": "gateway",
+                "fw": self.smile_version[0],
+                "location": self._home_location,
+                "model": "Stretch",
+                "name": "Stretch",
+                "types": {"power", "home"},
+                "vendor": "Plugwise B.V.",
+            }
+            return
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
         self._cp_state = self._appliances.find(
