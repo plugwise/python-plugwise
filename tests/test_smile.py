@@ -374,7 +374,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         extra = data[0]
         device_list = data[1]
         if preset:
-            device_list["3cb70739631c4d17a86b8b12e8a5161b"]["cooling_active"] = True
+            smile.cooling_active = True
         self.active_device_present = extra["active_device"]
         self.cooling_present = extra["cooling_present"]
         self.notifications = extra["notifications"]
