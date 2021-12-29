@@ -1622,7 +1622,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": None,
                 "active_preset": "home",
-                "sensors": [{"id": "illuminance", "state": 25.5}],
+                "sensors": [
+                    {"id": "illuminance", "state": 25.5},
+                    {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
+                    {"id": "cooling_deactivation_threshold", "state": 6},
+                ],
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
@@ -1635,8 +1639,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     }
                 ],
                 "sensors": [
-                    {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
-                    {"id": "cooling_deactivation_threshold", "state": 6},
                     {"id": "water_temperature", "state": 24.7},
                     {"id": "water_pressure", "state": 1.61},
                 ],
