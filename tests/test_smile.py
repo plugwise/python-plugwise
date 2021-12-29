@@ -365,7 +365,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("      ! no devices found in this location")
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=pw_smile.Smile, testdata=None):
+    async def device_test(self, smile=pw_smile.Smile, testdata=None, preset=False):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "sensors", "switches"]
@@ -373,6 +373,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
+        if preset:
+            device_list["3cb70739631c4d17a86b8b12e8a5161b"]["cooling_active"] = True
         self.active_device_present = extra["active_device"]
         self.cooling_present = extra["cooling_present"]
         self.notifications = extra["notifications"]
@@ -1604,7 +1606,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
-        await self.device_test(smile, testdata)
+        await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
         assert smile._sm_thermostat
         assert self.active_device_present
