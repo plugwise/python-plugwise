@@ -149,6 +149,21 @@ class SmileData(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
+        # Anna connected to a device with cooling and heating capabilities
+        if self.smile_name == "Anna" and details["class"] != "gateway":
+            if (
+                device_data["temperature"]
+                > device_data["cooling_activation_outdoor_temperature"]
+                and self._cooling_present
+            ):
+                device_data["cooling_active"] = True
+            if (
+                device_data["cooling_active"]
+                and device_data["temperature"]
+                < device_data["cooling_deactivation_threshold"]
+            ):
+                device_data["cooling_active"] = False
+
         return device_data
 
     def _device_data_adam(self, details, device_data):
