@@ -553,6 +553,14 @@ BATTERY = {
     ATTR_ID: "battery",
     ATTR_STATE: None,
 }
+COOL_ACT_THRESHOLD = {
+    ATTR_ID: "cooling_activation_outdoor_temperature",
+    ATTR_STATE: None,
+}
+COOL_DEACT_THRESHOLD = {
+    ATTR_ID: "cooling_deactivation_threshold",
+    ATTR_STATE: None,
+}
 CURRENT_TEMP = {
     ATTR_ID: "temperature",
     ATTR_STATE: None,
@@ -695,6 +703,8 @@ WATER_TEMP = {
 }
 SENSORS = [
     BATTERY,
+    COOL_ACT_THRESHOLD,
+    COOL_DEACT_THRESHOLD,
     CURRENT_TEMP,
     DEVICE_STATE,
     EL_CONSUMED,
