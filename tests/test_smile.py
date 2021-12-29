@@ -1565,6 +1565,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "standaard",
                 "active_preset": "home",
+                "cooling_active": False,
                 "sensors": [
                     {"id": "illuminance", "state": 86.0},
                     {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
@@ -1622,6 +1623,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": None,
                 "active_preset": "home",
+                "cooling_active": True,
                 "sensors": [
                     {"id": "illuminance", "state": 25.5},
                     {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
