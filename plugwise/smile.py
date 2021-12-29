@@ -152,17 +152,17 @@ class SmileData(SmileHelper):
         # Anna connected to a device with cooling and heating capabilities
         if "cooling_activation_outdoor_temperature" in device_data:
             if (
-                not device_data["cooling_active"]
+                not self.cooling_active
                 and device_data["temperature"]
                 > device_data["cooling_activation_outdoor_temperature"]
             ):
-                device_data["cooling_active"] = True
+                device_data["cooling_active"] = self.cooling_active = True
             if (
-                device_data["cooling_active"]
+                self.cooling_active
                 and device_data["temperature"]
                 < device_data["cooling_deactivation_threshold"]
             ):
-                device_data["cooling_active"] = False
+                device_data["cooling_active"] = self.cooling_active = False
 
         return device_data
 
@@ -315,6 +315,7 @@ class Smile(SmileComm, SmileData):
         self._stretch_v3 = False
         self._thermo_locs = None
 
+        self.cooling_active = False
         self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}
