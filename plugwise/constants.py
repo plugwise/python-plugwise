@@ -401,13 +401,13 @@ DEVICE_MEASUREMENTS = {
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core setpoint
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    # Anna illuminance
     "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
-    "outdoor_temperature": {
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
-    },  # Outdoor temp as reported on the Anna, in the App
-    "schedule_temperature": {
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
-    },  # Only present on legacy Anna and Anna_v3
+    # Only present on legacy Anna and Anna_v3
+    "schedule_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    # Anna: automatic cooling activation/deactivation thresholds
+    "cooling_activation_outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "cooling_deactivation_threshold": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Lisa and Tom
     "battery": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "temperature_difference": {ATTR_UNIT_OF_MEASUREMENT: DEGREE},
