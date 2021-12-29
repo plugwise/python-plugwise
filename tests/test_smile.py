@@ -1568,7 +1568,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": [
                     {"id": "illuminance", "state": 86.0},
                     {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
-                    {"id": "cooling_deactivation_threshold", "state": 6},
+                    {"id": "cooling_deactivation_threshold", "state": 4},
                 ],
             },
             # Central
