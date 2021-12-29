@@ -370,11 +370,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
+        if preset:
+            _LOGGER.debug("Set cooling_active to True")
+            smile.cooling_active = True
         data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
-        if preset:
-            smile.cooling_active = True
+
         self.active_device_present = extra["active_device"]
         self.cooling_present = extra["cooling_present"]
         self.notifications = extra["notifications"]
