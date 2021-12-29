@@ -463,6 +463,7 @@ class SmileHelper:
             appl.v_name = module_data[0]
             appl.model = check_model(module_data[1], appl.v_name)
             appl.fw = module_data[3]
+
             return appl
 
         if appl.pwclass == "heater_central":
@@ -740,6 +741,10 @@ class SmileHelper:
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
+
+        # Anna: check for presence of cooling function
+        if "cooling_activation_outdoor_temperature" in data:
+            self.cooling_present = True
 
         return data
 
