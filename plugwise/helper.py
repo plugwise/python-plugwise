@@ -86,11 +86,12 @@ def update_device_state(data, d_dict):
     _heating_state = False
     state = "idle"
 
-    for _, item in enumerate(d_dict["binary_sensors"]):
-        if item[ATTR_ID] == "dhw_state":
-            if item[ATTR_STATE]:
-                state = "dhw-heating"
-                _dhw_state = True
+    if "binary_sensors" in d_dict:
+        for _, item in enumerate(d_dict["binary_sensors"]):
+            if item[ATTR_ID] == "dhw_state":
+                if item[ATTR_STATE]:
+                    state = "dhw-heating"
+                    _dhw_state = True
 
     if "heating_state" in data:
         if data["heating_state"]:
@@ -168,10 +169,6 @@ def types_finder(data):
         locator = f".//logs/point_log[type='{measure}']"
         if data.find(locator) is not None:
             log = data.find(locator)
-
-            if measure == "outdoor_temperature":
-                types.add(attrs[ATTR_TYPE])
-
             p_locator = ".//electricity_point_meter"
             if log.find(p_locator) is not None:
                 if log.find(p_locator).get("id"):
@@ -403,8 +400,8 @@ class SmileHelper:
         appl_search = appliance.find(locator)
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
-            module = self._modules.find(f".//{mod_type}[@id='{link_id}']....")
-            if module is not None:
+            locator = f".//{mod_type}[@id='{link_id}']...."
+            if (module := self._modules.find(locator)) is not None:
                 v_name = module.find("vendor_name").text
                 v_model = module.find("vendor_model").text
                 hw_version = module.find("hardware_version").text
@@ -447,6 +444,16 @@ class SmileHelper:
             appl.fw = self.smile_version[0]
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
+
+            # Adam: check for cooling capability, assume heating capability is always present
+            mode_list = []
+            locator = "./actuator_functionalities/regulation_mode_control_functionality/allowed_modes"
+            if appliance.find(locator) is not None:
+                self._cooling_present = False
+                for mode in appliance.find(locator):
+                    mode_list.append(mode.text)
+                self._cooling_present = "cooling" in mode_list
+
             return appl
 
         if appl.pwclass in THERMOSTAT_CLASSES:
@@ -621,14 +628,15 @@ class SmileHelper:
     def _presets(self, loc_id):
         """Collect Presets for a Thermostat based on location_id."""
         presets = {}
-        tag = "zone_setpoint_and_state_based_on_preset"
+        tag_1 = "zone_setpoint_and_state_based_on_preset"
+        tag_2 = "Thermostat presets"
 
         if self._smile_legacy:
             return self._presets_legacy()
 
-        rule_ids = self._rule_ids_by_tag(tag, loc_id)
-        if rule_ids is None:
-            rule_ids = self._rule_ids_by_name("Thermostat presets", loc_id)
+        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
+            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
+                return presets
 
         for rule_id in rule_ids:
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
@@ -656,8 +664,7 @@ class SmileHelper:
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
 
-        if schema_ids != {}:
-            return schema_ids
+        return schema_ids
 
     def _rule_ids_by_tag(self, tag, loc_id):
         """Helper-function for _presets(), _schemas() and _last_active_schema().
@@ -671,13 +678,11 @@ class SmileHelper:
                 if rule.find(locator2) is not None:
                     schema_ids[rule.attrib["id"]] = loc_id
 
-        if schema_ids != {}:
-            return schema_ids
+        return schema_ids
 
     def _appliance_measurements(self, appliance, data, measurements):
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements:
-
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if appliance.find(p_locator) is not None:
                 if self._smile_legacy:
@@ -720,12 +725,7 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        search = self._appliances
-        if self._smile_legacy and self.smile_type != "stretch":
-            search = self._domain_objects
-
-        appliances = search.findall(f'.//appliance[@id="{d_id}"]')
-
+        appliances = self._appliances.findall(f'.//appliance[@id="{d_id}"]')
         for appliance in appliances:
             measurements = DEVICE_MEASUREMENTS.items()
             if self._active_device_present:
@@ -735,7 +735,6 @@ class SmileHelper:
                 }.items()
 
             data = self._appliance_measurements(appliance, data, measurements)
-
             data.update(self._get_lock_state(appliance))
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
@@ -918,8 +917,7 @@ class SmileHelper:
             loc.found = False
             return loc
 
-        peak = loc.peak_select.split("_")[1]
-        if peak == "offpeak":
+        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
@@ -941,22 +939,17 @@ class SmileHelper:
         direct_data = {}
         loc = Munch()
 
-        search = self._domain_objects
-        t_string = "tariff"
-        if self.smile_type == "power":
-            # P1: use data from LOCATIONS
-            search = self._locations
-            if self._smile_legacy:
-                t_string = "tariff_indicator"
-
-        loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
-
-        if loc.logs is None:
+        if self.smile_type != "power":
             return
 
+        search = self._locations
         log_list = ["point_log", "cumulative_log", "interval_log"]
         peak_list = ["nl_peak", "nl_offpeak"]
+        t_string = "tariff"
+        if self._smile_legacy:
+            t_string = "tariff_indicator"
 
+        loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in HOME_MEASUREMENTS.items():
             for loc.log_type in log_list:
@@ -965,7 +958,6 @@ class SmileHelper:
                         f'.//{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
-
                     loc = self._power_data_peak_value(loc)
                     if not loc.found:
                         continue
@@ -973,11 +965,9 @@ class SmileHelper:
                     direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
-
                     direct_data[loc.key_string] = loc.f_val
 
-        if direct_data != {}:
-            return direct_data
+        return direct_data
 
     def _preset(self, loc_id):
         """Helper-function for smile.py: device_data_climate().
@@ -1007,8 +997,7 @@ class SmileHelper:
         selected = None
 
         for schema in self._domain_objects.findall(".//rule"):
-            rule_name = schema.find("name").text
-            if rule_name:
+            if rule_name := schema.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
 
@@ -1040,9 +1029,7 @@ class SmileHelper:
 
         # Current schemas
         tag = "zone_preset_based_on_time_and_presence_with_override"
-        rule_ids = self._rule_ids_by_tag(tag, loc_id)
-
-        if rule_ids is None:
+        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
             return available, selected, schedule_temperature
 
         for rule_id, dummy in rule_ids.items():
@@ -1082,8 +1069,7 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
 
-        rule_ids = self._rule_ids_by_tag(tag, loc_id)
-        if rule_ids is None:
+        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
             return
 
         for rule_id, dummy in rule_ids.items():
@@ -1099,14 +1085,13 @@ class SmileHelper:
 
         return last_modified
 
-    def _object_value(self, obj_type, obj_id, measurement):
+    def _object_value(self, obj_id, measurement):
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
         Obtain the value/state for the given object.
         """
         search = self._domain_objects
-
         locator = (
-            f'.//{obj_type}[@id="{obj_id}"]/logs/point_log'
+            f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
         if search.find(locator) is not None:

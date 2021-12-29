@@ -19,7 +19,10 @@ PRESET_AWAY = "away"
 PRESSURE_BAR = "bar"
 SIGNAL_STRENGTH_DECIBELS_MILLIWATT = "dBm"
 TEMP_CELSIUS = "°C"
+TEMP_KELVIN = "°K"
 TIME_MILLISECONDS = "ms"
+UNIT = "unit"
+UNIT_LUMEN = "lm"
 VOLUME_CUBIC_METERS = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
 
@@ -388,10 +391,6 @@ HOME_MEASUREMENTS = {
         ATTR_TYPE: "gas",
         ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
     },
-    "outdoor_temperature": {
-        ATTR_TYPE: "temperature",
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
-    },
 }
 
 # Excluded:
@@ -402,6 +401,7 @@ DEVICE_MEASUREMENTS = {
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core setpoint
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
     "outdoor_temperature": {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
     },  # Outdoor temp as reported on the Anna, in the App
@@ -511,9 +511,6 @@ SMILES = {
 ATTR_ENABLED = "enabled_default"
 ATTR_ID = "id"
 ATTR_ICON = "icon"
-TEMP_KELVIN = "°K"
-UNIT = "unit"
-UNIT_LUMEN = "lm"
 
 EXTRA_STATE_ATTRIBS = {}
 

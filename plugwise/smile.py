@@ -52,11 +52,11 @@ class SmileData(SmileHelper):
         and/or the device_state sensor are appended.
         """
         if d_id == self.gateway_id:
-            if self.single_master_thermostat() is not None:
+            if self._sm_thermostat is not None:
                 bs_list.append(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
                 s_list.append(DEVICE_STATE)
-        if d_id == self._heater_id and self.single_master_thermostat() is not None:
+        if d_id == self._heater_id and self._sm_thermostat is not None:
             s_list.append(DEVICE_STATE)
 
     def _all_device_data(self):
@@ -87,16 +87,18 @@ class SmileData(SmileHelper):
 
         self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
 
+        self.gw_data["active_device"] = self._active_device_present
+        self.gw_data["cooling_present"] = self._cooling_present
         self.gw_data["gateway_id"] = self.gateway_id
         self.gw_data["heater_id"] = self._heater_id
+        self.gw_data["single_master_thermostat"] = self._sm_thermostat
         self.gw_data["smile_name"] = self.smile_name
-        self.gw_data["active_device"] = self._active_device_present
-        self.gw_data["single_master_thermostat"] = self.single_master_thermostat()
 
     def get_all_devices(self):
         """Determine the devices present from the obtained XML-data."""
         self._devices = {}
         self._scan_thermostats()
+        self.single_master_thermostat()
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
@@ -114,8 +116,7 @@ class SmileData(SmileHelper):
             if details["location"] is not None:
                 self._devices[appliance] = details
 
-        group_data = self._group_switches()
-        if group_data is not None:
+        if (group_data := self._group_switches()) is not None:
             self._devices.update(group_data)
 
         # Collect data for each device via helper function
@@ -148,20 +149,14 @@ class SmileData(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Anna specific
-        if self.smile_name == "Anna":
-            illuminance = self._object_value("appliance", dev_id, "illuminance")
-            if illuminance is not None:
-                device_data["illuminance"] = illuminance
-
         return device_data
 
     def _device_data_adam(self, details, device_data):
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
-        # Adam: indicate heating_state based on valves being open in case of city-provided heating
         if self.smile_name == "Adam":
+            # Indicate heating_state based on valves being open in case of city-provided heating
             if details["class"] == "gateway":
                 if (
                     not self._active_device_present
@@ -190,6 +185,17 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = self._last_active_schema(details["location"])
 
+        # Find the thermostat control_state of a location, from domain_objects
+        # The control_state represents the heating/cooling demand-state of the master thermostat
+        # Note: heating or cooling can still be active when the setpoint has been reached
+        locator = f'location[@id="{details["location"]}"]'
+        if (location := self._domain_objects.find(locator)) is not None:
+            locator = (
+                ".//actuator_functionalities/thermostat_functionality/control_state"
+            )
+            if (ctrl_state := location.find(locator)) is not None:
+                device_data["control_state"] = ctrl_state.text
+
         return device_data
 
     def _get_device_data(self, dev_id):
@@ -202,18 +208,16 @@ class SmileData(SmileHelper):
 
         # Generic
         if details["class"] == "gateway" or dev_id == self.gateway_id:
-            # Anna: outdoor_temperature only present in domain_objects
-            if (
-                self.smile_type == "thermostat"
-                and "outdoor_temperature" not in device_data
-            ):
+            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+            if self.smile_type == "thermostat":
                 outdoor_temperature = self._object_value(
-                    "location", self._home_location, "outdoor_temperature"
+                    self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
-            # Try to get P1 data and 2nd outdoor_temperature, when present
+            # Get P1 data from LOCATIONS
             power_data = self._power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
@@ -222,7 +226,7 @@ class SmileData(SmileHelper):
         if "c_heating_state" in device_data and "heating_state" in device_data:
             if device_data["c_heating_state"] and not device_data["heating_state"]:
                 device_data["heating_state"] = True
-                device_data.pop("c_heating_state")
+            device_data.pop("c_heating_state")
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
@@ -243,19 +247,17 @@ class SmileData(SmileHelper):
         """Determine if there is a single master thermostat in the setup.
         Possible output: None, True, False.
         """
-        if self.smile_type != "thermostat":
-            return None
+        if self.smile_type == "thermostat":
+            count = 0
+            for dummy, data in self._thermo_locs.items():
+                if "master_prio" in data:
+                    if data.get("master_prio") > 0:
+                        count += 1
 
-        count = 0
-        self._scan_thermostats()
-        for dummy, data in self._thermo_locs.items():
-            if "master_prio" in data:
-                if data.get("master_prio") > 0:
-                    count += 1
-
-        if count == 1:
-            return True
-        return False
+            if count == 1:
+                self._sm_thermostat = True
+            if count > 1:
+                self._sm_thermostat = False
 
 
 class Smile(SmileComm, SmileData):
@@ -284,12 +286,15 @@ class Smile(SmileComm, SmileData):
 
         self._active_device_present = None
         self._appliances = None
-        self._appl_data = {}
+        self._appl_data = None
+        self._cooling_present = None
         self._domain_objects = None
         self._heater_id = None
         self._home_location = None
         self._locations = None
         self._modules = None
+        self._notifications = None
+        self._sm_thermostat = None
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
@@ -298,7 +303,6 @@ class Smile(SmileComm, SmileData):
         self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}
-        self.notifications = {}
         self.smile_hostname = None
         self.smile_name = None
         self.smile_type = None
@@ -378,9 +382,7 @@ class Smile(SmileComm, SmileData):
         Detect which type of Smile is connected.
         """
         model = None
-        gateway = result.find(".//gateway")
-
-        if gateway is not None:
+        if (gateway := result.find(".//gateway")) is not None:
             model = result.find(".//gateway/vendor_model").text
             version = result.find(".//gateway/firmware_version").text
             if gateway.find("hostname") is not None:
@@ -395,9 +397,7 @@ class Smile(SmileComm, SmileData):
 
         ver = semver.VersionInfo.parse(version)
         target_smile = f"{model}_v{ver.major}"
-
         _LOGGER.debug("Plugwise identified as %s", target_smile)
-
         if target_smile not in SMILES:
             _LOGGER.error(
                 'Your version Smile identified as "%s" seems\
@@ -438,20 +438,19 @@ class Smile(SmileComm, SmileData):
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
 
         # If Plugwise notifications present:
-        self.notifications = {}
-        url = f"{self._endpoint}{DOMAIN_OBJECTS}"
+        self._notifications = {}
         notifications = self._domain_objects.findall(".//notification")
         for notification in notifications:
             try:
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
-                self.notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self.notifications)
+                self._notifications.update({msg_id: {msg_type: msg}})
+                _LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
                 _LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
-                    url,
+                    f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
     async def async_update(self):
@@ -465,8 +464,7 @@ class Smile(SmileComm, SmileData):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
-        data = []
-        self.gw_data["notifications"] = self.notifications
+        self.gw_data["notifications"] = self._notifications
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
@@ -479,7 +477,7 @@ class Smile(SmileComm, SmileData):
                         data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key
                     )
                 pw_notification_updater(
-                    self.gw_devices, dev_id, dev_dict, self.notifications
+                    self.gw_devices, dev_id, dev_dict, self._notifications
                 )
             if "sensors" in dev_dict:
                 for key, value in list(data.items()):
@@ -648,8 +646,7 @@ class Smile(SmileComm, SmileData):
     async def _set_preset_legacy(self, preset):
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = self._domain_objects.find(locator)
-        if rule is None:
+        if (rule := self._domain_objects.find(locator)) is None:
             return False
 
         uri = f"{RULES}"
