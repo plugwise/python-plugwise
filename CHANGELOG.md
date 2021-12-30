@@ -4,7 +4,8 @@
   - Improved dependency handling (@dependabot)
 
 # v0.15.7 - Smile - Anna: better implementation of cooling-function-detection
- - Anna: add two sensors related to automatic switching between heating and cooling
+ - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling mode active indication
+ - Adam: also provide a heating/cooling mode active indication
 
 # v0.15.6 - Smile - Various fixes and improvements
   - Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
