@@ -745,7 +745,7 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        # Anna: check for presence of cooling function
+        # Anna: check for cooling capability
         if "cooling_activation_outdoor_temperature" in data:
             data["cooling_active"] = False
             self._cooling_present = True
