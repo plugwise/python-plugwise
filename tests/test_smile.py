@@ -1578,7 +1578,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     {"id": "cooling_deactivation_threshold", "state": 4},
                 ],
             },
-            # Central
+            # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "cooling_state": False,
                 "heating_state": True,
@@ -1589,10 +1589,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     }
                 ],
                 "sensors": [
+                    {"id": "outdoor_temperature", "state": 18.0},
                     {"id": "water_temperature", "state": 29.1},
                     {"id": "water_pressure", "state": 1.57},
                 ],
             },
+            # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {
                 "sensors": [{"id": "outdoor_temperature", "state": 20.2}]
             },
