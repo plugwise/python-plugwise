@@ -403,6 +403,8 @@ DEVICE_MEASUREMENTS = {
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna illuminance
     "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
+    # Outdoor temperature as reported in the Plugwise App
+    "outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Only present on legacy Anna and Anna_v3
     "schedule_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna: automatic cooling activation/deactivation thresholds
