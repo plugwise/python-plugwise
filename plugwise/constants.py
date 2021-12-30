@@ -397,24 +397,24 @@ HOME_MEASUREMENTS = {
 # zone_thermosstat 'temperature_offset'
 # radiator_valve 'uncorrected_temperature', 'temperature_offset'
 DEVICE_MEASUREMENTS = {
-    # HA Core current_temperature
+    # HA Core thermostat current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # HA Core setpoint
+    # HA Core thermostat setpoint
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # Anna illuminance
+    # Specific for an Anna
     "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
     # Outdoor temperature from APPLIANCES - present for a heatpump
     "outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # Schedule temperature - only present on legacy Anna and Anna_v3
+    # Schedule temperature - only present for a legacy Anna or an Anna v3
     "schedule_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # Anna: automatic cooling activation/deactivation thresholds
+    # Specific for an Anna with heatpump extension installed
     "cooling_activation_outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "cooling_deactivation_threshold": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # Specific for Lisa and Tom/Floor
+    # Specific for a Lisa a Tom/Floor
     "battery": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "temperature_difference": {ATTR_UNIT_OF_MEASUREMENT: DEGREE},
     "valve_position": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    # Specific for Jip
+    # Specific for a Jip
     "humidity": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     # Specific for a Plug
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
@@ -437,15 +437,15 @@ HEATER_CENTRAL_MEASUREMENTS = {
     },
     "intended_boiler_temperature": {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
-    },  # non-zero when heating, zero when dhw-heating
+    },  # Non-zero when heating, zero when dhw-heating
     "central_heating_state": {
         ATTR_NAME: "c_heating_state",
         ATTR_UNIT_OF_MEASUREMENT: None,
-    },  # for Elga (heatpump) use this instead of intended_central_heating_state
+    },  # For Elga (heatpump) use this instead of intended_central_heating_state
     "intended_central_heating_state": {
         ATTR_NAME: "heating_state",
         ATTR_UNIT_OF_MEASUREMENT: None,
-    },  # use intended_c_h_state, this key shows the heating-behavior better than c-h_state
+    },  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
     "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "return_water_temperature": {
         ATTR_NAME: "return_temperature",
@@ -458,15 +458,14 @@ HEATER_CENTRAL_MEASUREMENTS = {
     "slave_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
     "flame_state": {
         ATTR_UNIT_OF_MEASUREMENT: None
-    },  # also present when there is a single gas-heater
-    # Anna only
+    },  # Also present when there is a single gas-heater
     "central_heater_water_pressure": {
         ATTR_NAME: "water_pressure",
         ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
     },
     # Legacy Anna: similar to flame-state on Anna/Adam
     "boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
-    # Legacy Anna: shows when heating is active, don't show dhw_state, cannot be determined reliably
+    # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
     "intended_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
