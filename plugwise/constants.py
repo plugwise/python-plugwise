@@ -403,20 +403,20 @@ DEVICE_MEASUREMENTS = {
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna illuminance
     "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
-    # Outdoor temperature as reported in the Plugwise App
+    # Outdoor temperature from APPLIANCES - present for a heatpump
     "outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # Only present on legacy Anna and Anna_v3
+    # Schedule temperature - only present on legacy Anna and Anna_v3
     "schedule_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Anna: automatic cooling activation/deactivation thresholds
     "cooling_activation_outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "cooling_deactivation_threshold": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # Lisa and Tom
+    # Specific for Lisa and Tom/Floor
     "battery": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "temperature_difference": {ATTR_UNIT_OF_MEASUREMENT: DEGREE},
     "valve_position": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    # Jip
+    # Specific for Jip
     "humidity": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    # Plug
+    # Specific for a Plug
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "relay": {ATTR_UNIT_OF_MEASUREMENT: None},
