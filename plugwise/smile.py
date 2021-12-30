@@ -149,8 +149,8 @@ class SmileData(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Anna: indicate possible operation-state of cooling function
-        # Actual ongoing cooling is shown via cooling_state
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if "cooling_activation_outdoor_temperature" in device_data:
             if (
                 not self.cooling_active
@@ -182,8 +182,8 @@ class SmileData(SmileHelper):
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
 
-            # Adam: indicate operation-state of cooling function
-            # Actual ongoing cooling is shown via cooling_state
+            # Adam: indicate active heating/cooling operation-mode
+            # Actual ongoing heating/cooling is shown via heating_state/cooling_state
             if details["class"] == "heater_central":
                 device_data["cooling_active"] = self.cooling_active
 
