@@ -181,6 +181,9 @@ class SmileData(SmileHelper):
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
 
+            if details["class"] == "heater_central":
+                device_data["cooling_active"] = self.cooling_active
+
         return device_data
 
     def _device_data_climate(self, details, device_data):
