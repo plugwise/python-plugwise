@@ -1,5 +1,3 @@
-# Use HA constraints
--c https://github.com/home-assistant/core/blob/dev/homeassistant/package_constraints.txt
 # Plugwise package constraints
 
 # Test constraints

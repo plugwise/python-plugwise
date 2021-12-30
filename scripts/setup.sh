@@ -16,7 +16,7 @@ for venv in venv .venv .; do
   if [ -f "${my_path}/${venv}/bin/activate" ]; then
     . "${my_path}/${venv}/bin/activate"
     # Install commit requirements
-    pip install --upgrade -r requirements_commit.txt
+    pip install --upgrade -r requirements_commit.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
     # Install pre-commit hook
     ${my_path}/${venv}/bin/pre-commit install
   fi
