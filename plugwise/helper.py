@@ -445,7 +445,7 @@ class SmileHelper:
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
 
-            # Adam: check for cooling capability, and check if active
+            # Adam: check for cooling capability and state
             mode_list = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             search = appliance.find(locator)
