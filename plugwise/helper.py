@@ -446,11 +446,18 @@ class SmileHelper:
             appl.v_name = "Plugwise B.V."
 
             # Adam: check for cooling capability, and check if active
+            mode_list = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             search = appliance.find(locator)
             if search is not None:
                 if search.find("mode") is not None:
-                    self.cooling_active = search.find("mode").text == "cooling"
+                    mode_set = search.find("mode").text
+                    if mode_set == "cooling":
+                        self.cooling_active = True
+                if search.find("allowed_modes") is not None:
+                    for mode in search.find("allowed_modes"):
+                        mode_list.append(mode.text)
+                    self._cooling_present = "cooling" in mode_list
 
             return appl
 
@@ -743,6 +750,7 @@ class SmileHelper:
         # Anna: check for presence of cooling function
         if "cooling_activation_outdoor_temperature" in data:
             data["cooling_active"] = False
+            self._cooling_present = True
 
         return data
 
