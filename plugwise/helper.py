@@ -450,9 +450,10 @@ class SmileHelper:
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             search = appliance.find(locator)
             if search is not None:
-                mode_set = search.find("mode").text
-                if mode_set == "cooling":
-                    self.cooling_active = True
+                if search.find("mode") is not None:
+                    mode_set = search.find("mode").text
+                    if mode_set == "cooling":
+                        self.cooling_active = True
                 if search.find("allowed_modes") is not None:
                     for mode in search.find("allowed_modes"):
                         mode_list.append(mode.text)
