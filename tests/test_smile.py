@@ -1114,7 +1114,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert master thermostat")
         assert not smile._sm_thermostat
         assert self.active_device_present
-        assert not smile.cooling_active
 
         switch_change = await self.tinker_switch(
             smile,
