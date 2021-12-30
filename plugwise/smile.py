@@ -149,7 +149,8 @@ class SmileData(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
-        # Anna connected to a device with cooling and heating capabilities
+        # Anna: indicate possible operation-state of cooling function
+        # Actual ongoing cooling is shown via cooling_state
         if "cooling_activation_outdoor_temperature" in device_data:
             if (
                 not self.cooling_active
@@ -181,6 +182,8 @@ class SmileData(SmileHelper):
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
 
+            # Adam: indicate operation-state of cooling function
+            # Actual ongoing cooling is shown via cooling_state
             if details["class"] == "heater_central":
                 device_data["cooling_active"] = self.cooling_active
 
@@ -203,7 +206,7 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = self._last_active_schema(details["location"])
 
-        # Find the thermostat control_state of a location, from domain_objects
+        # Find the thermostat control_state of a location, from DOMAIN_OBJECTS
         # The control_state represents the heating/cooling demand-state of the master thermostat
         # Note: heating or cooling can still be active when the setpoint has been reached
         locator = f'location[@id="{details["location"]}"]'
