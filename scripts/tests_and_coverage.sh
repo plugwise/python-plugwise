@@ -7,6 +7,10 @@ my_path=$(git rev-parse --show-toplevel)
 
 if [ -f "${my_venv}/bin/activate" ]; then
     . "${my_venv}/bin/activate"
+    if [ ! `which pytest` ]; then
+        echo "Unable to find pytest, run setup_test.sh before this script"
+        exit 1
+    fi
     echo "-----------------------------------------------------------"
     echo "Running plugwise/smile.py through pytest including coverage"
     echo "-----------------------------------------------------------"
