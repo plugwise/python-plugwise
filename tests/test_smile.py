@@ -777,7 +777,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
                 "selected_schedule": None,
                 "active_preset": "home",
-                "sensors": {"illuminance": 60.0},
+                "sensors": {"illuminance": 40.5},
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
@@ -1064,7 +1064,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ee62cad889f94e8ca3d09021f03a660b": {"control_state": "off"},
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"dhw_state": True},
+                "binary_sensors": {"dhw_state": False},
                 "sensors": {"device_state": "dhw-heating"},
                 "cooling_active": False,
             },
