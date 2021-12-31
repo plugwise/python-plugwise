@@ -135,34 +135,6 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_anna(self, dev_id, details, device_data):
-        """Helper-function for _get_device_data().
-        Determine Anna and legacy Anna device data.
-        """
-        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
-        if "boiler_state" in device_data:
-            device_data["heating_state"] = device_data["intended_boiler_state"]
-            device_data.pop("boiler_state", None)
-            device_data.pop("intended_boiler_state", None)
-
-        # Anna: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if "cooling_activation_outdoor_temperature" in device_data:
-            if (
-                not self.cooling_active
-                and device_data["temperature"]
-                > device_data["cooling_activation_outdoor_temperature"]
-            ):
-                device_data["cooling_active"] = self.cooling_active = True
-            if (
-                self.cooling_active
-                and device_data["temperature"]
-                < device_data["cooling_deactivation_threshold"]
-            ):
-                device_data["cooling_active"] = self.cooling_active = False
-
-        return device_data
-
     def _device_data_adam(self, details, device_data):
         """Helper-function for _get_device_data().
         Determine Adam device data.
@@ -241,8 +213,6 @@ class SmileData(SmileHelper):
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
-        # Specific, not generic Anna data
-        device_data = self._device_data_anna(dev_id, details, device_data)
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # Unless thermostat based, no need to walk presets

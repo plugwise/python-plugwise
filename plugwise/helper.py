@@ -738,10 +738,6 @@ class SmileHelper:
             data.update(self._appliance_measurements(appliance, data, measurements))
             data.update(self._get_lock_state(appliance))
 
-        # Fix for Adam + Anna: heating_state also present under Anna, remove
-        if "temperature" in data:
-            data.pop("heating_state", None)
-
         # Anna: check for cooling capability
         if "cooling_activation_outdoor_temperature" in data:
             data["cooling_active"] = False
@@ -752,6 +748,17 @@ class SmileHelper:
             if data["c_heating_state"] and not data["heating_state"]:
                 data["heating_state"] = True
             data.pop("c_heating_state")
+
+        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
+        if "boiler_state" in data:
+            data["heating_state"] = data["intended_boiler_state"]
+            data["flame_state"] = data["boiler_state"]
+            data.pop("boiler_state", None)
+            data.pop("intended_boiler_state", None)
+
+        # Fix for Adam + Anna: heating_state also present under Anna, remove
+        if "temperature" in data:
+            data.pop("heating_state", None)
 
         return data
 
