@@ -464,9 +464,12 @@ HEATER_CENTRAL_MEASUREMENTS = {
         ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
     },
     # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "boiler_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: None},
     # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
-    "intended_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "intended_boiler_state": {
+        ATTR_NAME: "heating_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },
 }
 
 SMILES = {
