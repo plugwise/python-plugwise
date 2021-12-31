@@ -149,6 +149,22 @@ class SmileData(SmileHelper):
             device_data.pop("boiler_state", None)
             device_data.pop("intended_boiler_state", None)
 
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        if "cooling_activation_outdoor_temperature" in device_data:
+            if (
+                not self.cooling_active
+                and device_data["temperature"]
+                > device_data["cooling_activation_outdoor_temperature"]
+            ):
+                device_data["cooling_active"] = self.cooling_active = True
+            if (
+                self.cooling_active
+                and device_data["temperature"]
+                < device_data["cooling_deactivation_threshold"]
+            ):
+                device_data["cooling_active"] = self.cooling_active = False
+
         return device_data
 
     def _device_data_adam(self, details, device_data):
@@ -165,6 +181,11 @@ class SmileData(SmileHelper):
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
+
+            # Adam: indicate active heating/cooling operation-mode
+            # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+            if details["class"] == "heater_central":
+                device_data["cooling_active"] = self.cooling_active
 
         return device_data
 
@@ -185,7 +206,7 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = self._last_active_schema(details["location"])
 
-        # Find the thermostat control_state of a location, from domain_objects
+        # Find the thermostat control_state of a location, from DOMAIN_OBJECTS
         # The control_state represents the heating/cooling demand-state of the master thermostat
         # Note: heating or cooling can still be active when the setpoint has been reached
         locator = f'location[@id="{details["location"]}"]'
@@ -287,7 +308,7 @@ class Smile(SmileComm, SmileData):
         self._active_device_present = None
         self._appliances = None
         self._appl_data = None
-        self._cooling_present = None
+        self._cooling_present = False
         self._domain_objects = None
         self._heater_id = None
         self._home_location = None
@@ -300,6 +321,7 @@ class Smile(SmileComm, SmileData):
         self._stretch_v3 = False
         self._thermo_locs = None
 
+        self.cooling_active = False
         self.gateway_id = None
         self.gw_data = {}
         self.gw_devices = {}

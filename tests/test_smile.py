@@ -365,14 +365,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("      ! no devices found in this location")
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=pw_smile.Smile, testdata=None):
+    async def device_test(self, smile=pw_smile.Smile, testdata=None, preset=False):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "sensors", "switches"]
         smile.get_all_devices()
+        # Preset smile.cooling_active for testing of a state-change
+        smile.cooling_active = False
+        if preset:
+            smile.cooling_active = True
         data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
+
         self.active_device_present = extra["active_device"]
         self.cooling_present = extra["cooling_present"]
         self.notifications = extra["notifications"]
@@ -1085,6 +1090,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ee62cad889f94e8ca3d09021f03a660b": {"control_state": "off"},
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
+                "cooling_active": False,
                 "binary_sensors": [{"id": "dhw_state", "state": True}],
                 "sensors": [{"id": "device_state", "state": "dhw-heating"}],
             },
@@ -1108,7 +1114,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert master thermostat")
         assert not smile._sm_thermostat
         assert self.active_device_present
-        assert not self.cooling_present
 
         switch_change = await self.tinker_switch(
             smile,
@@ -1473,7 +1478,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile._sm_thermostat is None  # it's not a thermostat :)
-        assert self.cooling_present is None  # not a heating/cooling system
+        assert not self.cooling_present
         assert not self.notifications
 
         await smile.close_connection()
@@ -1565,9 +1570,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "standaard",
                 "active_preset": "home",
-                "sensors": [{"id": "illuminance", "state": 86.0}],
+                "cooling_active": False,
+                "sensors": [
+                    {"id": "illuminance", "state": 86.0},
+                    {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
+                    {"id": "cooling_deactivation_threshold", "state": 4},
+                ],
             },
-            # Central
+            # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "cooling_state": False,
                 "heating_state": True,
@@ -1578,10 +1588,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     }
                 ],
                 "sensors": [
+                    {"id": "outdoor_temperature", "state": 18.0},
                     {"id": "water_temperature", "state": 29.1},
                     {"id": "water_pressure", "state": 1.57},
                 ],
             },
+            # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {
                 "sensors": [{"id": "outdoor_temperature", "state": 20.2}]
             },
@@ -1599,10 +1611,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
-        await self.device_test(smile, testdata)
+        await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
         assert smile._sm_thermostat
         assert self.active_device_present
+        assert self.cooling_present
         assert not self.notifications
 
         await smile.close_connection()
@@ -1617,7 +1630,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": None,
                 "active_preset": "home",
-                "sensors": [{"id": "illuminance", "state": 25.5}],
+                "cooling_active": True,
+                "sensors": [
+                    {"id": "illuminance", "state": 25.5},
+                    {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
+                    {"id": "cooling_deactivation_threshold", "state": 6},
+                ],
             },
             # Central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
@@ -1655,6 +1673,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert master thermostat")
         assert smile._sm_thermostat
         assert self.active_device_present
+        assert self.cooling_present
         assert not self.notifications
 
         await smile.close_connection()

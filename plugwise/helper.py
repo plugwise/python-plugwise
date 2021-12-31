@@ -445,14 +445,17 @@ class SmileHelper:
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
 
-            # Adam: check for cooling capability, assume heating capability is always present
+            # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list = []
-            locator = "./actuator_functionalities/regulation_mode_control_functionality/allowed_modes"
-            if appliance.find(locator) is not None:
-                self._cooling_present = False
-                for mode in appliance.find(locator):
-                    mode_list.append(mode.text)
-                self._cooling_present = "cooling" in mode_list
+            locator = "./actuator_functionalities/regulation_mode_control_functionality"
+            search = appliance.find(locator)
+            if search is not None:
+                if search.find("mode") is not None:
+                    self.cooling_active = search.find("mode").text == "cooling"
+                if search.find("allowed_modes") is not None:
+                    for mode in search.find("allowed_modes"):
+                        mode_list.append(mode.text)
+                    self._cooling_present = "cooling" in mode_list
 
             return appl
 
@@ -463,6 +466,7 @@ class SmileHelper:
             appl.v_name = module_data[0]
             appl.model = check_model(module_data[1], appl.v_name)
             appl.fw = module_data[3]
+
             return appl
 
         if appl.pwclass == "heater_central":
@@ -740,6 +744,11 @@ class SmileHelper:
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
+
+        # Anna: check for cooling capability
+        if "cooling_activation_outdoor_temperature" in data:
+            data["cooling_active"] = False
+            self._cooling_present = True
 
         return data
 
