@@ -232,7 +232,7 @@ jobs:
           . venv/bin/activate
           pytest --log-level info tests/*.py --cov='.'
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v2.2.0
+        uses: actions/upload-artifact@v2.3.1
         with:
           name: coverage-${{ matrix.python-version }}
           path: .coverage
