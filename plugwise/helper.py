@@ -747,6 +747,12 @@ class SmileHelper:
             data["cooling_active"] = False
             self._cooling_present = True
 
+        # Elga doesn't use intended_cental_heating_state to show the generic heating state
+        if "c_heating_state" in data and "heating_state" in data:
+            if data["c_heating_state"] and not data["heating_state"]:
+                data["heating_state"] = True
+            data.pop("c_heating_state")
+
         return data
 
     def _rank_thermostat(
