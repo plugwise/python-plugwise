@@ -237,6 +237,14 @@ jobs:
           name: coverage-${{ matrix.python-version }}
           path: .coverage
 
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@master
+
   coverage:
     name: Process test coverage
     runs-on: ubuntu-latest
@@ -306,6 +314,7 @@ jobs:
         run: >-
           python setup.py sdist
       - name: Publish distribution 📦 to Test PyPI
+        continue-on-error: true
         uses: pypa/gh-action-pypi-publish@master
         with:
           password: ${{ secrets.testpypi_token }}

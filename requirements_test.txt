@@ -1,7 +1,4 @@
-# In addition to Upstream HA (devbranch)
--r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt
--r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
-# and setup
+# Import from setup.py
 -e .
 # pytest-asyncio
 pytest-cover
