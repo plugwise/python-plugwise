@@ -504,8 +504,6 @@ class SmileHelper:
             # Provide a home_location for legacy_anna, preset all types applicable to home
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-                # For legacy_anna gateway and heater_central is the same device
-                self.gateway_id = self._heater_id
             appl.types = self._loc_data[self._home_location]["types"]
 
         # Determine appliance_type from functionality
