@@ -1,5 +1,4 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
-
 import asyncio
 import importlib
 
@@ -575,24 +574,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "active_preset": "home",
                 "schedule_temperature": 20.0,
-                "sensors": [
-                    {"id": "illuminance", "state": 151},
-                    {"id": "setpoint", "state": 20.5},
-                    {"id": "temperature", "state": 20.4},
-                ],
+                "sensors": {"illuminance": 151, "setpoint": 20.5, "temperature": 20.4},
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
+                "sensors": {
+                    "water_temperature": 23.6,
+                    "intended_boiler_temperature": 17.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 21.7,
+                    "water_pressure": 1.2,
+                },
                 "location": pw_constants.FAKE_LOC,
                 "heating_state": True,
-                "sensors": [
-                    {"id": "water_temperature", "state": 23.6},
-                    {"id": "intended_boiler_temperature", "state": 17.0},
-                    {"id": "modulation_level", "state": 0.0},
-                    {"id": "return_temperature", "state": 21.7},
-                    {"id": "water_pressure", "state": 1.2},
-                    {"id": "device_state", "state": "heating"},
-                ],
             },
         }
 
@@ -647,16 +641,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "9e7377867dc24e51b8098a5ba02bd89d": {
-                "sensors": [
-                    {"id": "illuminance", "state": 19.5},
-                    {"id": "setpoint", "state": 15.0},
-                    {"id": "temperature", "state": 21.4},
-                ],
+                "sensors": {"illuminance": 19.5, "setpoint": 15.0, "temperature": 21.4},
             },
             # Central
-            "ea5d8a7177e541b0a4b52da815166de4": {
-                "sensors": [{"id": "water_pressure", "state": 1.7}]
-            },
+            "ea5d8a7177e541b0a4b52da815166de4": {"sensors": {"water_pressure": 1.7}},
         }
 
         self.smile_setup = "legacy_anna_2"
@@ -707,17 +695,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
                 "location": "938696c4bcdb4b8a9a595cb38ed43913",
-                "sensors": [
-                    {"id": "electricity_consumed_point", "state": 456.0},
-                    {"id": "net_electricity_point", "state": 456.0},
-                    {"id": "gas_consumed_cumulative", "state": 584.431},
-                    {"id": "electricity_produced_peak_cumulative", "state": 1296.136},
-                    {
-                        "id": "electricity_produced_off_peak_cumulative",
-                        "state": 482.598,
-                    },
-                    {"id": "net_electricity_cumulative", "state": 1019.161},
-                ],
+                "sensors": {
+                    "electricity_consumed_point": 456.0,
+                    "net_electricity_point": 456.0,
+                    "gas_consumed_cumulative": 584.431,
+                    "electricity_produced_peak_cumulative": 1296.136,
+                    "electricity_produced_off_peak_cumulative": 482.598,
+                    "net_electricity_cumulative": 1019.161,
+                },
             }
         }
 
@@ -750,12 +735,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "199aa40f126840f392983d171374ab0b": {
-                "sensors": [
-                    {"id": "electricity_consumed_point", "state": 456.0},
-                    {"id": "net_electricity_point", "state": 456.0},
-                    {"id": "gas_consumed_cumulative", "state": 584.431},
-                    {"id": "electricity_produced_peak_cumulative", "state": 1296.136},
-                ]
+                "sensors": {
+                    "electricity_consumed_point": 456.0,
+                    "net_electricity_point": 456.0,
+                    "gas_consumed_cumulative": 584.431,
+                    "electricity_produced_peak_cumulative": 1296.136,
+                }
             }
         }
 
@@ -792,20 +777,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
                 "selected_schedule": None,
                 "active_preset": "home",
-                "sensors": [{"id": "illuminance", "state": 40.5}],
+                "sensors": {"illuminance": 60.0},
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "heating_state": True,
-                "binary_sensors": [{"id": "flame_state", "state": True}],
-                "sensors": [
-                    {"id": "water_pressure", "state": 2.1},
-                    {"id": "water_temperature", "state": 52.0},
-                    {"id": "device_state", "state": "heating"},
-                ],
+                "binary_sensors": {"flame_state": True},
+                "sensors": {"water_pressure": 2.1, "water_temperature": 52.0},
             },
             "0466eae8520144c78afb29628384edeb": {
-                "sensors": [{"id": "outdoor_temperature", "state": 7.44}]
+                "sensors": {"outdoor_temperature": 7.44}
             },
         }
 
@@ -900,13 +881,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
                 "location": "c34c6864216446528e95d88985e714cc",
+                "sensors": {"illuminance": 35.0},
                 "selected_schedule": "Normal",
                 "active_preset": "away",
-                "sensors": [{"id": "illuminance", "state": 35.0}],
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "location": "0f4f2ada20734a339fe353348fe87b96",
-                "sensors": [{"id": "outdoor_temperature", "state": 10.8}],
+                "sensors": {"outdoor_temperature": 10.8},
             },
             # # Central
             # "c46b4794d28149699eacf053deedd003": {
@@ -959,12 +940,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
+                "sensors": {"illuminance": 44.8},
                 "selected_schedule": "Normal",
                 "active_preset": "home",
-                "sensors": [{"id": "illuminance", "state": 44.8}],
             },
             "a270735e4ccd45239424badc0578a2b1": {
-                "sensors": [{"id": "outdoor_temperature", "state": 16.6}]
+                "sensors": {"outdoor_temperature": 16.6}
             },
             # # Central
             # "c46b4794d28149699eacf053deedd003": {
@@ -1013,30 +994,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "ee62cad889f94e8ca3d09021f03a660b": {
+                "sensors": {"setpoint": 20.5, "temperature": 20.5},
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
                 "active_preset": "home",
-                "sensors": [
-                    {"id": "setpoint", "state": 20.5},
-                    {"id": "temperature", "state": 20.5},
-                ],
             },
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
+                "binary_sensors": {"flame_state": False},
                 "heating_state": False,
-                "binary_sensors": [{"id": "flame_state", "state": False}],
-                "sensors": [{"id": "device_state", "state": "idle"}],
             },
             "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
-                "sensors": [{"id": "outdoor_temperature", "state": 11.9}]
+                "sensors": {"outdoor_temperature": 11.9}
             },
             # Plug MediaCenter
             "aa6b0002df0a46e1b1eb94beb61eddfe": {
-                "sensors": [{"id": "electricity_consumed", "state": 10.3}],
-                "switches": [
-                    {"id": "lock", "state": False},
-                    {"id": "relay", "state": True},
-                ],
+                "sensors": {"electricity_consumed": 10.3},
+                "switches": {"lock": False, "relay": True},
             },
         }
 
@@ -1090,14 +1064,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ee62cad889f94e8ca3d09021f03a660b": {"control_state": "off"},
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
+                "binary_sensors": {"dhw_state": True},
+                "sensors": {"device_state": "dhw-heating"},
                 "cooling_active": False,
-                "binary_sensors": [{"id": "dhw_state", "state": True}],
-                "sensors": [{"id": "device_state", "state": "dhw-heating"}],
             },
             # Test Switch
-            "b83f9f9758064c0fab4af6578cba4c6d": {
-                "switches": [{"id": "relay", "state": True}]
-            },
+            "b83f9f9758064c0fab4af6578cba4c6d": {"switches": {"relay": True}},
         }
 
         self.smile_setup = "adam_plus_anna_new"
@@ -1142,9 +1114,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
+                "binary_sensors": {"dhw_state": True},
                 "heating_state": True,
-                "binary_sensors": [{"id": "dhw_state", "state": True}],
-                "sensors": [{"id": "device_state", "state": "dhw and heating"}],
+                "sensors": {"device_state": "dhw and heating"},
             }
         }
 
@@ -1163,7 +1135,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "cooling_state": True,
-                "sensors": [{"id": "device_state", "state": "cooling"}],
+                "sensors": {"device_state": "cooling"},
             },
         }
 
@@ -1181,9 +1153,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
+                "binary_sensors": {"dhw_state": True},
                 "cooling_state": True,
-                "binary_sensors": [{"id": "dhw_state", "state": True}],
-                "sensors": [{"id": "device_state", "state": "dhw and cooling"}],
+                "sensors": {"device_state": "dhw and cooling"},
             }
         }
 
@@ -1202,57 +1174,43 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
-                "sensors": [
-                    {"id": "setpoint", "state": 21.5},
-                    {"id": "temperature", "state": 21.1},
-                    {"id": "battery", "state": 34},
-                ]
+                "sensors": {
+                    "setpoint": 21.5,
+                    "temperature": 21.1,
+                    "battery": 34,
+                }
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
-                "sensors": [
-                    {"id": "setpoint", "state": 21.5},
-                    {"id": "temperature", "state": 26.2},
-                    {"id": "valve_position", "state": 0},
-                ]
+                "sensors": {
+                    "setpoint": 21.5,
+                    "temperature": 26.2,
+                    "valve_position": 0,
+                }
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
-                "sensors": [{"id": "electricity_consumed", "state": 35.8}],
-                "switches": [
-                    {"id": "relay", "state": True},
-                ],
+                "sensors": {"electricity_consumed": 35.8},
+                "switches": {"relay": True},
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
-                "sensors": [
-                    {"id": "setpoint", "state": 13.0},
-                    {"id": "temperature", "state": 16.5},
-                    {"id": "battery", "state": 67},
-                ]
+                "sensors": {
+                    "setpoint": 13.0,
+                    "temperature": 16.5,
+                    "battery": 67,
+                }
             },
             # Adam
             "fe799307f1624099878210aa0b9f1475": {
+                "binary_sensors": {"plugwise_notification": True},
+                "sensors": {"outdoor_temperature": 7.69},
                 "heating_state": False,
-                "binary_sensors": [
-                    {
-                        "id": "plugwise_notification",
-                        "state": True,
-                    }
-                ],
-                "sensors": [
-                    {"id": "outdoor_temperature", "state": 7.69},
-                    {"id": "device_state", "state": "idle"},
-                ],
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
-                "sensors": [
-                    {"id": "electricity_consumed", "state": 12.2},
-                ],
-                "switches": [
-                    {"id": "relay", "state": True},
-                ],
+                "sensors": {"electricity_consumed": 12.2},
+                "switches": {"relay": True},
             },
         }
 
@@ -1321,53 +1279,42 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
-                "sensors": [
-                    {"id": "setpoint", "state": 21.5},
-                    {"id": "temperature", "state": 20.9},
-                    {"id": "battery", "state": 34},
-                ]
+                "sensors": {
+                    "setpoint": 21.5,
+                    "temperature": 20.9,
+                    "battery": 34,
+                }
             },
             # Floor WK
             "b310b72a0e354bfab43089919b9a88bf": {
-                "sensors": [
-                    {"id": "setpoint", "state": 21.5},
-                    {"id": "temperature", "state": 26.0},
-                    {"id": "valve_position", "state": 100},
-                ]
+                "sensors": {
+                    "setpoint": 21.5,
+                    "temperature": 26.0,
+                    "valve_position": 100,
+                }
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
-                "sensors": [
-                    {"id": "electricity_consumed", "state": 35.6},
-                ],
-                "switches": [
-                    {"id": "relay", "state": True},
-                ],
+                "sensors": {"electricity_consumed": 35.6},
+                "switches": {"relay": True},
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
-                "sensors": [
-                    {"id": "setpoint", "state": 13.0},
-                    {"id": "temperature", "state": 16.5},
-                    {"id": "battery", "state": 67},
-                ]
+                "sensors": {
+                    "setpoint": 13.0,
+                    "temperature": 16.5,
+                    "battery": 67,
+                }
             },
             # Adam
             "fe799307f1624099878210aa0b9f1475": {
+                "sensors": {"outdoor_temperature": 7.81},
                 "heating_state": True,
-                "sensors": [
-                    {"id": "outdoor_temperature", "state": 7.81},
-                    {"id": "device_state", "state": "heating"},
-                ],
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
-                "sensors": [
-                    {"id": "electricity_consumed", "state": 12.2},
-                ],
-                "switches": [
-                    {"id": "relay", "state": True},
-                ],
+                "sensors": {"electricity_consumed": 12.2},
+                "switches": {"relay": True},
             },
         }
 
@@ -1425,15 +1372,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Woonkamer - Tom
             "833de10f269c4deab58fb9df69901b4e": {
-                "sensors": [
-                    {"id": "valve_position", "state": 100},
-                ],
+                "sensors": {"valve_position": 100},
             },
             # Woonkamer - Jip
             "f61f1a2535f54f52ad006a3d18e459ca": {
-                "sensors": [
-                    {"id": "humidity", "state": 56.2},
-                ],
+                "sensors": {"humidity": 56.2},
             },
         }
 
@@ -1452,16 +1395,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 636.0},
-                    {"id": "electricity_produced_peak_cumulative", "state": 0.0},
-                    {
-                        "id": "electricity_consumed_off_peak_cumulative",
-                        "state": 10263.159,
-                    },
-                    {"id": "electricity_consumed_peak_interval", "state": 179},
-                    {"id": "net_electricity_cumulative", "state": 17965.326},
-                ]
+                "sensors": {
+                    "electricity_consumed_peak_point": 636.0,
+                    "electricity_produced_peak_cumulative": 0.0,
+                    "electricity_consumed_off_peak_cumulative": 10263.159,
+                    "electricity_consumed_peak_interval": 179,
+                    "net_electricity_cumulative": 17965.326,
+                }
             }
         }
 
@@ -1491,15 +1431,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 636.0},
-                    {"id": "electricity_produced_peak_cumulative", "state": 20.0},
-                    {
-                        "id": "electricity_consumed_off_peak_cumulative",
-                        "state": 10263.159,
-                    },
-                    {"id": "net_electricity_point", "state": 636},
-                ]
+                "sensors": {
+                    "electricity_consumed_peak_point": 636.0,
+                    "electricity_produced_peak_cumulative": 20.0,
+                    "electricity_consumed_off_peak_cumulative": 10263.159,
+                    "net_electricity_point": 636,
+                }
             }
         }
 
@@ -1530,14 +1467,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
-                "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 0.0},
-                    {"id": "electricity_produced_peak_cumulative", "state": 396.559},
-                    {"id": "electricity_consumed_off_peak_cumulative", "state": 551.09},
-                    {"id": "electricity_produced_peak_point", "state": 2816},
-                    {"id": "net_electricity_point", "state": -2816},
-                    {"id": "gas_consumed_cumulative", "state": 584.85},
-                ]
+                "sensors": {
+                    "electricity_consumed_peak_point": 0.0,
+                    "electricity_produced_peak_cumulative": 396.559,
+                    "electricity_consumed_off_peak_cumulative": 551.09,
+                    "electricity_produced_peak_point": 2816,
+                    "net_electricity_point": -2816,
+                    "gas_consumed_cumulative": 584.85,
+                }
             }
         }
 
@@ -1571,31 +1508,26 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "standaard",
                 "active_preset": "home",
                 "cooling_active": False,
-                "sensors": [
-                    {"id": "illuminance", "state": 86.0},
-                    {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
-                    {"id": "cooling_deactivation_threshold", "state": 4},
-                ],
+                "sensors": {
+                    "illuminance": 86.0,
+                    "cooling_activation_outdoor_temperature": 21.0,
+                    "cooling_deactivation_threshold": 4,
+                },
             },
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "cooling_state": False,
                 "heating_state": True,
-                "binary_sensors": [
-                    {
-                        "id": "dhw_state",
-                        "state": False,
-                    }
-                ],
-                "sensors": [
-                    {"id": "outdoor_temperature", "state": 18.0},
-                    {"id": "water_temperature", "state": 29.1},
-                    {"id": "water_pressure", "state": 1.57},
-                ],
+                "binary_sensors": {"dhw_state": False},
+                "sensors": {
+                    "outdoor_temperature": 18.0,
+                    "water_temperature": 29.1,
+                    "water_pressure": 1.57,
+                },
             },
             # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {
-                "sensors": [{"id": "outdoor_temperature", "state": 20.2}]
+                "sensors": {"outdoor_temperature": 20.2}
             },
         }
 
@@ -1631,29 +1563,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": None,
                 "active_preset": "home",
                 "cooling_active": True,
-                "sensors": [
-                    {"id": "illuminance", "state": 25.5},
-                    {"id": "cooling_activation_outdoor_temperature", "state": 21.0},
-                    {"id": "cooling_deactivation_threshold", "state": 6},
-                ],
+                "sensors": {
+                    "illuminance": 24.5,
+                    "cooling_activation_outdoor_temperature": 21.0,
+                    "cooling_deactivation_threshold": 6,
+                },
             },
-            # Central
+            # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "cooling_state": True,
                 "heating_state": False,
-                "binary_sensors": [
-                    {
-                        "id": "dhw_state",
-                        "state": False,
-                    }
-                ],
-                "sensors": [
-                    {"id": "water_temperature", "state": 24.7},
-                    {"id": "water_pressure", "state": 1.61},
-                ],
+                "binary_sensors": {"dhw_state": False},
+                "sensors": {"water_temperature": 24.7, "water_pressure": 1.61},
             },
+            # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {
-                "sensors": [{"id": "outdoor_temperature", "state": 22.0}]
+                "sensors": {"outdoor_temperature": 22.0}
             },
         }
 
@@ -1717,12 +1642,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Koelkast
             "e1c884e7dede431dadee09506ec4f859": {
-                "sensors": [{"id": "electricity_consumed", "state": 50.5}],
-                "switches": [{"id": "relay", "state": True}],
+                "sensors": {"electricity_consumed": 50.5},
+                "switches": {"relay": True},
             },
             # Vaatwasser
             "aac7b735042c4832ac9ff33aae4f453b": {
-                "sensors": [{"id": "electricity_consumed_interval", "state": 0.71}]
+                "sensors": {"electricity_consumed_interval": 0.71}
             },
         }
 
@@ -1754,15 +1679,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Tv hoek 25F6790
             "c71f1cb2100b42ca942f056dcb7eb01f": {
-                "sensors": [{"id": "electricity_consumed", "state": 33.3}],
-                "switches": [
-                    {"id": "lock", "state": False},
-                    {"id": "relay", "state": True},
-                ],
+                "sensors": {"electricity_consumed": 33.3},
+                "switches": {"lock": False, "relay": True},
             },
             # Wasdroger 043AECA
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "sensors": [{"id": "electricity_consumed_interval", "state": 0.21}]
+                "sensors": {"electricity_consumed_interval": 0.21}
             },
         }
 
@@ -1805,10 +1727,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "sensors": [
-                    {"id": "electricity_consumed_peak_point", "state": 548},
-                    {"id": "electricity_produced_peak_cumulative", "state": 0.0},
-                ]
+                "sensors": {
+                    "electricity_consumed_peak_point": 548,
+                    "electricity_produced_peak_cumulative": 0.0,
+                }
             }
         }
 
