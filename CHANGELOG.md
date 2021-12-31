@@ -6,6 +6,9 @@
  - Fixing #171
  - Improved dependency handling (@dependabot)
 
+# v0.16.0 - Smile - change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
+  - change from list- to dictformat for binary_sensors, sensors and switches
+
 # v0.15.6 - Smile - Various fixes and improvements
   - Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
   - Adam: collect `allowed_modes` and look for `cooling`, indicating cooling capability being available
