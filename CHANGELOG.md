@@ -1,8 +1,8 @@
 # Changelog
 
 # v0.15.7 - Smile - Improve implementation of cooling-function-detection
- - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling mode active indication
- - Adam: also provide a heating/cooling mode active indication
+ - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
+ - Adam: also provide a heating/cooling-mode active indication
  - Fixing #171
  - Improved dependency handling (@dependabot)
 
