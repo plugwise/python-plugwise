@@ -1,0 +1,2016 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appliances>
+	<appliance id='e6ed621bc14d42208d6a436345092248'>
+		<name>ZigBee InnrE</name>
+		<description>A device that communicates through the ZigBee protocol.</description>
+		<type>heater_electric</type>
+		<created_date>2021-02-12T17:01:14.713+01:00</created_date>
+		<modified_date>2021-12-02T21:48:35.292+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<interval_log id='c7bdfe0bb917496e9748df7a07c4cd31'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-02T12:00:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-02T11:45:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<period start_date="2021-12-02T12:00:00+01:00" end_date="2021-12-02T12:00:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-02T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='e21076f882304387a2736b3ac35e78f3'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT15M</interval>
+			</interval_log>
+			<point_log id='e460ab5f93e040659e03abbae3760132'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-02T12:00:51.301+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-01T08:13:20.343+01:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2021-12-02T12:00:51.301+01:00" end_date="2021-12-02T12:00:51.301+01:00">
+					<measurement log_date="2021-12-02T12:00:51.301+01:00">off</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='86f61822e47a4edabf5e21875adfa960'>
+				<updated_date>2021-12-02T12:00:51.301+01:00</updated_date>
+				<lock>false</lock>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='0ca13e8176204ca7bf6f09de59f81c83'>
+		<name>Central heating boiler</name>
+		<description></description>
+		<type>heater_central</type>
+		<created_date>2020-10-26T19:31:21.629+01:00</created_date>
+		<modified_date>2021-12-31T13:48:49.933+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='0195c9a1aff04d99bdc2fbe30071328f'>
+				<type>boiler_fan_speed_setpoint</type>
+				<unit>Hz</unit>
+				<updated_date>2020-12-07T09:07:58.503+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T09:07:58.503+01:00</last_consecutive_log_date>
+				<interval/>
+				<tacho_meter id='affd01299c9441cc9a58ca00535bb917'/>
+				<period start_date="2020-12-07T09:07:58.503+01:00" end_date="2020-12-07T09:07:58.503+01:00">
+					<measurement log_date="2020-12-07T09:07:58.503+01:00">30.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='0472a7ac00274e8b872cbf901c3a5d21'>
+				<type>intended_boiler_temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:36:00.350+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:58:18.316+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermo_meter id='a98b220b5a7e4834ae0fbcb949caa7b8'/>
+				<period start_date="2021-12-31T13:36:00.350+01:00" end_date="2021-12-31T13:36:00.350+01:00">
+					<measurement log_date="2021-12-31T13:36:00.350+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='0ffcb99c5efe4b26bc2fe33232be4bb2'>
+				<type>boiler_temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:49.906+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:48:49.906+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<thermo_meter id='4eb95cc1a1344882ae77990eeaa83278'/>
+				<period start_date="2021-12-31T13:48:49.906+01:00" end_date="2021-12-31T13:48:49.906+01:00">
+					<measurement log_date="2021-12-31T13:48:49.906+01:00">24.47</measurement>
+				</period>
+			</point_log>
+			<interval_log id='1121a70db1514b319252c9aa866fd1f9'>
+				<type>burner_operation_time</type>
+				<unit>s</unit>
+				<updated_date>2021-12-31T13:00:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T12:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<interval_chrono_meter id='6868bc4e882b43838dcc7779a5868dfa'/>
+				<period start_date="2021-12-31T13:00:00+01:00" end_date="2021-12-31T13:00:00+01:00" interval="PT1H">
+					<measurement log_date="2021-12-31T13:00:00+01:00">0</measurement>
+				</period>
+			</interval_log>
+			<point_log id='17380990ceaa4949a1b7c5f9ae48c88c'>
+				<type>open_therm_oem_diagnostic_code</type>
+				<unit></unit>
+				<updated_date>2021-12-31T08:04:05.529+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T08:04:05.528+01:00</last_consecutive_log_date>
+				<interval/>
+				<status_code id='ba8ddead7f344d02b9db3e5e01792ff0'/>
+				<period start_date="2021-12-31T08:04:05.529+01:00" end_date="2021-12-31T08:04:05.529+01:00">
+					<measurement log_date="2021-12-31T08:04:05.529+01:00">0</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='2390c0bc8a4448baa93a8426d5e16df7'>
+				<type>domestic_hot_water_burner_starts</type>
+				<unit></unit>
+				<updated_date>2020-12-07T15:06:20+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T15:06:20+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_counter id='3013ba091fc94e119234eacf516f8a4a'/>
+				<period start_date="2020-12-07T15:06:20+01:00" end_date="2020-12-07T15:06:20+01:00">
+					<measurement log_date="2020-12-07T15:06:20+01:00">15096</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='281c908e6bc5458a94d6446dc50a720d'>
+				<type>flame_state</type>
+				<unit></unit>
+				<updated_date>2021-12-31T11:48:12.890+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T11:48:12.890+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='17910e63b0db4c1e82f2142c3fbbbd56'/>
+				<period start_date="2021-12-31T11:48:12.890+01:00" end_date="2021-12-31T11:48:12.890+01:00">
+					<measurement log_date="2021-12-31T11:48:12.890+01:00">off</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='2e3e7aa36f12410f8f285c17ead78087'>
+				<type>failed_burner_starts</type>
+				<unit></unit>
+				<updated_date>2020-12-07T15:06:20+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T15:06:20+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_counter id='662dfb2d4ebb44d5b2a856e49f3f36ea'/>
+				<period start_date="2020-12-07T15:06:20+01:00" end_date="2020-12-07T15:06:20+01:00">
+					<measurement log_date="2020-12-07T15:06:20+01:00">53</measurement>
+				</period>
+			</cumulative_log>
+			<cumulative_log id='336ae56acd2d4eea90f437c7dd50f6fd'>
+				<type>domestic_hot_water_burner_operation_time</type>
+				<unit>hr</unit>
+				<updated_date>2020-12-07T15:06:20+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T15:06:20+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_chrono_meter id='dca3db103b944fcbad054e85a67baedd'/>
+				<period start_date="2020-12-07T15:06:20+01:00" end_date="2020-12-07T15:06:20+01:00">
+					<measurement log_date="2020-12-07T15:06:20+01:00">789</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='346d6aa94aca43c599cca2db3a06c5bf'>
+				<type>central_heating_state</type>
+				<unit></unit>
+				<updated_date>2021-12-31T08:01:11.974+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T08:01:11.974+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='94980e8eac84425d91a1456fc3553d9c'/>
+				<period start_date="2021-12-31T08:01:11.974+01:00" end_date="2021-12-31T08:01:11.974+01:00">
+					<measurement log_date="2021-12-31T08:01:11.974+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='3bc93abec7e44a49a19b0c1244ceb70d'>
+				<type>domestic_hot_water_state</type>
+				<unit></unit>
+				<updated_date>2021-12-31T08:02:17.065+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T08:02:17.065+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='25a3ff8401a048b0ba7107517c79ba64'/>
+				<period start_date="2021-12-31T08:02:17.065+01:00" end_date="2021-12-31T08:02:17.065+01:00">
+					<measurement log_date="2021-12-31T08:02:17.065+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='3f2f1347f2564e0da505896d94d68abe'>
+				<type>open_therm_oem_fault_code</type>
+				<unit></unit>
+				<updated_date>2021-12-31T06:17:30.042+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T05:40:17.184+01:00</last_consecutive_log_date>
+				<interval/>
+				<fault_code id='add2443dcdf247009594752003006536'/>
+				<period start_date="2021-12-31T06:17:30.042+01:00" end_date="2021-12-31T06:17:30.042+01:00">
+					<measurement log_date="2021-12-31T06:17:30.042+01:00">255</measurement>
+				</period>
+			</point_log>
+			<point_log id='401728d09e2c460895edc79847050b8d'>
+				<type>central_heater_water_pressure</type>
+				<unit>bar</unit>
+				<updated_date>2021-12-31T12:54:07.312+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T12:54:07.311+01:00</last_consecutive_log_date>
+				<interval/>
+				<pressure_gauge id='8a405416b33b48a380aec0ba174ab9d7'/>
+				<period start_date="2021-12-31T12:54:07.312+01:00" end_date="2021-12-31T12:54:07.312+01:00">
+					<measurement log_date="2021-12-31T12:54:07.312+01:00">2.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='6ec36f67cb674005ad9950993e214c16'>
+				<type>flame_current</type>
+				<unit>uA</unit>
+				<updated_date>2020-12-07T09:08:28.131+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T09:08:28.131+01:00</last_consecutive_log_date>
+				<interval/>
+				<ammeter id='390f86e3b6ab4eb0a9253d5ed5653574'/>
+				<period start_date="2020-12-07T09:08:28.131+01:00" end_date="2020-12-07T09:08:28.131+01:00">
+					<measurement log_date="2020-12-07T09:08:28.131+01:00">7.80</measurement>
+				</period>
+			</point_log>
+			<point_log id='7b6659fe5a6a4c8c929ca22aa79b28b4'>
+				<type>modulation_level</type>
+				<unit></unit>
+				<updated_date>2021-12-31T07:58:27.660+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:58:27.659+01:00</last_consecutive_log_date>
+				<interval/>
+				<modulation_level id='f73370d3b9da4eba9d297fd406fa5a34'/>
+				<period start_date="2021-12-31T07:58:27.660+01:00" end_date="2021-12-31T07:58:27.660+01:00">
+					<measurement log_date="2021-12-31T07:58:27.660+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='7cfa7f04356b4fac82bc4717b735b325'>
+				<type>burner_operation_time</type>
+				<unit>hr</unit>
+				<updated_date>2021-12-31T05:50:39+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T05:50:39+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_chrono_meter id='0595abf5e878431d8ed178cad9d12154'/>
+				<period start_date="2021-12-31T05:50:39+01:00" end_date="2021-12-31T05:50:39+01:00">
+					<measurement log_date="2021-12-31T05:50:39+01:00">8726</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='7e4d2b21d96f41cc8d62a1f649b1766e'>
+				<type>open_therm_application_specific_fault_code</type>
+				<unit></unit>
+				<updated_date>2021-12-31T06:17:30.042+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T17:07:09.637+01:00</last_consecutive_log_date>
+				<interval/>
+				<fault_code id='b11b1738968b4607a5751ed9b511b801'/>
+				<period start_date="2021-12-31T06:17:30.042+01:00" end_date="2021-12-31T06:17:30.042+01:00">
+					<measurement log_date="2021-12-31T06:17:30.042+01:00">0</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='81fee4d88a074c069c660ad04330a1e9'>
+				<type>domestic_hot_water_pump_operation_time</type>
+				<unit>hr</unit>
+				<updated_date>2020-12-07T15:06:20+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T15:06:20+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_chrono_meter id='e934175197f3467ab5d4bc28c6e1c4c2'/>
+				<period start_date="2020-12-07T15:06:20+01:00" end_date="2020-12-07T15:06:20+01:00">
+					<measurement log_date="2020-12-07T15:06:20+01:00">870</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='8e4fe24de9224122b0dba7e6a8b3e716'>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:46.816+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:48:18.015+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='780bab0fd2c9440981648c8ae9443fbf'/>
+				<period start_date="2021-12-31T13:48:46.816+01:00" end_date="2021-12-31T13:48:46.816+01:00">
+					<measurement log_date="2021-12-31T13:48:46.816+01:00">13.50</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='92ba00af208946319bc38a5de44aacec'>
+				<type>failed_burner_flame_ignitions</type>
+				<unit></unit>
+				<updated_date>2020-12-07T15:06:20+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T15:06:20+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_counter id='0586ceed16ad4d758f2f7075fbd5f54b'/>
+				<period start_date="2020-12-07T15:06:20+01:00" end_date="2020-12-07T15:06:20+01:00">
+					<measurement log_date="2020-12-07T15:06:20+01:00">44</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='93f760f53a1142aa9db4a0f4e5459925'>
+				<type>domestic_hot_water_setpoint</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T06:20:25.766+01:00</updated_date>
+				<last_consecutive_log_date>2021-04-07T08:30:23.187+02:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='e5139d3fcde4439abf9d00a0419cd911'/>
+				<period start_date="2021-12-31T06:20:25.766+01:00" end_date="2021-12-31T06:20:25.766+01:00">
+					<measurement log_date="2021-12-31T06:20:25.766+01:00">60.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='949b3a5ad2e040f78442e0953e8148d8'>
+				<type>maximum_boiler_temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:36:00.127+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-09T13:55:16.719+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='90d988693702490f9e630444a152dede'/>
+				<period start_date="2021-12-31T13:36:00.127+01:00" end_date="2021-12-31T13:36:00.127+01:00">
+					<measurement log_date="2021-12-31T13:36:00.127+01:00">35.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='a5f25990db8f4710b395b0bfe33552a4'>
+				<type>intended_central_heating_state</type>
+				<unit></unit>
+				<updated_date>2021-12-31T07:58:16.177+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:58:16.177+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='ee9303d6c65b47debcfbe97a0b7eca53'/>
+				<period start_date="2021-12-31T07:58:16.177+01:00" end_date="2021-12-31T07:58:16.177+01:00">
+					<measurement log_date="2021-12-31T07:58:16.177+01:00">off</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='ad64c5da8da345b799e01ba193096b87'>
+				<type>burner_starts</type>
+				<unit></unit>
+				<updated_date>2021-12-31T07:34:07+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:34:07+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_counter id='50621cc0bfe940daa3adf02eae64aaa0'/>
+				<period start_date="2021-12-31T07:34:07+01:00" end_date="2021-12-31T07:34:07+01:00">
+					<measurement log_date="2021-12-31T07:34:07+01:00">72636</measurement>
+				</period>
+			</cumulative_log>
+			<cumulative_log id='b3dc92a6016f4b60b4d2bc266fec0ae6'>
+				<type>central_heater_pump_operation_time</type>
+				<unit>hr</unit>
+				<updated_date>2021-12-31T07:51:33+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:51:33+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_chrono_meter id='f652cc8dd23d403db6f89b9820a47b53'/>
+				<period start_date="2021-12-31T07:51:33+01:00" end_date="2021-12-31T07:51:33+01:00">
+					<measurement log_date="2021-12-31T07:51:33+01:00">12350</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='c6d7a946dc024d54b848f65c64ceed65'>
+				<type>domestic_hot_water_comfort_mode</type>
+				<unit></unit>
+				<updated_date>2021-04-07T08:30:11.542+02:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T19:47:46.571+01:00</last_consecutive_log_date>
+				<interval/>
+				<domestic_hot_water_toggle id='c2537c851aa44723ac6bc84baaa3559c'/>
+				<period start_date="2021-04-07T08:30:11.542+02:00" end_date="2021-04-07T08:30:11.542+02:00">
+					<measurement log_date="2021-04-07T08:30:11.542+02:00">on</measurement>
+				</period>
+			</point_log>
+			<cumulative_log id='d3d35c56929b4562a328f5c14c5c1657'>
+				<type>domestic_hot_water_pump_starts</type>
+				<unit></unit>
+				<updated_date>2021-12-30T16:06:02+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-30T16:06:02+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_counter id='e0991751b3674ccb8851781c34361224'/>
+				<period start_date="2021-12-30T16:06:02+01:00" end_date="2021-12-30T16:06:02+01:00">
+					<measurement log_date="2021-12-30T16:06:02+01:00">441797</measurement>
+				</period>
+			</cumulative_log>
+			<cumulative_log id='e52cde37117b4444aef720a94076cb07'>
+				<type>central_heater_pump_starts</type>
+				<unit></unit>
+				<updated_date>2021-12-31T07:33:38+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:33:38+01:00</last_consecutive_log_date>
+				<interval/>
+				<cumulative_counter id='74ddb3c7eed64cfbb9d01a02f7fed7a1'/>
+				<period start_date="2021-12-31T07:33:38+01:00" end_date="2021-12-31T07:33:38+01:00">
+					<measurement log_date="2021-12-31T07:33:38+01:00">2490968</measurement>
+				</period>
+			</cumulative_log>
+			<point_log id='e7d11378dabc424c9fa85f3b6510ebfd'>
+				<type>domestic_hot_water_temperature</type>
+				<unit>C</unit>
+				<updated_date>2020-12-07T09:08:32.446+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T09:08:32.446+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<thermo_meter id='467ad3ff8d5f4239a4997606e6651648'/>
+				<period start_date="2020-12-07T09:08:32.446+01:00" end_date="2020-12-07T09:08:32.446+01:00">
+					<measurement log_date="2020-12-07T09:08:32.446+01:00">63.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='efcb607b2c3b4838b85c698dd88485a6'>
+				<type>cooling_state</type>
+				<unit></unit>
+				<updated_date>2021-12-28T15:07:37.695+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-28T15:07:37.695+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='51f831118abd45f88401d946227f0ae8'/>
+				<period start_date="2021-12-28T15:07:37.695+01:00" end_date="2021-12-28T15:07:37.695+01:00">
+					<measurement log_date="2021-12-28T15:07:37.695+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='f268d60f0bdf41a681a4839a8ca8bf48'>
+				<type>return_water_temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:46.339+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:48:46.339+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<thermo_meter id='68c91f6a79ff4cee9d6aa7ae6d5a5312'/>
+				<period start_date="2021-12-31T13:48:46.339+01:00" end_date="2021-12-31T13:48:46.339+01:00">
+					<measurement log_date="2021-12-31T13:48:46.339+01:00">24.93</measurement>
+				</period>
+			</point_log>
+			<point_log id='fd20151809d343daab7c05ee0efbe50e'>
+				<type>boiler_fan_speed</type>
+				<unit>Hz</unit>
+				<updated_date>2020-12-07T09:07:58.503+01:00</updated_date>
+				<last_consecutive_log_date>2020-12-07T09:07:58.503+01:00</last_consecutive_log_date>
+				<interval/>
+				<tacho_meter id='ba598c5123cf4d28ba4f7273d411da12'/>
+				<period start_date="2020-12-07T09:07:58.503+01:00" end_date="2020-12-07T09:07:58.503+01:00">
+					<measurement log_date="2020-12-07T09:07:58.503+01:00">30.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='40da86ec1166460781b575bb28237400'>
+				<updated_date>2021-12-31T06:20:25.766+01:00</updated_date>
+				<type>domestic_hot_water_setpoint</type>
+				<setpoint>60</setpoint>
+				<lower_bound>40</lower_bound>
+				<upper_bound>65</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations/>
+				<thermostat id='e5139d3fcde4439abf9d00a0419cd911'/>
+			</thermostat_functionality>
+			<thermostat_functionality id='45fbd663adee4567ad61fca55ae47398'>
+				<updated_date>2021-12-31T13:36:00.127+01:00</updated_date>
+				<type>maximum_boiler_temperature</type>
+				<setpoint>35</setpoint>
+				<lower_bound>7</lower_bound>
+				<upper_bound>50</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations/>
+				<thermostat id='90d988693702490f9e630444a152dede'/>
+			</thermostat_functionality>
+			<toggle_functionality id='7170eca79c8d4de39989a68c87211048'>
+				<domestic_hot_water_toggle id='c2537c851aa44723ac6bc84baaa3559c'/>
+				<updated_date>2021-04-07T08:30:11.542+02:00</updated_date>
+				<type>domestic_hot_water_comfort_mode</type>
+				<state>on</state>
+			</toggle_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='1053c8bbf8be43c6921742b146a625f1'>
+		<name>Thermostaat BK</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-28T14:59:20.005+01:00</created_date>
+		<modified_date>2021-12-31T13:45:19.003+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='b52908550469425b812c87f766fe5303'/>
+		<groups/>
+		<logs>
+			<point_log id='0bddb0f66bb34a629f83ca667164b811'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T08:00:03.239+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T08:00:03.203+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='a29f3769025a424f9fcf6f7a3999765f'/>
+				<period start_date="2021-12-31T08:00:03.239+01:00" end_date="2021-12-31T08:00:03.239+01:00">
+					<measurement log_date="2021-12-31T08:00:03.239+01:00">18.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='55e70496b2784563a1dc997ba53aa906'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2021-12-24T19:54:18.015+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-08T09:57:03.288+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='ed512816cf004c2983d0cc3645937600'/>
+				<period start_date="2021-12-24T19:54:18.015+01:00" end_date="2021-12-24T19:54:18.015+01:00">
+					<measurement log_date="2021-12-24T19:54:18.015+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='e0d75d138696419484f8573bb35e6545'>
+				<type>battery</type>
+				<unit></unit>
+				<updated_date>2021-12-31T04:37:36.270+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-30T16:44:07.154+01:00</last_consecutive_log_date>
+				<interval/>
+				<battery_meter id='973ac11bb54f4c1b874bbcb8c34c7814'/>
+				<period start_date="2021-12-31T04:37:36.270+01:00" end_date="2021-12-31T04:37:36.270+01:00">
+					<measurement log_date="2021-12-31T04:37:36.270+01:00">0.55</measurement>
+				</period>
+			</point_log>
+			<point_log id='f25e13ecf5024544ab749765ad41c787'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:45:19.001+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:45:19.001+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='56950de55baf4aa68e204fbd62f0f476'/>
+				<period start_date="2021-12-31T13:45:19.001+01:00" end_date="2021-12-31T13:45:19.001+01:00">
+					<measurement log_date="2021-12-31T13:45:19.001+01:00">18.80</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='315621a7123243fd9be122c9d1ad4022'>
+				<updated_date>2021-12-31T08:00:03.239+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>18</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='a29f3769025a424f9fcf6f7a3999765f'/>
+			</thermostat_functionality>
+			<offset_functionality id='c8e76832dd9c489dbc533a1076de81a7'>
+				<temperature_offset id='ed512816cf004c2983d0cc3645937600'/>
+				<updated_date>2021-12-24T19:54:18.015+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='a03b6e8e76dd4646af1a77c31dd9370c'>
+		<name>Smart Plug RB</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-03T10:15:11.482+01:00</created_date>
+		<modified_date>2021-12-31T13:41:14.111+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='93ac3f7bf25342f58cbb77c4a99ac0b3'/>
+		<groups/>
+		<logs>
+			<point_log id='88f79beea880433683c7bbbab1bda5ad'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:35:33.050+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T10:15:17.904+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='db8f6a2ada4a41919eb35637d39e0a15'/>
+				<period start_date="2021-12-31T13:35:33.050+01:00" end_date="2021-12-31T13:35:33.050+01:00">
+					<measurement log_date="2021-12-31T13:35:33.050+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='96759acaa59a41749223c123de287665'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='84af4efdcaec4b55917635b71069a197'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.77</measurement>
+				</period>
+			</interval_log>
+			<point_log id='ba9ecb2959e04bf0ace76728c4629f73'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:35:33.050+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-29T07:30:55.567+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='db8f6a2ada4a41919eb35637d39e0a15'/>
+				<period start_date="2021-12-31T13:35:33.050+01:00" end_date="2021-12-31T13:35:33.050+01:00">
+					<measurement log_date="2021-12-31T13:35:33.050+01:00">3.13</measurement>
+				</period>
+			</point_log>
+			<point_log id='ddac8b1eb00d45b38db8f5112218a34a'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:41:14.086+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T09:30:16.696+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='317a1cb22701418688f077cadc9a372e'/>
+				<period start_date="2021-12-31T13:41:14.086+01:00" end_date="2021-12-31T13:41:14.086+01:00">
+					<measurement log_date="2021-12-31T13:41:14.086+01:00">off</measurement>
+				</period>
+			</point_log>
+			<interval_log id='f48cc47f002947208d5452333d346bd3'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='84af4efdcaec4b55917635b71069a197'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='40eab2412bad441886da7fe9df56cb57'>
+				<updated_date>2021-12-31T13:41:14.086+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='317a1cb22701418688f077cadc9a372e'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='bbcffa48019f4b09b8368bbaf9559e68'>
+		<name>Smart Plug BK1</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-02T18:00:12.397+01:00</created_date>
+		<modified_date>2021-12-31T13:46:58.916+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='8cf650a4c10c44819e426bed406aec34'/>
+		<groups/>
+		<logs>
+			<interval_log id='0ebd94d051f940aeb04258b5aa873c61'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='e2df1558e382437383b73ea84c74bc1f'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='1c8567bc71b94d9097402fc49e77e86d'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:46:58.905+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-30T22:59:06.073+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='401656d23bc44dc19f8c08b94b2c3108'/>
+				<period start_date="2021-12-31T13:46:58.905+01:00" end_date="2021-12-31T13:46:58.905+01:00">
+					<measurement log_date="2021-12-31T13:46:58.905+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='3df86bdea3e34f4cb4c9ab2fb8fb1f46'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:32:34.226+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-30T22:59:14.417+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='6bcf09b388dc4cf88fcf262f37b15892'/>
+				<period start_date="2021-12-31T13:32:34.226+01:00" end_date="2021-12-31T13:32:34.226+01:00">
+					<measurement log_date="2021-12-31T13:32:34.226+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='a600f5fb527a41baa0ccb8ff3becdbde'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='e2df1558e382437383b73ea84c74bc1f'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='c26dc258b18340a2914418afcc9c67d6'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:32:34.226+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T05:40:42.108+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='6bcf09b388dc4cf88fcf262f37b15892'/>
+				<period start_date="2021-12-31T13:32:34.226+01:00" end_date="2021-12-31T13:32:34.226+01:00">
+					<measurement log_date="2021-12-31T13:32:34.226+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='9409e0c6028c49ad81261e2fe0f26bda'>
+				<updated_date>2021-12-31T13:46:58.905+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='401656d23bc44dc19f8c08b94b2c3108'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='f04c985c11ad4848b8fcd710343f9dcf'>
+		<name>Thermostaat  BK2</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-27T21:13:47.703+01:00</created_date>
+		<modified_date>2021-12-31T13:43:08.362+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='5cc21042f87f4b4c94ccb5537c47a53f'/>
+		<groups/>
+		<logs>
+			<point_log id='94069b457ae6488a94834240c96784d7'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2020-10-27T21:13:52.473+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-27T21:13:52.209+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='0940839a281746c69c65783ad0e7c36e'/>
+				<period start_date="2020-10-27T21:13:52.473+01:00" end_date="2020-10-27T21:13:52.473+01:00">
+					<measurement log_date="2020-10-27T21:13:52.473+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='db8198a6400846b69b0d45b98439dca9'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T01:57:38.409+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-16T13:35:09.082+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='ab57c7ebfa354f879686e262caec893c'/>
+				<period start_date="2021-12-31T01:57:38.409+01:00" end_date="2021-12-31T01:57:38.409+01:00">
+					<measurement log_date="2021-12-31T01:57:38.409+01:00">20.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='deaf10a8514546e0ab61ce66cee62772'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:43:08.360+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:43:08.360+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='8a96424f2a384a33a6e8306b983146d8'/>
+				<period start_date="2021-12-31T13:43:08.360+01:00" end_date="2021-12-31T13:43:08.360+01:00">
+					<measurement log_date="2021-12-31T13:43:08.360+01:00">21.90</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='a25ce60eb0154b5f899f089fc70efa1e'>
+				<updated_date>2021-12-31T01:57:38.409+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>20.5</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='ab57c7ebfa354f879686e262caec893c'/>
+			</thermostat_functionality>
+			<offset_functionality id='ee82b497465e446e9cddf27515032737'>
+				<temperature_offset id='0940839a281746c69c65783ad0e7c36e'/>
+				<updated_date>2020-10-27T21:13:52.473+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='ef79b83266b041a58b0b2031fb0ff457'>
+		<name>OpenThermGateway</name>
+		<description>An OpenTherm Gateway</description>
+		<type>open_therm_gateway</type>
+		<created_date>2020-10-26T19:30:36.637+01:00</created_date>
+		<modified_date>2020-10-26T19:37:47.912+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='257df2c4882f4963b5dc961b2f3ca955'>
+				<type>override_mode</type>
+				<unit></unit>
+				<updated_date>2021-04-07T08:30:15.980+02:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T19:30:36.855+01:00</last_consecutive_log_date>
+				<interval/>
+				<override_mode id='d120581b860f4657bd4e4fa20f449b50'/>
+				<period start_date="2021-04-07T08:30:15.980+02:00" end_date="2021-04-07T08:30:15.980+02:00">
+					<measurement log_date="2021-04-07T08:30:15.980+02:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='dc924b73dfa34ba0bab5dfd0a986e9b5'>
+				<type>open_therm_power_mode</type>
+				<unit></unit>
+				<updated_date>2021-04-07T08:30:16.294+02:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T19:37:47.899+01:00</last_consecutive_log_date>
+				<interval/>
+				<power_mode id='7768e53bced24e8990bd40f5c7990762'/>
+				<period start_date="2021-04-07T08:30:16.294+02:00" end_date="2021-04-07T08:30:16.294+02:00">
+					<measurement log_date="2021-04-07T08:30:16.294+02:00">0</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+	<appliance id='2e0fc4db2a6d4cbeb7cf786143543961'>
+		<name>Smart Plug KK</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-10-30T10:24:39.251+01:00</created_date>
+		<modified_date>2021-12-31T13:41:39.980+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='a562019b0b1f47a4bde8ebe3dbe3e8a9'/>
+		<groups/>
+		<logs>
+			<interval_log id='2ac057f4ec7c423b94465c8a79cda6d1'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='5e5852cb534c463d87cb7919cec36ed9'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='7ee9466f22e041189cae81d14e95fa93'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:29:46.944+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T08:08:26.977+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='dd2c14180700401286d5918a129500ac'/>
+				<period start_date="2021-12-31T13:29:46.944+01:00" end_date="2021-12-31T13:29:46.944+01:00">
+					<measurement log_date="2021-12-31T13:29:46.944+01:00">2.13</measurement>
+				</period>
+			</point_log>
+			<point_log id='8575540b8d5345c68a35fcce91300ab1'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:29:46.944+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-30T16:13:18.696+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='dd2c14180700401286d5918a129500ac'/>
+				<period start_date="2021-12-31T13:29:46.944+01:00" end_date="2021-12-31T13:29:46.944+01:00">
+					<measurement log_date="2021-12-31T13:29:46.944+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='9598fa6ab6b441978000af5eb144852d'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='5e5852cb534c463d87cb7919cec36ed9'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='dd1ed31c345e4c6bb28e8edad5ed8b96'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:38:47.663+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:48:16.655+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='eca6b996807e40c99d4498675aec7481'/>
+				<period start_date="2021-12-31T13:38:47.663+01:00" end_date="2021-12-31T13:38:47.663+01:00">
+					<measurement log_date="2021-12-31T13:38:47.663+01:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='0b4cbe42af2148589b2bd2299d5edf88'>
+				<updated_date>2021-12-31T13:38:47.663+01:00</updated_date>
+				<lock>false</lock>
+				<state>on</state>
+				<relay id='eca6b996807e40c99d4498675aec7481'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='3f0afa71f16c45ab964050002560e43c'>
+		<name>Smart Plug WK</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-02T16:16:28.852+01:00</created_date>
+		<modified_date>2021-12-31T13:37:44.618+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='fa5fa6b34f6b40a0972988b20e888ed4'/>
+		<groups/>
+		<logs>
+			<point_log id='28bb5b25f2b74bedbd4f4e9dceb20350'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:36:41.362+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:48:16.675+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='7fe5c99f86bd40bc85738616e47a5a91'/>
+				<period start_date="2021-12-31T13:36:41.362+01:00" end_date="2021-12-31T13:36:41.362+01:00">
+					<measurement log_date="2021-12-31T13:36:41.362+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='2ed4fa12c4a749a683806828cbc42c46'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:36:58.429+01:00</updated_date>
+				<last_consecutive_log_date>2021-02-01T17:01:59.051+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='78d64b341b7c4c11be6cd36841ca3107'/>
+				<period start_date="2021-12-31T13:36:58.429+01:00" end_date="2021-12-31T13:36:58.429+01:00">
+					<measurement log_date="2021-12-31T13:36:58.429+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='54345f70939c403fbd07e031d35664eb'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='beb82597a0f74abebfbeb4eec5bfe8ae'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='6ae30471bc54477c8156f7c94c0481d1'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:36:58.429+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T07:48:33.204+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='78d64b341b7c4c11be6cd36841ca3107'/>
+				<period start_date="2021-12-31T13:36:58.429+01:00" end_date="2021-12-31T13:36:58.429+01:00">
+					<measurement log_date="2021-12-31T13:36:58.429+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='887c551fe76440698cc98f969a0e34e7'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='beb82597a0f74abebfbeb4eec5bfe8ae'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='d74cd4c467f34b70b6456ffe236ec2cc'>
+				<updated_date>2021-12-31T13:36:41.362+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='7fe5c99f86bd40bc85738616e47a5a91'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='ca79d23ae0094120b877558734cff85c'>
+		<name>Thermostaat WK</name>
+		<description>A Thermostat</description>
+		<type>thermostat</type>
+		<created_date>2020-10-26T19:47:45.303+01:00</created_date>
+		<modified_date>2021-12-31T13:48:41.171+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='fa5fa6b34f6b40a0972988b20e888ed4'/>
+		<groups/>
+		<logs>
+			<point_log id='361486e0ea204360b8303cb8254e0e47'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:41.157+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:48:41.157+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='7720865eaf654aeda2d4dea98487185d'/>
+				<period start_date="2021-12-31T13:48:41.157+01:00" end_date="2021-12-31T13:48:41.157+01:00">
+					<measurement log_date="2021-12-31T13:48:41.157+01:00">22.53</measurement>
+				</period>
+			</point_log>
+			<point_log id='3cd3c5f857b14060b8be9f2d8d23c017'>
+				<type>intended_central_heating_state</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:46:12.032+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-26T09:56:16.978+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='cadb00c6be304d05b05ff42ec4ae6179'/>
+				<period start_date="2021-12-31T13:46:12.032+01:00" end_date="2021-12-31T13:46:12.032+01:00">
+					<measurement log_date="2021-12-31T13:46:12.032+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='6bc763dbcc50423bb5f40d1c62224591'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:37.094+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-16T17:15:00.702+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='620f53850f96416ba367362d5cb42e5a'/>
+				<period start_date="2021-12-31T13:48:37.094+01:00" end_date="2021-12-31T13:48:37.094+01:00">
+					<measurement log_date="2021-12-31T13:48:37.094+01:00">21.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='9c0239f333f74e1b823799928d5de425'>
+				<type>maximum_modulation_level</type>
+				<unit></unit>
+				<updated_date>2020-10-26T19:51:11.197+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T19:47:49.466+01:00</last_consecutive_log_date>
+				<interval/>
+				<modulation_level id='1cd20bd5dba442d7906ca47a7fc4076f'/>
+				<period start_date="2020-10-26T19:51:11.197+01:00" end_date="2020-10-26T19:51:11.197+01:00">
+					<measurement log_date="2020-10-26T19:51:11.197+01:00">1.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='f5907d935b9340e2a0e57e2740b1a6da'>
+				<type>intended_domestic_hot_water_comfort_mode</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:46:12.032+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T19:47:45.591+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='ec4620459581451e854d0f6937c2e6af'/>
+				<period start_date="2021-12-31T13:46:12.032+01:00" end_date="2021-12-31T13:46:12.032+01:00">
+					<measurement log_date="2021-12-31T13:46:12.032+01:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='c4d22a801beb46c5aec8b23fd05eceab'>
+				<updated_date>2021-12-31T13:48:37.094+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>21.5</setpoint>
+				<lower_bound>1</lower_bound>
+				<upper_bound>35</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='620f53850f96416ba367362d5cb42e5a'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='838c2f48195242709b87217cf8d8a71f'>
+		<name>Smart Plug BK</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-02T16:53:27.781+01:00</created_date>
+		<modified_date>2021-12-31T13:48:34.921+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='b52908550469425b812c87f766fe5303'/>
+		<groups/>
+		<logs>
+			<point_log id='348bc6ab0e44437180ff541e02852109'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:37:43.493+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T01:45:24.928+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='8bf0519bf2404413aa1c9f60e14cbd9d'/>
+				<period start_date="2021-12-31T13:37:43.493+01:00" end_date="2021-12-31T13:37:43.493+01:00">
+					<measurement log_date="2021-12-31T13:37:43.493+01:00">off</measurement>
+				</period>
+			</point_log>
+			<interval_log id='7c54387dd0984e3193d2ffa1e67b9158'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:45:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:30:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='9e812deacbf441a38b0cfce4539ac863'/>
+				<period start_date="2021-12-31T13:45:00+01:00" end_date="2021-12-31T13:45:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:45:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='a62e5357817148aca16fa4c6d9a3ce55'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:37:55.350+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T01:45:36.455+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='3bebb1cf3c4342cba0a458354a351000'/>
+				<period start_date="2021-12-31T13:37:55.350+01:00" end_date="2021-12-31T13:37:55.350+01:00">
+					<measurement log_date="2021-12-31T13:37:55.350+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='c795c2095bb24ae79220db4eae945a69'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:45:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:30:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='9e812deacbf441a38b0cfce4539ac863'/>
+				<period start_date="2021-12-31T13:45:00+01:00" end_date="2021-12-31T13:45:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:45:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='cead8df5f2694b9b8237748cc6e037ee'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:37:55.350+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-02T16:53:32.263+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='3bebb1cf3c4342cba0a458354a351000'/>
+				<period start_date="2021-12-31T13:37:55.350+01:00" end_date="2021-12-31T13:37:55.350+01:00">
+					<measurement log_date="2021-12-31T13:37:55.350+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='18697bde2ab04031b217eb4918dbfae6'>
+				<updated_date>2021-12-31T13:37:43.493+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='8bf0519bf2404413aa1c9f60e14cbd9d'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='c4ed311d54e341f58b4cdd201d1fde7e'>
+		<name>Thermostaat RB</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-28T15:07:25.005+01:00</created_date>
+		<modified_date>2021-12-31T13:48:46.497+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='93ac3f7bf25342f58cbb77c4a99ac0b3'/>
+		<groups/>
+		<logs>
+			<point_log id='05ba8858255c4fa6a746a034ca725acd'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T03:48:02.736+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-29T15:47:23.817+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='109f5a290ccf443f8d6162b09ad0e0b1'/>
+				<period start_date="2021-12-31T03:48:02.736+01:00" end_date="2021-12-31T03:48:02.736+01:00">
+					<measurement log_date="2021-12-31T03:48:02.736+01:00">17.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='d7953fcdedd8454cbc9008a4a3399442'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:46.492+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:48:46.492+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='498b05742feb4dfcbbf31ebe42c124d6'/>
+				<period start_date="2021-12-31T13:48:46.492+01:00" end_date="2021-12-31T13:48:46.492+01:00">
+					<measurement log_date="2021-12-31T13:48:46.492+01:00">20.70</measurement>
+				</period>
+			</point_log>
+			<point_log id='e708254c8e7b4117b2f3245284fdf7d1'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2020-10-28T15:07:33.735+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-28T15:07:33.280+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='d3e649126919447d904f953c316dbff8'/>
+				<period start_date="2020-10-28T15:07:33.735+01:00" end_date="2020-10-28T15:07:33.735+01:00">
+					<measurement log_date="2020-10-28T15:07:33.735+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='9e1957c1c6d7493dbf6d97ffbc752bc6'>
+				<temperature_offset id='d3e649126919447d904f953c316dbff8'/>
+				<updated_date>2020-10-28T15:07:33.735+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='ece729c504ea4134a751514234981955'>
+				<updated_date>2021-12-31T03:48:02.736+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>17</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='109f5a290ccf443f8d6162b09ad0e0b1'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='eac5db95d97241f6b17790897847ccf5'>
+		<name>Thermostaat BK1</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-27T21:07:24.125+01:00</created_date>
+		<modified_date>2021-12-31T13:38:34.576+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='8cf650a4c10c44819e426bed406aec34'/>
+		<groups/>
+		<logs>
+			<point_log id='1675d35201cc4a4795bf45d02499ea63'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T05:26:35.148+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-23T17:15:00.709+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='96fcef233b3a48469bd159376987882c'/>
+				<period start_date="2021-12-31T05:26:35.148+01:00" end_date="2021-12-31T05:26:35.148+01:00">
+					<measurement log_date="2021-12-31T05:26:35.148+01:00">20.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='516a93aab5024f4b933fa74f391d7171'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2020-10-27T21:07:28.892+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-27T21:07:28.676+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='98c64c3ff32147da88c5bdd9c4b0b68b'/>
+				<period start_date="2020-10-27T21:07:28.892+01:00" end_date="2020-10-27T21:07:28.892+01:00">
+					<measurement log_date="2020-10-27T21:07:28.892+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='7d70aa5570864834800581fbd2fdae86'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:38:34.574+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:38:34.574+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='f21007cbc349492e895f37dd6bc7eb7b'/>
+				<period start_date="2021-12-31T13:38:34.574+01:00" end_date="2021-12-31T13:38:34.574+01:00">
+					<measurement log_date="2021-12-31T13:38:34.574+01:00">21.50</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='a33d7a45ff0548d1a581f367ed188398'>
+				<temperature_offset id='98c64c3ff32147da88c5bdd9c4b0b68b'/>
+				<updated_date>2020-10-27T21:07:28.892+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='c7d23080ef6e4198b8ac8e22cb15d78f'>
+				<updated_date>2021-12-31T05:26:35.148+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>20.5</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='96fcef233b3a48469bd159376987882c'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='beb32da072274e698146db8b022f3c36'>
+		<name>Thermostaat SQ</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-27T21:08:54.651+01:00</created_date>
+		<modified_date>2021-12-31T13:46:54.988+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='9a27714b970547ee9a6bdadc2b815ad5'/>
+		<groups/>
+		<logs>
+			<point_log id='32458347941741379a223cfae280fe71'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:46:54.985+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:46:54.985+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='134177ef9646465fa7211fbc0228a026'/>
+				<period start_date="2021-12-31T13:46:54.985+01:00" end_date="2021-12-31T13:46:54.985+01:00">
+					<measurement log_date="2021-12-31T13:46:54.985+01:00">21.40</measurement>
+				</period>
+			</point_log>
+			<point_log id='a910f7e3bf684abc87aa5e752ffc5bc1'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T01:55:13.767+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-16T13:35:09.039+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='d5d6b3f5cc7b4ebfa4e27336ccc9f82a'/>
+				<period start_date="2021-12-31T01:55:13.767+01:00" end_date="2021-12-31T01:55:13.767+01:00">
+					<measurement log_date="2021-12-31T01:55:13.767+01:00">18.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='e5c3659a23984c44a38bffc5fac1dac3'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2020-10-27T21:08:59.077+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-27T21:08:58.784+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='01aa67f5c59943b689d4fee47b4f5336'/>
+				<period start_date="2020-10-27T21:08:59.077+01:00" end_date="2020-10-27T21:08:59.077+01:00">
+					<measurement log_date="2020-10-27T21:08:59.077+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='241b9450c668435e87ee269e58c75964'>
+				<temperature_offset id='01aa67f5c59943b689d4fee47b4f5336'/>
+				<updated_date>2020-10-27T21:08:59.077+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='4f4e7e98a9b8419f95ff60ef3a7be2b9'>
+				<updated_date>2021-12-31T01:55:13.767+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>18.5</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='d5d6b3f5cc7b4ebfa4e27336ccc9f82a'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='96714ad90fc948bcbcb5021c4b9f5ae9'>
+		<name>Smart Plug JM</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-02T21:24:39.151+01:00</created_date>
+		<modified_date>2021-12-31T13:39:38.249+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='e39529c79ab54fda9bed26cfc0447546'/>
+		<groups/>
+		<logs>
+			<interval_log id='2ed25ed54a9740c29123f9d339f74c6b'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='bbe857ddf0ff4a5da78f4a278effee2a'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='5f3bc961d4d24bcf92cb8f9c6fa2187b'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:39:38.246+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-23T13:10:21.147+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='ac023c9a54024c96b48f4b10d958b846'/>
+				<period start_date="2021-12-31T13:39:38.246+01:00" end_date="2021-12-31T13:39:38.246+01:00">
+					<measurement log_date="2021-12-31T13:39:38.246+01:00">off</measurement>
+				</period>
+			</point_log>
+			<interval_log id='87bfe30a698d45e7b394092f3690a6ae'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='bbe857ddf0ff4a5da78f4a278effee2a'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='b5cf699d75874e6981348860640c509e'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:25:16.545+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-23T13:10:33.630+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='04fa387e895a437a9d374f303e3eff40'/>
+				<period start_date="2021-12-31T13:25:16.545+01:00" end_date="2021-12-31T13:25:16.545+01:00">
+					<measurement log_date="2021-12-31T13:25:16.545+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='ba832e8e15d0476db643eb724cadf8e1'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:25:16.545+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T05:40:37.085+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='04fa387e895a437a9d374f303e3eff40'/>
+				<period start_date="2021-12-31T13:25:16.545+01:00" end_date="2021-12-31T13:25:16.545+01:00">
+					<measurement log_date="2021-12-31T13:25:16.545+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='40abbd630a3d454387c2a56f3a2b7dbb'>
+				<updated_date>2021-12-31T13:39:38.246+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='ac023c9a54024c96b48f4b10d958b846'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='3b4d2574e2c9443a832b48d19a1c4f06'>
+		<name>Smart Plug SJ</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-03T11:13:01.015+01:00</created_date>
+		<modified_date>2021-12-31T13:46:26.498+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='04b15f6e884448288f811d29fb7b1b30'/>
+		<groups/>
+		<logs>
+			<point_log id='3b84eb30654d41d3903bad19c2bebf74'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:46:26.306+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T11:13:07.884+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='7ec4ad0f81db4ef7948cce7e599d1e2a'/>
+				<period start_date="2021-12-31T13:46:26.306+01:00" end_date="2021-12-31T13:46:26.306+01:00">
+					<measurement log_date="2021-12-31T13:46:26.306+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='4bb3c85f66b443829a199e240c47504e'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:42:29.874+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-24T08:10:18.755+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='c241c20361984f84beab33124e2d7a0d'/>
+				<period start_date="2021-12-31T13:42:29.874+01:00" end_date="2021-12-31T13:42:29.874+01:00">
+					<measurement log_date="2021-12-31T13:42:29.874+01:00">off</measurement>
+				</period>
+			</point_log>
+			<interval_log id='59ee958adde24f58919e1328f1517e07'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:45:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:30:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='b62796e873a5456284fc7627f52e9c9f'/>
+				<period start_date="2021-12-31T13:45:00+01:00" end_date="2021-12-31T13:45:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:45:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='9561f6ca511245c287a8ff40c26b478b'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:46:26.306+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T11:13:07.884+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='7ec4ad0f81db4ef7948cce7e599d1e2a'/>
+				<period start_date="2021-12-31T13:46:26.306+01:00" end_date="2021-12-31T13:46:26.306+01:00">
+					<measurement log_date="2021-12-31T13:46:26.306+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='f2b59646b9d449a69835f913c4e6ea5e'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:45:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:30:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='b62796e873a5456284fc7627f52e9c9f'/>
+				<period start_date="2021-12-31T13:45:00+01:00" end_date="2021-12-31T13:45:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:45:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='8150c4d723584da58229d2e7b30de493'>
+				<updated_date>2021-12-31T13:42:29.874+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='c241c20361984f84beab33124e2d7a0d'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='7d97fc3117784cfdafe347bcedcbbbcb'>
+		<name>Gateway</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2020-10-26T19:29:29.541+01:00</created_date>
+		<modified_date>2021-12-24T15:23:49.836+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='0cea29e71d924a3f82fd4c5df0922c79'>
+				<type>gateway_mode</type>
+				<unit></unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval/>
+				<gateway_mode_control id='3673c46fb91040a9bc5880e5ca4b3a61'/>
+			</point_log>
+			<point_log id='125a7ea261f949f3812b405e45b785be'>
+				<type>regulation_mode</type>
+				<unit></unit>
+				<updated_date>2021-12-16T13:35:09.030+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T19:29:29.969+01:00</last_consecutive_log_date>
+				<interval/>
+				<regulation_mode_control id='7f89172d5c36454093f43a13683e5820'/>
+				<period start_date="2021-12-16T13:35:09.030+01:00" end_date="2021-12-16T13:35:09.030+01:00">
+					<measurement log_date="2021-12-16T13:35:09.030+01:00">heating</measurement>
+				</period>
+			</point_log>
+			<point_log id='6582d32f34944fccb0a1910a20a884a1'>
+				<type>wlan_state</type>
+				<unit></unit>
+				<updated_date>2021-12-24T15:23:49.624+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T09:16:42.163+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_state id='d237e3260c8e42ce8de3d1bfab3b82fc'/>
+				<period start_date="2021-12-24T15:23:49.624+01:00" end_date="2021-12-24T15:23:49.624+01:00">
+					<measurement log_date="2021-12-24T15:23:49.624+01:00">down</measurement>
+				</period>
+			</point_log>
+			<point_log id='b177fa36807e4ac2822b8484e1018373'>
+				<type>lan_ip_address</type>
+				<unit></unit>
+				<updated_date>2021-12-24T15:23:49+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-24T15:23:49+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_address id='f33dd0b1873646128e89c28b7f3325b6'/>
+				<period start_date="2021-12-24T15:23:49+01:00" end_date="2021-12-24T15:23:49+01:00">
+					<measurement log_date="2021-12-24T15:23:49+01:00">127.0.0.1</measurement>
+				</period>
+			</point_log>
+			<point_log id='b25164d984a740cb8bb6da790ba5d2f4'>
+				<type>signal_strength</type>
+				<unit>dBm</unit>
+				<updated_date>2021-12-22T09:16:32.569+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T09:16:32.569+01:00</last_consecutive_log_date>
+				<interval/>
+				<signal_strength id='f48fd5107d774e49b415c28781303439'/>
+				<period start_date="2021-12-22T09:16:32.569+01:00" end_date="2021-12-22T09:16:32.569+01:00">
+					<measurement log_date="2021-12-22T09:16:32.569+01:00">-48.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='bee10dadcc7b4a56aff4da606c2e6aed'>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<updated_date>2021-12-24T15:23:49.624+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T09:16:42+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_address id='0d4cc9c2ef2247a2925e5adf94256f34'/>
+				<period start_date="2021-12-24T15:23:49.624+01:00" end_date="2021-12-24T15:23:49.624+01:00">
+					<measurement log_date="2021-12-24T15:23:49.624+01:00">0.0.0.0</measurement>
+				</period>
+			</point_log>
+			<point_log id='cb1edba80b0b4e7dacd4c28d978459ca'>
+				<type>lan_state</type>
+				<unit></unit>
+				<updated_date>2021-12-24T15:23:49.788+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-24T15:17:21.680+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_state id='a92bfc1d189943748eb73638b8c93d7c'/>
+				<period start_date="2021-12-24T15:23:49.788+01:00" end_date="2021-12-24T15:23:49.788+01:00">
+					<measurement log_date="2021-12-24T15:23:49.788+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='d67d0c4f5ccc467f9efbb2c0349af92a'>
+				<type>link_quality</type>
+				<unit></unit>
+				<updated_date>2021-12-22T09:16:32.569+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T09:16:32.569+01:00</last_consecutive_log_date>
+				<interval/>
+				<link_quality id='62eff262e3084ad7bcd3dedf048e4c87'/>
+				<period start_date="2021-12-22T09:16:32.569+01:00" end_date="2021-12-22T09:16:32.569+01:00">
+					<measurement log_date="2021-12-22T09:16:32.569+01:00">62</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<gateway_mode_control_functionality id='6f578a5d8fd54ace8c74df1012dc1f51'>
+				<gateway_mode_control id='3673c46fb91040a9bc5880e5ca4b3a61'/>
+				<updated_date></updated_date>
+				<type>gateway_mode</type>
+				<mode>full</mode>
+				<allowed_modes>
+					<mode>setup</mode>
+					<mode>light</mode>
+					<mode>away</mode>
+					<mode>vacation</mode>
+					<mode/>
+					<mode>full</mode>
+					<mode>secure</mode>
+				</allowed_modes>
+			</gateway_mode_control_functionality>
+			<regulation_mode_control_functionality id='8cd6e336590e4f7188086d7eda21f848'>
+				<regulation_mode_control id='7f89172d5c36454093f43a13683e5820'/>
+				<updated_date>2021-12-16T13:35:09.030+01:00</updated_date>
+				<type>regulation_mode</type>
+				<mode>heating</mode>
+				<allowed_modes>
+					<mode>heating</mode>
+					<mode>off</mode>
+					<mode>bleeding_cold</mode>
+					<mode>bleeding_hot</mode>
+					<mode>cooling</mode>
+				</allowed_modes>
+			</regulation_mode_control_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='5ead63c65e5f44e7870ba2bd680ceb9e'>
+		<name>Smart Plug SQ</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-10-26T19:54:10.743+01:00</created_date>
+		<modified_date>2021-12-31T13:37:34.007+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='9a27714b970547ee9a6bdadc2b815ad5'/>
+		<groups/>
+		<logs>
+			<point_log id='0fe9aca0949245dca64a43f8cedb9b9b'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:23:10.582+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T14:35:59.086+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='c1975a6078d5460c93cb7ab15a1be0ef'/>
+				<period start_date="2021-12-31T13:23:10.582+01:00" end_date="2021-12-31T13:23:10.582+01:00">
+					<measurement log_date="2021-12-31T13:23:10.582+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='3860c2e12f064bf7987be229dbb26333'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='2913dfaf7a6740168dda680aa0f0937b'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='7ed4c587a77d40508c8585fdb9a960a8'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:37:34.002+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T14:35:49.869+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='b96846761ded405bb505fd1b472c9a7b'/>
+				<period start_date="2021-12-31T13:37:34.002+01:00" end_date="2021-12-31T13:37:34.002+01:00">
+					<measurement log_date="2021-12-31T13:37:34.002+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='cff0266fa7fe4d4dade89238400bcb08'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:23:10.582+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T19:54:12.834+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='c1975a6078d5460c93cb7ab15a1be0ef'/>
+				<period start_date="2021-12-31T13:23:10.582+01:00" end_date="2021-12-31T13:23:10.582+01:00">
+					<measurement log_date="2021-12-31T13:23:10.582+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='eb1be7c8d58e45aa821ceb6c1e046845'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='2913dfaf7a6740168dda680aa0f0937b'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='63399657afa24235b81755831ec67502'>
+				<updated_date>2021-12-31T13:37:34.002+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='b96846761ded405bb505fd1b472c9a7b'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='1a27dd03b5454c4e8b9e75c8d1afc7af'>
+		<name>Smart Plug DB</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-03T10:12:24.094+01:00</created_date>
+		<modified_date>2021-12-31T13:36:32.111+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='20e735858f8146cead98b873177a4f99'/>
+		<groups/>
+		<logs>
+			<interval_log id='0b98862a081241869d326660f20af51d'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='3f8fd8afb73b4107b198f431e62a5de0'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='0e16d523ab9546388d77eef5c3a61d65'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:22:13.396+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-03T10:12:30.451+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='69e99537669b43bb8009c45e1a787f45'/>
+				<period start_date="2021-12-31T13:22:13.396+01:00" end_date="2021-12-31T13:22:13.396+01:00">
+					<measurement log_date="2021-12-31T13:22:13.396+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='3e696bef4ccf4371ab726b5403c69bcc'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:22:13.396+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-26T01:00:36.730+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='69e99537669b43bb8009c45e1a787f45'/>
+				<period start_date="2021-12-31T13:22:13.396+01:00" end_date="2021-12-31T13:22:13.396+01:00">
+					<measurement log_date="2021-12-31T13:22:13.396+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='f2110c43f7a8465ca0b40466fef26aec'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:30:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:15:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='3f8fd8afb73b4107b198f431e62a5de0'/>
+				<period start_date="2021-12-31T13:30:00+01:00" end_date="2021-12-31T13:30:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:30:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='f5f13860139a4d51bcbc19b21de35801'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:36:32.108+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-26T01:00:21.033+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='d2b3be40651847eb8dd9e945aa57b589'/>
+				<period start_date="2021-12-31T13:36:32.108+01:00" end_date="2021-12-31T13:36:32.108+01:00">
+					<measurement log_date="2021-12-31T13:36:32.108+01:00">off</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='7691fb3ea71144c6a11334963b3ba72a'>
+				<updated_date>2021-12-31T13:36:32.108+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='d2b3be40651847eb8dd9e945aa57b589'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='8a482fa9dddb43acb765d019d8c9838b'>
+		<name>Smart Plug BK2</name>
+		<description>A smart plug that can be switched on/off and measure power usage.</description>
+		<type>valve_actuator</type>
+		<created_date>2020-11-02T18:04:00.035+01:00</created_date>
+		<modified_date>2021-12-31T13:48:02.942+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='5cc21042f87f4b4c94ccb5537c47a53f'/>
+		<groups/>
+		<logs>
+			<interval_log id='0b920e8a4879427e96b2e57eff492c86'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:45:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:30:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='c9ed16e129e2489d8e52e773d48197b1'/>
+				<period start_date="2021-12-31T13:45:00+01:00" end_date="2021-12-31T13:45:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:45:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='6959363c066341fe82d64805debe1b7e'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2021-12-31T13:48:02.940+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-26T04:30:22.278+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='2ebb81631356418e8e8959cb4caf69af'/>
+				<period start_date="2021-12-31T13:48:02.940+01:00" end_date="2021-12-31T13:48:02.940+01:00">
+					<measurement log_date="2021-12-31T13:48:02.940+01:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='90c222ad9d7640eb947316e29af07de8'>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:33:43.042+01:00</updated_date>
+				<last_consecutive_log_date>2020-11-02T18:04:06.479+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='93a73d307ad447e29fba25b458b72a82'/>
+				<period start_date="2021-12-31T13:33:43.042+01:00" end_date="2021-12-31T13:33:43.042+01:00">
+					<measurement log_date="2021-12-31T13:33:43.042+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='a93d520b48654ebfb018eda5ebc81dd7'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2021-12-31T13:45:00+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:30:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='c9ed16e129e2489d8e52e773d48197b1'/>
+				<period start_date="2021-12-31T13:45:00+01:00" end_date="2021-12-31T13:45:00+01:00" interval="PT15M">
+					<measurement log_date="2021-12-31T13:45:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='bb1f85efdb494b4ebe7f64d84f723636'>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<updated_date>2021-12-31T13:33:43.042+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-26T04:30:35.520+01:00</last_consecutive_log_date>
+				<interval/>
+				<electricity_point_meter id='93a73d307ad447e29fba25b458b72a82'/>
+				<period start_date="2021-12-31T13:33:43.042+01:00" end_date="2021-12-31T13:33:43.042+01:00">
+					<measurement log_date="2021-12-31T13:33:43.042+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='27152e016f0746049553167518b16dfd'>
+				<updated_date>2021-12-31T13:48:02.940+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id='2ebb81631356418e8e8959cb4caf69af'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='ea8372c0e3ad4622ad45a041d02425f5'>
+		<name>Thermostaat KK</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-27T09:22:32.346+01:00</created_date>
+		<modified_date>2021-12-31T13:48:14.157+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='a562019b0b1f47a4bde8ebe3dbe3e8a9'/>
+		<groups/>
+		<logs>
+			<point_log id='0ac9c1e93717435d92038a0d8c7e5d11'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2021-12-25T07:30:46.661+01:00</updated_date>
+				<last_consecutive_log_date>2021-02-17T12:31:50.397+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='d193bc6e469d4285b5655e0b7a9bdb8f'/>
+				<period start_date="2021-12-25T07:30:46.661+01:00" end_date="2021-12-25T07:30:46.661+01:00">
+					<measurement log_date="2021-12-25T07:30:46.661+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='297335e53bc648f28de122442c8acc1b'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:14.155+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:48:14.155+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='863bbe59846043db91aec7cf8fc70adb'/>
+				<period start_date="2021-12-31T13:48:14.155+01:00" end_date="2021-12-31T13:48:14.155+01:00">
+					<measurement log_date="2021-12-31T13:48:14.155+01:00">22.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='574a4fee43994531ad84f69339ad23c7'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T03:04:32.792+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-20T13:34:07.924+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='a2410e8f61944c69b1065905be7786dc'/>
+				<period start_date="2021-12-31T03:04:32.792+01:00" end_date="2021-12-31T03:04:32.792+01:00">
+					<measurement log_date="2021-12-31T03:04:32.792+01:00">21.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='6ebb70d75b9b4f2ea83cc6608b2b9bc1'>
+				<type>battery</type>
+				<unit></unit>
+				<updated_date>2021-12-31T06:58:15.453+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-27T18:24:04.650+01:00</last_consecutive_log_date>
+				<interval/>
+				<battery_meter id='a69f423d4c01450bb6ec7b9e9a2a5254'/>
+				<period start_date="2021-12-31T06:58:15.453+01:00" end_date="2021-12-31T06:58:15.453+01:00">
+					<measurement log_date="2021-12-31T06:58:15.453+01:00">0.53</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='298fdf1ac2c04eacac325d406d9dd4e9'>
+				<temperature_offset id='d193bc6e469d4285b5655e0b7a9bdb8f'/>
+				<updated_date>2021-12-25T07:30:46.661+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='bbd964f5fe604167985f3c1c49f7e609'>
+				<updated_date>2021-12-31T03:04:32.792+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>21.5</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='a2410e8f61944c69b1065905be7786dc'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='d3a276aeb3114a509bab1e4bf8c40348'>
+		<name>Thermostaat SJ</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-26T20:25:18.277+01:00</created_date>
+		<modified_date>2021-12-31T13:48:17.701+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='04b15f6e884448288f811d29fb7b1b30'/>
+		<groups/>
+		<logs>
+			<point_log id='236ac336791749c7995b01e0096616b1'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2020-10-26T20:25:21.413+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-26T20:25:21.198+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='60f0bc0c49964cb1810d3742d3f6eace'/>
+				<period start_date="2020-10-26T20:25:21.413+01:00" end_date="2020-10-26T20:25:21.413+01:00">
+					<measurement log_date="2020-10-26T20:25:21.413+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='290ee2fd61044d189b49659dea525799'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:48:17.698+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:48:17.698+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='d94e572c79b74c93a23649170c531f3c'/>
+				<period start_date="2021-12-31T13:48:17.698+01:00" end_date="2021-12-31T13:48:17.698+01:00">
+					<measurement log_date="2021-12-31T13:48:17.698+01:00">22.60</measurement>
+				</period>
+			</point_log>
+			<point_log id='a1e098dac82540ee95e1eae88800f024'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T12:08:28.156+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-21T11:53:40.255+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='74bcd6d3635f445ca4a74c4f59ffa8a0'/>
+				<period start_date="2021-12-31T12:08:28.156+01:00" end_date="2021-12-31T12:08:28.156+01:00">
+					<measurement log_date="2021-12-31T12:08:28.156+01:00">20.50</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='304b5b6a93df463a98ba8c71a1025945'>
+				<updated_date>2021-12-31T12:08:28.156+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>20.5</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='74bcd6d3635f445ca4a74c4f59ffa8a0'/>
+			</thermostat_functionality>
+			<offset_functionality id='d60ef1cf01b5463884c66013849b0da6'>
+				<temperature_offset id='60f0bc0c49964cb1810d3742d3f6eace'/>
+				<updated_date>2020-10-26T20:25:21.413+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='47e2c550a33846b680725aa3fb229473'>
+		<name>Thermostaat DB</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-28T15:14:08.541+01:00</created_date>
+		<modified_date>2021-12-31T13:35:34.784+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='20e735858f8146cead98b873177a4f99'/>
+		<groups/>
+		<logs>
+			<point_log id='7b1b65daa62a4c35bf9ff8754e5930b1'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:35:34.781+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:35:34.781+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='6c38b1ae425c4d199fcfe862683b2a39'/>
+				<period start_date="2021-12-31T13:35:34.781+01:00" end_date="2021-12-31T13:35:34.781+01:00">
+					<measurement log_date="2021-12-31T13:35:34.781+01:00">22.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='8e33490b8d814dc2beae339cbf9af4d8'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T03:21:00.142+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-22T09:29:44.600+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='fab4dc8183ff4f20bed4c09296e234df'/>
+				<period start_date="2021-12-31T03:21:00.142+01:00" end_date="2021-12-31T03:21:00.142+01:00">
+					<measurement log_date="2021-12-31T03:21:00.142+01:00">18.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='ced4d61b64d7499db0b5bb831da7ad5a'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2020-10-28T15:14:14.167+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-28T15:14:13.847+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='5ad81d3beff3496a8a97506f1aeee6a2'/>
+				<period start_date="2020-10-28T15:14:14.167+01:00" end_date="2020-10-28T15:14:14.167+01:00">
+					<measurement log_date="2020-10-28T15:14:14.167+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<offset_functionality id='afb871e1d08d42d89d887135dd9cb5d0'>
+				<temperature_offset id='5ad81d3beff3496a8a97506f1aeee6a2'/>
+				<updated_date>2020-10-28T15:14:14.167+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+			<thermostat_functionality id='bb1ef431092143efa883d8bed0f8ecb5'>
+				<updated_date>2021-12-31T03:21:00.142+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>18</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='fab4dc8183ff4f20bed4c09296e234df'/>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='7fda9f84f01342f8afe9ebbbbff30c0f'>
+		<name>Thermostaat JM</name>
+		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
+		<type>zone_thermostat</type>
+		<created_date>2020-10-28T16:02:36.260+01:00</created_date>
+		<modified_date>2021-12-31T13:42:47.867+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='e39529c79ab54fda9bed26cfc0447546'/>
+		<groups/>
+		<logs>
+			<point_log id='30cb643dd25e404d9f563d4c7da5e549'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2020-10-28T16:02:42.372+01:00</updated_date>
+				<last_consecutive_log_date>2020-10-28T16:02:42.073+01:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='29f3a7800b96443fb52372adbda6ac1b'/>
+				<period start_date="2020-10-28T16:02:42.372+01:00" end_date="2020-10-28T16:02:42.372+01:00">
+					<measurement log_date="2020-10-28T16:02:42.372+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='67c8438e2d46406ea1b1a09e2c84fd67'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T01:56:24.596+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-16T13:34:45.084+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='638aa21cb3c14897a12bc69a1730c431'/>
+				<period start_date="2021-12-31T01:56:24.596+01:00" end_date="2021-12-31T01:56:24.596+01:00">
+					<measurement log_date="2021-12-31T01:56:24.596+01:00">18.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='fd06504e277b486c9e538d064bbf03fa'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2021-12-31T13:42:47.865+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-31T13:42:47.865+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='a4cde7ab2d86414ba890eb441e112b45'/>
+				<period start_date="2021-12-31T13:42:47.865+01:00" end_date="2021-12-31T13:42:47.865+01:00">
+					<measurement log_date="2021-12-31T13:42:47.865+01:00">20.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='06a05976e85349f09edfd300ca5b64a0'>
+				<updated_date>2021-12-31T01:56:24.596+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>18</setpoint>
+				<lower_bound>0</lower_bound>
+				<upper_bound>99.9</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations><open_therm_regulation id='54326271f2ee423584e0423808984cca'/></regulations>
+				<thermostat id='638aa21cb3c14897a12bc69a1730c431'/>
+			</thermostat_functionality>
+			<offset_functionality id='d9049584cf4743ad86a25b58f8315506'>
+				<temperature_offset id='29f3a7800b96443fb52372adbda6ac1b'/>
+				<updated_date>2020-10-28T16:02:42.372+01:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+		</actuator_functionalities>
+	</appliance>
+</appliances>
