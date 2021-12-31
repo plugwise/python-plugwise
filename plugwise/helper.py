@@ -761,11 +761,6 @@ class SmileHelper:
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
 
-        # Anna: check for cooling capability
-        if "cooling_activation_outdoor_temperature" in data:
-            data["cooling_active"] = False
-            self._cooling_present = True
-
         # Elga doesn't use intended_cental_heating_state to show the generic heating state
         if "c_heating_state" in data:
             if "heating_state" in data:
@@ -783,6 +778,11 @@ class SmileHelper:
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
+
+        # Anna: check for cooling capability
+        if "cooling_activation_outdoor_temperature" in data:
+            data["cooling_active"] = False
+            self._cooling_present = True
 
         return data
 
