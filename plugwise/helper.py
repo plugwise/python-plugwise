@@ -540,7 +540,7 @@ class SmileHelper:
                     "types": {"power", "home"},
                     "vendor": "Plugwise B.V.",
                 }
-                self._gateway_id = self._home_location
+                self.gateway_id = self._home_location
                 # legacy p1 has no more devices
                 return
 
@@ -554,11 +554,11 @@ class SmileHelper:
                     "types": {"thermostat", "home"},
                     "vendor": "Plugwise B.V.",
                 }
-                self._gateway_id = self._home_location
+                self.gateway_id = self._home_location
 
         # Create a gateway for the Stretches
         if self.smile_type == "stretch":
-            self._appl_data[self._gateway_id] = {
+            self._appl_data[self.gateway_id] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "location": self._home_location,
