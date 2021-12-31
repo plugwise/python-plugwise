@@ -529,21 +529,34 @@ class SmileHelper:
         self._all_locations()
 
         # For legacy P1
-        if self._smile_legacy and self.smile_type == "power":
-            # Inject home_location as device id for legacy so
-            # appl_data can use the location id as device id.
-            self._appl_data[self._home_location] = {
-                "class": "gateway",
-                "fw": self.smile_version[0],
-                "location": self._home_location,
-                "model": "Smile P1",
-                "name": "P1",
-                "types": {"power", "home"},
-                "vendor": "Plugwise B.V.",
-            }
-            self.gateway_id = self._home_location
+        # Inject home_location as device id for legacy so
+        # appl_data can use the location id as device id.
+        if self._smile_legacy:
+            if self.smile_type == "power":
+                self._appl_data[self._home_location] = {
+                    "class": "gateway",
+                    "fw": self.smile_version[0],
+                    "location": self._home_location,
+                    "model": "Smile P1",
+                    "name": "P1",
+                    "types": {"power", "home"},
+                    "vendor": "Plugwise B.V.",
+                }
+                self._gateway_id = self._home_location
+                # legacy p1 has no more devices
+                return
 
-            return
+            elif self.smile_type == "thermostat":
+                self._appl_data[self._home_location] = {
+                    "class": "gateway",
+                    "fw": self.smile_version[0],
+                    "location": self._home_location,
+                    "model": "Smile Anna",
+                    "name": "Anna",
+                    "types": {"thermostat", "home"},
+                    "vendor": "Plugwise B.V.",
+                }
+                self._gateway_id = self._home_location
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
         self._cp_state = self._appliances.find(
