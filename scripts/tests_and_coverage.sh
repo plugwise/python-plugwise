@@ -3,11 +3,14 @@ set -eu
 
 my_path=$(git rev-parse --show-toplevel)
 
-. ${my_path}/scripts/python-venv.sh
+# shellcheck disable=SC1091
+. "${my_path}/scripts/python-venv.sh"
 
+# shellcheck disable=SC2154
 if [ -f "${my_venv}/bin/activate" ]; then
+    # shellcheck disable=SC1091
     . "${my_venv}/bin/activate"
-    if [ ! `which pytest` ]; then
+    if [ ! "$(which pytest)" ]; then
         echo "Unable to find pytest, run setup_test.sh before this script"
         exit 1
     fi
