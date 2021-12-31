@@ -2,7 +2,7 @@
 
 # v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
   - Change from list- to dictformat for binary_sensors, sensors and switches
-  - Provide gateway-devices for Legacy Anna, Legacy P1 and Stretch
+  - Provide gateway-devices for Legacy Anna and Stretch
   - Code-optimizations
 
 # v0.15.7 - Smile - Improve implementation of cooling-function-detection
