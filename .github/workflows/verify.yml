@@ -314,7 +314,6 @@ jobs:
         run: >-
           python setup.py sdist
       - name: Publish distribution 📦 to Test PyPI
-        continue-on-error: true
         uses: pypa/gh-action-pypi-publish@master
         continue-on-error: true
         with:
