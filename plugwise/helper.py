@@ -779,10 +779,21 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        # Anna: check for cooling capability
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if "cooling_activation_outdoor_temperature" in data:
             data["cooling_active"] = False
             self._cooling_present = True
+            if (
+                not self.cooling_active
+                and data["temperature"] > data["cooling_activation_outdoor_temperature"]
+            ):
+                data["cooling_active"] = self.cooling_active = True
+            if (
+                self.cooling_active
+                and data["temperature"] < data["cooling_deactivation_threshold"]
+            ):
+                data["cooling_active"] = self.cooling_active = False
 
         return data
 
