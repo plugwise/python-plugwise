@@ -47,7 +47,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.mkdir(os.path.dirname(datafile))
 
         with open(datafile, "w") as fixture_file:
-            fixture_file.write(json.dumps(data))
+            fixture_file.write(
+                json.dumps(
+                    data,
+                    default=lambda x: list(x) if isinstance(x, set) else x,
+                )
+            )
 
     async def setup_app(
         self,
