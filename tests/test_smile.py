@@ -14,7 +14,6 @@ from unittest.mock import patch
 
 # Testing
 import aiohttp
-import jsonpickle as json
 import pytest
 
 pw_exceptions = importlib.import_module("plugwise.exceptions")
@@ -47,7 +46,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.mkdir(os.path.dirname(datafile))
 
         with open(datafile, "w") as fixture_file:
-            fixture_file.write(json.encode(data))
+            fixture_file.write(data)
 
     async def setup_app(
         self,
