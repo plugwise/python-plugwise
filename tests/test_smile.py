@@ -1133,7 +1133,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"device_state": "dhw and heating"},
             },
             # Lisa Badkamer
-            "6f5b89fbeeb34355b3ba6efe990298d9": {
+            "453e510de7cb47af8ec5b44fbf40cbe5": {
                 "control_state": "heating",
             },
         }
