@@ -1,5 +1,6 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 import asyncio
+import json
 import importlib
 
 # Fixture writing
@@ -46,7 +47,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.mkdir(os.path.dirname(datafile))
 
         with open(datafile, "w") as fixture_file:
-            fixture_file.write(data)
+            fixture_file.write(json.dumps(data))
 
     async def setup_app(
         self,
