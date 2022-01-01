@@ -292,7 +292,7 @@
 				<regulations><open_therm_regulation id='675255ffa14a42fda735874a81381734'/></regulations>
 				<cooling_allowed>true</cooling_allowed>
 				<preheating_allowed>true</preheating_allowed>
-				<control_state>off</control_state>
+				<control_state>heating</control_state>
 				<regulation_control>active</regulation_control>
 			</thermostat_functionality>
 		</actuator_functionalities>
