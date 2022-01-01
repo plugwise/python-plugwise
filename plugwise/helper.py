@@ -636,6 +636,22 @@ class SmileHelper:
 
         return matched_locations
 
+    def _control_state(self, loc_id):
+        """Helper-function for _device_data_climate().
+        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        Represents the heating/cooling demand-state of the local master thermostat.
+        Note: heating or cooling can still be active when the setpoint has been reached.
+        """
+        locator = f'location[@id="{loc_id}"]'
+        if (location := self._domain_objects.find(locator)) is not None:
+            locator = (
+                ".//actuator_functionalities/thermostat_functionality/control_state"
+            )
+            if (ctrl_state := location.find(locator)) is not None:
+                return ctrl_state.text
+
+        return
+
     def _presets_legacy(self):
         """Helper-function for presets() - collect Presets for a legacy Anna."""
         preset_dictionary = {}

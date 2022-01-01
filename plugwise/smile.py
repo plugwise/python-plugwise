@@ -161,10 +161,11 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
-        device_data["active_preset"] = self._preset(details["location"])
-        device_data["presets"] = self._presets(details["location"])
+        loc_id = details["location"]
+        device_data["active_preset"] = self._preset(loc_id)
+        device_data["presets"] = self._presets(loc_id)
 
-        avail_schemas, sel_schema, sched_setpoint = self._schemas(details["location"])
+        avail_schemas, sel_schema, sched_setpoint = self._schemas(loc_id)
         if not self._smile_legacy:
             device_data["schedule_temperature"] = sched_setpoint
         device_data["available_schedules"] = avail_schemas
@@ -172,18 +173,10 @@ class SmileData(SmileHelper):
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
-            device_data["last_used"] = self._last_active_schema(details["location"])
+            device_data["last_used"] = self._last_active_schema(loc_id)
 
-        # Find the thermostat control_state of a location, from DOMAIN_OBJECTS
-        # The control_state represents the heating/cooling demand-state of the master thermostat
-        # Note: heating or cooling can still be active when the setpoint has been reached
-        locator = f'location[@id="{details["location"]}"]'
-        if (location := self._domain_objects.find(locator)) is not None:
-            locator = (
-                ".//actuator_functionalities/thermostat_functionality/control_state"
-            )
-            if (ctrl_state := location.find(locator)) is not None:
-                device_data["control_state"] = ctrl_state.text
+        if ctrl_state := self._control_state(loc_id):
+            device_data["control_state"] = ctrl_state
 
         return device_data
 
