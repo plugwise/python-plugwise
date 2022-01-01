@@ -1128,11 +1128,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "control_state": "heating",
                 "binary_sensors": {"dhw_state": True},
                 "heating_state": True,
                 "sensors": {"device_state": "dhw and heating"},
-            }
+            },
+            # Lisa Badkamer
+            "6f5b89fbeeb34355b3ba6efe990298d9": {
+                "control_state": "heating",
+            },
         }
 
         self.smile_setup = "adam_plus_anna_new_copy_dhw_and_heating"
