@@ -112,9 +112,6 @@ class SmileData(SmileHelper):
             if details["location"] is not None:
                 self._devices[appliance] = details
 
-            # Remove types-list, no longer needed at this point
-            details.pop("types")
-
         if (group_data := self._group_switches()) is not None:
             self._devices.update(group_data)
 
