@@ -1081,7 +1081,8 @@ class SmileHelper:
         if name is not None:
             schemas[name] = active
             available = [name]
-            selected = name
+            if active:
+                selected = name
 
         return available, selected, schedule_temperature
 
