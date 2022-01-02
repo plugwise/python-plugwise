@@ -1,7 +1,7 @@
 # Changelog
 
 # v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
-  - Change from list- to dictformat for binary_sensors, sensors and switches
+  - Change from list- to dict-format for binary_sensors, sensors and switches
   - Provide gateway-devices for Legacy Anna and Stretch
   - Code-optimizations
 
