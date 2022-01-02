@@ -1057,7 +1057,7 @@ class SmileHelper:
         """Helper-function for _schemas().
         Collect available schemas/schedules for the legacy thermostat.
         """
-        available = []
+        available = ["None"]
         name = None
         schedule_temperature = None
         schemas = {}
@@ -1068,16 +1068,21 @@ class SmileHelper:
                 if "preset" not in rule_name:
                     name = rule_name
 
-        log_type = "schedule_state"
-        locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
+        log_type_1 = "schedule_state"
+        log_type_2 = "schedule_temperature"
+        locator_1 = f"appliance[type='thermostat']/logs/point_log[type='{log_type_1}']/period/measurement"
+        locator_2 = f"appliance[type='thermostat']/logs/point_log[type='{log_type_2}']/period/measurement"
         active = False
-        if self._domain_objects.find(locator) is not None:
-            active = self._domain_objects.find(locator).text == "on"
+        if result := self._domain_objects.find(locator_1) is not None:
+            active = result.text == "on"
+        if result := self._domain_objects.find(locator_2) is not None:
+            schedule_temperature = result.text
 
         if name is not None:
             schemas[name] = active
+            available = [name]
+            selected = name
 
-        available, selected = determine_selected(available, selected, schemas)
         return available, selected, schedule_temperature
 
     def _schemas(self, loc_id):
