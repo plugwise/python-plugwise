@@ -365,8 +365,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             dev_info["name"], dev_info["class"], dev_id
                         ),
                     )
-            if device_count == 0:
+            if device_count == 0:  # pragma: no cover
                 _LOGGER.info("      ! no devices found in this location")
+                assert False
 
     @pytest.mark.asyncio
     async def device_test(self, smile=pw_smile.Smile, testdata=None, preset=False):
