@@ -537,7 +537,6 @@ class SmileHelper:
                     "location": self._home_location,
                     "model": "P1",
                     "name": "P1",
-                    "types": {"power", "home"},
                     "vendor": "Plugwise B.V.",
                 }
                 self.gateway_id = self._home_location
@@ -551,7 +550,6 @@ class SmileHelper:
                     "location": self._home_location,
                     "model": "Anna",
                     "name": "Anna",
-                    "types": {"thermostat", "home"},
                     "vendor": "Plugwise B.V.",
                 }
                 self.gateway_id = self._home_location
@@ -564,7 +562,6 @@ class SmileHelper:
                 "location": self._home_location,
                 "model": "Stretch",
                 "name": "Stretch",
-                "types": {"power", "home"},
                 "vendor": "Plugwise B.V.",
             }
 
@@ -609,7 +606,6 @@ class SmileHelper:
                 "location": appl.location,
                 "model": appl.model,
                 "name": appl.name,
-                "types": appl.types,
                 "vendor": appl.v_name,
             }
             if (
@@ -629,9 +625,6 @@ class SmileHelper:
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self._appl_data.items():
                 if appliance_details["location"] == location_id:
-                    for appl_type in appliance_details["types"]:
-                        location_details["types"].add(appl_type)
-
                     matched_locations[location_id] = location_details
 
         return matched_locations
