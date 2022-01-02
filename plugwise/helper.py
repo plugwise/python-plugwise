@@ -1090,7 +1090,7 @@ class SmileHelper:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
         """
-        available = []
+        available = ["None"]
         rule_ids = {}
         schemas = {}
         schedule_temperature = None
