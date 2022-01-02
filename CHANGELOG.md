@@ -1,5 +1,10 @@
 # Changelog
 
+# v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
+  - Change from list- to dict-format for binary_sensors, sensors and switches
+  - Provide gateway-devices for Legacy Anna and Stretch
+  - Code-optimizations
+
 # v0.15.7 - Smile - Improve implementation of cooling-function-detection
  - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
  - Adam: also provide a heating/cooling-mode active indication

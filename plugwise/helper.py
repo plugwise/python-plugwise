@@ -73,10 +73,10 @@ def device_state_updater(data, devs, d_id, d_dict):
     """Helper-function for async_update().
     Update the Device_State sensor state.
     """
-    for idx, item in enumerate(d_dict["sensors"]):
-        if item[ATTR_ID] == "device_state":
+    for item in d_dict["sensors"]:
+        if item == "device_state":
             result = update_device_state(data, d_dict)
-            devs[d_id]["sensors"][idx][ATTR_STATE] = result
+            devs[d_id]["sensors"][item] = result
 
 
 def update_device_state(data, d_dict):
@@ -84,49 +84,46 @@ def update_device_state(data, d_dict):
     _cooling_state = False
     _dhw_state = False
     _heating_state = False
-    state = "idle"
+    result = "idle"
 
     if "binary_sensors" in d_dict:
-        for _, item in enumerate(d_dict["binary_sensors"]):
-            if item[ATTR_ID] == "dhw_state":
-                if item[ATTR_STATE]:
-                    state = "dhw-heating"
-                    _dhw_state = True
+        for item, state in d_dict["binary_sensors"].items():
+            if item == "dhw_state" and state:
+                result = "dhw-heating"
+                _dhw_state = True
 
-    if "heating_state" in data:
-        if data["heating_state"]:
-            state = "heating"
-            _heating_state = True
+    if "heating_state" in data and data["heating_state"]:
+        result = "heating"
+        _heating_state = True
     if _heating_state and _dhw_state:
-        state = "dhw and heating"
-    if "cooling_state" in data:
-        if data["cooling_state"]:
-            state = "cooling"
-            _cooling_state = True
+        result = "dhw and heating"
+    if "cooling_state" in data and data["cooling_state"]:
+        result = "cooling"
+        _cooling_state = True
     if _cooling_state and _dhw_state:
-        state = "dhw and cooling"
+        result = "dhw and cooling"
 
-    return state
+    return result
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
     """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
     """
-    for idx, item in enumerate(d_dict["binary_sensors"]):
-        if item[ATTR_ID] == "plugwise_notification":
-            devs[d_id]["binary_sensors"][idx][ATTR_STATE] = notifs != {}
+    for item in d_dict["binary_sensors"]:
+        if item == "plugwise_notification":
+            devs[d_id]["binary_sensors"][item] = notifs != {}
 
 
 def update_helper(data, devs, d_dict, d_id, e_type, key):
     """Helper-function for async_update()."""
     for dummy in d_dict[e_type]:
-        if key != dummy[ATTR_ID]:
+        if key != dummy:
             continue
-        for idx, item in enumerate(devs[d_id][e_type]):
-            if key != item[ATTR_ID]:
+        for item in devs[d_id][e_type]:
+            if key != item:
                 continue
-            devs[d_id][e_type][idx][ATTR_STATE] = data[key]
+            devs[d_id][e_type][item] = data[key]
 
 
 def check_model(name, v_name):
@@ -320,13 +317,13 @@ class SmileHelper:
 
         if self.smile_type == "thermostat":
             self._loc_data[FAKE_LOC] = {
-                "name": "Legacy Anna",
+                "name": "Home",
                 "types": {"temperature"},
                 "members": appliances,
             }
         if self.smile_type == "stretch":
             self._loc_data[FAKE_LOC] = {
-                "name": "Legacy Stretch",
+                "name": "Home",
                 "types": {"power"},
                 "members": appliances,
             }
@@ -507,8 +504,6 @@ class SmileHelper:
             # Provide a home_location for legacy_anna, preset all types applicable to home
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-                # For legacy_anna gateway and heater_central is the same device
-                self.gateway_id = self._heater_id
             appl.types = self._loc_data[self._home_location]["types"]
 
         # Determine appliance_type from functionality
@@ -531,22 +526,44 @@ class SmileHelper:
 
         self._all_locations()
 
-        # For legacy P1
-        if self._smile_legacy and self.smile_type == "power":
-            # Inject home_location as device id for legacy so
-            # appl_data can use the location id as device id.
-            self._appl_data[self._home_location] = {
+        # Create a gateway for legacy P1 and Anna
+        # And inject a home_location as device id for legacy so
+        # appl_data can use the location id as device id, where needed.
+        if self._smile_legacy:
+            if self.smile_type == "power":
+                self._appl_data[self._home_location] = {
+                    "class": "gateway",
+                    "fw": self.smile_version[0],
+                    "location": self._home_location,
+                    "model": "P1",
+                    "name": "P1",
+                    "vendor": "Plugwise B.V.",
+                }
+                self.gateway_id = self._home_location
+                # legacy p1 has no more devices
+                return
+
+            elif self.smile_type == "thermostat":
+                self._appl_data[self._home_location] = {
+                    "class": "gateway",
+                    "fw": self.smile_version[0],
+                    "location": self._home_location,
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                }
+                self.gateway_id = self._home_location
+
+        # Create a gateway for the Stretches
+        if self.smile_type == "stretch":
+            self._appl_data[self.gateway_id] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "location": self._home_location,
-                "model": "Smile P1",
-                "name": "P1",
-                "types": {"power", "home"},
+                "model": "Stretch",
+                "name": "Stretch",
                 "vendor": "Plugwise B.V.",
             }
-            self.gateway_id = self._home_location
-
-            return
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
         self._cp_state = self._appliances.find(
@@ -589,7 +606,6 @@ class SmileHelper:
                 "location": appl.location,
                 "model": appl.model,
                 "name": appl.name,
-                "types": appl.types,
                 "vendor": appl.v_name,
             }
             if (
@@ -609,12 +625,25 @@ class SmileHelper:
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self._appl_data.items():
                 if appliance_details["location"] == location_id:
-                    for appl_type in appliance_details["types"]:
-                        location_details["types"].add(appl_type)
-
-            matched_locations[location_id] = location_details
+                    matched_locations[location_id] = location_details
 
         return matched_locations
+
+    def _control_state(self, loc_id):
+        """Helper-function for _device_data_climate().
+        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        Represents the heating/cooling demand-state of the local master thermostat.
+        Note: heating or cooling can still be active when the setpoint has been reached.
+        """
+        locator = f'location[@id="{loc_id}"]'
+        if (location := self._domain_objects.find(locator)) is not None:
+            locator = (
+                ".//actuator_functionalities/thermostat_functionality/control_state"
+            )
+            if (ctrl_state := location.find(locator)) is not None:
+                return ctrl_state.text
+
+        return
 
     def _presets_legacy(self):
         """Helper-function for presets() - collect Presets for a legacy Anna."""
@@ -729,26 +758,44 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        appliances = self._appliances.findall(f'.//appliance[@id="{d_id}"]')
-        for appliance in appliances:
-            measurements = DEVICE_MEASUREMENTS.items()
-            if self._active_device_present:
-                measurements = {
-                    **DEVICE_MEASUREMENTS,
-                    **HEATER_CENTRAL_MEASUREMENTS,
-                }.items()
+        appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
+        measurements = DEVICE_MEASUREMENTS.items()
+        if self._active_device_present:
+            measurements = {
+                **DEVICE_MEASUREMENTS,
+                **HEATER_CENTRAL_MEASUREMENTS,
+            }.items()
 
+        if appliance is not None:
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
+
+        # Elga doesn't use intended_cental_heating_state to show the generic heating state
+        if "c_heating_state" in data:
+            if "heating_state" in data:
+                if data["c_heating_state"] and not data["heating_state"]:
+                    data["heating_state"] = True
+            data.pop("c_heating_state")
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        # Anna: check for cooling capability
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if "cooling_activation_outdoor_temperature" in data:
             data["cooling_active"] = False
             self._cooling_present = True
+            if (
+                not self.cooling_active
+                and data["temperature"] > data["cooling_activation_outdoor_temperature"]
+            ):
+                data["cooling_active"] = self.cooling_active = True
+            if (
+                self.cooling_active
+                and data["temperature"] < data["cooling_deactivation_threshold"]
+            ):
+                data["cooling_active"] = self.cooling_active = False
 
         return data
 
@@ -1128,24 +1175,21 @@ class SmileHelper:
 
         return data
 
-    def _create_lists_from_data(self, data, bs_list, s_list, sw_list):
+    def _create_dicts_from_data(self, data, bs_dict, s_dict, sw_dict):
         """Helper-function for smile.py: _all_device_data().
-        Create lists of binary_sensors, sensors, switches from the relevant data.
+        Create dicts of binary_sensors, sensors, switches from the relevant data.
         """
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
-                if item[ATTR_ID] == key:
-                    data.pop(item[ATTR_ID])
+                if list(item.keys())[0] == key:
+                    data.pop(key)
                     if self._active_device_present:
-                        item[ATTR_STATE] = value
-                        bs_list.append(item)
+                        bs_dict[key] = value
             for item in SENSORS:
-                if item[ATTR_ID] == key:
-                    data.pop(item[ATTR_ID])
-                    item[ATTR_STATE] = value
-                    s_list.append(item)
+                if list(item.keys())[0] == key:
+                    data.pop(key)
+                    s_dict[key] = value
             for item in SWITCHES:
-                if item[ATTR_ID] == key:
-                    data.pop(item[ATTR_ID])
-                    item[ATTR_STATE] = value
-                    sw_list.append(item)
+                if list(item.keys())[0] == key:
+                    data.pop(key)
+                    sw_dict[key] = value

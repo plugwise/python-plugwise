@@ -46,46 +46,42 @@ _LOGGER = logging.getLogger(__name__)
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def _append_special(self, data, d_id, bs_list, s_list):
+    def _append_special(self, data, d_id, bs_dict, s_dict):
         """Helper-function for smile.py: _all_device_data().
         When conditions are met, the plugwise_notification binary_sensor
         and/or the device_state sensor are appended.
         """
         if d_id == self.gateway_id:
             if self._sm_thermostat is not None:
-                bs_list.append(PW_NOTIFICATION)
+                bs_dict.update(PW_NOTIFICATION)
             if not self._active_device_present and "heating_state" in data:
-                s_list.append(DEVICE_STATE)
+                s_dict.update(DEVICE_STATE)
         if d_id == self._heater_id and self._sm_thermostat is not None:
-            s_list.append(DEVICE_STATE)
+            s_dict.update(DEVICE_STATE)
 
     def _all_device_data(self):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        dev_id_list = []
-        dev_and_data_list = []
         for dev_id, dev_dict in self._devices.items():
             dev_and_data = dev_dict
-            temp_bs_list = []
-            temp_s_list = []
-            temp_sw_list = []
+            temp_bs_dict = {}
+            temp_s_dict = {}
+            temp_sw_dict = {}
             data = self._get_device_data(dev_id)
 
-            self._create_lists_from_data(data, temp_bs_list, temp_s_list, temp_sw_list)
-            self._append_special(data, dev_id, temp_bs_list, temp_s_list)
+            self._create_dicts_from_data(data, temp_bs_dict, temp_s_dict, temp_sw_dict)
+            self._append_special(data, dev_id, temp_bs_dict, temp_s_dict)
 
             dev_and_data.update(data)
-            if temp_bs_list != []:
-                dev_and_data["binary_sensors"] = temp_bs_list
-            if temp_s_list != []:
-                dev_and_data["sensors"] = temp_s_list
-            if temp_sw_list != []:
-                dev_and_data["switches"] = temp_sw_list
-            dev_id_list.append(dev_id)
-            dev_and_data_list.append(copy.deepcopy(dev_and_data))
+            if temp_bs_dict != {}:
+                dev_and_data["binary_sensors"] = temp_bs_dict
+            if temp_s_dict != {}:
+                dev_and_data["sensors"] = temp_s_dict
+            if temp_sw_dict != {}:
+                dev_and_data["switches"] = temp_sw_dict
 
-        self.gw_devices = dict(zip(dev_id_list, dev_and_data_list))
+            self.gw_devices[dev_id] = dev_and_data
 
         self.gw_data["active_device"] = self._active_device_present
         self.gw_data["cooling_present"] = self._cooling_present
@@ -139,34 +135,6 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_anna(self, dev_id, details, device_data):
-        """Helper-function for _get_device_data().
-        Determine Anna and legacy Anna device data.
-        """
-        # Legacy_anna: create Auxiliary heating_state and leave out domestic_hot_water_state
-        if "boiler_state" in device_data:
-            device_data["heating_state"] = device_data["intended_boiler_state"]
-            device_data.pop("boiler_state", None)
-            device_data.pop("intended_boiler_state", None)
-
-        # Anna: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if "cooling_activation_outdoor_temperature" in device_data:
-            if (
-                not self.cooling_active
-                and device_data["temperature"]
-                > device_data["cooling_activation_outdoor_temperature"]
-            ):
-                device_data["cooling_active"] = self.cooling_active = True
-            if (
-                self.cooling_active
-                and device_data["temperature"]
-                < device_data["cooling_deactivation_threshold"]
-            ):
-                device_data["cooling_active"] = self.cooling_active = False
-
-        return device_data
-
     def _device_data_adam(self, details, device_data):
         """Helper-function for _get_device_data().
         Determine Adam device data.
@@ -193,10 +161,11 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
-        device_data["active_preset"] = self._preset(details["location"])
-        device_data["presets"] = self._presets(details["location"])
+        loc_id = details["location"]
+        device_data["active_preset"] = self._preset(loc_id)
+        device_data["presets"] = self._presets(loc_id)
 
-        avail_schemas, sel_schema, sched_setpoint = self._schemas(details["location"])
+        avail_schemas, sel_schema, sched_setpoint = self._schemas(loc_id)
         if not self._smile_legacy:
             device_data["schedule_temperature"] = sched_setpoint
         device_data["available_schedules"] = avail_schemas
@@ -204,18 +173,10 @@ class SmileData(SmileHelper):
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
-            device_data["last_used"] = self._last_active_schema(details["location"])
+            device_data["last_used"] = self._last_active_schema(loc_id)
 
-        # Find the thermostat control_state of a location, from DOMAIN_OBJECTS
-        # The control_state represents the heating/cooling demand-state of the master thermostat
-        # Note: heating or cooling can still be active when the setpoint has been reached
-        locator = f'location[@id="{details["location"]}"]'
-        if (location := self._domain_objects.find(locator)) is not None:
-            locator = (
-                ".//actuator_functionalities/thermostat_functionality/control_state"
-            )
-            if (ctrl_state := location.find(locator)) is not None:
-                device_data["control_state"] = ctrl_state.text
+        if ctrl_state := self._control_state(loc_id):
+            device_data["control_state"] = ctrl_state
 
         return device_data
 
@@ -243,16 +204,8 @@ class SmileData(SmileHelper):
             if power_data is not None:
                 device_data.update(power_data)
 
-        # Elga doesn't use intended_cental_heating_state to show the generic heating state
-        if "c_heating_state" in device_data and "heating_state" in device_data:
-            if device_data["c_heating_state"] and not device_data["heating_state"]:
-                device_data["heating_state"] = True
-            device_data.pop("c_heating_state")
-
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
-        # Specific, not generic Anna data
-        device_data = self._device_data_anna(dev_id, details, device_data)
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # Unless thermostat based, no need to walk presets
@@ -305,7 +258,7 @@ class Smile(SmileComm, SmileData):
             websession,
         )
 
-        self._active_device_present = None
+        self._active_device_present = False
         self._appliances = None
         self._appl_data = None
         self._cooling_present = False
@@ -314,7 +267,7 @@ class Smile(SmileComm, SmileData):
         self._home_location = None
         self._locations = None
         self._modules = None
-        self._notifications = None
+        self._notifications = {}
         self._sm_thermostat = None
         self._smile_legacy = False
         self._stretch_v2 = False

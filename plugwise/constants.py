@@ -464,9 +464,12 @@ HEATER_CENTRAL_MEASUREMENTS = {
         ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
     },
     # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "boiler_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: None},
     # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
-    "intended_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "intended_boiler_state": {
+        ATTR_NAME: "heating_state",
+        ATTR_UNIT_OF_MEASUREMENT: None,
+    },
 }
 
 SMILES = {
@@ -527,22 +530,11 @@ NO_NOTIFICATION_ICON = "mdi:mailbox-outline"
 SWITCH_ICON = "mdi:electric-switch"
 
 # Binary Sensors
-DHW_STATE = {
-    ATTR_ID: "dhw_state",
-    ATTR_STATE: False,
-}
-FLAME_STATE = {
-    ATTR_ID: "flame_state",
-    ATTR_STATE: False,
-}
-PW_NOTIFICATION = {
-    ATTR_ID: "plugwise_notification",
-    ATTR_STATE: False,
-}
-SLAVE_BOILER_STATE = {
-    ATTR_ID: "slave_boiler_state",
-    ATTR_STATE: False,
-}
+DHW_STATE = {"dhw_state": False}
+FLAME_STATE = {"flame_state": False}
+PW_NOTIFICATION = {"plugwise_notification": False}
+SLAVE_BOILER_STATE = {"slave_boiler_state": False}
+
 BINARY_SENSORS = [
     DHW_STATE,
     FLAME_STATE,
@@ -550,158 +542,45 @@ BINARY_SENSORS = [
 ]
 
 # Sensors
-BATTERY = {
-    ATTR_ID: "battery",
-    ATTR_STATE: None,
-}
-COOL_ACT_THRESHOLD = {
-    ATTR_ID: "cooling_activation_outdoor_temperature",
-    ATTR_STATE: None,
-}
-COOL_DEACT_THRESHOLD = {
-    ATTR_ID: "cooling_deactivation_threshold",
-    ATTR_STATE: None,
-}
-CURRENT_TEMP = {
-    ATTR_ID: "temperature",
-    ATTR_STATE: None,
-}
-DEVICE_STATE = {
-    ATTR_ID: "device_state",
-    ATTR_STATE: None,
-}
-EL_CONSUMED = {
-    ATTR_ID: "electricity_consumed",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_INTERVAL = {
-    ATTR_ID: "electricity_consumed_interval",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_OFF_PEAK_CUMULATIVE = {
-    ATTR_ID: "electricity_consumed_off_peak_cumulative",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_OFF_PEAK_INTERVAL = {
-    ATTR_ID: "electricity_consumed_off_peak_interval",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_OFF_PEAK_POINT = {
-    ATTR_ID: "electricity_consumed_off_peak_point",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_PEAK_CUMULATIVE = {
-    ATTR_ID: "electricity_consumed_peak_cumulative",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_PEAK_INTERVAL = {
-    ATTR_ID: "electricity_consumed_peak_interval",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_PEAK_POINT = {
-    ATTR_ID: "electricity_consumed_peak_point",
-    ATTR_STATE: None,
-}
-EL_CONSUMED_POINT = {
-    ATTR_ID: "electricity_consumed_point",
-    ATTR_STATE: None,
-}
-EL_PRODUCED = {
-    ATTR_ID: "electricity_produced",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_INTERVAL = {
-    ATTR_ID: "electricity_produced_interval",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_OFF_PEAK_CUMULATIVE = {
-    ATTR_ID: "electricity_produced_off_peak_cumulative",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_OFF_PEAK_INTERVAL = {
-    ATTR_ID: "electricity_produced_off_peak_interval",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_OFF_PEAK_POINT = {
-    ATTR_ID: "electricity_produced_off_peak_point",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_PEAK_CUMULATIVE = {
-    ATTR_ID: "electricity_produced_peak_cumulative",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_PEAK_INTERVAL = {
-    ATTR_ID: "electricity_produced_peak_interval",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_PEAK_POINT = {
-    ATTR_ID: "electricity_produced_peak_point",
-    ATTR_STATE: None,
-}
-EL_PRODUCED_POINT = {
-    ATTR_ID: "electricity_produced_point",
-    ATTR_STATE: None,
-}
-GAS_CONSUMED_CUMULATIVE = {
-    ATTR_ID: "gas_consumed_cumulative",
-    ATTR_STATE: None,
-}
-GAS_CONSUMED_INTERVAL = {
-    ATTR_ID: "gas_consumed_interval",
-    ATTR_STATE: None,
-}
-HUMIDITY = {
-    ATTR_ID: "humidity",
-    ATTR_STATE: None,
-}
-ILLUMINANCE = {
-    ATTR_ID: "illuminance",
-    ATTR_STATE: None,
-}
-INTENDED_BOILER_TEMP = {
-    ATTR_ID: "intended_boiler_temperature",
-    ATTR_STATE: None,
-}
-MOD_LEVEL = {
-    ATTR_ID: "modulation_level",
-    ATTR_STATE: None,
-}
-NET_EL_CUMULATIVE = {
-    ATTR_ID: "net_electricity_cumulative",
-    ATTR_STATE: None,
-}
-NET_EL_POINT = {
-    ATTR_ID: "net_electricity_point",
-    ATTR_STATE: None,
-}
-OUTDOOR_TEMP = {
-    ATTR_ID: "outdoor_temperature",
-    ATTR_STATE: None,
-}
-RETURN_TEMP = {
-    ATTR_ID: "return_temperature",
-    ATTR_STATE: None,
-}
-TARGET_TEMP = {
-    ATTR_ID: "setpoint",
-    ATTR_STATE: None,
-}
-TEMP_DIFF = {
-    ATTR_ID: "temperature_difference",
-    ATTR_STATE: None,
-}
-VALVE_POS = {
-    ATTR_ID: "valve_position",
-    ATTR_STATE: None,
-}
-WATER_PRESSURE = {
-    ATTR_ID: "water_pressure",
-    ATTR_STATE: None,
-}
-WATER_TEMP = {
-    ATTR_ID: "water_temperature",
-    ATTR_STATE: None,
-}
+BATTERY = {"battery": None}
+COOL_ACT_THRESHOLD = {"cooling_activation_outdoor_temperature": None}
+COOL_DEACT_THRESHOLD = {"cooling_deactivation_threshold": None}
+CURRENT_TEMP = {"temperature": None}
+DEVICE_STATE = {"device_state": None}
+EL_CONSUMED = {"electricity_consumed": None}
+EL_CONSUMED_INTERVAL = {"electricity_consumed_interval": None}
+EL_CONSUMED_OFF_PEAK_CUMULATIVE = {"electricity_consumed_off_peak_cumulative": None}
+EL_CONSUMED_OFF_PEAK_INTERVAL = {"electricity_consumed_off_peak_interval": None}
+EL_CONSUMED_OFF_PEAK_POINT = {"electricity_consumed_off_peak_point": None}
+EL_CONSUMED_PEAK_CUMULATIVE = {"electricity_consumed_peak_cumulative": None}
+EL_CONSUMED_PEAK_INTERVAL = {"electricity_consumed_peak_interval": None}
+EL_CONSUMED_PEAK_POINT = {"electricity_consumed_peak_point": None}
+EL_CONSUMED_POINT = {"electricity_consumed_point": None}
+EL_PRODUCED = {"electricity_produced": None}
+EL_PRODUCED_INTERVAL = {"electricity_produced_interval": None}
+EL_PRODUCED_OFF_PEAK_CUMULATIVE = {"electricity_produced_off_peak_cumulative": None}
+EL_PRODUCED_OFF_PEAK_INTERVAL = {"electricity_produced_off_peak_interval": None}
+EL_PRODUCED_OFF_PEAK_POINT = {"electricity_produced_off_peak_point": None}
+EL_PRODUCED_PEAK_CUMULATIVE = {"electricity_produced_peak_cumulative": None}
+EL_PRODUCED_PEAK_INTERVAL = {"electricity_produced_peak_interval": None}
+EL_PRODUCED_PEAK_POINT = {"electricity_produced_peak_point": None}
+EL_PRODUCED_POINT = {"electricity_produced_point": None}
+GAS_CONSUMED_CUMULATIVE = {"gas_consumed_cumulative": None}
+GAS_CONSUMED_INTERVAL = {"gas_consumed_interval": None}
+HUMIDITY = {"humidity": None}
+ILLUMINANCE = {"illuminance": None}
+INTENDED_BOILER_TEMP = {"intended_boiler_temperature": None}
+MOD_LEVEL = {"modulation_level": None}
+NET_EL_CUMULATIVE = {"net_electricity_cumulative": None}
+NET_EL_POINT = {"net_electricity_point": None}
+OUTDOOR_TEMP = {"outdoor_temperature": None}
+RETURN_TEMP = {"return_temperature": None}
+TARGET_TEMP = {"setpoint": None}
+TEMP_DIFF = {"temperature_difference": None}
+VALVE_POS = {"valve_position": None}
+WATER_PRESSURE = {"water_pressure": None}
+WATER_TEMP = {"water_temperature": None}
+
 SENSORS = [
     BATTERY,
     COOL_ACT_THRESHOLD,
@@ -744,18 +623,10 @@ SENSORS = [
 ]
 
 # Switches
-DHW_COMF_MODE = {
-    ATTR_ID: "dhw_cm_switch",
-    ATTR_STATE: False,
-}
-LOCK = {
-    ATTR_ID: "lock",
-    ATTR_STATE: False,
-}
-RELAY = {
-    ATTR_ID: "relay",
-    ATTR_STATE: False,
-}
+DHW_COMF_MODE = {"dhw_cm_switch": False}
+LOCK = {"lock": False}
+RELAY = {"relay": False}
+
 SWITCHES = [
     DHW_COMF_MODE,
     LOCK,

@@ -377,7 +377,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='8e3c6be20e034ad79e31fbe842a65078'/>
 				<period start_date="2020-11-10T15:54:59.940+01:00" end_date="2020-11-10T15:54:59.940+01:00">
-					<measurement log_date="2020-11-10T15:54:59.940+01:00">18.90</measurement>
+					<measurement log_date="2020-11-10T15:54:59.940+01:00">16.90</measurement>
 				</period>
 			</point_log>
 		</logs>
@@ -483,7 +483,7 @@
 				<interval/>
 				<boiler_state id='c38d5ff7ff8f46ce8e14be36765c62c9'/>
 				<period start_date="2020-11-10T09:06:24.587+01:00" end_date="2020-11-10T09:06:24.587+01:00">
-					<measurement log_date="2020-11-10T09:06:24.587+01:00">off</measurement>
+					<measurement log_date="2020-11-10T09:06:24.587+01:00">on</measurement>
 				</period>
 			</point_log>
 			<point_log id='84b35d9ba6a2452ca297ef13e14ebe20'>
