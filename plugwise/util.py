@@ -124,7 +124,8 @@ def format_measure(measure, unit):
 def determine_selected(available, selected, schemas):
     """Determine selected schema from available schemas."""
     for schema, active in schemas.items():
-        available.remove("None")
+        if "None" in available:
+            available.remove("None")
         available.append(schema)
         if active:
             selected = schema
