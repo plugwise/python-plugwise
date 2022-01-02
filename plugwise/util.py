@@ -123,10 +123,11 @@ def format_measure(measure, unit):
 
 def determine_selected(available, selected, schemas):
     """Determine selected schema from available schemas."""
-    for schema_a, schema_b in schemas.items():
-        available.append(schema_a)
-        if schema_b:
-            selected = schema_a
+    for schema, active in schemas.items():
+        available.remove("None")
+        available.append(schema)
+        if active:
+            selected = schema
     return available, selected
 
 
