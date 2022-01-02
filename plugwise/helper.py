@@ -1073,9 +1073,9 @@ class SmileHelper:
         locator_1 = f"appliance[type='thermostat']/logs/point_log[type='{log_type_1}']/period/measurement"
         locator_2 = f"appliance[type='thermostat']/logs/point_log[type='{log_type_2}']/period/measurement"
         active = False
-        if result := self._domain_objects.find(locator_1) is not None:
+        if (result := self._domain_objects.find(locator_1)) is not None:
             active = result.text == "on"
-        if result := self._domain_objects.find(locator_2) is not None:
+        if (result := self._domain_objects.find(locator_2)) is not None:
             schedule_temperature = result.text
 
         if name is not None:
