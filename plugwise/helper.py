@@ -317,13 +317,13 @@ class SmileHelper:
 
         if self.smile_type == "thermostat":
             self._loc_data[FAKE_LOC] = {
-                "name": "Legacy Anna",
+                "name": "Home",
                 "types": {"temperature"},
                 "members": appliances,
             }
         if self.smile_type == "stretch":
             self._loc_data[FAKE_LOC] = {
-                "name": "Legacy Stretch",
+                "name": "Home",
                 "types": {"power"},
                 "members": appliances,
             }
