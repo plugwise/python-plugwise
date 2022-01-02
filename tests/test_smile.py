@@ -647,6 +647,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "9e7377867dc24e51b8098a5ba02bd89d": {
+                "available_schedules": ["Thermostat schedule"],
+                "selected_schedule": "None",
+                "last_used": "Thermostat schedule",
                 "sensors": {"illuminance": 19.5, "setpoint": 15.0, "temperature": 21.4},
             },
             # Central
@@ -781,7 +784,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "selected_schedule": None,
+                "selected_schedule": "None",
                 "active_preset": "home",
                 "sensors": {"illuminance": 40.5},
             },
@@ -1584,7 +1587,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
-                "selected_schedule": None,
+                "selected_schedule": "None",
                 "active_preset": "home",
                 "cooling_active": True,
                 "sensors": {
