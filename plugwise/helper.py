@@ -1061,7 +1061,7 @@ class SmileHelper:
         name = None
         schedule_temperature = None
         schemas = {}
-        selected = None
+        selected = "None"
 
         for schema in self._domain_objects.findall(".//rule"):
             if rule_name := schema.find("name").text:
@@ -1088,7 +1088,7 @@ class SmileHelper:
         rule_ids = {}
         schemas = {}
         schedule_temperature = None
-        selected = None
+        selected = "None"
 
         # Legacy schemas
         if self._smile_legacy:  # Only one schedule allowed
