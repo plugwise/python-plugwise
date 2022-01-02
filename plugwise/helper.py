@@ -632,7 +632,7 @@ class SmileHelper:
                     for appl_type in appliance_details["types"]:
                         location_details["types"].add(appl_type)
 
-            matched_locations[location_id] = location_details
+                    matched_locations[location_id] = location_details
 
         return matched_locations
 
