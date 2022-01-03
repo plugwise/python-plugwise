@@ -49,7 +49,7 @@ RESPONSE_TYPE_SUCCESS = b"00C1"
 RESPONSE_TYPE_ERROR = b"00C2"
 RESPONSE_TYPE_TIMEOUT = b"00E1"
 
-# NodeAckLargeResponse
+# NodeResponse
 CLOCK_SET = b"00D7"
 JOIN_REQUEST_ACCEPTED = b"00D9"
 RELAY_SWITCHED_OFF = b"00DE"
@@ -102,7 +102,7 @@ STATUS_RESPONSES = {
     RESPONSE_TYPE_SUCCESS: "success",
     RESPONSE_TYPE_ERROR: "error",
     RESPONSE_TYPE_TIMEOUT: "timeout",
-    # NodeAckLargeResponse
+    # NodeResponse
     CLOCK_SET: "clock set",
     JOIN_REQUEST_ACCEPTED: "join accepted",
     REAL_TIME_CLOCK_ACCEPTED: "real time clock set",
