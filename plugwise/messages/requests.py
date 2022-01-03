@@ -77,7 +77,7 @@ class NodeAllowJoiningRequest(NodeRequest):
     Enable or disable receiving joining request of unjoined nodes.
     Circle+ node will respond with an acknowledge message
 
-    Response message: NodeAckLargeResponse
+    Response message: NodeResponse
     """
 
     ID = b"0008"
@@ -176,7 +176,7 @@ class CircleSwitchRelayRequest(NodeRequest):
     """
     switches relay on/off
 
-    Response message: NodeAckLargeResponse
+    Response message: NodeResponse
     """
 
     ID = b"0017"

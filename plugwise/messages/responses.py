@@ -105,7 +105,7 @@ class StickResponse(USBresponse):
         super().__init__(MESSAGE_SMALL)
 
 
-class NodeAckLargeResponse(USBresponse):
+class NodeResponse(USBresponse):
     """
     Acknowledge message with source MAC
 
@@ -600,6 +600,6 @@ def get_message_response(message_id, length, seq_id):
         if length == 20:
             return StickResponse()
         if length == 36:
-            return NodeAckLargeResponse()
+            return NodeResponse()
         return None
     return id_to_message.get(message_id, None)

@@ -44,7 +44,7 @@ from .messages.requests import (
     StickInitRequest,
 )
 from .messages.responses import (
-    NodeAckLargeResponse,
+    NodeResponse,
     NodeAckResponse,
     NodeInfoResponse,
     NodeJoinAvailableResponse,
@@ -410,7 +410,7 @@ class Stick:
     def message_processor(self, message: USBresponse):
         """Received message from Plugwise network."""
         mac = message.mac.decode(UTF8_DECODE)
-        if isinstance(message, (NodeAckLargeResponse, NodeAckResponse)):
+        if isinstance(message, (NodeResponse, NodeAckResponse)):
             if message.ack_id in STATE_ACTIONS:
                 self._pass_message_to_node(message, mac)
         elif isinstance(message, NodeInfoResponse):

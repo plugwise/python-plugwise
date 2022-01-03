@@ -24,7 +24,7 @@ from ..constants import (
     SLEEP_SET,
 )
 from ..messages.requests import NodeInfoRequest, NodePingRequest, NodeSleepConfigRequest
-from ..messages.responses import NodeAckLargeResponse, NodeAwakeResponse
+from ..messages.responses import NodeResponse, NodeAwakeResponse
 from ..nodes import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class NodeSED(PlugwiseNode):
         """
         if isinstance(message, NodeAwakeResponse):
             self._process_awake_response(message)
-        elif isinstance(message, NodeAckLargeResponse):
+        elif isinstance(message, NodeResponse):
             if message.ack_id == SLEEP_SET:
                 self.maintenance_interval = self._new_maintenance_interval
             else:

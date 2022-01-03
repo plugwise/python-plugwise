@@ -36,7 +36,7 @@ from ..messages.responses import (
     CircleClockResponse,
     CircleEnergyCountersResponse,
     CirclePowerUsageResponse,
-    NodeAckLargeResponse,
+    NodeResponse,
 )
 from ..nodes import PlugwiseNode
 
@@ -247,7 +247,7 @@ class PlugwiseCircle(PlugwiseNode):
                     self.mac,
                 )
                 self._request_calibration(self.request_power_update)
-        elif isinstance(message, NodeAckLargeResponse):
+        elif isinstance(message, NodeResponse):
             self._node_ack_response(message)
         elif isinstance(message, CircleCalibrationResponse):
             self._response_calibration(message)

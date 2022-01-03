@@ -31,7 +31,7 @@ from .constants import (
 )
 from .messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
 from .messages.responses import (
-    NodeAckLargeResponse,
+    NodeResponse,
     NodeAckResponse,
     StickResponse,
 )
@@ -275,7 +275,7 @@ class StickMessageController:
                 message.seq_id, message.ack_id, message.__class__.__name__
             )
         else:
-            if isinstance(message, (NodeAckResponse, NodeAckLargeResponse)):
+            if isinstance(message, (NodeAckResponse, NodeResponse)):
                 self._log_status_message(message, message.ack_id)
             else:
                 self._log_status_message(message)
