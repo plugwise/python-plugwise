@@ -138,7 +138,7 @@ class StickMessageController:
             (
                 priority,
                 retry_counter,
-                datetime.now(),
+                datetime.utcnow(),
                 [
                     request,
                     callback,
@@ -241,7 +241,7 @@ class StickMessageController:
                         str(seq_id),
                         str(self.expected_responses[seq_id][2]),
                     )
-                self.expected_responses[seq_id][3] = datetime.now()
+                self.expected_responses[seq_id][3] = datetime.utcnow()
                 # Send request
                 self.connection.send(self.expected_responses[seq_id][0])
                 time.sleep(SLEEP_TIME)
@@ -332,7 +332,7 @@ class StickMessageController:
             for seq_id in list(self.expected_responses.keys()):
                 if self.expected_responses[seq_id][3] is not None:
                     if self.expected_responses[seq_id][3] < (
-                        datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
+                        datetime.utcnow() - timedelta(seconds=MESSAGE_TIME_OUT)
                     ):
                         _mac = "<unknown>"
                         if self.expected_responses[seq_id][0].mac:
