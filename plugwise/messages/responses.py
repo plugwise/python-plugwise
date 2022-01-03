@@ -92,7 +92,7 @@ class USBresponse(PlugwiseMessage):
         return 34 + arglen + self.len_correction
 
 
-class NodeAckSmallResponse(USBresponse):
+class StickResponse(USBresponse):
     """
     Acknowledge message without source MAC
 
@@ -598,7 +598,7 @@ def get_message_response(message_id, length, seq_id):
     # No fixed sequence ID, continue at message ID
     if message_id == b"0000":
         if length == 20:
-            return NodeAckSmallResponse()
+            return StickResponse()
         if length == 36:
             return NodeAckLargeResponse()
         return None
