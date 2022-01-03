@@ -49,7 +49,7 @@ from .messages.responses import (
     NodeInfoResponse,
     NodeJoinAvailableResponse,
     NodeRemoveResponse,
-    NodeResponse,
+    USBresponse,
     StickInitResponse,
 )
 from .nodes.circle import PlugwiseCircle
@@ -407,7 +407,7 @@ class Stick:
         else:
             _LOGGER.warning("Node %s does not exists, unable to remove node.", mac)
 
-    def message_processor(self, message: NodeResponse):
+    def message_processor(self, message: USBresponse):
         """Received message from Plugwise network."""
         mac = message.mac.decode(UTF8_DECODE)
         if isinstance(message, (NodeAckLargeResponse, NodeAckResponse)):

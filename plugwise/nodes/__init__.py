@@ -17,7 +17,7 @@ from ..messages.responses import (
     NodeInfoResponse,
     NodeJoinAckResponse,
     NodePingResponse,
-    NodeResponse,
+    USBresponse,
 )
 from ..util import validate_mac, version_to_model
 
@@ -180,7 +180,7 @@ class PlugwiseNode:
 
     def message_for_node(self, message):
         """Process received message."""
-        assert isinstance(message, NodeResponse)
+        assert isinstance(message, USBresponse)
         if message.mac == self._mac:
             if message.timestamp is not None:
                 _LOGGER.debug(

@@ -22,7 +22,7 @@ from ..util import (
 )
 
 
-class NodeResponse(PlugwiseMessage):
+class USBresponse(PlugwiseMessage):
     """
     Base class for response messages received by USB-Stick.
     """
@@ -92,7 +92,7 @@ class NodeResponse(PlugwiseMessage):
         return 34 + arglen + self.len_correction
 
 
-class NodeAckSmallResponse(NodeResponse):
+class NodeAckSmallResponse(USBresponse):
     """
     Acknowledge message without source MAC
 
@@ -105,7 +105,7 @@ class NodeAckSmallResponse(NodeResponse):
         super().__init__(MESSAGE_SMALL)
 
 
-class NodeAckLargeResponse(NodeResponse):
+class NodeAckLargeResponse(USBresponse):
     """
     Acknowledge message with source MAC
 
@@ -118,7 +118,7 @@ class NodeAckLargeResponse(NodeResponse):
         super().__init__(MESSAGE_LARGE)
 
 
-class CirclePlusQueryResponse(NodeResponse):
+class CirclePlusQueryResponse(USBresponse):
     """
     TODO:
 
@@ -156,7 +156,7 @@ class CirclePlusQueryResponse(NodeResponse):
         self.new_node_mac_id.value = b"00" + self.new_node_mac_id.value[2:]
 
 
-class CirclePlusQueryEndResponse(NodeResponse):
+class CirclePlusQueryEndResponse(USBresponse):
     """
     TODO:
         PWAckReplyV1_0
@@ -177,7 +177,7 @@ class CirclePlusQueryEndResponse(NodeResponse):
         return 18 + arglen
 
 
-class CirclePlusConnectResponse(NodeResponse):
+class CirclePlusConnectResponse(USBresponse):
     """
     CirclePlus connected to the network
 
@@ -197,7 +197,7 @@ class CirclePlusConnectResponse(NodeResponse):
         return 18 + arglen
 
 
-class NodeJoinAvailableResponse(NodeResponse):
+class NodeJoinAvailableResponse(USBresponse):
     """
     Message from an unjoined node to notify it is available to join a plugwise network
 
@@ -207,7 +207,7 @@ class NodeJoinAvailableResponse(NodeResponse):
     ID = b"0006"
 
 
-class StickInitResponse(NodeResponse):
+class StickInitResponse(USBresponse):
     """
     Returns the configuration and status of the USB-Stick
 
@@ -240,7 +240,7 @@ class StickInitResponse(NodeResponse):
         ]
 
 
-class NodePingResponse(NodeResponse):
+class NodePingResponse(USBresponse):
     """
     Ping response from node
 
@@ -265,7 +265,7 @@ class NodePingResponse(NodeResponse):
         ]
 
 
-class CirclePowerUsageResponse(NodeResponse):
+class CirclePowerUsageResponse(USBresponse):
     """
     Returns power usage as impulse counters for several different timeframes
 
@@ -290,7 +290,7 @@ class CirclePowerUsageResponse(NodeResponse):
         ]
 
 
-class CirclePlusScanResponse(NodeResponse):
+class CirclePlusScanResponse(USBresponse):
     """
     Returns the MAC of a registered node at the specified memory address
 
@@ -306,7 +306,7 @@ class CirclePlusScanResponse(NodeResponse):
         self.params += [self.node_mac, self.node_address]
 
 
-class NodeRemoveResponse(NodeResponse):
+class NodeRemoveResponse(USBresponse):
     """
     Returns conformation (or not) if node is removed from the Plugwise network
     by having it removed from the memory of the Circle+
@@ -323,7 +323,7 @@ class NodeRemoveResponse(NodeResponse):
         self.params += [self.node_mac_id, self.status]
 
 
-class NodeInfoResponse(NodeResponse):
+class NodeInfoResponse(USBresponse):
     """
     Returns the status information of Node
 
@@ -352,7 +352,7 @@ class NodeInfoResponse(NodeResponse):
         ]
 
 
-class CircleCalibrationResponse(NodeResponse):
+class CircleCalibrationResponse(USBresponse):
     """
     returns the calibration settings of node
 
@@ -370,7 +370,7 @@ class CircleCalibrationResponse(NodeResponse):
         self.params += [self.gain_a, self.gain_b, self.off_tot, self.off_noise]
 
 
-class CirclePlusRealTimeClockResponse(NodeResponse):
+class CirclePlusRealTimeClockResponse(USBresponse):
     """
     returns the real time clock of CirclePlus node
 
@@ -388,7 +388,7 @@ class CirclePlusRealTimeClockResponse(NodeResponse):
         self.params += [self.time, self.day_of_week, self.date]
 
 
-class CircleClockResponse(NodeResponse):
+class CircleClockResponse(USBresponse):
     """
     Returns the current internal clock of Node
 
@@ -406,7 +406,7 @@ class CircleClockResponse(NodeResponse):
         self.params += [self.time, self.day_of_week, self.unknown, self.unknown2]
 
 
-class CircleEnergyCountersResponse(NodeResponse):
+class CircleEnergyCountersResponse(USBresponse):
     """
     Returns historical energy usage of requested memory address
     Each response contains 4 energy counters at specified 1 hour timestamp
@@ -440,7 +440,7 @@ class CircleEnergyCountersResponse(NodeResponse):
         ]
 
 
-class NodeAwakeResponse(NodeResponse):
+class NodeAwakeResponse(USBresponse):
     """
     A sleeping end device (SED: Scan, Sense, Switch) sends
     this message to announce that is awake. Awake types:
@@ -462,7 +462,7 @@ class NodeAwakeResponse(NodeResponse):
         self.params += [self.awake_type]
 
 
-class NodeSwitchGroupResponse(NodeResponse):
+class NodeSwitchGroupResponse(USBresponse):
     """
     A sleeping end device (SED: Scan, Sense, Switch) sends
     this message to switch groups on/off when the configured
@@ -483,7 +483,7 @@ class NodeSwitchGroupResponse(NodeResponse):
         ]
 
 
-class NodeFeaturesResponse(NodeResponse):
+class NodeFeaturesResponse(USBresponse):
     """
     Returns supported features of node
     TODO: FeatureBitmask
@@ -499,7 +499,7 @@ class NodeFeaturesResponse(NodeResponse):
         self.params += [self.features]
 
 
-class NodeJoinAckResponse(NodeResponse):
+class NodeJoinAckResponse(USBresponse):
     """
     Notification message when node (re)joined existing network again.
     Sent when a SED (re)joins the network e.g. when you reinsert the battery of a Scan
@@ -514,7 +514,7 @@ class NodeJoinAckResponse(NodeResponse):
         # sequence number is always FFFD
 
 
-class NodeAckResponse(NodeResponse):
+class NodeAckResponse(USBresponse):
     """
     Acknowledge message in regular format
     Sent by nodes supporting plugwise 2.4 protocol version
@@ -529,7 +529,7 @@ class NodeAckResponse(NodeResponse):
         self.ack_id = Int(0, 2, False)
 
 
-class SenseReportResponse(NodeResponse):
+class SenseReportResponse(USBresponse):
     """
     Returns the current temperature and humidity of a Sense node.
     The interval this report is sent is configured by the 'SenseReportIntervalRequest' request
@@ -546,7 +546,7 @@ class SenseReportResponse(NodeResponse):
         self.params += [self.humidity, self.temperature]
 
 
-class CircleInitialRelaisStateResponse(NodeResponse):
+class CircleInitialRelaisStateResponse(USBresponse):
     """
     Returns the initial relais state.
 
