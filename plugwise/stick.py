@@ -22,7 +22,7 @@ from .constants import (
     NODE_TYPE_SENSE,
     NODE_TYPE_STEALTH,
     NODE_TYPE_SWITCH,
-    PRIORITY_LOW,
+    Priority,
     STATE_ACTIONS,
     UTF8_DECODE,
     WATCHDOG_DEAMON,
@@ -634,7 +634,7 @@ class Stick:
                             NodePingRequest(bytes(mac, UTF8_DECODE)),
                             None,
                             -1,
-                            PRIORITY_LOW,
+                            Priority.Low,
                         )
                     _discover_counter = 0
                 else:
@@ -747,7 +747,7 @@ class Stick:
                     NodeInfoRequest(bytes(mac, UTF8_DECODE)),
                     callback,
                     0,
-                    PRIORITY_LOW,
+                    Priority.Low,
                 )
             elif force_discover:
                 self.msg_controller.send(

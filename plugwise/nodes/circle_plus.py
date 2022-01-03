@@ -2,7 +2,7 @@
 from datetime import datetime
 import logging
 
-from ..constants import MAX_TIME_DRIFT, PRIORITY_LOW, UTF8_DECODE
+from ..constants import MAX_TIME_DRIFT, Priority, UTF8_DECODE
 from ..messages.requests import (
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
@@ -93,7 +93,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             CirclePlusRealTimeClockGetRequest(self._mac),
             callback,
             0,
-            PRIORITY_LOW,
+            Priority.Low,
         )
 
     def _response_realtime_clock(self, message):

@@ -17,11 +17,10 @@ from ..constants import (
     FEATURE_RSSI_OUT,
     MAX_TIME_DRIFT,
     MESSAGE_TIME_OUT,
-    PRIORITY_HIGH,
-    PRIORITY_LOW,
     PULSES_PER_KW_SECOND,
     RELAY_SWITCHED_OFF,
     RELAY_SWITCHED_ON,
+    Priority,
 )
 from ..messages.requests import (
     CircleCalibrationRequest,
@@ -200,7 +199,7 @@ class PlugwiseCircle(PlugwiseNode):
             CircleCalibrationRequest(self._mac),
             callback,
             0,
-            PRIORITY_HIGH,
+            Priority.High,
         )
 
     def _request_switch(self, state, callback=None):
@@ -209,7 +208,7 @@ class PlugwiseCircle(PlugwiseNode):
             CircleSwitchRelayRequest(self._mac, state),
             callback,
             0,
-            PRIORITY_HIGH,
+            Priority.High,
         )
 
     def request_power_update(self, callback=None):
@@ -628,7 +627,7 @@ class PlugwiseCircle(PlugwiseNode):
                         CircleEnergyCountersRequest(self._mac, log_address),
                         None,
                         0,
-                        PRIORITY_LOW,
+                        Priority.Low,
                     )
             else:
                 # Collect energy counters of today and yesterday
@@ -641,13 +640,13 @@ class PlugwiseCircle(PlugwiseNode):
                         CircleEnergyCountersRequest(self._mac, req_log_address),
                         None,
                         0,
-                        PRIORITY_LOW,
+                        Priority.Low,
                     )
                 self.message_sender(
                     CircleEnergyCountersRequest(self._mac, log_address),
                     callback,
                     0,
-                    PRIORITY_LOW,
+                    Priority.Low,
                 )
 
     def _response_energy_counters(self, message: CircleEnergyCountersResponse):
@@ -788,7 +787,7 @@ class PlugwiseCircle(PlugwiseNode):
             CircleClockGetRequest(self._mac),
             callback,
             0,
-            PRIORITY_LOW,
+            Priority.Low,
         )
 
     def set_clock(self, callback=None):
