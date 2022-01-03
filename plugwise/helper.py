@@ -1068,15 +1068,11 @@ class SmileHelper:
                 if "preset" not in rule_name:
                     name = rule_name
 
-        log_type_1 = "schedule_state"
-        log_type_2 = "schedule_temperature"
-        locator_1 = f"appliance[type='thermostat']/logs/point_log[type='{log_type_1}']/period/measurement"
-        locator_2 = f"appliance[type='thermostat']/logs/point_log[type='{log_type_2}']/period/measurement"
+        log_type = "schedule_state"
+        locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
-        if (result := self._domain_objects.find(locator_1)) is not None:
+        if (result := self._domain_objects.find(locator)) is not None:
             active = result.text == "on"
-        if (result := self._domain_objects.find(locator_2)) is not None:
-            schedule_temperature = result.text
 
         if name is not None:
             schemas[name] = active
