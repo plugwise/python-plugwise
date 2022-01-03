@@ -1,5 +1,7 @@
 """Plugwise Stick and Smile constants."""
 
+from enum import Enum
+
 # Copied homeassistant.consts
 ATTR_DEVICE_CLASS = "device_class"
 ATTR_NAME = "name"
@@ -147,10 +149,14 @@ LOGADDR_OFFSET = 278528
 # Default sleep between sending messages
 SLEEP_TIME = 150 / 1000
 
-# Message priority levels
-PRIORITY_HIGH = 1
-PRIORITY_LOW = 3
-PRIORITY_MEDIUM = 2
+
+class Priority(int, Enum):
+    """Message priority levels for USB-stick."""
+
+    High = 1
+    Medium = 2
+    Low = 3
+
 
 # Max seconds the internal clock of plugwise nodes
 # are allowed to drift in seconds

@@ -10,7 +10,7 @@ from ..constants import (
     FEATURE_PING,
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
-    PRIORITY_HIGH,
+    Priority,
     SED_AWAKE_BUTTON,
     SED_AWAKE_FIRST,
     SED_AWAKE_MAINTENANCE,
@@ -88,7 +88,7 @@ class NodeSED(PlugwiseNode):
                     request_message.__class__.__name__,
                     self.mac,
                 )
-                self.message_sender(request_message, callback, -1, PRIORITY_HIGH)
+                self.message_sender(request_message, callback, -1, Priority.High)
             self._sed_requests = {}
         else:
             if message.awake_type.value == SED_AWAKE_STATE:

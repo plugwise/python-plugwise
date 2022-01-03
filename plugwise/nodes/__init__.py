@@ -8,7 +8,7 @@ from ..constants import (
     FEATURE_RELAY,
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
-    PRIORITY_LOW,
+    Priority,
     UTF8_DECODE,
 )
 from ..messages.requests import NodeFeaturesRequest, NodeInfoRequest, NodePingRequest
@@ -160,7 +160,7 @@ class PlugwiseNode:
             NodeInfoRequest(self._mac),
             callback,
             0,
-            PRIORITY_LOW,
+            Priority.Low,
         )
 
     def _request_features(self, callback=None):

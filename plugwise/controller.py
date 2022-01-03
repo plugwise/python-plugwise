@@ -22,12 +22,12 @@ from .connections.socket import SocketConnection
 from .constants import (
     MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
-    PRIORITY_MEDIUM,
     REQUEST_FAILED,
     REQUEST_SUCCESS,
     SLEEP_TIME,
     STATUS_RESPONSES,
     UTF8_DECODE,
+    Priority,
 )
 from .messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
 from .messages.responses import (
@@ -125,7 +125,7 @@ class StickMessageController:
         request: NodeRequest,
         callback=None,
         retry_counter=0,
-        priority=PRIORITY_MEDIUM,
+        priority: Priority = Priority.Medium,
     ):
         """Queue request message to be sent into Plugwise Zigbee network."""
         _LOGGER.debug(
