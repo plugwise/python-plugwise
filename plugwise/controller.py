@@ -33,7 +33,7 @@ from .messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
 from .messages.responses import (
     NodeAckLargeResponse,
     NodeAckResponse,
-    NodeAckSmallResponse,
+    StickResponse,
 )
 from .parser import PlugwiseParser
 from .util import inc_seq_id
@@ -269,7 +269,7 @@ class StickMessageController:
             elif message.seq_id == b"0000" and self.last_seq_id == b"FFFB":
                 self.last_seq_id = b"0000"
 
-        if isinstance(message, NodeAckSmallResponse):
+        if isinstance(message, StickResponse):
             self._log_status_message(message, message.ack_id)
             self._post_message_action(
                 message.seq_id, message.ack_id, message.__class__.__name__

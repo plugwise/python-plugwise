@@ -44,7 +44,7 @@ MESSAGE_SMALL = "SMALL"
 
 # Acknowledge message types
 
-# NodeAckSmallResponse
+# StickResponse
 RESPONSE_TYPE_SUCCESS = b"00C1"
 RESPONSE_TYPE_ERROR = b"00C2"
 RESPONSE_TYPE_TIMEOUT = b"00E1"
@@ -98,7 +98,7 @@ REQUEST_FAILED = (
     SLEEP_FAILED,
 )
 STATUS_RESPONSES = {
-    # NodeAckSmallResponse
+    # StickResponse
     RESPONSE_TYPE_SUCCESS: "success",
     RESPONSE_TYPE_ERROR: "error",
     RESPONSE_TYPE_TIMEOUT: "timeout",
