@@ -29,7 +29,7 @@ from .constants import (
     UTF8_DECODE,
     Priority,
 )
-from .messages.requests import NodeInfoRequest, NodePingRequest, NodeRequest
+from .messages.requests import NodeInfoRequest, NodePingRequest, PlugwiseRequest
 from .messages.responses import (
     NodeResponse,
     NodeAckResponse,
@@ -122,7 +122,7 @@ class StickMessageController:
 
     def send(
         self,
-        request: NodeRequest,
+        request: PlugwiseRequest,
         callback=None,
         retry_counter=0,
         priority: Priority = Priority.Medium,

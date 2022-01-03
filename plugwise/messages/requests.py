@@ -13,7 +13,7 @@ from ..util import (
 )
 
 
-class NodeRequest(PlugwiseMessage):
+class PlugwiseRequest(PlugwiseMessage):
     """Base class for request messages to be send from by USB-Stick."""
 
     def __init__(self, mac):
@@ -22,7 +22,7 @@ class NodeRequest(PlugwiseMessage):
         self.mac = mac
 
 
-class NodeNetworkInfoRequest(NodeRequest):
+class NodeNetworkInfoRequest(PlugwiseRequest):
     """TODO: PublicNetworkInfoRequest
 
     No arguments
@@ -31,7 +31,7 @@ class NodeNetworkInfoRequest(NodeRequest):
     ID = b"0001"
 
 
-class CirclePlusConnectRequest(NodeRequest):
+class CirclePlusConnectRequest(PlugwiseRequest):
     """
     Request to connect a Circle+ to the Stick
 
@@ -49,7 +49,7 @@ class CirclePlusConnectRequest(NodeRequest):
         return MESSAGE_HEADER + msg + checksum + MESSAGE_FOOTER
 
 
-class NodeAddRequest(NodeRequest):
+class NodeAddRequest(PlugwiseRequest):
     """
     Inform node it is added to the Plugwise Network it to memory of Circle+ node
 
@@ -72,12 +72,12 @@ class NodeAddRequest(NodeRequest):
         return MESSAGE_HEADER + msg + checksum + MESSAGE_FOOTER
 
 
-class NodeAllowJoiningRequest(NodeRequest):
+class NodeAllowJoiningRequest(PlugwiseRequest):
     """
     Enable or disable receiving joining request of unjoined nodes.
     Circle+ node will respond with an acknowledge message
 
-    Response message: NodeResponse
+    Response message: NodeAckLargeResponse
     """
 
     ID = b"0008"
@@ -89,7 +89,7 @@ class NodeAllowJoiningRequest(NodeRequest):
         self.args.append(Int(val, length=2))
 
 
-class NodeResetRequest(NodeRequest):
+class NodeResetRequest(PlugwiseRequest):
     """
     TODO: Some kind of reset request
 
@@ -106,12 +106,12 @@ class NodeResetRequest(NodeRequest):
         ]
 
 
-class StickInitRequest(NodeRequest):
     """
     Initialize USB-Stick
 
     Response message: StickInitResponse
     """
+class StickInitRequest(PlugwiseRequest):
 
     ID = b"000A"
 
@@ -121,7 +121,7 @@ class StickInitRequest(NodeRequest):
         super().__init__("")
 
 
-class NodeImagePrepareRequest(NodeRequest):
+class NodeImagePrepareRequest(PlugwiseRequest):
     """
     TODO: PWEswImagePrepareRequestV1_0
 
@@ -131,32 +131,32 @@ class NodeImagePrepareRequest(NodeRequest):
     ID = b"000B"
 
 
-class NodePingRequest(NodeRequest):
     """
     Ping node
 
     Response message: NodePingResponse
     """
+class NodePingRequest(PlugwiseRequest):
 
     ID = b"000D"
 
 
-class CirclePowerUsageRequest(NodeRequest):
     """
     Request current power usage
 
     Response message: CirclePowerUsageResponse
     """
+class CirclePowerUsageRequest(PlugwiseRequest):
 
     ID = b"0012"
 
 
-class CircleClockSetRequest(NodeRequest):
     """
     Set internal clock of node
 
     Response message: [Acknowledge message]
     """
+class CircleClockSetRequest(PlugwiseRequest):
 
     ID = b"0016"
 
@@ -172,11 +172,11 @@ class CircleClockSetRequest(NodeRequest):
         self.args += [this_date, log_buf_addr, this_time, day_of_week]
 
 
-class CircleSwitchRelayRequest(NodeRequest):
+class CircleSwitchRelayRequest(PlugwiseRequest):
     """
     switches relay on/off
 
-    Response message: NodeResponse
+    Response message: NodeAckLargeResponse
     """
 
     ID = b"0017"
@@ -187,7 +187,7 @@ class CircleSwitchRelayRequest(NodeRequest):
         self.args.append(Int(val, length=2))
 
 
-class CirclePlusScanRequest(NodeRequest):
+class CirclePlusScanRequest(PlugwiseRequest):
     """
     Get all linked Circle plugs from Circle+
     a Plugwise network can have 64 devices the node ID value has a range from 0 to 63
@@ -203,7 +203,7 @@ class CirclePlusScanRequest(NodeRequest):
         self.node_address = node_address
 
 
-class NodeRemoveRequest(NodeRequest):
+class NodeRemoveRequest(PlugwiseRequest):
     """
     Request node to be removed from Plugwise network by
     removing it from memory of Circle+ node.
@@ -218,7 +218,7 @@ class NodeRemoveRequest(NodeRequest):
         self.args.append(String(mac_to_unjoined, length=16))
 
 
-class NodeInfoRequest(NodeRequest):
+class NodeInfoRequest(PlugwiseRequest):
     """
     Request status info of node
 
@@ -228,7 +228,7 @@ class NodeInfoRequest(NodeRequest):
     ID = b"0023"
 
 
-class CircleCalibrationRequest(NodeRequest):
+class CircleCalibrationRequest(PlugwiseRequest):
     """
     Request power calibration settings of node
 
@@ -238,7 +238,7 @@ class CircleCalibrationRequest(NodeRequest):
     ID = b"0026"
 
 
-class CirclePlusRealTimeClockSetRequest(NodeRequest):
+class CirclePlusRealTimeClockSetRequest(PlugwiseRequest):
     """
     Set real time clock of CirclePlus
 
@@ -255,7 +255,7 @@ class CirclePlusRealTimeClockSetRequest(NodeRequest):
         self.args += [this_time, day_of_week, this_date]
 
 
-class CirclePlusRealTimeClockGetRequest(NodeRequest):
+class CirclePlusRealTimeClockGetRequest(PlugwiseRequest):
     """
     Request current real time clock of CirclePlus
 
@@ -265,7 +265,7 @@ class CirclePlusRealTimeClockGetRequest(NodeRequest):
     ID = b"0029"
 
 
-class CircleClockGetRequest(NodeRequest):
+class CircleClockGetRequest(PlugwiseRequest):
     """
     Request current internal clock of node
 
@@ -275,7 +275,7 @@ class CircleClockGetRequest(NodeRequest):
     ID = b"003E"
 
 
-class CircleEnableScheduleRequest(NodeRequest):
+class CircleEnableScheduleRequest(PlugwiseRequest):
     """
     Request to switch Schedule on or off
 
@@ -292,7 +292,7 @@ class CircleEnableScheduleRequest(NodeRequest):
         self.args.append(Int(1, length=2))
 
 
-class NodeAddToGroupRequest(NodeRequest):
+class NodeAddToGroupRequest(PlugwiseRequest):
     """
     Add node to group
 
@@ -309,7 +309,7 @@ class NodeAddToGroupRequest(NodeRequest):
         self.args += [group_mac_val, task_id_val, port_mask_val]
 
 
-class NodeRemoveFromGroupRequest(NodeRequest):
+class NodeRemoveFromGroupRequest(PlugwiseRequest):
     """
     Remove node from group
 
@@ -324,7 +324,7 @@ class NodeRemoveFromGroupRequest(NodeRequest):
         self.args += [group_mac_val]
 
 
-class NodeBroadcastGroupSwitchRequest(NodeRequest):
+class NodeBroadcastGroupSwitchRequest(PlugwiseRequest):
     """
     Broadcast to group to switch
 
@@ -339,7 +339,7 @@ class NodeBroadcastGroupSwitchRequest(NodeRequest):
         self.args.append(Int(val, length=2))
 
 
-class CircleEnergyCountersRequest(NodeRequest):
+class CircleEnergyCountersRequest(PlugwiseRequest):
     """
     Request energy usage counters storaged a given memory address
 
@@ -353,7 +353,7 @@ class CircleEnergyCountersRequest(NodeRequest):
         self.args.append(LogAddr(log_address, 8))
 
 
-class NodeSleepConfigRequest(NodeRequest):
+class NodeSleepConfigRequest(PlugwiseRequest):
     """
     Configure timers for SED nodes to minimize battery usage
 
@@ -394,7 +394,7 @@ class NodeSleepConfigRequest(NodeRequest):
         ]
 
 
-class NodeSelfRemoveRequest(NodeRequest):
+class NodeSelfRemoveRequest(PlugwiseRequest):
     """
     <command number="0051" vnumber="1.0" implementation="Plugwise.IO.Commands.V20.PWSelfRemovalRequestV1_0">
       <arguments>
@@ -407,7 +407,7 @@ class NodeSelfRemoveRequest(NodeRequest):
     ID = b"0051"
 
 
-class NodeMeasureIntervalRequest(NodeRequest):
+class NodeMeasureIntervalRequest(PlugwiseRequest):
     """
     Configure the logging interval of power measurement in minutes
 
@@ -422,7 +422,7 @@ class NodeMeasureIntervalRequest(NodeRequest):
         self.args.append(Int(production, length=4))
 
 
-class NodeClearGroupMacRequest(NodeRequest):
+class NodeClearGroupMacRequest(PlugwiseRequest):
     """
     TODO:
 
@@ -436,7 +436,7 @@ class NodeClearGroupMacRequest(NodeRequest):
         self.args.append(Int(taskId, length=2))
 
 
-class CircleSetScheduleValueRequest(NodeRequest):
+class CircleSetScheduleValueRequest(PlugwiseRequest):
     """
     Send chunk of On/Off/StandbyKiller Schedule to Circle(+)
 
@@ -450,7 +450,7 @@ class CircleSetScheduleValueRequest(NodeRequest):
         self.args.append(SInt(val, length=4))
 
 
-class NodeFeaturesRequest(NodeRequest):
+class NodeFeaturesRequest(PlugwiseRequest):
     """
     Request feature set node supports
 
@@ -460,7 +460,7 @@ class NodeFeaturesRequest(NodeRequest):
     ID = b"005F"
 
 
-class ScanConfigureRequest(NodeRequest):
+class ScanConfigureRequest(PlugwiseRequest):
     """
     Configure a Scan node
 
@@ -488,7 +488,7 @@ class ScanConfigureRequest(NodeRequest):
         ]
 
 
-class ScanLightCalibrateRequest(NodeRequest):
+class ScanLightCalibrateRequest(PlugwiseRequest):
     """
     Calibrate light sensitivity
 
@@ -498,7 +498,7 @@ class ScanLightCalibrateRequest(NodeRequest):
     ID = b"0102"
 
 
-class SenseReportIntervalRequest(NodeRequest):
+class SenseReportIntervalRequest(PlugwiseRequest):
     """
     Sets the Sense temperature and humidity measurement report interval in minutes.
     Based on this interval, periodically a 'SenseReportResponse' message is sent by the Sense node
@@ -513,7 +513,7 @@ class SenseReportIntervalRequest(NodeRequest):
         self.args.append(Int(interval, length=2))
 
 
-class CircleInitialRelaisStateRequest(NodeRequest):
+class CircleInitialRelaisStateRequest(PlugwiseRequest):
     """
     Get or set initial Relais state
 

@@ -5,7 +5,7 @@ import threading
 import time
 
 from ..constants import SLEEP_TIME
-from ..messages.requests import NodeRequest
+from ..messages.requests import PlugwiseRequest
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -96,7 +96,7 @@ class StickConnection:
     def _write_data(self, data):
         """Placeholder."""
 
-    def send(self, message: NodeRequest, callback=None):
+    def send(self, message: PlugwiseRequest, callback=None):
         """Add message to write queue."""
         self._write_queue.put_nowait((message, callback))
 
