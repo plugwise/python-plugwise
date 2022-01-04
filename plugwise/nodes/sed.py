@@ -1,8 +1,9 @@
-"""Plugwise SED (Sleeping Endpoint Device) base object."""
+"""Plugwise SED (Sleeping Endpoint Device) base class."""
 
 # TODO:
 # - Expose awake state as sensor
 # - Set available state after 2 missed awake messages
+from __future__ import annotations
 
 import logging
 

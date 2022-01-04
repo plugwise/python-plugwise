@@ -1,4 +1,6 @@
-"""Plugwise switch node object."""
+"""Plugwise switch node class."""
+from __future__ import annotations
+
 import logging
 
 from ..constants import FEATURE_PING, FEATURE_RSSI_IN, FEATURE_RSSI_OUT, FEATURE_SWITCH

@@ -3,6 +3,8 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Main stick object to control associated plugwise plugs
 """
+from __future__ import annotations
+
 from datetime import datetime, timedelta
 from enum import Enum
 import logging
