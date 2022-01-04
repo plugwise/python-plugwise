@@ -124,12 +124,6 @@ STATUS_RESPONSES = {
     SCAN_LIGHT_CALIBRATION_ACCEPTED: "Scan light calibration accepted",
 }
 
-# TODO: responses
-ACK_POWER_CALIBRATION = b"00DA"
-ACK_CIRCLE_PLUS = b"00DD"
-ACK_POWER_LOG_INTERVAL_SET = b"00F8"
-
-
 # Max timeout in seconds
 MESSAGE_TIME_OUT = 15  # Stick responds with timeout messages after 10 sec.
 MESSAGE_RETRY = 2
