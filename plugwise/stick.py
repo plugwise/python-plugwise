@@ -14,6 +14,7 @@ import time
 
 from .constants import (
     ACCEPT_JOIN_REQUESTS,
+    MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
     NODE_TYPE_CELSIUS_NR,
     NODE_TYPE_CELSIUS_SED,
@@ -667,6 +668,7 @@ class Stick:
                     for mac in self._nodes_not_discovered:
                         _ping_request = NodePingRequest(bytes(mac, UTF8_DECODE))
                         _ping_request.priority = Priority.Low
+                        _ping_request.retry_counter = MESSAGE_RETRY - 1
                         self.msg_controller.send(_ping_request)
                     _discover_counter = 0
                 else:
@@ -680,7 +682,7 @@ class Stick:
                     ):
                         time.sleep(1)
                         update_loop_checker += 1
-                        if not self.msg_controller.busy:
+                        if not self.msg_controller.busy and self._run_update_thread:
                             # wait 2 seconds
                             time.sleep(2)
                             break
@@ -773,15 +775,16 @@ class Stick:
                 None,
             )
             self._callback_NodeInfo[mac] = callback
-            self.msg_controller.send(
-                NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-            )
+            _node_request = NodeInfoRequest(bytes(mac, UTF8_DECODE))
+            _node_request.retry_counter = MESSAGE_RETRY - 1
+            self.msg_controller.send(_node_request)
         else:
             (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
             if not (firstrequest and lastrequest):
                 self._callback_NodeInfo[mac] = callback
                 _node_request = NodeInfoRequest(bytes(mac, UTF8_DECODE))
                 _node_request.priority = Priority.Low
+                _node_request.retry_counter = MESSAGE_RETRY - 1
                 self.msg_controller.send(_node_request)
             elif force_discover:
                 self._callback_NodeInfo[mac] = callback
