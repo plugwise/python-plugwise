@@ -4,7 +4,7 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 Plugwise protocol helpers
 """
 import binascii
-import datetime
+from datetime import date, datetime, time, timedelta, timezone
 import re
 import struct
 
@@ -195,7 +195,7 @@ class UnixTimestamp(Int):
 
     def deserialize(self, val):
         Int.deserialize(self, val)
-        self.value = datetime.datetime.fromtimestamp(self.value)
+        self.value = datetime.fromtimestamp(self.value)
 
 
 class Year2k(Int):
@@ -207,8 +207,7 @@ class Year2k(Int):
 
 
 class DateTime(CompositeType):
-    """datetime value as used in the general info response
-    format is: YYMMmmmm
+    """Plugwise datetime value in the general info response format of: YYMMmmmm
     where year is offset value from the epoch which is Y2K
     and last four bytes are offset from the beginning of the month in minutes
     """
@@ -224,10 +223,12 @@ class DateTime(CompositeType):
         CompositeType.deserialize(self, val)
         if self.minutes.value == 65535:
             self.value = None
+        elif self.month.value == 0:
+            self.value = None
         else:
-            self.value = datetime.datetime(
+            self.value = datetime(
                 year=self.year.value, month=self.month.value, day=1
-            ) + datetime.timedelta(minutes=self.minutes.value)
+            ).replace(tzinfo=timezone.utc) + timedelta(minutes=self.minutes.value)
 
 
 class Time(CompositeType):
@@ -242,8 +243,8 @@ class Time(CompositeType):
 
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
-        self.value = datetime.time(
-            self.hour.value, self.minute.value, self.second.value
+        self.value = time(
+            hour=self.hour.value, minute=self.minute.value, second=self.second.value
         )
 
 
@@ -271,10 +272,10 @@ class RealClockTime(CompositeType):
 
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
-        self.value = datetime.time(
-            int(self.hour.value),
-            int(self.minute.value),
-            int(self.second.value),
+        self.value = time(
+            hour=int(self.hour.value),
+            minute=int(self.minute.value),
+            second=int(self.second.value),
         )
 
 
@@ -290,10 +291,10 @@ class RealClockDate(CompositeType):
 
     def deserialize(self, val):
         CompositeType.deserialize(self, val)
-        self.value = datetime.date(
-            int(self.year.value) + PLUGWISE_EPOCH,
-            int(self.month.value),
-            int(self.day.value),
+        self.value = date(
+            year=int(self.year.value) + PLUGWISE_EPOCH,
+            month=int(self.month.value),
+            day=int(self.day.value),
         )
 
 
