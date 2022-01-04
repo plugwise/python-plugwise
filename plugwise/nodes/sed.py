@@ -26,6 +26,7 @@ from ..messages.requests import (
 from ..messages.responses import (
     NodeAwakeResponse,
     NodeAwakeResponseType,
+    NodeRejoinResponse,
     NodeResponse,
     NodeResponseType,
     PlugwiseResponse,
@@ -57,6 +58,8 @@ class NodeSED(PlugwiseNode):
             self._process_NodeAwakeResponse(message)
         elif isinstance(message, NodeResponse):
             self._process_NodeResponse(message)
+        elif isinstance(message, NodeRejoinResponse):
+            self._process_NodeRejoinResponse(message)
         else:
             super().message_for_node(message)
 
@@ -80,6 +83,14 @@ class NodeSED(PlugwiseNode):
                 del self._sed_requests[b"0050"]
         else:
             super()._process_NodeResponse(message)
+
+    def _process_NodeRejoinResponse(self, message: NodeRejoinResponse) -> None:
+        """Process content of 'NodeAwakeResponse' message."""
+        _LOGGER.info(
+            "Node %s has (re)joined plugwise network",
+            self.mac,
+        )
+        self._send_pending_requests()
 
     def _process_NodeAwakeResponse(self, message: NodeAwakeResponse) -> None:
         """Process content of 'NodeAwakeResponse' message."""
