@@ -57,12 +57,6 @@ class PlugwiseScan(NodeSED):
         """Process received messages for PlugwiseScan class."""
         self._last_update = message.timestamp
         if isinstance(message, NodeSwitchGroupResponse):
-            _LOGGER.debug(
-                "Switch group %s to state %s received from %s",
-                str(message.group.value),
-                str(message.power_state.value),
-                self.mac,
-            )
             self._process_NodeSwitchGroupResponse(message)
         elif isinstance(message, NodeAckResponse):
             self._process_NodeAckResponse(message)
@@ -111,6 +105,13 @@ class PlugwiseScan(NodeSED):
     def _process_NodeSwitchGroupResponse(
         self, message: NodeSwitchGroupResponse
     ) -> None:
+        """Process content of 'NodeSwitchGroupResponse' message."""
+        _LOGGER.debug(
+            "Switch group %s to state %s received from %s",
+            str(message.group.value),
+            str(message.power_state.value),
+            self.mac,
+        )
         if message.power_state.value == 0:
             # turn off => clear motion
             if self._motion_state:
