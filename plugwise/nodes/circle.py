@@ -18,7 +18,6 @@ from ..constants import (
     MAX_TIME_DRIFT,
     MESSAGE_TIME_OUT,
     PULSES_PER_KW_SECOND,
-    Priority,
 )
 from ..messages.requests import (
     CircleCalibrationRequest,

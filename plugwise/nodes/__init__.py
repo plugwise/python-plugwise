@@ -8,10 +8,14 @@ from ..constants import (
     FEATURE_RELAY,
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
-    Priority,
     UTF8_DECODE,
 )
-from ..messages.requests import NodeFeaturesRequest, NodeInfoRequest, NodePingRequest
+from ..messages.requests import (
+    NodeFeaturesRequest,
+    NodeInfoRequest,
+    NodePingRequest,
+    Priority,
+)
 from ..messages.responses import (
     NodeFeaturesResponse,
     NodeInfoResponse,
