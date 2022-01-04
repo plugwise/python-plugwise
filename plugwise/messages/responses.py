@@ -1,5 +1,8 @@
 """All known response messages to be received from plugwise devices."""
+from __future__ import annotations
+
 from datetime import datetime, timezone
+from enum import Enum
 
 from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER, MESSAGE_LARGE, MESSAGE_SMALL
 from ..exceptions import (
@@ -20,6 +23,54 @@ from ..util import (
     Time,
     UnixTimestamp,
 )
+
+
+class StickResponseType(bytes, Enum):
+    """Response message types for stick."""
+
+    # Minimal value = b"00C0", maximum value = b"00F3"
+    # Below the currently known values:
+
+    success = b"00C1"
+    failed = b"00C2"
+    timeout = b"00E1"
+
+
+class NodeResponseType(bytes, Enum):
+    """Response types of a 'NodeResponse' reply message."""
+
+    ClockAccepted = b"00D7"
+    JoinAccepted = b"00D9"
+    RelaySwitchedOff = b"00DE"
+    RelaySwitchedOn = b"00D8"
+    RelaySwitchFailed = b"00E2"
+    SleepConfigAccepted = b"00F6"
+    SleepConfigFailed = b"00F7"  # TODO: Validate
+    RealTimeClockAccepted = b"00DF"
+    RealTimeClockFailed = b"00E7"
+
+
+class NodeAckResponseType(bytes, Enum):
+    """Response types of a 'NodeAckResponse' reply message."""
+
+    ScanConfigAccepted = b"00BE"
+    ScanConfigFailed = b"00BF"
+    ScanLightCalibrationAccepted = b"00BD"
+    SenseIntervalAccepted = b"00B3"
+    SenseIntervalFailed = b"00B4"
+    SenseBoundariesAccepted = b"00B5"
+    SenseBoundariesFailed = b"00B6"
+
+
+class NodeAwakeResponseType(int, Enum):
+    """Response types of a 'NodeAwakeResponse' reply message."""
+
+    Maintenance = 0  # SED awake for maintenance
+    First = 1  # SED awake for the first time
+    Startup = 2  # SED awake after restart, e.g. after reinserting a battery
+    State = 3  # SED awake to report state (Motion / Temperature / Humidity
+    Unknown = 4
+    Button = 5  # SED awake due to button press
 
 
 class PlugwiseResponse(PlugwiseMessage):
