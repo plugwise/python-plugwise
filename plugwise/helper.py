@@ -468,7 +468,14 @@ class SmileHelper:
 
         if appl.pwclass == "heater_central":
             # Remove heater_central when no active device present
-            if not self._active_device_present:
+            if self._on_off_device:
+                appl.name = "On_Off"
+                appl.v_name = None
+                appl.model = "Unknown"
+
+            return appl
+
+            if not self._ot_device and not self._on_off_device:
                 return None
 
             self._heater_id = appliance.attrib["id"]
@@ -483,7 +490,9 @@ class SmileHelper:
             appl.model = check_model(module_data[1], appl.v_name)
             if appl.model is None:
                 appl.model = (
-                    "Generic heater/cooler" if self._cp_state else "Generic heater"
+                    "Generic heater/cooler"
+                    if self._cooling_present
+                    else "Generic heater"
                 )
             return appl
 
@@ -566,14 +575,14 @@ class SmileHelper:
             }
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        self._cp_state = self._appliances.find(
-            ".//logs/point_log[type='compressor_state']"
+        ch_state = self._appliances.find(
+            ".//logs/point_log[type='central_heating_state']"
         )
-        fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
-        bl_state = self._appliances.find(".//services/boiler_state")
-        self._active_device_present = (
-            self._cp_state is not None or fl_state is not None or bl_state is not None
+        ot_fault_code = self._appliances.find(
+            ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
+        self._ot_device = ch_state is not None and ot_fault_code is not None
+        self._on_off_device = ch_state is not None and ot_fault_code is None
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -760,7 +769,7 @@ class SmileHelper:
 
         appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
         measurements = DEVICE_MEASUREMENTS.items()
-        if self._active_device_present:
+        if self._ot_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
                 **HEATER_CENTRAL_MEASUREMENTS,
@@ -1183,7 +1192,7 @@ class SmileHelper:
             for item in BINARY_SENSORS:
                 if list(item.keys())[0] == key:
                     data.pop(key)
-                    if self._active_device_present:
+                    if self._ot_device:
                         bs_dict[key] = value
             for item in SENSORS:
                 if list(item.keys())[0] == key:

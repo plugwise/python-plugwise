@@ -54,7 +54,9 @@ class SmileData(SmileHelper):
         if d_id == self.gateway_id:
             if self._sm_thermostat is not None:
                 bs_dict.update(PW_NOTIFICATION)
-            if not self._active_device_present and "heating_state" in data:
+            if (
+                not self._ot_device and not self._on_off_device
+            ) and "heating_state" in data:
                 s_dict.update(DEVICE_STATE)
         if d_id == self._heater_id and self._sm_thermostat is not None:
             s_dict.update(DEVICE_STATE)
@@ -83,7 +85,7 @@ class SmileData(SmileHelper):
 
             self.gw_devices[dev_id] = dev_and_data
 
-        self.gw_data["active_device"] = self._active_device_present
+        self.gw_data["active_device"] = self._ot_device or self._on_off_device
         self.gw_data["cooling_present"] = self._cooling_present
         self.gw_data["gateway_id"] = self.gateway_id
         self.gw_data["heater_id"] = self._heater_id
@@ -142,10 +144,7 @@ class SmileData(SmileHelper):
         if self.smile_name == "Adam":
             # Indicate heating_state based on valves being open in case of city-provided heating
             if details["class"] == "gateway":
-                if (
-                    not self._active_device_present
-                    and self._heating_valves() is not None
-                ):
+                if self._on_off_device and self._heating_valves() is not None:
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
@@ -258,7 +257,8 @@ class Smile(SmileComm, SmileData):
             websession,
         )
 
-        self._active_device_present = False
+        self._on_off_device = False
+        self._ot_device = False
         self._appliances = None
         self._appl_data = None
         self._cooling_present = False
