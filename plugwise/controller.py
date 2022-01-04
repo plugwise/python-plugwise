@@ -55,14 +55,15 @@ class StickMessageController:
         self._send_message_thread_state = False
 
         self._timeout_delta = timedelta(minutes=1)
-        self._open_requests: dict(bytes, PlugwiseRequest) = {}
+        self._pending_request: dict(bytes, PlugwiseRequest) = {}
         self._stick_response: bool = False
 
     @property
     def busy(self) -> bool:
         """Indicator if controller is busy with sending messages."""
         if self._send_message_queue.qsize() < 2:
-            return False
+            if len(self._pending_request) < 2:
+                return False
         return True
 
     @property
@@ -206,21 +207,21 @@ class StickMessageController:
         """handle received message from Plugwise Zigbee network."""
         if isinstance(message, StickResponse):
             if not self._stick_response:
-                if message.seq_id not in self._open_requests.keys():
-                    self._open_requests[message.seq_id] = self._stick_request
-                self._open_requests[message.seq_id].stick_response = message.timestamp
-                self._open_requests[message.seq_id].stick_state = message.ack_id
+                if message.seq_id not in self._pending_request.keys():
+                    self._pending_request[message.seq_id] = self._stick_request
+                self._pending_request[message.seq_id].stick_response = message.timestamp
+                self._pending_request[message.seq_id].stick_state = message.ack_id
                 self._stick_response = True
                 self._log_status_of_request(message.seq_id)
 
         else:
             # Forward message to Stick class
-            if message.seq_id in self._open_requests:
+            if message.seq_id in self._pending_request:
                 _LOGGER.info(
                     "forward %s after %s%s with seq_id=%s",
                     message.__class__.__name__,
-                    self._open_requests[message.seq_id].__class__.__name__,
-                    self._open_requests[message.seq_id].target_mac,
+                    self._pending_request[message.seq_id].__class__.__name__,
+                    self._pending_request[message.seq_id].target_mac,
                     str(message.seq_id),
                 )
             else:
@@ -230,43 +231,43 @@ class StickMessageController:
                     str(message.seq_id),
                 )
             self.message_processor(message)
-            if message.seq_id in self._open_requests.keys():
-                del self._open_requests[message.seq_id]
+            if message.seq_id in self._pending_request.keys():
+                del self._pending_request[message.seq_id]
 
     def _log_status_of_request(self, seq_id: bytes) -> None:
         """."""
-        if isinstance(self._open_requests[seq_id].mac, bytes):
-            _target = " to " + self._open_requests[seq_id].mac.decode(UTF8_DECODE)
+        if isinstance(self._pending_request[seq_id].mac, bytes):
+            _target = " to " + self._pending_request[seq_id].mac.decode(UTF8_DECODE)
         else:
             _target = ""
-        if self._open_requests[seq_id].stick_state == StickResponseType.success:
+        if self._pending_request[seq_id].stick_state == StickResponseType.success:
             _LOGGER.debug(
                 "Stick accepted %s%s with seq_id=%s",
-                self._open_requests[seq_id].__class__.__name__,
+                self._pending_request[seq_id].__class__.__name__,
                 _target,
                 str(seq_id),
             )
-        elif self._open_requests[seq_id].stick_state == StickResponseType.timeout:
+        elif self._pending_request[seq_id].stick_state == StickResponseType.timeout:
             _LOGGER.warning(
                 "Stick 'time out' received for %s%s with seq_id=%s, retry request",
-                self._open_requests[seq_id].__class__.__name__,
+                self._pending_request[seq_id].__class__.__name__,
                 _target,
                 str(seq_id),
             )
-            self._open_requests[seq_id].stick_state = None
-            self.send(self._open_requests[seq_id])
-        elif self._open_requests[seq_id].stick_state == StickResponseType.failed:
+            self._pending_request[seq_id].stick_state = None
+            self.send(self._pending_request[seq_id])
+        elif self._pending_request[seq_id].stick_state == StickResponseType.failed:
             _LOGGER.error(
                 "Stick failed received for %s%s with seq_id=%s",
-                self._open_requests[seq_id].__class__.__name__,
+                self._pending_request[seq_id].__class__.__name__,
                 _target,
                 str(seq_id),
             )
         else:
             _LOGGER.warning(
                 "Unknown StickResponseType %s received for %s%s with seq_id=%s",
-                str(self._open_requests[seq_id].stick_state),
-                self._open_requests[seq_id].__class__.__name__,
+                str(self._pending_request[seq_id].stick_state),
+                self._pending_request[seq_id].__class__.__name__,
                 _target,
                 str(seq_id),
             )
@@ -275,39 +276,39 @@ class StickMessageController:
         """Daemon to time out open requests without any response message."""
         while self._receive_timeout_thread_state:
             _utcnow = datetime.utcnow().replace(tzinfo=timezone.utc)
-            for seq_id in list(self._open_requests.keys()):
+            for seq_id in list(self._pending_request.keys()):
                 if (
-                    self._open_requests[seq_id].stick_response + self._timeout_delta
+                    self._pending_request[seq_id].stick_response + self._timeout_delta
                     < _utcnow
                 ):
-                    if isinstance(self._open_requests[seq_id].mac, bytes):
-                        _target = " to " + self._open_requests[seq_id].mac.decode(
+                    if isinstance(self._pending_request[seq_id].mac, bytes):
+                        _target = " to " + self._pending_request[seq_id].mac.decode(
                             UTF8_DECODE
                         )
                     else:
                         _target = ""
-                    if self._open_requests[seq_id].retry_counter >= MESSAGE_RETRY:
+                    if self._pending_request[seq_id].retry_counter >= MESSAGE_RETRY:
                         _LOGGER.warning(
                             "No response for %s%s => drop request (seq_id=%s, retry=%s, last try=%s, last stick_response=%s)",
-                            self._open_requests[seq_id].__class__.__name__,
+                            self._pending_request[seq_id].__class__.__name__,
                             _target,
                             str(seq_id),
-                            str(self._open_requests[seq_id].retry_counter),
-                            str(self._open_requests[seq_id].send),
-                            str(self._open_requests[seq_id].stick_response),
+                            str(self._pending_request[seq_id].retry_counter),
+                            str(self._pending_request[seq_id].send),
+                            str(self._pending_request[seq_id].stick_response),
                         )
                     else:
                         _LOGGER.warning(
                             "No response for %s%s => retry request (seq_id=%s, retry=%s, last try=%s, last stick_response=%s)",
-                            self._open_requests[seq_id].__class__.__name__,
+                            self._pending_request[seq_id].__class__.__name__,
                             _target,
                             str(seq_id),
-                            str(self._open_requests[seq_id].retry_counter),
-                            str(self._open_requests[seq_id].send),
-                            str(self._open_requests[seq_id].stick_response),
+                            str(self._pending_request[seq_id].retry_counter),
+                            str(self._pending_request[seq_id].send),
+                            str(self._pending_request[seq_id].stick_response),
                         )
-                        self.send(self._open_requests[seq_id])
-                    del self._open_requests[seq_id]
+                        self.send(self._pending_request[seq_id])
+                    del self._pending_request[seq_id]
             receive_timeout_checker = 0
             while (
                 receive_timeout_checker < MESSAGE_TIME_OUT
@@ -342,11 +343,11 @@ class StickMessageController:
                 ):
                     return True
         # Check for open requests
-        for _seq_id in self._open_requests.keys():
-            if self._open_requests[_seq_id].target_mac:
+        for _seq_id in self._pending_request.keys():
+            if self._pending_request[_seq_id].target_mac:
                 if (
-                    self._open_requests[_seq_id].mac == request.mac
-                    and self._open_requests[_seq_id].__class__.__name__
+                    self._pending_request[_seq_id].mac == request.mac
+                    and self._pending_request[_seq_id].__class__.__name__
                     == request.__class__.__name__
                 ):
                     return True
