@@ -2,11 +2,13 @@
 from datetime import datetime, timezone
 import logging
 
-from ..constants import MAX_TIME_DRIFT, Priority, UTF8_DECODE
+from ..constants import MAX_TIME_DRIFT, UTF8_DECODE
 from ..messages.requests import (
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
     CirclePlusScanRequest,
+    Priority,
+)
 from ..messages.responses import (
     CirclePlusRealTimeClockResponse,
     CirclePlusScanResponse,

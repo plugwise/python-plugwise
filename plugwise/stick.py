@@ -22,7 +22,6 @@ from .constants import (
     NODE_TYPE_SENSE,
     NODE_TYPE_STEALTH,
     NODE_TYPE_SWITCH,
-    Priority,
     STATE_ACTIONS,
     UTF8_DECODE,
     WATCHDOG_DEAMON,
@@ -41,6 +40,7 @@ from .messages.requests import (
     NodeInfoRequest,
     NodePingRequest,
     NodeRemoveRequest,
+    Priority,
     StickInitRequest,
 )
 from .messages.responses import (

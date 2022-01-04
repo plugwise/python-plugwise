@@ -10,7 +10,6 @@ from ..constants import (
     FEATURE_PING,
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
-    Priority,
     SED_CLOCK_INTERVAL,
     SED_CLOCK_SYNC,
     SED_MAINTENANCE_INTERVAL,
@@ -21,6 +20,9 @@ from ..messages.requests import (
     NodeInfoRequest,
     NodePingRequest,
     NodeSleepConfigRequest,
+    PlugwiseRequest,
+    Priority,
+)
 from ..messages.responses import (
     NodeAwakeResponse,
     NodeAwakeResponseType,
