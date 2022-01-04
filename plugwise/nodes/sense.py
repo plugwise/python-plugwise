@@ -12,7 +12,7 @@ from ..constants import (
     SENSE_TEMPERATURE_MULTIPLIER,
     SENSE_TEMPERATURE_OFFSET,
 )
-from ..messages.responses import SenseReportResponse
+from ..messages.responses import PlugwiseResponse, SenseReportResponse
 from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
@@ -43,18 +43,13 @@ class PlugwiseSense(NodeSED):
         """Return the current temperature."""
         return self._temperature
 
-    def message_for_sense(self, message):
-        """
-        Process received message
-        """
+    def message_for_node(self, message: PlugwiseResponse) -> None:
+        """Process received messages for PlugwiseSense class."""
+        self._last_update = message.timestamp
         if isinstance(message, SenseReportResponse):
             self._process_SenseReportResponse(message)
         else:
-            _LOGGER.info(
-                "Unsupported message %s received from %s",
-                message.__class__.__name__,
-                self.mac,
-            )
+            super().message_for_node(message)
 
     def _process_SenseReportResponse(self, message: SenseReportResponse) -> None:
         """Process content of 'NodeAckResponse' message."""

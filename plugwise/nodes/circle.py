@@ -36,6 +36,7 @@ from ..messages.responses import (
     CircleEnergyCountersResponse,
     CirclePowerUsageResponse,
     NodeResponse,
+    PlugwiseResponse,
 )
 from ..nodes import PlugwiseNode
 
@@ -231,10 +232,9 @@ class PlugwiseCircle(PlugwiseNode):
                 # No history collected yet, request energy history
                 self.request_energy_counters()
 
-    def message_for_circle(self, message):
-        """
-        Process received message
-        """
+    def message_for_node(self, message: PlugwiseResponse) -> None:
+        """Process received messages for PlugwiseCircle class."""
+        self._last_update = message.timestamp
         if isinstance(message, CirclePowerUsageResponse):
             if self.calibration:
                 self._process_CirclePowerUsageResponse(message)
@@ -265,10 +265,7 @@ class PlugwiseCircle(PlugwiseNode):
         elif isinstance(message, CircleClockResponse):
             self._process_CircleClockResponse(message)
         else:
-            self.message_for_circle_plus(message)
-
-    def message_for_circle_plus(self, message):
-        """Pass messages to PlugwiseCirclePlus class"""
+            super().message_for_node(message)
 
     def _process_NodeResponse(self, message: NodeResponse) -> None:
         """Process content of 'NodeResponse' message."""
