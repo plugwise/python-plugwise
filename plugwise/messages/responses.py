@@ -4,7 +4,12 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from enum import Enum
 
-from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER, MESSAGE_LARGE, MESSAGE_SMALL
+from ..constants import (
+    MESSAGE_FOOTER,
+    MESSAGE_HEADER,
+    NODE_MESSAGE_SIZE,
+    STICK_MESSAGE_SIZE,
+)
 from ..exceptions import (
     InvalidMessageChecksum,
     InvalidMessageFooter,
@@ -97,9 +102,9 @@ class PlugwiseResponse(PlugwiseMessage):
         self.seq_id = None
         self.msg_id = None
         self.ack_id = None
-        if self.format_size == MESSAGE_SMALL:
+        if self.format_size == STICK_MESSAGE_SIZE:
             self.len_correction = -12
-        elif self.format_size == MESSAGE_LARGE:
+        elif self.format_size == NODE_MESSAGE_SIZE:
             self.len_correction = 4
         else:
             self.len_correction = 0
@@ -128,10 +133,13 @@ class PlugwiseResponse(PlugwiseMessage):
         self.msg_id = response[4:8]
         self.seq_id = response[8:12]
         response = response[12:]
-        if self.format_size == MESSAGE_SMALL or self.format_size == MESSAGE_LARGE:
+        if (
+            self.format_size == STICK_MESSAGE_SIZE
+            or self.format_size == NODE_MESSAGE_SIZE
+        ):
             self.ack_id = response[:4]
             response = response[4:]
-        if self.format_size != MESSAGE_SMALL:
+        if self.format_size != STICK_MESSAGE_SIZE:
             self.mac = response[:16]
             response = response[16:]
         response = self._parse_params(response)
@@ -164,7 +172,7 @@ class StickResponse(PlugwiseResponse):
     ID = b"0000"
 
     def __init__(self):
-        super().__init__(MESSAGE_SMALL)
+        super().__init__(STICK_MESSAGE_SIZE)
 
 
 class NodeResponse(PlugwiseResponse):
@@ -177,7 +185,7 @@ class NodeResponse(PlugwiseResponse):
     ID = b"0000"
 
     def __init__(self):
-        super().__init__(MESSAGE_LARGE)
+        super().__init__(NODE_MESSAGE_SIZE)
 
 
 class CirclePlusQueryResponse(PlugwiseResponse):

@@ -41,8 +41,8 @@ STOPBITS = 1
 # Plugwise message identifiers
 MESSAGE_FOOTER = b"\x0d\x0a"
 MESSAGE_HEADER = b"\x05\x05\x03\x03"
-MESSAGE_LARGE = "LARGE"
-MESSAGE_SMALL = "SMALL"
+NODE_MESSAGE_SIZE = "LARGE"
+STICK_MESSAGE_SIZE = "SMALL"
 
 # Max timeout in seconds
 MESSAGE_TIME_OUT = 15  # Stick responds with timeout messages after 10 sec.
