@@ -63,6 +63,13 @@ class StickMessageController:
         self.last_result: StickResponseType | None = None
 
     @property
+    def busy(self) -> bool:
+        """Indicator if controller is busy with sending messages."""
+        if self._send_message_queue.qsize() < 2:
+            return False
+        return True
+
+    @property
     def receive_timeout_thread_state(self) -> bool:
         """Required state of the receive timeout thread"""
         return self._receive_timeout_thread_state

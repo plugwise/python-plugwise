@@ -680,6 +680,10 @@ class Stick:
                     ):
                         time.sleep(1)
                         update_loop_checker += 1
+                        if not self.msg_controller.busy:
+                            # wait 2 seconds
+                            time.sleep(2)
+                            break
 
         # TODO: narrow exception
         except Exception as err:  # pylint: disable=broad-except
