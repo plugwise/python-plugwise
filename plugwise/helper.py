@@ -769,7 +769,7 @@ class SmileHelper:
 
         appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
         measurements = DEVICE_MEASUREMENTS.items()
-        if self._ot_device:
+        if self._ot_device or self._on_off_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
                 **HEATER_CENTRAL_MEASUREMENTS,
@@ -1192,7 +1192,7 @@ class SmileHelper:
             for item in BINARY_SENSORS:
                 if list(item.keys())[0] == key:
                     data.pop(key)
-                    if self._ot_device:
+                    if self._ot_device or self._on_off_device:
                         bs_dict[key] = value
             for item in SENSORS:
                 if list(item.keys())[0] == key:
