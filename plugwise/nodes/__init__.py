@@ -39,10 +39,10 @@ class PlugwiseNode:
         self._features = ()
         self._address = address
         self._callbacks = {}
-        self._last_update = None
-        self._available = False
-        self._battery_powered = False
-        self._measures_power = False
+        self._last_update: datetime | None = None
+        self._available: bool = False
+        self._battery_powered: bool = False
+        self._measures_power: bool = False
         self._rssi_in = None
         self._rssi_out = None
         self._ping = None
@@ -195,7 +195,7 @@ class PlugwiseNode:
             elif isinstance(message, NodeInfoResponse):
                 self._process_NodeInfoResponse(message)
             elif isinstance(message, NodeFeaturesResponse):
-                self._process_features_response(message)
+                self._process_NodeFeaturesResponse(message)
             elif isinstance(message, NodeAckResponse):
                 self._process_NodeAckResponse(message)
             else:
@@ -205,7 +205,7 @@ class PlugwiseNode:
                     self.mac,
                 )
 
-    def subscribe_callback(self, callback, sensor) -> bool:
+    def subscribe_callback(self, callback: callable, sensor: str) -> bool:
         """Subscribe callback to execute when state change happens."""
         if sensor in self._features:
             if sensor not in self._callbacks:
@@ -214,7 +214,7 @@ class PlugwiseNode:
             return True
         return False
 
-    def unsubscribe_callback(self, callback, sensor):
+    def unsubscribe_callback(self, callback: callable, sensor: str):
         """Unsubscribe callback to execute when state change happens."""
         if sensor in self._callbacks:
             self._callbacks[sensor].remove(callback)
@@ -272,7 +272,7 @@ class PlugwiseNode:
             self._callback_NodeInfo()
             self._callback_NodeInfo = None
 
-    def _process_features_response(self, message):
+    def _process_NodeFeaturesResponse(self, message: NodeFeaturesResponse):
         """Process features message."""
         _LOGGER.warning(
             "Node %s supports features %s", self.mac, str(message.features.value)
