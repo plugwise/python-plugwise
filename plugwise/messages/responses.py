@@ -24,6 +24,10 @@ from ..util import (
     UnixTimestamp,
 )
 
+REJOIN_RESPONSE_ID = b"FFFD"
+AWAKE_RESPONSE = b"FFFE"
+SWITCH_GROUP_RESPONSE = b"FFFF"
+
 
 class StickResponseType(bytes, Enum):
     """Response message types for stick."""
@@ -643,12 +647,13 @@ def get_message_response(message_id, length, seq_id):
     """
     Return message class based on sequence ID, Length of message or message ID.
     """
+
     # First check for known sequence ID's
-    if seq_id == b"FFFD":
+    if seq_id == REJOIN_RESPONSE_ID:
         return NodeRejoinResponse()
-    if seq_id == b"FFFE":
+    if seq_id == AWAKE_RESPONSE:
         return NodeAwakeResponse()
-    if seq_id == b"FFFF":
+    if seq_id == SWITCH_GROUP_RESPONSE:
         return NodeSwitchGroupResponse()
 
     # No fixed sequence ID, continue at message ID

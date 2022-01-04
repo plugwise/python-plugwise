@@ -21,7 +21,14 @@ from .connections.serial import PlugwiseUSBConnection
 from .connections.socket import SocketConnection
 from .constants import MESSAGE_RETRY, MESSAGE_TIME_OUT, SLEEP_TIME, UTF8_DECODE
 from .messages.requests import PlugwiseRequest, Priority
-from .messages.responses import PlugwiseResponse, StickResponse, StickResponseType
+from .messages.responses import (
+    AWAKE_RESPONSE,
+    REJOIN_RESPONSE_ID,
+    SWITCH_GROUP_RESPONSE,
+    PlugwiseResponse,
+    StickResponse,
+    StickResponseType,
+)
 from .parser import PlugwiseParser
 
 _LOGGER = logging.getLogger(__name__)
@@ -225,11 +232,22 @@ class StickMessageController:
                     str(message.seq_id),
                 )
             else:
-                _LOGGER.warning(
-                    "Forward %s with seq_id=%s",
-                    message.__class__.__name__,
-                    str(message.seq_id),
-                )
+                if message.seq_id in (
+                    REJOIN_RESPONSE_ID,
+                    AWAKE_RESPONSE,
+                    SWITCH_GROUP_RESPONSE,
+                ):
+                    _LOGGER.info(
+                        "Forward %s with seq_id=%s",
+                        message.__class__.__name__,
+                        str(message.seq_id),
+                    )
+                else:
+                    _LOGGER.warning(
+                        "Forward unexpected %s with seq_id=%s",
+                        message.__class__.__name__,
+                        str(message.seq_id),
+                    )
             self.message_processor(message)
             if message.seq_id in self._pending_request.keys():
                 del self._pending_request[message.seq_id]
