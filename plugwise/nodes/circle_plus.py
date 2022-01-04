@@ -1,5 +1,5 @@
 """Plugwise Circle+ node object."""
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 
 from ..constants import MAX_TIME_DRIFT, Priority, UTF8_DECODE
@@ -98,13 +98,13 @@ class PlugwiseCirclePlus(PlugwiseCircle):
 
     def _response_realtime_clock(self, message):
         realtime_clock_dt = datetime(
-            datetime.now().year,
-            datetime.now().month,
-            datetime.now().day,
+            datetime.utcnow().year,
+            datetime.utcnow().month,
+            datetime.utcnow().day,
             message.time.value.hour,
             message.time.value.minute,
             message.time.value.second,
-        )
+        ).replace(tzinfo=timezone.utc)
         realtime_clock_offset = message.timestamp.replace(microsecond=0) - (
             realtime_clock_dt + self.timezone_delta
         )

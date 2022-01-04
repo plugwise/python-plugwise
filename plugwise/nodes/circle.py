@@ -1,5 +1,5 @@
 """Plugwise Circle node object."""
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import logging
 
 from ..constants import (
@@ -83,7 +83,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._energy_pulses_today_now = None
         self._energy_pulses_yesterday = None
         self._new_relay_state = False
-        self._new_relay_stamp = datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
+        self._new_relay_stamp = datetime.utcnow() - timedelta(seconds=MESSAGE_TIME_OUT)
         self._pulses_1s = None
         self._pulses_8s = None
         self._pulses_produced_1h = None
@@ -180,7 +180,10 @@ class PlugwiseCircle(PlugwiseNode):
         Return last known relay state or the new switch state by anticipating
         the acknowledge for new state is getting in before message timeout.
         """
-        if self._new_relay_stamp + timedelta(seconds=MESSAGE_TIME_OUT) > datetime.now():
+        if (
+            self._new_relay_stamp + timedelta(seconds=MESSAGE_TIME_OUT)
+            > datetime.utcnow()
+        ):
             return self._new_relay_state
         return self._relay_state
 
@@ -189,7 +192,7 @@ class PlugwiseCircle(PlugwiseNode):
         """Request the relay to switch state."""
         self._request_switch(state)
         self._new_relay_state = state
-        self._new_relay_stamp = datetime.now()
+        self._new_relay_stamp = datetime.utcnow()
         if state != self._relay_state:
             self.do_callback(FEATURE_RELAY["id"])
 
@@ -761,13 +764,13 @@ class PlugwiseCircle(PlugwiseNode):
 
     def _response_clock(self, message: CircleClockResponse):
         log_date = datetime(
-            datetime.now().year,
-            datetime.now().month,
-            datetime.now().day,
+            datetime.utcnow().year,
+            datetime.utcnow().month,
+            datetime.utcnow().day,
             message.time.value.hour,
             message.time.value.minute,
             message.time.value.second,
-        )
+        ).replace(tzinfo=timezone.utc)
         clock_offset = message.timestamp.replace(microsecond=0) - (
             log_date + self.timezone_delta
         )
