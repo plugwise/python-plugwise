@@ -1,4 +1,6 @@
 """All known request messages to be send to plugwise devices."""
+from enum import Enum
+
 from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER
 from ..messages import PlugwiseMessage
 from ..util import (
@@ -11,6 +13,14 @@ from ..util import (
     String,
     Time,
 )
+
+
+class Priority(int, Enum):
+    """Message priority levels for USB-stick."""
+
+    High = 1
+    Medium = 2
+    Low = 3
 
 
 class PlugwiseRequest(PlugwiseMessage):
