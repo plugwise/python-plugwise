@@ -444,7 +444,7 @@ class Stick:
         if message.ack_id == NodeResponseType.JoinAccepted:
             # Discovery newly accepted node
             self.discover_node(
-                message.mac.decode.decode(UTF8_DECODE), self._discover_after_scan
+                message.mac.decode(UTF8_DECODE), self._discover_after_scan
             )
         self._pass_message_to_node(message)
 
