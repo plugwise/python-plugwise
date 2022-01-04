@@ -16,16 +16,9 @@ from .constants import (
     ACCEPT_JOIN_REQUESTS,
     MESSAGE_RETRY,
     MESSAGE_TIME_OUT,
-    NODE_TYPE_CELSIUS_NR,
-    NODE_TYPE_CELSIUS_SED,
-    NODE_TYPE_CIRCLE,
-    NODE_TYPE_CIRCLE_PLUS,
-    NODE_TYPE_SCAN,
-    NODE_TYPE_SENSE,
-    NODE_TYPE_STEALTH,
-    NODE_TYPE_SWITCH,
     UTF8_DECODE,
     WATCHDOG_DEAMON,
+    NodeType,
 )
 from .controller import StickMessageController
 from .exceptions import (
@@ -353,29 +346,27 @@ class Stick:
             str(node_type),
             mac,
         )
-        if node_type == NODE_TYPE_CIRCLE_PLUS:
+        if node_type == NodeType.CirclePlus:
             self._device_nodes[mac] = PlugwiseCirclePlus(
                 mac, address, self.msg_controller.send
             )
-        elif node_type == NODE_TYPE_CIRCLE:
+        elif node_type == NodeType.Circle:
             self._device_nodes[mac] = PlugwiseCircle(
                 mac, address, self.msg_controller.send
             )
-        elif node_type == NODE_TYPE_SWITCH:
+        elif node_type == NodeType.Switch:
             self._device_nodes[mac] = None
-        elif node_type == NODE_TYPE_SENSE:
+        elif node_type == NodeType.Sense:
             self._device_nodes[mac] = PlugwiseSense(
                 mac, address, self.msg_controller.send
             )
-        elif node_type == NODE_TYPE_SCAN:
+        elif node_type == NodeType.Scan:
             self._device_nodes[mac] = PlugwiseScan(
                 mac, address, self.msg_controller.send
             )
-        elif node_type == NODE_TYPE_CELSIUS_SED:
+        elif node_type == NodeType.CelsiusSED or NodeType.CelsiusNR:
             self._device_nodes[mac] = None
-        elif node_type == NODE_TYPE_CELSIUS_NR:
-            self._device_nodes[mac] = None
-        elif node_type == NODE_TYPE_STEALTH:
+        elif node_type == NodeType.Stealth:
             self._device_nodes[mac] = PlugwiseStealth(
                 mac, address, self.msg_controller.send
             )
@@ -486,7 +477,7 @@ class Stick:
                 mac,
                 str(message.seq_id),
             )
-            if message.node_type.value == NODE_TYPE_CIRCLE_PLUS:
+            if message.node_type.value == NodeType.CirclePlus:
                 self._circle_plus_discovered = True
                 self._append_node(mac, 0, message.node_type.value)
                 if mac in self._nodes_not_discovered:

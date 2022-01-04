@@ -66,16 +66,21 @@ WATCHDOG_DEAMON = 60
 # Automatically accept new join requests
 ACCEPT_JOIN_REQUESTS = False
 
-# Node types
-NODE_TYPE_STICK = 0
-NODE_TYPE_CIRCLE_PLUS = 1  # AME_NC
-NODE_TYPE_CIRCLE = 2  # AME_NR
-NODE_TYPE_SWITCH = 3  # AME_SEDSwitch
-NODE_TYPE_SENSE = 5  # AME_SEDSense
-NODE_TYPE_SCAN = 6  # AME_SEDScan
-NODE_TYPE_CELSIUS_SED = 7  # AME_CelsiusSED
-NODE_TYPE_CELSIUS_NR = 8  # AME_CelsiusNR
-NODE_TYPE_STEALTH = 9  # AME_STEALTH_ZE
+
+class NodeType(int, Enum):
+    """USB Node types"""
+
+    Stick = 0
+    CirclePlus = 1  # AME_NC
+    Circle = 2  # AME_NR
+    Switch = 3  # AME_SEDSwitch
+    Sense = 5  # AME_SEDSense
+    Scan = 6  # AME_SEDScan
+    CelsiusSED = 7  # AME_CelsiusSED
+    CelsiusNR = 8  # AME_CelsiusNR
+    Stealth = 9  # AME_STEALTH_ZE
+
+
 # 10 AME_MSPBOOTLOAD
 # 11 AME_STAR
 
