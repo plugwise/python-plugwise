@@ -398,9 +398,7 @@ class Stick:
         """Accept node to join Plugwise network by register mac in Circle+ memory"""
         self._callback_NodeJoin
         if validate_mac(mac):
-            self.msg_controller.send(
-                NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback
-            )
+            self.msg_controller.send(NodeAddRequest(bytes(mac, UTF8_DECODE), True))
             return True
         _LOGGER.warning("Invalid mac '%s' address, unable to join node manually.", mac)
         return False
@@ -410,7 +408,6 @@ class Stick:
         if validate_mac(mac):
             self.msg_controller.send(
                 NodeRemoveRequest(bytes(self.circle_plus_mac, UTF8_DECODE), mac),
-                callback,
             )
             return True
 
@@ -505,9 +502,10 @@ class Stick:
                     )
             self._pass_message_to_node(message)
 
-        if self._callback_NodeInfo.get(mac) is not None:
-            self._callback_NodeInfo()
-            self._callback_NodeInfo = None
+        if self._callback_NodeInfo.get(mac):
+            if self._callback_NodeInfo[mac] is not None:
+                self._callback_NodeInfo[mac]()
+            self._callback_NodeInfo[mac] = None
 
     def _process_NodeJoinAvailableResponse(self, message: NodeJoinAvailableResponse):
         """Process content of 'NodeJoinAvailableResponse' message."""
@@ -669,8 +667,6 @@ class Stick:
                     for mac in self._nodes_not_discovered:
                         self.msg_controller.send(
                             NodePingRequest(bytes(mac, UTF8_DECODE)),
-                            None,
-                            -1,
                             Priority.Low,
                         )
                     _discover_counter = 0
@@ -773,21 +769,20 @@ class Stick:
                 None,
                 None,
             )
+            self._callback_NodeInfo[mac] = callback
             self.msg_controller.send(
                 NodeInfoRequest(bytes(mac, UTF8_DECODE)),
             )
-            self._callback_NodeInfo[mac] = callback
         else:
             (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
             if not (firstrequest and lastrequest):
+                self._callback_NodeInfo[mac] = callback
                 self.msg_controller.send(
                     NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                    0,
                     Priority.Low,
                 )
-                self._callback_NodeInfo[mac] = callback
             elif force_discover:
+                self._callback_NodeInfo[mac] = callback
                 self.msg_controller.send(
                     NodeInfoRequest(bytes(mac, UTF8_DECODE)),
                 )
-                self._callback_NodeInfo[mac] = callback
