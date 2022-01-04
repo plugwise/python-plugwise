@@ -29,7 +29,7 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseScan(NodeSED):
     """provides interface to the Plugwise Scan nodes"""
 
-    def __init__(self, mac, address, message_sender):
+    def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
         self._features = (
             FEATURE_MOTION["id"],
