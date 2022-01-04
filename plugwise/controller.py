@@ -3,11 +3,9 @@ Message controller for USB-Stick
 
 The controller will:
 - handle the connection (connect/disconnect) to the USB-Stick
-- take care for message acknowledgements based on sequence id's
-- resend message requests when timeouts occurs
+- resend message requests when stick responds with timeouts
 - holds a sending queue and submit messages based on the message priority (high, medium, low)
 - passes received messages back to message processor (stick.py)
-- execution of callbacks after processing the response message
 
 """
 from __future__ import annotations
