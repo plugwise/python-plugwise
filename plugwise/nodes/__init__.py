@@ -17,9 +17,9 @@ from ..messages.requests import (
     Priority,
 )
 from ..messages.responses import (
+    NodeAckResponse,
     NodeFeaturesResponse,
     NodeInfoResponse,
-    NodeJoinAckResponse,
     NodePingResponse,
     NodeResponse,
     PlugwiseResponse,
@@ -207,12 +207,14 @@ class PlugwiseNode:
             self._last_update = message.timestamp
             if isinstance(message, NodePingResponse):
                 self._process_NodePingResponse(message)
+            elif isinstance(message, NodeResponse):
+                self._process_NodeResponse(message)
             elif isinstance(message, NodeInfoResponse):
                 self._process_NodeInfoResponse(message)
             elif isinstance(message, NodeFeaturesResponse):
                 self._process_features_response(message)
-            elif isinstance(message, NodeJoinAckResponse):
-                self._process_join_ack_response(message)
+            elif isinstance(message, NodeAckResponse):
+                self._process_NodeAckResponse(message)
             else:
                 _LOGGER.warning(
                     "Unmanaged %s received for %s",
@@ -246,13 +248,6 @@ class PlugwiseNode:
                         "Error while executing all callback : %s",
                         err,
                     )
-
-    def _process_join_ack_response(self, message):
-        """Process join acknowledge response message"""
-        _LOGGER.info(
-            "Node %s has (re)joined plugwise network",
-            self.mac,
-        )
 
     def _process_NodePingResponse(self, message: NodePingResponse) -> None:
         """Process content of 'NodePingResponse' message."""
@@ -301,3 +296,19 @@ class PlugwiseNode:
             "Node %s supports features %s", self.mac, str(message.features.value)
         )
         self._device_features = message.features.value
+
+    def _process_NodeAckResponse(self, message: NodeAckResponse) -> None:
+        """Process content of 'NodeAckResponse' message."""
+        _LOGGER.warning(
+            "Unmanaged NodeAckResponse (%s) received for %s",
+            str(message.ack_id),
+            self.mac,
+        )
+
+    def _process_NodeResponse(self, message: NodeResponse) -> None:
+        """Process content of 'NodeResponse' message."""
+        _LOGGER.warning(
+            "Unmanaged NodeResponse (%s) received for %s",
+            str(message.ack_id),
+            self.mac,
+        )
