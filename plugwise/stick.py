@@ -46,6 +46,7 @@ from .messages.responses import (
     PlugwiseResponse,
     StickInitResponse,
 )
+from .nodes import PlugwiseNode
 from .nodes.circle import PlugwiseCircle
 from .nodes.circle_plus import PlugwiseCirclePlus
 from .nodes.scan import PlugwiseScan
@@ -77,7 +78,7 @@ class Stick:
         self._auto_update_timer = 0
         self._circle_plus_discovered = False
         self._circle_plus_retries = 0
-        self._device_nodes = {}
+        self._device_nodes: dict[str, PlugwiseNode] = {}
         self._joined_nodes = 0
         self._mac_stick = None
         self._messages_for_undiscovered_nodes = []
@@ -339,7 +340,7 @@ class Stick:
             if self.scan_callback:
                 self.scan_callback()
 
-    def _append_node(self, mac, address, node_type):
+    def _append_node(self, mac: str, address: int, node_type):
         """Add node to list of controllable nodes"""
         _LOGGER.debug(
             "Add new node type (%s) with mac %s",
