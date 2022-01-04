@@ -65,7 +65,7 @@ class PlugwiseScan(NodeSED):
         else:
             super().message_for_node(message)
 
-    def _process_NodeAckResponse(self, message: NodeAckResponse):
+    def _process_NodeAckResponse(self, message: NodeAckResponse) -> None:
         """Process content of 'NodeAckResponse' message."""
         if message.ack_id == NodeAckResponseType.ScanConfigAccepted:
             self._motion_reset_timer = self._new_motion_reset_timer

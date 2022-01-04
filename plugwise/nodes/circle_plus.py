@@ -1,5 +1,6 @@
 """Plugwise Circle+ node class."""
 from __future__ import annotations
+
 from datetime import datetime, timezone
 import logging
 
@@ -58,7 +59,6 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                 self._callback_RealTimeClockAccepted()
             self._callback_RealTimeClockAccepted = None
             self._callback_RealTimeClockFailed = None
-
         elif message.ack_id == NodeResponseType.RealTimeClockFailed:
             if self._callback_RealTimeClockFailed is not None:
                 self._callback_RealTimeClockFailed()
