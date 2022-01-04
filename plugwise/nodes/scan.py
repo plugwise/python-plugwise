@@ -4,15 +4,12 @@ from __future__ import annotations
 import logging
 
 from ..constants import (
-    FEATURE_MOTION,
-    FEATURE_PING,
-    FEATURE_RSSI_IN,
-    FEATURE_RSSI_OUT,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
     SCAN_SENSITIVITY_HIGH,
     SCAN_SENSITIVITY_MEDIUM,
     SCAN_SENSITIVITY_OFF,
+    USB,
 )
 from ..messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
 from ..messages.responses import (
@@ -23,6 +20,12 @@ from ..messages.responses import (
 )
 from ..nodes.sed import NodeSED
 
+_FEATURES = (
+    USB.motion,
+    USB.ping,
+    USB.rssi_in,
+    USB.rssi_out,
+)
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -31,12 +34,7 @@ class PlugwiseScan(NodeSED):
 
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
-        self._features = (
-            FEATURE_MOTION["id"],
-            FEATURE_PING["id"],
-            FEATURE_RSSI_IN["id"],
-            FEATURE_RSSI_OUT["id"],
-        )
+        self._features = _FEATURES
         self._motion_state = False
         self._motion_reset_timer = None
         self._daylight_mode = None
@@ -118,12 +116,12 @@ class PlugwiseScan(NodeSED):
             # turn off => clear motion
             if self._motion_state:
                 self._motion_state = False
-                self.do_callback(FEATURE_MOTION["id"])
+                self.do_callback(USB.motion)
         elif message.power_state.value == 1:
             # turn on => motion
             if not self._motion_state:
                 self._motion_state = True
-                self.do_callback(FEATURE_MOTION["id"])
+                self.do_callback(USB.motion)
         else:
             _LOGGER.warning(
                 "Unknown power_state (%s) received from %s",

@@ -8,14 +8,12 @@ from __future__ import annotations
 import logging
 
 from ..constants import (
-    FEATURE_PING,
-    FEATURE_RSSI_IN,
-    FEATURE_RSSI_OUT,
     SED_CLOCK_INTERVAL,
     SED_CLOCK_SYNC,
     SED_MAINTENANCE_INTERVAL,
     SED_SLEEP_FOR,
     SED_STAY_ACTIVE,
+    USB,
 )
 from ..messages.requests import (
     NodeInfoRequest,
@@ -149,9 +147,9 @@ class NodeSED(PlugwiseNode):
         """Ping node."""
         if (
             ignore_sensor
-            or self._callbacks.get(FEATURE_PING["id"])
-            or self._callbacks.get(FEATURE_RSSI_IN["id"])
-            or self._callbacks.get(FEATURE_RSSI_OUT["id"])
+            or self._callbacks.get(USB.ping)
+            or self._callbacks.get(USB.rssi_in)
+            or self._callbacks.get(USB.rssi_out)
             or callback is not None
         ):
             self._callback_NodePing = callback
