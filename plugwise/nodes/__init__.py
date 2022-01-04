@@ -169,10 +169,7 @@ class PlugwiseNode:
     def _request_info(self, callback: callable | None = None) -> None:
         """Request info from node."""
         self._callback_NodeInfo = callback
-        self.message_sender(
-            NodeInfoRequest(self._mac),
-            Priority.Low,
-        )
+        self.message_sender(NodeInfoRequest(self._mac), Priority.Low)
 
     def _request_features(self, callback: callable | None = None) -> None:
         """Request supported features for this node."""
@@ -259,7 +256,6 @@ class PlugwiseNode:
         if self._ping != message.ping_ms.value:
             self._ping = message.ping_ms.value
             self.do_callback(FEATURE_PING["id"])
-
         if self._callback_NodePing is not None:
             self._callback_NodePing()
             self._callback_NodePing = None
