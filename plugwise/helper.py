@@ -467,14 +467,15 @@ class SmileHelper:
             return appl
 
         if appl.pwclass == "heater_central":
-            # Remove heater_central when no active device present
+            # Provide info for On-Off device
             if self._on_off_device:
                 appl.name = "On_Off"
                 appl.v_name = None
                 appl.model = "Unknown"
 
-            return appl
+                return appl
 
+            # Remove heater_central when no active device present
             if not self._ot_device and not self._on_off_device:
                 return None
 
