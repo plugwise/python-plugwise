@@ -4,7 +4,13 @@ from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 
-from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER, UTF8_DECODE
+from ..constants import (
+    DAY_IN_MINUTES,
+    HOUR_IN_MINUTES,
+    MESSAGE_FOOTER,
+    MESSAGE_HEADER,
+    UTF8_DECODE,
+)
 from ..messages import PlugwiseMessage
 from ..util import (
     DateTime,
@@ -253,7 +259,9 @@ class CircleClockSetRequest(PlugwiseRequest):
     def __init__(self, mac, dt):
         super().__init__(mac)
         passed_days = dt.day - 1
-        month_minutes = (passed_days * 24 * 60) + (dt.hour * 60) + dt.minute
+        month_minutes = (
+            (passed_days * DAY_IN_MINUTES) + (dt.hour * HOUR_IN_MINUTES) + dt.minute
+        )
         this_date = DateTime(dt.year, dt.month, month_minutes)
         this_time = Time(dt.hour, dt.minute, dt.second)
         day_of_week = Int(dt.weekday(), 2)
