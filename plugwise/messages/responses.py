@@ -1,5 +1,5 @@
 """All known response messages to be received from plugwise devices."""
-from datetime import datetime
+from datetime import datetime, timezone
 
 from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER, MESSAGE_LARGE, MESSAGE_SMALL
 from ..exceptions import (
@@ -43,7 +43,7 @@ class PlugwiseResponse(PlugwiseMessage):
             self.len_correction = 0
 
     def deserialize(self, response):
-        self.timestamp = datetime.now()
+        self.timestamp = datetime.utcnow().replace(tzinfo=timezone.utc)
         if response[:4] != MESSAGE_HEADER:
             raise InvalidMessageHeader(
                 f"Invalid message header {str(response[:4])} for {self.__class__.__name__}"
