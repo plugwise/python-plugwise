@@ -469,6 +469,7 @@ class SmileHelper:
         if appl.pwclass == "heater_central":
             # Provide info for On-Off device
             if self._on_off_device:
+                self._heater_id = appliance.attrib["id"]
                 appl.name = "On_Off"
                 appl.v_name = None
                 appl.model = "Unknown"
