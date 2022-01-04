@@ -26,7 +26,7 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseCirclePlus(PlugwiseCircle):
     """provides interface to the Plugwise Circle+ nodes"""
 
-    def __init__(self, mac, address, message_sender):
+    def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
         self._plugwise_nodes = {}
         self._scan_response = {}

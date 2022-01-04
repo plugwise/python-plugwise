@@ -47,7 +47,7 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseCircle(PlugwiseNode):
     """provides interface to the Plugwise Circle nodes and base class for Circle+ nodes"""
 
-    def __init__(self, mac, address, message_sender):
+    def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
         self._features = (
             FEATURE_ENERGY_CONSUMPTION_TODAY["id"],

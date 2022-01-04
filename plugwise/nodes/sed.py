@@ -40,7 +40,7 @@ _LOGGER = logging.getLogger(__name__)
 class NodeSED(PlugwiseNode):
     """provides base class for SED based nodes like Scan, Sense & Switch"""
 
-    def __init__(self, mac, address, message_sender):
+    def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
         self._sed_requests = {}
         self.maintenance_interval = SED_MAINTENANCE_INTERVAL

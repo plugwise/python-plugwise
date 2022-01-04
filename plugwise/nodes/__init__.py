@@ -34,7 +34,7 @@ _LOGGER = logging.getLogger(__name__)
 class PlugwiseNode:
     """Base class for a Plugwise node."""
 
-    def __init__(self, mac, address, message_sender):
+    def __init__(self, mac: str, address: int, message_sender: callable):
         mac = mac.upper()
         if not validate_mac(mac):
             _LOGGER.warning(
