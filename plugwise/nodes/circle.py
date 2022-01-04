@@ -211,10 +211,7 @@ class PlugwiseCircle(PlugwiseNode):
     def _request_calibration(self, callback: callable | None = None) -> None:
         """Request calibration info"""
         self._callback_CircleCalibration = callback
-        self.message_sender(
-            CircleCalibrationRequest(self._mac),
-            Priority.High,
-        )
+        self.message_sender(CircleCalibrationRequest(self._mac))
 
     def _request_switch(
         self,
@@ -228,18 +225,15 @@ class PlugwiseCircle(PlugwiseNode):
         else:
             self._callback_RelaySwitchedOff = success_callback
         self._callback_RelaySwitchFailed = failed_callback
-        self.message_sender(
-            CircleSwitchRelayRequest(self._mac, state),
-            Priority.High,
-        )
+        _relay_request = CircleSwitchRelayRequest(self._mac, state)
+        _relay_request.priority = Priority.High
+        self.message_sender(_relay_request)
 
     def request_power_update(self, callback: callable | None = None) -> None:
         """Request power usage and update energy counters"""
         if self._available:
             self._callback_CirclePowerUsage = callback
-            self.message_sender(
-                CirclePowerUsageRequest(self._mac),
-            )
+            self.message_sender(CirclePowerUsageRequest(self._mac))
             if len(self._energy_history) > 0:
                 # Request new energy counters if last one is more than one hour ago
                 if self._energy_last_collected_timestamp < datetime.utcnow().replace(
@@ -655,25 +649,21 @@ class PlugwiseCircle(PlugwiseNode):
                     self._request_info(self.request_energy_counters)
                 else:
                     # Request new energy counters
-                    self.message_sender(
-                        CircleEnergyCountersRequest(self._mac, log_address),
-                        Priority.Low,
-                    )
+                    _log_request = CircleEnergyCountersRequest(self._mac, log_address)
+                    _log_request.priority = Priority.Low
+                    self.message_sender(_log_request)
             else:
                 # Collect energy counters of today and yesterday
                 # Each request contains will return 4 hours, except last request
 
                 # TODO: validate range of log_addresses
                 self._energy_history_collecting = True
-                for req_log_address in range(log_address - 13, log_address):
-                    self.message_sender(
-                        CircleEnergyCountersRequest(self._mac, req_log_address),
-                        Priority.Low,
+                for req_log_address in range(log_address - 13, log_address + 1):
+                    _log_request = CircleEnergyCountersRequest(
+                        self._mac, req_log_address
                     )
-                self.message_sender(
-                    CircleEnergyCountersRequest(self._mac, log_address),
-                    Priority.Low,
-                )
+                    _log_request.priority = Priority.Low
+                    self.message_sender(_log_request)
 
     def _process_CircleEnergyCountersResponse(
         self, message: CircleEnergyCountersResponse
@@ -810,18 +800,16 @@ class PlugwiseCircle(PlugwiseNode):
     def get_clock(self, callback: callable | None = None) -> None:
         """get current datetime of internal clock of Circle."""
         self._callback_CircleClockResponse = callback
-        self.message_sender(
-            CircleClockGetRequest(self._mac),
-            0,
-            Priority.Low,
-        )
+        _clock_request = CircleClockGetRequest(self._mac)
+        _clock_request.priority = Priority.Low
+        self.message_sender(_clock_request)
 
     def set_clock(self, callback: callable | None = None) -> None:
         """set internal clock of CirclePlus."""
         self._callback_ClockAccepted = callback
-        self.message_sender(
-            CircleClockSetRequest(self._mac, datetime.utcnow()),
-        )
+        _clock_request = CircleClockSetRequest(self._mac, datetime.utcnow())
+        _clock_request.priority = Priority.High
+        self.message_sender(_clock_request)
 
     def sync_clock(self, max_drift=0):
         """Resync clock of node if time has drifted more than MAX_TIME_DRIFT"""

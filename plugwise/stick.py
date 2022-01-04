@@ -665,10 +665,9 @@ class Stick:
                 # Do a single ping for undiscovered nodes once per 10 update cycles
                 if _discover_counter == 10:
                     for mac in self._nodes_not_discovered:
-                        self.msg_controller.send(
-                            NodePingRequest(bytes(mac, UTF8_DECODE)),
-                            Priority.Low,
-                        )
+                        _ping_request = NodePingRequest(bytes(mac, UTF8_DECODE))
+                        _ping_request.priority = Priority.Low
+                        self.msg_controller.send(_ping_request)
                     _discover_counter = 0
                 else:
                     _discover_counter += 1
@@ -777,10 +776,9 @@ class Stick:
             (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
             if not (firstrequest and lastrequest):
                 self._callback_NodeInfo[mac] = callback
-                self.msg_controller.send(
-                    NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                    Priority.Low,
-                )
+                _node_request = NodeInfoRequest(bytes(mac, UTF8_DECODE))
+                _node_request.priority = Priority.Low
+                self.msg_controller.send(_node_request)
             elif force_discover:
                 self._callback_NodeInfo[mac] = callback
                 self.msg_controller.send(

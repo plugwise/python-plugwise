@@ -169,7 +169,9 @@ class PlugwiseNode:
     def _request_info(self, callback: callable | None = None) -> None:
         """Request info from node."""
         self._callback_NodeInfo = callback
-        self.message_sender(NodeInfoRequest(self._mac), Priority.Low)
+        _node_request = NodeInfoRequest(self._mac)
+        _node_request.priority = Priority.Low
+        self.message_sender(_node_request)
 
     def _request_features(self, callback: callable | None = None) -> None:
         """Request supported features for this node."""

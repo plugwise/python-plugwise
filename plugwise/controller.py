@@ -123,26 +123,25 @@ class StickMessageController:
     def send(
         self,
         request: PlugwiseRequest,
-        priority: Priority = Priority.Medium,
-        retry: int = MESSAGE_RETRY,
     ):
         """Queue request message to be sent into Plugwise Zigbee network."""
         _LOGGER.info(
             "Send queue = %s, Add %s, priority=%s, retry=%s",
             str(self._send_message_queue.qsize()),
             request.__class__.__name__,
-            str(priority),
-            str(retry),
+            str(request.priority),
+            str(request.retry_counter),
         )
         _utc = datetime.utcnow().replace(tzinfo=timezone.utc)
-        self._send_message_queue.put((priority, _utc, retry, request))
+        _retry = MESSAGE_RETRY - request.retry_counter + 1
+        self._send_message_queue.put((request.priority, _retry, _utc, request))
 
     def _send_message_loop(self):
         """Daemon to send messages waiting in queue."""
-        _max_wait = SLEEP_TIME * 10
+        _max_wait = SLEEP_TIME * 15
         while self._send_message_thread_state:
             try:
-                _priority, _utc, _retry, _request = self._send_message_queue.get(
+                _priority, _retry, _utc, _request = self._send_message_queue.get(
                     block=True, timeout=1
                 )
             except Empty:
@@ -161,6 +160,7 @@ class StickMessageController:
                 # Send request
                 self.connection.send(_request)
                 _request.send = datetime.utcnow().replace(tzinfo=timezone.utc)
+                self._stick_request.retry_counter += 1
 
                 # Wait for response
                 while timeout_counter < _max_wait:
@@ -173,16 +173,17 @@ class StickMessageController:
                     _retry -= 1
                     if _retry < 1:
                         _LOGGER.error(
-                            "No response for %s after 3 retries. Drop request!",
-                            _request.__class__.__name__,
-                        )
-                    else:
-                        _LOGGER.warning(
-                            "No response for %s after %s retry. Retry request!",
+                            "Stick does not respond to %s after %s retries. Drop request",
                             _request.__class__.__name__,
                             str(MESSAGE_RETRY - _retry + 1),
                         )
-                        self.send(_request, _priority, _retry)
+                    else:
+                        _LOGGER.warning(
+                            "Stick does not respond to %s after %s retries. Retry request",
+                            _request.__class__.__name__,
+                            str(MESSAGE_RETRY - _retry + 1),
+                        )
+                        self.send(_request)
                 else:
                     _LOGGER.info(
                         "Send queue = %s",
@@ -202,7 +203,7 @@ class StickMessageController:
                 self._log_status_of_request(message.seq_id)
 
         else:
-            # Forward message to Stick
+            # Forward message to Stick class
             if message.seq_id in self._open_requests:
                 if isinstance(self._open_requests[message.seq_id].mac, bytes):
                     _target = " to " + self._open_requests[message.seq_id].mac.decode(
@@ -242,11 +243,13 @@ class StickMessageController:
             )
         elif self._open_requests[seq_id].stick_state == StickResponseType.timeout:
             _LOGGER.warning(
-                "Stick 'time out' received for %s%s with seq_id=%s",
+                "Stick 'time out' received for %s%s with seq_id=%s, retry request",
                 self._open_requests[seq_id].__class__.__name__,
                 _target,
                 str(seq_id),
             )
+            self._open_requests[seq_id].stick_state = None
+            self.send(self._open_requests[seq_id])
         elif self._open_requests[seq_id].stick_state == StickResponseType.failed:
             _LOGGER.error(
                 "Stick failed received for %s%s with seq_id=%s",
@@ -278,14 +281,27 @@ class StickMessageController:
                         )
                     else:
                         _target = ""
-                    _LOGGER.warning(
-                        "_receive_timeout_loop found old %s%s with seq_id=%s, send=%s, stick_response=%s",
-                        self._open_requests[seq_id].__class__.__name__,
-                        _target,
-                        str(seq_id),
-                        str(self._open_requests[seq_id].send),
-                        str(self._open_requests[seq_id].stick_response),
-                    )
+                    if self._open_requests[seq_id].retry_counter >= MESSAGE_RETRY:
+                        _LOGGER.warning(
+                            "No response for %s%s => drop request (seq_id=%s, retry=%s, last try=%s, last stick_response=%s)",
+                            self._open_requests[seq_id].__class__.__name__,
+                            _target,
+                            str(seq_id),
+                            str(self._open_requests[seq_id].retry_counter),
+                            str(self._open_requests[seq_id].send),
+                            str(self._open_requests[seq_id].stick_response),
+                        )
+                    else:
+                        _LOGGER.warning(
+                            "No response for %s%s => retry request (seq_id=%s, retry=%s, last try=%s, last stick_response=%s)",
+                            self._open_requests[seq_id].__class__.__name__,
+                            _target,
+                            str(seq_id),
+                            str(self._open_requests[seq_id].retry_counter),
+                            str(self._open_requests[seq_id].send),
+                            str(self._open_requests[seq_id].stick_response),
+                        )
+                        self.send(self._open_requests[seq_id])
                     del self._open_requests[seq_id]
             receive_timeout_checker = 0
             while (
