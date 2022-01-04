@@ -194,9 +194,9 @@ class PlugwiseNode:
                 self._request_info()
             self._last_update = message.timestamp
             if isinstance(message, NodePingResponse):
-                self._process_ping_response(message)
+                self._process_NodePingResponse(message)
             elif isinstance(message, NodeInfoResponse):
-                self._process_info_response(message)
+                self._process_NodeInfoResponse(message)
             elif isinstance(message, NodeFeaturesResponse):
                 self._process_features_response(message)
             elif isinstance(message, NodeJoinAckResponse):
@@ -242,8 +242,8 @@ class PlugwiseNode:
             self.mac,
         )
 
-    def _process_ping_response(self, message):
-        """Process ping response message."""
+    def _process_NodePingResponse(self, message: NodePingResponse) -> None:
+        """Process content of 'NodePingResponse' message."""
         if self._rssi_in != message.rssi_in.value:
             self._rssi_in = message.rssi_in.value
             self.do_callback(FEATURE_RSSI_IN["id"])
@@ -254,13 +254,8 @@ class PlugwiseNode:
             self._ping = message.ping_ms.value
             self.do_callback(FEATURE_PING["id"])
 
-    def _process_info_response(self, message):
-        """Process info response message."""
-        _LOGGER.debug(
-            "Response info message for node %s, last log address %s",
-            self.mac,
-            str(message.last_logaddr.value),
-        )
+    def _process_NodeInfoResponse(self, message: NodeInfoResponse) -> None:
+        """Process content of 'NodeInfoResponse' message."""
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
                 self._relay_state = True
