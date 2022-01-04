@@ -1,4 +1,6 @@
-"""Plugwise Sense node object."""
+"""Plugwise Sense node class."""
+from __future__ import annotations
+
 import logging
 
 from ..constants import (
