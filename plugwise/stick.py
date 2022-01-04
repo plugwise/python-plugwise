@@ -44,13 +44,13 @@ from .messages.requests import (
     StickInitRequest,
 )
 from .messages.responses import (
-    NodeAckResponse,
     NodeInfoResponse,
     NodeJoinAvailableResponse,
     NodeRemoveResponse,
     NodeResponse,
-    StickInitResponse,
+    NodeResponseType,
     PlugwiseResponse,
+    StickInitResponse,
 )
 from .nodes.circle import PlugwiseCircle
 from .nodes.circle_plus import PlugwiseCirclePlus
@@ -409,23 +409,33 @@ class Stick:
 
     def message_processor(self, message: PlugwiseResponse):
         """Received message from Plugwise network."""
-        mac = message.mac.decode(UTF8_DECODE)
-        if isinstance(message, (NodeResponse, NodeAckResponse)):
-            if message.ack_id in STATE_ACTIONS:
-                self._pass_message_to_node(message, mac)
+        if isinstance(message, NodeResponse):
+            self._process_NodeResponse(message)
         elif isinstance(message, NodeInfoResponse):
-            self._process_node_info_response(message, mac)
+            self._process_NodeInfoResponse(message)
         elif isinstance(message, StickInitResponse):
-            self._process_stick_init_response(message)
+            self._process_StickInitResponse(message)
         elif isinstance(message, NodeJoinAvailableResponse):
-            self._process_node_join_request(message, mac)
+            self._process_NodeJoinAvailableResponse(message)
         elif isinstance(message, NodeRemoveResponse):
             self._process_node_remove(message)
         else:
-            self._pass_message_to_node(message, mac)
+            self._pass_message_to_node(message)
 
-    def _process_stick_init_response(self, stick_init_response: StickInitResponse):
-        """Process StickInitResponse message."""
+    def _process_NodeResponse(self, message: NodeResponse) -> None:
+        """Process content of 'NodeResponse' message."""
+
+        if message.ack_id == NodeResponseType.JoinAccepted:
+            # Discovery newly accepted node
+            self.discover_node(
+                message.mac.decode.decode(UTF8_DECODE), self._discover_after_scan
+            )
+        self._pass_message_to_node(message)
+
+    def _process_StickInitResponse(
+        self, stick_init_response: StickInitResponse
+    ) -> None:
+        """Process content of 'StickInitResponse' message."""
         self._mac_stick = stick_init_response.mac
         if stick_init_response.network_is_online.value == 1:
             self._network_online = True
@@ -445,17 +455,18 @@ class Stick:
             self._watchdog_thread.daemon = True
             self._watchdog_thread.start()
 
-    def _process_node_info_response(self, node_info_response, mac):
-        """Process NodeInfoResponse message."""
-        if not self._pass_message_to_node(node_info_response, mac, False):
+    def _process_NodeInfoResponse(self, message: NodeInfoResponse):
+        """Process content of 'NodeInfoResponse' message."""
+        mac = message.mac.decode(UTF8_DECODE)
+        if not self._pass_message_to_node(message, False):
             _LOGGER.debug(
                 "Received NodeInfoResponse from currently unknown node with mac %s with sequence id %s",
                 mac,
-                str(node_info_response.seq_id),
+                str(message.seq_id),
             )
-            if node_info_response.node_type.value == NODE_TYPE_CIRCLE_PLUS:
+            if message.node_type.value == NODE_TYPE_CIRCLE_PLUS:
                 self._circle_plus_discovered = True
-                self._append_node(mac, 0, node_info_response.node_type.value)
+                self._append_node(mac, 0, message.node_type.value)
                 if mac in self._nodes_not_discovered:
                     del self._nodes_not_discovered[mac]
             else:
@@ -467,15 +478,13 @@ class Stick:
                     self._append_node(
                         mac,
                         self._nodes_to_discover[mac],
-                        node_info_response.node_type.value,
+                        message.node_type.value,
                     )
-            self._pass_message_to_node(node_info_response, mac)
+            self._pass_message_to_node(message)
 
-    def _process_node_join_request(self, node_join_request, mac):
-        """
-        Process NodeJoinAvailableResponse message from a node that
-        is not part of a plugwise network yet and wants to join
-        """
+    def _process_NodeJoinAvailableResponse(self, message: NodeJoinAvailableResponse):
+        """Process content of 'NodeJoinAvailableResponse' message."""
+        mac = message.mac.decode(UTF8_DECODE)
         if self._device_nodes.get(mac):
             _LOGGER.debug(
                 "Received node available message for node %s which is already joined.",
@@ -521,12 +530,13 @@ class Stick:
                 unjoined_mac,
             )
 
-    def _pass_message_to_node(self, message, mac, discover=True):
+    def _pass_message_to_node(self, message: PlugwiseResponse, discover=True):
         """
         Pass message to node class to take action on message
 
         Returns True if message has passed onto existing known node
         """
+        mac = message.mac.decode(UTF8_DECODE)
         if self._device_nodes.get(mac):
             self._device_nodes[mac].message_for_node(message)
             return True
