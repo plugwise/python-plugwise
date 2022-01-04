@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import logging
 
-from ..constants import MAX_TIME_DRIFT, UTF8_DECODE
+from ..constants import DAY_IN_SECONDS, MAX_TIME_DRIFT, UTF8_DECODE
 from ..messages.requests import (
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
@@ -126,19 +126,18 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         self, message: CirclePlusRealTimeClockResponse
     ) -> None:
         """Process content of 'CirclePlusRealTimeClockResponse' message."""
-        realtime_clock_dt = datetime(
-            datetime.utcnow().year,
-            datetime.utcnow().month,
-            datetime.utcnow().day,
-            message.time.value.hour,
-            message.time.value.minute,
-            message.time.value.second,
-        ).replace(tzinfo=timezone.utc)
-        realtime_clock_offset = message.timestamp.replace(microsecond=0) - (
-            realtime_clock_dt + self.timezone_delta
+        _dt_of_circle_plus = datetime.utcnow().replace(
+            hour=message.time.value.hour,
+            minute=message.time.value.minute,
+            second=message.time.value.second,
+            microsecond=0,
+            tzinfo=timezone.utc,
+        )
+        realtime_clock_offset = (
+            message.timestamp.replace(microsecond=0) - _dt_of_circle_plus
         )
         if realtime_clock_offset.days == -1:
-            self._realtime_clock_offset = realtime_clock_offset.seconds - 86400
+            self._realtime_clock_offset = realtime_clock_offset.seconds - DAY_IN_SECONDS
         else:
             self._realtime_clock_offset = realtime_clock_offset.seconds
         _LOGGER.debug(

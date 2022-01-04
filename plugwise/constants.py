@@ -30,6 +30,7 @@ VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
 
 ### Stick constants ###
 
+DAY_IN_SECONDS = 86400
 UTF8_DECODE = "utf-8"
 
 # Serial connection settings for plugwise USB stick
