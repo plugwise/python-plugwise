@@ -81,6 +81,18 @@ class PlugwiseNode:
         return self._battery_powered
 
     @property
+    def features(self) -> tuple:
+        """Return the abstracted features supported by this plugwise device."""
+        return self._features
+
+    @property
+    def firmware_version(self) -> str:
+        """Return firmware version."""
+        if self._firmware_version is not None:
+            return str(self._firmware_version)
+        return "Unknown"
+
+    @property
     def hardware_model(self) -> str:
         """Return hardware model."""
         if self._hardware_version:
@@ -92,18 +104,6 @@ class PlugwiseNode:
         """Return hardware version."""
         if self._hardware_version is not None:
             return self._hardware_version
-        return "Unknown"
-
-    @property
-    def features(self) -> tuple:
-        """Return the abstracted features supported by this plugwise device."""
-        return self._features
-
-    @property
-    def firmware_version(self) -> str:
-        """Return firmware version."""
-        if self._firmware_version is not None:
-            return str(self._firmware_version)
         return "Unknown"
 
     @property
