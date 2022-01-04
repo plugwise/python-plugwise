@@ -23,8 +23,15 @@ from ..constants import (
     SED_STAY_ACTIVE,
     SLEEP_SET,
 )
-from ..messages.requests import NodeInfoRequest, NodePingRequest, NodeSleepConfigRequest
-from ..messages.responses import NodeResponse, NodeAwakeResponse
+from ..messages.requests import (
+    NodeInfoRequest,
+    NodePingRequest,
+    NodeSleepConfigRequest,
+from ..messages.responses import (
+    NodeAwakeResponse,
+    NodeResponse,
+    PlugwiseResponse,
+)
 from ..nodes import PlugwiseNode
 
 _LOGGER = logging.getLogger(__name__)
@@ -41,10 +48,9 @@ class NodeSED(PlugwiseNode):
         self._wake_up_interval = None
         self._battery_powered = True
 
-    def message_for_sed(self, message):
-        """
-        Process received message
-        """
+    def message_for_node(self, message: PlugwiseResponse) -> None:
+        """Process received messages for NodeSED class."""
+        self._last_update = message.timestamp
         if isinstance(message, NodeAwakeResponse):
             self._process_NodeAwakeResponse(message)
         elif isinstance(message, NodeResponse):
@@ -55,18 +61,8 @@ class NodeSED(PlugwiseNode):
                 self.message_for_switch(message)
                 self.message_for_sense(message)
         else:
-            self.message_for_scan(message)
-            self.message_for_switch(message)
-            self.message_for_sense(message)
+            super().message_for_node(message)
 
-    def message_for_scan(self, message):
-        """Pass messages to PlugwiseScan class"""
-
-    def message_for_switch(self, message):
-        """Pass messages to PlugwiseSwitch class"""
-
-    def message_for_sense(self, message):
-        """Pass messages to PlugwiseSense class"""
 
     def _process_NodeAwakeResponse(self, message: NodeAwakeResponse) -> None:
         """Process content of 'NodeAwakeResponse' message."""

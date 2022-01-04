@@ -2,7 +2,7 @@
 import logging
 
 from ..constants import FEATURE_PING, FEATURE_RSSI_IN, FEATURE_RSSI_OUT, FEATURE_SWITCH
-from ..messages.responses import NodeSwitchGroupResponse
+from ..messages.responses import NodeSwitchGroupResponse, PlugwiseResponse
 from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
@@ -26,18 +26,13 @@ class PlugwiseSwitch(NodeSED):
         """Return the last known switch state"""
         return self._switch_state
 
-    def message_for_switch(self, message):
-        """
-        Process received message
-        """
+    def message_for_node(self, message: PlugwiseResponse) -> None:
+        """Process received messages for PlugwiseSense class."""
+        self._last_update = message.timestamp
         if isinstance(message, NodeSwitchGroupResponse):
-            _LOGGER.debug(
-                "Switch group request %s received from %s for group id %s",
-                str(message.power_state),
-                self.mac,
-                str(message.group),
-            )
             self._process_NodeSwitchGroupResponse(message)
+        else:
+            super().message_for_node(message)
 
     def _process_NodeSwitchGroupResponse(
         self, message: NodeSwitchGroupResponse

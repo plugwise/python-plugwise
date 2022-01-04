@@ -7,6 +7,7 @@ from ..messages.requests import (
     CirclePlusRealTimeClockGetRequest,
     CirclePlusRealTimeClockSetRequest,
     CirclePlusScanRequest,
+from ..messages.responses import (
 )
 from ..messages.responses import CirclePlusRealTimeClockResponse, CirclePlusScanResponse
 from ..nodes.circle import PlugwiseCircle
@@ -25,20 +26,15 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         self._realtime_clock_offset = None
         self.get_real_time_clock(self.sync_realtime_clock)
 
-    def message_for_circle_plus(self, message):
-        """
-        Process received message
-        """
+    def message_for_node(self, message: PlugwiseResponse) -> None:
+        """Process received messages for PlugwiseCirclePlus class."""
+        self._last_update = message.timestamp
         if isinstance(message, CirclePlusRealTimeClockResponse):
             self._process_CirclePlusRealTimeClockResponse(message)
         elif isinstance(message, CirclePlusScanResponse):
             self._process_CirclePlusScanResponse(message)
         else:
-            _LOGGER.waning(
-                "Unsupported message type '%s' received from circle with mac %s",
-                str(message.__class__.__name__),
-                self.mac,
-            )
+            super().message_for_node(message)
 
     def scan_for_nodes(self, callback=None):
         """Scan for registered nodes."""

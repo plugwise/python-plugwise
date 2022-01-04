@@ -178,9 +178,8 @@ class PlugwiseNode:
                 callback,
             )
 
-    def message_for_node(self, message):
-        """Process received message."""
-        assert isinstance(message, PlugwiseResponse)
+    def message_for_node(self, message: PlugwiseResponse) -> None:
+        """Process received messages for base PlugwiseNode class."""
         if message.mac == self._mac:
             if message.timestamp is not None:
                 _LOGGER.debug(
@@ -193,6 +192,7 @@ class PlugwiseNode:
             if not self._available:
                 self.available = True
                 self._request_info()
+            self._last_update = message.timestamp
             if isinstance(message, NodePingResponse):
                 self._process_ping_response(message)
             elif isinstance(message, NodeInfoResponse):
@@ -202,20 +202,11 @@ class PlugwiseNode:
             elif isinstance(message, NodeJoinAckResponse):
                 self._process_join_ack_response(message)
             else:
-                self.message_for_circle(message)
-                self.message_for_sed(message)
-        else:
-            _LOGGER.debug(
-                "Skip message, mac of node (%s) != mac at message (%s)",
-                message.mac.decode(UTF8_DECODE),
-                self.mac,
-            )
-
-    def message_for_circle(self, message):
-        """Pass messages to PlugwiseCircle class"""
-
-    def message_for_sed(self, message):
-        """Pass messages to NodeSED class"""
+                _LOGGER.warning(
+                    "Unmanaged %s received for %s",
+                    message.__class__.__name__,
+                    self.mac,
+                )
 
     def subscribe_callback(self, callback, sensor) -> bool:
         """Subscribe callback to execute when state change happens."""

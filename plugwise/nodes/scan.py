@@ -14,7 +14,11 @@ from ..constants import (
     SCAN_SENSITIVITY_OFF,
 )
 from ..messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
-from ..messages.responses import NodeAckResponse, NodeSwitchGroupResponse
+from ..messages.responses import (
+    NodeAckResponse,
+    NodeSwitchGroupResponse,
+    PlugwiseResponse,
+)
 from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
@@ -44,10 +48,9 @@ class PlugwiseScan(NodeSED):
         """Return the last known motion state"""
         return self._motion_state
 
-    def message_for_scan(self, message):
-        """
-        Process received message
-        """
+    def message_for_node(self, message: PlugwiseResponse) -> None:
+        """Process received messages for PlugwiseScan class."""
+        self._last_update = message.timestamp
         if isinstance(message, NodeSwitchGroupResponse):
             _LOGGER.debug(
                 "Switch group %s to state %s received from %s",
@@ -59,11 +62,7 @@ class PlugwiseScan(NodeSED):
         elif isinstance(message, NodeAckResponse):
             self._process_NodeAckResponse(message)
         else:
-            _LOGGER.info(
-                "Unsupported message %s received from %s",
-                message.__class__.__name__,
-                self.mac,
-            )
+            super().message_for_node(message)
 
     def _process_NodeAckResponse(self, message: NodeAckResponse):
         """Process content of 'NodeAckResponse' message."""
