@@ -187,10 +187,7 @@ class PlugwiseNode:
         """Ping node."""
         if ignore_sensor or FEATURE_PING["id"] in self._callbacks:
             self._callback_NodePing = callback
-            self.message_sender(
-                NodePingRequest(self._mac),
-                callback,
-            )
+            self.message_sender(NodePingRequest(self._mac))
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for base PlugwiseNode class."""

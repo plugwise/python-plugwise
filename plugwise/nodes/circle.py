@@ -662,8 +662,6 @@ class PlugwiseCircle(PlugwiseNode):
                     # Request new energy counters
                     self.message_sender(
                         CircleEnergyCountersRequest(self._mac, log_address),
-                        None,
-                        0,
                         Priority.Low,
                     )
             else:
@@ -675,14 +673,10 @@ class PlugwiseCircle(PlugwiseNode):
                 for req_log_address in range(log_address - 13, log_address):
                     self.message_sender(
                         CircleEnergyCountersRequest(self._mac, req_log_address),
-                        None,
-                        0,
                         Priority.Low,
                     )
                 self.message_sender(
                     CircleEnergyCountersRequest(self._mac, log_address),
-                    callback,
-                    0,
                     Priority.Low,
                 )
 
