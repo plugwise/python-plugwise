@@ -44,89 +44,9 @@ MESSAGE_HEADER = b"\x05\x05\x03\x03"
 MESSAGE_LARGE = "LARGE"
 MESSAGE_SMALL = "SMALL"
 
-# Acknowledge message types
-
-# StickResponse
-RESPONSE_TYPE_SUCCESS = b"00C1"
-RESPONSE_TYPE_ERROR = b"00C2"
-RESPONSE_TYPE_TIMEOUT = b"00E1"
-
-# NodeResponse
-CLOCK_SET = b"00D7"
-JOIN_REQUEST_ACCEPTED = b"00D9"
-RELAY_SWITCHED_OFF = b"00DE"
-RELAY_SWITCHED_ON = b"00D8"
-RELAY_SWITCH_FAILED = b"00E2"
-SLEEP_SET = b"00F6"
-SLEEP_FAILED = b"00F7"  # TODO: Validate
-REAL_TIME_CLOCK_ACCEPTED = b"00DF"
-REAL_TIME_CLOCK_FAILED = b"00E7"
-
-# NodeAckResponse
-SCAN_CONFIGURE_ACCEPTED = b"00BE"
-SCAN_CONFIGURE_FAILED = b"00BF"
-SCAN_LIGHT_CALIBRATION_ACCEPTED = b"00BD"
-SENSE_INTERVAL_ACCEPTED = b"00B3"
-SENSE_INTERVAL_FAILED = b"00B4"
-SENSE_BOUNDARIES_ACCEPTED = b"00B5"
-SENSE_BOUNDARIES_FAILED = b"00B6"
-
-STATE_ACTIONS = (
-    RELAY_SWITCHED_ON,
-    RELAY_SWITCHED_OFF,
-    SCAN_CONFIGURE_ACCEPTED,
-    SLEEP_SET,
-)
-REQUEST_SUCCESS = (
-    CLOCK_SET,
-    JOIN_REQUEST_ACCEPTED,
-    REAL_TIME_CLOCK_ACCEPTED,
-    RELAY_SWITCHED_ON,
-    RELAY_SWITCHED_OFF,
-    SCAN_CONFIGURE_ACCEPTED,
-    SCAN_LIGHT_CALIBRATION_ACCEPTED,
-    SENSE_BOUNDARIES_ACCEPTED,
-    SENSE_INTERVAL_ACCEPTED,
-    SLEEP_SET,
-)
-REQUEST_FAILED = (
-    REAL_TIME_CLOCK_FAILED,
-    RELAY_SWITCH_FAILED,
-    RESPONSE_TYPE_ERROR,
-    RESPONSE_TYPE_TIMEOUT,
-    SCAN_CONFIGURE_FAILED,
-    SENSE_BOUNDARIES_FAILED,
-    SENSE_INTERVAL_FAILED,
-    SLEEP_FAILED,
-)
-STATUS_RESPONSES = {
-    # StickResponse
-    RESPONSE_TYPE_SUCCESS: "success",
-    RESPONSE_TYPE_ERROR: "error",
-    RESPONSE_TYPE_TIMEOUT: "timeout",
-    # NodeResponse
-    CLOCK_SET: "clock set",
-    JOIN_REQUEST_ACCEPTED: "join accepted",
-    REAL_TIME_CLOCK_ACCEPTED: "real time clock set",
-    REAL_TIME_CLOCK_FAILED: "real time clock failed",
-    RELAY_SWITCHED_ON: "relay on",
-    RELAY_SWITCHED_OFF: "relay off",
-    RELAY_SWITCH_FAILED: "relay switching failed",
-    SLEEP_SET: "sleep settings accepted",
-    SLEEP_FAILED: "sleep settings failed",
-    # NodeAckResponse
-    SCAN_CONFIGURE_ACCEPTED: "Scan settings accepted",
-    SCAN_CONFIGURE_FAILED: "Scan settings failed",
-    SENSE_INTERVAL_ACCEPTED: "Sense report interval accepted",
-    SENSE_INTERVAL_FAILED: "Sense report interval failed",
-    SENSE_BOUNDARIES_ACCEPTED: "Sense boundaries accepted",
-    SENSE_BOUNDARIES_FAILED: "Sense boundaries failed",
-    SCAN_LIGHT_CALIBRATION_ACCEPTED: "Scan light calibration accepted",
-}
-
 # Max timeout in seconds
 MESSAGE_TIME_OUT = 15  # Stick responds with timeout messages after 10 sec.
-MESSAGE_RETRY = 2
+MESSAGE_RETRY = 3
 
 # plugwise year information is offset from y2k
 PLUGWISE_EPOCH = 2000
@@ -134,7 +54,7 @@ PULSES_PER_KW_SECOND = 468.9385193
 LOGADDR_OFFSET = 278528
 
 # Default sleep between sending messages
-SLEEP_TIME = 150 / 1000
+SLEEP_TIME = 0.1
 
 # Max seconds the internal clock of plugwise nodes
 # are allowed to drift in seconds

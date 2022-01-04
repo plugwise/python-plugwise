@@ -49,28 +49,6 @@ def version_to_model(version):
     return model if model is not None else "Unknown"
 
 
-def inc_seq_id(seq_id, value=1) -> bytearray:
-    """
-    Increment sequence id by value
-
-    :return: 4 bytes
-    """
-    if seq_id is None:
-        return b"0000"
-    temp_int = int(seq_id, 16) + value
-    # Max seq_id = b'FFFB'
-    # b'FFFC' reserved for <unknown> message
-    # b'FFFD' reserved for 'NodeRejoinResponse' message
-    # b'FFFE' reserved for 'NodeSwitchGroupResponse' message
-    # b'FFFF' reserved for 'NodeAwakeResponse' message
-    if temp_int >= 65532:
-        temp_int = 0
-    temp_str = str(hex(temp_int)).lstrip("0x").upper()
-    while len(temp_str) < 4:
-        temp_str = "0" + temp_str
-    return temp_str.encode()
-
-
 def uint_to_int(val, octals):
     """compute the 2's compliment of int value val for negative values"""
     bits = octals << 2
