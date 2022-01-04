@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 
-from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER
+from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER, UTF8_DECODE
 from ..messages import PlugwiseMessage
 from ..util import (
     DateTime,
@@ -40,6 +40,16 @@ class PlugwiseRequest(PlugwiseMessage):
         self._stick_state: bytes | None = None
         self._retry_counter: int = 0
         self._priority: Priority = Priority.Medium
+
+    @property
+    def target_mac(self) -> str:
+        """
+        MAC address in readable form.
+        Returns empty string if no MAC exists
+        """
+        if isinstance(self.mac, bytes):
+            return self.mac.decode(UTF8_DECODE)
+        return ""
 
     @property
     def priority(self) -> Priority:

@@ -128,20 +128,27 @@ class StickMessageController:
         request: PlugwiseRequest,
     ):
         """Queue request message to be sent into Plugwise Zigbee network."""
-        _LOGGER.info(
-            "Send queue = %s, Add %s, priority=%s, retry=%s",
-            str(self._send_message_queue.qsize()),
-            request.__class__.__name__,
-            str(request.priority),
-            str(request.retry_counter),
-        )
-        _utc = datetime.utcnow().replace(tzinfo=timezone.utc)
-        _retry = MESSAGE_RETRY - request.retry_counter + 1
-        self._send_message_queue.put((request.priority, _retry, _utc, request))
+
+        if self._duplicate_request(request):
+            _LOGGER.warning(
+                "Drop duplicate %s for %s",
+                request.__class__.__name__,
+                request.target_mac,
+            )
+        else:
+            _LOGGER.info(
+                "Send queue = %s, Add %s, priority=%s, retry=%s",
+                str(self._send_message_queue.qsize()),
+                request.__class__.__name__,
+                str(request.priority),
+                str(request.retry_counter),
+            )
+            _utc = datetime.utcnow().replace(tzinfo=timezone.utc)
+            _retry = MESSAGE_RETRY - request.retry_counter + 1
+            self._send_message_queue.put((request.priority, _retry, _utc, request))
 
     def _send_message_loop(self):
         """Daemon to send messages waiting in queue."""
-        _max_wait = SLEEP_TIME * 15
         while self._send_message_thread_state:
             try:
                 _priority, _retry, _utc, _request = self._send_message_queue.get(
@@ -166,18 +173,19 @@ class StickMessageController:
                 self._stick_request.retry_counter += 1
 
                 # Wait for response
-                while timeout_counter < _max_wait:
+                while timeout_counter < MESSAGE_TIME_OUT:
                     if self._stick_response:
                         break
                     time.sleep(SLEEP_TIME)
-                    timeout_counter += 1
+                    timeout_counter += SLEEP_TIME
 
-                if timeout_counter > _max_wait:
+                if timeout_counter > MESSAGE_TIME_OUT:
                     _retry -= 1
                     if _retry < 1:
                         _LOGGER.error(
-                            "Stick does not respond to %s after %s retries. Drop request",
+                            "Stick does not respond to %s for %s after %s retries. Drop request",
                             _request.__class__.__name__,
+                            _request.target_mac,
                             str(MESSAGE_RETRY - _retry + 1),
                         )
                     else:
@@ -208,17 +216,11 @@ class StickMessageController:
         else:
             # Forward message to Stick class
             if message.seq_id in self._open_requests:
-                if isinstance(self._open_requests[message.seq_id].mac, bytes):
-                    _target = " to " + self._open_requests[message.seq_id].mac.decode(
-                        UTF8_DECODE
-                    )
-                else:
-                    _target = ""
                 _LOGGER.info(
                     "forward %s after %s%s with seq_id=%s",
                     message.__class__.__name__,
                     self._open_requests[message.seq_id].__class__.__name__,
-                    _target,
+                    self._open_requests[message.seq_id].target_mac,
                     str(message.seq_id),
                 )
             else:
@@ -276,7 +278,7 @@ class StickMessageController:
             for seq_id in list(self._open_requests.keys()):
                 if (
                     self._open_requests[seq_id].stick_response + self._timeout_delta
-                    > _utcnow
+                    < _utcnow
                 ):
                     if isinstance(self._open_requests[seq_id].mac, bytes):
                         _target = " to " + self._open_requests[seq_id].mac.decode(
@@ -314,6 +316,41 @@ class StickMessageController:
                 time.sleep(1)
                 receive_timeout_checker += 1
         _LOGGER.debug("Receive timeout loop stopped")
+
+    def _duplicate_request(self, request: PlugwiseRequest) -> bool:
+        """Check if request target towards same node already exists in queue."""
+        if request.target_mac == "":
+            return False
+        if request.__class__.__name__ in (
+            "CirclePlusScanRequest",
+            "CircleClockSetRequest",
+            "CirclePlusRealTimeClockSetRequest",
+            "CircleEnergyCountersRequest",
+        ):
+            return False
+        # Check queue
+        for (
+            _priority,
+            _retry,
+            _utc,
+            _queued_request,
+        ) in self._send_message_queue.queue:
+            if _queued_request.target_mac:
+                if (
+                    _queued_request.mac == request.mac
+                    and _queued_request.__class__.__name__ == request.__class__.__name__
+                ):
+                    return True
+        # Check for open requests
+        for _seq_id in self._open_requests.keys():
+            if self._open_requests[_seq_id].target_mac:
+                if (
+                    self._open_requests[_seq_id].mac == request.mac
+                    and self._open_requests[_seq_id].__class__.__name__
+                    == request.__class__.__name__
+                ):
+                    return True
+        return False
 
     def disconnect_from_stick(self):
         """Disconnect from stick and raise error if it fails"""
