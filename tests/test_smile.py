@@ -1253,7 +1253,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
         assert not smile._sm_thermostat
-        assert not self.active_device_present
+        assert self.active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -1357,7 +1357,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
         assert not smile._sm_thermostat
-        assert not self.active_device_present
+        assert self.active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
