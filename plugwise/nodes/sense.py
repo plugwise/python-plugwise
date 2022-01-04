@@ -4,20 +4,23 @@ from __future__ import annotations
 import logging
 
 from ..constants import (
-    FEATURE_HUMIDITY,
-    FEATURE_PING,
-    FEATURE_RSSI_IN,
-    FEATURE_RSSI_OUT,
-    FEATURE_TEMPERATURE,
     SENSE_HUMIDITY_MULTIPLIER,
     SENSE_HUMIDITY_OFFSET,
     SENSE_TEMPERATURE_MULTIPLIER,
     SENSE_TEMPERATURE_OFFSET,
+    USB,
 )
 from ..messages.responses import PlugwiseResponse, SenseReportResponse
 from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
+_FEATURES = (
+    USB.humidity,
+    USB.ping,
+    USB.rssi_in,
+    USB.rssi_out,
+    USB.temperature,
+)
 
 
 class PlugwiseSense(NodeSED):
@@ -25,13 +28,7 @@ class PlugwiseSense(NodeSED):
 
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
-        self._features = (
-            FEATURE_HUMIDITY["id"],
-            FEATURE_PING["id"],
-            FEATURE_RSSI_IN["id"],
-            FEATURE_RSSI_OUT["id"],
-            FEATURE_TEMPERATURE["id"],
-        )
+        self._features = _FEATURES
         self._temperature = None
         self._humidity = None
 
@@ -67,7 +64,7 @@ class PlugwiseSense(NodeSED):
                     self.mac,
                     str(self._temperature),
                 )
-                self.do_callback(FEATURE_TEMPERATURE["id"])
+                self.do_callback(USB.temperature)
         if message.humidity.value != 65535:
             new_humidity = int(
                 SENSE_HUMIDITY_MULTIPLIER * (message.humidity.value / 65536)
@@ -80,4 +77,4 @@ class PlugwiseSense(NodeSED):
                     self.mac,
                     str(self._humidity),
                 )
-                self.do_callback(FEATURE_HUMIDITY["id"])
+                self.do_callback(USB.humidity)

@@ -6,7 +6,6 @@ import logging
 
 from ..constants import (
     FEATURE_ENERGY_CONSUMPTION_TODAY,
-    FEATURE_PING,
     FEATURE_POWER_CONSUMPTION_CURRENT_HOUR,
     FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR,
     FEATURE_POWER_CONSUMPTION_TODAY,
@@ -14,12 +13,10 @@ from ..constants import (
     FEATURE_POWER_PRODUCTION_CURRENT_HOUR,
     FEATURE_POWER_USE,
     FEATURE_POWER_USE_LAST_8_SEC,
-    FEATURE_RELAY,
-    FEATURE_RSSI_IN,
-    FEATURE_RSSI_OUT,
     MAX_TIME_DRIFT,
     MESSAGE_TIME_OUT,
     PULSES_PER_KW_SECOND,
+    USB,
 )
 from ..messages.requests import (
     CircleCalibrationRequest,
@@ -41,6 +38,12 @@ from ..messages.responses import (
 )
 from ..nodes import PlugwiseNode
 
+_FEATURES = (
+    USB.available,
+    USB.ping,
+    USB.rssi_in,
+    USB.rssi_out,
+)
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -274,7 +277,7 @@ class PlugwiseCircle(PlugwiseNode):
                     self.mac,
                 )
                 self._relay_state = True
-                self.do_callback(FEATURE_RELAY["id"])
+                self.do_callback(USB.relay)
         elif message.ack_id == NodeResponseType.RelaySwitchedOff:
             if self._callback_RelaySwitchedOff is not None:
                 self._callback_RelaySwitchedOff()
@@ -287,7 +290,7 @@ class PlugwiseCircle(PlugwiseNode):
                     self.mac,
                 )
                 self._relay_state = False
-                self.do_callback(FEATURE_RELAY["id"])
+                self.do_callback(USB.relay)
         elif message.ack_id == NodeResponseType.RelaySwitchFailed:
             if self._callback_RelaySwitchFailed is not None:
                 self._callback_RelaySwitchFailed()

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 
-from ..constants import FEATURE_PING, FEATURE_RSSI_IN, FEATURE_RSSI_OUT, FEATURE_SWITCH
+from ..constants import USB
 from ..messages.responses import NodeSwitchGroupResponse, PlugwiseResponse
 from ..nodes.sed import NodeSED
 
@@ -16,10 +16,10 @@ class PlugwiseSwitch(NodeSED):
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
         self._features = (
-            FEATURE_PING["id"],
-            FEATURE_RSSI_IN["id"],
-            FEATURE_RSSI_OUT["id"],
-            FEATURE_SWITCH["id"],
+            USB.ping,
+            USB.rssi_in,
+            USB.rssi_out,
+            USB.switch,
         )
         self._switch_state = False
 
@@ -44,12 +44,12 @@ class PlugwiseSwitch(NodeSED):
             # turn off => clear motion
             if self._switch_state:
                 self._switch_state = False
-                self.do_callback(FEATURE_SWITCH["id"])
+                self.do_callback(USB.switch)
         elif message.power_state == 1:
             # turn on => motion
             if not self._switch_state:
                 self._switch_state = True
-                self.do_callback(FEATURE_SWITCH["id"])
+                self.do_callback(USB.switch)
         else:
             _LOGGER.debug(
                 "Unknown power_state (%s) received from %s",

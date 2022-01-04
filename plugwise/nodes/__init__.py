@@ -4,14 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 import logging
 
-from ..constants import (
-    FEATURE_AVAILABLE,
-    FEATURE_PING,
-    FEATURE_RELAY,
-    FEATURE_RSSI_IN,
-    FEATURE_RSSI_OUT,
-    UTF8_DECODE,
-)
+from ..constants import USB, UTF8_DECODE
 from ..messages.requests import (
     NodeFeaturesRequest,
     NodeInfoRequest,
@@ -73,22 +66,14 @@ class PlugwiseNode:
     @available.setter
     def available(self, state: bool):
         """Set current network availability state of plugwise node."""
-        if state:
-            if not self._available:
-                self._available = True
-                _LOGGER.debug(
-                    "Mark node %s available",
-                    self.mac,
-                )
-                self.do_callback(FEATURE_AVAILABLE["id"])
-        else:
-            if self._available:
-                self._available = False
-                _LOGGER.debug(
-                    "Mark node %s unavailable",
-                    self.mac,
-                )
-                self.do_callback(FEATURE_AVAILABLE["id"])
+        if state and not self._available:
+            self._available = True
+            _LOGGER.debug("Mark node %s available", self.mac)
+            self.do_callback(USB.available)
+        elif not state and self._available:
+            self._available = False
+            _LOGGER.debug("Mark node %s unavailable", self.mac)
+            self.do_callback(USB.available)
 
     @property
     def battery_powered(self) -> bool:
@@ -184,7 +169,7 @@ class PlugwiseNode:
         self, callback: callable | None = None, ignore_sensor=True
     ) -> None:
         """Ping node."""
-        if ignore_sensor or FEATURE_PING["id"] in self._callbacks:
+        if ignore_sensor or USB.ping in self._callbacks:
             self._callback_NodePing = callback
             self.message_sender(NodePingRequest(self._mac))
 
@@ -251,13 +236,13 @@ class PlugwiseNode:
         """Process content of 'NodePingResponse' message."""
         if self._rssi_in != message.rssi_in.value:
             self._rssi_in = message.rssi_in.value
-            self.do_callback(FEATURE_RSSI_IN["id"])
+            self.do_callback(USB.rssi_in)
         if self._rssi_out != message.rssi_out.value:
             self._rssi_out = message.rssi_out.value
-            self.do_callback(FEATURE_RSSI_OUT["id"])
+            self.do_callback(USB.rssi_out)
         if self._ping != message.ping_ms.value:
             self._ping = message.ping_ms.value
-            self.do_callback(FEATURE_PING["id"])
+            self.do_callback(USB.ping)
         if self._callback_NodePing is not None:
             self._callback_NodePing()
             self._callback_NodePing = None
@@ -267,11 +252,11 @@ class PlugwiseNode:
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
                 self._relay_state = True
-                self.do_callback(FEATURE_RELAY["id"])
+                self.do_callback(USB.relay)
         else:
             if self._relay_state:
                 self._relay_state = False
-                self.do_callback(FEATURE_RELAY["id"])
+                self.do_callback(USB.relay)
         self._hardware_version = message.hw_ver.value.decode(UTF8_DECODE)
         self._firmware_version = message.fw_ver.value
         self._node_type = message.node_type.value

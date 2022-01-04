@@ -122,6 +122,23 @@ HW_MODELS = {
     "143.1": "Anna",
 }
 
+# USB Stick device features
+
+
+class USB(str, Enum):
+    """USB property ID's."""
+
+    available = "available"
+    humidity = "humidity"
+    motion = "motion"
+    ping = "ping"
+    relay = "relay"
+    switch = "switch"
+    temperature = "temperature"
+    rssi_in = "RSSI_in"
+    rssi_out = "RSSI_out"
+
+
 # Defaults for SED's (Sleeping End Devices)
 SED_STAY_ACTIVE = 10  # Time in seconds the SED keep itself awake to receive and respond to other messages
 SED_SLEEP_FOR = 60  # Time in minutes the SED will sleep
