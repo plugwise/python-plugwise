@@ -30,9 +30,9 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         Process received message
         """
         if isinstance(message, CirclePlusRealTimeClockResponse):
-            self._response_realtime_clock(message)
+            self._process_CirclePlusRealTimeClockResponse(message)
         elif isinstance(message, CirclePlusScanResponse):
-            self._process_scan_response(message)
+            self._process_CirclePlusScanResponse(message)
         else:
             _LOGGER.waning(
                 "Unsupported message type '%s' received from circle with mac %s",
@@ -47,8 +47,8 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             self.message_sender(CirclePlusScanRequest(self._mac, node_address))
             self._scan_response[node_address] = False
 
-    def _process_scan_response(self, message):
-        """Process scan response message."""
+    def _process_CirclePlusScanResponse(self, message: CirclePlusScanResponse) -> None:
+        """Process content of 'CirclePlusScanResponse' message."""
         _LOGGER.debug(
             "Process scan response for address %s", message.node_address.value
         )
@@ -96,7 +96,10 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             Priority.Low,
         )
 
-    def _response_realtime_clock(self, message):
+    def _process_CirclePlusRealTimeClockResponse(
+        self, message: CirclePlusRealTimeClockResponse
+    ) -> None:
+        """Process content of 'CirclePlusRealTimeClockResponse' message."""
         realtime_clock_dt = datetime(
             datetime.utcnow().year,
             datetime.utcnow().month,

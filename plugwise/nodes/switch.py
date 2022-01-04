@@ -37,10 +37,12 @@ class PlugwiseSwitch(NodeSED):
                 self.mac,
                 str(message.group),
             )
-            self._process_switch_group(message)
+            self._process_NodeSwitchGroupResponse(message)
 
-    def _process_switch_group(self, message):
-        """Switch group request from Scan"""
+    def _process_NodeSwitchGroupResponse(
+        self, message: NodeSwitchGroupResponse
+    ) -> None:
+        """Process content of 'NodeSwitchGroupResponse' message."""
         if message.power_state == 0:
             # turn off => clear motion
             if self._switch_state:
