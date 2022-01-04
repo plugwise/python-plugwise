@@ -45,9 +45,14 @@ class NodeResponseType(bytes, Enum):
     RelaySwitchedOn = b"00D8"
     RelaySwitchFailed = b"00E2"
     SleepConfigAccepted = b"00F6"
-    SleepConfigFailed = b"00F7"  # TODO: Validate
     RealTimeClockAccepted = b"00DF"
     RealTimeClockFailed = b"00E7"
+
+    # TODO: Validate these response types
+    SleepConfigFailed = b"00F7"
+    PowerLogIntervalAccepted = b"00F8"
+    PowerCalibrationAccepted = b"00DA"
+    CirclePlus = b"00DD"
 
 
 class NodeAckResponseType(bytes, Enum):
