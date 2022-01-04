@@ -1,4 +1,7 @@
 """All known request messages to be send to plugwise devices."""
+from __future__ import annotations
+
+from datetime import datetime
 from enum import Enum
 
 from ..constants import MESSAGE_FOOTER, MESSAGE_HEADER
@@ -30,6 +33,41 @@ class PlugwiseRequest(PlugwiseMessage):
         PlugwiseMessage.__init__(self)
         self.args = []
         self.mac = mac
+
+        # Local property variables to support StickMessageController
+        self._send: datetime | None = None
+        self._stick_response: datetime | None = None
+        self._stick_state: bytes | None = None
+
+    @property
+    def send(self) -> datetime | None:
+        """Timestamp message request is send to Stick."""
+        return self._send
+
+    @send.setter
+    def send(self, timestamp: datetime) -> None:
+        """Set timestamp message request is send to Stick."""
+        self._send = timestamp
+
+    @property
+    def stick_response(self) -> datetime | None:
+        """Timestamp Stick responded with."""
+        return self._stick_response
+
+    @stick_response.setter
+    def stick_response(self, timestamp: datetime) -> None:
+        """Set timestamp message request is send to Stick."""
+        self._stick_response = timestamp
+
+    @property
+    def stick_state(self) -> bytes | None:
+        """Stick 'StickResponse' acknowledge state."""
+        return self._stick_state
+
+    @stick_state.setter
+    def stick_state(self, state: bytes) -> None:
+        """Set 'StickResponse' acknowledge state."""
+        self._stick_state = state
 
 
 class NodeNetworkInfoRequest(PlugwiseRequest):
@@ -116,14 +154,11 @@ class NodeResetRequest(PlugwiseRequest):
         ]
 
 
-    """
-    Initialize USB-Stick
-
-    Response message: StickInitResponse
-    """
 class StickInitRequest(PlugwiseRequest):
+    """Initialize USB-Stick."""
 
     ID = b"000A"
+    Response = "StickInitResponse"
 
     def __init__(self):
         """message for that initializes the Stick"""
@@ -141,34 +176,25 @@ class NodeImagePrepareRequest(PlugwiseRequest):
     ID = b"000B"
 
 
-    """
-    Ping node
-
-    Response message: NodePingResponse
-    """
 class NodePingRequest(PlugwiseRequest):
+    """Ping node."""
 
     ID = b"000D"
+    Response = "NodePingResponse"
 
 
-    """
-    Request current power usage
-
-    Response message: CirclePowerUsageResponse
-    """
 class CirclePowerUsageRequest(PlugwiseRequest):
+    """Request current power usage."""
 
     ID = b"0012"
+    Response = "CirclePowerUsageResponse"
 
 
-    """
-    Set internal clock of node
-
-    Response message: [Acknowledge message]
-    """
 class CircleClockSetRequest(PlugwiseRequest):
+    """Set internal clock of node."""
 
     ID = b"0016"
+    Response = "CirclePowerUsageResponse"
 
     def __init__(self, mac, dt):
         super().__init__(mac)
@@ -361,6 +387,26 @@ class CircleEnergyCountersRequest(PlugwiseRequest):
     def __init__(self, mac, log_address):
         super().__init__(mac)
         self.args.append(LogAddr(log_address, 8))
+
+
+class CircleHandlesOffRequest(PlugwiseRequest):
+    """
+    ?PWSetHandlesOffRequestV1_0
+
+    Response message: ?
+    """
+
+    ID = b"004D"
+
+
+class CircleHandlesOnRequest(PlugwiseRequest):
+    """
+    ?PWSetHandlesOnRequestV1_0
+
+    Response message: ?
+    """
+
+    ID = b"004E"
 
 
 class NodeSleepConfigRequest(PlugwiseRequest):
