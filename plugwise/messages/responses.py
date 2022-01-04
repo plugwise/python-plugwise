@@ -499,7 +499,7 @@ class NodeFeaturesResponse(PlugwiseResponse):
         self.params += [self.features]
 
 
-class NodeJoinAckResponse(PlugwiseResponse):
+class NodeRejoinResponse(PlugwiseResponse):
     """
     Notification message when node (re)joined existing network again.
     Sent when a SED (re)joins the network e.g. when you reinsert the battery of a Scan
@@ -589,7 +589,7 @@ def get_message_response(message_id, length, seq_id):
     """
     # First check for known sequence ID's
     if seq_id == b"FFFD":
-        return NodeJoinAckResponse()
+        return NodeRejoinResponse()
     if seq_id == b"FFFE":
         return NodeAwakeResponse()
     if seq_id == b"FFFF":

@@ -60,7 +60,7 @@ def inc_seq_id(seq_id, value=1) -> bytearray:
     temp_int = int(seq_id, 16) + value
     # Max seq_id = b'FFFB'
     # b'FFFC' reserved for <unknown> message
-    # b'FFFD' reserved for 'NodeJoinAckResponse' message
+    # b'FFFD' reserved for 'NodeRejoinResponse' message
     # b'FFFE' reserved for 'NodeSwitchGroupResponse' message
     # b'FFFF' reserved for 'NodeAwakeResponse' message
     if temp_int >= 65532:
