@@ -59,8 +59,6 @@ class StickMessageController:
         self._timeout_delta = timedelta(minutes=1)
         self._open_requests: dict(bytes, PlugwiseRequest) = {}
         self._stick_response: bool = False
-        self.last_seq_id: bytes | None = None
-        self.last_result: StickResponseType | None = None
 
     @property
     def busy(self) -> bool:
