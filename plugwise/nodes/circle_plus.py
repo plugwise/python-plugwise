@@ -118,10 +118,9 @@ class PlugwiseCirclePlus(PlugwiseCircle):
     def get_real_time_clock(self, callback: callable | None = None) -> None:
         """get current datetime of internal clock of CirclePlus."""
         self._callback_CirclePlusRealTimeClockGet = callback
-        self.message_sender(
-            CirclePlusRealTimeClockGetRequest(self._mac),
-            Priority.Low,
-        )
+        _clock_request = CirclePlusRealTimeClockGetRequest(self._mac)
+        _clock_request.priority = Priority.Low
+        self.message_sender(_clock_request)
 
     def _process_CirclePlusRealTimeClockResponse(
         self, message: CirclePlusRealTimeClockResponse
@@ -159,9 +158,9 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         """set internal clock of CirclePlus."""
         self._callback_RealTimeClockAccepted = success_callback
         self._callback_RealTimeClockFailed = failed_callback
-        self.message_sender(
-            CirclePlusRealTimeClockSetRequest(self._mac, datetime.utcnow()),
-        )
+        _clock_request = CirclePlusRealTimeClockSetRequest(self._mac, datetime.utcnow())
+        _clock_request.priority = Priority.High
+        self.message_sender(_clock_request)
 
     def sync_realtime_clock(self, max_drift=0):
         """Sync real time clock of node if time has drifted more than max drifted."""

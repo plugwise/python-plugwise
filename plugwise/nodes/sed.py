@@ -125,12 +125,13 @@ class NodeSED(PlugwiseNode):
                 request_message.__class__.__name__,
                 self.mac,
             )
-            self.message_sender(request_message, Priority.High)
+            self.message_sender(request_message)
         self._sed_requests = {}
 
     def _queue_request(self, message: PlugwiseRequest):
         """Queue request to be sent when SED is awake. Last message wins."""
         self._sed_requests[message.ID] = message
+        self._sed_requests[message.ID].priority = Priority.High
         _LOGGER.info(
             "Queue %s to be send at next awake of SED node %s",
             message.__class__.__name__,

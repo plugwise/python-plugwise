@@ -38,6 +38,28 @@ class PlugwiseRequest(PlugwiseMessage):
         self._send: datetime | None = None
         self._stick_response: datetime | None = None
         self._stick_state: bytes | None = None
+        self._retry_counter: int = 0
+        self._priority: Priority = Priority.Medium
+
+    @property
+    def priority(self) -> Priority:
+        """Priority level."""
+        return self._priority
+
+    @priority.setter
+    def priority(self, priority: Priority) -> None:
+        """Set priority level."""
+        self._priority = priority
+
+    @property
+    def retry_counter(self) -> int:
+        """Total number of retries."""
+        return self._retry_counter
+
+    @retry_counter.setter
+    def retry_counter(self, retry: int) -> None:
+        """Set new retry counter"""
+        self._retry_counter = retry
 
     @property
     def send(self) -> datetime | None:
