@@ -447,7 +447,8 @@ class Stick:
             self.discover_node(
                 message.mac.decode(UTF8_DECODE), self._discover_after_scan
             )
-        self._pass_message_to_node(message)
+        else:
+            self._pass_message_to_node(message)
 
     def _process_StickInitResponse(
         self, stick_init_response: StickInitResponse
