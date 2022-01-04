@@ -30,6 +30,9 @@ VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
 
 ### Stick constants ###
 
+DAY_IN_MINUTES = 1440
+HOUR_IN_MINUTES = 60
+
 DAY_IN_SECONDS = 86400
 UTF8_DECODE = "utf-8"
 
