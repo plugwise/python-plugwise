@@ -17,6 +17,7 @@ from ..messages.responses import (
     NodeInfoResponse,
     NodeJoinAckResponse,
     NodePingResponse,
+    NodeResponse,
     PlugwiseResponse,
 )
 from ..util import validate_mac, version_to_model
@@ -52,6 +53,11 @@ class PlugwiseNode:
         self._relay_state = False
         self._last_log_address = None
         self._device_features = None
+
+        # Local callback variables
+        self._callback_NodeInfo: callable | None = None
+        self._callback_NodePing: callable | None = None
+        self._callback_NodeFeature: callable | None = None
 
     @property
     def available(self) -> bool:
@@ -150,29 +156,31 @@ class PlugwiseNode:
             return self._rssi_out
         return 0
 
-    def do_ping(self, callback=None):
+    def do_ping(self, callback: callable | None = None) -> None:
         """Send network ping message to node."""
         self._request_ping(callback, True)
 
-    def _request_info(self, callback=None):
+    def _request_info(self, callback: callable | None = None) -> None:
         """Request info from node."""
+        self._callback_NodeInfo = callback
         self.message_sender(
             NodeInfoRequest(self._mac),
-            callback,
-            0,
             Priority.Low,
         )
 
-    def _request_features(self, callback=None):
+    def _request_features(self, callback: callable | None = None) -> None:
         """Request supported features for this node."""
+        self._callback_NodeFeature = callback
         self.message_sender(
             NodeFeaturesRequest(self._mac),
-            callback,
         )
 
-    def _request_ping(self, callback=None, ignore_sensor=True):
+    def _request_ping(
+        self, callback: callable | None = None, ignore_sensor=True
+    ) -> None:
         """Ping node."""
         if ignore_sensor or FEATURE_PING["id"] in self._callbacks:
+            self._callback_NodePing = callback
             self.message_sender(
                 NodePingRequest(self._mac),
                 callback,
@@ -254,6 +262,10 @@ class PlugwiseNode:
             self._ping = message.ping_ms.value
             self.do_callback(FEATURE_PING["id"])
 
+        if self._callback_NodePing is not None:
+            self._callback_NodePing()
+            self._callback_NodePing = None
+
     def _process_NodeInfoResponse(self, message: NodeInfoResponse) -> None:
         """Process content of 'NodeInfoResponse' message."""
         if message.relay_state.serialize() == b"01":
@@ -274,6 +286,10 @@ class PlugwiseNode:
             _LOGGER.debug("Relay state      = %s", str(self._relay_state))
         _LOGGER.debug("Hardware version = %s", str(self._hardware_version))
         _LOGGER.debug("Firmware version = %s", str(self._firmware_version))
+
+        if self._callback_NodeInfo is not None:
+            self._callback_NodeInfo()
+            self._callback_NodeInfo = None
 
     def _process_features_response(self, message):
         """Process features message."""

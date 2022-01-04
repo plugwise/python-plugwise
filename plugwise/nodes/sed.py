@@ -11,17 +11,11 @@ from ..constants import (
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
     Priority,
-    SED_AWAKE_BUTTON,
-    SED_AWAKE_FIRST,
-    SED_AWAKE_MAINTENANCE,
-    SED_AWAKE_STARTUP,
-    SED_AWAKE_STATE,
     SED_CLOCK_INTERVAL,
     SED_CLOCK_SYNC,
     SED_MAINTENANCE_INTERVAL,
     SED_SLEEP_FOR,
     SED_STAY_ACTIVE,
-    SLEEP_SET,
 )
 from ..messages.requests import (
     NodeInfoRequest,
@@ -29,7 +23,9 @@ from ..messages.requests import (
     NodeSleepConfigRequest,
 from ..messages.responses import (
     NodeAwakeResponse,
+    NodeAwakeResponseType,
     NodeResponse,
+    NodeResponseType,
     PlugwiseResponse,
 )
 from ..nodes import PlugwiseNode
@@ -48,21 +44,40 @@ class NodeSED(PlugwiseNode):
         self._wake_up_interval = None
         self._battery_powered = True
 
+        # Local callback variables
+        self._callbackSleepConfigAccepted: callable | None = None
+        self._callbackSleepConfigFailed: callable | None = None
+
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for NodeSED class."""
         self._last_update = message.timestamp
         if isinstance(message, NodeAwakeResponse):
             self._process_NodeAwakeResponse(message)
         elif isinstance(message, NodeResponse):
-            if message.ack_id == SLEEP_SET:
-                self.maintenance_interval = self._new_maintenance_interval
-            else:
-                self.message_for_scan(message)
-                self.message_for_switch(message)
-                self.message_for_sense(message)
+            self._process_NodeResponse(message)
         else:
             super().message_for_node(message)
 
+    def _process_NodeResponse(self, message: NodeResponse) -> None:
+        """Process content of 'NodeResponse' message."""
+        if message.ack_id == NodeResponseType.SleepConfigAccepted:
+            self._wake_up_interval = self._new_maintenance_interval
+            if self._callbackSleepConfigAccepted is not None:
+                self._callbackSleepConfigAccepted()
+            self._callbackSleepConfigAccepted = None
+            self._callbackSleepConfigFailed = None
+            if b"0050" in self._sed_requests:
+                del self._sed_requests[b"0050"]
+        elif message.ack_id == NodeResponseType.SleepConfigFailed:
+            self._new_maintenance_interval = None
+            if self._callbackSleepConfigFailed is not None:
+                self._callbackSleepConfigFailed()
+            self._callbackSleepConfigFailed = None
+            self._callbackSleepConfigAccepted = None
+            if b"0050" in self._sed_requests:
+                del self._sed_requests[b"0050"]
+        else:
+            super()._process_NodeResponse(message)
 
     def _process_NodeAwakeResponse(self, message: NodeAwakeResponse) -> None:
         """Process content of 'NodeAwakeResponse' message."""
@@ -72,65 +87,67 @@ class NodeSED(PlugwiseNode):
             self.mac,
         )
         if (
-            message.awake_type.value == SED_AWAKE_MAINTENANCE
-            or message.awake_type.value == SED_AWAKE_FIRST
-            or message.awake_type.value == SED_AWAKE_STARTUP
-            or message.awake_type.value == SED_AWAKE_BUTTON
+            message.awake_type.value == NodeAwakeResponseType.Maintenance
+            or message.awake_type.value == NodeAwakeResponseType.First
+            or message.awake_type.value == NodeAwakeResponseType.Startup
+            or message.awake_type.value == NodeAwakeResponseType.Button
         ):
-            for request in self._sed_requests:
-                (request_message, callback) = self._sed_requests[request]
-                _LOGGER.info(
-                    "Send queued %s message to SED node %s",
-                    request_message.__class__.__name__,
-                    self.mac,
-                )
-                self.message_sender(request_message, callback, -1, Priority.High)
-            self._sed_requests = {}
+            self._send_pending_requests()
+        elif message.awake_type.value == NodeAwakeResponseType.State:
+            _LOGGER.debug("Node %s awake for state change", self.mac)
         else:
-            if message.awake_type.value == SED_AWAKE_STATE:
-                _LOGGER.debug("Node %s awake for state change", self.mac)
-            else:
-                _LOGGER.info(
-                    "Unknown awake message type (%s) received for node %s",
-                    str(message.awake_type.value),
-                    self.mac,
-                )
+            _LOGGER.info(
+                "Unknown awake message type (%s) received for node %s",
+                str(message.awake_type.value),
+                self.mac,
+            )
 
-    def _queue_request(self, request_message, callback=None):
+    def _send_pending_requests(self) -> None:
+        """Send pending requests to SED node."""
+        for request in self._sed_requests:
+            request_message = self._sed_requests[request]
+            _LOGGER.info(
+                "Send queued %s message to SED node %s",
+                request_message.__class__.__name__,
+                self.mac,
+            )
+            self.message_sender(request_message, Priority.High)
+        self._sed_requests = {}
+
+    def _queue_request(self, message: PlugwiseRequest):
         """Queue request to be sent when SED is awake. Last message wins."""
-        self._sed_requests[request_message.ID] = (
-            request_message,
-            callback,
+        self._sed_requests[message.ID] = message
+        _LOGGER.info(
+            "Queue %s to be send at next awake of SED node %s",
+            message.__class__.__name__,
+            self.mac,
         )
 
+    # Overrule method from PlugwiseNode class
     def _request_info(self, callback=None):
         """Request info from node"""
-        self._queue_request(
-            NodeInfoRequest(self._mac),
-            callback,
-        )
+        self._callback_NodeInfo = callback
+        self._queue_request(NodeInfoRequest(self._mac))
 
-    def _request_ping(self, callback=None, ignore_sensor=True):
-        """Ping node"""
+    # Overrule method from PlugwiseNode class
+    def _request_ping(self, callback=None, ignore_sensor=False):
+        """Ping node."""
         if (
             ignore_sensor
             or self._callbacks.get(FEATURE_PING["id"])
             or self._callbacks.get(FEATURE_RSSI_IN["id"])
             or self._callbacks.get(FEATURE_RSSI_OUT["id"])
+            or callback is not None
         ):
+            self._callback_NodePing = callback
             self._queue_request(
                 NodePingRequest(self._mac),
-                callback,
             )
         else:
             _LOGGER.debug(
                 "Drop ping request for SED %s because no callback is registered",
                 self.mac,
             )
-
-    def _wake_up_interval_accepted(self):
-        """Callback after wake up interval is received and accepted by SED."""
-        self._wake_up_interval = self._new_maintenance_interval
 
     def Configure_SED(
         self,
@@ -139,9 +156,11 @@ class NodeSED(PlugwiseNode):
         maintenance_interval=SED_MAINTENANCE_INTERVAL,
         clock_sync=SED_CLOCK_SYNC,
         clock_interval=SED_CLOCK_INTERVAL,
-    ):
+        success_callback: callable | None = None,
+        failed_callback: callable | None = None,
+    ) -> None:
         """Reconfigure the sleep/awake settings for a SED send at next awake of SED"""
-        message = NodeSleepConfigRequest(
+        _message = NodeSleepConfigRequest(
             self._mac,
             stay_active,
             maintenance_interval,
@@ -149,10 +168,7 @@ class NodeSED(PlugwiseNode):
             clock_sync,
             clock_interval,
         )
-        self._queue_request(message, self._wake_up_interval_accepted)
+        self._callbackSleepConfigAccepted = success_callback
+        self._callbackSleepConfigFailed = failed_callback
+        self._queue_request(_message)
         self._new_maintenance_interval = maintenance_interval
-        _LOGGER.info(
-            "Queue %s message to be send at next awake of SED node %s",
-            message.__class__.__name__,
-            self.mac,
-        )
