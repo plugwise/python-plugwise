@@ -252,32 +252,13 @@ class PlugwiseCircle(PlugwiseNode):
         """Process received messages for PlugwiseCircle class."""
         self._last_update = message.timestamp
         if isinstance(message, CirclePowerUsageResponse):
-            if self.calibration:
-                self._process_CirclePowerUsageResponse(message)
-                _LOGGER.debug(
-                    "Power update for %s, last update %s",
-                    self.mac,
-                    str(self._last_update),
-                )
-            else:
-                _LOGGER.info(
-                    "Received power update for %s before calibration information is known",
-                    self.mac,
-                )
-                self._request_calibration(self.request_power_update)
+            self._process_CirclePowerUsageResponse(message)
         elif isinstance(message, NodeResponse):
             self._process_NodeResponse(message)
         elif isinstance(message, CircleCalibrationResponse):
             self._process_CircleCalibrationResponse(message)
         elif isinstance(message, CircleEnergyCountersResponse):
-            if self.calibration:
-                self._response_energy_counters(message)
-            else:
-                _LOGGER.debug(
-                    "Received power buffer log for %s before calibration information is known",
-                    self.mac,
-                )
-                self._process_CircleEnergyCountersResponse(message)
+            self._process_CircleEnergyCountersResponse(message)
         elif isinstance(message, CircleClockResponse):
             self._process_CircleClockResponse(message)
         else:
@@ -334,6 +315,13 @@ class PlugwiseCircle(PlugwiseNode):
         # rounding errors. Zero these out. However, negative pulse values are valid
         # for power producing appliances, like solar panels, so don't complain too loudly.
 
+        if not self.calibration:
+            _LOGGER.info(
+                "Received power update for %s before calibration information is known",
+                self.mac,
+            )
+            self._request_calibration(self.request_power_update)
+            return
         # Power consumption last second
         if message.pulse_1s.value == -1:
             message.pulse_1s.value = 0
