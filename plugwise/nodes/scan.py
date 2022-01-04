@@ -6,7 +6,6 @@ from ..constants import (
     FEATURE_PING,
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
-    SCAN_CONFIGURE_ACCEPTED,
     SCAN_DAYLIGHT_MODE,
     SCAN_MOTION_RESET_TIMER,
     SCAN_SENSITIVITY_HIGH,
@@ -16,6 +15,7 @@ from ..constants import (
 from ..messages.requests import ScanConfigureRequest, ScanLightCalibrateRequest
 from ..messages.responses import (
     NodeAckResponse,
+    NodeAckResponseType,
     NodeSwitchGroupResponse,
     PlugwiseResponse,
 )
@@ -43,6 +43,11 @@ class PlugwiseScan(NodeSED):
         self._new_daylight_mode = None
         self._new_sensitivity = None
 
+        # Local callback variables
+        self._callbackScanConfigAccepted: callable | None = None
+        self._callbackScanConfigFailed: callable | None = None
+        self._callbackScanLightCalibrateAccepted: callable | None = None
+
     @property
     def motion(self) -> bool:
         """Return the last known motion state"""
@@ -66,16 +71,42 @@ class PlugwiseScan(NodeSED):
 
     def _process_NodeAckResponse(self, message: NodeAckResponse):
         """Process content of 'NodeAckResponse' message."""
-        if message.ack_id == SCAN_CONFIGURE_ACCEPTED:
+        if message.ack_id == NodeAckResponseType.ScanConfigAccepted:
             self._motion_reset_timer = self._new_motion_reset_timer
             self._daylight_mode = self._new_daylight_mode
             self._sensitivity = self._new_sensitivity
-        else:
+            if self._callbackScanConfigAccepted is not None:
+                self._callbackScanConfigAccepted()
+            self._callbackScanConfigAccepted = None
+            self._callbackScanConfigFailed = None
+            if b"0050" in self._sed_requests:
+                del self._sed_requests[b"0050"]
             _LOGGER.info(
-                "Unsupported ack message %s received for %s",
-                str(message.ack_id),
+                "Scan configuration accepted by scan %s",
                 self.mac,
             )
+        elif message.ack_id == NodeAckResponseType.ScanConfigFailed:
+            self._new_motion_reset_timer = None
+            self._new_daylight_mode = None
+            self._new_sensitivity = None
+            if self._callbackScanConfigFailed is not None:
+                self._callbackScanConfigFailed()
+            self._callbackScanConfigAccepted = None
+            self._callbackScanConfigFailed = None
+            _LOGGER.warning(
+                "Scan configuration failed by scan %s",
+                self.mac,
+            )
+        elif message.ack_id == NodeAckResponseType.ScanLightCalibrationAccepted:
+            if self._callbackScanLightCalibrateAccepted is not None:
+                self._callbackScanLightCalibrateAccepted()
+            self._callbackScanLightCalibrateAccepted = None
+            _LOGGER.info(
+                "Scan light calibration accepted by scan %s",
+                self.mac,
+            )
+        else:
+            super()._process_NodeAckResponse(message)
 
     def _process_NodeSwitchGroupResponse(
         self, message: NodeSwitchGroupResponse
@@ -97,16 +128,21 @@ class PlugwiseScan(NodeSED):
                 self.mac,
             )
 
-    def CalibrateLight(self, callback=None):
+    def CalibrateLight(
+        self,
+        callback: callable | None = None,
+    ) -> None:
         """Queue request to calibration light sensitivity"""
-        self._queue_request(ScanLightCalibrateRequest(self._mac), callback)
+        self._callbackScanLightCalibrateAccepted = callback
+        self._queue_request(ScanLightCalibrateRequest(self._mac))
 
     def Configure_scan(
         self,
         motion_reset_timer=SCAN_MOTION_RESET_TIMER,
         sensitivity_level=SCAN_SENSITIVITY_MEDIUM,
         daylight_mode=SCAN_DAYLIGHT_MODE,
-        callback=None,
+        success_callback: callable | None = None,
+        failed_callback: callable | None = None,
     ):
         """Queue request to set motion reporting settings"""
         self._new_motion_reset_timer = motion_reset_timer
@@ -119,11 +155,12 @@ class PlugwiseScan(NodeSED):
             # Default to medium:
             sensitivity_value = 30  # b'1E'
         self._new_sensitivity = sensitivity_level
+        self._callbackScanConfigAccepted = success_callback
+        self._callbackScanConfigFailed = failed_callback
         self._queue_request(
             ScanConfigureRequest(
                 self._mac, motion_reset_timer, sensitivity_value, daylight_mode
-            ),
-            callback,
+            )
         )
 
     def SetMotionAction(self, callback=None):

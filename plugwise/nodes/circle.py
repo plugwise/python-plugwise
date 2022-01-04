@@ -18,8 +18,6 @@ from ..constants import (
     MAX_TIME_DRIFT,
     MESSAGE_TIME_OUT,
     PULSES_PER_KW_SECOND,
-    RELAY_SWITCHED_OFF,
-    RELAY_SWITCHED_ON,
     Priority,
 )
 from ..messages.requests import (
@@ -29,6 +27,7 @@ from ..messages.requests import (
     CircleEnergyCountersRequest,
     CirclePowerUsageRequest,
     CircleSwitchRelayRequest,
+    Priority,
 )
 from ..messages.responses import (
     CircleCalibrationResponse,
@@ -36,6 +35,7 @@ from ..messages.responses import (
     CircleEnergyCountersResponse,
     CirclePowerUsageResponse,
     NodeResponse,
+    NodeResponseType,
     PlugwiseResponse,
 )
 from ..nodes import PlugwiseNode
@@ -99,6 +99,16 @@ class PlugwiseCircle(PlugwiseNode):
             minute=0, second=0, microsecond=0
         ) - datetime.utcnow().replace(minute=0, second=0, microsecond=0)
         self._clock_offset = None
+
+        # Local callback variables
+        self._callback_RelaySwitchedOn: callable | None = None
+        self._callback_RelaySwitchedOff: callable | None = None
+        self._callback_RelaySwitchFailed: callable | None = None
+        self._callback_CircleClockResponse: callable | None = None
+        self._callback_ClockAccepted: callable | None = None
+        self._callback_CircleCalibration: callable | None = None
+        self._callback_CirclePowerUsage: callable | None = None
+
         self.get_clock(self.sync_clock)
         self._request_calibration()
 
@@ -197,30 +207,37 @@ class PlugwiseCircle(PlugwiseNode):
         if state != self._relay_state:
             self.do_callback(FEATURE_RELAY["id"])
 
-    def _request_calibration(self, callback=None):
+    def _request_calibration(self, callback: callable | None = None) -> None:
         """Request calibration info"""
+        self._callback_CircleCalibration = callback
         self.message_sender(
             CircleCalibrationRequest(self._mac),
-            callback,
-            0,
             Priority.High,
         )
 
-    def _request_switch(self, state, callback=None):
+    def _request_switch(
+        self,
+        state: bool,
+        success_callback: callable | None = None,
+        failed_callback: callable | None = None,
+    ) -> None:
         """Request to switch relay state and request state info"""
+        if state:
+            self._callback_RelaySwitchedOn = success_callback
+        else:
+            self._callback_RelaySwitchedOff = success_callback
+        self._callback_RelaySwitchFailed = failed_callback
         self.message_sender(
             CircleSwitchRelayRequest(self._mac, state),
-            callback,
-            0,
             Priority.High,
         )
 
-    def request_power_update(self, callback=None):
+    def request_power_update(self, callback: callable | None = None) -> None:
         """Request power usage and update energy counters"""
         if self._available:
+            self._callback_CirclePowerUsage = callback
             self.message_sender(
                 CirclePowerUsageRequest(self._mac),
-                callback,
             )
             if len(self._energy_history) > 0:
                 # Request new energy counters if last one is more than one hour ago
@@ -269,7 +286,12 @@ class PlugwiseCircle(PlugwiseNode):
 
     def _process_NodeResponse(self, message: NodeResponse) -> None:
         """Process content of 'NodeResponse' message."""
-        if message.ack_id == RELAY_SWITCHED_ON:
+        if message.ack_id == NodeResponseType.RelaySwitchedOn:
+            if self._callback_RelaySwitchedOn is not None:
+                self._callback_RelaySwitchedOn()
+            self._callback_RelaySwitchFailed = None
+            self._callback_RelaySwitchedOn = None
+            self._callback_RelaySwitchedOff = None
             if not self._relay_state:
                 _LOGGER.debug(
                     "Switch relay on for %s",
@@ -277,7 +299,12 @@ class PlugwiseCircle(PlugwiseNode):
                 )
                 self._relay_state = True
                 self.do_callback(FEATURE_RELAY["id"])
-        elif message.ack_id == RELAY_SWITCHED_OFF:
+        elif message.ack_id == NodeResponseType.RelaySwitchedOff:
+            if self._callback_RelaySwitchedOff is not None:
+                self._callback_RelaySwitchedOff()
+            self._callback_RelaySwitchFailed = None
+            self._callback_RelaySwitchedOn = None
+            self._callback_RelaySwitchedOff = None
             if self._relay_state:
                 _LOGGER.debug(
                     "Switch relay off for %s",
@@ -285,12 +312,19 @@ class PlugwiseCircle(PlugwiseNode):
                 )
                 self._relay_state = False
                 self.do_callback(FEATURE_RELAY["id"])
+        elif message.ack_id == NodeResponseType.RelaySwitchFailed:
+            if self._callback_RelaySwitchFailed is not None:
+                self._callback_RelaySwitchFailed()
+            self._callback_RelaySwitchFailed = None
+            self._callback_RelaySwitchedOn = None
+            self._callback_RelaySwitchedOff = None
+        elif message.ack_id == NodeResponseType.ClockAccepted:
+            if self._callback_ClockAccepted is not None:
+                self._callback_ClockAccepted()
+                self._callback_ClockAccepted = None
         else:
-            _LOGGER.debug(
-                "Unmanaged _node_ack_response %s received for %s",
-                str(message.ack_id),
-                self.mac,
-            )
+            super()._process_NodeResponse(message)
+
     def _process_CirclePowerUsageResponse(
         self, message: CirclePowerUsageResponse
     ) -> None:
@@ -360,6 +394,10 @@ class PlugwiseCircle(PlugwiseNode):
             self._pulses_produced_1h = message.pulse_hour_produced.value
             self.do_callback(FEATURE_POWER_PRODUCTION_CURRENT_HOUR["id"])
 
+        if self._callback_CirclePowerUsage is not None:
+            self._callback_CirclePowerUsage()
+        self._callback_CirclePowerUsage = None
+
     def _process_CircleCalibrationResponse(
         self, message: CircleCalibrationResponse
     ) -> None:
@@ -368,6 +406,10 @@ class PlugwiseCircle(PlugwiseNode):
             val = getattr(message, calibration).value
             setattr(self, "_" + calibration, val)
         self.calibration = True
+
+        if self._callback_CircleCalibration is not None:
+            self._callback_CircleCalibration()
+        self._callback_CircleCalibration = None
 
     def pulses_to_kws(self, pulses, seconds=1):
         """
@@ -609,7 +651,9 @@ class PlugwiseCircle(PlugwiseNode):
                 self._energy_pulses_today_hourly = _pulses_today_hourly
                 self.do_callback(FEATURE_POWER_CONSUMPTION_TODAY["id"])
 
-    def request_energy_counters(self, log_address=None, callback=None):
+    def request_energy_counters(
+        self, log_address=None, callback: callable | None = None
+    ):
         """Request power log of specified address"""
         _LOGGER.debug(
             "request_energy_counters for %s of address %s", self.mac, str(log_address)
@@ -789,21 +833,24 @@ class PlugwiseCircle(PlugwiseNode):
             self.mac,
             str(self._clock_offset),
         )
+        if self._callback_CircleClockResponse is not None:
+            self._callback_CircleClockResponse()
+            self._callback_CircleClockResponse = None
 
-    def get_clock(self, callback=None):
+    def get_clock(self, callback: callable | None = None) -> None:
         """get current datetime of internal clock of Circle."""
+        self._callback_CircleClockResponse = callback
         self.message_sender(
             CircleClockGetRequest(self._mac),
-            callback,
             0,
             Priority.Low,
         )
 
-    def set_clock(self, callback=None):
+    def set_clock(self, callback: callable | None = None) -> None:
         """set internal clock of CirclePlus."""
+        self._callback_ClockAccepted = callback
         self.message_sender(
             CircleClockSetRequest(self._mac, datetime.utcnow()),
-            callback,
         )
 
     def sync_clock(self, max_drift=0):

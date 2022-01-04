@@ -8,8 +8,12 @@ from ..messages.requests import (
     CirclePlusRealTimeClockSetRequest,
     CirclePlusScanRequest,
 from ..messages.responses import (
+    CirclePlusRealTimeClockResponse,
+    CirclePlusScanResponse,
+    NodeResponse,
+    NodeResponseType,
+    PlugwiseResponse,
 )
-from ..messages.responses import CirclePlusRealTimeClockResponse, CirclePlusScanResponse
 from ..nodes.circle import PlugwiseCircle
 
 _LOGGER = logging.getLogger(__name__)
@@ -22,23 +26,47 @@ class PlugwiseCirclePlus(PlugwiseCircle):
         super().__init__(mac, address, message_sender)
         self._plugwise_nodes = {}
         self._scan_response = {}
-        self._scan_for_nodes_callback = None
         self._realtime_clock_offset = None
         self.get_real_time_clock(self.sync_realtime_clock)
+
+        # Local callback variables
+        self._callback_RealTimeClockAccepted: callable | None = None
+        self._callback_RealTimeClockFailed: callable | None = None
+        self._callback_CirclePlusRealTimeClockGet: callable | None = None
+        self._callback_CirclePlusRealTimeClockSet: callable | None = None
+        self._callback_CirclePlusScanResponse: callable | None = None
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for PlugwiseCirclePlus class."""
         self._last_update = message.timestamp
         if isinstance(message, CirclePlusRealTimeClockResponse):
             self._process_CirclePlusRealTimeClockResponse(message)
+        elif isinstance(message, NodeResponse):
+            self._process_NodeResponse(message)
         elif isinstance(message, CirclePlusScanResponse):
             self._process_CirclePlusScanResponse(message)
         else:
             super().message_for_node(message)
 
-    def scan_for_nodes(self, callback=None):
+    def _process_NodeResponse(self, message: NodeResponse) -> None:
+        """Process content of 'NodeResponse' message."""
+        if message.ack_id == NodeResponseType.RealTimeClockAccepted:
+            if self._callback_RealTimeClockAccepted is not None:
+                self._callback_RealTimeClockAccepted()
+            self._callback_RealTimeClockAccepted = None
+            self._callback_RealTimeClockFailed = None
+
+        elif message.ack_id == NodeResponseType.RealTimeClockFailed:
+            if self._callback_RealTimeClockFailed is not None:
+                self._callback_RealTimeClockFailed()
+            self._callback_RealTimeClockAccepted = None
+            self._callback_RealTimeClockFailed = None
+        else:
+            super()._process_NodeResponse(message)
+
+    def scan_for_nodes(self, callback: callable | None = None) -> None:
         """Scan for registered nodes."""
-        self._scan_for_nodes_callback = callback
+        self._callback_CirclePlusScanResponse = callback
         for node_address in range(0, 64):
             self.message_sender(CirclePlusScanRequest(self._mac, node_address))
             self._scan_response[node_address] = False
@@ -60,7 +88,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                 self._plugwise_nodes[
                     message.node_mac.value.decode(UTF8_DECODE)
                 ] = message.node_address.value
-        if self._scan_for_nodes_callback:
+        if self._callback_CirclePlusScanResponse:
             # Check if scan is complete before execute callback
             scan_complete = False
             self._scan_response[message.node_address.value] = True
@@ -78,17 +106,17 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                     break
                 if node_address == 63:
                     scan_complete = True
-            if scan_complete and self._scan_for_nodes_callback:
-                self._scan_for_nodes_callback(self._plugwise_nodes)
-                self._scan_for_nodes_callback = None
+            if scan_complete:
+                if self._callback_CirclePlusScanResponse:
+                    self._callback_CirclePlusScanResponse(self._plugwise_nodes)
+                self._callback_CirclePlusScanResponse = None
                 self._plugwise_nodes = {}
 
-    def get_real_time_clock(self, callback=None):
+    def get_real_time_clock(self, callback: callable | None = None) -> None:
         """get current datetime of internal clock of CirclePlus."""
+        self._callback_CirclePlusRealTimeClockGet = callback
         self.message_sender(
             CirclePlusRealTimeClockGetRequest(self._mac),
-            callback,
-            0,
             Priority.Low,
         )
 
@@ -116,12 +144,20 @@ class PlugwiseCirclePlus(PlugwiseCircle):
             self.mac,
             str(self._clock_offset),
         )
+        if self._callback_CirclePlusRealTimeClockGet is not None:
+            self._callback_CirclePlusRealTimeClockGet()
+            self._callback_CirclePlusRealTimeClockGet = None
 
-    def set_real_time_clock(self, callback=None):
+    def set_real_time_clock(
+        self,
+        success_callback: callable | None = None,
+        failed_callback: callable | None = None,
+    ) -> None:
         """set internal clock of CirclePlus."""
+        self._callback_RealTimeClockAccepted = success_callback
+        self._callback_RealTimeClockFailed = failed_callback
         self.message_sender(
             CirclePlusRealTimeClockSetRequest(self._mac, datetime.utcnow()),
-            callback,
         )
 
     def sync_realtime_clock(self, max_drift=0):
