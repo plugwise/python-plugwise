@@ -5,7 +5,7 @@ Main stick object to control associated plugwise plugs
 """
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 import logging
 import sys
@@ -731,7 +731,7 @@ class Stick:
         """Helper to check if SED device is still sending its hartbeat."""
         if self._device_nodes[mac].available:
             if self._device_nodes[mac].last_update < (
-                datetime.now()
+                datetime.utcnow().replace(tzinfo=timezone.utc)
                 - timedelta(minutes=(self._device_nodes[mac].maintenance_interval + 1))
             ):
                 _LOGGER.info(
@@ -740,7 +740,7 @@ class Stick:
                     mac,
                     str(self._device_nodes[mac].last_update),
                     str(
-                        datetime.now()
+                        datetime.utcnow().replace(tzinfo=timezone.utc)
                         - timedelta(
                             minutes=(self._device_nodes[mac].maintenance_interval + 1)
                         )
