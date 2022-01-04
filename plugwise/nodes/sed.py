@@ -46,7 +46,7 @@ class NodeSED(PlugwiseNode):
         Process received message
         """
         if isinstance(message, NodeAwakeResponse):
-            self._process_awake_response(message)
+            self._process_NodeAwakeResponse(message)
         elif isinstance(message, NodeResponse):
             if message.ack_id == SLEEP_SET:
                 self.maintenance_interval = self._new_maintenance_interval
@@ -68,8 +68,8 @@ class NodeSED(PlugwiseNode):
     def message_for_sense(self, message):
         """Pass messages to PlugwiseSense class"""
 
-    def _process_awake_response(self, message):
-        """ "Process awake message"""
+    def _process_NodeAwakeResponse(self, message: NodeAwakeResponse) -> None:
+        """Process content of 'NodeAwakeResponse' message."""
         _LOGGER.debug(
             "Awake message type '%s' received from %s",
             str(message.awake_type.value),

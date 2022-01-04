@@ -55,9 +55,9 @@ class PlugwiseScan(NodeSED):
                 str(message.power_state.value),
                 self.mac,
             )
-            self._process_switch_group(message)
+            self._process_NodeSwitchGroupResponse(message)
         elif isinstance(message, NodeAckResponse):
-            self._process_ack_message(message)
+            self._process_NodeAckResponse(message)
         else:
             _LOGGER.info(
                 "Unsupported message %s received from %s",
@@ -65,8 +65,8 @@ class PlugwiseScan(NodeSED):
                 self.mac,
             )
 
-    def _process_ack_message(self, message):
-        """Process acknowledge message"""
+    def _process_NodeAckResponse(self, message: NodeAckResponse):
+        """Process content of 'NodeAckResponse' message."""
         if message.ack_id == SCAN_CONFIGURE_ACCEPTED:
             self._motion_reset_timer = self._new_motion_reset_timer
             self._daylight_mode = self._new_daylight_mode
@@ -78,8 +78,9 @@ class PlugwiseScan(NodeSED):
                 self.mac,
             )
 
-    def _process_switch_group(self, message):
-        """Switch group request from Scan"""
+    def _process_NodeSwitchGroupResponse(
+        self, message: NodeSwitchGroupResponse
+    ) -> None:
         if message.power_state.value == 0:
             # turn off => clear motion
             if self._motion_state:

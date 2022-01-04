@@ -237,7 +237,7 @@ class PlugwiseCircle(PlugwiseNode):
         """
         if isinstance(message, CirclePowerUsageResponse):
             if self.calibration:
-                self._response_power_usage(message)
+                self._process_CirclePowerUsageResponse(message)
                 _LOGGER.debug(
                     "Power update for %s, last update %s",
                     self.mac,
@@ -250,9 +250,9 @@ class PlugwiseCircle(PlugwiseNode):
                 )
                 self._request_calibration(self.request_power_update)
         elif isinstance(message, NodeResponse):
-            self._node_ack_response(message)
+            self._process_NodeResponse(message)
         elif isinstance(message, CircleCalibrationResponse):
-            self._response_calibration(message)
+            self._process_CircleCalibrationResponse(message)
         elif isinstance(message, CircleEnergyCountersResponse):
             if self.calibration:
                 self._response_energy_counters(message)
@@ -261,17 +261,17 @@ class PlugwiseCircle(PlugwiseNode):
                     "Received power buffer log for %s before calibration information is known",
                     self.mac,
                 )
-                self._request_calibration(self.request_energy_counters)
+                self._process_CircleEnergyCountersResponse(message)
         elif isinstance(message, CircleClockResponse):
-            self._response_clock(message)
+            self._process_CircleClockResponse(message)
         else:
             self.message_for_circle_plus(message)
 
     def message_for_circle_plus(self, message):
         """Pass messages to PlugwiseCirclePlus class"""
 
-    def _node_ack_response(self, message):
-        """Process switch response message"""
+    def _process_NodeResponse(self, message: NodeResponse) -> None:
+        """Process content of 'NodeResponse' message."""
         if message.ack_id == RELAY_SWITCHED_ON:
             if not self._relay_state:
                 _LOGGER.debug(
@@ -294,8 +294,11 @@ class PlugwiseCircle(PlugwiseNode):
                 str(message.ack_id),
                 self.mac,
             )
+    def _process_CirclePowerUsageResponse(
+        self, message: CirclePowerUsageResponse
+    ) -> None:
+        """Process content of 'CirclePowerUsageResponse' message."""
 
-    def _response_power_usage(self, message: CirclePowerUsageResponse):
         # Sometimes the circle returns -1 for some of the pulse counters
         # likely this means the circle measures very little power and is suffering from
         # rounding errors. Zero these out. However, negative pulse values are valid
@@ -360,8 +363,10 @@ class PlugwiseCircle(PlugwiseNode):
             self._pulses_produced_1h = message.pulse_hour_produced.value
             self.do_callback(FEATURE_POWER_PRODUCTION_CURRENT_HOUR["id"])
 
-    def _response_calibration(self, message: CircleCalibrationResponse):
-        """Store calibration properties"""
+    def _process_CircleCalibrationResponse(
+        self, message: CircleCalibrationResponse
+    ) -> None:
+        """Process content of 'CircleCalibrationResponse' message."""
         for calibration in ("gain_a", "gain_b", "off_noise", "off_tot"):
             val = getattr(message, calibration).value
             setattr(self, "_" + calibration, val)
@@ -652,12 +657,15 @@ class PlugwiseCircle(PlugwiseNode):
                     Priority.Low,
                 )
 
-    def _response_energy_counters(self, message: CircleEnergyCountersResponse):
-        """
-        Save historical energy information in local counters
-        Each response message contains 4 log counters (slots)
-        of the energy pulses collected during the previous hour of given timestamp
-        """
+    def _process_CircleEnergyCountersResponse(
+        self, message: CircleEnergyCountersResponse
+    ) -> None:
+        """Process content of 'CircleEnergyCountersResponse' message."""
+
+        # Save historical energy information in local counters
+        # Each response message contains 4 log counters (slots)
+        # of the energy pulses collected during the previous hour of given timestamp
+
         if message.logaddr.value == self._last_log_address:
             self._energy_last_populated_slot = 0
 
@@ -698,7 +706,7 @@ class PlugwiseCircle(PlugwiseNode):
                 self._energy_last_rollover_timestamp = _utc_hour_timestamp
                 _history_rollover = True
                 _LOGGER.info(
-                    "_response_energy_counters for %s | history rollover, reset date to %s",
+                    "_process_CircleEnergyCountersResponse for %s | history rollover, reset date to %s",
                     self.mac,
                     str(_utc_hour_timestamp),
                 )
@@ -709,7 +717,7 @@ class PlugwiseCircle(PlugwiseNode):
                 and self._energy_consumption_today_reset < _local_midnight_timestamp
             ):
                 _LOGGER.info(
-                    "_response_energy_counters for %s | midnight rollover, reset date to %s",
+                    "_process_CircleEnergyCountersResponse for %s | midnight rollover, reset date to %s",
                     self.mac,
                     str(_local_midnight_timestamp),
                 )
@@ -728,7 +736,7 @@ class PlugwiseCircle(PlugwiseNode):
             _midnight_rollover = False
         else:
             _LOGGER.info(
-                "_response_energy_counters for %s | collection not running, len=%s, timestamp:%s=%s",
+                "_process_CircleEnergyCountersResponse for %s | collection not running, len=%s, timestamp:%s=%s",
                 self.mac,
                 str(len(self._energy_history)),
                 str(self._energy_last_collected_timestamp),
@@ -749,7 +757,7 @@ class PlugwiseCircle(PlugwiseNode):
             self._update_energy_today_now(False, _history_rollover, _midnight_rollover)
         else:
             _LOGGER.info(
-                "_response_energy_counters for %s | self._energy_history_collecting running",
+                "_process_CircleEnergyCountersResponse for %s | self._energy_history_collecting running",
                 self.mac,
                 str(_local_midnight_timestamp),
             )
@@ -762,7 +770,8 @@ class PlugwiseCircle(PlugwiseNode):
             if log_timestamp < _8_days_ago:
                 del self._energy_history[log_timestamp]
 
-    def _response_clock(self, message: CircleClockResponse):
+    def _process_CircleClockResponse(self, message: CircleClockResponse) -> None:
+        """Process content of 'CircleClockResponse' message."""
         log_date = datetime(
             datetime.utcnow().year,
             datetime.utcnow().month,
