@@ -277,6 +277,31 @@ class NodeJoinAvailableResponse(PlugwiseResponse):
     ID = b"0006"
 
 
+class NodePingResponse(PlugwiseResponse):
+    """
+    Ping response from node
+
+    - incomingLastHopRssiTarget (received signal strength indicator)
+    - lastHopRssiSource
+    - timediffInMs
+
+    Response to : NodePingRequest
+    """
+
+    ID = b"000E"
+
+    def __init__(self):
+        super().__init__()
+        self.rssi_in = Int(0, length=2)
+        self.rssi_out = Int(0, length=2)
+        self.ping_ms = Int(0, 4, False)
+        self.params += [
+            self.rssi_in,
+            self.rssi_out,
+            self.ping_ms,
+        ]
+
+
 class StickInitResponse(PlugwiseResponse):
     """
     Returns the configuration and status of the USB-Stick
@@ -307,31 +332,6 @@ class StickInitResponse(PlugwiseResponse):
             self.circle_plus_mac,
             self.network_id,
             self.unknown2,
-        ]
-
-
-class NodePingResponse(PlugwiseResponse):
-    """
-    Ping response from node
-
-    - incomingLastHopRssiTarget (received signal strength indicator)
-    - lastHopRssiSource
-    - timediffInMs
-
-    Response to : NodePingRequest
-    """
-
-    ID = b"000E"
-
-    def __init__(self):
-        super().__init__()
-        self.rssi_in = Int(0, length=2)
-        self.rssi_out = Int(0, length=2)
-        self.ping_ms = Int(0, 4, False)
-        self.params += [
-            self.rssi_in,
-            self.rssi_out,
-            self.ping_ms,
         ]
 
 
