@@ -4,6 +4,7 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 Main stick object to control associated plugwise plugs
 """
 from datetime import datetime, timedelta
+from enum import Enum
 import logging
 import sys
 import threading
@@ -11,8 +12,6 @@ import time
 
 from .constants import (
     ACCEPT_JOIN_REQUESTS,
-    CB_JOIN_REQUEST,
-    CB_NEW_NODE,
     MESSAGE_TIME_OUT,
     NODE_TYPE_CELSIUS_NR,
     NODE_TYPE_CELSIUS_SED,
@@ -22,7 +21,6 @@ from .constants import (
     NODE_TYPE_SENSE,
     NODE_TYPE_STEALTH,
     NODE_TYPE_SWITCH,
-    STATE_ACTIONS,
     UTF8_DECODE,
     WATCHDOG_DEAMON,
 )
@@ -62,6 +60,13 @@ from .util import validate_mac
 _LOGGER = logging.getLogger(__name__)
 
 
+class StickCallback(str, Enum):
+    """Available callback types to be registered to the Stick class."""
+
+    NodeDiscovered = "NEW_NODE"
+    NodeRequestToJoin = "JOIN_REQUEST"
+
+
 class Stick:
     """Plugwise connection stick."""
 
@@ -93,6 +98,11 @@ class Stick:
         self._stick_initialized = False
         self._update_thread = None
         self._watchdog_thread = None
+
+        # Local callback variables
+        self._callback_StickInit: callable | None = None
+        self._callback_NodeInfo: dict(str, callable) = {}
+        self._callback_NodeJoinAvailableResponse: dict(int, callable) = {}
 
         if callback:
             self.auto_initialize(callback)
@@ -183,7 +193,8 @@ class Stick:
         if not self.msg_controller.connection.is_connected():
             raise StickInitError
         _LOGGER.debug("Send init request to Plugwise Zigbee stick")
-        self.msg_controller.send(StickInitRequest(), callback)
+        self._callback_StickInit = callback
+        self.msg_controller.send(StickInitRequest())
         time_counter = 0
         while not self._stick_initialized and (time_counter < timeout):
             time_counter += 0.1
@@ -219,8 +230,13 @@ class Stick:
             self.msg_controller.disconnect_from_stick()
         self.msg_controller = None
 
-    def subscribe_stick_callback(self, callback, callback_type):
-        """Subscribe callback to execute."""
+    def subscribe_stick_callback(self, callback: callable, callback_type) -> int:
+        """Subscribe callback to execute.
+        Returns ID of callback registration
+        """
+
+        self._callback_NodeJoinAvailableResponse
+
         if callback_type not in self._stick_callbacks:
             self._stick_callbacks[callback_type] = []
         self._stick_callbacks[callback_type].append(callback)
@@ -378,6 +394,7 @@ class Stick:
 
     def node_join(self, mac: str, callback=None) -> bool:
         """Accept node to join Plugwise network by register mac in Circle+ memory"""
+        self._callback_NodeJoin
         if validate_mac(mac):
             self.msg_controller.send(
                 NodeAddRequest(bytes(mac, UTF8_DECODE), True), callback
@@ -455,6 +472,10 @@ class Stick:
             self._watchdog_thread.daemon = True
             self._watchdog_thread.start()
 
+        if self._callback_StickInit is not None:
+            self._callback_StickInit()
+            self._callback_StickInit = None
+
     def _process_NodeInfoResponse(self, message: NodeInfoResponse):
         """Process content of 'NodeInfoResponse' message."""
         mac = message.mac.decode(UTF8_DECODE)
@@ -482,6 +503,10 @@ class Stick:
                     )
             self._pass_message_to_node(message)
 
+        if self._callback_NodeInfo.get(mac) is not None:
+            self._callback_NodeInfo()
+            self._callback_NodeInfo = None
+
     def _process_NodeJoinAvailableResponse(self, message: NodeJoinAvailableResponse):
         """Process content of 'NodeJoinAvailableResponse' message."""
         mac = message.mac.decode(UTF8_DECODE)
@@ -492,19 +517,19 @@ class Stick:
             )
         else:
             if self._accept_join_requests:
-                # Send accept join request
+                # Auto accept active => accept join request
                 _LOGGER.info(
                     "Accepting network join request for node with mac %s",
                     mac,
                 )
-                self.msg_controller.send(NodeAddRequest(node_join_request.mac, True))
+                self.msg_controller.send(NodeAddRequest(message.mac, True))
                 self._nodes_not_discovered[mac] = (None, None)
             else:
                 _LOGGER.debug(
                     "New node with mac %s requesting to join Plugwise network, do callback",
                     mac,
                 )
-                self.do_callback(CB_JOIN_REQUEST, mac)
+                self.do_callback(StickCallback.NodeRequestToJoin, mac)
 
     def _process_node_remove(self, node_remove_response):
         """
@@ -734,7 +759,7 @@ class Stick:
                 break
         if node_discovered:
             del self._nodes_not_discovered[node_discovered]
-            self.do_callback(CB_NEW_NODE, node_discovered)
+            self.do_callback(StickCallback.NodeDiscovered, node_discovered)
             self.auto_update()
 
     def discover_node(self, mac: str, callback=None, force_discover=False):
@@ -748,19 +773,19 @@ class Stick:
             )
             self.msg_controller.send(
                 NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                callback,
             )
+            self._callback_NodeInfo[mac] = callback
         else:
             (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
             if not (firstrequest and lastrequest):
                 self.msg_controller.send(
                     NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                    callback,
                     0,
                     Priority.Low,
                 )
+                self._callback_NodeInfo[mac] = callback
             elif force_discover:
                 self.msg_controller.send(
                     NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                    callback,
                 )
+                self._callback_NodeInfo[mac] = callback
