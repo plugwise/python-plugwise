@@ -84,7 +84,7 @@ class Stick:
         self._network_id = None
         self._network_online = False
         self._nodes_discovered = None
-        self._nodes_not_discovered = {}
+        self._nodes_not_discovered: list(str) = []
         self._nodes_off_line = 0
         self._nodes_to_discover = {}
         self._port = port
@@ -310,7 +310,7 @@ class Stick:
         ):
             if self._nodes_off_line == 0:
                 self._nodes_to_discover = {}
-                self._nodes_not_discovered = {}
+                self._nodes_not_discovered = []
             else:
                 for mac in self._nodes_to_discover:
                     if not self._device_nodes.get(mac):
@@ -320,7 +320,7 @@ class Stick:
                         )
                     else:
                         if mac in self._nodes_not_discovered:
-                            del self._nodes_not_discovered[mac]
+                            self._nodes_not_discovered.remove(mac)
             self.msg_controller.discovery_finished = True
             if self._callback_scan_finished:
                 self._callback_scan_finished()
@@ -330,14 +330,16 @@ class Stick:
         """Timeout for initial scan."""
         if not self.msg_controller.discovery_finished:
             for mac in self._nodes_to_discover:
-                if mac not in self._device_nodes.keys():
+                if (
+                    mac in self._device_nodes.keys()
+                    and mac in self._nodes_not_discovered
+                ):
+                    self._nodes_not_discovered.remove(mac)
+                else:
                     _LOGGER.info(
                         "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
                         str(mac),
                     )
-                else:
-                    if mac in self._nodes_not_discovered:
-                        del self._nodes_not_discovered[mac]
             if self._callback_scan_finished:
                 self._callback_scan_finished()
                 self._callback_scan_finished = None
@@ -484,7 +486,7 @@ class Stick:
                 self._circle_plus_discovered = True
                 self._append_node(mac, 0, message.node_type.value)
                 if mac in self._nodes_not_discovered:
-                    del self._nodes_not_discovered[mac]
+                    self._nodes_not_discovered.remove(mac)
             else:
                 if mac in self._nodes_to_discover:
                     _LOGGER.info(
@@ -519,7 +521,7 @@ class Stick:
                     mac,
                 )
                 self.msg_controller.send(NodeAddRequest(message.mac, True))
-                self._nodes_not_discovered[mac] = (None, None)
+                self._nodes_not_discovered.append(mac)
             else:
                 _LOGGER.debug(
                     "New node with mac %s requesting to join Plugwise network, do callback",
@@ -757,7 +759,7 @@ class Stick:
                 node_discovered = mac
                 break
         if node_discovered:
-            del self._nodes_not_discovered[node_discovered]
+            self._nodes_not_discovered.remove(node_discovered)
             self.do_callback(StickCallback.NodeDiscovered, node_discovered)
             self.auto_update()
 
@@ -773,17 +775,4 @@ class Stick:
             _node_request.priority = Priority.Low
             _node_request.drop_at_timeout = True
             _node_request.retry_counter = MESSAGE_RETRY - 1
-            self.msg_controller.send(_node_request)
-        else:
-            (firstrequest, lastrequest) = self._nodes_not_discovered[mac]
-            if not (firstrequest and lastrequest):
-                self._callback_NodeInfo[mac] = callback
-                _node_request = NodeInfoRequest(bytes(mac, UTF8_DECODE))
-                _node_request.priority = Priority.Low
-                _node_request.retry_counter = MESSAGE_RETRY - 1
-                self.msg_controller.send(_node_request)
-            elif force_discover:
-                self._callback_NodeInfo[mac] = callback
-                self.msg_controller.send(
-                    NodeInfoRequest(bytes(mac, UTF8_DECODE)),
-                )
+        self.msg_controller.send(_node_request)
