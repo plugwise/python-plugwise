@@ -147,9 +147,10 @@ class PlugwiseNode:
             return self._rssi_out
         return 0
 
-    def do_ping(self, callback: callable | None = None) -> None:
+    def do_ping(self, forced=False, callback: callable | None = None) -> None:
         """Send network ping message to node."""
-        self._request_ping(callback, True)
+        if forced or USB.ping in self._callbacks:
+            self._request_ping(callback)
 
     def _request_info(self, callback: callable | None = None) -> None:
         """Request info from node."""
@@ -165,13 +166,14 @@ class PlugwiseNode:
             NodeFeaturesRequest(self._mac),
         )
 
-    def _request_ping(
-        self, callback: callable | None = None, ignore_sensor=True
-    ) -> None:
+    def _request_ping(self, callback: callable | None = None) -> None:
         """Ping node."""
-        if ignore_sensor or USB.ping in self._callbacks:
-            self._callback_NodePing = callback
-            self.message_sender(NodePingRequest(self._mac))
+        self._callback_NodePing = callback
+        _request = NodePingRequest(self._mac)
+        if self.available:
+            _request.priority = Priority.Low
+            _request.retry_counter = MESSAGE_RETRY - 1
+        self.message_sender(_request)
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for base PlugwiseNode class."""
