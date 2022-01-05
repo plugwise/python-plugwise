@@ -49,7 +49,6 @@ from .exceptions import (
     ResponseError,
 )
 from .util import (
-    determine_selected,
     escape_illegal_xml_characters,
     format_measure,
     in_between,
@@ -721,6 +720,8 @@ class SmileHelper:
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
                     schema_ids[rule.attrib["id"]] = loc_id
+                else:  # NEW
+                    schema_ids[rule.attrib["id"]] = None  # NEW
 
         return schema_ids
 
@@ -1082,13 +1083,12 @@ class SmileHelper:
 
         return available, selected, schedule_temperature
 
-    def _schemas(self, loc_id):
+    def _schemas(self, location):  # NEW
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
         """
-        available = ["None"]
+        available = []
         rule_ids = {}
-        schemas = {}
         schedule_temperature = None
         selected = "None"
 
@@ -1097,62 +1097,39 @@ class SmileHelper:
             return self._schemas_legacy()
 
         # Current schemas
+        if location not in self._last_active:  # NEW
+            self._last_active[location] = "None"  # NEW
+
         tag = "zone_preset_based_on_time_and_presence_with_override"
-        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
+        if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperature
 
-        for rule_id, dummy in rule_ids.items():
+        for rule_id, loc_id in rule_ids.items():  # NEW
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            active = (
-                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
-                == "true"
-            )
-            schemas[name] = active
-            schedules = {}
-            locator = f'rule[@id="{rule_id}"]/directives'
-            directives = self._domain_objects.find(locator)
-            for directive in directives:
-                schedule = directive.find("then").attrib
-                keys, dummy = zip(*schedule.items())
-                if str(keys[0]) == "preset":
-                    schedules[directive.attrib["time"]] = float(
-                        self._presets(loc_id)[schedule["preset"]][0]
-                    )
-                else:
-                    schedules[directive.attrib["time"]] = float(schedule["setpoint"])
+            available.append(name)  # NEW
+            # deleted # NEW
+            if location == loc_id:  # NEW
+                selected = name  # NEW
+                schedules = {}  # NEW
+                locator = f'rule[@id="{rule_id}"]/directives'  # NEW
+                directives = self._domain_objects.find(locator)  # NEW
+                for directive in directives:  # NEW
+                    schedule = directive.find("then").attrib  # NEW
+                    keys, dummy = zip(*schedule.items())  # NEW
+                    if str(keys[0]) == "preset":  # NEW
+                        schedules[directive.attrib["time"]] = float(  # NEW
+                            self._presets(loc_id)[schedule["preset"]][0]  # NEW
+                        )  # NEW
+                    else:  # NEW
+                        schedules[directive.attrib["time"]] = float(
+                            schedule["setpoint"]
+                        )  # NEW
 
-            schedule_temperature = schemas_schedule_temp(schedules)
-
-        available, selected = determine_selected(available, selected, schemas)
+                schedule_temperature = schemas_schedule_temp(schedules)  # NEW
+                if selected != "None":
+                    self._last_active[location] = selected  # NEW
 
         return available, selected, schedule_temperature
-
-    def _last_active_schema(self, loc_id):
-        """Helper-function for smile.py: _device_data_climate().
-        Determine the last active schema/schedule based on the Location ID.
-        """
-        epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        rule_ids = {}
-        schemas = {}
-        last_modified = None
-
-        tag = "zone_preset_based_on_time_and_presence_with_override"
-
-        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
-            return
-
-        for rule_id, dummy in rule_ids.items():
-            schema_name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            schema_date = self._domain_objects.find(
-                f'rule[@id="{rule_id}"]/modified_date'
-            ).text
-            schema_time = parse(schema_date)
-            schemas[schema_name] = (schema_time - epoch).total_seconds()
-
-        if schemas != {}:
-            last_modified = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
-
-        return last_modified
 
     def _object_value(self, obj_id, measurement):
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().

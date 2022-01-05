@@ -172,7 +172,7 @@ class SmileData(SmileHelper):
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
-            device_data["last_used"] = self._last_active_schema(loc_id)
+            device_data["last_used"] = self._last_active.get(loc_id)  # NEW
 
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
@@ -265,6 +265,7 @@ class Smile(SmileComm, SmileData):
         self._domain_objects = None
         self._heater_id = None
         self._home_location = None
+        self._last_active = {}  # NEW
         self._locations = None
         self._modules = None
         self._notifications = {}
