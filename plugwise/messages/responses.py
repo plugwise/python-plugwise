@@ -28,6 +28,8 @@ REJOIN_RESPONSE_ID = b"FFFD"
 AWAKE_RESPONSE = b"FFFE"
 SWITCH_GROUP_RESPONSE = b"FFFF"
 
+SPECIAL_SEQ_IDS = (REJOIN_RESPONSE_ID, AWAKE_RESPONSE, SWITCH_GROUP_RESPONSE)
+
 
 class StickResponseType(bytes, Enum):
     """Response message types for stick."""
