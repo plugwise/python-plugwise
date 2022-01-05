@@ -22,9 +22,7 @@ from .connections.socket import SocketConnection
 from .constants import MESSAGE_RETRY, MESSAGE_TIME_OUT, SLEEP_TIME, UTF8_DECODE
 from .messages.requests import PlugwiseRequest, Priority
 from .messages.responses import (
-    AWAKE_RESPONSE,
-    REJOIN_RESPONSE_ID,
-    SWITCH_GROUP_RESPONSE,
+    SPECIAL_SEQ_IDS,
     PlugwiseResponse,
     StickResponse,
     StickResponseType,
@@ -232,11 +230,7 @@ class StickMessageController:
                     str(message.seq_id),
                 )
             else:
-                if message.seq_id in (
-                    REJOIN_RESPONSE_ID,
-                    AWAKE_RESPONSE,
-                    SWITCH_GROUP_RESPONSE,
-                ):
+                if message.seq_id in SPECIAL_SEQ_IDS:
                     _LOGGER.info(
                         "Forward %s with seq_id=%s",
                         message.__class__.__name__,
