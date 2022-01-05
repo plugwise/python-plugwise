@@ -71,7 +71,6 @@ class Stick:
         self.circle_plus_mac = None
         self.init_callback = None
         self.msg_controller = None
-        self.scan_callback = None
 
         self._accept_join_requests = ACCEPT_JOIN_REQUESTS
         self._auto_update_manually = False
@@ -97,6 +96,7 @@ class Stick:
         self._watchdog_thread = None
 
         # Local callback variables
+        self._callback_scan_finished: callable | None = None
         self._callback_StickInit: callable | None = None
         self._callback_NodeInfo: dict(str, callable) = {}
         self._callback_NodeJoinAvailableResponse: dict(int, callable) = {}
@@ -254,9 +254,9 @@ class Stick:
         else:
             self._accept_join_requests = False
 
-    def scan(self, callback=None):
+    def scan(self, callback: callable | None = None) -> None:
         """Scan and try to detect all registered nodes."""
-        self.scan_callback = callback
+        self._callback_scan_finished = callback
         self.scan_for_registered_nodes()
 
     def scan_circle_plus(self):
@@ -322,8 +322,9 @@ class Stick:
                         if mac in self._nodes_not_discovered:
                             del self._nodes_not_discovered[mac]
             self.msg_controller.discovery_finished = True
-            if self.scan_callback:
-                self.scan_callback()
+            if self._callback_scan_finished:
+                self._callback_scan_finished()
+                self._callback_scan_finished = None
 
     def scan_timeout_expired(self):
         """Timeout for initial scan."""
@@ -337,8 +338,9 @@ class Stick:
                 else:
                     if mac in self._nodes_not_discovered:
                         del self._nodes_not_discovered[mac]
-            if self.scan_callback:
-                self.scan_callback()
+            if self._callback_scan_finished:
+                self._callback_scan_finished()
+                self._callback_scan_finished = None
 
     def _append_node(self, mac: str, address: int, node_type):
         """Add node to list of controllable nodes"""
