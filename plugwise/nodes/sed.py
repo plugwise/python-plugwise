@@ -52,6 +52,7 @@ class NodeSED(PlugwiseNode):
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for NodeSED class."""
+        self.available = True
         self._last_update = message.timestamp
         if isinstance(message, NodeAwakeResponse):
             self._process_NodeAwakeResponse(message)

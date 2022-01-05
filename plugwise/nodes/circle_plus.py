@@ -42,6 +42,7 @@ class PlugwiseCirclePlus(PlugwiseCircle):
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for PlugwiseCirclePlus class."""
+        self.available = True
         self._last_update = message.timestamp
         if isinstance(message, CirclePlusRealTimeClockResponse):
             self._process_CirclePlusRealTimeClockResponse(message)

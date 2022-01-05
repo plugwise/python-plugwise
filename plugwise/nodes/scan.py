@@ -55,6 +55,7 @@ class PlugwiseScan(NodeSED):
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for PlugwiseScan class."""
+        self.available = True
         self._last_update = message.timestamp
         if isinstance(message, NodeSwitchGroupResponse):
             self._process_NodeSwitchGroupResponse(message)

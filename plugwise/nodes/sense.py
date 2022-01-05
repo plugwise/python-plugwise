@@ -44,6 +44,7 @@ class PlugwiseSense(NodeSED):
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for PlugwiseSense class."""
+        self.available = True
         self._last_update = message.timestamp
         if isinstance(message, SenseReportResponse):
             self._process_SenseReportResponse(message)
