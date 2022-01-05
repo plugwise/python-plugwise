@@ -250,7 +250,7 @@ class StickMessageController:
                     )
             self.message_processor(message)
             if message.seq_id in self._pending_request.keys():
-                del self._pending_request[message.seq_id]
+                self._pending_request[message.seq_id].finished = True
 
     def _log_status_of_request(self, seq_id: bytes) -> None:
         """."""
@@ -295,7 +295,9 @@ class StickMessageController:
         while self._receive_timeout_thread_state:
             _utcnow = datetime.utcnow().replace(tzinfo=timezone.utc)
             for seq_id in list(self._pending_request.keys()):
-                if (
+                if self._pending_request[seq_id].finished:
+                    del self._pending_request[seq_id]
+                elif (
                     self._pending_request[seq_id].stick_response + self._timeout_delta
                     < _utcnow
                 ):

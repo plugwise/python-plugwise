@@ -40,6 +40,17 @@ class PlugwiseRequest(PlugwiseMessage):
         self._stick_state: bytes | None = None
         self._retry_counter: int = 0
         self._priority: Priority = Priority.Medium
+        self._finished: bool = False
+
+    @property
+    def finished(self) -> bool:
+        """Indicate if response to request has been received."""
+        return self._finished
+
+    @finished.setter
+    def finished(self, state: bool) -> None:
+        """Set finish state to indicate if response has been received."""
+        self._finished = state
 
     @property
     def target_mac(self) -> str:
