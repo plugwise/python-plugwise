@@ -500,10 +500,10 @@ class Stick:
                     )
             self._pass_message_to_node(message)
 
-        if self._callback_NodeInfo.get(mac):
-            if self._callback_NodeInfo[mac] is not None:
+        if mac in self._callback_NodeInfo.keys():
+            if self._callback_NodeInfo[mac]:
                 self._callback_NodeInfo[mac]()
-            self._callback_NodeInfo[mac] = None
+            del self._callback_NodeInfo[mac]
 
     def _process_NodeJoinAvailableResponse(self, message: NodeJoinAvailableResponse):
         """Process content of 'NodeJoinAvailableResponse' message."""
@@ -767,6 +767,7 @@ class Stick:
         """Helper to try to discovery the node (type) based on mac."""
         if not validate_mac(mac) or self._device_nodes.get(mac):
             return
+        self._callback_NodeInfo[mac] = callback
         if mac not in self._nodes_not_discovered:
             self._nodes_not_discovered.append(mac)
 
