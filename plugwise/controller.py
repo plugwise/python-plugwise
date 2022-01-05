@@ -20,7 +20,7 @@ from typing import TypedDict
 from .connections.serial import PlugwiseUSBConnection
 from .connections.socket import SocketConnection
 from .constants import MESSAGE_RETRY, MESSAGE_TIME_OUT, SLEEP_TIME, UTF8_DECODE
-from .messages.requests import PlugwiseRequest, Priority
+from .messages.requests import NodePingRequest, PlugwiseRequest, Priority
 from .messages.responses import (
     SPECIAL_SEQ_IDS,
     PlugwiseResponse,
@@ -274,6 +274,13 @@ class StickMessageController:
                 str(seq_id),
             )
         elif self._pending_request[seq_id].stick_state == StickResponseType.timeout:
+            if not isinstance(self._pending_request, NodePingRequest):
+                _LOGGER.warning(
+                    "Stick 'time out' received for %s%s with seq_id=%s, retry request",
+                    self._pending_request[seq_id].__class__.__name__,
+                    _target,
+                    str(seq_id),
+                )
             _request = self._pending_request[seq_id]
             _request.stick_state = None
             self._pending_request[seq_id].finished = True
