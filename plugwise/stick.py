@@ -440,9 +440,10 @@ class Stick:
 
         if message.ack_id == NodeResponseType.JoinAccepted:
             # Discovery newly accepted node
-            self.discover_node(
-                message.mac.decode(UTF8_DECODE), self._discover_after_scan
-            )
+            if not self._device_nodes.get(message.mac.decode(UTF8_DECODE)):
+                self.discover_node(
+                    message.mac.decode(UTF8_DECODE), self._discover_after_scan
+                )
         else:
             self._pass_message_to_node(message)
 
@@ -488,17 +489,16 @@ class Stick:
                 if mac in self._nodes_not_discovered:
                     self._nodes_not_discovered.remove(mac)
             else:
-                if mac in self._nodes_to_discover:
-                    _LOGGER.info(
-                        "Node with mac %s discovered",
-                        mac,
-                    )
-                    self._append_node(
-                        mac,
-                        self._nodes_to_discover[mac],
-                        message.node_type.value,
-                    )
-            self._pass_message_to_node(message)
+                _LOGGER.info(
+                    "Node with mac %s discovered",
+                    mac,
+                )
+                self._append_node(
+                    mac,
+                    self._nodes_to_discover[mac],
+                    message.node_type.value,
+                )
+        self._pass_message_to_node(message)
 
         if mac in self._callback_NodeInfo.keys():
             if self._callback_NodeInfo[mac]:
