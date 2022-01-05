@@ -640,6 +640,9 @@ class Stick:
         day_of_month = datetime.now().day
         try:
             while self._run_update_thread:
+                _available_ts = datetime.utcnow().replace(
+                    tzinfo=timezone.utc
+                ) - timedelta(minutes=5)
                 if datetime.now().day != day_of_month:
                     day_of_month = datetime.now().day
                     _sync_clock = True
@@ -649,10 +652,26 @@ class Stick:
                             # Check availability state of SED's
                             self._check_availability_of_seds(mac)
                         else:
-                            # Do ping request for all non SED's
-                            self._device_nodes[mac].do_ping()
+                            # Mark devices unavailable
+                            if (
+                                self._device_nodes[mac].available
+                                and self._device_nodes[mac].last_update < _available_ts
+                            ):
+                                _LOGGER.warning(
+                                    "Set %s to unavailable, last update: %s",
+                                    mac,
+                                    str(self._device_nodes[mac].last_update),
+                                )
+                                self._device_nodes[mac].available = False
+                                self._device_nodes[mac].do_ping(True)
+                            else:
+                                # Do ping request for all non SED's
+                                self._device_nodes[mac].do_ping()
 
-                        if self._device_nodes[mac].measures_power:
+                        if (
+                            self._device_nodes[mac].available
+                            and self._device_nodes[mac].measures_power
+                        ):
                             # Request current power usage
                             self._device_nodes[mac].request_power_update()
                             # Sync internal clock of power measure nodes once a day
