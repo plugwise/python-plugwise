@@ -175,35 +175,24 @@ class PlugwiseNode:
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
         """Process received messages for base PlugwiseNode class."""
-        if message.mac == self._mac:
-            if message.timestamp is not None:
-                _LOGGER.debug(
-                    "Previous update %s of node %s, last message %s",
-                    str(self._last_update),
-                    self.mac,
-                    str(message.timestamp),
-                )
-                self._last_update = message.timestamp
-            if not self._available:
-                self.available = True
-                self._request_info()
-            self._last_update = message.timestamp
-            if isinstance(message, NodePingResponse):
-                self._process_NodePingResponse(message)
-            elif isinstance(message, NodeResponse):
-                self._process_NodeResponse(message)
-            elif isinstance(message, NodeInfoResponse):
-                self._process_NodeInfoResponse(message)
-            elif isinstance(message, NodeFeaturesResponse):
-                self._process_NodeFeaturesResponse(message)
-            elif isinstance(message, NodeAckResponse):
-                self._process_NodeAckResponse(message)
-            else:
-                _LOGGER.warning(
-                    "Unmanaged %s received for %s",
-                    message.__class__.__name__,
-                    self.mac,
-                )
+        self._last_update = message.timestamp
+        self.available = True
+        if isinstance(message, NodePingResponse):
+            self._process_NodePingResponse(message)
+        elif isinstance(message, NodeResponse):
+            self._process_NodeResponse(message)
+        elif isinstance(message, NodeInfoResponse):
+            self._process_NodeInfoResponse(message)
+        elif isinstance(message, NodeFeaturesResponse):
+            self._process_NodeFeaturesResponse(message)
+        elif isinstance(message, NodeAckResponse):
+            self._process_NodeAckResponse(message)
+        else:
+            _LOGGER.warning(
+                "Unmanaged %s received for %s",
+                message.__class__.__name__,
+                self.mac,
+            )
 
     def subscribe_callback(self, callback: callable, sensor: str) -> bool:
         """Subscribe callback to execute when state change happens."""
