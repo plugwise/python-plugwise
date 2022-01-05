@@ -434,7 +434,7 @@ class SmileHelper:
             return appl
 
     def _appliance_info_finder(self, appliance, appl):
-        """Collect device info (Smile/Stretch, Thermostats, Auxiliary): firmware, model and vendor name."""
+        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
@@ -470,7 +470,7 @@ class SmileHelper:
             # Provide info for On-Off device
             if self._on_off_device:
                 self._heater_id = appliance.attrib["id"]
-                appl.name = "On_Off"
+                appl.name = "OnOff"
                 appl.v_name = None
                 appl.model = "Unknown"
 
@@ -481,7 +481,7 @@ class SmileHelper:
                 return None
 
             self._heater_id = appliance.attrib["id"]
-            appl.name = "Auxiliary"
+            appl.name = "OpenTherm"
             locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
             locator2 = ".//services/boiler_state"
             mod_type = "boiler_state"
