@@ -266,8 +266,10 @@ class StickMessageController:
                 _target,
                 str(seq_id),
             )
-            self._pending_request[seq_id].stick_state = None
-            self.send(self._pending_request[seq_id])
+            _request = self._pending_request[seq_id]
+            _request.stick_state = None
+            self._pending_request[seq_id].finished = True
+            self.send(_request)
         elif self._pending_request[seq_id].stick_state == StickResponseType.failed:
             _LOGGER.error(
                 "Stick failed received for %s%s with seq_id=%s",
@@ -363,6 +365,7 @@ class StickMessageController:
                     self._pending_request[_seq_id].mac == request.mac
                     and self._pending_request[_seq_id].__class__.__name__
                     == request.__class__.__name__
+                    and not self._pending_request[_seq_id].finished
                 ):
                     return True
         return False
