@@ -1055,15 +1055,12 @@ class SmileHelper:
         if preset is not None:
             return preset.text
 
-    def _schemas_legacy(self):
+    def _schemas_legacy(self, avail, sched_temp, sel):
         """Helper-function for _schemas().
         Collect available schemas/schedules for the legacy thermostat.
         """
-        available = ["None"]
         name = None
-        schedule_temperature = None
         schemas = {}
-        selected = "None"
 
         for schema in self._domain_objects.findall(".//rule"):
             if rule_name := schema.find("name").text:
@@ -1078,25 +1075,21 @@ class SmileHelper:
 
         if name is not None:
             schemas[name] = active
-            available = [name]
+            avail = [name]
             if active:
-                selected = name
+                sel = name
 
-        return available, selected, schedule_temperature
+        return avail, sel, sched_temp
 
-    def _schemas_anna(self, loc_id):
+    def _schemas_anna(self, avail, loc_id, rule_ids, sched_temp, sel):
         """Helper-function for _schemas().
         Obtain the available schemas/schedules from an non-legacy Anna based on the Location ID.
         """
-        available = ["None"]
-        rule_ids = {}
         schemas = {}
-        schedule_temperature = None
-        selected = "None"
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
-            return available, selected, schedule_temperature
+            return avail, sel, sched_temp
 
         for rule_id, dummy in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
@@ -1118,30 +1111,32 @@ class SmileHelper:
                 else:
                     schedules[directive.attrib["time"]] = float(schedule["setpoint"])
 
-            schedule_temperature = schemas_schedule_temp(schedules)
+            sched_temp = schemas_schedule_temp(schedules)
 
-        available, selected = determine_selected(available, selected, schemas)
+        avail, sel = determine_selected(avail, sel, schemas)
 
-        return available, selected, schedule_temperature
+        return avail, sel, sched_temp
 
     def _schemas(self, location):
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
         """
-        # Legacy Anna schema, only one schedule allowed
-        if self._smile_legacy:
-            return self._schemas_legacy()
-
-        # Anna schema's, only one location
-        if self.smile_name == "Anna":
-            return self._schemas_anna(location)
-
-        # Adam schema's, various schedules that can be used for various locations
         available = ["None"]
         rule_ids = {}
         schedule_temperature = None
         selected = "None"
 
+        # Legacy Anna schema, only one schedule allowed
+        if self._smile_legacy:
+            return self._schemas_legacy(available, schedule_temperature, selected)
+
+        # Anna schema's, only one location
+        if self.smile_name == "Anna":
+            return self._schemas_anna(
+                available, location, rule_ids, schedule_temperature, selected
+            )
+
+        # Adam schema's, various schedules that can be used for various locations
         if location not in self._last_active:
             self._last_active[location] = "None"
 
