@@ -1178,6 +1178,33 @@ class SmileHelper:
 
         return available, selected, schedule_temperature
 
+    def _last_active_schema(self, loc_id):
+        """Helper-function for smile.py: _device_data_climate().
+        Determine the last active schema/schedule based on the Location ID.
+        """
+        epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
+        rule_ids = {}
+        schemas = {}
+        last_modified = None
+
+        tag = "zone_preset_based_on_time_and_presence_with_override"
+
+        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
+            return
+
+        for rule_id, dummy in rule_ids.items():
+            schema_name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            schema_date = self._domain_objects.find(
+                f'rule[@id="{rule_id}"]/modified_date'
+            ).text
+            schema_time = parse(schema_date)
+            schemas[schema_name] = (schema_time - epoch).total_seconds()
+
+        if schemas != {}:
+            last_modified = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
+
+        return last_modified
+
     def _object_value(self, obj_id, measurement):
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
         Obtain the value/state for the given object.
