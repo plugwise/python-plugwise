@@ -1131,11 +1131,6 @@ class SmileHelper:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
         """
-        available = []
-        rule_ids = {}
-        schedule_temperature = None
-        selected = "None"
-
         # Legacy schemas
         if self._smile_legacy:  # Only one schedule allowed
             return self._schemas_legacy()
@@ -1143,6 +1138,10 @@ class SmileHelper:
         if self.smile_name == "Anna":
             return self._schemas_anna(location)
 
+        available = []
+        rule_ids = {}
+        schedule_temperature = None
+        selected = "None"
         # Current schemas
         if location not in self._last_active:  # NEW
             self._last_active[location] = "None"  # NEW
