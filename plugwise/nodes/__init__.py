@@ -150,7 +150,7 @@ class PlugwiseNode:
     def do_ping(self, forced=False, callback: callable | None = None) -> None:
         """Send network ping message to node."""
         if forced or USB.ping in self._callbacks:
-            self._request_ping(callback)
+            self._request_NodePing(callback)
 
     def _request_features(self, callback: callable | None = None) -> None:
         """Request supported features for this node."""
@@ -166,7 +166,7 @@ class PlugwiseNode:
         _node_request.priority = Priority.Low
         self.message_sender(_node_request)
 
-    def _request_ping(self, callback: callable | None = None) -> None:
+    def _request_NodePing(self, callback: callable | None = None) -> None:
         """Ping node."""
         self._callback_NodePing = callback
         _request = NodePingRequest(self._mac)
