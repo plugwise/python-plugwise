@@ -121,6 +121,17 @@ def format_measure(measure, unit):
     return measure
 
 
+def determine_selected(available, selected, schemas):
+    """Determine selected schema from available schemas."""
+    for schema, active in schemas.items():
+        if "None" in available:
+            available.remove("None")
+        available.append(schema)
+        if active:
+            selected = schema
+    return available, selected
+
+
 def in_between(now, start, end):
     """Determine timing for schedules."""
     if start <= end:

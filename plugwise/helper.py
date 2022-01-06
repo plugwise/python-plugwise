@@ -49,6 +49,7 @@ from .exceptions import (
     ResponseError,
 )
 from .util import (
+    determine_selected,
     escape_illegal_xml_characters,
     format_measure,
     in_between,
