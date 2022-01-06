@@ -86,7 +86,7 @@ class Stick:
         self._nodes_discovered = None
         self._nodes_not_discovered: list(str) = []
         self._nodes_off_line = 0
-        self._nodes_to_discover = {}
+        self._nodes_to_discover: dict(str, int) = {}
         self._port = port
         self._run_update_thread = False
         self._run_watchdog = None

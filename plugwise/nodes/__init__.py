@@ -37,7 +37,7 @@ class PlugwiseNode:
         self._mac = bytes(mac, encoding=UTF8_DECODE)
         self.message_sender = message_sender
         self._features = ()
-        self._address = address
+        self._address: int = address
         self._callbacks = {}
         self._last_update: datetime | None = None
         self._available: bool = False
@@ -50,7 +50,8 @@ class PlugwiseNode:
         self._hardware_version = None
         self._firmware_version = None
         self._relay_state = False
-        self._last_log_address = None
+        self._info_last_log_address: int | None = None
+        self._info_last_timestamp: datetime | None = None
         self._device_features = None
 
         # Local callback variables
@@ -240,6 +241,7 @@ class PlugwiseNode:
 
     def _process_NodeInfoResponse(self, message: NodeInfoResponse) -> None:
         """Process content of 'NodeInfoResponse' message."""
+        self._info_last_timestamp = message.timestamp
         if message.relay_state.serialize() == b"01":
             if not self._relay_state:
                 self._relay_state = True
@@ -251,8 +253,8 @@ class PlugwiseNode:
         self._hardware_version = message.hw_ver.value.decode(UTF8_DECODE)
         self._firmware_version = message.fw_ver.value
         self._node_type = message.node_type.value
-        if self._last_log_address != message.last_logaddr.value:
-            self._last_log_address = message.last_logaddr.value
+        if self._info_last_log_address != message.last_logaddr.value:
+            self._info_last_log_address = message.last_logaddr.value
         _LOGGER.debug("Node type        = %s", self.hardware_model)
         if not self._battery_powered:
             _LOGGER.debug("Relay state      = %s", str(self._relay_state))

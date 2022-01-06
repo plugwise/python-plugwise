@@ -28,8 +28,8 @@ class PlugwiseCirclePlus(PlugwiseCircle):
 
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
-        self._plugwise_nodes = {}
-        self._scan_response = {}
+        self._plugwise_nodes: dict(str, int) = {}
+        self._scan_response: dict(int, bool) = {}
         self._realtime_clock_offset = None
         self.get_real_time_clock(self.sync_realtime_clock)
 
