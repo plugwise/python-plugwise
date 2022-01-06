@@ -1182,6 +1182,9 @@ class SmileHelper:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last active schema/schedule based on the Location ID.
         """
+        if self.smile_name == "Adam":
+            return self._last_active.get(loc_id)
+
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
         rule_ids = {}
         schemas = {}
