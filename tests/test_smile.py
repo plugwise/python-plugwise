@@ -1072,7 +1072,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "ee62cad889f94e8ca3d09021f03a660b": {
                 "control_state": "off",
-                "available_schedules": ["Weekschema"],
+                "available_schedules": ["Badkamer", "Weekschema", "Test"],
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
                 "presets": {
