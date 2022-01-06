@@ -1084,6 +1084,49 @@ class SmileHelper:
 
         return available, selected, schedule_temperature
 
+    def _schemas_anna(self, loc_id):
+        """Helper-function for smile.py: _device_data_climate().
+        Obtain the available schemas/schedules based on the Location ID.
+        """
+        available = ["None"]
+        rule_ids = {}
+        schemas = {}
+        schedule_temperature = None
+        selected = "None"
+
+        # Legacy schemas
+        if self._smile_legacy:  # Only one schedule allowed
+            return self._schemas_legacy()
+
+        # Current schemas
+        tag = "zone_preset_based_on_time_and_presence_with_override"
+        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
+            return available, selected, schedule_temperature
+
+        for rule_id, dummy in rule_ids.items():
+            name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            active = (
+                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
+                == "true"
+            )
+            schemas[name] = active
+            schedules = {}
+            locator = f'rule[@id="{rule_id}"]/directives'
+            directives = self._domain_objects.find(locator)
+            for directive in directives:
+                schedule = directive.find("then").attrib
+                keys, dummy = zip(*schedule.items())
+                if str(keys[0]) == "preset":
+                    schedules[directive.attrib["time"]] = float(
+                        self._presets(loc_id)[schedule["preset"]][0]
+                    )
+                else:
+                    schedules[directive.attrib["time"]] = float(schedule["setpoint"])
+
+            schedule_temperature = schemas_schedule_temp(schedules)
+
+        available, selected = determine_selected(available, selected, schemas)
+
     def _schemas(self, location):  # NEW
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
@@ -1096,6 +1139,9 @@ class SmileHelper:
         # Legacy schemas
         if self._smile_legacy:  # Only one schedule allowed
             return self._schemas_legacy()
+
+        if self.smile_name == "Anna":
+            return self._schemas_anna(location)
 
         # Current schemas
         if location not in self._last_active:  # NEW
