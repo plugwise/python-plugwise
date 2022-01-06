@@ -1094,11 +1094,6 @@ class SmileHelper:
         schedule_temperature = None
         selected = "None"
 
-        # Legacy schemas
-        if self._smile_legacy:  # Only one schedule allowed
-            return self._schemas_legacy()
-
-        # Current schemas
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
             return available, selected, schedule_temperature
@@ -1126,6 +1121,8 @@ class SmileHelper:
             schedule_temperature = schemas_schedule_temp(schedules)
 
         available, selected = determine_selected(available, selected, schemas)
+
+        return available, selected, schedule_temperature
 
     def _schemas(self, location):  # NEW
         """Helper-function for smile.py: _device_data_climate().
