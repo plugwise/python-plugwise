@@ -172,7 +172,7 @@ class SmileData(SmileHelper):
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
-            device_data["last_used"] = self._last_active.get(loc_id)  # NEW
+            device_data["last_used"] = self._last_active_schema(loc_id)
 
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
