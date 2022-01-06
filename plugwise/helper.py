@@ -1085,8 +1085,8 @@ class SmileHelper:
         return available, selected, schedule_temperature
 
     def _schemas_anna(self, loc_id):
-        """Helper-function for smile.py: _device_data_climate().
-        Obtain the available schemas/schedules based on the Location ID.
+        """Helper-function for _schemas().
+        Obtain the available schemas/schedules from an non-legacy Anna based on the Location ID.
         """
         available = ["None"]
         rule_ids = {}
