@@ -1124,53 +1124,54 @@ class SmileHelper:
 
         return available, selected, schedule_temperature
 
-    def _schemas(self, location):  # NEW
+    def _schemas(self, location):
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules based on the Location ID.
         """
-        # Legacy schemas
-        if self._smile_legacy:  # Only one schedule allowed
+        # Legacy Anna schema, only one schedule allowed
+        if self._smile_legacy:
             return self._schemas_legacy()
 
+        # Anna schema's, only one location
         if self.smile_name == "Anna":
             return self._schemas_anna(location)
 
-        available = []
+        # Adam schema's, various schedules that can be used for various locations
+        available = ["None"]
         rule_ids = {}
         schedule_temperature = None
         selected = "None"
-        # Current schemas
-        if location not in self._last_active:  # NEW
-            self._last_active[location] = "None"  # NEW
+
+        if location not in self._last_active:
+            self._last_active[location] = "None"
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperature
 
-        for rule_id, loc_id in rule_ids.items():  # NEW
+        for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            available.append(name)  # NEW
-            # deleted # NEW
-            if location == loc_id:  # NEW
-                selected = name  # NEW
-                schedules = {}  # NEW
-                locator = f'rule[@id="{rule_id}"]/directives'  # NEW
-                directives = self._domain_objects.find(locator)  # NEW
-                for directive in directives:  # NEW
-                    schedule = directive.find("then").attrib  # NEW
-                    keys, dummy = zip(*schedule.items())  # NEW
-                    if str(keys[0]) == "preset":  # NEW
-                        schedules[directive.attrib["time"]] = float(  # NEW
-                            self._presets(loc_id)[schedule["preset"]][0]  # NEW
-                        )  # NEW
-                    else:  # NEW
+            available.append(name)
+            if location == loc_id:
+                selected = name
+                schedules = {}
+                locator = f'rule[@id="{rule_id}"]/directives'
+                directives = self._domain_objects.find(locator)
+                for directive in directives:
+                    schedule = directive.find("then").attrib
+                    keys, dummy = zip(*schedule.items())
+                    if str(keys[0]) == "preset":
+                        schedules[directive.attrib["time"]] = float(
+                            self._presets(loc_id)[schedule["preset"]][0]
+                        )
+                    else:
                         schedules[directive.attrib["time"]] = float(
                             schedule["setpoint"]
-                        )  # NEW
+                        )
 
-                schedule_temperature = schemas_schedule_temp(schedules)  # NEW
+                schedule_temperature = schemas_schedule_temp(schedules)
                 if selected != "None":
-                    self._last_active[location] = selected  # NEW
+                    self._last_active[location] = selected
 
         return available, selected, schedule_temperature
 
@@ -1178,9 +1179,11 @@ class SmileHelper:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last active schema/schedule based on the Location ID.
         """
+        # Adam
         if self.smile_name == "Adam":
             return self._last_active.get(loc_id)
 
+        # Anna's
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
         rule_ids = {}
         schemas = {}
