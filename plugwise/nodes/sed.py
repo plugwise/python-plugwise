@@ -138,7 +138,7 @@ class NodeSED(PlugwiseNode):
         )
 
     # Overrule method from PlugwiseNode class
-    def _request_info(self, callback=None):
+    def _request_NodeInfo(self, callback=None):
         """Request info from node"""
         self._callback_NodeInfo = callback
         self._queue_request(NodeInfoRequest(self._mac))

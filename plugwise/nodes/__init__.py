@@ -152,19 +152,19 @@ class PlugwiseNode:
         if forced or USB.ping in self._callbacks:
             self._request_ping(callback)
 
-    def _request_info(self, callback: callable | None = None) -> None:
-        """Request info from node."""
-        self._callback_NodeInfo = callback
-        _node_request = NodeInfoRequest(self._mac)
-        _node_request.priority = Priority.Low
-        self.message_sender(_node_request)
-
     def _request_features(self, callback: callable | None = None) -> None:
         """Request supported features for this node."""
         self._callback_NodeFeature = callback
         self.message_sender(
             NodeFeaturesRequest(self._mac),
         )
+
+    def _request_NodeInfo(self, callback: callable | None = None) -> None:
+        """Request info from node."""
+        self._callback_NodeInfo = callback
+        _node_request = NodeInfoRequest(self._mac)
+        _node_request.priority = Priority.Low
+        self.message_sender(_node_request)
 
     def _request_ping(self, callback: callable | None = None) -> None:
         """Ping node."""

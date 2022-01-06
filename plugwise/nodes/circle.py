@@ -251,7 +251,8 @@ class PlugwiseCircle(PlugwiseNode):
         """Process received messages for PlugwiseCircle class."""
         if not self.available:
             self.available = True
-            self._request_info()
+            if not isinstance(message, NodeInfoResponse):
+                self._request_NodeInfo()
         self._last_update = message.timestamp
         if isinstance(message, CirclePowerUsageResponse):
             self._process_CirclePowerUsageResponse(message)
