@@ -1086,7 +1086,6 @@ class SmileHelper:
         Obtain the available schemas/schedules from an non-legacy Anna based on the Location ID.
         """
         schemas = {}
-
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
             return avail, sel, sched_temp
