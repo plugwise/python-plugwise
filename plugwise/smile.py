@@ -520,10 +520,8 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def set_schedule_state(self, loc_id, name, state):
-        """Set the Schedule, with the given name, on the relevant Thermostat.
-        Determined from - DOMAIN_OBJECTS.
-        """
+    async def set_schedule_state_anna(self, loc_id, name, state):
+        """Helper-function for set_schedule_state()."""
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
@@ -532,6 +530,40 @@ class Smile(SmileComm, SmileData):
             return False
 
         for schema_rule_id, location_id in schema_rule_ids.items():
+            template_id = None
+            if location_id == loc_id:
+                state = str(state)
+                locator = f'.//*[@id="{schema_rule_id}"]/template'
+                for rule in self._domain_objects.findall(locator):
+                    template_id = rule.attrib["id"]
+
+                uri = f"{RULES};id={schema_rule_id}"
+                data = (
+                    "<rules><rule"
+                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+                    f' id="{template_id}"/><active>{state}</active></rule></rules>'
+                )
+
+                await self._request(uri, method="put", data=data)
+
+        return True
+
+    async def set_schedule_state(self, loc_id, name, state):
+        """Set the Schedule, with the given name, on the relevant Thermostat.
+        Determined from - DOMAIN_OBJECTS.
+        """
+        if self._smile_legacy:
+            return await self._set_schedule_state_legacy(name, state)
+
+        if self.smile_name == "Anna":
+            return await self._set_schedule_state_anna(loc_id, name, state)
+
+        # Adam
+        schema_rule_id = self._rule_ids_by_name(str(name), loc_id)
+        if schema_rule_id == {} or schema_rule_id is None:
+            return False
+
+        for rule_id, location_id in schema_rule_id.items():
             template_id = None
             if location_id == loc_id:
                 state = str(state)
