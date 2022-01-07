@@ -199,6 +199,7 @@ class SmileData(SmileHelper):
                 if self._heater_id is not None:
                     if self.cooling_active:
                         device_data["mode"] = "cool"
+        # TODO: add testcases
 
         # Control_state
         if ctrl_state := self._control_state(loc_id):
