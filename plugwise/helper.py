@@ -707,6 +707,8 @@ class SmileHelper:
         for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
+            else:
+                schema_ids[rule.attrib["id"]] = None
 
         return schema_ids
 
@@ -721,8 +723,8 @@ class SmileHelper:
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
                     schema_ids[rule.attrib["id"]] = loc_id
-                else:  # NEW
-                    schema_ids[rule.attrib["id"]] = None  # NEW
+                else:
+                    schema_ids[rule.attrib["id"]] = None
 
         return schema_ids
 
