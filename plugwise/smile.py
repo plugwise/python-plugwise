@@ -164,7 +164,11 @@ class SmileData(SmileHelper):
 
         # Presets
         presets = self._presets(loc_id)
+
+        # TODO: remove, replace by preset_setpoint for active_setppoint
         device_data["presets"] = presets
+        # TODO
+
         device_data["preset_modes"] = None
         if presets:
             device_data["preset_modes"] = list(presets)
