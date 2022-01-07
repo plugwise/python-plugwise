@@ -35,12 +35,23 @@ class PlugwiseRequest(PlugwiseMessage):
         self.mac = mac
 
         # Local property variables to support StickMessageController
+        self._drop_at_timeout: bool = False
         self._send: datetime | None = None
         self._stick_response: datetime | None = None
         self._stick_state: bytes | None = None
         self._retry_counter: int = 0
         self._priority: Priority = Priority.Medium
         self._finished: bool = False
+
+    @property
+    def drop_at_timeout(self) -> bool:
+        """Indicates if message should be dropped at first timeout."""
+        self._drop_at_timeout
+
+    @drop_at_timeout.setter
+    def drop_at_timeout(self, state: bool) -> None:
+        """Configure the action the controller should takes on message timeouts."""
+        self._drop_at_timeout = state
 
     @property
     def finished(self) -> bool:

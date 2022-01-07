@@ -185,27 +185,35 @@ class StickMessageController:
                     time.sleep(SLEEP_TIME)
                     timeout_counter += SLEEP_TIME
 
-                if timeout_counter > MESSAGE_TIME_OUT:
-                    _retry -= 1
-                    if _retry < 1:
-                        _LOGGER.error(
-                            "Stick does not respond to %s for %s after %s retries. Drop request",
-                            _request.__class__.__name__,
-                            _request.target_mac,
-                            str(MESSAGE_RETRY - _retry + 1),
-                        )
-                    else:
-                        _LOGGER.warning(
-                            "Stick does not respond to %s after %s retries. Retry request",
-                            _request.__class__.__name__,
-                            str(MESSAGE_RETRY - _retry + 1),
-                        )
-                        self.send(_request)
-                else:
-                    _LOGGER.info(
-                        "Send queue = %s",
-                        str(self._send_message_queue.qsize()),
+                if _request.drop_at_timeout:
+                    _LOGGER.error(
+                        "Stick does not respond to %s for %s, drop request as request is set to be dropped at timeout",
+                        _request.__class__.__name__,
+                        _request.target_mac,
                     )
+                else:
+                    if timeout_counter > MESSAGE_TIME_OUT:
+                        _retry -= 1
+                        if _retry < 1:
+                            _LOGGER.error(
+                                "Stick does not respond to %s for %s after %s retries. Drop request",
+                                _request.__class__.__name__,
+                                _request.target_mac,
+                                str(MESSAGE_RETRY - _retry + 1),
+                            )
+                        else:
+                            _LOGGER.warning(
+                                "Stick does not respond to %s after %s retries. Retry request",
+                                _request.__class__.__name__,
+                                str(MESSAGE_RETRY - _retry + 1),
+                            )
+                            self.send(_request)
+                    else:
+                        _LOGGER.info(
+                            "Send queue = %s",
+                            str(self._send_message_queue.qsize()),
+                        )
+
         _LOGGER.debug("Send message loop stopped")
 
     def message_handler(self, message: PlugwiseResponse) -> None:
@@ -260,16 +268,17 @@ class StickMessageController:
                 str(seq_id),
             )
         elif self._pending_request[seq_id].stick_state == StickResponseType.timeout:
-            _LOGGER.warning(
-                "Stick 'time out' received for %s%s with seq_id=%s, retry request",
-                self._pending_request[seq_id].__class__.__name__,
-                _target,
-                str(seq_id),
-            )
             _request = self._pending_request[seq_id]
             _request.stick_state = None
             self._pending_request[seq_id].finished = True
-            self.send(_request)
+            if not _request.drop_at_timeout:
+                _LOGGER.warning(
+                    "Stick 'time out' received for %s%s with seq_id=%s, retry request",
+                    self._pending_request[seq_id].__class__.__name__,
+                    _target,
+                    str(seq_id),
+                )
+                self.send(_request)
         elif self._pending_request[seq_id].stick_state == StickResponseType.failed:
             _LOGGER.error(
                 "Stick failed received for %s%s with seq_id=%s",

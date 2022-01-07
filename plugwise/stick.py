@@ -669,6 +669,7 @@ class Stick:
                     for mac in self._nodes_not_discovered:
                         _ping_request = NodePingRequest(bytes(mac, UTF8_DECODE))
                         _ping_request.priority = Priority.Low
+                        _ping_request.drop_at_timeout = True
                         _ping_request.retry_counter = MESSAGE_RETRY - 1
                         self.msg_controller.send(_ping_request)
                     _discover_counter = 0
@@ -771,12 +772,12 @@ class Stick:
         if not validate_mac(mac) or self._device_nodes.get(mac):
             return
         if mac not in self._nodes_not_discovered:
-            self._nodes_not_discovered[mac] = (
-                None,
-                None,
-            )
-            self._callback_NodeInfo[mac] = callback
-            _node_request = NodeInfoRequest(bytes(mac, UTF8_DECODE))
+            self._nodes_not_discovered.append(mac)
+
+        _node_request = NodeInfoRequest(bytes(mac, UTF8_DECODE))
+        if not force_discover:
+            _node_request.priority = Priority.Low
+            _node_request.drop_at_timeout = True
             _node_request.retry_counter = MESSAGE_RETRY - 1
             self.msg_controller.send(_node_request)
         else:
