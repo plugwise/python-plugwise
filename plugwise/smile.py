@@ -167,12 +167,12 @@ class SmileData(SmileHelper):
         preset = self._preset(loc_id)
         device_data["active_preset"] = preset
         device_data["preset_modes"] = None
-        device_data["preset_temperature"} = None
+        device_data["preset_temperature"] = None
         if presets:
             device_data["preset_modes"] = list(presets)
-            device_data["preset_temperature"} = presets[preset][0]
+            device_data["preset_temperature"] = presets[preset][0]
             if self.cooling_active:
-                device_data["preset_temperature"} = presets[preset][1]
+                device_data["preset_temperature"] = presets[preset][1]
 
         # Schedule
         avail_schemas, sel_schema, sched_setpoint = self._schemas(loc_id)
