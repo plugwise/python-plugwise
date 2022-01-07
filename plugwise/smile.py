@@ -563,21 +563,28 @@ class Smile(SmileComm, SmileData):
         if schema_rule_id == {} or schema_rule_id is None:
             return False
 
-        for rule_id, location_id in schema_rule_id.items():
+        for rule_id, dummy in schema_rule_id.items():
             template_id = None
-            if location_id == loc_id:
-                state = str(state)
-                locator = f'.//*[@id="{schema_rule_id}"]/template'
-                for rule in self._domain_objects.findall(locator):
-                    template_id = rule.attrib["id"]
+            locator = f'.//*[@id="{rule_id}"]/template'
+            rule = self._domain_objects.find(locator)
+            template_id = rule.attrib["id"]
 
-                uri = f"{RULES};id={schema_rule_id}"
+            if state == "on":
+                uri = f"{RULES};id={rule_id}"
                 data = (
                     "<rules><rule"
                     f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                    f' id="{template_id}"/><active>{state}</active></rule></rules>'
+                    f' id="{template_id}"/><contexts><zone><location id="{loc_id}"/></zone></contexts>'
                 )
+                await self._request(uri, method="put", data=data)
 
+            if state == "off":
+                uri = f"{RULES};id={rule_id}"
+                data = (
+                    "<rules><rule"
+                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+                    f' id="{template_id}"/><contexts> </contexts>'
+                )
                 await self._request(uri, method="put", data=data)
 
         return True
