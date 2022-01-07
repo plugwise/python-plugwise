@@ -161,9 +161,16 @@ class SmileData(SmileHelper):
         Determine climate-control device data.
         """
         loc_id = details["location"]
-        device_data["active_preset"] = self._preset(loc_id)
-        device_data["presets"] = self._presets(loc_id)
 
+        # Presets
+        presets = self._presets(loc_id)
+        device_data["presets"] = presets
+        device_data["preset_modes"] = None
+        if presets:
+            device_data["preset_modes"] = list(presets)
+        device_data["active_preset"] = self._preset(loc_id)
+
+        # Schedule
         avail_schemas, sel_schema, sched_setpoint = self._schemas(loc_id)
         if not self._smile_legacy:
             device_data["schedule_temperature"] = sched_setpoint
@@ -174,6 +181,22 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = self._last_active_schema(loc_id)
 
+        # Operation mode: auto, heat, cool, off
+        device_data["mode"] = "auto"
+        schedule_status = False
+        if sel_schema != "None":
+            schedule_status = True
+        if not schedule_status:
+            # Mimic HomeKit behavior
+            if self._preset(loc_id) == "away":
+                device_data["mode"] = "off"  # pragma: no cover
+            else:
+                device_data["mode"] = "heat"
+                if self._heater_id is not None:
+                    if self.cooling_active:
+                        device_data["mode"] = "cool"
+
+        # Control_state
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
