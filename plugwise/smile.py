@@ -520,7 +520,7 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def set_schedule_state_anna(self, loc_id, name, state):
+    async def _set_schedule_state_anna(self, loc_id, name, state):
         """Helper-function for set_schedule_state()."""
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
