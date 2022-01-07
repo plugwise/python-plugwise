@@ -30,6 +30,12 @@ from .messages.responses import (
 from .parser import PlugwiseParser
 
 _LOGGER = logging.getLogger(__name__)
+IGNORE_DUPLICATES = (
+    "CircleClockSetRequest",
+    "CircleEnergyLogsRequest",
+    "CirclePlusScanRequest",
+    "CirclePlusRealTimeClockSetRequest",
+)
 
 
 class MessageRequest(TypedDict):
@@ -347,12 +353,7 @@ class StickMessageController:
         """Check if request target towards same node already exists in queue."""
         if request.target_mac == "":
             return False
-        if request.__class__.__name__ in (
-            "CirclePlusScanRequest",
-            "CircleClockSetRequest",
-            "CirclePlusRealTimeClockSetRequest",
-            "CircleEnergyCountersRequest",
-        ):
+        if request.__class__.__name__ in IGNORE_DUPLICATES:
             return False
         # Check queue
         for (
