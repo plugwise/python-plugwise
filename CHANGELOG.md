@@ -1,5 +1,13 @@
 # Changelog
 
+# v0.15.8 - Stick - Improve performance and energy monitoring
+
+- Improved timeout message handling based on response messages of USB-stick
+- More frequent energy monitoring polling when Stick is idle
+- Full rewrite of energy collection code. No dependency to fixed log interval. Should fix [#149]https://github.com/plugwise/plugwise-beta/issues/149 and [157]https://github.com/plugwise/plugwise-beta/issues/157
+- Added ability to change energy log interval
+- Added full support for energy production [#39](https://github.com/plugwise/python-plugwise/issues/39)
+
 # v0.15.7 - Smile - Improve implementation of cooling-function-detection
 
 - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
