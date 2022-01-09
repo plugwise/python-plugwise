@@ -22,6 +22,12 @@ from ..messages.responses import (
 from ..util import validate_mac, version_to_model
 
 _LOGGER = logging.getLogger(__name__)
+FEATURES_NODE = (
+    USB.available,
+    USB.ping,
+    USB.rssi_in,
+    USB.rssi_out,
+)
 
 
 class PlugwiseNode:
@@ -36,7 +42,7 @@ class PlugwiseNode:
             )
         self._mac = bytes(mac, encoding=UTF8_DECODE)
         self.message_sender = message_sender
-        self._features = ()
+        self._features: tuple(USB, ...) = FEATURES_NODE
         self._address: int = address
         self._callbacks = {}
         self._last_update: datetime | None = None

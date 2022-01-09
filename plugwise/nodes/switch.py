@@ -8,6 +8,7 @@ from ..messages.responses import NodeSwitchGroupResponse, PlugwiseResponse
 from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
+FEATURES_SWITCH = (USB.switch,)
 
 
 class PlugwiseSwitch(NodeSED):
@@ -15,12 +16,7 @@ class PlugwiseSwitch(NodeSED):
 
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
-        self._features = (
-            USB.ping,
-            USB.rssi_in,
-            USB.rssi_out,
-            USB.switch,
-        )
+        self._features += FEATURES_SWITCH
         self._switch_state = False
 
     @property

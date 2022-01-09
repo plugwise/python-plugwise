@@ -14,11 +14,8 @@ from ..messages.responses import PlugwiseResponse, SenseReportResponse
 from ..nodes.sed import NodeSED
 
 _LOGGER = logging.getLogger(__name__)
-_FEATURES = (
+FEATURES_SENSE = (
     USB.humidity,
-    USB.ping,
-    USB.rssi_in,
-    USB.rssi_out,
     USB.temperature,
 )
 
@@ -28,7 +25,7 @@ class PlugwiseSense(NodeSED):
 
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
-        self._features = _FEATURES
+        self._features += FEATURES_SENSE
         self._temperature = None
         self._humidity = None
 
