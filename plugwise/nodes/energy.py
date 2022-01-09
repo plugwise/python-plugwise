@@ -50,7 +50,7 @@ PRODUCED = False
 
 
 def calc_log_address(address: int, slot: int, offset: int) -> tuple:
-    """Calculate addess and slot for log based for specified offset"""
+    """Calculate address and slot for log based for specified offset"""
 
     # FIXME: Handle max address (max is currently unknown) to guard against address rollovers
     if offset < 0:
@@ -177,7 +177,7 @@ class EnergyCounter:
 
     @property
     def calibration(self) -> CircleCalibration | None:
-        """Return current energy calibration configration."""
+        """Return current energy calibration configuration."""
         return self._calibration
 
     @calibration.setter
@@ -358,7 +358,7 @@ class EnergyCollection:
 
     @property
     def calibration(self) -> CircleCalibration | None:
-        """Energy calibration configration."""
+        """Energy calibration configuration."""
         return self._calibration
 
     @calibration.setter
@@ -546,7 +546,7 @@ class EnergyCollection:
     @property
     def missing_log_addresses(self) -> list[int] | None:
         """
-        List of any addres missing in current sequence.
+        List of any address missing in current sequence.
         Returns None if no logs are collected.
         """
         if self._logs is None:
@@ -704,7 +704,7 @@ class EnergyCollection:
     def _calc_total_pulses(self, utc_start: datetime, direction: bool) -> int | None:
         """Calculate total pulses from given point in time."""
 
-        # Intervalpulses have to be up-to-date to return usefull pulse value
+        # Intervalpulses have to be up-to-date to return useful pulse value
         if self._pulses is None:
             return None
         _log_pulses = None
@@ -920,7 +920,7 @@ class EnergyCollection:
     def _update_interval_pulses(
         self, timestamp: datetime, pulses: int | None, direction: bool
     ) -> None:
-        """Update local consumption pulse varables."""
+        """Update local consumption pulse variables."""
 
         if self._next_log_timestamp(direction) is None:
             # Not enough logs collected yet, skip checking for rollover
@@ -1053,7 +1053,7 @@ class EnergyCollection:
             and not self._rollover_interval_log[direction]
         ):
             # After expected rollover and no log rollover is started
-            # A decrease indicates a rollover prior to the expected log comming in.
+            # A decrease indicates a rollover prior to the expected log coming in.
             if pulses < self._interval_pulses[direction]:
                 # Decrease => Trigger rollover
                 self._rollover_interval_pulses[direction] = True
@@ -1074,7 +1074,7 @@ class EnergyCollection:
             and not self._rollover_interval_log[direction]
         ):
             # Interval rollover is started and we're after expected log rollover timestamp.
-            # As reset happend before, we expect a increase of pulses and wait for log rollover to happen.
+            # As reset happened before, we expect a increase of pulses and wait for log rollover to happen.
             if pulses < self._interval_pulses[direction]:
                 # Decrease => Rollover active
                 _LOGGER.debug(
