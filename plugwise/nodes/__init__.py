@@ -154,12 +154,25 @@ class PlugwiseNode:
             return self._rssi_out
         return 0
 
-    def do_ping(self, forced=False, callback: callable | None = None) -> None:
+    def do_callback(self, sensor: USB) -> None:
+        """Execute callbacks registered for specified callback type."""
+        if sensor in self._callbacks:
+            for callback in self._callbacks[sensor]:
+                try:
+                    callback(None)
+                # TODO: narrow exception
+                except Exception as err:  # pylint: disable=broad-except
+                    _LOGGER.error(
+                        "Error while executing callback : %s",
+                        err,
+                    )
+
+    def do_ping(self, callback: callable | None = None) -> None:
         """Send network ping message to node."""
-        if forced or USB.ping in self._callbacks:
+        if USB.ping in self._callbacks:
             self._request_NodePing(callback)
 
-    def _request_features(self, callback: callable | None = None) -> None:
+    def _request_NodeFeatures(self, callback: callable | None = None) -> None:
         """Request supported features for this node."""
         self._callback_NodeFeature = callback
         self.message_sender(
@@ -216,19 +229,6 @@ class PlugwiseNode:
         """Unsubscribe callback to execute when state change happens."""
         if sensor in self._callbacks:
             self._callbacks[sensor].remove(callback)
-
-    def do_callback(self, sensor):
-        """Execute callbacks registered for specified callback type."""
-        if sensor in self._callbacks:
-            for callback in self._callbacks[sensor]:
-                try:
-                    callback(None)
-                # TODO: narrow exception
-                except Exception as err:  # pylint: disable=broad-except
-                    _LOGGER.error(
-                        "Error while executing all callback : %s",
-                        err,
-                    )
 
     def _process_NodePingResponse(self, message: NodePingResponse) -> None:
         """Process content of 'NodePingResponse' message."""
