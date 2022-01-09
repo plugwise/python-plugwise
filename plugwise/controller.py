@@ -318,7 +318,17 @@ class StickMessageController:
                         )
                     else:
                         _target = ""
-                    if self._pending_request[seq_id].retry_counter >= MESSAGE_RETRY:
+                    if self._pending_request[seq_id].drop_at_timeout:
+                        _LOGGER.debug(
+                            "No response for %s%s while 'drop at timeout' is enabled => drop request (seq_id=%s, retry=%s, last try=%s, last stick_response=%s)",
+                            self._pending_request[seq_id].__class__.__name__,
+                            _target,
+                            str(seq_id),
+                            str(self._pending_request[seq_id].retry_counter),
+                            str(self._pending_request[seq_id].send),
+                            str(self._pending_request[seq_id].stick_response),
+                        )
+                    elif self._pending_request[seq_id].retry_counter >= MESSAGE_RETRY:
                         _LOGGER.warning(
                             "No response for %s%s => drop request (seq_id=%s, retry=%s, last try=%s, last stick_response=%s)",
                             self._pending_request[seq_id].__class__.__name__,
