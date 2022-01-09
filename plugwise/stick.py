@@ -30,7 +30,7 @@ from .exceptions import (
 )
 from .messages.requests import (
     NodeAddRequest,
-    NodeAllowJoiningRequest,
+    CirclePlusAllowJoiningRequest,
     NodeInfoRequest,
     NodePingRequest,
     NodeRemoveRequest,
@@ -248,7 +248,7 @@ class Stick:
         Enable or disable Plugwise network
         Automatically accept new join request
         """
-        self.msg_controller.send(NodeAllowJoiningRequest(enable))
+        self.msg_controller.send(CirclePlusAllowJoiningRequest(enable))
         if enable:
             self._accept_join_requests = accept
         else:

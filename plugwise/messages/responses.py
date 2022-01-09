@@ -30,10 +30,10 @@ from ..util import (
 )
 
 REJOIN_RESPONSE_ID = b"FFFD"
-AWAKE_RESPONSE = b"FFFE"
-SWITCH_GROUP_RESPONSE = b"FFFF"
+AWAKE_RESPONSE_ID = b"FFFE"
+SWITCH_GROUP_RESPONSE_ID = b"FFFF"
 
-SPECIAL_SEQ_IDS = (REJOIN_RESPONSE_ID, AWAKE_RESPONSE, SWITCH_GROUP_RESPONSE)
+SPECIAL_SEQ_IDS = (REJOIN_RESPONSE_ID, AWAKE_RESPONSE_ID, SWITCH_GROUP_RESPONSE_ID)
 
 
 class StickResponseType(bytes, Enum):
@@ -94,7 +94,7 @@ class PlugwiseResponse(PlugwiseMessage):
     Base class for response messages received by USB-Stick.
     """
 
-    def __init__(self, format_size=None):
+    def __init__(self, format_size: String | None = None) -> None:
         super().__init__()
         self.format_size = format_size
         self.params = []
@@ -109,7 +109,7 @@ class PlugwiseResponse(PlugwiseMessage):
         else:
             self.len_correction = 0
 
-    def deserialize(self, response):
+    def deserialize(self, response: bytes) -> None:
         self.timestamp = datetime.utcnow().replace(tzinfo=timezone.utc)
         if response[:4] != MESSAGE_HEADER:
             raise InvalidMessageHeader(
@@ -150,14 +150,15 @@ class PlugwiseResponse(PlugwiseMessage):
             msg += self.mac
         msg += _args
 
-    def _parse_params(self, response):
+    def _parse_params(self, response: bytes) -> None:
         for param in self.params:
             my_val = response[: len(param)]
             param.deserialize(my_val)
             response = response[len(my_val) :]
         return response
 
-    def __len__(self):
+    def __len__(self) -> int:
+        """Return the size of response message."""
         arglen = sum(len(x) for x in self.params)
         return 34 + arglen + self.len_correction
 
@@ -171,33 +172,37 @@ class StickResponse(PlugwiseResponse):
 
     ID = b"0000"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(STICK_MESSAGE_SIZE)
 
 
 class NodeResponse(PlugwiseResponse):
     """
-    Acknowledge message with source MAC
+    Report status from node to a specific request
 
-    Response to: Any message
+    Supported protocols : 1.0, 2.0
+    Response to requests: TODO: complete list
+                          CircleClockSetRequest
+                          CirclePlusRealTimeClockSetRequest
     """
 
     ID = b"0000"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(NODE_MESSAGE_SIZE)
 
 
-class CirclePlusQueryResponse(PlugwiseResponse):
+class NodeNetworkInfoResponse(PlugwiseResponse):
     """
-    TODO:
+    Report status of zigbee network
 
-    Response to : ???
+    Supported protocols : 1.0, 2.0
+    Response to request : NodeNetworkInfoRequest
     """
 
     ID = b"0002"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.channel = String(None, length=2)
         self.source_mac_id = String(None, length=16)
@@ -220,29 +225,31 @@ class CirclePlusQueryResponse(PlugwiseResponse):
         arglen = sum(len(x) for x in self.params)
         return 18 + arglen
 
-    def deserialize(self, response):
+    def deserialize(self, response: bytes) -> None:
         super().deserialize(response)
         # Clear first two characters of mac ID, as they contain part of the short PAN-ID
         self.new_node_mac_id.value = b"00" + self.new_node_mac_id.value[2:]
 
 
-class CirclePlusQueryEndResponse(PlugwiseResponse):
+class NodeSpecificResponse(PlugwiseResponse):
     """
-    TODO:
-        PWAckReplyV1_0
-        <argument name="code" length="2"/>
+    TODO: Report some sort of status from node
 
-    Response to : ???
+    PWAckReplyV1_0
+    <argument name="code" length="2"/>
+
+    Supported protocols : 1.0, 2.0
+    Response to requests: Unknown: TODO
     """
 
     ID = b"0003"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.status = Int(0, 4)
         self.params += [self.status]
 
-    def __len__(self):
+    def __len__(self) -> int:
         arglen = sum(len(x) for x in self.params)
         return 18 + arglen
 
@@ -251,12 +258,13 @@ class CirclePlusConnectResponse(PlugwiseResponse):
     """
     CirclePlus connected to the network
 
-    Response to : CirclePlusConnectRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : CirclePlusConnectRequest
     """
 
     ID = b"0005"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.existing = Int(0, 2)
         self.allowed = Int(0, 2)
@@ -269,9 +277,10 @@ class CirclePlusConnectResponse(PlugwiseResponse):
 
 class NodeJoinAvailableResponse(PlugwiseResponse):
     """
-    Message from an unjoined node to notify it is available to join a plugwise network
+    Request from Node to join a plugwise network
 
-    Response to : <nothing>
+    Supported protocols : 1.0, 2.0
+    Response to request : No request as every unjoined node is requesting to be added automatically
     """
 
     ID = b"0006"
@@ -279,18 +288,19 @@ class NodeJoinAvailableResponse(PlugwiseResponse):
 
 class NodePingResponse(PlugwiseResponse):
     """
-    Ping response from node
+    Ping and RSSI (Received Signal Strength Indicator) response from node
 
-    - incomingLastHopRssiTarget (received signal strength indicator)
-    - lastHopRssiSource
+    - rssi_in : Incoming last hop RSSI target
+    - rssi_out : Last hop RSSI source
     - timediffInMs
 
-    Response to : NodePingRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : NodePingRequest
     """
 
     ID = b"000E"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.rssi_in = Int(0, length=2)
         self.rssi_out = Int(0, length=2)
@@ -302,6 +312,22 @@ class NodePingResponse(PlugwiseResponse):
         ]
 
 
+class NodeImageValidationResponse(PlugwiseResponse):
+    """
+    TODO: Some kind of response to validate a firmware image for a node.
+
+    Supported protocols : 1.0, 2.0
+    Response to request : NodeImageValidationRequest
+    """
+
+    ID = b"0010"
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.timestamp = UnixTimestamp(0)
+        self.params += [self.timestamp]
+
+
 class StickInitResponse(PlugwiseResponse):
     """
     Returns the configuration and status of the USB-Stick
@@ -309,17 +335,15 @@ class StickInitResponse(PlugwiseResponse):
     Optional:
     - circle_plus_mac
     - network_id
+    - TODO: Two unknown parameters
 
-    <argument name="upYesNo" length="2"/>
-    <argument name="extendedPanId" length="16" optional="1"/>
-    <argument name="panId" length="4" optional="1"/>
-
-    Response to: StickInitRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : StickInitRequest
     """
 
     ID = b"0011"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.unknown1 = Int(0, length=2)
         self.network_is_online = Int(0, length=2)
@@ -339,37 +363,63 @@ class CirclePowerUsageResponse(PlugwiseResponse):
     """
     Returns power usage as impulse counters for several different timeframes
 
-    Response to : CirclePowerUsageRequest
+    Supported protocols : 1.0, 2.0, 2.1, 2.3
+    Response to request : CirclePowerUsageRequest
     """
 
     ID = b"0013"
 
-    def __init__(self):
+    def __init__(self, protocol_version: str = "2.3") -> None:
         super().__init__()
         self.pulse_1s = Int(0, 4)
         self.pulse_8s = Int(0, 4)
-        self.pulse_hour_consumed = Int(0, 8)
-        self.pulse_hour_produced = Int(0, 8)
         self.nanosecond_offset = Int(0, 4)
-        self.params += [
-            self.pulse_1s,
-            self.pulse_8s,
-            self.pulse_hour_consumed,
-            self.pulse_hour_produced,
-            self.nanosecond_offset,
-        ]
+        self.params += [self.pulse_1s, self.pulse_8s]
+        if protocol_version == "2.3":
+            self.pulse_counter_consumed = Int(0, 8)
+            self.pulse_counter_produced = Int(0, 8)
+            self.params += [
+                self.pulse_counter_consumed,
+                self.pulse_counter_produced,
+            ]
+        self.params += [self.nanosecond_offset]
+
+
+class CircleLogDataResponse(PlugwiseResponse):
+    """
+    TODO: Returns some kind of log data from a node.
+    Only supported at protocol version 1.0 !
+
+          <argument name="macId" length="16"/>
+          <argument name="storedAbs" length="8"/>
+          <argument name="powermeterinfo" length="8"/>
+          <argument name="flashaddress" length="8"/>
+
+    Supported protocols : 1.0
+    Response to: CircleLogDataRequest
+    """
+
+    ID = b"0015"
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.stored_abs = DateTime()
+        self.powermeterinfo = Int(0, 8, False)
+        self.flashaddress = LogAddr(0, length=8)
+        self.params += [self.stored_abs, self.powermeterinfo, self.flashaddress]
 
 
 class CirclePlusScanResponse(PlugwiseResponse):
     """
-    Returns the MAC of a registered node at the specified memory address
+    Returns the MAC of a registered node at the specified memory address of a Circle+
 
-    Response to: CirclePlusScanRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : CirclePlusScanRequest
     """
 
     ID = b"0019"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.node_mac = String(None, length=16)
         self.node_address = Int(0, 2, False)
@@ -381,12 +431,13 @@ class NodeRemoveResponse(PlugwiseResponse):
     Returns conformation (or not) if node is removed from the Plugwise network
     by having it removed from the memory of the Circle+
 
-    Response to: NodeRemoveRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : NodeRemoveRequest
     """
 
     ID = b"001D"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.node_mac_id = String(None, length=16)
         self.status = Int(0, 2)
@@ -397,24 +448,45 @@ class NodeInfoResponse(PlugwiseResponse):
     """
     Returns the status information of Node
 
-    Response to: NodeInfoRequest
+    Supported protocols : 1.0, 2.0, 2.3
+    Response to request : NodeInfoRequest
     """
 
     ID = b"0024"
 
-    def __init__(self):
+    def __init__(self, protocol_version: str = "2.0") -> None:
         super().__init__()
-        self.datetime = DateTime()
+
         self.last_logaddr = LogAddr(0, length=8)
-        self.relay_state = Int(0, length=2)
+        if protocol_version == "1.0":
+            pass
+            self.datetime = DateTime()  # FIXME: Define "absoluteHour" variable
+            self.relay_state = Int(0, length=2)
+            self.params += [
+                self.datetime,
+                self.last_logaddr,
+                self.relay_state,
+            ]
+        elif protocol_version == "2.0":
+            self.datetime = DateTime()
+            self.relay_state = Int(0, length=2)
+            self.params += [
+                self.datetime,
+                self.last_logaddr,
+                self.relay_state,
+            ]
+        elif protocol_version == "2.3":
+            self.state_mask = Int(0, length=2)  # FIXME: Define "Statemask" variable
+            self.params += [
+                self.datetime,
+                self.last_logaddr,
+                self.state_mask,
+            ]
         self.hz = Int(0, length=2)
         self.hw_ver = String(None, length=12)
         self.fw_ver = UnixTimestamp(0)
         self.node_type = Int(0, length=2)
         self.params += [
-            self.datetime,
-            self.last_logaddr,
-            self.relay_state,
             self.hz,
             self.hw_ver,
             self.fw_ver,
@@ -424,14 +496,15 @@ class NodeInfoResponse(PlugwiseResponse):
 
 class CircleCalibrationResponse(PlugwiseResponse):
     """
-    returns the calibration settings of node
+    Returns the calibration settings of node
 
-    Response to: CircleCalibrationRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : CircleCalibrationRequest
     """
 
     ID = b"0027"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.gain_a = Float(0, 8)
         self.gain_b = Float(0, 8)
@@ -444,12 +517,13 @@ class CirclePlusRealTimeClockResponse(PlugwiseResponse):
     """
     returns the real time clock of CirclePlus node
 
-    Response to: CirclePlusRealTimeClockGetRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : CirclePlusRealTimeClockGetRequest
     """
 
     ID = b"003A"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.time = RealClockTime()
@@ -458,16 +532,22 @@ class CirclePlusRealTimeClockResponse(PlugwiseResponse):
         self.params += [self.time, self.day_of_week, self.date]
 
 
+# TODO : Insert
+#
+# ID = b"003D" = Schedule response
+
+
 class CircleClockResponse(PlugwiseResponse):
     """
     Returns the current internal clock of Node
 
-    Response to: CircleClockGetRequest
+    Supported protocols : 1.0, 2.0
+    Response to request : CircleClockGetRequest
     """
 
     ID = b"003F"
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.time = Time()
         self.day_of_week = Int(0, 2, False)
@@ -476,12 +556,12 @@ class CircleClockResponse(PlugwiseResponse):
         self.params += [self.time, self.day_of_week, self.unknown, self.unknown2]
 
 
-class CircleEnergyCountersResponse(PlugwiseResponse):
+class CircleEnergyLogsResponse(PlugwiseResponse):
     """
     Returns historical energy usage of requested memory address
     Each response contains 4 energy counters at specified 1 hour timestamp
 
-    Response to: CircleEnergyCountersRequest
+    Response to: CircleEnergyLogsRequest
     """
 
     ID = b"0049"
@@ -616,40 +696,43 @@ class SenseReportResponse(PlugwiseResponse):
         self.params += [self.humidity, self.temperature]
 
 
-class CircleInitialRelaisStateResponse(PlugwiseResponse):
+class CircleRelayInitStateResponse(PlugwiseResponse):
     """
-    Returns the initial relais state.
+    Returns the configured relay state after power-up of Circle
 
-    Response to: CircleInitialRelaisStateRequest
+    Supported protocols : 2.6
+    Response to request : CircleRelayInitStateRequest
     """
 
     ID = b"0139"
 
     def __init__(self):
         super().__init__()
-        set_or_get = Int(0, length=2)
-        relais = Int(0, length=2)
-        self.params += [set_or_get, relais]
+        is_get = Int(0, length=2)
+        relay = Int(0, length=2)
+        self.params += [is_get, relay]
 
 
 id_to_message = {
-    b"0002": CirclePlusQueryResponse(),
-    b"0003": CirclePlusQueryEndResponse(),
+    b"0002": NodeNetworkInfoResponse(),
+    b"0003": NodeAckResponse(),
     b"0005": CirclePlusConnectResponse(),
     b"0006": NodeJoinAvailableResponse(),
     b"000E": NodePingResponse(),
     b"0011": StickInitResponse(),
     b"0013": CirclePowerUsageResponse(),
+    b"0015": CircleLogDataResponse(),
     b"0019": CirclePlusScanResponse(),
     b"001D": NodeRemoveResponse(),
     b"0024": NodeInfoResponse(),
     b"0027": CircleCalibrationResponse(),
     b"003A": CirclePlusRealTimeClockResponse(),
     b"003F": CircleClockResponse(),
-    b"0049": CircleEnergyCountersResponse(),
+    b"0049": CircleEnergyLogsResponse(),
     b"0060": NodeFeaturesResponse(),
     b"0100": NodeAckResponse(),
     b"0105": SenseReportResponse(),
+    b"0139": CircleRelayInitStateResponse(),
 }
 
 
@@ -661,9 +744,9 @@ def get_message_response(message_id, length, seq_id):
     # First check for known sequence ID's
     if seq_id == REJOIN_RESPONSE_ID:
         return NodeRejoinResponse()
-    if seq_id == AWAKE_RESPONSE:
+    if seq_id == AWAKE_RESPONSE_ID:
         return NodeAwakeResponse()
-    if seq_id == SWITCH_GROUP_RESPONSE:
+    if seq_id == SWITCH_GROUP_RESPONSE_ID:
         return NodeSwitchGroupResponse()
 
     # No fixed sequence ID, continue at message ID

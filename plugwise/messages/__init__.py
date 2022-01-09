@@ -10,7 +10,7 @@ class PlugwiseMessage:
     ID = b"0000"
 
     def __init__(self):
-        self.mac = ""
+        self.mac = None
         self.checksum = None
         self.args = []
 
@@ -18,7 +18,7 @@ class PlugwiseMessage:
         """Return message in a serialized format that can be sent out on wire."""
         _args = b"".join(a.serialize() for a in self.args)
         msg = self.ID
-        if self.mac != "":
+        if self.mac is not None:
             msg += self.mac
         msg += _args
         self.checksum = self.calculate_checksum(msg)
