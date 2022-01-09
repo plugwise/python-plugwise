@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 import logging
 
-from ..constants import USB, UTF8_DECODE
+from ..constants import MESSAGE_RETRY, USB, UTF8_DECODE, NodeType
 from ..messages.requests import (
     NodeFeaturesRequest,
     NodeInfoRequest,
