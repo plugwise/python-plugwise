@@ -673,7 +673,8 @@ class Stick:
                             and self._device_nodes[mac].measures_power
                         ):
                             # Request current power usage
-                            self._device_nodes[mac].request_power_update()
+                            self._device_nodes[mac].update_power_usage()
+                            self._device_nodes[mac].update_energy_log_collection()
                             # Sync internal clock of power measure nodes once a day
                             if _sync_clock:
                                 self._device_nodes[mac].sync_clock()

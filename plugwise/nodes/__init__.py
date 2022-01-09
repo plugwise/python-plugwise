@@ -55,7 +55,7 @@ class PlugwiseNode:
         self._node_type = None
         self._hardware_version = None
         self._firmware_version = None
-        self._relay_state = False
+        self._relay_state: bool = False
         self._info_last_log_address: int | None = None
         self._info_last_timestamp: datetime | None = None
         self._device_features = None
