@@ -1,28 +1,31 @@
 # Changelog
 
 # v0.15.7 - Smile - Improve implementation of cooling-function-detection
- - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
- - Adam: also provide a heating/cooling-mode active indication
- - Fixing #171
- - Improved dependency handling (@dependabot)
+
+- Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
+- Adam: also provide a heating/cooling-mode active indication
+- Fixing #171
+- Improved dependency handling (@dependabot)
 
 # v0.15.6 - Smile - Various fixes and improvements
-  - Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
-  - Adam: collect `allowed_modes` and look for `cooling`, indicating cooling capability being available
-  - Optimize code: use `_all_appliances()` once instead of 3 times, by updating/changing `single_master_thermostat()`,
-  - Protect several more variables,
-  - Change/improve how `illuminance` and `outdoor_temperature` are obtained,
-  - Use walrus operator where applicable,
-  - Various small code improvements,
-  - Add and adapt testcode
-  - Add testing for python 3.10, improve dependencies (github workflow)
-  - Bump aiohttp to 3.8.1, remove fixed dependencies
+
+- Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
+- Adam: collect `allowed_modes` and look for `cooling`, indicating cooling capability being available
+- Optimize code: use `_all_appliances()` once instead of 3 times, by updating/changing `single_master_thermostat()`,
+- Protect several more variables,
+- Change/improve how `illuminance` and `outdoor_temperature` are obtained,
+- Use walrus operator where applicable,
+- Various small code improvements,
+- Add and adapt testcode
+- Add testing for python 3.10, improve dependencies (github workflow)
+- Bump aiohttp to 3.8.1, remove fixed dependencies
 
 # v0.15.5 - Skipping, not released
 
 ## v0.15.4 - Smile - Bugfix: handle removed thermostats
-  - Recognize when a thermostat has been removed from a zone and don't show it in Core
-  - Rename Group Switch to Switchgroup, remove vendor name
+
+- Recognize when a thermostat has been removed from a zone and don't show it in Core
+- Rename Group Switch to Switchgroup, remove vendor name
 
 ## v0.15.3 - Skipping, not released
 
@@ -43,7 +46,7 @@
 
 ## v0.14.1 - Smile: removing further `last_reset`s
 
- - As per https://developers.home-assistant.io/blog/2021/08/16/state_class_total
+- As per <https://developers.home-assistant.io/blog/2021/08/16/state_class_total>
 
 ## v0.14.0 - Smile: sensor-platform updates - 2021.9 compatible
 
