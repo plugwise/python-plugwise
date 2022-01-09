@@ -115,7 +115,7 @@ class PlugwiseNode:
 
     @property
     def last_update(self) -> datetime:
-        """Return datetime of last received update."""
+        """Return datetime of last received update in UTC."""
         return self._last_update
 
     @property
