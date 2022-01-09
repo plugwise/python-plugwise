@@ -391,8 +391,6 @@ class PlugwiseCircle(PlugwiseNode):
             self._process_CircleEnergyLogsResponse(message)
         elif isinstance(message, CircleClockResponse):
             self._process_CircleClockResponse(message)
-        elif isinstance(message, NodeInfoResponse):
-            self._process_NodeInfoResponse(message)
         else:
             super().message_for_node(message)
 
@@ -562,21 +560,6 @@ class PlugwiseCircle(PlugwiseNode):
             self._update_intervals()
         else:
             super()._process_NodeResponse(message)
-
-    def _process_NodeInfoResponse(self, message: NodeInfoResponse) -> None:
-        """Process contents of 'NodeInfoResponse' message"""
-        _protocol_set = False
-        if self._protocol is None:
-            _protocol_set = True
-        super()._process_NodeInfoResponse(message)
-        if _protocol_set and self._protocol:
-            if self._protocol[1] == "2.6":
-                # Request the current configuration of relay state at power-up
-                _relay_init_request = CircleRelayInitStateRequest(
-                    self._mac, False, False
-                )
-                _relay_init_request.priority = Priority.Low
-                self.message_sender(_relay_init_request)
 
     def _update_intervals(self) -> None:
         """Update interval features."""
