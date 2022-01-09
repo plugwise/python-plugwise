@@ -98,7 +98,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._pulses_8s: float | None = None
         self._pluses_consumed: int = 0
         self._pluses_produced: int = 0
-        self._energy = EnergyCollection(ENERGY_COUNTER_IDS, self._log)
+        self._energy = EnergyCollection(ENERGY_COUNTER_IDS)
 
         # local log duration interval variables
         self._log_interval_consumption: int | None = None
@@ -277,55 +277,38 @@ class PlugwiseCircle(PlugwiseNode):
         _missing_addresses = self._energy.missing_log_addresses
 
         if _missing_addresses is not None:
-            if self._log:
-                _LOGGER.error(
-                    "update_energy_log_collection for %s | Request missing | missing=%s, self._energy.next_log_timestamp=%s",
-                    self.mac,
-                    str(_missing_addresses),
-                    str(self._energy.next_log_timestamp),
-                )
             for _address in _missing_addresses:
                 self._request_CircleEnergyLogs(_address)
-        else:
-            # Less than two full log addresses has been collected. Request logs stored at last 4 addresses
-            if self._info_last_timestamp > datetime.utcnow().replace(
-                tzinfo=timezone.utc
-            ) - timedelta(minutes=1):
-                # Recent node info, so do an initial request for last 10 log addresses
-                if self._log:
-                    _LOGGER.error(
-                        "update_energy_log_collection for %s | Request initial | _info_last_timestamp=%s, self._info_last_log_address=%s",
-                        self.mac,
-                        str(self._info_last_timestamp),
-                        str(self._info_last_log_address),
-                    )
-                for _address in range(
-                    self._info_last_log_address,
-                    self._info_last_log_address - 11,
-                    -1,
-                ):
-                    self._request_CircleEnergyLogs(_address)
-            elif self._info_last_timestamp < datetime.utcnow().replace(
-                tzinfo=timezone.utc
-            ) - timedelta(minutes=15):
-                # node request older than 15 minutes, do node info request first
-                if self._log:
-                    _LOGGER.error(
-                        "update_energy_log_collection for %s | Request node info | _info_last_timestamp=%s, self._info_last_log_address=%s",
-                        self.mac,
-                        str(self._info_last_timestamp),
-                        str(self._info_last_log_address),
-                    )
-                self._request_NodeInfo(self.update_energy_log_collection)
-            else:
-                if self._log:
-                    _LOGGER.error(
-                        "update_energy_log_collection for %s | Skip initial | _info_last_timestamp=%s",
-                        self.mac,
-                        str(self._info_last_timestamp),
-                    )
-        if self._log:
-            _LOGGER.error("update_energy_log_collection for %s | Finished", self.mac)
+            return
+
+        # Less than two full log addresses has been collected. Request logs stored at last 4 addresses
+        if self._info_last_timestamp > datetime.utcnow().replace(
+            tzinfo=timezone.utc
+        ) - timedelta(minutes=1):
+            # Recent node info, so do an initial request for last 10 log addresses
+            _LOGGER.debug(
+                "update_energy_log_collection for %s | Request initial | _info_last_timestamp=%s, self._info_last_log_address=%s",
+                self.mac,
+                str(self._info_last_timestamp),
+                str(self._info_last_log_address),
+            )
+            for _address in range(
+                self._info_last_log_address,
+                self._info_last_log_address - 11,
+                -1,
+            ):
+                self._request_CircleEnergyLogs(_address)
+        elif self._info_last_timestamp < datetime.utcnow().replace(
+            tzinfo=timezone.utc
+        ) - timedelta(minutes=15):
+            # node request older than 15 minutes, do node info request first
+            _LOGGER.debug(
+                "update_energy_log_collection for %s | Request node info | _info_last_timestamp=%s, self._info_last_log_address=%s",
+                self.mac,
+                str(self._info_last_timestamp),
+                str(self._info_last_log_address),
+            )
+            self._request_NodeInfo(self.update_energy_log_collection)
 
     def _request_CircleCalibration(self, callback: callable | None = None) -> None:
         """Request calibration info"""
@@ -350,21 +333,11 @@ class PlugwiseCircle(PlugwiseNode):
         self, address: int, callback: callable | None = None
     ) -> None:
         """Request energy counters for given memory address"""
-        if self._log:
-            _LOGGER.error(
-                "_request_CircleEnergyLogs for %s | address=%s", self.mac, str(address)
-            )
         if address not in self._energy.log_collected_addresses:
             self._callback_CircleEnergyLogs[address] = callback
             _request = CircleEnergyLogsRequest(self._mac, address)
             _request.priority = Priority.Low
             self.message_sender(_request)
-            if self._log:
-                _LOGGER.error(
-                    "_request_CircleEnergyLogs for %s | SEND address=%s",
-                    self.mac,
-                    str(address),
-                )
 
     def _request_CircleMeasureInterval(
         self,
@@ -472,15 +445,6 @@ class PlugwiseCircle(PlugwiseNode):
         for _slot in range(4, 0, -1):
             _log_timestamp = getattr(message, "logdate%d" % (_slot,)).value
             _log_pulses = getattr(message, "pulses%d" % (_slot,)).value
-            if self._log:
-                _LOGGER.info(
-                    "_process_CircleEnergyLogsResponse for %s | address=%s, slot=%s, timestamp=%s, pulses=%s",
-                    self.mac,
-                    str(message.logaddr.value),
-                    str(_slot),
-                    str(_log_timestamp),
-                    str(_log_pulses),
-                )
             if _log_timestamp is not None:
                 _log_state: PulseLog = {
                     Pulses.address: message.logaddr.value,
