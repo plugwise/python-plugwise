@@ -164,9 +164,8 @@ class EnergyCounter:
     Class to hold energy counter statistics.
     """
 
-    def __init__(self, feature_id: USB, log=False) -> None:
+    def __init__(self, feature_id: USB) -> None:
         """Initialize EnergyCounter class."""
-        self._debug_log = log
         self._calibration: CircleCalibration | None = None
         self._consumption: bool = ENERGY_COUNTERS[feature_id]["consumption"]
         self._energy: float | None = None
@@ -285,10 +284,8 @@ class EnergyCollection:
     Also calculates the interval duration
     """
 
-    def __init__(self, energy_counter_ids: tuple[USB], log=False):
+    def __init__(self, energy_counter_ids: tuple[USB]):
         """Initialize EnergyCollection class."""
-
-        self._debug_log = log
         self._energy_counter_ids = energy_counter_ids
         self._calibration: CircleCalibration | None = None
         self._counters: dict[USB, EnergyCounter] = self._initialize_counters()
@@ -345,7 +342,7 @@ class EnergyCollection:
         """Setup counters and define max_counter_id."""
         _counters = {}
         for _feature in self._energy_counter_ids:
-            _counters[_feature] = EnergyCounter(_feature, self._debug_log)
+            _counters[_feature] = EnergyCounter(_feature)
         return _counters
 
     def _get_max_counter_id(self, consumption: bool) -> USB | None:
@@ -418,18 +415,14 @@ class EnergyCollection:
     @log.setter
     def log(self, pulse_log: PulseLog) -> None:
         """Store last received PulseLog values."""
-
-        if self._debug_log:
-            _LOGGER.error(
-                "EnergyCollection | log.setter | START | address=%s, slot=%s, pulses=%s, timestamp=%s, duplicate=%s",
-                str(pulse_log[Pulses.address]),
-                str(pulse_log[Pulses.slot]),
-                str(pulse_log[Pulses.pulses]),
-                str(pulse_log[Pulses.timestamp]),
-                str(
-                    self._log_exists(pulse_log[Pulses.address], pulse_log[Pulses.slot])
-                ),
-            )
+        _LOGGER.debug(
+            "EnergyCollection | log.setter | address=%s, slot=%s, pulses=%s, timestamp=%s, duplicate=%s",
+            str(pulse_log[Pulses.address]),
+            str(pulse_log[Pulses.slot]),
+            str(pulse_log[Pulses.pulses]),
+            str(pulse_log[Pulses.timestamp]),
+            str(self._log_exists(pulse_log[Pulses.address], pulse_log[Pulses.slot])),
+        )
 
         self._log = pulse_log
 
@@ -458,15 +451,6 @@ class EnergyCollection:
             self._cleanup_logs()
             self._update_interval_deltas(_direction)
             self._update_counters(_direction)
-
-        if self._debug_log:
-            _LOGGER.error(
-                "EnergyCollection | log.setter | FINISHED | address=%s, slot=%s, pulses=%s, timestamp=%s",
-                str(pulse_log[Pulses.address]),
-                str(pulse_log[Pulses.slot]),
-                str(pulse_log[Pulses.pulses]),
-                str(pulse_log[Pulses.timestamp]),
-            )
 
     @property
     def log_address_first(self) -> int | None:
@@ -601,22 +585,11 @@ class EnergyCollection:
 
         for _address in self._missing_addresses_before(_before):
             if _address not in _missing:
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | missing_log_addresses | Add before (%s) : %s",
-                        str(_before),
-                        str(_address),
-                    )
                 _missing.append(_address)
 
         # Add missing log addresses post to last collected log
         for _address in self._missing_addresses_after():
             if _address not in _missing:
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | missing_log_addresses | Add after :%s",
-                        str(_address),
-                    )
                 _missing.append(_address)
 
         return _missing
@@ -629,12 +602,11 @@ class EnergyCollection:
     @pulses.setter
     def pulses(self, pulses: PulseInterval) -> None:
         """Store last received PulseInterval values."""
-        if self._debug_log:
-            _LOGGER.error(
-                "EnergyCollection | pulses.setter | START | consumption=%s, production=%s",
-                str(pulses[Pulses.consumption]),
-                str(pulses[Pulses.production]),
-            )
+        _LOGGER.debug(
+            "EnergyCollection | pulses.setter | consumption=%s, production=%s",
+            str(pulses[Pulses.consumption]),
+            str(pulses[Pulses.production]),
+        )
         self._pulses = pulses
         self._update_interval_pulses(
             pulses[Pulses.timestamp], pulses[Pulses.consumption], CONSUMED
@@ -644,13 +616,6 @@ class EnergyCollection:
         )
         self._update_counters(CONSUMED)
         self._update_counters(False)
-
-        if self._debug_log:
-            _LOGGER.error(
-                "EnergyCollection | pulses.setter | FINISHED | consumption=%s, production=%s",
-                str(pulses[Pulses.consumption]),
-                str(pulses[Pulses.production]),
-            )
 
     def _cleanup_logs(self) -> None:
         """Delete expired collected logs"""
@@ -750,12 +715,11 @@ class EnergyCollection:
             self._rollover_interval_pulses[direction]
             or self._rollover_interval_log[direction]
         ):
-            if self._debug_log and direction:
-                _LOGGER.error(
-                    "EnergyCollection | _calc_total_pulses | Skip | Rollover active: pulses=%s, log=%s",
-                    str(self._rollover_interval_pulses[direction]),
-                    str(self._rollover_interval_log[direction]),
-                )
+            _LOGGER.debug(
+                "EnergyCollection | _calc_total_pulses | Skip | Rollover active: pulses=%s, log=%s",
+                str(self._rollover_interval_pulses[direction]),
+                str(self._rollover_interval_log[direction]),
+            )
             return None
         else:
             if self._log_last[direction] and utc_start >= self._log_last[direction][2]:
@@ -764,15 +728,13 @@ class EnergyCollection:
         # Collect total pulses from logs
         if _log_pulses is None:
             _log_pulses = self._calc_log_pulses(utc_start, direction)
-
-        if self._debug_log and direction:
-            _LOGGER.error(
-                "EnergyCollection | _calc_total_pulses | start=%s, _log_pulses=%s, _interval_pulses=%s, direction=%s",
-                str(utc_start),
-                str(_log_pulses),
-                str(self._interval_pulses[direction]),
-                str(direction),
-            )
+        _LOGGER.debug(
+            "EnergyCollection | _calc_total_pulses | start=%s, _log_pulses=%s, _interval_pulses=%s, direction=%s",
+            str(utc_start),
+            str(_log_pulses),
+            str(self._interval_pulses[direction]),
+            str(direction),
+        )
 
         if _log_pulses is not None and self._interval_pulses[direction] is not None:
             return _log_pulses + self._interval_pulses[direction]
@@ -908,12 +870,11 @@ class EnergyCollection:
                         # Possible counter rollover, retry using new timestamp
                         self._update_counter(_id, direction)
         else:
-            if self._debug_log:
-                _LOGGER.error(
-                    "EnergyCollection | _update_counters | SKIP, rollover active, pulse=%s, log=%s",
-                    str(self._rollover_interval_pulses[direction]),
-                    str(self._rollover_interval_log[direction]),
-                )
+            _LOGGER.debug(
+                "EnergyCollection | _update_counters | SKIP, rollover active, pulse=%s, log=%s",
+                str(self._rollover_interval_pulses[direction]),
+                str(self._rollover_interval_log[direction]),
+            )
 
     def _update_counter(self, counter_id: USB, direction: bool) -> bool:
         """
@@ -926,13 +887,12 @@ class EnergyCollection:
                 self._counters[counter_id].reset, direction
             )
         ) is not None:
-            if self._debug_log and direction:
-                _LOGGER.error(
-                    "EnergyCollection | _update_counter | id=%s, pulses=%s, start=%s",
-                    str(counter_id),
-                    str(_tot_pulses),
-                    str(self._counters[counter_id].reset),
-                )
+            _LOGGER.debug(
+                "EnergyCollection | _update_counter | id=%s, pulses=%s, start=%s",
+                str(counter_id),
+                str(_tot_pulses),
+                str(self._counters[counter_id].reset),
+            )
             _pulse_stats: PulseStats = {
                 Pulses.timestamp: self._pulses[Pulses.timestamp],
                 Pulses.start: self._counters[counter_id].reset,
@@ -942,11 +902,10 @@ class EnergyCollection:
             if self._counters[counter_id].energy is None:
                 return True
         else:
-            if self._debug_log and direction:
-                _LOGGER.error(
-                    "EnergyCollection | _update_counter | _id=%s, _tot_pulses=None",
-                    str(counter_id),
-                )
+            _LOGGER.debug(
+                "EnergyCollection | _update_counter | _id=%s, _tot_pulses=None",
+                str(counter_id),
+            )
         return False
 
     def _update_interval_deltas(self, direction: bool) -> None:
@@ -965,26 +924,24 @@ class EnergyCollection:
 
         if self._next_log_timestamp(direction) is None:
             # Not enough logs collected yet, skip checking for rollover
-            if self._debug_log:
-                _LOGGER.error(
-                    "EnergyCollection | _update_interval_pulses | _next_interval | pulses.timestamp=%s, self._next_log_timestamp=%s, direction=%s",
-                    str(timestamp),
-                    str(self._next_log_timestamp(direction)),
-                    str(direction),
-                )
+            _LOGGER.debug(
+                "EnergyCollection | _update_interval_pulses | _next_interval | pulses.timestamp=%s, self._next_log_timestamp=%s, direction=%s",
+                str(timestamp),
+                str(self._next_log_timestamp(direction)),
+                str(direction),
+            )
             self._interval_pulses[direction] = pulses
             self._update_counters(direction)
         else:
-            if self._debug_log:
-                _LOGGER.error(
-                    "EnergyCollection | _update_interval_pulses | pulses=%s, _interval_consumption_pulses=%s, timestamp=%s, _next_interval=%s, _rollover_interval_consumption_pulses=%s, _rollover_consumption_log=%s",
-                    str(pulses),
-                    str(self._interval_pulses[direction]),
-                    str(timestamp),
-                    str(self._next_log_timestamp(direction)),
-                    str(self._rollover_interval_pulses[direction]),
-                    str(self._rollover_interval_log[direction]),
-                )
+            _LOGGER.debug(
+                "EnergyCollection | _update_interval_pulses | pulses=%s, _interval_consumption_pulses=%s, timestamp=%s, _next_interval=%s, _rollover_interval_consumption_pulses=%s, _rollover_consumption_log=%s",
+                str(pulses),
+                str(self._interval_pulses[direction]),
+                str(timestamp),
+                str(self._next_log_timestamp(direction)),
+                str(self._rollover_interval_pulses[direction]),
+                str(self._rollover_interval_log[direction]),
+            )
             if timestamp < self._next_log_timestamp(direction):
                 self._update_before_log(timestamp, pulses, direction)
             else:
@@ -1003,20 +960,18 @@ class EnergyCollection:
             if pulses < self._interval_pulses[direction]:
                 # Decrease of interval pulses => Trigger interval rollover
                 self._rollover_interval_pulses[direction] = True
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_before_log | Decrease => Trigger rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_before_log | Decrease => Trigger rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
             else:
                 # Increase of interval pulses => Regular update
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_before_log | Increase => Regular update | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_before_log | Increase => Regular update | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
         elif (
             self._rollover_interval_pulses[direction]
             and not self._rollover_interval_log[direction]
@@ -1025,20 +980,18 @@ class EnergyCollection:
             # We expect an increase of pulses as previously reset is active before.
             if pulses < self._interval_pulses[direction]:
                 # Next decrease => Rollover already active
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_before_log | Decrease => Interval rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_before_log | Decrease => Interval rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
             else:
                 # Increase => Rollover already active
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_before_log | Increase => Interval rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_before_log | Increase => Interval rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
         elif (
             not self._rollover_interval_pulses[direction]
             and self._rollover_interval_log[direction]
@@ -1048,29 +1001,26 @@ class EnergyCollection:
             if pulses < self._interval_pulses[direction]:
                 # Decrease => Finish rollover
                 self._rollover_interval_log[direction] = False
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_before_log | Decrease => Finish log rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
-            else:
-                # Increase => Finish rollover
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_before_log | Increase => Log rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
-        else:
-            if self._debug_log:
-                _LOGGER.warning(
-                    "EnergyCollection | _update_before_log | Unexpected state - %s,%s | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                    str(self._rollover_interval_pulses[direction]),
-                    str(self._rollover_interval_log[direction]),
+                _LOGGER.debug(
+                    "EnergyCollection | _update_before_log | Decrease => Finish log rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
                     str(timestamp),
                     str(self._next_log_timestamp(direction)),
                 )
+            else:
+                # Increase => Finish rollover
+                _LOGGER.debug(
+                    "EnergyCollection | _update_before_log | Increase => Log rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
+        else:
+            _LOGGER.warning(
+                "EnergyCollection | _update_before_log | Unexpected state - %s,%s | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                str(self._rollover_interval_pulses[direction]),
+                str(self._rollover_interval_log[direction]),
+                str(timestamp),
+                str(self._next_log_timestamp(direction)),
+            )
 
         self._interval_pulses[direction] = pulses
 
@@ -1086,20 +1036,18 @@ class EnergyCollection:
             if pulses < self._interval_pulses[direction]:
                 # Decrease => Finish rollover
                 self._rollover_interval_log[direction] = False
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_after_log | Decrease => Finish log rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_after_log | Decrease => Finish log rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
             else:
                 # Increase => Update
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_after_log | Increase => Log rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_after_log | Increase => Log rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
         elif (
             not self._rollover_interval_pulses[direction]
             and not self._rollover_interval_log[direction]
@@ -1109,20 +1057,18 @@ class EnergyCollection:
             if pulses < self._interval_pulses[direction]:
                 # Decrease => Trigger rollover
                 self._rollover_interval_pulses[direction] = True
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_after_log | Decrease => Trigger rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_after_log | Decrease => Trigger rollover | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
             else:
                 # Increase => Without rollover active
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_after_log | Increase => Without rollover active |  pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
+                _LOGGER.debug(
+                    "EnergyCollection | _update_after_log | Increase => Without rollover active |  pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
         elif (
             self._rollover_interval_pulses[direction]
             and not self._rollover_interval_log[direction]
@@ -1131,30 +1077,27 @@ class EnergyCollection:
             # As reset happend before, we expect a increase of pulses and wait for log rollover to happen.
             if pulses < self._interval_pulses[direction]:
                 # Decrease => Rollover active
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_after_log | Decrease => Rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
-            else:
-                # Increase => Rollover active
-                self._interval_pulses[direction] = pulses
-                if self._debug_log:
-                    _LOGGER.error(
-                        "EnergyCollection | _update_after_log | Increase => Rollover active |  pulses.timestamp=%s, self._next_log_timestamp=%s",
-                        str(timestamp),
-                        str(self._next_log_timestamp(direction)),
-                    )
-        else:
-            self._rollover_interval_log[direction] = False
-            self._rollover_interval_pulses[direction] = False
-            if self._debug_log:
-                _LOGGER.warning(
-                    "EnergyCollection | _update_after_log | Unexpected state reset both | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                _LOGGER.debug(
+                    "EnergyCollection | _update_after_log | Decrease => Rollover active | pulses.timestamp=%s, self._next_log_timestamp=%s",
                     str(timestamp),
                     str(self._next_log_timestamp(direction)),
                 )
+            else:
+                # Increase => Rollover active
+                self._interval_pulses[direction] = pulses
+                _LOGGER.debug(
+                    "EnergyCollection | _update_after_log | Increase => Rollover active |  pulses.timestamp=%s, self._next_log_timestamp=%s",
+                    str(timestamp),
+                    str(self._next_log_timestamp(direction)),
+                )
+        else:
+            self._rollover_interval_log[direction] = False
+            self._rollover_interval_pulses[direction] = False
+            _LOGGER.warning(
+                "EnergyCollection | _update_after_log | Unexpected state reset both | pulses.timestamp=%s, self._next_log_timestamp=%s",
+                str(timestamp),
+                str(self._next_log_timestamp(direction)),
+            )
         self._interval_pulses[direction] = pulses
 
     def _update_log_states(self) -> tuple(bool, bool):
@@ -1241,17 +1184,16 @@ class EnergyCollection:
         """Handle log rollovers."""
 
         _next_ts = self._next_log_timestamp(direction)
-        if self._debug_log:
-            _LOGGER.error(
-                "EnergyCollection | _update_log_rollovers | START | direction=%s |cp=%s, cl=%s, pp=%s, pl=%s | check ts=%s >= next_ts=%s",
-                str(direction),
-                str(self._rollover_interval_pulses[CONSUMED]),
-                str(self._rollover_interval_log[CONSUMED]),
-                str(self._rollover_interval_pulses[PRODUCED]),
-                str(self._rollover_interval_log[PRODUCED]),
-                str(timestamp),
-                str(_next_ts),
-            )
+        _LOGGER.debug(
+            "EnergyCollection | _update_log_rollovers | START | direction=%s | cp=%s, cl=%s, pp=%s, pl=%s | check ts=%s >= next_ts=%s",
+            str(direction),
+            str(self._rollover_interval_pulses[CONSUMED]),
+            str(self._rollover_interval_log[CONSUMED]),
+            str(self._rollover_interval_pulses[PRODUCED]),
+            str(self._rollover_interval_log[PRODUCED]),
+            str(timestamp),
+            str(_next_ts),
+        )
 
         if _next_ts is not None and timestamp >= _next_ts:
             if (
@@ -1267,12 +1209,11 @@ class EnergyCollection:
                 # Start log rollover
                 self._rollover_interval_log[direction] = True
 
-        if self._debug_log:
-            _LOGGER.error(
-                "EnergyCollection | _update_log_rollovers | FINISHED | direction=%s |cp=%s, cl=%s, pp=%s, pl=%s",
-                str(direction),
-                str(self._rollover_interval_pulses[CONSUMED]),
-                str(self._rollover_interval_log[CONSUMED]),
-                str(self._rollover_interval_pulses[PRODUCED]),
-                str(self._rollover_interval_log[PRODUCED]),
-            )
+        _LOGGER.debug(
+            "EnergyCollection | _update_log_rollovers | FINISHED | direction=%s | cp=%s, cl=%s, pp=%s, pl=%s",
+            str(direction),
+            str(self._rollover_interval_pulses[CONSUMED]),
+            str(self._rollover_interval_log[CONSUMED]),
+            str(self._rollover_interval_pulses[PRODUCED]),
+            str(self._rollover_interval_log[PRODUCED]),
+        )
