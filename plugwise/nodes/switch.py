@@ -25,7 +25,7 @@ class PlugwiseSwitch(NodeSED):
         return self._switch_state
 
     def message_for_node(self, message: PlugwiseResponse) -> None:
-        """Process received messages for PlugwiseSense class."""
+        """Process received messages for PlugwiseSwitch class."""
         self.available = True
         self._last_update = message.timestamp
         if isinstance(message, NodeSwitchGroupResponse):
