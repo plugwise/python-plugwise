@@ -5,14 +5,6 @@ from datetime import datetime, timedelta, timezone
 import logging
 
 from ..constants import (
-    FEATURE_ENERGY_CONSUMPTION_TODAY,
-    FEATURE_POWER_CONSUMPTION_CURRENT_HOUR,
-    FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR,
-    FEATURE_POWER_CONSUMPTION_TODAY,
-    FEATURE_POWER_CONSUMPTION_YESTERDAY,
-    FEATURE_POWER_PRODUCTION_CURRENT_HOUR,
-    FEATURE_POWER_USE,
-    FEATURE_POWER_USE_LAST_8_SEC,
     MAX_TIME_DRIFT,
     MESSAGE_TIME_OUT,
     PULSES_PER_KW_SECOND,
@@ -38,11 +30,16 @@ from ..messages.responses import (
 )
 from ..nodes import PlugwiseNode
 
-_FEATURES = (
-    USB.available,
-    USB.ping,
-    USB.rssi_in,
-    USB.rssi_out,
+FEATURES_CIRCLE = (
+    USB.hour_cons,
+    USB.hour_prod,
+    USB.day_cons,
+    USB.day_prod,
+    USB.interval_cons,
+    USB.interval_prod,
+    USB.power_1s,
+    USB.power_8s,
+    USB.relay,
 )
 _LOGGER = logging.getLogger(__name__)
 
@@ -52,21 +49,6 @@ class PlugwiseCircle(PlugwiseNode):
 
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
-        self._features = (
-            FEATURE_ENERGY_CONSUMPTION_TODAY["id"],
-            FEATURE_PING["id"],
-            FEATURE_POWER_USE["id"],
-            FEATURE_POWER_USE_LAST_8_SEC["id"],
-            FEATURE_POWER_CONSUMPTION_CURRENT_HOUR["id"],
-            FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR["id"],
-            FEATURE_POWER_CONSUMPTION_TODAY["id"],
-            FEATURE_POWER_CONSUMPTION_YESTERDAY["id"],
-            FEATURE_POWER_PRODUCTION_CURRENT_HOUR["id"],
-            # FEATURE_POWER_PRODUCTION_PREVIOUS_HOUR["id"],
-            FEATURE_RSSI_IN["id"],
-            FEATURE_RSSI_OUT["id"],
-            FEATURE_RELAY["id"],
-        )
         self._energy_consumption_today_reset = datetime.now().replace(
             hour=0, minute=0, second=0, microsecond=0
         )
@@ -103,6 +85,9 @@ class PlugwiseCircle(PlugwiseNode):
             minute=0, second=0, microsecond=0
         ) - datetime.utcnow().replace(minute=0, second=0, microsecond=0)
         self._clock_offset = None
+
+        # Supported features of node
+        self._features += FEATURES_CIRCLE
 
         # Local callback variables
         self._callback_RelaySwitchedOn: callable | None = None

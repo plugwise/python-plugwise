@@ -20,12 +20,7 @@ from ..messages.responses import (
 )
 from ..nodes.sed import NodeSED
 
-_FEATURES = (
-    USB.motion,
-    USB.ping,
-    USB.rssi_in,
-    USB.rssi_out,
-)
+FEATURES_SCAN = (USB.motion,)
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -34,7 +29,7 @@ class PlugwiseScan(NodeSED):
 
     def __init__(self, mac: str, address: int, message_sender: callable):
         super().__init__(mac, address, message_sender)
-        self._features = _FEATURES
+        self._features += FEATURES_SCAN
         self._motion_state = False
         self._motion_reset_timer = None
         self._daylight_mode = None
