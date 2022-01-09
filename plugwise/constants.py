@@ -1,5 +1,6 @@
 """Plugwise Stick and Smile constants."""
 
+from datetime import datetime, timezone
 from enum import Enum
 
 # Copied homeassistant.consts
@@ -30,10 +31,19 @@ VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
 
 ### Stick constants ###
 
+LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo
+DAY_IN_HOURS = 24
+WEEK_IN_HOURS = 168
+
 DAY_IN_MINUTES = 1440
 HOUR_IN_MINUTES = 60
 
 DAY_IN_SECONDS = 86400
+HOUR_IN_SECONDS = 3600
+MINUTE_IN_SECONDS = 60
+
+SECOND_IN_NANOSECONDS = 1000000000
+
 UTF8_DECODE = "utf-8"
 
 # Serial connection settings for plugwise USB stick
@@ -55,7 +65,11 @@ MESSAGE_RETRY = 3
 # plugwise year information is offset from y2k
 PLUGWISE_EPOCH = 2000
 PULSES_PER_KW_SECOND = 468.9385193
+
+# Energy log memory addresses
 LOGADDR_OFFSET = 278528
+LOGADDR_MAX = 65535  # TODO: Determine last log address, currently not used yet
+
 
 # Default sleep between sending messages
 SLEEP_TIME = 0.1
@@ -177,117 +191,6 @@ SENSE_HUMIDITY_OFFSET = 6
 SENSE_TEMPERATURE_MULTIPLIER = 175.72
 SENSE_TEMPERATURE_OFFSET = 46.85
 
-# Stick device features
-FEATURE_AVAILABLE = {
-    "id": "available",
-    "name": "Available",
-    "state": "available",
-    "unit": "state",
-}
-FEATURE_ENERGY_CONSUMPTION_TODAY = {
-    "id": "energy_consumption_today",
-    "name": "Energy consumption today",
-    "state": "Energy_consumption_today",
-    "unit": ENERGY_KILO_WATT_HOUR,
-}
-FEATURE_HUMIDITY = {
-    "id": "humidity",
-    "name": "Humidity",
-    "state": "humidity",
-    "unit": "%",
-}
-FEATURE_MOTION = {
-    "id": "motion",
-    "name": "Motion",
-    "state": "motion",
-    "unit": "state",
-}
-FEATURE_PING = {
-    "id": "ping",
-    "name": "Ping roundtrip",
-    "state": "ping",
-    "unit": TIME_MILLISECONDS,
-}
-FEATURE_POWER_USE = {
-    "id": "power_1s",
-    "name": "Power usage",
-    "state": "current_power_usage",
-    "unit": POWER_WATT,
-}
-FEATURE_POWER_USE_LAST_8_SEC = {
-    "id": "power_8s",
-    "name": "Power usage 8 seconds",
-    "state": "current_power_usage_8_sec",
-    "unit": POWER_WATT,
-}
-FEATURE_POWER_CONSUMPTION_CURRENT_HOUR = {
-    "id": "power_con_cur_hour",
-    "name": "Power consumption current hour",
-    "state": "power_consumption_current_hour",
-    "unit": ENERGY_KILO_WATT_HOUR,
-}
-FEATURE_POWER_CONSUMPTION_PREVIOUS_HOUR = {
-    "id": "power_con_prev_hour",
-    "name": "Power consumption previous hour",
-    "state": "power_consumption_previous_hour",
-    "unit": ENERGY_KILO_WATT_HOUR,
-}
-FEATURE_POWER_CONSUMPTION_TODAY = {
-    "id": "power_con_today",
-    "name": "Power consumption today",
-    "state": "power_consumption_today",
-    "unit": ENERGY_KILO_WATT_HOUR,
-}
-FEATURE_POWER_CONSUMPTION_YESTERDAY = {
-    "id": "power_con_yesterday",
-    "name": "Power consumption yesterday",
-    "state": "power_consumption_yesterday",
-    "unit": ENERGY_KILO_WATT_HOUR,
-}
-FEATURE_POWER_PRODUCTION_CURRENT_HOUR = {
-    "id": "power_prod_cur_hour",
-    "name": "Power production current hour",
-    "state": "power_production_current_hour",
-    "unit": ENERGY_KILO_WATT_HOUR,
-}
-FEATURE_POWER_PRODUCTION_PREVIOUS_HOUR = {
-    "id": "power_prod_prev_hour",
-    "name": "Power production previous hour",
-    "state": "power_production_previous_hour",
-    "unit": ENERGY_KILO_WATT_HOUR,
-}
-FEATURE_RELAY = {
-    "id": "relay",
-    "name": "Relay state",
-    "state": "relay_state",
-    "unit": "state",
-}
-FEATURE_SWITCH = {
-    "id": "switch",
-    "name": "Switch state",
-    "state": "switch_state",
-    "unit": "state",
-}
-FEATURE_TEMPERATURE = {
-    "id": "temperature",
-    "name": "Temperature",
-    "state": "temperature",
-    "unit": TEMP_CELSIUS,
-}
-
-# TODO: Need to validate RSSI sensors
-FEATURE_RSSI_IN = {
-    "id": "RSSI_in",
-    "name": "RSSI in",
-    "state": "rssi_in",
-    "unit": "Unknown",
-}
-FEATURE_RSSI_OUT = {
-    "id": "RSSI_out",
-    "name": "RSSI out",
-    "state": "rssi_out",
-    "unit": "Unknown",
-}
 
 ### Smile constants ###
 
