@@ -489,15 +489,16 @@ class Stick:
                 if mac in self._nodes_not_discovered:
                     self._nodes_not_discovered.remove(mac)
             else:
-                _LOGGER.info(
-                    "Node with mac %s discovered",
-                    mac,
-                )
-                self._append_node(
-                    mac,
-                    self._nodes_to_discover[mac],
-                    message.node_type.value,
-                )
+                if mac in self._nodes_to_discover:
+                    _LOGGER.info(
+                        "Node with mac %s discovered",
+                        mac,
+                    )
+                    self._append_node(
+                        mac,
+                        self._nodes_to_discover[mac],
+                        message.node_type.value,
+                    )
         self._pass_message_to_node(message)
 
         if mac in self._callback_NodeInfo.keys():
