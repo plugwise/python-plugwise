@@ -205,7 +205,7 @@ class EnergyCounter:
 
     @statistics.setter
     def statistics(self, statistics: PulseStats) -> None:
-        """Pulse statistics since last counter reset. """
+        """Pulse statistics since last counter reset."""
         if self._statistics is None:
             self._statistics = statistics
         else:
