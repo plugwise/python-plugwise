@@ -7,6 +7,8 @@ import logging
 
 import aiohttp
 
+from defusedxml import ElementTree as etree
+
 # Dict as class
 from munch import Munch
 
@@ -520,34 +522,6 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def _set_schedule_state_anna(self, loc_id, name, state):
-        """Helper-function for set_schedule_state()."""
-        if self._smile_legacy:
-            return await self._set_schedule_state_legacy(name, state)
-
-        schema_rule_ids = self._rule_ids_by_name(str(name), loc_id)
-        if schema_rule_ids == {} or schema_rule_ids is None:
-            return False
-
-        for schema_rule_id, location_id in schema_rule_ids.items():
-            template_id = None
-            if location_id == loc_id:
-                state = str(state)
-                locator = f'.//*[@id="{schema_rule_id}"]/template'
-                for rule in self._domain_objects.findall(locator):
-                    template_id = rule.attrib["id"]
-
-                uri = f"{RULES};id={schema_rule_id}"
-                data = (
-                    "<rules><rule"
-                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                    f' id="{template_id}"/><active>{state}</active></rule></rules>'
-                )
-
-                await self._request(uri, method="put", data=data)
-
-        return True
-
     async def set_schedule_state(self, loc_id, name, state):
         """Set the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
@@ -555,37 +529,33 @@ class Smile(SmileComm, SmileData):
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
-        if self.smile_name == "Anna":
-            return await self._set_schedule_state_anna(loc_id, name, state)
-
-        # Adam
-        schema_rule_id = self._rule_ids_by_name(str(name), loc_id)
-        if schema_rule_id == {} or schema_rule_id is None:
+        schema_rule = self._rule_ids_by_name(str(name), loc_id)
+        if schema_rule == {} or schema_rule is None:
             return False
 
-        for rule_id, dummy in schema_rule_id.items():
-            template_id = None
-            locator = f'.//*[@id="{rule_id}"]/template'
-            rule = self._domain_objects.find(locator)
-            template_id = rule.attrib["id"]
+        schema_rule_id = next(iter(schema_rule))
+        state = str(state)
+        locator = f'.//rule[@id="{schema_rule_id}"]/directives'
+        directives = etree.tostring(self._domain_objects.find(locator)).decode()
+        locator = f'.//*[@id="{schema_rule_id}"]/template'
+        template_id = self._domain_objects.find(locator).attrib["id"]
 
-            if state == "on":
-                uri = f"{RULES};id={rule_id}"
-                data = (
-                    "<rules><rule"
-                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                    f' id="{template_id}"/><contexts><zone><location id="{loc_id}"/></zone></contexts>'
-                )
-                await self._request(uri, method="put", data=data)
+        if state == "off":
+            uri = f"{RULES};id={schema_rule_id}"
+            data = (
+                f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+                f' id="{template_id}" /><active>true</active>{directives}<contexts> </contexts></rule></rules>'
+            )
+            await self._request(uri, method="put", data=data)
 
-            if state == "off":
-                uri = f"{RULES};id={rule_id}"
-                data = (
-                    "<rules><rule"
-                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                    f' id="{template_id}"/><contexts> </contexts>'
-                )
-                await self._request(uri, method="put", data=data)
+        if state == "on":
+            uri = f"{RULES};id={schema_rule_id}"
+            data = (
+                f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+                f' id="{template_id}" /><active>true</active>{directives}<contexts><context>'
+                f'<zone><location id="{loc_id}" /></zone></context></contexts></rule></rules>'
+            )
+            await self._request(uri, method="put", data=data)
 
         return True
 
