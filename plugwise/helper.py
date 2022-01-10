@@ -138,11 +138,14 @@ def check_model(name, v_name):
         return name
 
 
-def schemas_schedule_temp(schedules):
+def schemas_schedule_temp(schedules, name):
     """Helper-function for schemas().
     Obtain the schedule temperature of the schema/schedule.
     """
-    for period, temp in schedules.items():
+    if name == "None":
+        return
+
+    for period, temp in schedules[name].items():
         moment_1, moment_2 = period.split(",")
         moment_1 = moment_1.replace("[", "").split(" ")
         moment_2 = moment_2.replace(")", "").split(" ")
@@ -1083,44 +1086,9 @@ class SmileHelper:
 
         return avail, sel, sched_temp
 
-    def _schemas_anna(self, avail, loc_id, rule_ids, sched_temp, sel):
-        """Helper-function for _schemas().
-        Obtain the available schemas/schedules from an non-legacy Anna based on the Location ID.
-        """
-        schemas = {}
-        tag = "zone_preset_based_on_time_and_presence_with_override"
-        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
-            return avail, sel, sched_temp
-
-        for rule_id, dummy in rule_ids.items():
-            name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            active = (
-                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
-                == "true"
-            )
-            schemas[name] = active
-            schedules = {}
-            locator = f'rule[@id="{rule_id}"]/directives'
-            directives = self._domain_objects.find(locator)
-            for directive in directives:
-                schedule = directive.find("then").attrib
-                keys, dummy = zip(*schedule.items())
-                if str(keys[0]) == "preset":
-                    schedules[directive.attrib["time"]] = float(
-                        self._presets(loc_id)[schedule["preset"]][0]
-                    )
-                else:
-                    schedules[directive.attrib["time"]] = float(schedule["setpoint"])
-
-            sched_temp = schemas_schedule_temp(schedules)
-
-        avail, sel = determine_selected(avail, sel, schemas)
-
-        return avail, sel, sched_temp
-
     def _schemas(self, location):
         """Helper-function for smile.py: _device_data_climate().
-        Obtain the available schemas/schedules based on the Location ID.
+        Obtain the available schemas/schedules based, they can all be connected to one location.
         """
         available = ["None"]
         rule_ids = {}
@@ -1131,12 +1099,6 @@ class SmileHelper:
         if self._smile_legacy:
             return self._schemas_legacy(available, schedule_temperature, selected)
 
-        # Anna schema's, only one location
-        if self.smile_name == "Anna":
-            return self._schemas_anna(
-                available, location, rule_ids, schedule_temperature, selected
-            )
-
         # Adam schema's, various schedules that can be used for various locations
         if location not in self._last_active:
             self._last_active[location] = "None"
@@ -1146,29 +1108,34 @@ class SmileHelper:
             return available, selected, schedule_temperature
 
         available.remove("None")
+        schedules = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
             available.append(name)
             if location == loc_id:
                 selected = name
-                schedules = {}
-                locator = f'rule[@id="{rule_id}"]/directives'
-                directives = self._domain_objects.find(locator)
-                for directive in directives:
-                    schedule = directive.find("then").attrib
-                    keys, dummy = zip(*schedule.items())
-                    if str(keys[0]) == "preset":
-                        schedules[directive.attrib["time"]] = float(
-                            self._presets(loc_id)[schedule["preset"]][0]
-                        )
-                    else:
-                        schedules[directive.attrib["time"]] = float(
-                            schedule["setpoint"]
-                        )
 
-                schedule_temperature = schemas_schedule_temp(schedules)
-                if selected != "None":
-                    self._last_active[location] = selected
+            schedule = {}
+            locator = f'rule[@id="{rule_id}"]/directives'
+            directives = self._domain_objects.find(locator)
+            for directive in directives:
+                entry = directive.find("then").attrib
+                keys, dummy = zip(*entry.items())
+                if str(keys[0]) == "preset":
+                    schedule[directive.attrib["time"]] = float(
+                        self._presets(loc_id)[entry["preset"]][0]
+                    )
+                else:
+                    schedule[directive.attrib["time"]] = float(entry["setpoint"])
+
+            schedules[name] = schedule
+
+            if selected != "None":
+                self._last_active[location] = selected
+
+        schedule_temperature = schemas_schedule_temp(
+            schedules, self._last_active_schema(location)
+        )
 
         return available, selected, schedule_temperature
 
