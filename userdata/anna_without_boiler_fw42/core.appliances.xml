@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appliances>
+	<appliance id='c46b4794d28149699eacf053deedd003'>
+		<name>Central heating boiler</name>
+		<description></description>
+		<type>heater_central</type>
+		<created_date>2019-01-31T12:18:35.141+01:00</created_date>
+		<modified_date>2022-01-11T19:35:47.806+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='8debe5ae23774ea8b9f8b01b5f3199e9'>
+				<type>central_heating_state</type>
+				<unit></unit>
+				<updated_date>2022-01-11T19:01:05.633+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T19:01:05.633+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='22c7a570a10c4b95b99ac1880ee23c5e'/>
+				<period start_date="2022-01-11T19:01:05.633+01:00" end_date="2022-01-11T19:01:05.633+01:00">
+					<measurement log_date="2022-01-11T19:01:05.633+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='97fbfb8102dd4b21892e567d770b2fbb'>
+				<type>intended_central_heating_state</type>
+				<unit></unit>
+				<updated_date>2022-01-11T19:01:08.923+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T19:01:08.923+01:00</last_consecutive_log_date>
+				<interval/>
+				<boiler_state id='d00211aa409c4b1bafd114b10bce1aaa'/>
+				<period start_date="2022-01-11T19:01:08.923+01:00" end_date="2022-01-11T19:01:08.923+01:00">
+					<measurement log_date="2022-01-11T19:01:08.923+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='dbb0790c78164aa09ba59c5dc0e302f0'>
+				<type>burner_operation_time</type>
+				<unit>s</unit>
+				<updated_date>2022-01-11T19:00:00+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T18:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<interval_chrono_meter id='9eeb1d474ff341daa431d9e67e76bc19'/>
+				<period start_date="2022-01-11T19:00:00+01:00" end_date="2022-01-11T19:00:00+01:00" interval="PT1H">
+					<measurement log_date="2022-01-11T19:00:00+01:00">2081</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+	<appliance id='7ffbb3ab4b6c4ab2915d7510f7bf8fe9'>
+		<name>Anna</name>
+		<description>A thermostat</description>
+		<type>thermostat</type>
+		<created_date>2019-04-23T20:32:36.648+02:00</created_date>
+		<modified_date>2022-01-11T19:35:59.413+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='c34c6864216446528e95d88985e714cc'/>
+		<groups/>
+		<logs>
+			<point_log id='139424e07ef74dca84e288d34027f4a8'>
+				<type>cpu_frequency</type>
+				<unit>Hz</unit>
+				<updated_date>2022-01-11T09:37:40+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T09:37:40+01:00</last_consecutive_log_date>
+				<interval/>
+				<frequency_meter id='356da2846d83410fbca988b3a8683c72'/>
+				<period start_date="2022-01-11T09:37:40+01:00" end_date="2022-01-11T09:37:40+01:00">
+					<measurement log_date="2022-01-11T09:37:40+01:00">8000000</measurement>
+				</period>
+			</point_log>
+			<point_log id='1e4fce5ecc8b4d7faa3a4cebc374b86b'>
+				<type>proximity_detection</type>
+				<unit></unit>
+				<updated_date>2021-12-10T12:14:17.963+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-10T12:14:17.963+01:00</last_consecutive_log_date>
+				<interval/>
+				<proximity_sensor id='11f12162bbfc4a0d9939c2e1815bb58b'/>
+				<period start_date="2021-12-10T12:14:17.963+01:00" end_date="2021-12-10T12:14:17.963+01:00">
+					<measurement log_date="2021-12-10T12:14:17.963+01:00">no_proximity_detected</measurement>
+				</period>
+			</point_log>
+			<point_log id='49114f82027f49e3abb12cf18d5c240c'>
+				<type>temperature_offset</type>
+				<unit>C</unit>
+				<updated_date>2021-10-27T05:31:42.109+02:00</updated_date>
+				<last_consecutive_log_date>2020-06-03T01:37:16.877+02:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset id='b93e9a0840894acca62c199319d139f1'/>
+				<period start_date="2021-10-27T05:31:42.109+02:00" end_date="2021-10-27T05:31:42.109+02:00">
+					<measurement log_date="2021-10-27T05:31:42.109+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='503fd771e8994ff58e6046d93c2229ee'>
+				<type>temperature</type>
+				<unit>C</unit>
+				<updated_date>2022-01-11T19:34:45.556+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T18:57:42.765+01:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='dbb618e08abd4d148de6958364bd12e8'/>
+				<period start_date="2022-01-11T19:34:45.556+01:00" end_date="2022-01-11T19:34:45.556+01:00">
+					<measurement log_date="2022-01-11T19:34:45.556+01:00">20.65</measurement>
+				</period>
+			</point_log>
+			<point_log id='515d73905c4348f9aadc5199c2bc5d7b'>
+				<type>button_right</type>
+				<unit></unit>
+				<updated_date>2021-12-07T19:05:57.517+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-07T19:05:57.517+01:00</last_consecutive_log_date>
+				<interval/>
+				<button id='fcec2aa88efc4d60bcf2db3fa830c877'/>
+				<period start_date="2021-12-07T19:05:57.517+01:00" end_date="2021-12-07T19:05:57.517+01:00">
+					<measurement log_date="2021-12-07T19:05:57.517+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='67a07f469f92472794ad7216dea3ec35'>
+				<type>onoff_boiler_temperature_deadband</type>
+				<unit>C</unit>
+				<updated_date>2021-10-27T05:31:42.048+02:00</updated_date>
+				<last_consecutive_log_date>2021-08-06T18:27:55.049+02:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset_meter id='d9aab83f4be844d182a6ec53025a26b8'/>
+				<period start_date="2021-10-27T05:31:42.048+02:00" end_date="2021-10-27T05:31:42.048+02:00">
+					<measurement log_date="2021-10-27T05:31:42.048+02:00">0.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='969795dd5e7545bbb307626d9855a860'>
+				<type>open_therm_boiler_activation_threshold</type>
+				<unit>C</unit>
+				<updated_date>2021-10-27T05:31:42.046+02:00</updated_date>
+				<last_consecutive_log_date>2020-06-03T01:37:16.729+02:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset_meter id='df79431903254399ab721af901c4fed4'/>
+				<period start_date="2021-10-27T05:31:42.046+02:00" end_date="2021-10-27T05:31:42.046+02:00">
+					<measurement log_date="2021-10-27T05:31:42.046+02:00">10.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='9df5ad0db84f459b8d2861c86029e1b7'>
+				<type>button_top</type>
+				<unit></unit>
+				<updated_date>2021-12-09T08:39:44.587+01:00</updated_date>
+				<last_consecutive_log_date>2021-12-09T08:39:44.587+01:00</last_consecutive_log_date>
+				<interval/>
+				<button id='3e1ee37176aa4440ac62be3cdbb23f8e'/>
+				<period start_date="2021-12-09T08:39:44.587+01:00" end_date="2021-12-09T08:39:44.587+01:00">
+					<measurement log_date="2021-12-09T08:39:44.587+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='a383f6a1f2dd4a50a954bb188e442895'>
+				<type>proximity_sensor_state</type>
+				<unit></unit>
+				<updated_date>2021-10-27T05:31:42.104+02:00</updated_date>
+				<last_consecutive_log_date>2020-05-12T01:22:33.143+02:00</last_consecutive_log_date>
+				<interval/>
+				<proximity_sensor_toggle id='d71d20f8395a474fae14f5f9229a3ed4'/>
+				<period start_date="2021-10-27T05:31:42.104+02:00" end_date="2021-10-27T05:31:42.104+02:00">
+					<measurement log_date="2021-10-27T05:31:42.104+02:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='a87055a66ff7409b8dd0f036f87e7c06'>
+				<type>preheating_target_temperature_rate</type>
+				<unit>C_hr</unit>
+				<updated_date>2021-10-27T05:31:42.007+02:00</updated_date>
+				<last_consecutive_log_date>2021-08-06T18:27:54.995+02:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_rate id='8a885732ced34a1fba377049b0f218c3'/>
+				<period start_date="2021-10-27T05:31:42.007+02:00" end_date="2021-10-27T05:31:42.007+02:00">
+					<measurement log_date="2021-10-27T05:31:42.007+02:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='aa2bb69bfbba41f38378b7f8d6ec46a3'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2022-01-11T07:36:39.747+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T07:36:39.747+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermostat id='4bad11ecf8ed40798a6128dd0f2110da'/>
+				<period start_date="2022-01-11T07:36:39.747+01:00" end_date="2022-01-11T07:36:39.747+01:00">
+					<measurement log_date="2022-01-11T07:36:39.747+01:00">21.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='c829ea0a2fbe49caa871f207aef874ac'>
+				<type>illuminance</type>
+				<unit>lx</unit>
+				<updated_date>2022-01-11T19:35:59.410+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T19:35:59.410+01:00</last_consecutive_log_date>
+				<interval/>
+				<illuminance_meter id='39f7499fe29e4801ac50aae911871104'/>
+				<period start_date="2022-01-11T19:35:59.410+01:00" end_date="2022-01-11T19:35:59.410+01:00">
+					<measurement log_date="2022-01-11T19:35:59.410+01:00">0.25</measurement>
+				</period>
+			</point_log>
+			<point_log id='cf6ff421eb5b4f2ea7cc7c048e0bf462'>
+				<type>target_temperature</type>
+				<unit>C</unit>
+				<updated_date>2022-01-10T06:02:32.062+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-10T06:02:32.062+01:00</last_consecutive_log_date>
+				<interval/>
+				<thermo_meter id='43e22a304ea04ba88f665e1f896668a8'/>
+				<period start_date="2022-01-10T06:02:32.062+01:00" end_date="2022-01-10T06:02:32.062+01:00">
+					<measurement log_date="2022-01-10T06:02:32.062+01:00">21.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='ddcda4cc2698404aa270b36f3da5945b'>
+				<type>derivative_coefficient</type>
+				<unit>s</unit>
+				<updated_date>2021-10-27T05:31:42.053+02:00</updated_date>
+				<last_consecutive_log_date>2021-08-06T18:27:55.186+02:00</last_consecutive_log_date>
+				<interval/>
+				<coefficient id='ba0d19c45d3044afbe478e86f5e7d204'/>
+				<period start_date="2021-10-27T05:31:42.053+02:00" end_date="2021-10-27T05:31:42.053+02:00">
+					<measurement log_date="2021-10-27T05:31:42.053+02:00">0</measurement>
+				</period>
+			</point_log>
+			<point_log id='e0480e703bd14c37b6b2ade950542078'>
+				<type>button_left</type>
+				<unit></unit>
+				<updated_date>2021-10-30T17:53:25.158+02:00</updated_date>
+				<last_consecutive_log_date>2021-10-30T17:53:25.158+02:00</last_consecutive_log_date>
+				<interval/>
+				<button id='bc87a325c23448cd8c824b6f012f67ff'/>
+				<period start_date="2021-10-30T17:53:25.158+02:00" end_date="2021-10-30T17:53:25.158+02:00">
+					<measurement log_date="2021-10-30T17:53:25.158+02:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='ec0a99570cb940ddba11308a38917d71'>
+				<type>decentral_heat_demand_offset</type>
+				<unit>C</unit>
+				<updated_date>2022-01-11T19:36:10.814+01:00</updated_date>
+				<last_consecutive_log_date>2020-06-03T01:37:16.697+02:00</last_consecutive_log_date>
+				<interval/>
+				<temperature_offset_meter id='f46b5236f45b478db53c538c2e9f085a'/>
+				<period start_date="2022-01-11T19:36:10.814+01:00" end_date="2022-01-11T19:36:10.814+01:00">
+					<measurement log_date="2022-01-11T19:36:10.814+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='66f6277ea79243b3a4b728dd458a10d1'>
+				<updated_date>2022-01-11T07:36:39.748+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>21</setpoint>
+				<lower_bound>4</lower_bound>
+				<upper_bound>30</upper_bound>
+				<resolution>0.1</resolution>
+				<regulations><ame_regulation id='9855830948a543f7a87b36ff206a07e7'/></regulations>
+				<thermostat id='4bad11ecf8ed40798a6128dd0f2110da'/>
+			</thermostat_functionality>
+			<toggle_functionality id='907bc7cfe5a64d0393ad59dcaeb2ccb6'>
+				<proximity_sensor_toggle id='d71d20f8395a474fae14f5f9229a3ed4'/>
+				<updated_date>2021-10-27T05:31:42.104+02:00</updated_date>
+				<type>proximity_sensor_state</type>
+				<state>on</state>
+			</toggle_functionality>
+			<offset_functionality id='d4c4794fd8744edaa6360231800df353'>
+				<temperature_offset id='b93e9a0840894acca62c199319d139f1'/>
+				<updated_date>2021-10-27T05:31:42.109+02:00</updated_date>
+				<type>temperature_offset</type>
+				<offset>0</offset>
+			</offset_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<appliance id='a270735e4ccd45239424badc0578a2b1'>
+		<name>Gateway</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2019-01-31T12:18:40.157+01:00</created_date>
+		<modified_date>2022-01-11T19:36:57.687+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='078f744923844b7c9f0dbb55d5663f5f'>
+				<type>lan_state</type>
+				<unit></unit>
+				<updated_date>2022-01-11T19:36:57.688+01:00</updated_date>
+				<last_consecutive_log_date>2020-05-12T01:22:02.396+02:00</last_consecutive_log_date>
+				<interval/>
+				<network_state id='e3279538bea4473297ffb20728eeda3f'/>
+				<period start_date="2022-01-11T19:36:57.688+01:00" end_date="2022-01-11T19:36:57.688+01:00">
+					<measurement log_date="2022-01-11T19:36:57.688+01:00">down</measurement>
+				</period>
+			</point_log>
+			<point_log id='4249b26246b44923964d975e159d857f'>
+				<type>gateway_mode</type>
+				<unit></unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval/>
+				<gateway_mode_control id='3d67626ef57640cfa0c93aa1c281e97d'/>
+			</point_log>
+			<point_log id='4f37a23dd52d4657bf0c654beba70afa'>
+				<type>link_quality</type>
+				<unit></unit>
+				<updated_date>2022-01-11T19:36:57.648+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T19:36:57.648+01:00</last_consecutive_log_date>
+				<interval/>
+				<link_quality id='c8967c9002fc479cba65e814647f53ea'/>
+				<period start_date="2022-01-11T19:36:57.648+01:00" end_date="2022-01-11T19:36:57.648+01:00">
+					<measurement log_date="2022-01-11T19:36:57.648+01:00">63</measurement>
+				</period>
+			</point_log>
+			<point_log id='786c5b6e8f394026959d5732095299fa'>
+				<type>signal_strength</type>
+				<unit>dBm</unit>
+				<updated_date>2022-01-11T19:36:57.648+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T19:36:57.648+01:00</last_consecutive_log_date>
+				<interval/>
+				<signal_strength id='2c67d0e7aa8644b9a97d4ac4109674f0'/>
+				<period start_date="2022-01-11T19:36:57.648+01:00" end_date="2022-01-11T19:36:57.648+01:00">
+					<measurement log_date="2022-01-11T19:36:57.648+01:00">-47.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='884aad2a3ed8460da76f54b7c3bc249d'>
+				<type>wlan_state</type>
+				<unit></unit>
+				<updated_date>2022-01-11T19:36:57.649+01:00</updated_date>
+				<last_consecutive_log_date>2021-11-20T13:03:21.161+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_state id='148f48bc9ff0453ca7e88ce2f44fa9c0'/>
+				<period start_date="2022-01-11T19:36:57.649+01:00" end_date="2022-01-11T19:36:57.649+01:00">
+					<measurement log_date="2022-01-11T19:36:57.649+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='dfc77ff973b34fda8ed86a25803986ba'>
+				<type>lan_ip_address</type>
+				<unit></unit>
+				<updated_date>2022-01-11T19:36:57.688+01:00</updated_date>
+				<last_consecutive_log_date>2021-10-27T05:27:15+02:00</last_consecutive_log_date>
+				<interval/>
+				<network_address id='7b6d943add744ed2915137d4d21a731f'/>
+				<period start_date="2022-01-11T19:36:57.688+01:00" end_date="2022-01-11T19:36:57.688+01:00">
+					<measurement log_date="2022-01-11T19:36:57.688+01:00">0.0.0.0</measurement>
+				</period>
+			</point_log>
+			<point_log id='f9d43d7c89e846c8a91fa2c049bb1f91'>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<updated_date>2022-01-11T19:36:57.649+01:00</updated_date>
+				<last_consecutive_log_date>2022-01-11T07:07:18+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_address id='81bc43f4a6d54ff6aa0bbb2be90046fe'/>
+				<period start_date="2022-01-11T19:36:57.649+01:00" end_date="2022-01-11T19:36:57.649+01:00">
+					<measurement log_date="2022-01-11T19:36:57.649+01:00">127.0.0.1</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<gateway_mode_control_functionality id='99a68131fde94d4aaec5b7f0c05f6d2f'>
+				<gateway_mode_control id='3d67626ef57640cfa0c93aa1c281e97d'/>
+				<updated_date></updated_date>
+				<type>gateway_mode</type>
+				<mode>full</mode>
+				<allowed_modes>
+					<mode>setup</mode>
+					<mode>light</mode>
+					<mode>away</mode>
+					<mode>vacation</mode>
+					<mode/>
+					<mode>full</mode>
+					<mode>secure</mode>
+				</allowed_modes>
+			</gateway_mode_control_functionality>
+		</actuator_functionalities>
+	</appliance>
+</appliances>
