@@ -1077,9 +1077,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test Adam with Anna and a switch-group setup."""
         testdata = {
             # Anna
-            "ee62cad889f94e8ca3d09021f03a660b": {
-                "control_state": "off",
-                "available_schedules": ["Badkamer", "Weekschema", "Test"],
+            "ad4838d7d35c4d6ea796ee12ae5aedf8": {
+                "control_state": "heating",
+                "available_schedules": ["Weekschema", "Badkamer", "Test"],
+                "mode": "auto",
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
                 "presets": {
@@ -1087,26 +1088,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "away": [15.0, 25.0],
                     "vacation": [15.0, 28.0],
                     "no_frost": [10.0, 30.0],
-                    "asleep": [18.0, 24.0],
+                    "asleep": [17.0, 24.0],
                 },
                 "preset_modes": [
                     "home",
+                    "asleep",
                     "away",
                     "vacation",
                     "no_frost",
-                    "asleep",
                 ],
-                "active_preset": "home",
+                "active_preset": "asleep",
                 "schedule_temperature": 20.5,
             },
             # Central
-            "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"dhw_state": True},
-                "sensors": {"device_state": "dhw-heating"},
+            "056ee145a816487eaa69243c3280f8bf": {
+                "heating_state": True,
+                "binary_sensors": {"dhw_state": False, "flame_state": False},
+                "sensors": {
+                    "water_temperature": 37.0,
+                    "intended_boiler_temperature": 38.1,
+                    "device_state": "heating",
+                },
                 "cooling_active": False,
             },
             # Test Switch
-            "b83f9f9758064c0fab4af6578cba4c6d": {"switches": {"relay": True}},
+            "e8ef2a01ed3b4139a53bf749204fe6b4": {"switches": {"relay": True}},
         }
 
         self.smile_setup = "adam_plus_anna_new"
@@ -1115,7 +1121,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.2.4"
+        assert smile.smile_version[0] == "3.6.4"
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
