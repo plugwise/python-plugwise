@@ -1132,20 +1132,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         switch_change = await self.tinker_switch(
             smile,
-            "b83f9f9758064c0fab4af6578cba4c6d",
-            ["aa6b0002df0a46e1b1eb94beb61eddfe", "f2be121e4a9345ac83c6e99ed89a98be"],
+            "e8ef2a01ed3b4139a53bf749204fe6b4",
+            ["2568cc4b9c1e401495d4741a5f89bee1", "29542b2b6a6a4169acecc15c72a599b8"],
         )
         assert switch_change
         switch_change = await self.tinker_switch(
-            smile, "2743216f626f43948deec1f7ab3b3d70", model="dhw_cm_switch"
+            smile, "056ee145a816487eaa69243c3280f8bf", model="dhw_cm_switch"
         )
         assert switch_change
         switch_change = await self.tinker_switch(
-            smile, "40ec6ebe67844b21914c4a5382a3f09f", model="lock"
+            smile, "854f8a9b0e7e425db97f1f110e1ce4b3", model="lock"
         )
         assert switch_change
         switch_change = await self.tinker_switch(
-            smile, "f2be121e4a9345ac83c6e99ed89a98be"
+            smile, "2568cc4b9c1e401495d4741a5f89bee1"
         )
         assert not switch_change
         await smile.close_connection()
