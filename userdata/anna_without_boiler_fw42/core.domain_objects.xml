@@ -454,7 +454,7 @@
 		</actuator_functionalities>
 	</appliance>
 	<rule id='a36b5218575a42809dc3748377d160f9'>
-		<name>Normaal</name>
+		<name>Normal</name>
 		<description></description>
 		<template id="b7ec76497c104b9689b7fc1876ddfa85" tag="zone_preset_based_on_time_and_presence_with_override"/>
 		<active>true</active>
