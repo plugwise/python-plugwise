@@ -117,7 +117,7 @@
 		<name>Thuiswerken</name>
 		<description></description>
 		<template id="c51106a7df114f23871e621c49a639b1" tag="zone_preset_based_on_time_and_presence_with_override"/>
-		<active>false</active>
+		<active>true</active>
 		<created_date>2019-05-14T21:52:48.525+02:00</created_date>
 		<modified_date>2019-05-14T21:54:02.749+02:00</modified_date>
 		<deleted_date></deleted_date>
@@ -128,11 +128,7 @@
 			<when time="[fr 07:00,th 07:00)"><then preset="home"/></when>
 			<when time="[th 07:00,mo 07:00)"><then preset="home"/></when>
 		</directives>
-		<contexts>
-			<context>
-				<zone><location id="eb5309212bf5407bb143e5bfa3b18aee"/></zone>
-			</context>
-		</contexts>
+		<contexts> </contexts>
 	</rule>
 	<appliance id='01b85360fdd243d0aaad4d6ac2a5ba7e'>
 		<name>Anna</name>
