@@ -1004,62 +1004,62 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-     async def test_connect_anna_without_boiler_fw42(self):
-         """Test an Anna firmware 4.2 setup without a boiler."""
-         # testdata is a dictionary with key ctrl_id_dev_id => keys:values
-         # testdata={
-         #             'ctrl_id': { 'outdoor+temp': 20.0, }
-         #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
-         #         }
-         testdata = {
-             # Anna
-             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
-                 "selected_schedule": "Normal",
-                 "active_preset": "home",
-                 "sensors": [{"id": "illuminance", "state": 0.25}],
-             },
-             "a270735e4ccd45239424badc0578a2b1": {
-                 "sensors": [{"id": "outdoor_temperature", "state": 3.56}]
-             },
-             # # Central
-             # "c46b4794d28149699eacf053deedd003": {
-             #    "heating_state": True,
-             # },
-         }
+    async def test_connect_anna_without_boiler_fw42(self):
+        """Test an Anna firmware 4.2 setup without a boiler."""
+        # testdata is a dictionary with key ctrl_id_dev_id => keys:values
+        # testdata={
+        #             'ctrl_id': { 'outdoor+temp': 20.0, }
+        #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
+        #         }
+        testdata = {
+            # Anna
+            "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
+                "selected_schedule": "Normal",
+                "active_preset": "home",
+                "sensors": {"illuminance": 0.25},
+            },
+            "a270735e4ccd45239424badc0578a2b1": {
+                "sensors": {"outdoor_temperature": 3.56}
+            },
+            # # Central
+            # "c46b4794d28149699eacf053deedd003": {
+            #    "heating_state": True,
+            # },
+        }
 
-         self.smile_setup = "anna_without_boiler_fw42"
-         server, smile, client = await self.connect_wrapper()
-         assert smile.smile_hostname == "smile000000"
+        self.smile_setup = "anna_without_boiler_fw42"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
 
-         _LOGGER.info("Basics:")
-         _LOGGER.info(" # Assert type = thermostat")
-         assert smile.smile_type == "thermostat"
-         _LOGGER.info(" # Assert version")
-         assert smile.smile_version[0] == "4.2.1"
-         _LOGGER.info(" # Assert no legacy")
-         assert not smile._smile_legacy  # pylint: disable=protected-access
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.2.1"
+        _LOGGER.info(" # Assert no legacy")
+        assert not smile._smile_legacy  # pylint: disable=protected-access
 
-         await self.device_test(smile, testdata)
-         _LOGGER.info(" # Assert master thermostat")
-         assert smile._sm_thermostat
-         assert not self.active_device_present
-         assert not self.notifications
+        await self.device_test(smile, testdata)
+        _LOGGER.info(" # Assert master thermostat")
+        assert smile._sm_thermostat
+        assert not self.active_device_present
+        assert not self.notifications
 
-         await self.tinker_thermostat(
-             smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Test", "Normal"]
-         )
-         await smile.close_connection()
-         await self.disconnect(server, client)
+        await self.tinker_thermostat(
+            smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Test", "Normal"]
+        )
+        await smile.close_connection()
+        await self.disconnect(server, client)
 
-         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-         await self.tinker_thermostat(
-             smile,
-             "c34c6864216446528e95d88985e714cc",
-             good_schemas=["Test", "Normal"],
-             unhappy=True,
-         )
-         await smile.close_connection()
-         await self.disconnect(server, client)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.tinker_thermostat(
+            smile,
+            "c34c6864216446528e95d88985e714cc",
+            good_schemas=["Test", "Normal"],
+            unhappy=True,
+        )
+        await smile.close_connection()
+        await self.disconnect(server, client)
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna(self):
