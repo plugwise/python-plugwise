@@ -145,7 +145,7 @@ class SmileData(SmileHelper):
         """
         if self.smile_name == "Adam":
             # Indicate heating_state based on valves being open in case of city-provided heating
-            if details["class"] == "gateway":
+            if details["class"] == "heater_central":
                 if self._on_off_device and self._heating_valves() is not None:
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
