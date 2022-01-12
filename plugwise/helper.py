@@ -819,12 +819,12 @@ class SmileHelper:
             self._cooling_present = True
             if (
                 not self.cooling_active
-                and data["temperature"] > data["cooling_activation_outdoor_temperature"]
+                and self._outdoor_temp > data["cooling_activation_outdoor_temperature"]
             ):
                 self.cooling_active = True
             if (
                 self.cooling_active
-                and data["temperature"] < data["cooling_deactivation_threshold"]
+                and self._outdoor_temp < data["cooling_deactivation_threshold"]
             ):
                 self.cooling_active = False
 
