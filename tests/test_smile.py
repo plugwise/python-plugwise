@@ -1597,6 +1597,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
+        # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
         await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
         assert smile._sm_thermostat
