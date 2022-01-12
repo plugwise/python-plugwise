@@ -697,7 +697,7 @@ class SmileHelper:
 
         if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
             if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
-                return presets
+                return presets  # pragma: no cover
 
         for rule_id in rule_ids:
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
@@ -1173,7 +1173,7 @@ class SmileHelper:
         tag = "zone_preset_based_on_time_and_presence_with_override"
 
         if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
-            return
+            return  # pragma: no cover
 
         for rule_id, dummy in rule_ids.items():
             schema_name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
