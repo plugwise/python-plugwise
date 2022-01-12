@@ -1042,7 +1042,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
         assert smile._sm_thermostat
-        assert not self.active_device_present
+        assert self.active_device_present
         assert not self.notifications
 
         await self.tinker_thermostat(

@@ -43,6 +43,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
 )
 from .exceptions import (
+    ConfigurationError,
     DeviceTimeoutError,
     InvalidAuthentication,
     InvalidXMLError,
@@ -157,6 +158,15 @@ def schemas_schedule_temp(schedules, name):
 
     length = len(schema_list)
     schema_list = sorted(schema_list)
+
+    # Bark on empty schema_list
+    if not schema_list:
+        _LOGGER.error("Current schema %s has no contents", name)
+
+    # Schema with less than 2 items
+    if length == 1:
+        return schema_list[0][1]
+
     for i in range(length):
         result_1 = schema_list[i][0]
         start = schema_list[i][1]
@@ -1122,7 +1132,7 @@ class SmileHelper:
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperature
 
-        available.remove("None")
+        available = []
         schedules = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
