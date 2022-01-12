@@ -489,7 +489,10 @@ class Smile(SmileComm, SmileData):
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
         # Update cooling_active to it's final value
-        if "cooling_active" in self.gw_devices[self._heater_id]:
+        if (
+            self._heater_id in self.gw_devices
+            and "cooling_active" in self.gw_devices[self._heater_id]
+        ):
             self.gw_devices[self._heater_id]["cooling_active"] = self.cooling_active
 
         return [self.gw_data, self.gw_devices]
