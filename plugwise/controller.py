@@ -191,8 +191,8 @@ class StickMessageController:
                     time.sleep(SLEEP_TIME)
                     timeout_counter += SLEEP_TIME
 
-                if _request.drop_at_timeout:
-                    _LOGGER.error(
+                if not self._stick_response and _request.drop_at_timeout:
+                    _LOGGER.info(
                         "Stick does not respond to %s for %s, drop request as request is set to be dropped at timeout",
                         _request.__class__.__name__,
                         _request.target_mac,
