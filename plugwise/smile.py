@@ -217,9 +217,7 @@ class SmileData(SmileHelper):
                     self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
-                    device_data[
-                        "outdoor_temperature"
-                    ] = self._outdoor_temp = outdoor_temperature
+                    device_data["outdoor_temperature"] = outdoor_temperature
 
             # Get P1 data from LOCATIONS
             power_data = self._power_data_from_location(details["location"])

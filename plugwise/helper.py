@@ -772,6 +772,10 @@ class SmileHelper:
                     measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
                 )
 
+                # Anna: use the local outdoor temperature as reference for turning cooling on/off
+                if measurement == "outdoor_temperature":
+                    self._outdoor_temp = data[measurement]
+
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if appliance.find(i_locator) is not None:
                 name = f"{measurement}_interval"
