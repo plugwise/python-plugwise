@@ -845,6 +845,8 @@ class EnergyCollection:
                     _consumption_ts + _consumption_delta
                 ):
                     _production_ts += _production_delta
+                else:
+                    _consumption_ts += _consumption_delta
                 if _consumption_ts >= _target and _production_ts >= _target:
                     break
             else:
