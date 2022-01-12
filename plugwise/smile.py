@@ -151,11 +151,6 @@ class SmileData(SmileHelper):
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
 
-            # Adam: indicate active heating/cooling operation-mode
-            # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-            if details["class"] == "heater_central":
-                device_data["cooling_active"] = self.cooling_active
-
         return device_data
 
     def _device_data_climate(self, details, device_data):
@@ -198,7 +193,6 @@ class SmileData(SmileHelper):
                 if self._heater_id is not None:
                     if self.cooling_active:
                         device_data["mode"] = "cool"
-        # TODO: add testcases
 
         # Control_state
         if ctrl_state := self._control_state(loc_id):
@@ -229,6 +223,11 @@ class SmileData(SmileHelper):
             power_data = self._power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
+
+        # Adam: indicate active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        if details["class"] == "heater_central":
+            device_data["cooling_active"] = self.cooling_active
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
