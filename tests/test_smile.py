@@ -1219,6 +1219,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a broad setup of Adam with a zone per device setup."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
+            "90986d591dcd426cae3ec3e8111ff730": {
+                "heating_state": False,
+                "sensors": {"device_state": "idle"},
+            },
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "sensors": {
@@ -1252,7 +1256,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "fe799307f1624099878210aa0b9f1475": {
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.69},
-                "heating_state": False,
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
@@ -1324,6 +1327,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a broad setup of Adam with multiple devices per zone setup."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
+            # Central
+            "90986d591dcd426cae3ec3e8111ff730": {
+                "heating_state": True,
+                "sensors": {"device_state": "heating"},
+            },
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "sensors": {
@@ -1356,7 +1364,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Adam
             "fe799307f1624099878210aa0b9f1475": {
                 "sensors": {"outdoor_temperature": 7.81},
-                "heating_state": True,
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
