@@ -1,5 +1,8 @@
 # Changelog
 
+# (in progress)
+  - Add Anna firmware 4.2 support
+
 # v0.16.1 - Smile - various updates:
   - Change active device detection - detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
   - Always show text in the climate-attributes `available_schemas` and `selected_schema`.
