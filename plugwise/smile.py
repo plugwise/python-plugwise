@@ -534,16 +534,11 @@ class Smile(SmileComm, SmileData):
             return False
 
         schema_rule_id = next(iter(schema_rule))
-        _LOGGER.debug("Rule_id: %s", schema_rule_id)
-        _LOGGER.debug("Loc_id: %s", loc_id)
-        _LOGGER.debug("Name: %s", name)
-        _LOGGER.debug("State: %s", state)
         state = str(state)
         locator = f'.//rule[@id="{schema_rule_id}"]/directives'
         directives = etree.tostring(self._domain_objects.find(locator)).decode()
         locator = f'.//*[@id="{schema_rule_id}"]/template'
         template_id = self._domain_objects.find(locator).attrib["id"]
-        _LOGGER.debug("Templ_id: %s", template_id)
 
         if state == "off":
             uri = f"{RULES};id={schema_rule_id}"
