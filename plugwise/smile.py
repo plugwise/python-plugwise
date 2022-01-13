@@ -287,7 +287,7 @@ class Smile(SmileComm, SmileData):
         self._domain_objects = None
         self._heater_id = None
         self._home_location = None
-        self._last_active = {}  # NEW
+        self._last_active = {}
         self._locations = None
         self._modules = None
         self._notifications = {}
