@@ -56,10 +56,6 @@ class SmileData(SmileHelper):
         if d_id == self.gateway_id:
             if self._sm_thermostat is not None:
                 bs_dict.update(PW_NOTIFICATION)
-            if (
-                not self._ot_device and not self._on_off_device
-            ) and "heating_state" in data:
-                s_dict.update(DEVICE_STATE)
         if d_id == self._heater_id and self._sm_thermostat is not None:
             s_dict.update(DEVICE_STATE)
 
@@ -546,22 +542,20 @@ class Smile(SmileComm, SmileData):
         locator = f'.//*[@id="{schema_rule_id}"]/template'
         template_id = self._domain_objects.find(locator).attrib["id"]
 
-        if state == "off":
-            uri = f"{RULES};id={schema_rule_id}"
-            data = (
-                f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                f' id="{template_id}" /><active>true</active>{directives}<contexts> </contexts></rule></rules>'
-            )
-            await self._request(uri, method="put", data=data)
-
+        uri = f"{RULES};id={schema_rule_id}"
+        # data for state is off
+        data = (
+            f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+            f' id="{template_id}" /><active>true</active>{directives}<contexts> </contexts></rule></rules>'
+        )
         if state == "on":
-            uri = f"{RULES};id={schema_rule_id}"
             data = (
                 f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
                 f' id="{template_id}" /><active>true</active>{directives}<contexts><context>'
                 f'<zone><location id="{loc_id}" /></zone></context></contexts></rule></rules>'
             )
-            await self._request(uri, method="put", data=data)
+
+        await self._request(uri, method="put", data=data)
 
         return True
 
