@@ -489,11 +489,9 @@ class Smile(SmileComm, SmileData):
                     update_helper(
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
-        # Update cooling_active to it's final value
-        if (
-            self._heater_id in self.gw_devices
-            and "cooling_active" in self.gw_devices[self._heater_id]
-        ):
+
+        # Anna: update cooling_active to it's final value after all entities have been updated
+        if not self._smile_legacy and self.smile_name == "Anna":
             self.gw_devices[self._heater_id]["cooling_active"] = self.cooling_active
 
         return [self.gw_data, self.gw_devices]
@@ -528,6 +526,9 @@ class Smile(SmileComm, SmileData):
         """Set the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         """
+        if state not in ["on", "off"]:
+            return False
+
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
@@ -536,24 +537,20 @@ class Smile(SmileComm, SmileData):
             return False
 
         schema_rule_id = next(iter(schema_rule))
-        state = str(state)
         locator = f'.//rule[@id="{schema_rule_id}"]/directives'
         directives = etree.tostring(self._domain_objects.find(locator)).decode()
         locator = f'.//*[@id="{schema_rule_id}"]/template'
         template_id = self._domain_objects.find(locator).attrib["id"]
 
+        info = " "
+        if state == "on":
+            info = f'<context><zone><location id="{loc_id}" /></zone></context>'
+
         uri = f"{RULES};id={schema_rule_id}"
-        # data for state is off
         data = (
             f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-            f' id="{template_id}" /><active>true</active>{directives}<contexts> </contexts></rule></rules>'
+            f' id="{template_id}" /><active>true</active>{directives}<contexts>{info}</contexts></rule></rules>'
         )
-        if state == "on":
-            data = (
-                f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                f' id="{template_id}" /><active>true</active>{directives}<contexts><context>'
-                f'<zone><location id="{loc_id}" /></zone></context></contexts></rule></rules>'
-            )
 
         await self._request(uri, method="put", data=data)
 
