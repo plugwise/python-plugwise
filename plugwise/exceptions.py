@@ -47,10 +47,6 @@ class TimeoutException(PlugwiseException):
 ### Smile exceptions ###
 
 
-class ConfigurationError(PlugwiseException):
-    """Raised when (user) configuration is incorrect."""
-
-
 class ConnectionFailedError(PlugwiseException):
     """Raised when unable to connect."""
 

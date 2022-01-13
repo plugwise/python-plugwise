@@ -43,7 +43,6 @@ from .constants import (
     THERMOSTAT_CLASSES,
 )
 from .exceptions import (
-    ConfigurationError,
     DeviceTimeoutError,
     InvalidAuthentication,
     InvalidXMLError,
@@ -159,10 +158,9 @@ def schemas_schedule_temp(schedules, name):
     length = len(schema_list)
     schema_list = sorted(schema_list)
 
-    #    # Bark on empty schema_list
-    #    if not schema_list:
-    #        _LOGGER.error("Current schema %s has no contents", name)
-    #        raise ConfigurationError
+    # Bark on empty schema_list
+    if not schema_list:
+        _LOGGER.info("Schema %s has no preset switching moments, continuing", name)
 
     # Schema with less than 2 items
     if length == 1:
