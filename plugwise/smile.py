@@ -526,9 +526,6 @@ class Smile(SmileComm, SmileData):
         """Set the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         """
-        if state not in ["on", "off"]:
-            return False  # pragma: no cover
-
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
