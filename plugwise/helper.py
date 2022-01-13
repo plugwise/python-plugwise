@@ -147,33 +147,29 @@ def schemas_schedule_temp(schedules, name):
 
     schema_list = []
     for period, temp in schedules[name].items():
-        list_1 = []
-        list_2 = []
+        tmp_list = []
         moment, dummy = period.split(",")
         moment = moment.replace("[", "").split(" ")
         day_nr = DAYS.get(moment[0], "None")
         start_time = dt.datetime.strptime(moment[1], "%H:%M").time()
-        list_1.append(day_nr)
-        list_1.append(start_time)
-        list_2.append(list_1)
-        list_2.append(temp)
-        schema_list.append(list_2)
+        tmp_list.extend((day_nr, start_time, temp))
+        schema_list.append(tmp_list)
 
     length = len(schema_list)
     schema_list = sorted(schema_list)
     for i in range(length):
-        result_1 = schema_list[i][0][0]
-        start = schema_list[i][0][1]
+        result_1 = schema_list[i][0]
+        start = schema_list[i][1]
         n = (i + 1) % (length - 1)
-        result_2 = schema_list[n][0][0]
-        end = schema_list[n][0][1]
+        result_2 = schema_list[n][0]
+        end = schema_list[n][1]
         now = dt.datetime.now().time()
         if (
             result_1 == dt.datetime.now().weekday()
             or result_2 == dt.datetime.now().weekday()
         ):
             if in_between(now, start, end):
-                return schema_list[i][1]
+                return schema_list[i][2]
 
 
 def types_finder(data):
