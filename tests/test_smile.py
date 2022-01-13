@@ -1569,12 +1569,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "cooling_active": True,
+                "cooling_active": False,
                 "cooling_state": False,
                 "heating_state": True,
                 "binary_sensors": {"dhw_state": False},
                 "sensors": {
-                    "outdoor_temperature": 22.0,
+                    "outdoor_temperature": 3.0,
                     "water_temperature": 29.1,
                     "water_pressure": 1.57,
                 },
@@ -1598,7 +1598,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
         # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
-        await self.device_test(smile, testdata)
+        await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
         assert smile._sm_thermostat
         assert self.active_device_present
