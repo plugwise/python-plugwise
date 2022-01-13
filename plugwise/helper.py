@@ -713,7 +713,7 @@ class SmileHelper:
 
     def _rule_ids_by_name(self, name, loc_id):
         """Helper-function for _presets().
-        Obtain the rule_id from the given name and location_id.
+        Obtain the rule_id from the given name and and provide the location_id, when present.
         """
         schema_ids = {}
         locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
@@ -727,7 +727,7 @@ class SmileHelper:
 
     def _rule_ids_by_tag(self, tag, loc_id):
         """Helper-function for _presets(), _schemas() and _last_active_schema().
-        Obtain the rule_id from the given template_tag and location_id.
+        Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
         schema_ids = {}
         locator1 = f'.//template[@tag="{tag}"]'
