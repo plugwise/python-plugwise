@@ -535,7 +535,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schema}{warning}")
                 try:
                     schema_change = await smile.set_schedule_state(
-                        loc_id, new_schema, "auto"
+                        loc_id, new_schema, "on"
                     )
                     assert schema_change == assert_state
                     _LOGGER.info("  + failed as intended")
