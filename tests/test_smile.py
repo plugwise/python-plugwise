@@ -1685,7 +1685,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
-        await self.device_test(smile, testdata)
+        await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
         assert smile._sm_thermostat
 
