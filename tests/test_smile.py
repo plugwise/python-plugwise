@@ -1629,7 +1629,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "cooling_state": True,
                 "heating_state": False,
                 "binary_sensors": {"dhw_state": False},
-                "sensors": {"water_temperature": 24.7, "water_pressure": 1.61},
+                "sensors": {
+                    "outdoor_temperature": 20.0,
+                    "water_temperature": 24.7,
+                    "water_pressure": 1.61,
+                },
             },
             # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {

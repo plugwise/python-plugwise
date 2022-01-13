@@ -314,7 +314,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-16T17:29:52.077+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-16T17:29:52.077+02:00" end_date="2020-04-16T17:29:52.077+02:00">
-					<measurement log_date="2020-04-16T17:29:52.077+02:00">21.00</measurement>
+					<measurement log_date="2020-04-16T17:29:52.077+02:00">22.00</measurement>
 				</period>
 				<thermo_meter id='71b1d108384a49769ee4f47b1317cbc6'/>
 			</point_log>
@@ -1205,7 +1205,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-16T12:22:21.258+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-16T12:22:21.258+02:00" end_date="2020-04-16T12:22:21.258+02:00">
-					<measurement log_date="2020-04-16T12:22:21.258+02:00">22.00</measurement>
+					<measurement log_date="2020-04-16T12:22:21.258+02:00">20.00</measurement>
 				</period>
 				<thermostat id='c796d632de2e452e80eebb079067b60a'/>
 			</point_log>
