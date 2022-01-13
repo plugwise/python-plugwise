@@ -1101,18 +1101,20 @@ class SmileHelper:
 
     def _schemas(self, location):
         """Helper-function for smile.py: _device_data_climate().
-        Obtain the available schemas/schedules based, they can all be connected to one location.
+        Obtain the available schemas/schedules. Adam: a schedule can be connected to more than one location.
+        NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available = ["None"]
         rule_ids = {}
         schedule_temperature = None
         selected = "None"
 
-        # Legacy Anna schema, only one schedule allowed
+        # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
             return self._schemas_legacy(available, schedule_temperature, selected)
 
-        # Adam schema's, various schedules that can be used for various locations
+        # Adam schedules, one schedule can be linked to various locations
+        # _last_active contains the locations and the active schedule name per location, or "None"
         if location not in self._last_active:
             self._last_active[location] = "None"
 
