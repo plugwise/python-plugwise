@@ -162,6 +162,7 @@ def schemas_schedule_temp(schedules, name):
     # Bark on empty schema_list
     if not schema_list:
         _LOGGER.error("Current schema %s has no contents", name)
+        raise ConfigurationError
 
     # Schema with less than 2 items
     if length == 1:
