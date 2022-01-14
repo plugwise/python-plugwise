@@ -1107,7 +1107,7 @@ class SmileHelper:
             if active:
                 sel = name
 
-        return avail, sel, sched_temp
+        return avail, sel, sched_temp, None
 
     def _schemas(self, location):
         """Helper-function for smile.py: _device_data_climate().
@@ -1130,7 +1130,7 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
-            return available, selected, schedule_temperature
+            return available, selected, schedule_temperature, None
 
         available = []
         schedules = {}
@@ -1158,13 +1158,12 @@ class SmileHelper:
             if selected != "None":
                 self._last_active[location] = selected
 
-        schedule_temperature = schemas_schedule_temp(
-            schedules, self._last_active_schema(location)
-        )
+        last_active = self._last_active_schema(location)
+        schedule_temperature = schemas_schedule_temp(schedules, last_active)
         if not schedule_temperature:
-            return "None", "None", None
+            return "None", "None", None, None
 
-        return available, selected, schedule_temperature
+        return available, selected, schedule_temperature, last_active
 
     def _last_active_schema(self, loc_id):
         """Helper-function for smile.py: _device_data_climate().

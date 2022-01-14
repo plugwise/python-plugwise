@@ -165,7 +165,7 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        avail_schemas, sel_schema, sched_setpoint = self._schemas(loc_id)
+        avail_schemas, sel_schema, sched_setpoint, last_active = self._schemas(loc_id)
         device_data["available_schedules"] = avail_schemas
         device_data["selected_schedule"] = sel_schema
         if not self._smile_legacy:
@@ -173,7 +173,7 @@ class SmileData(SmileHelper):
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
-            device_data["last_used"] = self._last_active_schema(loc_id)
+            device_data["last_used"] = last_active
 
         # Operation mode: auto, heat, cool, off
         device_data["mode"] = "auto"
