@@ -1163,7 +1163,6 @@ class SmileHelper:
             if selected != "None":
                 self._last_active[location] = selected
 
-        _LOGGER.debug("Schedules: %s", schedules)
         last_active = self._last_active_schema(location)
         schedule_temperature = None
         if schedules:
