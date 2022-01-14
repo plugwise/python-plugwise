@@ -1153,7 +1153,8 @@ class SmileHelper:
                 else:
                     schedule[directive.attrib["time"]] = float(entry["setpoint"])
 
-            schedules[name] = schedule
+            if schedule:
+                schedules[name] = schedule
 
             if selected != "None":
                 self._last_active[location] = selected
