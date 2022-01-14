@@ -1161,6 +1161,8 @@ class SmileHelper:
         schedule_temperature = schemas_schedule_temp(
             schedules, self._last_active_schema(location)
         )
+        if not schedule_temperature:
+            return "None", "None", None
 
         return available, selected, schedule_temperature
 
