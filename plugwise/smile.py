@@ -496,7 +496,7 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name, state):
+    async def _set_schedule_state_legacy(self, name, status):
         """Helper-function for set_schedule_state()."""
         schema_rule_id = None
         for rule in self._domain_objects.findall("rule"):
@@ -507,7 +507,9 @@ class Smile(SmileComm, SmileData):
             return False
 
         template_id = None
-        state = str(state)
+        state = "false"
+        if str(status) == "on":
+            state = "true"
         locator = f'.//*[@id="{schema_rule_id}"]/template'
         for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
