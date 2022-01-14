@@ -158,11 +158,6 @@ def schemas_schedule_temp(schedules, name):
     length = len(schema_list)
     schema_list = sorted(schema_list)
 
-    # Bark on empty schema_list
-    if not schema_list:
-        _LOGGER.error("Schedule %s has no preset switching moments, ignoring", name)
-        return
-
     # Schema with less than 2 items
     if length == 1:
         return schema_list[0][2]
@@ -1155,6 +1150,10 @@ class SmileHelper:
                     selected = name
                     self._last_active[location] = selected
                 schedules[name] = schedule
+            else:
+                _LOGGER.error(
+                    "Schedule %s has no preset switching moments, ignoring", name
+                )
 
         last_active = self._last_active_schema(location)
         if schedules:
