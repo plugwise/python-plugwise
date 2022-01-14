@@ -1415,11 +1415,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
+                "available_schedules": [
+                    "CV Roan",
+                    "Bios Schema met Film Avond",
+                    "GF7  Woonkamer",
+                    "Badkamer Schema",
+                    "CV Jessie",
+                ],
+                "selected_schedule": "None",
+                "schedule_temperature": None,
+                "last_used": "None",
                 "sensors": {
                     "setpoint": 13.0,
                     "temperature": 16.5,
                     "battery": 67,
-                }
+                },
             },
             # Adam
             "fe799307f1624099878210aa0b9f1475": {
