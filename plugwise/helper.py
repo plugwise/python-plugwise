@@ -160,7 +160,8 @@ def schemas_schedule_temp(schedules, name):
 
     # Bark on empty schema_list
     if not schema_list:
-        _LOGGER.info("Schema %s has no preset switching moments, continuing", name)
+        _LOGGER.error("Schedule %s has no preset switching moments, ignoring", name)
+        return
 
     # Schema with less than 2 items
     if length == 1:
