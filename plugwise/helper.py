@@ -1155,6 +1155,10 @@ class SmileHelper:
 
             if schedule:
                 schedules[name] = schedule
+            else:
+                available.remove(name)
+                available.append("None")
+                selected = "None"
 
             if selected != "None":
                 self._last_active[location] = selected
