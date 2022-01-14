@@ -1161,7 +1161,9 @@ class SmileHelper:
 
         _LOGGER.debug("Schedules: %s", schedules)
         last_active = self._last_active_schema(location)
-        schedule_temperature = schemas_schedule_temp(schedules, last_active)
+        schedule_temperature = None
+        if schedules:
+            schedule_temperature = schemas_schedule_temp(schedules, last_active)
         # if not schedule_temperature:
         #     return "None", "None", None, None
 
