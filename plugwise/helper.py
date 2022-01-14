@@ -1161,6 +1161,7 @@ class SmileHelper:
 
         if not available:
             available = ["None"]
+            last_active = None
 
         return available, selected, schedule_temperature, last_active
 
