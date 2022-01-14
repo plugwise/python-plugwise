@@ -1619,7 +1619,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
-                "selected_schedule": "standaard",
+                "selected_schedule": "None",
                 "active_preset": "home",
                 "sensors": {
                     "illuminance": 86.0,
