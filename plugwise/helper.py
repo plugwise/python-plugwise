@@ -1136,10 +1136,6 @@ class SmileHelper:
         schedules = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            available.append(name)
-            if location == loc_id:
-                selected = name
-
             schedule = {}
             locator = f'rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
@@ -1154,21 +1150,15 @@ class SmileHelper:
                     schedule[directive.attrib["time"]] = float(entry["setpoint"])
 
             if schedule:
+                available.append(name)
+                if location == loc_id:
+                    selected = name
+                    self._last_active[location] = selected
                 schedules[name] = schedule
-            else:
-                available.remove(name)
-                available.append("None")
-                selected = "None"
-
-            if selected != "None":
-                self._last_active[location] = selected
 
         last_active = self._last_active_schema(location)
-        schedule_temperature = None
         if schedules:
             schedule_temperature = schemas_schedule_temp(schedules, last_active)
-        # if not schedule_temperature:
-        #     return "None", "None", None, None
 
         return available, selected, schedule_temperature, last_active
 
