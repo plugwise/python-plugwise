@@ -751,9 +751,8 @@ class SmileHelper:
         for measurement, attrs in measurements:
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if appliance.find(p_locator) is not None:
-                if self._smile_legacy:
-                    if measurement == "domestic_hot_water_state":
-                        continue
+                if self._smile_legacy and measurement == "domestic_hot_water_state":
+                    continue
 
                 measure = appliance.find(p_locator).text
                 # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
