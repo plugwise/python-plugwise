@@ -1997,60 +1997,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": 0.0,
                     "valve_position": 0.0,
                 },
-            }
-            #            # Central
-            #            "90986d591dcd426cae3ec3e8111ff730": {
-            #                "heating_state": True,
-            #                "sensors": {"device_state": "heating"},
-            #            },
-            #            # Lisa WK
-            #            "b59bcebaf94b499ea7d46e4a66fb62d8": {
-            #                "sensors": {
-            #                    "setpoint": 21.5,
-            #                    "temperature": 20.9,
-            #                    "battery": 34,
-            #                }
-            #            },
-            #            # Floor WK
-            #            "b310b72a0e354bfab43089919b9a88bf": {
-            #                "sensors": {
-            #                    "setpoint": 21.5,
-            #                    "temperature": 26.0,
-            #                    "valve_position": 100,
-            #                }
-            #            },
-            #            # CV pomp
-            #            "78d1126fc4c743db81b61c20e88342a7": {
-            #                "sensors": {"electricity_consumed": 35.6},
-            #                "switches": {"relay": True},
-            #            },
-            #            # Lisa Bios
-            #            "df4a4a8169904cdb9c03d61a21f42140": {
-            #                "available_schedules": [
-            #                    "CV Roan",
-            #                    "Bios Schema met Film Avond",
-            #                    "GF7  Woonkamer",
-            #                    "Badkamer Schema",
-            #                    "CV Jessie",
-            #                ],
-            #                "selected_schedule": "None",
-            #                "schedule_temperature": None,
-            #                "last_used": "None",
-            #                "sensors": {
-            #                    "setpoint": 13.0,
-            #                    "temperature": 16.5,
-            #                    "battery": 67,
-            #                },
-            #            },
-            #            # Adam
-            #            "fe799307f1624099878210aa0b9f1475": {
-            #                "sensors": {"outdoor_temperature": 7.81},
-            #            },
-            #            # Modem
-            #            "675416a629f343c495449970e2ca37b5": {
-            #                "sensors": {"electricity_consumed": 12.2},
-            #                "switches": {"relay": True},
-            #            },
+            },
         }
 
         self.smile_setup = "adam_multiple_devices_per_zone"
@@ -2130,13 +2077,27 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
+                "class": "gateway",
+                "fw": "3.3.6",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "P1",
+                "name": "P1",
+                "vendor": "Plugwise B.V.",
                 "sensors": {
-                    "electricity_consumed_peak_point": 636.0,
-                    "electricity_produced_peak_cumulative": 0.0,
+                    "net_electricity_point": 636,
+                    "electricity_consumed_peak_point": 636,
+                    "electricity_consumed_off_peak_point": 0,
+                    "net_electricity_cumulative": 17965.326,
+                    "electricity_consumed_peak_cumulative": 7702.167,
                     "electricity_consumed_off_peak_cumulative": 10263.159,
                     "electricity_consumed_peak_interval": 179,
-                    "net_electricity_cumulative": 17965.326,
-                }
+                    "electricity_produced_point": 0,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_peak_cumulative": 0.0,
+                    "electricity_produced_off_peak_cumulative": 0.0,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                },
             }
         }
 
@@ -2202,14 +2163,30 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
+                "class": "gateway",
+                "fw": "3.3.9",
+                "location": "cd3e822288064775a7c4afcdd70bdda2",
+                "model": "P1",
+                "name": "P1",
+                "vendor": "Plugwise B.V.",
                 "sensors": {
-                    "electricity_consumed_peak_point": 0.0,
-                    "electricity_produced_peak_cumulative": 396.559,
-                    "electricity_consumed_off_peak_cumulative": 551.09,
-                    "electricity_produced_peak_point": 2816,
                     "net_electricity_point": -2816,
+                    "electricity_consumed_peak_point": 0,
+                    "electricity_consumed_off_peak_point": 0,
+                    "net_electricity_cumulative": 442.972,
+                    "electricity_consumed_peak_cumulative": 442.932,
+                    "electricity_consumed_off_peak_cumulative": 551.09,
+                    "electricity_consumed_peak_interval": 0,
+                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_produced_peak_point": 2816,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_peak_cumulative": 396.559,
+                    "electricity_produced_off_peak_cumulative": 154.491,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
                     "gas_consumed_cumulative": 584.85,
-                }
+                    "gas_consumed_interval": 0.0,
+                },
             }
         }
 
@@ -2380,14 +2357,170 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
-            # Koelkast
+            "259882df3c05415b99c2d962534ce820": {
+                "class": "gateway",
+                "fw": "3.1.11",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Stretch",
+                "name": "Stretch",
+                "vendor": "Plugwise B.V.",
+            },
+            "5ca521ac179d468e91d772eeeb8a2117": {
+                "class": "zz_misc",
+                "fw": None,
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": None,
+                "name": "Oven (793F84)",
+                "vendor": None,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "5871317346d045bc9f6b987ef25ee638": {
+                "class": "water_heater_vessel",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Boiler (1EB31)",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 1.19,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
             "e1c884e7dede431dadee09506ec4f859": {
-                "sensors": {"electricity_consumed": 50.5},
+                "class": "refrigerator",
+                "fw": "2011-06-27T10:47:37+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle+ type F",
+                "name": "Koelkast (92C4A)",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 50.5,
+                    "electricity_consumed_interval": 0.08,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "aac7b735042c4832ac9ff33aae4f453b": {
+                "class": "dishwasher",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Vaatwasser (2a1ab)",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.71,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "cfe95cf3de1948c0b8955125bf754614": {
+                "class": "dryer",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Droger (52559)",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "99f89d097be34fca88d8598c6dbc18ea": {
+                "class": "router",
+                "fw": None,
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": None,
+                "name": "Meterkast (787BFB)",
+                "vendor": None,
+                "sensors": {
+                    "electricity_consumed": 27.6,
+                    "electricity_consumed_interval": 28.2,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
+            },
+            "059e4d03c7a34d278add5c7a4a781d19": {
+                "class": "washingmachine",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Wasmachine (52AC1)",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "e309b52ea5684cf1a22f30cf0cd15051": {
+                "class": "computer_desktop",
+                "fw": None,
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": None,
+                "name": "Computer (788618)",
+                "vendor": None,
+                "sensors": {
+                    "electricity_consumed": 156,
+                    "electricity_consumed_interval": 163,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
+            },
+            "71e1944f2a944b26ad73323e399efef0": {
+                "class": "switching",
+                "fw": None,
+                "location": None,
+                "model": "Switchgroup",
+                "name": "Test",
+                "members": ["5ca521ac179d468e91d772eeeb8a2117"],
+                "types": {"switch_group"},
+                "vendor": None,
                 "switches": {"relay": True},
             },
-            # Vaatwasser
-            "aac7b735042c4832ac9ff33aae4f453b": {
-                "sensors": {"electricity_consumed_interval": 0.71}
+            "d950b314e9d8499f968e6db8d82ef78c": {
+                "class": "report",
+                "fw": None,
+                "location": None,
+                "model": "Switchgroup",
+                "name": "Stroomvreters",
+                "members": [
+                    "059e4d03c7a34d278add5c7a4a781d19",
+                    "5871317346d045bc9f6b987ef25ee638",
+                    "aac7b735042c4832ac9ff33aae4f453b",
+                    "cfe95cf3de1948c0b8955125bf754614",
+                    "e1c884e7dede431dadee09506ec4f859",
+                ],
+                "types": {"switch_group"},
+                "vendor": None,
+                "switches": {"relay": True},
+            },
+            "d03738edfcc947f7b8f4573571d90d2d": {
+                "class": "switching",
+                "fw": None,
+                "location": None,
+                "model": "Switchgroup",
+                "name": "Schakel",
+                "members": [
+                    "059e4d03c7a34d278add5c7a4a781d19",
+                    "cfe95cf3de1948c0b8955125bf754614",
+                ],
+                "types": {"switch_group"},
+                "vendor": None,
+                "switches": {"relay": True},
             },
         }
 
@@ -2417,14 +2550,256 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
-            # Tv hoek 25F6790
-            "c71f1cb2100b42ca942f056dcb7eb01f": {
-                "sensors": {"electricity_consumed": 33.3},
-                "switches": {"lock": False, "relay": True},
+            "6e3e708b07ca4648964795a582c90ad1": {
+                "class": "gateway",
+                "fw": "2.3.12",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Stretch",
+                "name": "Stretch",
+                "vendor": "Plugwise B.V.",
             },
-            # Wasdroger 043AECA
+            "09c8ce93d7064fa6a233c0e4c2449bfe": {
+                "class": "lamp",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "kerstboom buiten 043B016",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "33a1c784a9ff4c2d8766a0212714be09": {
+                "class": "lighting",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Barverlichting",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "199fd4b2caa44197aaf5b3128f6464ed": {
+                "class": "airconditioner",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Airco 25F69E3",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 2.06,
+                    "electricity_consumed_interval": 1.62,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "713427748874454ca1eb4488d7919cf2": {
+                "class": "freezer",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Leeg 043220D",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "sensors": {"electricity_consumed_interval": 0.21}
+                "class": "dryer",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Wasdroger 043AECA",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 1.31,
+                    "electricity_consumed_interval": 0.21,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
+            },
+            "c71f1cb2100b42ca942f056dcb7eb01f": {
+                "class": "tv",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Tv hoek 25F6790",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 33.3,
+                    "electricity_consumed_interval": 4.93,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "2cc9a0fe70ef4441a9e4f55dfd64b776": {
+                "class": "lamp",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Lamp TV 025F698F",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 4.0,
+                    "electricity_consumed_interval": 0.58,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "6518f3f72a82486c97b91e26f2e9bd1d": {
+                "class": "charger",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Bed 025F6768",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "828f6ce1e36744689baacdd6ddb1d12c": {
+                "class": "washingmachine",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Wasmachine 043AEC7",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 3.5,
+                    "electricity_consumed_interval": 0.5,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
+            },
+            "71e3e65ffc5a41518b19460c6e8ee34f": {
+                "class": "tv",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Leeg 043AEC6",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "305452ce97c243c0a7b4ab2a4ebfe6e3": {
+                "class": "lamp",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Lamp piano 025F6819",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "bc0adbebc50d428d9444a5d805c89da9": {
+                "class": "watercooker",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Waterkoker 043AF7F",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "407aa1c1099d463c9137a3a9eda787fd": {
+                "class": "zz_misc",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "0043B013",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "2587a7fcdd7e482dab03fda256076b4b": {
+                "class": "zz_misc",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "00469CA1",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "a28e6f5afc0e4fc68498c1f03e82a052": {
+                "class": "lamp",
+                "fw": "2011-06-27T10:52:18+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle type F",
+                "name": "Lamp bank 25F67F8",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 4.19,
+                    "electricity_consumed_interval": 0.62,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
+            "24b2ed37c8964c73897db6340a39c129": {
+                "class": "router",
+                "fw": "2011-06-27T10:47:37+02:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Circle+ type F",
+                "name": "MK Netwerk 1A4455E",
+                "vendor": "Plugwise",
+                "sensors": {
+                    "electricity_consumed": 4.63,
+                    "electricity_consumed_interval": 0.65,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
+            },
+            "f7b145c8492f4dd7a4de760456fdef3e": {
+                "class": "switching",
+                "fw": None,
+                "location": None,
+                "model": "Switchgroup",
+                "name": "Test",
+                "members": ["407aa1c1099d463c9137a3a9eda787fd"],
+                "types": {"switch_group"},
+                "vendor": None,
+                "switches": {"relay": False},
             },
         }
 
@@ -2467,10 +2842,28 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
+                "class": "gateway",
+                "fw": "4.1.1",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "P1",
+                "name": "P1",
+                "vendor": "Plugwise B.V.",
                 "sensors": {
+                    "net_electricity_point": 548,
                     "electricity_consumed_peak_point": 548,
+                    "electricity_consumed_off_peak_point": 0,
+                    "net_electricity_cumulative": 20983.453,
+                    "electricity_consumed_peak_cumulative": 9067.554,
+                    "electricity_consumed_off_peak_cumulative": 11915.899,
+                    "electricity_consumed_peak_interval": 335,
+                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_produced_peak_point": 0,
+                    "electricity_produced_off_peak_point": 0,
                     "electricity_produced_peak_cumulative": 0.0,
-                }
+                    "electricity_produced_off_peak_cumulative": 0.0,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                },
             }
         }
 
