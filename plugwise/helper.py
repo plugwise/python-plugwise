@@ -1110,6 +1110,7 @@ class SmileHelper:
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available = ["None"]
+        last_active = None
         rule_ids = {}
         schedule_temperature = None
         selected = "None"
@@ -1127,7 +1128,6 @@ class SmileHelper:
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperature, None
 
-        available = []
         schedules = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
@@ -1152,16 +1152,13 @@ class SmileHelper:
                 schedules[name] = schedule
             else:
                 _LOGGER.error(
-                    "Schedule %s has no preset switching moments, ignoring", name
+                    "Schedule %s has no preset switching moments, ignoring.", name
                 )
 
-        last_active = self._last_active_schema(location)
         if schedules:
+            available.remove("None")
+            last_active = self._last_active_schema(location)
             schedule_temperature = schemas_schedule_temp(schedules, last_active)
-
-        if not available:
-            available = ["None"]
-            last_active = None
 
         return available, selected, schedule_temperature, last_active
 
