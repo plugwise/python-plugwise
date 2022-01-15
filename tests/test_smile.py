@@ -446,7 +446,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 if dev_data[measure_key] is not None:
                                     assert isinstance(dev_data[measure_key], float)
                                 else:
-                                    assert dev_data[measure_key] is None
+                                    assert dev_data[measure_key] == measure_assert
                             else:
                                 assert dev_data[measure_key] == measure_assert
 
