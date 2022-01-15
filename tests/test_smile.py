@@ -778,16 +778,29 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
+                "class": "gateway",
+                "fw": "2.5.9",
                 "location": "938696c4bcdb4b8a9a595cb38ed43913",
+                "model": "P1",
+                "name": "P1",
+                "vendor": "Plugwise B.V.",
                 "sensors": {
-                    "electricity_consumed_point": 456.0,
-                    "net_electricity_point": 456.0,
-                    "gas_consumed_cumulative": 584.431,
+                    "net_electricity_point": 456,
+                    "electricity_consumed_point": 456,
+                    "net_electricity_cumulative": 1019.161,
+                    "electricity_consumed_peak_cumulative": 1155.155,
+                    "electricity_consumed_off_peak_cumulative": 1642.74,
+                    "electricity_consumed_peak_interval": 210,
+                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_produced_point": 0,
                     "electricity_produced_peak_cumulative": 1296.136,
                     "electricity_produced_off_peak_cumulative": 482.598,
-                    "net_electricity_cumulative": 1019.161,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                    "gas_consumed_cumulative": 584.431,
+                    "gas_consumed_interval": 0.014,
                 },
-            }
+            },
         }
 
         self.smile_setup = "smile_p1_v2"
@@ -859,18 +872,59 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "selected_schedule": "None",
+                "class": "thermostat",
+                "fw": "2018-02-08T11:15:53+01:00",
+                "location": "eb5309212bf5407bb143e5bfa3b18aee",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
                 "active_preset": "home",
-                "sensors": {"illuminance": 40.5},
+                "presets": {
+                    "vacation": [15.0, 28.0],
+                    "no_frost": [10.0, 30.0],
+                    "away": [17.5, 25.0],
+                    "asleep": [17.0, 24.0],
+                    "home": [20.5, 22.0],
+                },
+                "available_schedules": ["Standaard", "Thuiswerken"],
+                "selected_schedule": "None",
+                "schedule_temperature": 20.5,
+                "last_used": "Standaard",
+                "mode": "heat",
+                "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
+                "class": "heater_central",
+                "fw": None,
+                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                "model": "2.32",
+                "name": "OpenTherm",
+                "vendor": "Bosch Thermotechniek B.V.",
                 "heating_state": True,
-                "binary_sensors": {"flame_state": True},
-                "sensors": {"water_pressure": 2.1, "water_temperature": 52.0},
+                "cooling_active": False,
+                "binary_sensors": {"dhw_state": False, "flame_state": True},
+                "sensors": {
+                    "water_temperature": 52.0,
+                    "intended_boiler_temperature": 48.6,
+                    "modulation_level": 0.0,
+                    "return_temperature": 42.0,
+                    "water_pressure": 2.1,
+                    "device_state": "heating",
+                },
+                "switches": {"dhw_cm_switch": False},
             },
+            # Gateway
             "0466eae8520144c78afb29628384edeb": {
-                "sensors": {"outdoor_temperature": 7.44}
+                "class": "gateway",
+                "fw": "4.0.15",
+                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise B.V.",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 7.44},
             },
         }
 
