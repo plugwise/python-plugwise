@@ -571,9 +571,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
-                "available_schedules": ["Thermostat schedule"],
-                "selected_schedule": "Thermostat schedule",
-                "last_used": "Thermostat schedule",
+                "class": "thermostat",
+                "fw": "2017-03-13T11:54:58+01:00",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "schedule_temperature": 20.0,
+                "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
+                "active_preset": "home",
                 "presets": {
                     "away": [19.0, 0],
                     "vacation": [15.0, 0],
@@ -581,28 +587,41 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "home": [20.0, 0],
                     "no_frost": [10.0, 0],
                 },
-                "preset_modes": [
-                    "away",
-                    "vacation",
-                    "asleep",
-                    "home",
-                    "no_frost",
-                ],
-                "active_preset": "home",
-                "schedule_temperature": 20.0,
-                "sensors": {"illuminance": 151, "setpoint": 20.5, "temperature": 20.4},
+                "available_schedules": ["Thermostat schedule"],
+                "selected_schedule": "Thermostat schedule",
+                "last_used": "Thermostat schedule",
+                "mode": "auto",
+                "sensors": {"temperature": 20.4, "setpoint": 20.5, "illuminance": 151},
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
+                "class": "heater_central",
+                "fw": None,
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "4.21",
+                "name": "OpenTherm",
+                "vendor": "Bosch Thermotechniek B.V.",
+                "heating_state": True,
+                "cooling_active": False,
+                "binary_sensors": {"flame_state": True},
                 "sensors": {
                     "water_temperature": 23.6,
                     "intended_boiler_temperature": 17.0,
                     "modulation_level": 0.0,
                     "return_temperature": 21.7,
                     "water_pressure": 1.2,
+                    "device_state": "heating",
                 },
-                "location": pw_constants.FAKE_LOC,
-                "heating_state": True,
+            },
+            # Gateway
+            "0000aaaa0000aaaa0000aaaa0000aa00": {
+                "class": "gateway",
+                "fw": "1.8.0",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise B.V.",
+                "binary_sensors": {"plugwise_notification": False},
             },
         }
 
@@ -657,13 +676,59 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "9e7377867dc24e51b8098a5ba02bd89d": {
+                "class": "thermostat",
+                "fw": "2017-03-13T11:54:58+01:00",
+                "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "schedule_temperature": 15.0,
+                "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
+                "active_preset": None,
+                "presets": {
+                    "vacation": [15.0, 0],
+                    "away": [15.0, 0],
+                    "no_frost": [10.0, 0],
+                    "home": [18.0, 0],
+                    "asleep": [15.0, 0],
+                },
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "None",
                 "last_used": "Thermostat schedule",
-                "sensors": {"illuminance": 19.5, "setpoint": 15.0, "temperature": 21.4},
+                "mode": "heat",
+                "sensors": {"temperature": 21.4, "setpoint": 15.0, "illuminance": 19.5},
             },
             # Central
-            "ea5d8a7177e541b0a4b52da815166de4": {"sensors": {"water_pressure": 1.7}},
+            "ea5d8a7177e541b0a4b52da815166de4": {
+                "class": "heater_central",
+                "fw": None,
+                "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                "model": "Generic heater",
+                "name": "OpenTherm",
+                "vendor": None,
+                "heating_state": False,
+                "cooling_active": False,
+                "binary_sensors": {"flame_state": False},
+                "sensors": {
+                    "water_temperature": 54.0,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 0.0,
+                    "water_pressure": 1.7,
+                    "device_state": "idle",
+                },
+            },
+            # Gateway
+            "be81e3f8275b4129852c4d8d550ae2eb": {
+                "class": "gateway",
+                "fw": "1.8.0",
+                "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise B.V.",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 21.0},
+            },
         }
 
         self.smile_setup = "legacy_anna_2"
