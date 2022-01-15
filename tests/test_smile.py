@@ -443,7 +443,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 _LOGGER.debug(
                                     "Schedule temperature = %s", dev_data[measure_key]
                                 )
-                                if dev_data[measure_key] is not None:
+                                if measure_assert is not None:
                                     assert isinstance(dev_data[measure_key], float)
                                 else:
                                     assert dev_data[measure_key] == measure_assert
