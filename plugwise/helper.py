@@ -1158,8 +1158,7 @@ class SmileHelper:
         if schedules:
             available.remove("None")
             last_active = self._last_active_schema(location)
-            if selected != "None":
-                schedule_temperature = schemas_schedule_temp(schedules, last_active)
+            schedule_temperature = schemas_schedule_temp(schedules, last_active)
 
         return available, selected, schedule_temperature, last_active
 
