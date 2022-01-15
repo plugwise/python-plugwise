@@ -567,7 +567,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
-        # testdata is a dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
@@ -668,11 +667,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_legacy_anna_2(self):
         """Test a legacy Anna device."""
-        # testdata is a dictionary with key ctrl_id_dev_id => keys:values
-        # testdata={
-        #             'ctrl_id': { 'outdoor+temp': 20.0, }
-        #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
-        #         }
         testdata = {
             # Anna
             "9e7377867dc24e51b8098a5ba02bd89d": {
@@ -774,7 +768,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2(self):
         """Test a legacy P1 device."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
@@ -828,7 +821,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2_2(self):
         """Test another legacy P1 device."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Gateway / P1 itself
             "199aa40f126840f392983d171374ab0b": {
@@ -864,11 +856,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_v4(self):
         """Test an Anna firmware 4 setup without a boiler."""
-        # testdata is a dictionary with key ctrl_id_dev_id => keys:values
-        # testdata={
-        #             'ctrl_id': { 'outdoor+temp': 20.0, }
-        #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
-        #         }
         testdata = {
             # Anna
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
@@ -1010,11 +997,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw3(self):
         """Test an Anna firmware 3 without a boiler."""
-        # testdata is a dictionary with key ctrl_id_dev_id => keys:values
-        # testdata={
-        #             'ctrl_id': { 'outdoor+temp': 20.0, }
-        #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
-        #         }
         testdata = {
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
@@ -1027,10 +1009,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "sensors": {"outdoor_temperature": 10.8},
             },
-            # # Central
-            # "c46b4794d28149699eacf053deedd003": {
-            #    "heating_state": False,
-            # },
         }
 
         self.smile_setup = "anna_without_boiler_fw3"
@@ -1070,11 +1048,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw4(self):
         """Test an Anna firmware 4 without a boiler."""
-        # testdata is a dictionary with key ctrl_id_dev_id => keys:values
-        # testdata={
-        #             'ctrl_id': { 'outdoor+temp': 20.0, }
-        #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
-        #         }
         testdata = {
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
@@ -1085,10 +1058,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "a270735e4ccd45239424badc0578a2b1": {
                 "sensors": {"outdoor_temperature": 16.6}
             },
-            # # Central
-            # "c46b4794d28149699eacf053deedd003": {
-            #    "heating_state": True,
-            # },
         }
 
         self.smile_setup = "anna_without_boiler_fw4"
@@ -1128,11 +1097,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw42(self):
         """Test an Anna firmware 4.2 setup without a boiler."""
-        # testdata is a dictionary with key ctrl_id_dev_id => keys:values
-        # testdata={
-        #             'ctrl_id': { 'outdoor+temp': 20.0, }
-        #             'ctrl_id:dev_id': { 'type': 'thermostat', 'battery': None, }
-        #         }
         testdata = {
             # Central
             "c46b4794d28149699eacf053deedd003": {
@@ -1220,7 +1184,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna(self):
         """Test outdated information for Adam with Anna setup."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Anna
             "ee62cad889f94e8ca3d09021f03a660b": {
@@ -1547,7 +1510,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             "90986d591dcd426cae3ec3e8111ff730": {
                 "heating_state": False,
@@ -1655,7 +1617,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_multiple_devices_per_zone(self):
         """Test a broad setup of Adam with multiple devices per zone setup."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             "df4a4a8169904cdb9c03d61a21f42140": {
                 "class": "zone_thermostat",
@@ -2073,7 +2034,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v3(self):
         """Test a P1 firmware 3 with only electricity setup."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
@@ -2123,7 +2083,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v3solarfake(self):
         """Test a P1 firmware 3 with manually added solar setup."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
@@ -2159,7 +2118,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v3_full_option(self):
         """Test a P1 firmware 3 full option (gas and solar) setup."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
@@ -2213,7 +2171,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump(self):
         """Test a Anna with Elga setup in idle mode."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
@@ -2269,7 +2226,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling(self):
         """Test a Anna with Elga setup in cooling mode."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
@@ -2355,7 +2311,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_stretch_v31(self):
         """Test erroneous domain_objects file from user."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             "259882df3c05415b99c2d962534ce820": {
                 "class": "gateway",
@@ -2540,15 +2495,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no master thermostat")
         assert smile._sm_thermostat is None  # it's not a thermostat :)
 
-        # smile.get_all_devices()
-
         await smile.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
     async def test_connect_stretch_v23(self):
         """Test erroneous domain_objects file from user."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             "6e3e708b07ca4648964795a582c90ad1": {
                 "class": "gateway",
@@ -2838,7 +2790,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v4(self):
         """Test a P1 firmware 4 setup."""
-        # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
