@@ -49,13 +49,12 @@ class MessageRequest(TypedDict):
 class StickMessageController:
     """Handle connection and message sending and receiving"""
 
-    def __init__(self, port: str, message_processor, node_state):
+    def __init__(self, port: str, message_processor):
         """Initialize message controller"""
         self.connection = None
         self.discovery_finished = False
         self.init_callback = None
         self.message_processor = message_processor
-        self.node_state = node_state
         self.parser = PlugwiseParser(self.message_handler)
         self.port = port
 
