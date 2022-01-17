@@ -1,11 +1,12 @@
 # Changelog
 
-# (in progress)
-  - Add Anna firmware 4.2 support
-
 # v0.16.1 - Smile - various updates:
-  - Change active device detection - detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
-  - Always show text in the climate-attributes `available_schemas` and `selected_schema`.
+  - BREAKING: Change active device detecting, detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
+  - Add Adam v3.6.4 (beta) and Anna firmware 4.2 support (representation and switching on/off of a schedule has changed)
+  - Anna: Fix cooling_active prediction
+  - Schedules: always show `available_schemas` and `selected_schema`, also with "None" available and/or selected
+  - Cleanup and optimize code
+  - Adapt and improve testcode
 
 # v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
   - Change from list- to dict-format for binary_sensors, sensors and switches
