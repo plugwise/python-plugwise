@@ -1948,8 +1948,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "CV Jessie",
                 ],
                 "selected_schedule": "None",
-                "schedule_temperature": None,
-                "last_used": "None",
+                "schedule_temperature": 15.0,
+                "last_used": "Badkamer Schema",
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
