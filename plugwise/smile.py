@@ -536,8 +536,10 @@ class Smile(SmileComm, SmileData):
             return False
 
         schema_rule_id = next(iter(schema_rule))
+        _LOGGER.debug("HOI: schema_rule_id: %s", schema_rule_id)
         locator = f'.//rule[@id="{schema_rule_id}"]/directives'
         directives = etree.tostring(self._domain_objects.find(locator)).decode()
+        _LOGGER.debug(directives)
         locator = f'.//*[@id="{schema_rule_id}"]/template'
         template_id = self._domain_objects.find(locator).attrib["id"]
 
