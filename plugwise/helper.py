@@ -1156,28 +1156,25 @@ class SmileHelper:
 
         if schedules:
             available.remove("None")
-            last_active = self._last_active_schema(location)
+            last_active = self._last_active_schema(location, rule_ids)
             schedule_temperature = schemas_schedule_temp(schedules, last_active)
 
         return available, selected, schedule_temperature, last_active
 
-    def _last_active_schema(self, loc_id):
+    def _last_active_schema(self, loc_id, rule_ids):
         """Helper-function for smile.py: _device_data_climate().
         Determine the last active schema/schedule based on the Location ID.
         """
-        # Adam
-        if self.smile_name == "Adam":
-            return self._last_active.get(loc_id)
-
-        # Anna's
+        # First, find last_modified == selected
+        last_modified = self._last_active.get(loc_id)
+        if last_modified is not None:
+            return last_modified
+        
+        # Alternatively, find last_modified by finding the most recent modified_date
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        rule_ids = {}
         schemas = {}
-        last_modified = None
 
-        tag = "zone_preset_based_on_time_and_presence_with_override"
-
-        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
+        if not rule_ids:
             return  # pragma: no cover
 
         for rule_id, dummy in rule_ids.items():
@@ -1188,7 +1185,7 @@ class SmileHelper:
             schema_time = parse(schema_date)
             schemas[schema_name] = (schema_time - epoch).total_seconds()
 
-        if schemas != {}:
+        if schemas:
             last_modified = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
 
         return last_modified
