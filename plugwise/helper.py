@@ -1167,7 +1167,7 @@ class SmileHelper:
         """
         # First, find last_modified == selected
         last_modified = self._last_active.get(loc_id)
-        if last_modified is not None:
+        if last_modified != "None":
             return last_modified
 
         # Alternatively, find last_modified by finding the most recent modified_date
