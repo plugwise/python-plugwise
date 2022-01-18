@@ -1169,7 +1169,7 @@ class SmileHelper:
         last_modified = self._last_active.get(loc_id)
         if last_modified is not None:
             return last_modified
-        
+
         # Alternatively, find last_modified by finding the most recent modified_date
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
         schemas = {}
