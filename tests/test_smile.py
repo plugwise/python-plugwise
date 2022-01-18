@@ -445,8 +445,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 )
                                 if measure_assert is not None:
                                     assert isinstance(dev_data[measure_key], float)
-                                else:
-                                    assert dev_data[measure_key] == measure_assert
+                                else:  # edge-case: schedule_temperature = None
+                                    assert (
+                                        dev_data[measure_key] == measure_assert
+                                    )  # pragma: no cover
                             else:
                                 assert dev_data[measure_key] == measure_assert
 
