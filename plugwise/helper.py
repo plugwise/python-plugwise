@@ -143,7 +143,7 @@ def schemas_schedule_temp(schedules, name):
     Obtain the schedule temperature of the schema/schedule.
     """
     if name == "None":
-        return
+        return  # pragma: no cover
 
     schema_list = []
     for period, temp in schedules[name].items():
