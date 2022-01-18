@@ -76,6 +76,9 @@
 			<when time="[mo 02:00,mo 02:00)"><then preset="home"/></when>
 		</directives>
 		<contexts>
+			<context>
+				<zone><location id="c34c6864216446528e95d88985e714cc"/></zone>
+			</context>
 		</contexts>
 	</rule>
 	<module id='11e2525899534d359bc2288d52a77342'>
@@ -488,9 +491,6 @@
 			<when time="[th 22:00,fr 22:00)"><then preset="asleep"/></when>
 		</directives>
 		<contexts>
-			<context>
-				<zone><location id="c34c6864216446528e95d88985e714cc"/></zone>
-			</context>
 		</contexts>
 	</rule>
 	<location id='c34c6864216446528e95d88985e714cc'>
