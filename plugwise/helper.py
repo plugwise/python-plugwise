@@ -1109,7 +1109,7 @@ class SmileHelper:
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available = ["None"]
-        last_active = None
+        last_used = None
         rule_ids = {}
         schedule_temperature = None
         selected = "None"
@@ -1119,9 +1119,9 @@ class SmileHelper:
             return self._schemas_legacy(available, schedule_temperature, selected)
 
         # Adam schedules, one schedule can be linked to various locations
-        # _last_active contains the locations and the active schedule name per location, or "None"
+        # self._last_active contains the locations and the active schedule name per location, or None
         if location not in self._last_active:
-            self._last_active[location] = "None"
+            self._last_active[location] = None
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
@@ -1156,21 +1156,21 @@ class SmileHelper:
 
         if schedules:
             available.remove("None")
-            last_active = self._last_active_schema(location, rule_ids)
-            schedule_temperature = schemas_schedule_temp(schedules, last_active)
+            last_used = self._last_used_schedule(location, rule_ids)
+            schedule_temperature = schemas_schedule_temp(schedules, last_used)
 
-        return available, selected, schedule_temperature, last_active
+        return available, selected, schedule_temperature, last_used
 
-    def _last_active_schema(self, loc_id, rule_ids):
+    def _last_used_schedule(self, loc_id, rule_ids):
         """Helper-function for smile.py: _device_data_climate().
-        Determine the last active schema/schedule based on the Location ID.
+        Determine the last-used schedule based on the location or the modified date.
         """
-        # First, find last_modified == selected
-        last_modified = self._last_active.get(loc_id)
-        if last_modified != "None":
-            return last_modified
+        # First, find last_used == selected
+        last_used = self._last_active.get(loc_id)
+        if last_used is not None:
+            return last_used
 
-        # Alternatively, find last_modified by finding the most recent modified_date
+        # Alternatively, find last_used by finding the most recent modified_date
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
         schemas = {}
 
@@ -1186,9 +1186,9 @@ class SmileHelper:
             schemas[schema_name] = (schema_time - epoch).total_seconds()
 
         if schemas:
-            last_modified = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
+            last_used = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
 
-        return last_modified
+        return last_used
 
     def _object_value(self, obj_id, measurement):
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
