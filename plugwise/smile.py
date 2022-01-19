@@ -538,17 +538,15 @@ class Smile(SmileComm, SmileData):
         schema_rule_id = next(iter(schema_rule))
         locator = f'.//rule[@id="{schema_rule_id}"]/directives'
         directives = etree.tostring(self._domain_objects.find(locator)).decode()
-        locator = f'.//*[@id="{schema_rule_id}"]/template'
-        template_id = self._domain_objects.find(locator).attrib["id"]
-
         info = ""
         if state == "on":
             info = f'<context><zone><location id="{loc_id}" /></zone></context>'
 
         uri = f"{RULES};id={schema_rule_id}"
         data = (
-            f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-            f' id="{template_id}" /><active>true</active>{directives}<contexts>{info}</contexts></rule></rules>'
+            f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name>'
+            '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
+            f"<active>true</active>{directives}<contexts>{info}</contexts></rule></rules>"
         )
 
         await self._request(uri, method="put", data=data)
