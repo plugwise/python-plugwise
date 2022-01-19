@@ -300,7 +300,7 @@ class SmileComm:
                 headers = {"Accept-Encoding": "gzip"}
                 resp = await self._websession.get(url, auth=self._auth, headers=headers)
             if method == "put":
-                headers = {"Content-type": "text/xml"}
+                headers = {"Content-type": "application/x-www-form-urlencoded"}
                 resp = await self._websession.put(
                     url, data=data, headers=headers, auth=self._auth
                 )
