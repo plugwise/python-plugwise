@@ -173,7 +173,9 @@ class Stick:
     def connect(self, callback=None):
         """Startup message controller and connect to stick."""
         if not self.msg_controller:
-            self.msg_controller = StickMessageController(self.port, self.message_processor)
+            self.msg_controller = StickMessageController(
+                self.port, self.message_processor
+            )
         if self.msg_controller.connect_to_stick(callback):
             # update daemon
             self._run_update_thread = False
