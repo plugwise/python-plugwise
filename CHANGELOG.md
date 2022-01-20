@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.17.x - Stick - Improve performance and energy monitoring
+# v0.16.2.a0 - Stick - Improve performance and energy monitoring
 
 - Improved timeout message handling based on response messages of USB-stick
 - More frequent energy monitoring polling when Stick is idle
