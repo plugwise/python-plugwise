@@ -4,7 +4,9 @@
 
 - Improved timeout message handling based on response messages of USB-stick
 - More frequent energy monitoring polling when Stick is idle
-- Full rewrite of energy collection code. No dependency to fixed log interval. Should fix [#149]https://github.com/plugwise/plugwise-beta/issues/149 and [157]https://github.com/plugwise/plugwise-beta/issues/157
+- Full rewrite of energy collection code. No dependency to fixed log interval. Should fix
+  - [#149]https://github.com/plugwise/plugwise-beta/issues/149
+  - [157]https://github.com/plugwise/plugwise-beta/issues/157
 - Added ability to change energy log interval
 - Added full support for energy production [#39](https://github.com/plugwise/python-plugwise/issues/39)
 
