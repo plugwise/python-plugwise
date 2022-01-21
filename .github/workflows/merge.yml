@@ -12,7 +12,7 @@ on:
   pull_request:
     types: closed
     branches:
-      - main
+      - release-0.15.7
 
 jobs:
   publishing:
