@@ -1,18 +1,20 @@
 # Changelog
 
-# v0.16.2.a0 - Stick - Improve performance and energy monitoring
-
-- Improved timeout message handling based on response messages of USB-stick
-- More frequent energy monitoring polling when Stick is idle
-- Full rewrite of energy collection code. No dependency to fixed log interval. Should fix [#149]https://github.com/plugwise/plugwise-beta/issues/149 and [157]https://github.com/plugwise/plugwise-beta/issues/157
-- Added ability to change energy log interval
-- Added full support for energy production [#39](https://github.com/plugwise/python-plugwise/issues/39)
-
 # v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
 
 - Change from list- to dict-format for binary_sensors, sensors and switches
 - Provide gateway-devices for Legacy Anna and Stretch
 - Code-optimizations
+
+# v0.15.8 - Stick - Improve performance and energy monitoring
+
+- Improved timeout message handling based on response messages of USB-stick
+- More frequent energy monitoring polling when Stick is idle
+- Full rewrite of energy collection code. No dependency to fixed log interval. Should fix
+  - [#149]https://github.com/plugwise/plugwise-beta/issues/149
+  - [157]https://github.com/plugwise/plugwise-beta/issues/157
+- Added ability to change energy log interval
+- Added full support for energy production [#39](https://github.com/plugwise/python-plugwise/issues/39)
 
 # v0.15.7 - Smile - Improve implementation of cooling-function-detection
 
