@@ -295,17 +295,23 @@ class SmileComm:
         url = f"{self._endpoint}{command}"
 
         try:
+
+            if method == "delete":
+                resp = await self._websession.delete(url, auth=self._auth)
             if method == "get":
                 # Work-around for Stretchv2, should not hurt the other smiles
                 headers = {"Accept-Encoding": "gzip"}
                 resp = await self._websession.get(url, auth=self._auth, headers=headers)
-            if method == "put":
-                headers = {"Content-type": "application/x-www-form-urlencoded"}
+            if method == "patch":
+                headers = {"Content-type": "type/xml"}
                 resp = await self._websession.put(
-                    url, data=data, headers=headers, auth=self._auth
+                    url, data=data, auth=self._auth, headers=headers
                 )
-            if method == "delete":
-                resp = await self._websession.delete(url, auth=self._auth)
+            if method == "put":
+                headers = {"Content-type": "type/xml"}
+                resp = await self._websession.put(
+                    url, data=data, auth=self._auth, headers=headers
+                )
         except ServerTimeoutError:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
