@@ -301,11 +301,14 @@ class SmileComm:
             if method == "get":
                 # Work-around for Stretchv2, should not hurt the other smiles
                 headers = {"Accept-Encoding": "gzip"}
-                resp = await self._websession.get(url, auth=self._auth, headers=headers)
+                resp = await self._websession.get(url, headers=headers, auth=self._auth)
             if method == "put":
-                headers = {"Content-type": "type/xml"}
+                headers = {"Content-type": "text/xml"}
                 resp = await self._websession.put(
-                    url, data=data, auth=self._auth, headers=headers
+                    url,
+                    headers=headers,
+                    data=data,
+                    auth=self._auth,
                 )
         except ServerTimeoutError:
             if retry < 1:
