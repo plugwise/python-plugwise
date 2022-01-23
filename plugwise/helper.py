@@ -302,11 +302,6 @@ class SmileComm:
                 # Work-around for Stretchv2, should not hurt the other smiles
                 headers = {"Accept-Encoding": "gzip"}
                 resp = await self._websession.get(url, auth=self._auth, headers=headers)
-            if method == "patch":
-                headers = {"Content-type": "type/xml"}
-                resp = await self._websession.put(
-                    url, data=data, auth=self._auth, headers=headers
-                )
             if method == "put":
                 headers = {"Content-type": "type/xml"}
                 resp = await self._websession.put(
