@@ -536,16 +536,17 @@ class Smile(SmileComm, SmileData):
             return False
 
         schema_rule_id = next(iter(schema_rule))
-        locator = f'.//*[@id="{schema_rule_id}"]/template'
-        template_id = self._domain_objects.find(locator).attrib["id"]
-
         info = ""
         if state == "on":
             info = f'<context><zone><location id="{loc_id}" /></zone></context>'
 
-        template = f'<template id="{template_id}" />'
-        if self.smile_name == "Adam":
-            template = '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
+        template = (
+            '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
+        )
+        if self.smile_name != "Adam":
+            locator = f'.//*[@id="{schema_rule_id}"]/template'
+            template_id = self._domain_objects.find(locator).attrib["id"]
+            template = f'<template id="{template_id}" />'
 
         uri = f"{RULES};id={schema_rule_id}"
         data = (
