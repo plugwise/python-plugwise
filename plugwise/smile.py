@@ -549,7 +549,7 @@ class Smile(SmileComm, SmileData):
 
         uri = f"{RULES};id={schema_rule_id}"
         data = (
-            f"<rules><rule id='{schema_rule_id}'><name><![CDATA[{name}]]></name>"
+            f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name>'
             f"{template}<contexts>{info}</contexts></rule></rules>"
         )
 
