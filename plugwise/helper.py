@@ -559,45 +559,34 @@ class SmileHelper:
 
         self._all_locations()
 
-        # Create a gateway for legacy P1 and Anna
-        # And inject a home_location as device id for legacy so
+        # Create a gateway for legacy Anna, P1 and Stretches
+        # and inject a home_location as device id for legacy so
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
-            if self.smile_type == "power":
-                self._appl_data[self._home_location] = {
-                    "class": "gateway",
-                    "fw": self.smile_version[0],
-                    "location": self._home_location,
-                    "model": "P1",
-                    "name": "P1",
-                    "vendor": "Plugwise B.V.",
-                }
-                self.gateway_id = self._home_location
-                # legacy p1 has no more devices
-                return
-
-            elif self.smile_type == "thermostat":
-                self._appl_data[self._home_location] = {
-                    "class": "gateway",
-                    "fw": self.smile_version[0],
-                    "location": self._home_location,
-                    "model": "Anna",
-                    "name": "Anna",
-                    "vendor": "Plugwise B.V.",
-                }
-                self.gateway_id = self._home_location
-
-        # Create a gateway for the Stretches
-        if self.smile_type == "stretch":
             self._appl_data[self._home_location] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "location": self._home_location,
-                "model": "Stretch",
-                "name": "Stretch",
                 "vendor": "Plugwise B.V.",
             }
             self.gateway_id = self._home_location
+
+            if self.smile_type == "power":
+                self._appl_data[self._home_location].update(
+                    {"model": "P1", "name": "P1"}
+                )
+                # legacy p1 has no more devices
+                return
+
+            if self.smile_type == "thermostat":
+                self._appl_data[self._home_location].update(
+                    {"model": "Anna", "name": "Anna"}
+                )
+
+            if self.smile_type == "stretch":
+                self._appl_data[self._home_location].update(
+                    {"model": "Stretch", "name": "Stretch"}
+                )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
         ch_state = self._appliances.find(
