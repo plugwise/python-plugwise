@@ -337,7 +337,7 @@ class Smile(SmileComm, SmileData):
 
     async def _smile_detect_legacy(self, result, dsmrmain):
         """Helper-function for _smile_detect()."""
-        network = result.find(".//module/protocols/master_controller/network")
+        network = result.find(".//module/protocols/master_controller")
 
         # Assume legacy
         self._smile_legacy = True
@@ -366,7 +366,6 @@ class Smile(SmileComm, SmileData):
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
-                    self.gateway_id = network.attrib["id"]
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
