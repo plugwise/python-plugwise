@@ -2314,7 +2314,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_stretch_v31(self):
         """Test erroneous domain_objects file from user."""
         testdata = {
-            "259882df3c05415b99c2d962534ce820": {
+            "0000aaaa0000aaaa0000aaaa0000aa00": {
                 "class": "gateway",
                 "fw": "3.1.11",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2504,7 +2504,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_stretch_v23(self):
         """Test erroneous domain_objects file from user."""
         testdata = {
-            "6e3e708b07ca4648964795a582c90ad1": {
+            "0000aaaa0000aaaa0000aaaa0000aa00": {
                 "class": "gateway",
                 "fw": "2.3.12",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
