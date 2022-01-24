@@ -589,7 +589,7 @@ class SmileHelper:
 
         # Create a gateway for the Stretches
         if self.smile_type == "stretch":
-            self._appl_data[self.gateway_id] = {
+            self._appl_data[self._home_location] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "location": self._home_location,
@@ -597,6 +597,7 @@ class SmileHelper:
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
             }
+            self.gateway_id = self._home_location
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
         ch_state = self._appliances.find(
