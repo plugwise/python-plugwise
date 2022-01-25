@@ -317,7 +317,7 @@ class Smile(SmileComm, SmileData):
             DOMAIN_OBJECTS = "/core/direct_objects"
             result = await self._request(DOMAIN_OBJECTS)
             vendor_names = result.findall(".//module/vendor_name")
-    
+
         for name in vendor_names:
             names.append(name.text)
 
