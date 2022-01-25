@@ -610,21 +610,21 @@ class Stick:
                 if datetime.now().day != day_of_month:
                     day_of_month = datetime.now().day
                     _sync_clock = True
-                for mac in self._device_nodes:
-                    if self._device_nodes[mac]:
-                        if self._device_nodes[mac].battery_powered:
+                for mac, device in self._device_nodes.items():
+                    if device:
+                        if device.battery_powered:
                             # Check availability state of SED's
                             self._check_availability_of_seds(mac)
                         else:
                             # Do ping request for all non SED's
-                            self._device_nodes[mac].do_ping()
+                            device.do_ping()
 
-                        if self._device_nodes[mac].measures_power:
+                        if device.measures_power:
                             # Request current power usage
-                            self._device_nodes[mac].request_power_update()
+                            device.request_power_update()
                             # Sync internal clock of power measure nodes once a day
                             if _sync_clock:
-                                self._device_nodes[mac].sync_clock()
+                                device.sync_clock()
                 _sync_clock = False
 
                 # Do a single ping for undiscovered nodes once per 10 update cycles
@@ -669,8 +669,8 @@ class Stick:
             # Timer based on a minimum of 5 seconds + 1 second for each node supporting power measurement
             if not self._auto_update_manually:
                 count_nodes = 0
-                for mac in self._device_nodes:
-                    if self._device_nodes[mac].measures_power:
+                for _, node in self._device_nodes.items():
+                    if node.measures_power:
                         count_nodes += 1
                 self._auto_update_timer = 5 + (count_nodes * 1)
                 _LOGGER.info(
@@ -680,7 +680,7 @@ class Stick:
         if not self._run_update_thread:
             self._update_thread.start()
 
-    ### Helper functions ###
+    # Helper functions
     def do_callback(self, callback_type, callback_arg=None):
         """Helper to execute registered callbacks for specified callback type."""
         if callback_type in self._stick_callbacks:

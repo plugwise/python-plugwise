@@ -58,6 +58,8 @@ class StickConnection:
             time.sleep(0.01)
         _LOGGER.debug("Reader daemon stopped")
 
+    #  TODO: function instead of self
+    #  pylint: disable=no-self-use
     def _read_data(self):
         """placeholder."""
         return b"0000"

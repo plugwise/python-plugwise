@@ -97,10 +97,14 @@ class PlugwiseScan(NodeSED):
                 self.mac,
             )
 
+    #  TODO: snakestyle name
+    #  pylint: disable=invalid-name
     def CalibrateLight(self, callback=None):
         """Queue request to calibration light sensitivity"""
         self._queue_request(ScanLightCalibrateRequest(self._mac), callback)
 
+    #  TODO: snakestyle name
+    #  pylint: disable=invalid-name
     def Configure_scan(
         self,
         motion_reset_timer=SCAN_MOTION_RESET_TIMER,
@@ -126,6 +130,8 @@ class PlugwiseScan(NodeSED):
             callback,
         )
 
+    #  TODO: snakestyle name
+    #  pylint: disable=invalid-name
     def SetMotionAction(self, callback=None):
         """Queue Configure Scan to signal motion"""
         # TODO:

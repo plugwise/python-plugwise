@@ -75,14 +75,13 @@ class NodeSED(PlugwiseNode):
             str(message.awake_type.value),
             self.mac,
         )
-        if (
-            message.awake_type.value == SED_AWAKE_MAINTENANCE
-            or message.awake_type.value == SED_AWAKE_FIRST
-            or message.awake_type.value == SED_AWAKE_STARTUP
-            or message.awake_type.value == SED_AWAKE_BUTTON
-        ):
-            for request in self._sed_requests:
-                (request_message, callback) = self._sed_requests[request]
+        if message.awake_type.value in [
+            SED_AWAKE_MAINTENANCE,
+            SED_AWAKE_FIRST,
+            SED_AWAKE_STARTUP,
+            SED_AWAKE_BUTTON,
+        ]:
+            for request_message, callback in self._sed_requests.items():
                 _LOGGER.info(
                     "Send queued %s message to SED node %s",
                     request_message.__class__.__name__,
@@ -136,6 +135,8 @@ class NodeSED(PlugwiseNode):
         """Callback after wake up interval is received and accepted by SED."""
         self._wake_up_interval = self._new_maintenance_interval
 
+    #  TODO: snakestyle name
+    #  pylint: disable=invalid-name
     def Configure_SED(
         self,
         stay_active=SED_STAY_ACTIVE,

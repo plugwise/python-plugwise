@@ -1,13 +1,9 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise backend module for Home Assistant Core.
 """
-import asyncio
-import copy
 import logging
 
 import aiohttp
-
-from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
@@ -74,11 +70,11 @@ class SmileData(SmileHelper):
             self._append_special(data, dev_id, temp_bs_dict, temp_s_dict)
 
             dev_and_data.update(data)
-            if temp_bs_dict != {}:
+            if temp_bs_dict:
                 dev_and_data["binary_sensors"] = temp_bs_dict
-            if temp_s_dict != {}:
+            if temp_s_dict:
                 dev_and_data["sensors"] = temp_s_dict
-            if temp_sw_dict != {}:
+            if temp_sw_dict:
                 dev_and_data["switches"] = temp_sw_dict
 
             self.gw_devices[dev_id] = dev_and_data
@@ -468,7 +464,7 @@ class Smile(SmileComm, SmileData):
             data = self._get_device_data(dev_id)
             for key, value in list(data.items()):
                 if key in dev_dict:
-                    self.gw_devices[dev_id][key] = value
+                    dev_dict[key] = value
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
                     update_helper(
@@ -531,7 +527,7 @@ class Smile(SmileComm, SmileData):
             return await self._set_schedule_state_legacy(name, state)
 
         schema_rule = self._rule_ids_by_name(str(name), loc_id)
-        if schema_rule == {} or schema_rule is None:
+        if not schema_rule or schema_rule is None:
             return False
 
         schema_rule_id = next(iter(schema_rule))

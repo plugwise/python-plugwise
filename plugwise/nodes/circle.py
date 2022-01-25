@@ -685,8 +685,9 @@ class PlugwiseCircle(PlugwiseNode):
                 self._energy_last_populated_slot = _slot
 
             # Store most recent timestamp of collected pulses
-            if self._energy_last_collected_timestamp < _log_timestamp:
-                self._energy_last_collected_timestamp = _log_timestamp
+            self._energy_last_collected_timestamp = max(
+                self._energy_last_collected_timestamp, _log_timestamp
+            )
 
             # Trigger history rollover
             if (
@@ -746,11 +747,11 @@ class PlugwiseCircle(PlugwiseNode):
             )
             self._update_energy_today_now(False, _history_rollover, _midnight_rollover)
         else:
-            _LOGGER.info(
-                "_response_energy_counters for %s | self._energy_history_collecting running",
-                self.mac,
-                str(_local_midnight_timestamp),
+            logstring = (
+                "_response_energy_counters for %s | self._energy_history_collecting running %s"
+                % (self.mac, str(_local_midnight_timestamp))
             )
+            _LOGGER.info(logstring)
 
         # Cleanup energy history for more than 8 day's ago
         _8_days_ago = datetime.utcnow().replace(
