@@ -312,11 +312,16 @@ class Smile(SmileComm, SmileData):
         names = []
 
         result = await self._request(DOMAIN_OBJECTS)
-        dsmrmain = result.find(".//module/protocols/dsmrmain")
-
         vendor_names = result.findall(".//module/vendor_name")
+        if not vendor_names:
+            DOMAIN_OBJECTS = "/core/direct_objects"
+            result = await self._request(DOMAIN_OBJECTS)
+            vendor_names = result.findall(".//module/vendor_name")
+    
         for name in vendor_names:
             names.append(name.text)
+
+        dsmrmain = result.find(".//module/protocols/dsmrmain")
 
         if "Plugwise" not in names:
             if dsmrmain is None:  # pragma: no cover
