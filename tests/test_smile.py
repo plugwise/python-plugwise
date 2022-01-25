@@ -71,6 +71,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return app
 
         app.router.add_get("/core/appliances", self.smile_appliances)
+        app.router.add_get("/core/direct_objects", self.smile_direct_objects)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
         app.router.add_get("/core/modules", self.smile_modules)
         app.router.add_get("/system/status.xml", self.smile_status)
@@ -120,6 +121,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         userdata = os.path.join(
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.appliances.xml",
+        )
+        filedata = open(userdata)
+        data = filedata.read()
+        filedata.close()
+        return aiohttp.web.Response(text=data)
+
+    async def smile_direct_objects(self, request):
+        """Render setup specific direct objects endpoint."""
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.direct_objects.xml",
         )
         filedata = open(userdata)
         data = filedata.read()
