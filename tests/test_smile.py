@@ -2501,39 +2501,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_stretch_v23_no_do(self):
-        """Test empty domain_objects file."""
-        testdata = {
-            "0000aaaa0000aaaa0000aaaa0000aa00": {
-                "class": "gateway",
-                "fw": "2.3.12",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Stretch",
-                "name": "Stretch",
-                "vendor": "Plugwise B.V.",
-            }
-        }
-
-        self.smile_setup = "stretch_v23_no_do"
-        server, smile, client = await self.connect_wrapper(stretch=True)
-        assert smile.smile_hostname == "stretch000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "stretch"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.3.12"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
-
-        await self.device_test(smile, testdata)
-        _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
     async def test_connect_p1v4(self):
         """Test a P1 firmware 4 setup."""
         testdata = {
@@ -2628,6 +2595,39 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert False  # pragma: no cover
         except pw_exceptions.DeviceTimeoutError:
             assert True
+
+    @pytest.mark.asyncio
+    async def test_connect_stretch_v23_no_do(self):
+        """Test empty domain_objects file."""
+        testdata = {
+            "0000aaaa0000aaaa0000aaaa0000aa00": {
+                "class": "gateway",
+                "fw": "2.3.12",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Stretch",
+                "name": "Stretch",
+                "vendor": "Plugwise B.V.",
+            }
+        }
+
+        self.smile_setup = "stretch_v23_no_do"
+        server, smile, client = await self.connect_wrapper(stretch=True)
+        assert smile.smile_hostname == "stretch000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "stretch"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "2.3.12"
+        _LOGGER.info(" # Assert legacy")
+        assert smile._smile_legacy  # pylint: disable=protected-access
+
+        await self.device_test(smile, testdata)
+        _LOGGER.info(" # Assert no master thermostat")
+        assert smile._sm_thermostat is None  # it's not a thermostat :)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
 
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""
