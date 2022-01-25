@@ -337,7 +337,7 @@ class NodeInfoResponse(NodeResponse):
         self.datetime = DateTime()
         self.last_logaddr = LogAddr(0, length=8)
         self.relay_state = Int(0, length=2)
-        #  TODO: snake-style
+        #  TODO: 20220126 snake-style
         #  pylint: disable=invalid-name
         self.hz = Int(0, length=2)
         self.hw_ver = String(None, length=12)

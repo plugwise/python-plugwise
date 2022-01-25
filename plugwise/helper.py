@@ -443,6 +443,8 @@ class SmileHelper:
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
+            #  TODO: 20220125 investigate why walrus doesn't play with pylint (module.find = no-member) on
+            #        if (module := self._modules.find(locator)) is not None:
             module = self._modules.find(locator)
             if module is not None:
                 v_name = module.find("vendor_name").text

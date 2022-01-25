@@ -135,7 +135,7 @@ class NodeSED(PlugwiseNode):
         """Callback after wake up interval is received and accepted by SED."""
         self._wake_up_interval = self._new_maintenance_interval
 
-    #  TODO: snakestyle name
+    #  TODO: 20220125 snakestyle name
     #  pylint: disable=invalid-name
     def Configure_SED(
         self,
