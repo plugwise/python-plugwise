@@ -310,6 +310,7 @@ class Smile(SmileComm, SmileData):
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
         names = []
+        global DOMAIN_OBJECTS
 
         result = await self._request(DOMAIN_OBJECTS)
         vendor_names = result.findall(".//module/vendor_name")
