@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+	<gateway>
+		<product>stretch</product>
+		<hostname>stretch000000</hostname>
+		<firmware>2.3.12</firmware>
+		<upgrade/>
+	</gateway>
+	<wlan0>
+		<mac>01:23:45:67:89:AB</mac>
+		<ip>127.0.0.1</ip>
+		<bcast>127.0.0.1</bcast>
+		<mask>127.0.0.1</mask>
+		<encryption><![CDATA[mixed-psk]]></encryption>
+		<proto>static</proto>
+		<gateway>127.0.0.1</gateway>
+		<ieee>802.11abgn</ieee>
+		<ssid><![CDATA[stretch_000b47]]></ssid>
+		<mode>Master</mode>
+		<frequency unit="MHz">2412</frequency>
+		<wifi_channel>1</wifi_channel>
+	</wlan0>
+	<eth0>
+		<mac>01:23:45:67:89:AB</mac>
+		<ip>127.0.0.1</ip>
+		<bcast>127.0.0.1</bcast>
+		<mask>127.0.0.1</mask>
+		<proto>dhcp</proto>
+		<gateway>127.0.0.1</gateway>
+	</eth0>
+	<time>2020-08-03T21:56:29.284+02:00</time>
+	<timezone><![CDATA[Europe/Amsterdam]]></timezone>
+</system>
+
