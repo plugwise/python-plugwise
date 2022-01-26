@@ -2513,6 +2513,54 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_stretch_v27_no_domain(self):
+        """Test erroneous domain_objects file from user."""
+        # testdata dictionary with key ctrl_id_dev_id => keys:values
+        testdata = {
+            # Tv hoek 25F6790
+            "c71f1cb2100b42ca942f056dcb7eb01f": {
+                "sensors": {"electricity_consumed": 33.3},
+                "switches": {"lock": False, "relay": True},
+            },
+            # Wasdroger 043AECA
+            "fd1b74f59e234a9dae4e23b2b5cf07ed": {
+                "sensors": {"electricity_consumed_interval": 0.21}
+            },
+        }
+
+        self.smile_setup = "stretch_v27_no_domain"
+        server, smile, client = await self.connect_wrapper(stretch=True)
+        assert smile.smile_hostname == "stretch000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "stretch"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "2.3.12"
+        _LOGGER.info(" # Assert legacy")
+        assert smile._smile_legacy  # pylint: disable=protected-access
+
+        await self.device_test(smile, testdata)
+        _LOGGER.info(" # Assert no master thermostat")
+        assert smile._sm_thermostat is None  # it's not a thermostat :)
+
+        switch_change = await self.tinker_switch(
+            smile, "2587a7fcdd7e482dab03fda256076b4b"
+        )
+        assert switch_change
+        switch_change = await self.tinker_switch(
+            smile,
+            "f7b145c8492f4dd7a4de760456fdef3e",
+            ["407aa1c1099d463c9137a3a9eda787fd"],
+        )
+        assert switch_change
+
+        # smile.get_all_devices()
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_p1v4(self):
         """Test a P1 firmware 4 setup."""
         testdata = {

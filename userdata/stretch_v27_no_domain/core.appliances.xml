@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appliances>
+	<appliance id='8b8d14b242e24cd789743c828b9a2ea9'>
+		<name>76BF93</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T20:40:58.929+01:00</created_date>
+		<modified_date>2022-01-26T12:37:15.337+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='4ff83cc5d6ba4e34bbe58b5bc7c2102c'/>
+			<relay id='927cdb20439f48fbbc815c72948a8a02'/>
+			<electricity_point_meter id='ad67a3b6378040dc85e886e750029060'/>
+		</services>
+		<logs>
+			<interval_log id='466d8be3220f431ba9aaab3366281ff0'>
+				<updated_date>2022-01-26T12:37:15.337+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:15.337+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='997e7951cbf34703bede70f67299f936'>
+				<updated_date>2022-01-26T12:37:15.336+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:15.336+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">1.14</measurement>
+				</period>
+			</interval_log>
+			<point_log id='b34791b584784f879d3cdeef5c87fa9a'>
+				<updated_date>2022-01-26T12:36:51.953+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T20:41:00.698+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:51.953+01:00" end_date="2022-01-26T12:36:51.953+01:00">
+					<measurement log_date="2022-01-26T12:36:51.953+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='dce183bd57074e8799375cd1bcdae47d'>
+				<updated_date>2022-01-26T12:37:15.330+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:41:01.210+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:15.330+01:00" end_date="2022-01-26T12:37:15.330+01:00">
+					<measurement log_date="2022-01-26T12:37:15.330+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='f7e24f6ac1814a7597c9b6f1069e149e'>
+				<updated_date>2022-01-26T12:37:15.330+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:43:58.505+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:15.330+01:00" end_date="2022-01-26T12:37:15.330+01:00">
+					<measurement log_date="2022-01-26T12:37:15.330+01:00">1.69</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='8b738bb5e18e4dcb8bb8ed4bc2eb06f4'>
+				<updated_date>2022-01-26T12:36:51.959+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='8e4ecdcc9094481387e0273437bb51f9'>
+		<name>25F68C3</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T14:57:36.452+01:00</created_date>
+		<modified_date>2022-01-26T12:37:14.137+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='6e72615e211d41ff9777d00b40dfeb1b'/>
+			<relay id='3d8c9e75e51e49b0897d92093fc01a83'/>
+			<electricity_point_meter id='8aa4d63f4f2d4f70accf65743d1b77df'/>
+		</services>
+		<logs>
+			<interval_log id='2aae1996849a4c9397e1cb26aea4cf9e'>
+				<updated_date>2022-01-26T12:37:14.137+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.137+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='5bb71928d42141b4a8460bf407bc634b'>
+				<updated_date>2022-01-26T12:36:52.575+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T14:57:38.134+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:52.575+01:00" end_date="2022-01-26T12:36:52.575+01:00">
+					<measurement log_date="2022-01-26T12:36:52.575+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='6958fb88e41a4db399af2a64b194aad1'>
+				<updated_date>2022-01-26T12:37:14.136+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.136+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">2.83</measurement>
+				</period>
+			</interval_log>
+			<point_log id='83f755245ee140c79365ae5f1565821b'>
+				<updated_date>2022-01-26T12:37:14.130+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T14:57:38.917+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.130+01:00" end_date="2022-01-26T12:37:14.130+01:00">
+					<measurement log_date="2022-01-26T12:37:14.130+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='fae8db66608849d0982ef34272ba63d2'>
+				<updated_date>2022-01-26T12:37:14.130+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-26T08:32:24.313+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.130+01:00" end_date="2022-01-26T12:37:14.130+01:00">
+					<measurement log_date="2022-01-26T12:37:14.130+01:00">4.69</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='e12a369459d34824814a012acf656bb9'>
+				<updated_date>2022-01-26T12:36:52.581+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='9b9bfdb3c7ad4ca5817ccaa235f1e094'>
+		<name>25881A2</name>
+		<description>Circle+</description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T13:33:01.760+01:00</created_date>
+		<modified_date>2022-01-26T12:37:06.511+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='59fb5d47a6654be093edc5aa420ba61a'/>
+			<electricity_interval_meter id='a7485db49a4941cda178528f63f98ba2'/>
+			<relay id='12ba04991e1e42bb9ee856130c407838'/>
+		</services>
+		<logs>
+			<point_log id='279a0adb6ec041eab8265449994976ff'>
+				<updated_date>2022-01-26T12:37:06.503+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:45:49.331+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:06.503+01:00" end_date="2022-01-26T12:37:06.503+01:00">
+					<measurement log_date="2022-01-26T12:37:06.503+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='6fd948182df644bb9e336055f68d4195'>
+				<updated_date>2022-01-26T12:37:06.510+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T12:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:06.510+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">7.77</measurement>
+				</period>
+			</interval_log>
+			<point_log id='dc52231745c44723adbb4fef0fd7e36c'>
+				<updated_date>2022-01-26T12:37:06.503+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-26T08:38:12.893+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:06.503+01:00" end_date="2022-01-26T12:37:06.503+01:00">
+					<measurement log_date="2022-01-26T12:37:06.503+01:00">13.31</measurement>
+				</period>
+			</point_log>
+			<interval_log id='e768139e5eb14539a2b325ecd72f217b'>
+				<updated_date>2022-01-26T12:37:06.511+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:06.511+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='fca4361624084089af0c4cb17cdd9298'>
+				<updated_date>2022-01-26T12:36:54.555+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T20:45:38.897+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:54.555+01:00" end_date="2022-01-26T12:36:54.555+01:00">
+					<measurement log_date="2022-01-26T12:36:54.555+01:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='490dbd1b079c4e38a0b240aea7736312'>
+				<updated_date></updated_date>
+				<state>off</state>
+				<lock>true</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='4661019bbe7b4a3bbe39f345ca5b5d98'>
+		<name>25F68CC</name>
+		<description>Nintendo</description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T19:36:21.830+01:00</created_date>
+		<modified_date>2022-01-26T08:30:10.275+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='9fb01fd597b5420589dc6a27f74496cb'/>
+			<relay id='799fcd6ead1f4b469364ffa7a32b3e55'/>
+			<electricity_interval_meter id='97fb71d099704bfa94d03369c7224cd4'/>
+		</services>
+		<logs>
+			<point_log id='3194a589d3bb443093bfc3fb7ee9b4d1'>
+				<updated_date>2022-01-26T08:30:04.241+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-26T08:07:22.334+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T08:30:04.241+01:00" end_date="2022-01-26T08:30:04.241+01:00">
+					<measurement log_date="2022-01-26T08:30:04.241+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='95a8be63e8ec492aad1a7f766e2f40ee'>
+				<updated_date>2022-01-26T08:30:04.246+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T07:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T08:00:00+01:00" end_date="2022-01-26T08:30:04.246+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T08:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='9d03f6181c524fd5a0e9f4ea47a9ae4e'>
+				<updated_date>2022-01-26T08:30:04.248+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T07:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T08:00:00+01:00" end_date="2022-01-26T08:30:04.248+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T08:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='b704bedc70924969886ec8729ab0c73f'>
+				<updated_date>2022-01-26T08:30:10.270+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T19:42:31.297+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T08:30:10.270+01:00" end_date="2022-01-26T08:30:10.270+01:00">
+					<measurement log_date="2022-01-26T08:30:10.270+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='fdc8a09a12ed4fb6800afedeb2f31348'>
+				<updated_date>2022-01-26T08:30:04.241+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T19:36:34.366+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T08:30:04.241+01:00" end_date="2022-01-26T08:30:04.241+01:00">
+					<measurement log_date="2022-01-26T08:30:04.241+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='4180a4c41cae412cb209c571e59dc077'>
+				<updated_date>2022-01-26T08:30:10.275+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='5ee135e752034ad2a3e38a407332757f'>
+		<name>261B329</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T14:55:04.039+01:00</created_date>
+		<modified_date>2022-01-26T12:37:10.184+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='9383879107a347a0925c8f465a9ae3c1'/>
+			<electricity_interval_meter id='a2e4eaf24d8b45119e229a53be93229d'/>
+			<relay id='af8f12921bc64e1a8eded649345aa8e3'/>
+		</services>
+		<logs>
+			<point_log id='380d1c94588544a3958fa310696352ec'>
+				<updated_date>2022-01-26T12:37:10.177+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T14:55:06.386+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:10.177+01:00" end_date="2022-01-26T12:37:10.177+01:00">
+					<measurement log_date="2022-01-26T12:37:10.177+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='58b661d948984b23a4380b75f4f465cd'>
+				<updated_date>2022-01-26T12:37:10.177+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:16.429+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:10.177+01:00" end_date="2022-01-26T12:37:10.177+01:00">
+					<measurement log_date="2022-01-26T12:37:10.177+01:00">6.75</measurement>
+				</period>
+			</point_log>
+			<interval_log id='70d35f88dd8f463198ffb806369ff6a9'>
+				<updated_date>2022-01-26T12:37:10.182+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:10.182+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">3.98</measurement>
+				</period>
+			</interval_log>
+			<point_log id='85a673838a844fd99fd128294536348b'>
+				<updated_date>2022-01-26T12:36:52.422+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T14:55:05.687+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:52.422+01:00" end_date="2022-01-26T12:36:52.422+01:00">
+					<measurement log_date="2022-01-26T12:36:52.422+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='89070024cfc74f8884b48ddeaa7f44ac'>
+				<updated_date>2022-01-26T12:37:10.184+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:10.184+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='d54a9716e0b24dcab5ee960344bb9bc5'>
+				<updated_date>2022-01-26T12:36:52.428+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='ad858f416f3e42e6a25bbd6b18178b0e'>
+		<name>261B2AE</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T14:56:05.646+01:00</created_date>
+		<modified_date>2022-01-26T12:37:06.247+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='11061e9c711e430c90b7bd8feb4d9ce6'/>
+			<electricity_point_meter id='46469387aebd4540be99beeb9a92f57d'/>
+			<electricity_interval_meter id='e8c1e9bbd4184c2b9879ac08252a106e'/>
+		</services>
+		<logs>
+			<point_log id='206a05b339d84927b3a9d9a31eae4e7b'>
+				<updated_date>2022-01-26T12:37:06.241+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:47:48.107+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:06.241+01:00" end_date="2022-01-26T12:37:06.241+01:00">
+					<measurement log_date="2022-01-26T12:37:06.241+01:00">6.06</measurement>
+				</period>
+			</point_log>
+			<point_log id='5891ac48a08445dea96676cf21d8495d'>
+				<updated_date>2022-01-26T12:36:47.604+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T18:54:01.002+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:47.604+01:00" end_date="2022-01-26T12:36:47.604+01:00">
+					<measurement log_date="2022-01-26T12:36:47.604+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='86c73da107454d45bcfa4c4d6a5b3fbf'>
+				<updated_date>2022-01-26T12:37:06.241+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T14:56:07.890+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:06.241+01:00" end_date="2022-01-26T12:37:06.241+01:00">
+					<measurement log_date="2022-01-26T12:37:06.241+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='b7ea75775193463dbae88ddee3ee1851'>
+				<updated_date>2022-01-26T12:37:06.247+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:06.247+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='edd0f3823eed469aa05ed943b003b415'>
+				<updated_date>2022-01-26T12:37:06.246+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:06.246+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">3.41</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='19e84ea2ba974085aee2833baa8d5578'>
+				<updated_date>2022-01-26T12:36:47.610+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='e4172142264f488a99b63c73817c9d21'>
+		<name>261B32A</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T14:54:33.989+01:00</created_date>
+		<modified_date>2022-01-26T12:37:14.916+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='a7dd4e11c4a2428ba13223c29600b449'/>
+			<relay id='3b74c07cce3544f9bde4766737043a25'/>
+			<electricity_point_meter id='7cb6ff7329dd43ee84610fd79cd07078'/>
+		</services>
+		<logs>
+			<interval_log id='304368fb97e24324a7f13988cc78a420'>
+				<updated_date>2022-01-26T12:37:14.914+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.914+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">5.84</measurement>
+				</period>
+			</interval_log>
+			<point_log id='3a7cb23ab9ed4e54af0f7e152288c82a'>
+				<updated_date>2022-01-26T12:37:03.094+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T14:54:35.693+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:03.094+01:00" end_date="2022-01-26T12:37:03.094+01:00">
+					<measurement log_date="2022-01-26T12:37:03.094+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='906195fd3a9149a8a3eedb50bfbaf1cf'>
+				<updated_date>2022-01-26T12:37:14.909+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:16.326+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.909+01:00" end_date="2022-01-26T12:37:14.909+01:00">
+					<measurement log_date="2022-01-26T12:37:14.909+01:00">9.63</measurement>
+				</period>
+			</point_log>
+			<interval_log id='b4885f682b2042efafe70d4635d9ed20'>
+				<updated_date>2022-01-26T12:37:14.916+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.916+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='fa9cca95aa624bafa4c0cdde28eb7c43'>
+				<updated_date>2022-01-26T12:37:14.909+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T14:54:36.400+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.909+01:00" end_date="2022-01-26T12:37:14.909+01:00">
+					<measurement log_date="2022-01-26T12:37:14.909+01:00">0.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='630ea0528e5144299c214c0e6c6f6224'>
+				<updated_date>2022-01-26T12:37:03.100+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='0b078d5862614880bc670cabf9f54b4e'>
+		<name>769C03</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T20:44:42.215+01:00</created_date>
+		<modified_date>2022-01-26T12:37:10.333+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='68fe158afac94f24a0b466af193e58b0'/>
+			<relay id='4821ddc45b8741958736a6a83a1344b1'/>
+			<electricity_point_meter id='ddf6ff4cd8794bfd9cc00d862fa7eaf3'/>
+		</services>
+		<logs>
+			<interval_log id='09375ca5aa8d4cdca41ea3c8efce538e'>
+				<updated_date>2022-01-26T12:37:10.331+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:10.331+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='7a33c828614d49589c749c7c9b008258'>
+				<updated_date>2022-01-26T12:37:10.327+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:45.073+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:10.327+01:00" end_date="2022-01-26T12:37:10.327+01:00">
+					<measurement log_date="2022-01-26T12:37:10.327+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='aa95ec240dbd4bb68917b0af0e98834f'>
+				<updated_date>2022-01-26T12:36:53.242+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T20:44:43.995+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:53.242+01:00" end_date="2022-01-26T12:36:53.242+01:00">
+					<measurement log_date="2022-01-26T12:36:53.242+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='e17df14e5e9d4c2a8ff50352d46fec31'>
+				<updated_date>2022-01-26T12:37:10.327+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:45.073+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:10.327+01:00" end_date="2022-01-26T12:37:10.327+01:00">
+					<measurement log_date="2022-01-26T12:37:10.327+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='e3e8ff777d7945e0825a1e15552c0398'>
+				<updated_date>2022-01-26T12:37:10.333+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:10.333+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='69e0441698d7464b902fcf753242bfa3'>
+				<updated_date>2022-01-26T12:36:53.247+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='553dfa416df94802851de32913f1ebd3'>
+		<name>B7DEED</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T20:20:52.426+01:00</created_date>
+		<modified_date>2022-01-26T12:37:06.328+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='1bb9434d7acc42e19626528fb6c0e4d3'/>
+			<relay id='a42e1574270e4144a043e53f00b78d46'/>
+			<electricity_interval_meter id='015d68ea64204178967a4929564ccfa5'/>
+		</services>
+		<logs>
+			<point_log id='30954c1131044b23877ffe029a1aa79b'>
+				<updated_date>2022-01-26T12:37:06.321+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:20:54.839+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:06.321+01:00" end_date="2022-01-26T12:37:06.321+01:00">
+					<measurement log_date="2022-01-26T12:37:06.321+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='52ebe3c797994ad5839022dda1c2c7bd'>
+				<updated_date>2022-01-26T12:36:57.316+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T20:20:54.184+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:57.316+01:00" end_date="2022-01-26T12:36:57.316+01:00">
+					<measurement log_date="2022-01-26T12:36:57.316+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='821dc437b1074391ab0b67fea9ace77c'>
+				<updated_date>2022-01-26T12:37:06.326+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:06.326+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">1.66</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='a371d1af9b1d42a3b3c82999823680c5'>
+				<updated_date>2022-01-26T12:37:06.328+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:06.328+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='a3f4d3a31bfc4523a2ba7b9b71ca5092'>
+				<updated_date>2022-01-26T12:37:06.321+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:43:58.886+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:06.321+01:00" end_date="2022-01-26T12:37:06.321+01:00">
+					<measurement log_date="2022-01-26T12:37:06.321+01:00">2.50</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='f7fe739fd55b4800a49dca93c5620f8a'>
+				<updated_date>2022-01-26T12:36:57.323+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='d0122ac66eba47b99d8e5fbd1e2f5932'>
+		<name>25F66AD</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T13:34:23.636+01:00</created_date>
+		<modified_date>2022-01-26T12:37:14.551+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='b8ff3eeb5381425b803704fb8fa43c4e'/>
+			<electricity_interval_meter id='dbd39107c54f460a90f732142d4b9b62'/>
+			<relay id='ee8eb9fbb8464ac7b87d692a44773e82'/>
+		</services>
+		<logs>
+			<point_log id='2feb780fd0174087aa8815d3755c9f60'>
+				<updated_date>2022-01-26T12:37:14.545+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T13:34:25.106+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.545+01:00" end_date="2022-01-26T12:37:14.545+01:00">
+					<measurement log_date="2022-01-26T12:37:14.545+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='4f426b6b817646a7b504685607e2e1c9'>
+				<updated_date>2022-01-26T12:37:14.545+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:21.616+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.545+01:00" end_date="2022-01-26T12:37:14.545+01:00">
+					<measurement log_date="2022-01-26T12:37:14.545+01:00">3.88</measurement>
+				</period>
+			</point_log>
+			<interval_log id='52210dddbcf14cb492faea0f77118666'>
+				<updated_date>2022-01-26T12:37:14.551+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.551+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='5a9b0b14ae614f1dbcb9cd9bda8455c1'>
+				<updated_date>2022-01-26T12:37:04.171+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T13:42:43.745+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:04.171+01:00" end_date="2022-01-26T12:37:04.171+01:00">
+					<measurement log_date="2022-01-26T12:37:04.171+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='b279a1de1bd247019243467d93399f30'>
+				<updated_date>2022-01-26T12:37:14.550+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.550+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">2.21</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='9c06fd443a5545b998f45a6e98cb9c72'>
+				<updated_date>2022-01-26T12:37:04.178+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='9db23f92fd114e83acce036b6cb82295'>
+		<name>76B2F2</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T20:44:31.310+01:00</created_date>
+		<modified_date>2022-01-26T12:37:15.216+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='b8e80edd525747b8906b39f5951fc21c'/>
+			<electricity_interval_meter id='d131b423d920467a97abc35e03899c11'/>
+			<relay id='4daac40a9de34b238acfd294efb52aff'/>
+		</services>
+		<logs>
+			<point_log id='3754e852ab254502a2f63c0953484f94'>
+				<updated_date>2022-01-26T12:37:15.209+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:34.372+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:15.209+01:00" end_date="2022-01-26T12:37:15.209+01:00">
+					<measurement log_date="2022-01-26T12:37:15.209+01:00">0.63</measurement>
+				</period>
+			</point_log>
+			<interval_log id='6e012b0b123c43ce9c123b23892c04e0'>
+				<updated_date>2022-01-26T12:37:15.214+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:15.214+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='8719707b7d9845fbbcd149e814da54a5'>
+				<updated_date>2022-01-26T12:37:15.209+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:34.372+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:15.209+01:00" end_date="2022-01-26T12:37:15.209+01:00">
+					<measurement log_date="2022-01-26T12:37:15.209+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='a7f50309692e49898ec1adce141eb3e3'>
+				<updated_date>2022-01-26T12:37:15.216+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:15.216+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='e9355aa4e6814c7ca5cabc9c8ba21f11'>
+				<updated_date>2022-01-26T12:37:07.681+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T20:44:33.058+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:07.681+01:00" end_date="2022-01-26T12:37:07.681+01:00">
+					<measurement log_date="2022-01-26T12:37:07.681+01:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuators>
+			<relay id='face5e6c5b224a2f948a59b268ecd11b'>
+				<updated_date>2022-01-26T12:37:07.688+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='3b729c63ca41421b9e21264adfa0a4e7'>
+		<name>261B34C</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T14:58:06.788+01:00</created_date>
+		<modified_date>2022-01-26T12:37:14.595+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='e0fb7a1504214d45920f6ae0ce5db4b4'/>
+			<electricity_interval_meter id='118a2db5723148efba5102176cb59607'/>
+			<relay id='68305706bad0448a91226d5d276311dd'/>
+		</services>
+		<logs>
+			<point_log id='117bafbbe20c47daab0498a0c681b463'>
+				<updated_date>2022-01-26T12:37:14.589+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:23.489+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.589+01:00" end_date="2022-01-26T12:37:14.589+01:00">
+					<measurement log_date="2022-01-26T12:37:14.589+01:00">8.50</measurement>
+				</period>
+			</point_log>
+			<interval_log id='12174aef593e4a5f86ceda55de50add2'>
+				<updated_date>2022-01-26T12:37:14.595+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.595+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<point_log id='8dc6e82db7394c02901cd349672ea6b4'>
+				<updated_date>2022-01-26T12:36:52.667+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T14:58:08.564+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:52.667+01:00" end_date="2022-01-26T12:36:52.667+01:00">
+					<measurement log_date="2022-01-26T12:36:52.667+01:00">on</measurement>
+				</period>
+			</point_log>
+			<point_log id='924cff51206a48ae88845c2537212d2e'>
+				<updated_date>2022-01-26T12:37:14.589+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T14:58:09.287+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:14.589+01:00" end_date="2022-01-26T12:37:14.589+01:00">
+					<measurement log_date="2022-01-26T12:37:14.589+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='eb40c47695454ce395ff2160743775f7'>
+				<updated_date>2022-01-26T12:37:14.594+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:14.594+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">5.19</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='93ee94981f3c42ad9fbdf5384f4c740d'>
+				<updated_date>2022-01-26T12:36:52.673+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+	<appliance id='7c7f0d3da801402291b057f9ec69b5b6'>
+		<name>261B34D</name>
+		<description></description>
+		<type>zz_misc</type>
+		<created_date>2022-01-24T14:59:38.861+01:00</created_date>
+		<modified_date>2022-01-26T12:37:04.612+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='96804b47342d4184a7aa3a8317e5d96a'/>
+			<electricity_interval_meter id='d2bb2fd39a4e4963b8bf43c81366b188'/>
+			<relay id='a071d54bf9fc4ff6951f7e7f190d78b1'/>
+		</services>
+		<logs>
+			<point_log id='9c2b31b964cb4168b6dc86bd4e48351a'>
+				<updated_date>2022-01-26T12:37:04.605+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T14:59:41.402+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:04.605+01:00" end_date="2022-01-26T12:37:04.605+01:00">
+					<measurement log_date="2022-01-26T12:37:04.605+01:00">0.00</measurement>
+				</period>
+			</point_log>
+			<interval_log id='a75ae7274ffb412bb166f1edc6672281'>
+				<updated_date>2022-01-26T12:37:04.610+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:04.610+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">4.54</measurement>
+				</period>
+			</interval_log>
+			<point_log id='bd47ad14362d462d94baf8d48b94989c'>
+				<updated_date>2022-01-26T12:37:04.605+01:00</updated_date>
+				<type>electricity_consumed</type>
+				<unit>W</unit>
+				<last_consecutive_log_date>2022-01-24T20:44:24.216+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:37:04.605+01:00" end_date="2022-01-26T12:37:04.605+01:00">
+					<measurement log_date="2022-01-26T12:37:04.605+01:00">7.81</measurement>
+				</period>
+			</point_log>
+			<point_log id='ec9e783bedbd454da5a753597cb1f454'>
+				<updated_date>2022-01-26T12:36:47.811+01:00</updated_date>
+				<type>relay</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-01-24T14:59:40.566+01:00</last_consecutive_log_date>
+				<period start_date="2022-01-26T12:36:47.811+01:00" end_date="2022-01-26T12:36:47.811+01:00">
+					<measurement log_date="2022-01-26T12:36:47.811+01:00">on</measurement>
+				</period>
+			</point_log>
+			<interval_log id='f53adf22e8304d8b9530d11f42441a66'>
+				<updated_date>2022-01-26T12:37:04.612+01:00</updated_date>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<last_consecutive_log_date>2022-01-26T11:00:00+01:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<period start_date="2022-01-26T12:00:00+01:00" end_date="2022-01-26T12:37:04.612+01:00" interval="PT1H">
+					<measurement log_date="2022-01-26T12:00:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+		</logs>
+		<actuators>
+			<relay id='de42f6330bc64d9d85e6141bf840e7c3'>
+				<updated_date>2022-01-26T12:36:47.816+01:00</updated_date>
+				<state>on</state>
+				<lock>false</lock>
+			</relay>
+		</actuators>
+	</appliance>
+</appliances>
