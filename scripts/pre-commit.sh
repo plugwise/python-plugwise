@@ -9,6 +9,6 @@ grep -r --include="*.xml" '<longitude>' userdata/* | grep -v '4.49' && echo "COM
 grep -r --include="*.xml" '<latitude>' userdata/* | grep -v '52.21' && echo "COMMIT REJECTED, found your hometown, modify domain_objects and set latitude to 52.21 (that is: Plugwise HQ)!" && exit 1
 grep -r --include="*.xml" '<city>' userdata/* | grep -v 'Sassenheim' && echo "COMMIT REJECTED, found your hometown, modify domain_objects and set city to Sassenheim (that is: Plugwise HQ)!" && exit 1
 grep -r --include="*.xml" '<postal_code>' userdata/* | grep -v '2171' && echo "COMMIT REJECTED, found your hometown, modify domain_objects and set postal_code to 2171 (that is: Plugwise HQ)!" && exit 1
-grep -r --include="*.xml" '<mac>' userdata/* | grep -v '01:23:45:67:89:AB' && echo "COMMIT REJECTED, found a mac-address, modify system_status and set mac-address to 0123456789AB!" && exit 1
+grep -r --include="*.xml" '<mac>' userdata/* | grep -v '01:23:45:67:89:AB' && echo "COMMIT REJECTED, found a mac-address, modify system_status and set mac-address to 0123456789AB/01:23:45:67:89:AB!" && exit 1
 # No problems found
 exit 0

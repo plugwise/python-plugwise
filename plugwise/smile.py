@@ -290,6 +290,7 @@ class Smile(SmileComm, SmileData):
         self._last_active = {}
         self._locations = None
         self._modules = None
+        self._nodomain_mc = None
         self._notifications = {}
         self._outdoor_temp = None
         self._sm_thermostat = None
@@ -325,13 +326,18 @@ class Smile(SmileComm, SmileData):
         dsmrmain = result.find(".//module/protocols/dsmrmain")
 
         if "Plugwise" not in names:
-            if dsmrmain is None:  # pragma: no cover
+            modules = await self._request(MODULES)
+            m_c = modules.find(".//module/protocols/master_controller")
+            print("hoi")
+            print(m_c)
+            if dsmrmain is None and m_c is None:  # pragma: no cover
                 _LOGGER.error(
                     "Connected but expected text not returned, \
                               we got %s",
                     result,
                 )
                 raise ConnectionFailedError
+            self._nodomain_mc = m_c
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
@@ -369,6 +375,17 @@ class Smile(SmileComm, SmileData):
             elif network is not None:
                 try:
                     system = await self._request(SYSTEM)
+                    version = system.find(".//gateway/firmware").text
+                    model = system.find(".//gateway/product").text
+                    self.smile_hostname = system.find(".//gateway/hostname").text
+                except InvalidXMLError:  # pragma: no cover
+                    # Corner case check
+                    raise ConnectionFailedError
+            # Stretch without domains:
+            elif self._nodomain_mc is not None:
+                try:
+                    system = await self._request(SYSTEM)
+                    print(system.text)
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
