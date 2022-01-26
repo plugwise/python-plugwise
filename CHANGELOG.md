@@ -7,6 +7,7 @@
   - Schedules: always show `available_schemas` and `selected_schema`, also with "None" available and/or selected
   - Cleanup and optimize code
   - Adapt and improve testcode
+  - Support stretch without domain_data (firmware 2.7)
 
 # v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
   - Change from list- to dict-format for binary_sensors, sensors and switches

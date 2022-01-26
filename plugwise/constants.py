@@ -356,6 +356,7 @@ FEATURE_RSSI_OUT = {
 ### Smile constants ###
 
 APPLIANCES = "/core/appliances"
+DIRECT_OBJECTS = "/core/direct_objects"
 DOMAIN_OBJECTS = "/core/domain_objects"
 LOCATIONS = "/core/locations"
 MODULES = "/core/modules"

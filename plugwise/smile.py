@@ -21,6 +21,7 @@ from .constants import (
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DEVICE_STATE,
+    DIRECT_OBJECTS,
     DOMAIN_OBJECTS,
     LOCATIONS,
     MODULES,
@@ -316,9 +317,14 @@ class Smile(SmileComm, SmileData):
         result = await self._request(DOMAIN_OBJECTS)
         vendor_names = result.findall(".//module/vendor_name")
         if not vendor_names:
-            DOMAIN_OBJECTS = "/core/direct_objects"
-            result = await self._request(DOMAIN_OBJECTS)
-            vendor_names = result.findall(".//module/vendor_name")
+            try:
+                result = await self._request(DIRECT_OBJECTS)
+                vendor_names = result.findall(".//module/vendor_name")
+            except InvalidXMLError:
+                _LOGGER.warning(
+                    "Connected but neither DOMAIN nor DIRECT objects returned vendor names"
+                )
+                raise ConnectionFailedError
 
         for name in vendor_names:
             names.append(name.text)
@@ -371,12 +377,14 @@ class Smile(SmileComm, SmileData):
 
             # Stretch:
             elif network is not None or self._nodomain_mc is not None:
-                stretch_loc = STATUS
                 try:
-                    # Stretch without domains:
-                    if self._nodomain_mc is not None:
-                        stretch_loc = SYSTEM
-                    system = await self._request(stretch_loc)
+                    # Regular stretch
+                    system = await self._request(STATUS)
+                    try:
+                        version = system.find(".//gateway/firmware").text
+                    except AttributeError:
+                        # Stretch without domains has no STATUS:
+                        system = await self._request(SYSTEM)
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
