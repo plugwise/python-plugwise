@@ -75,7 +75,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
         app.router.add_get("/core/modules", self.smile_modules)
         app.router.add_get("/system/status.xml", self.smile_status)
-        app.router.add_get("/system", self.smile_status)
+        app.router.add_get("/system", self.smile_system)
 
         if broken:
             app.router.add_get("/core/locations", self.smile_broken)
@@ -177,6 +177,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             userdata = os.path.join(
                 os.path.dirname(__file__),
                 f"../userdata/{self.smile_setup}/system_status_xml.xml",
+            )
+            filedata = open(userdata)
+            data = filedata.read()
+            filedata.close()
+            return aiohttp.web.Response(text=data)
+        except OSError:
+            raise aiohttp.web.HTTPNotFound
+
+    async def smile_system(self, request):
+        """Render setup specific system endpoint."""
+        try:
+            userdata = os.path.join(
+                os.path.dirname(__file__),
+                f"../userdata/{self.smile_setup}/system.xml",
             )
             filedata = open(userdata)
             data = filedata.read()
@@ -2517,14 +2531,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
-            # Tv hoek 25F6790
-            "c71f1cb2100b42ca942f056dcb7eb01f": {
-                "sensors": {"electricity_consumed": 33.3},
+            # 76BF93
+            "8b8d14b242e24cd789743c828b9a2ea9": {
+                "sensors": {"electricity_consumed": 1.69},
                 "switches": {"lock": False, "relay": True},
             },
-            # Wasdroger 043AECA
-            "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "sensors": {"electricity_consumed_interval": 0.21}
+            # 25F66AD
+            "d0122ac66eba47b99d8e5fbd1e2f5932": {
+                "sensors": {"electricity_consumed_interval": 2.21}
             },
         }
 
@@ -2536,7 +2550,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert type = thermostat")
         assert smile.smile_type == "stretch"
         _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.3.12"
+        assert smile.smile_version[0] == "2.7.18"
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy  # pylint: disable=protected-access
 

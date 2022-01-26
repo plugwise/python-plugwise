@@ -328,8 +328,6 @@ class Smile(SmileComm, SmileData):
         if "Plugwise" not in names:
             modules = await self._request(MODULES)
             m_c = modules.find(".//module/protocols/master_controller")
-            print("hoi")
-            print(m_c)
             if dsmrmain is None and m_c is None:  # pragma: no cover
                 _LOGGER.error(
                     "Connected but expected text not returned, \
@@ -372,20 +370,13 @@ class Smile(SmileComm, SmileData):
                     raise ConnectionFailedError
 
             # Stretch:
-            elif network is not None:
+            elif network is not None or self._nodomain_mc is not None:
+                stretch_loc = STATUS
                 try:
-                    system = await self._request(SYSTEM)
-                    version = system.find(".//gateway/firmware").text
-                    model = system.find(".//gateway/product").text
-                    self.smile_hostname = system.find(".//gateway/hostname").text
-                except InvalidXMLError:  # pragma: no cover
-                    # Corner case check
-                    raise ConnectionFailedError
-            # Stretch without domains:
-            elif self._nodomain_mc is not None:
-                try:
-                    system = await self._request(SYSTEM)
-                    print(system.text)
+                    # Stretch without domains:
+                    if self._nodomain_mc is not None:
+                        stretch_loc = SYSTEM
+                    system = await self._request(stretch_loc)
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
