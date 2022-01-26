@@ -2559,15 +2559,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._sm_thermostat is None  # it's not a thermostat :)
 
         switch_change = await self.tinker_switch(
-            smile, "2587a7fcdd7e482dab03fda256076b4b"
+            smile, "8b8d14b242e24cd789743c828b9a2ea9"
         )
         assert switch_change
-        switch_change = await self.tinker_switch(
-            smile,
-            "f7b145c8492f4dd7a4de760456fdef3e",
-            ["407aa1c1099d463c9137a3a9eda787fd"],
-        )
-        assert switch_change
+        # no_domain has no groups
+        # switch_change = await self.tinker_switch(
+        #    smile,
+        #    "d0122ac66eba47b99d8e5fbd1e2f5932",
+        #    ["407aa1c1099d463c9137a3a9eda787fd"],
+        # )
+        # assert switch_change
 
         # smile.get_all_devices()
 
