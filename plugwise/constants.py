@@ -363,7 +363,7 @@ MODULES = "/core/modules"
 NOTIFICATIONS = "/core/notifications"
 RULES = "/core/rules"
 SYSTEM = "/system"
-STATUS = "/system/status.xml"
+STATUS = "/system/status"
 
 ATTR_TYPE = "type"
 DEFAULT_TIMEOUT = 30

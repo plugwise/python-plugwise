@@ -74,7 +74,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         app.router.add_get("/core/direct_objects", self.smile_direct_objects)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
         app.router.add_get("/core/modules", self.smile_modules)
-        app.router.add_get("/system/status.xml", self.smile_status)
+        app.router.add_get("/system/status", self.smile_status)
         app.router.add_get("/system", self.smile_system)
 
         if broken:
