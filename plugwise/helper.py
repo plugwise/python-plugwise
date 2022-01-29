@@ -138,25 +138,43 @@ def check_model(name, v_name):
         return name
 
 
-def schemas_schedule_temp(schedules):
+def schemas_schedule_temp(schedules, name):
     """Helper-function for schemas().
     Obtain the schedule temperature of the schema/schedule.
     """
-    for period, temp in schedules.items():
-        moment_1, moment_2 = period.split(",")
-        moment_1 = moment_1.replace("[", "").split(" ")
-        moment_2 = moment_2.replace(")", "").split(" ")
-        result_1 = DAYS.get(moment_1[0], "None")
-        result_2 = DAYS.get(moment_2[0], "None")
+    if name == "None":
+        return  # pragma: no cover
+
+    schema_list = []
+    for period, temp in schedules[name].items():
+        tmp_list = []
+        moment, dummy = period.split(",")
+        moment = moment.replace("[", "").split(" ")
+        day_nr = DAYS.get(moment[0], "None")
+        start_time = dt.datetime.strptime(moment[1], "%H:%M").time()
+        tmp_list.extend((day_nr, start_time, temp))
+        schema_list.append(tmp_list)
+
+    length = len(schema_list)
+    schema_list = sorted(schema_list)
+
+    # Schema with less than 2 items
+    if length == 1:
+        return schema_list[0][2]
+
+    for i in range(length):
+        result_1 = schema_list[i][0]
+        start = schema_list[i][1]
+        n = (i + 1) % (length - 1)
+        result_2 = schema_list[n][0]
+        end = schema_list[n][1]
         now = dt.datetime.now().time()
-        start = dt.datetime.strptime(moment_1[1], "%H:%M").time()
-        end = dt.datetime.strptime(moment_2[1], "%H:%M").time()
         if (
             result_1 == dt.datetime.now().weekday()
             or result_2 == dt.datetime.now().weekday()
         ):
             if in_between(now, start, end):
-                return temp
+                return schema_list[i][2]
 
 
 def types_finder(data):
@@ -277,17 +295,21 @@ class SmileComm:
         url = f"{self._endpoint}{command}"
 
         try:
+
+            if method == "delete":
+                resp = await self._websession.delete(url, auth=self._auth)
             if method == "get":
                 # Work-around for Stretchv2, should not hurt the other smiles
                 headers = {"Accept-Encoding": "gzip"}
-                resp = await self._websession.get(url, auth=self._auth, headers=headers)
+                resp = await self._websession.get(url, headers=headers, auth=self._auth)
             if method == "put":
                 headers = {"Content-type": "text/xml"}
                 resp = await self._websession.put(
-                    url, data=data, headers=headers, auth=self._auth
+                    url,
+                    headers=headers,
+                    data=data,
+                    auth=self._auth,
                 )
-            if method == "delete":
-                resp = await self._websession.delete(url, auth=self._auth)
         except ServerTimeoutError:
             if retry < 1:
                 _LOGGER.error("Timed out sending command to Plugwise: %s", command)
@@ -434,7 +456,7 @@ class SmileHelper:
             return appl
 
     def _appliance_info_finder(self, appliance, appl):
-        """Collect device info (Smile/Stretch, Thermostats, Auxiliary): firmware, model and vendor name."""
+        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
@@ -467,12 +489,21 @@ class SmileHelper:
             return appl
 
         if appl.pwclass == "heater_central":
+            # Provide info for On-Off device
+            if self._on_off_device:
+                self._heater_id = appliance.attrib["id"]
+                appl.name = "OnOff"
+                appl.v_name = None
+                appl.model = "Unknown"
+
+                return appl
+
             # Remove heater_central when no active device present
-            if not self._active_device_present:
+            if not self._ot_device and not self._on_off_device:
                 return None
 
             self._heater_id = appliance.attrib["id"]
-            appl.name = "Auxiliary"
+            appl.name = "OpenTherm"
             locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
             locator2 = ".//services/boiler_state"
             mod_type = "boiler_state"
@@ -483,7 +514,9 @@ class SmileHelper:
             appl.model = check_model(module_data[1], appl.v_name)
             if appl.model is None:
                 appl.model = (
-                    "Generic heater/cooler" if self._cp_state else "Generic heater"
+                    "Generic heater/cooler"
+                    if self._cooling_present
+                    else "Generic heater"
                 )
             return appl
 
@@ -526,54 +559,44 @@ class SmileHelper:
 
         self._all_locations()
 
-        # Create a gateway for legacy P1 and Anna
-        # And inject a home_location as device id for legacy so
+        # Create a gateway for legacy Anna, P1 and Stretches
+        # and inject a home_location as device id for legacy so
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
-            if self.smile_type == "power":
-                self._appl_data[self._home_location] = {
-                    "class": "gateway",
-                    "fw": self.smile_version[0],
-                    "location": self._home_location,
-                    "model": "P1",
-                    "name": "P1",
-                    "vendor": "Plugwise B.V.",
-                }
-                self.gateway_id = self._home_location
-                # legacy p1 has no more devices
-                return
-
-            elif self.smile_type == "thermostat":
-                self._appl_data[self._home_location] = {
-                    "class": "gateway",
-                    "fw": self.smile_version[0],
-                    "location": self._home_location,
-                    "model": "Anna",
-                    "name": "Anna",
-                    "vendor": "Plugwise B.V.",
-                }
-                self.gateway_id = self._home_location
-
-        # Create a gateway for the Stretches
-        if self.smile_type == "stretch":
-            self._appl_data[self.gateway_id] = {
+            self._appl_data[self._home_location] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "location": self._home_location,
-                "model": "Stretch",
-                "name": "Stretch",
                 "vendor": "Plugwise B.V.",
             }
+            self.gateway_id = self._home_location
+
+            if self.smile_type == "power":
+                self._appl_data[self._home_location].update(
+                    {"model": "P1", "name": "P1"}
+                )
+                # legacy p1 has no more devices
+                return
+
+            if self.smile_type == "thermostat":
+                self._appl_data[self._home_location].update(
+                    {"model": "Anna", "name": "Anna"}
+                )
+
+            if self.smile_type == "stretch":
+                self._appl_data[self._home_location].update(
+                    {"model": "Stretch", "name": "Stretch"}
+                )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        self._cp_state = self._appliances.find(
-            ".//logs/point_log[type='compressor_state']"
+        ch_state = self._appliances.find(
+            ".//logs/point_log[type='central_heating_state']"
         )
-        fl_state = self._appliances.find(".//logs/point_log[type='flame_state']")
-        bl_state = self._appliances.find(".//services/boiler_state")
-        self._active_device_present = (
-            self._cp_state is not None or fl_state is not None or bl_state is not None
+        ot_fault_code = self._appliances.find(
+            ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
+        self._ot_device = ch_state is not None and ot_fault_code is not None
+        self._on_off_device = ch_state is not None and ot_fault_code is None
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -669,7 +692,7 @@ class SmileHelper:
 
         if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
             if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
-                return presets
+                return presets  # pragma: no cover
 
         for rule_id in rule_ids:
             directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
@@ -689,19 +712,21 @@ class SmileHelper:
 
     def _rule_ids_by_name(self, name, loc_id):
         """Helper-function for _presets().
-        Obtain the rule_id from the given name and location_id.
+        Obtain the rule_id from the given name and and provide the location_id, when present.
         """
         schema_ids = {}
         locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
+            else:
+                schema_ids[rule.attrib["id"]] = None
 
         return schema_ids
 
     def _rule_ids_by_tag(self, tag, loc_id):
         """Helper-function for _presets(), _schemas() and _last_active_schema().
-        Obtain the rule_id from the given template_tag and location_id.
+        Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
         schema_ids = {}
         locator1 = f'.//template[@tag="{tag}"]'
@@ -710,6 +735,8 @@ class SmileHelper:
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
                     schema_ids[rule.attrib["id"]] = loc_id
+                else:
+                    schema_ids[rule.attrib["id"]] = None
 
         return schema_ids
 
@@ -718,9 +745,8 @@ class SmileHelper:
         for measurement, attrs in measurements:
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if appliance.find(p_locator) is not None:
-                if self._smile_legacy:
-                    if measurement == "domestic_hot_water_state":
-                        continue
+                if self._smile_legacy and measurement == "domestic_hot_water_state":
+                    continue
 
                 measure = appliance.find(p_locator).text
                 # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
@@ -739,6 +765,10 @@ class SmileHelper:
                 data[measurement] = format_measure(
                     measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
                 )
+
+                # Anna: use the local outdoor temperature as reference for turning cooling on/off
+                if measurement == "outdoor_temperature":
+                    self._outdoor_temp = data[measurement]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if appliance.find(i_locator) is not None:
@@ -760,7 +790,7 @@ class SmileHelper:
 
         appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
         measurements = DEVICE_MEASUREMENTS.items()
-        if self._active_device_present:
+        if self._ot_device or self._on_off_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
                 **HEATER_CENTRAL_MEASUREMENTS,
@@ -784,18 +814,17 @@ class SmileHelper:
         # Anna: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if "cooling_activation_outdoor_temperature" in data:
-            data["cooling_active"] = False
             self._cooling_present = True
             if (
                 not self.cooling_active
-                and data["temperature"] > data["cooling_activation_outdoor_temperature"]
+                and self._outdoor_temp > data["cooling_activation_outdoor_temperature"]
             ):
-                data["cooling_active"] = self.cooling_active = True
+                self.cooling_active = True
             if (
                 self.cooling_active
-                and data["temperature"] < data["cooling_deactivation_threshold"]
+                and self._outdoor_temp < data["cooling_deactivation_threshold"]
             ):
-                data["cooling_active"] = self.cooling_active = False
+                self.cooling_active = False
 
         return data
 
@@ -1042,15 +1071,12 @@ class SmileHelper:
         if preset is not None:
             return preset.text
 
-    def _schemas_legacy(self):
+    def _schemas_legacy(self, avail, sched_temp, sel):
         """Helper-function for _schemas().
         Collect available schemas/schedules for the legacy thermostat.
         """
-        available = []
         name = None
-        schedule_temperature = None
         schemas = {}
-        selected = None
 
         for schema in self._domain_objects.findall(".//rule"):
             if rule_name := schema.find("name").text:
@@ -1060,73 +1086,90 @@ class SmileHelper:
         log_type = "schedule_state"
         locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
-        if self._domain_objects.find(locator) is not None:
-            active = self._domain_objects.find(locator).text == "on"
+        if (result := self._domain_objects.find(locator)) is not None:
+            active = result.text == "on"
 
         if name is not None:
             schemas[name] = active
+            avail = [name]
+            if active:
+                sel = name
 
-        available, selected = determine_selected(available, selected, schemas)
-        return available, selected, schedule_temperature
+        return avail, sel, sched_temp, None
 
-    def _schemas(self, loc_id):
+    def _schemas(self, location):
         """Helper-function for smile.py: _device_data_climate().
-        Obtain the available schemas/schedules based on the Location ID.
+        Obtain the available schemas/schedules. Adam: a schedule can be connected to more than one location.
+        NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available = []
+        available = ["None"]
+        last_used = None
         rule_ids = {}
-        schemas = {}
         schedule_temperature = None
-        selected = None
+        selected = "None"
 
-        # Legacy schemas
-        if self._smile_legacy:  # Only one schedule allowed
-            return self._schemas_legacy()
+        # Legacy Anna schedule, only one schedule allowed
+        if self._smile_legacy:
+            return self._schemas_legacy(available, schedule_temperature, selected)
 
-        # Current schemas
+        # Adam schedules, one schedule can be linked to various locations
+        # self._last_active contains the locations and the active schedule name per location, or None
+        if location not in self._last_active:
+            self._last_active[location] = None
+
         tag = "zone_preset_based_on_time_and_presence_with_override"
-        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
-            return available, selected, schedule_temperature
+        if not (rule_ids := self._rule_ids_by_tag(tag, location)):
+            return available, selected, schedule_temperature, None
 
-        for rule_id, dummy in rule_ids.items():
+        schedules = {}
+        for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            active = (
-                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
-                == "true"
-            )
-            schemas[name] = active
-            schedules = {}
+            schedule = {}
             locator = f'rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
             for directive in directives:
-                schedule = directive.find("then").attrib
-                keys, dummy = zip(*schedule.items())
+                entry = directive.find("then").attrib
+                keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
-                    schedules[directive.attrib["time"]] = float(
-                        self._presets(loc_id)[schedule["preset"]][0]
+                    schedule[directive.attrib["time"]] = float(
+                        self._presets(loc_id)[entry["preset"]][0]
                     )
                 else:
-                    schedules[directive.attrib["time"]] = float(schedule["setpoint"])
+                    schedule[directive.attrib["time"]] = float(entry["setpoint"])
 
-            schedule_temperature = schemas_schedule_temp(schedules)
+            if schedule:
+                available.append(name)
+                if location == loc_id:
+                    selected = name
+                    self._last_active[location] = selected
+                schedules[name] = schedule
+            else:
+                _LOGGER.error(
+                    "Schedule %s has no preset switching moments, ignoring.", name
+                )
 
-        available, selected = determine_selected(available, selected, schemas)
+        if schedules:
+            available.remove("None")
+            last_used = self._last_used_schedule(location, rule_ids)
+            schedule_temperature = schemas_schedule_temp(schedules, last_used)
 
-        return available, selected, schedule_temperature
+        return available, selected, schedule_temperature, last_used
 
-    def _last_active_schema(self, loc_id):
+    def _last_used_schedule(self, loc_id, rule_ids):
         """Helper-function for smile.py: _device_data_climate().
-        Determine the last active schema/schedule based on the Location ID.
+        Determine the last-used schedule based on the location or the modified date.
         """
+        # First, find last_used == selected
+        last_used = self._last_active.get(loc_id)
+        if last_used is not None:
+            return last_used
+
+        # Alternatively, find last_used by finding the most recent modified_date
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        rule_ids = {}
         schemas = {}
-        last_modified = None
 
-        tag = "zone_preset_based_on_time_and_presence_with_override"
-
-        if not (rule_ids := self._rule_ids_by_tag(tag, loc_id)):
-            return
+        if not rule_ids:
+            return  # pragma: no cover
 
         for rule_id, dummy in rule_ids.items():
             schema_name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
@@ -1136,10 +1179,10 @@ class SmileHelper:
             schema_time = parse(schema_date)
             schemas[schema_name] = (schema_time - epoch).total_seconds()
 
-        if schemas != {}:
-            last_modified = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
+        if schemas:
+            last_used = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
 
-        return last_modified
+        return last_used
 
     def _object_value(self, obj_id, measurement):
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
@@ -1183,7 +1226,7 @@ class SmileHelper:
             for item in BINARY_SENSORS:
                 if list(item.keys())[0] == key:
                     data.pop(key)
-                    if self._active_device_present:
+                    if self._ot_device or self._on_off_device:
                         bs_dict[key] = value
             for item in SENSORS:
                 if list(item.keys())[0] == key:

@@ -7,6 +7,8 @@ import logging
 
 import aiohttp
 
+from defusedxml import ElementTree as etree
+
 # Dict as class
 from munch import Munch
 
@@ -54,8 +56,6 @@ class SmileData(SmileHelper):
         if d_id == self.gateway_id:
             if self._sm_thermostat is not None:
                 bs_dict.update(PW_NOTIFICATION)
-            if not self._active_device_present and "heating_state" in data:
-                s_dict.update(DEVICE_STATE)
         if d_id == self._heater_id and self._sm_thermostat is not None:
             s_dict.update(DEVICE_STATE)
 
@@ -83,7 +83,7 @@ class SmileData(SmileHelper):
 
             self.gw_devices[dev_id] = dev_and_data
 
-        self.gw_data["active_device"] = self._active_device_present
+        self.gw_data["active_device"] = self._ot_device or self._on_off_device
         self.gw_data["cooling_present"] = self._cooling_present
         self.gw_data["gateway_id"] = self.gateway_id
         self.gw_data["heater_id"] = self._heater_id
@@ -141,19 +141,11 @@ class SmileData(SmileHelper):
         """
         if self.smile_name == "Adam":
             # Indicate heating_state based on valves being open in case of city-provided heating
-            if details["class"] == "gateway":
-                if (
-                    not self._active_device_present
-                    and self._heating_valves() is not None
-                ):
+            if details["class"] == "heater_central":
+                if self._on_off_device and self._heating_valves() is not None:
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
-
-            # Adam: indicate active heating/cooling operation-mode
-            # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-            if details["class"] == "heater_central":
-                device_data["cooling_active"] = self.cooling_active
 
         return device_data
 
@@ -162,19 +154,43 @@ class SmileData(SmileHelper):
         Determine climate-control device data.
         """
         loc_id = details["location"]
-        device_data["active_preset"] = self._preset(loc_id)
-        device_data["presets"] = self._presets(loc_id)
 
-        avail_schemas, sel_schema, sched_setpoint = self._schemas(loc_id)
-        if not self._smile_legacy:
-            device_data["schedule_temperature"] = sched_setpoint
+        # Presets
+        device_data["preset_modes"] = None
+        device_data["active_preset"] = None
+        presets = self._presets(loc_id)
+        if presets:
+            device_data["presets"] = presets
+            device_data["preset_modes"] = list(presets)
+            device_data["active_preset"] = self._preset(loc_id)
+
+        # Schedule
+        avail_schemas, sel_schema, sched_setpoint, last_active = self._schemas(loc_id)
         device_data["available_schedules"] = avail_schemas
         device_data["selected_schedule"] = sel_schema
+        if not self._smile_legacy:
+            device_data["schedule_temperature"] = sched_setpoint
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
-            device_data["last_used"] = self._last_active_schema(loc_id)
+            device_data["last_used"] = last_active
 
+        # Operation mode: auto, heat, cool, off
+        device_data["mode"] = "auto"
+        schedule_status = False
+        if sel_schema != "None":
+            schedule_status = True
+        if not schedule_status:
+            # Mimic HomeKit behavior
+            if self._preset(loc_id) == "away":
+                device_data["mode"] = "off"  # pragma: no cover
+            else:
+                device_data["mode"] = "heat"
+                if self._heater_id is not None:
+                    if self.cooling_active:
+                        device_data["mode"] = "cool"
+
+        # Control_state
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
@@ -203,6 +219,11 @@ class SmileData(SmileHelper):
             power_data = self._power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
+
+        # Adam: indicate active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        if details["class"] == "heater_central":
+            device_data["cooling_active"] = self.cooling_active
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
@@ -258,16 +279,19 @@ class Smile(SmileComm, SmileData):
             websession,
         )
 
-        self._active_device_present = False
+        self._on_off_device = False
+        self._ot_device = False
         self._appliances = None
         self._appl_data = None
         self._cooling_present = False
         self._domain_objects = None
         self._heater_id = None
         self._home_location = None
+        self._last_active = {}
         self._locations = None
         self._modules = None
         self._notifications = {}
+        self._outdoor_temp = None
         self._sm_thermostat = None
         self._smile_legacy = False
         self._stretch_v2 = False
@@ -313,7 +337,7 @@ class Smile(SmileComm, SmileData):
 
     async def _smile_detect_legacy(self, result, dsmrmain):
         """Helper-function for _smile_detect()."""
-        network = result.find(".//module/protocols/network_router/network")
+        network = result.find(".//module/protocols/master_controller")
 
         # Assume legacy
         self._smile_legacy = True
@@ -342,7 +366,6 @@ class Smile(SmileComm, SmileData):
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
-                    self.gateway_id = network.attrib["id"]
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -466,9 +489,13 @@ class Smile(SmileComm, SmileData):
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
 
+        # Anna: update cooling_active to it's final value after all entities have been updated
+        if not self._smile_legacy and self.smile_name == "Anna":
+            self.gw_devices[self._heater_id]["cooling_active"] = self.cooling_active
+
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name, state):
+    async def _set_schedule_state_legacy(self, name, status):
         """Helper-function for set_schedule_state()."""
         schema_rule_id = None
         for rule in self._domain_objects.findall("rule"):
@@ -479,7 +506,9 @@ class Smile(SmileComm, SmileData):
             return False
 
         template_id = None
-        state = str(state)
+        state = "false"
+        if str(status) == "on":
+            state = "true"
         locator = f'.//*[@id="{schema_rule_id}"]/template'
         for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
@@ -501,26 +530,30 @@ class Smile(SmileComm, SmileData):
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
-        schema_rule_ids = self._rule_ids_by_name(str(name), loc_id)
-        if schema_rule_ids == {} or schema_rule_ids is None:
+        schema_rule = self._rule_ids_by_name(str(name), loc_id)
+        if schema_rule == {} or schema_rule is None:
             return False
 
-        for schema_rule_id, location_id in schema_rule_ids.items():
-            template_id = None
-            if location_id == loc_id:
-                state = str(state)
-                locator = f'.//*[@id="{schema_rule_id}"]/template'
-                for rule in self._domain_objects.findall(locator):
-                    template_id = rule.attrib["id"]
+        schema_rule_id = next(iter(schema_rule))
+        info = ""
+        if state == "on":
+            info = f'<context><zone><location id="{loc_id}" /></zone></context>'
 
-                uri = f"{RULES};id={schema_rule_id}"
-                data = (
-                    "<rules><rule"
-                    f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
-                    f' id="{template_id}"/><active>{state}</active></rule></rules>'
-                )
+        template = (
+            '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
+        )
+        if self.smile_name != "Adam":
+            locator = f'.//*[@id="{schema_rule_id}"]/template'
+            template_id = self._domain_objects.find(locator).attrib["id"]
+            template = f'<template id="{template_id}" />'
 
-                await self._request(uri, method="put", data=data)
+        uri = f"{RULES};id={schema_rule_id}"
+        data = (
+            f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name>'
+            f"{template}<contexts>{info}</contexts></rule></rules>"
+        )
+
+        await self._request(uri, method="put", data=data)
 
         return True
 

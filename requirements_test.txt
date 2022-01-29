@@ -1,5 +1,4 @@
 # Import from setup.py
 -e .
-# pytest-asyncio
 pytest-cover
 radon

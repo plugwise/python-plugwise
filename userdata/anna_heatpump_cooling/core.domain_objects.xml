@@ -48,17 +48,13 @@
 		<name>standaard</name>
 		<description></description>
 		<template id="d93feb852299451697b256929151cbe6" tag="zone_preset_based_on_time_and_presence_with_override"/>
-		<active>false</active>
+		<active>true</active>
 		<created_date>2020-03-21T12:16:15.949+01:00</created_date>
 		<modified_date>2020-04-12T12:08:51.070+02:00</modified_date>
 		<deleted_date></deleted_date>
 		<directives>
 		</directives>
-		<contexts>
-			<context>
-				<zone><location id="c784ee9fdab44e1395b8dee7d7a497d5"/></zone>
-			</context>
-		</contexts>
+		<contexts> </contexts>
 	</rule>
 	<template id='1a363654856f4be79e1ad35d4ed78e82' tag="zone_setpoint_and_state_based_on_preset">
 		<name>Zone preset template</name>

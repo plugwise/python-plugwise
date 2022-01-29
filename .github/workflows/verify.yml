@@ -4,7 +4,7 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 16
+  CACHE_VERSION: 1
   DEFAULT_PYTHON: "3.9"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
 
@@ -49,7 +49,7 @@ jobs:
           python -m venv venv
           . venv/bin/activate
           pip install -U pip setuptools wheel
-          pip install -r requirements_test.txt
+          pip install -r requirements_test.txt -r requirements_commit.txt
       - name: Restore pre-commit environment from cache
         id: cache-precommit
         uses: actions/cache@v2
@@ -195,7 +195,10 @@ jobs:
           python -m venv venv
           . venv/bin/activate
           pip install -U pip setuptools wheel
-          pip install -r requirements_test.txt
+          #pip install -r requirements_test.txt
+          # 20220124 Mimic setup_test.sh
+          pip install --upgrade -r requirements_test.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
+          pip install --upgrade pytest-asyncio
 
   pytest:
     runs-on: ubuntu-latest
