@@ -315,6 +315,11 @@ class Smile(SmileComm, SmileData):
         dsmrmain = result.find(".//module/protocols/dsmrmain")
 
         vendor_names = result.findall(".//module/vendor_name")
+        if not vendor_names:
+            # Work-around for Stretch fv 2.7.18
+            result = await self._request(MODULES)
+            vendor_names = result.findall(".//module/vendor_name")
+
         for name in vendor_names:
             names.append(name.text)
 
