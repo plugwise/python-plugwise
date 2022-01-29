@@ -274,34 +274,10 @@ class Smile(SmileComm, SmileData):
             timeout,
             websession,
         )
+        SmileData.__init__(self)
 
-        self._on_off_device = False
-        self._ot_device = False
-        self._appliances = None
-        self._appl_data = None
-        self._cooling_present = False
-        self._domain_objects = None
-        self._heater_id = None
-        self._home_location = None
-        self._last_active = {}
-        self._locations = None
-        self._modules = None
         self._notifications = {}
-        self._outdoor_temp = None
-        self._sm_thermostat = None
-        self._smile_legacy = False
-        self._stretch_v2 = False
-        self._stretch_v3 = False
-        self._thermo_locs = None
-
-        self.cooling_active = False
-        self.gateway_id = None
-        self.gw_data = {}
-        self.gw_devices = {}
         self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
 
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
