@@ -2,6 +2,7 @@
 
 # v0.16.1 - Smile - various updates:
   - BREAKING: Change active device detection, detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
+  - Stretch: base detection on the always presence of a Stick
   - Add Adam v3.6.x (beta) and Anna firmware 4.2 support (representation and switching on/off of a schedule has changed)
   - Anna: Fix cooling_active prediction
   - Schedules: always show `available_schemas` and `selected_schema`, also with "None" available and/or selected
