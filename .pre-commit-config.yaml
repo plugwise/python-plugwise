@@ -13,6 +13,10 @@ repos:
             "-rn",  # Only display messages
             "-sn",  # Don't display the score
           ]
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
@@ -88,7 +92,3 @@ repos:
         types: [python]
         require_serial: true
         files: ^plugwise/.+\.py$
-#  - repo: https://github.com/PyCQA/isort
-#    rev: 5.10.1
-#    hooks:
-#      - id: isort
