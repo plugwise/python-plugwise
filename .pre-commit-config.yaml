@@ -1,5 +1,22 @@
 repos:
   # Run manually in CI skipping the branch checks
+  - repo: https://github.com/PyCQA/pylint
+    rev: v2.12.2
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args:
+          [
+            "-rn",  # Only display messages
+            "-sn",  # Don't display the score
+          ]
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
@@ -75,7 +92,3 @@ repos:
         types: [python]
         require_serial: true
         files: ^plugwise/.+\.py$
-#  - repo: https://github.com/PyCQA/isort
-#    rev: 5.10.1
-#    hooks:
-#      - id: isort

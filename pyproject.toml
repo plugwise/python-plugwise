@@ -24,11 +24,11 @@ ignore = [
 # Use a conservative default here; 2 should speed up most setups and not hurt
 # any too bad. Override on command line as appropriate.
 # Disabled for now: https://github.com/PyCQA/pylint/issues/3584
-#jobs = 2
+jobs = 2
 # Disabled pylint_strict_informational for codefactor
-#load-plugins = [
-#    "pylint_strict_informational",
-#]
+load-plugins = [
+    "pylint_strict_informational",
+]
 persistent = false
 extension-pkg-whitelist = [
     "ciso8601",
@@ -67,8 +67,10 @@ disable = [
     "format",
     "abstract-class-little-used",
     "abstract-method",
+    "consider-using-f-string",
     "cyclic-import",
     "duplicate-code",
+    "fixme",
     "inconsistent-return-statements",
     "locally-disabled",
     "not-context-manager",

@@ -66,7 +66,7 @@ class NodeResponse(PlugwiseMessage):
         self.msg_id = response[4:8]
         self.seq_id = response[8:12]
         response = response[12:]
-        if self.format_size == MESSAGE_SMALL or self.format_size == MESSAGE_LARGE:
+        if self.format_size in [MESSAGE_SMALL, MESSAGE_LARGE]:
             self.ack_id = response[:4]
             response = response[4:]
         if self.format_size != MESSAGE_SMALL:
@@ -337,6 +337,8 @@ class NodeInfoResponse(NodeResponse):
         self.datetime = DateTime()
         self.last_logaddr = LogAddr(0, length=8)
         self.relay_state = Int(0, length=2)
+        #  TODO: 20220126 snake-style
+        #  pylint: disable=invalid-name
         self.hz = Int(0, length=2)
         self.hw_ver = String(None, length=12)
         self.fw_ver = UnixTimestamp(0)

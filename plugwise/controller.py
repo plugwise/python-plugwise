@@ -280,11 +280,7 @@ class StickMessageController:
             else:
                 self._log_status_message(message)
             self.message_processor(message)
-            if (
-                message.seq_id != b"FFFF"
-                and message.seq_id != b"FFFE"
-                and message.seq_id != b"FFFD"
-            ):
+            if message.seq_id not in [b"FFFF", b"FFFE", b"FFFD"]:
                 self._post_message_action(
                     message.seq_id, None, message.__class__.__name__
                 )

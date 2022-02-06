@@ -27,7 +27,7 @@ class StickConnection:
         self._writer_thread = None
 
     ################################################
-    ###             Open connection              ###
+    #               Open connection                #
     ################################################
 
     def connect(self) -> bool:
@@ -40,7 +40,7 @@ class StickConnection:
         """Placeholder."""
 
     ################################################
-    ###                   Reader                 ###
+    #                     Reader                   #
     ################################################
 
     def _reader_start(self, name):
@@ -58,12 +58,14 @@ class StickConnection:
             time.sleep(0.01)
         _LOGGER.debug("Reader daemon stopped")
 
+    #  TODO: 20220125 function instead of self
+    #  pylint: disable=no-self-use
     def _read_data(self):
         """placeholder."""
         return b"0000"
 
     ################################################
-    ###                 Writer                   ###
+    #                   Writer                     #
     ################################################
 
     def _writer_start(self, name: str):
@@ -101,7 +103,7 @@ class StickConnection:
         self._write_queue.put_nowait((message, callback))
 
     ################################################
-    ###             Connection state             ###
+    #               Connection state               #
     ################################################
 
     def is_connected(self):
@@ -117,7 +119,7 @@ class StickConnection:
         return self._writer_thread.is_alive() if self.run_writer_thread else False
 
     ################################################
-    ###             Close connection             ###
+    #               Close connection               #
     ################################################
 
     def disconnect(self):

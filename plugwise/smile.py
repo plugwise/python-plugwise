@@ -1,13 +1,9 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise backend module for Home Assistant Core.
 """
-import asyncio
-import copy
 import logging
 
 import aiohttp
-
-from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
@@ -74,11 +70,11 @@ class SmileData(SmileHelper):
             self._append_special(data, dev_id, temp_bs_dict, temp_s_dict)
 
             dev_and_data.update(data)
-            if temp_bs_dict != {}:
+            if temp_bs_dict:
                 dev_and_data["binary_sensors"] = temp_bs_dict
-            if temp_s_dict != {}:
+            if temp_s_dict:
                 dev_and_data["sensors"] = temp_s_dict
-            if temp_sw_dict != {}:
+            if temp_sw_dict:
                 dev_and_data["switches"] = temp_sw_dict
 
             self.gw_devices[dev_id] = dev_and_data
@@ -278,34 +274,10 @@ class Smile(SmileComm, SmileData):
             timeout,
             websession,
         )
+        SmileData.__init__(self)
 
-        self._on_off_device = False
-        self._ot_device = False
-        self._appliances = None
-        self._appl_data = None
-        self._cooling_present = False
-        self._domain_objects = None
-        self._heater_id = None
-        self._home_location = None
-        self._last_active = {}
-        self._locations = None
-        self._modules = None
         self._notifications = {}
-        self._outdoor_temp = None
-        self._sm_thermostat = None
-        self._smile_legacy = False
-        self._stretch_v2 = False
-        self._stretch_v3 = False
-        self._thermo_locs = None
-
-        self.cooling_active = False
-        self.gateway_id = None
-        self.gw_data = {}
-        self.gw_devices = {}
         self.smile_hostname = None
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = ()
 
     async def connect(self):
         """Connect to Plugwise device and determine its name, type and version."""
@@ -473,7 +445,7 @@ class Smile(SmileComm, SmileData):
             data = self._get_device_data(dev_id)
             for key, value in list(data.items()):
                 if key in dev_dict:
-                    self.gw_devices[dev_id][key] = value
+                    dev_dict[key] = value
             if "binary_sensors" in dev_dict:
                 for key, value in list(data.items()):
                     update_helper(
@@ -536,7 +508,7 @@ class Smile(SmileComm, SmileData):
             return await self._set_schedule_state_legacy(name, state)
 
         schema_rule = self._rule_ids_by_name(str(name), loc_id)
-        if schema_rule == {} or schema_rule is None:
+        if not schema_rule or schema_rule is None:
             return False
 
         schema_rule_id = next(iter(schema_rule))

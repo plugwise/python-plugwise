@@ -7,7 +7,6 @@ import logging
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientSession, ClientTimeout, ServerTimeoutError
-from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -17,24 +16,16 @@ import pytz
 
 from .constants import (
     APPLIANCES,
-    ATTR_ICON,
-    ATTR_ID,
     ATTR_NAME,
-    ATTR_STATE,
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
-    COOLING_ICON,
     DEVICE_MEASUREMENTS,
-    DOMAIN_OBJECTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     FAKE_LOC,
-    FLAME_ICON,
     HEATER_CENTRAL_MEASUREMENTS,
-    HEATING_ICON,
     HOME_MEASUREMENTS,
-    IDLE_ICON,
     LOCATIONS,
     POWER_WATT,
     SENSORS,
@@ -49,7 +40,6 @@ from .exceptions import (
     ResponseError,
 )
 from .util import (
-    determine_selected,
     escape_illegal_xml_characters,
     format_measure,
     in_between,
@@ -165,9 +155,9 @@ def schemas_schedule_temp(schedules, name):
     for i in range(length):
         result_1 = schema_list[i][0]
         start = schema_list[i][1]
-        n = (i + 1) % (length - 1)
-        result_2 = schema_list[n][0]
-        end = schema_list[n][1]
+        j = (i + 1) % (length - 1)
+        result_2 = schema_list[j][0]
+        end = schema_list[j][1]
         now = dt.datetime.now().time()
         if (
             result_1 == dt.datetime.now().weekday()
@@ -326,6 +316,39 @@ class SmileComm:
 class SmileHelper:
     """The SmileHelper class."""
 
+    def __init__(self):
+        """Set the constructor for this class."""
+        self._appl_data = None
+        self._appliances = None
+        self._cooling_present = None
+        self._cp_state = None
+        self._devices = None
+        self._domain_objects = None
+        self._heater_id = None
+        self._home_location = None
+        self._last_active = {}
+        self._loc_data = None
+        self._locations = None
+        self._modules = None
+        self._on_off_device = None
+        self._ot_device = None
+        self._outdoor_temp = None
+        self._sm_thermostat = None
+        self._thermo_locs = None
+
+        self._smile_legacy = None
+        self._stretch_v2 = None
+        self._stretch_v3 = None
+
+        self.cooling_active = None
+        self.gateway_id = None
+        self.gw_data = {}
+        self.gw_devices = {}
+
+        self.smile_name = None
+        self.smile_type = None
+        self.smile_version = []
+
     def _locations_legacy(self):
         """Helper-function for _all_locations().
         Create locations for legacy devices.
@@ -420,7 +443,8 @@ class SmileHelper:
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
-            if (module := self._modules.find(locator)) is not None:
+            module = self._modules.find(locator)
+            if module is not None:
                 v_name = module.find("vendor_name").text
                 v_model = module.find("vendor_model").text
                 hw_version = module.find("hardware_version").text
