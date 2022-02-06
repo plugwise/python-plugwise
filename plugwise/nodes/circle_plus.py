@@ -57,10 +57,8 @@ class PlugwiseCirclePlus(PlugwiseCircle):
                 "Linked plugwise node with mac %s found",
                 message.node_mac.value.decode(UTF8_DECODE),
             )
-            if (
-                message.node_mac.value.decode(UTF8_DECODE)
-                not in self._plugwise_nodes.keys()
-            ):
+            #  TODO: 20220206 is there 'mac' in the dict? Otherwise it can be rewritten to just if message... in
+            if not self._plugwise_nodes.get(message.node_mac.value.decode(UTF8_DECODE)):
                 self._plugwise_nodes[
                     message.node_mac.value.decode(UTF8_DECODE)
                 ] = message.node_address.value
