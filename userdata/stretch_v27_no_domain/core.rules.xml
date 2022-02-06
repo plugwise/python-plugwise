@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+	<schedule_rule id='58ecba5db3694bcfb1e2ba026a63e4ed'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T14:55:04.604+01:00</created_date>
+		<modified_date>2022-01-24T14:55:04.688+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='af8f12921bc64e1a8eded649345aa8e3'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='d8d3c0279e6c44ea98eeda60d3b04a24'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T13:34:23.904+01:00</created_date>
+		<modified_date>2022-01-24T13:34:23.947+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='ee8eb9fbb8464ac7b87d692a44773e82'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='32736b9879fa481abbcf3f4fc46de575'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T14:57:37.031+01:00</created_date>
+		<modified_date>2022-01-24T14:57:37.114+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='3d8c9e75e51e49b0897d92093fc01a83'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='000b1c3e6354407190baaf0b81de01e9'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T13:33:01.968+01:00</created_date>
+		<modified_date>2022-01-24T14:45:27.222+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='1013e323611b4f68951ab8e622885e56'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T14:59:39.444+01:00</created_date>
+		<modified_date>2022-01-24T14:59:39.528+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='a071d54bf9fc4ff6951f7e7f190d78b1'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='a83d4b881c3c4716b28d88f79a7d6249'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T14:58:07.442+01:00</created_date>
+		<modified_date>2022-01-24T14:58:07.526+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='68305706bad0448a91226d5d276311dd'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='068bd7a7e9814bda897b3f457379e18c'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T20:44:31.953+01:00</created_date>
+		<modified_date>2022-01-24T20:44:32.050+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='4daac40a9de34b238acfd294efb52aff'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='53c6b6b3f16f49a3bab3f0ea15e323a7'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T20:44:42.875+01:00</created_date>
+		<modified_date>2022-01-24T20:44:42.973+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='4821ddc45b8741958736a6a83a1344b1'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='359cc67a685743e1a954f5d1c0931dd9'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T14:54:34.555+01:00</created_date>
+		<modified_date>2022-01-24T14:54:34.651+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='3b74c07cce3544f9bde4766737043a25'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='9f1c6f2007e14a01ab4c8dc4339081ce'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T14:56:06.225+01:00</created_date>
+		<modified_date>2022-01-24T14:56:06.320+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='11061e9c711e430c90b7bd8feb4d9ce6'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='9b193f7529964c7b82bd3b3259d09956'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T19:36:22.430+01:00</created_date>
+		<modified_date>2022-01-24T19:36:22.515+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='799fcd6ead1f4b469364ffa7a32b3e55'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='6636fa27fcc44c7ebf55ba6cfcc7ad46'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T20:20:53.063+01:00</created_date>
+		<modified_date>2022-01-24T20:20:53.147+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='a42e1574270e4144a043e53f00b78d46'/>
+		</services>
+	</schedule_rule>
+	<schedule_rule id='9ed5c81599ec4b79a9c03f6604035707'>
+		<name></name>
+		<description></description>
+		<schedule>
+		</schedule>
+		<created_date>2022-01-24T20:40:59.555+01:00</created_date>
+		<modified_date>2022-01-24T20:40:59.638+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='927cdb20439f48fbbc815c72948a8a02'/>
+		</services>
+	</schedule_rule>
+</rules>

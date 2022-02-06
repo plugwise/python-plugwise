@@ -2790,6 +2790,46 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_stretch_v27_no_domain(self):
+        """Test erroneous domain_objects file from user."""
+        # testdata dictionary with key ctrl_id_dev_id => keys:values
+        testdata = {
+            # 76BF93
+            "8b8d14b242e24cd789743c828b9a2ea9": {
+                "sensors": {"electricity_consumed": 1.69},
+                "switches": {"lock": False, "relay": True},
+            },
+            # 25F66AD
+            "d0122ac66eba47b99d8e5fbd1e2f5932": {
+                "sensors": {"electricity_consumed_interval": 2.21}
+            },
+        }
+
+        self.smile_setup = "stretch_v27_no_domain"
+        server, smile, client = await self.connect_wrapper(stretch=True)
+        assert smile.smile_hostname == "stretch000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "stretch"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "2.7.18"
+        _LOGGER.info(" # Assert legacy")
+        assert smile._smile_legacy  # pylint: disable=protected-access
+
+        await self.device_test(smile, testdata)
+        _LOGGER.info(" # Assert no master thermostat")
+        assert smile._sm_thermostat is None  # it's not a thermostat :)
+
+        switch_change = await self.tinker_switch(
+            smile, "8b8d14b242e24cd789743c828b9a2ea9"
+        )
+        assert switch_change
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_p1v4(self):
         """Test a P1 firmware 4 setup."""
         testdata = {

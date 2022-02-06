@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module id='54275d1712d14c1fb6930e326208ff56'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4023</hardware_version>
+		<firmware_version>2011-05-13T09:19:23+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T20:44:42.034+01:00</created_date>
+		<modified_date>2022-01-26T12:37:24.459+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='4821ddc45b8741958736a6a83a1344b1'>
+				<measurement log_date="2022-01-26T12:37:23.350+01:00">on</measurement>
+			</relay>
+			<electricity_interval_meter id='68fe158afac94f24a0b466af193e58b0'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">0.00</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<electricity_point_meter id='ddf6ff4cd8794bfd9cc00d862fa7eaf3'>
+				<measurement log_date="2022-01-26T12:37:24.450+01:00" unit="W" directionality="consumed">0.00</measurement>
+				<measurement log_date="2022-01-26T12:37:24.450+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_router id='0434b142dd9f4a4895de4d266b0328a8'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='b7a753cf9dc34b17834740afeb97679c'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T19:36:21.651+01:00</created_date>
+		<modified_date>2022-01-26T08:30:10.279+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='799fcd6ead1f4b469364ffa7a32b3e55'>
+				<measurement log_date="2022-01-26T08:30:10.270+01:00">on</measurement>
+			</relay>
+			<electricity_interval_meter id='97fb71d099704bfa94d03369c7224cd4'>
+				<measurement log_date="2022-01-26T08:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">0.00</measurement>
+				<measurement log_date="2022-01-26T08:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<electricity_point_meter id='9fb01fd597b5420589dc6a27f74496cb'>
+				<measurement log_date="2022-01-26T08:30:04.241+01:00" unit="W" directionality="consumed">0.00</measurement>
+				<measurement log_date="2022-01-26T08:30:04.241+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_router id='372571ad3ef34939afe1cf08fa2529a5'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='f9d3122b5b8f4567baeb3169bc36d602'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T14:55:03.847+01:00</created_date>
+		<modified_date>2022-01-26T12:37:24.308+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='9383879107a347a0925c8f465a9ae3c1'>
+				<measurement log_date="2022-01-26T12:37:24.299+01:00" unit="W" directionality="consumed">6.75</measurement>
+				<measurement log_date="2022-01-26T12:37:24.299+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='a2e4eaf24d8b45119e229a53be93229d'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">4.00</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='af8f12921bc64e1a8eded649345aa8e3'>
+				<measurement log_date="2022-01-26T12:37:22.549+01:00">on</measurement>
+			</relay>
+		</services>
+		<protocols>
+			<network_router id='35577449d85948f8be8522761e37eb64'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='96c006f023a247fb9d25f5bda03eac24'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0700-73' model_name='Circle+ type F'>NC</vendor_model>
+		<hardware_version>6539-0700-7326</hardware_version>
+		<firmware_version>2011-06-27T10:47:37+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T13:33:01.650+01:00</created_date>
+		<modified_date>2022-01-26T12:37:24.718+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='12ba04991e1e42bb9ee856130c407838'>
+				<measurement log_date="2022-01-26T12:37:24.714+01:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='59fb5d47a6654be093edc5aa420ba61a'>
+				<measurement log_date="2022-01-26T12:37:20.661+01:00" unit="W" directionality="consumed">13.28</measurement>
+				<measurement log_date="2022-01-26T12:37:20.661+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='a7485db49a4941cda178528f63f98ba2'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">7.82</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<network_coordinator id='f97c758a6d6c44ca873990071f7e9fdf'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_coordinator>
+		</protocols>
+	</module>
+	<module id='1fcf42fd5fe64b36b7a6178964c5171a'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0700-85' model_name='Stick'>MC</vendor_model>
+		<hardware_version>6539-0700-8512</hardware_version>
+		<firmware_version>2011-06-27T10:43:39+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T13:33:01.618+01:00</created_date>
+		<modified_date>2022-01-26T12:37:29.014+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+		</services>
+		<protocols>
+			<master_controller id='d2cecd94cb80400c9f264906447fd082'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></master_controller>
+		</protocols>
+	</module>
+	<module id='1823595c558d4cfda1bed3a4993700a6'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4022</hardware_version>
+		<firmware_version>2011-05-13T09:19:23+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T20:40:58.749+01:00</created_date>
+		<modified_date>2022-01-26T12:37:22.061+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='4ff83cc5d6ba4e34bbe58b5bc7c2102c'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">1.14</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='927cdb20439f48fbbc815c72948a8a02'>
+				<measurement log_date="2022-01-26T12:37:22.052+01:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='ad67a3b6378040dc85e886e750029060'>
+				<measurement log_date="2022-01-26T12:37:15.330+01:00" unit="W" directionality="consumed">1.71</measurement>
+				<measurement log_date="2022-01-26T12:37:15.330+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_router id='abb7ea3694eb4b8b9bf10520b54db49e'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='cbda99f796444ad298e57a4310435385'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T14:58:06.619+01:00</created_date>
+		<modified_date>2022-01-26T12:37:28.684+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='118a2db5723148efba5102176cb59607'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">5.22</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='68305706bad0448a91226d5d276311dd'>
+				<measurement log_date="2022-01-26T12:37:22.774+01:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='e0fb7a1504214d45920f6ae0ce5db4b4'>
+				<measurement log_date="2022-01-26T12:37:28.674+01:00" unit="W" directionality="consumed">8.52</measurement>
+				<measurement log_date="2022-01-26T12:37:28.674+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_router id='08afc1a4c34b4b45b777aacf1d0fb690'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='35f34295d20540e4861b570e0b37b503'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T14:57:36.271+01:00</created_date>
+		<modified_date>2022-01-26T12:37:28.225+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='3d8c9e75e51e49b0897d92093fc01a83'>
+				<measurement log_date="2022-01-26T12:37:22.687+01:00">on</measurement>
+			</relay>
+			<electricity_interval_meter id='6e72615e211d41ff9777d00b40dfeb1b'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">2.85</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<electricity_point_meter id='8aa4d63f4f2d4f70accf65743d1b77df'>
+				<measurement log_date="2022-01-26T12:37:28.215+01:00" unit="W" directionality="consumed">4.68</measurement>
+				<measurement log_date="2022-01-26T12:37:28.215+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+		</services>
+		<protocols>
+			<network_router id='9b2c3b1dc79a4c93b7fd8ac668ba368e'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='ebf1c61a3b5445268ff6c8b133e940b3'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T14:59:38.684+01:00</created_date>
+		<modified_date>2022-01-26T12:37:18.687+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='96804b47342d4184a7aa3a8317e5d96a'>
+				<measurement log_date="2022-01-26T12:37:18.677+01:00" unit="W" directionality="consumed">7.82</measurement>
+				<measurement log_date="2022-01-26T12:37:18.677+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<relay id='a071d54bf9fc4ff6951f7e7f190d78b1'>
+				<measurement log_date="2022-01-26T12:37:18.380+01:00">on</measurement>
+			</relay>
+			<electricity_interval_meter id='d2bb2fd39a4e4963b8bf43c81366b188'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">4.57</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<network_router id='7e615e83ccad46a4a90c1ae5364a94d2'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='cc6020f0afc242e09331472049e18982'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4023</hardware_version>
+		<firmware_version>2011-05-13T09:19:23+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T20:20:52.243+01:00</created_date>
+		<modified_date>2022-01-26T12:37:27.446+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='015d68ea64204178967a4929564ccfa5'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">1.67</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<electricity_point_meter id='1bb9434d7acc42e19626528fb6c0e4d3'>
+				<measurement log_date="2022-01-26T12:37:20.430+01:00" unit="W" directionality="consumed">2.53</measurement>
+				<measurement log_date="2022-01-26T12:37:20.430+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<relay id='a42e1574270e4144a043e53f00b78d46'>
+				<measurement log_date="2022-01-26T12:37:27.437+01:00">on</measurement>
+			</relay>
+		</services>
+		<protocols>
+			<network_router id='8c27a5d65a0f40e0b380904ea738bdad'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='6b84f10a5d284e43b5c22cb052531527'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T13:34:23.550+01:00</created_date>
+		<modified_date>2022-01-26T12:37:28.646+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_point_meter id='b8ff3eeb5381425b803704fb8fa43c4e'>
+				<measurement log_date="2022-01-26T12:37:28.637+01:00" unit="W" directionality="consumed">3.90</measurement>
+				<measurement log_date="2022-01-26T12:37:28.637+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='dbd39107c54f460a90f732142d4b9b62'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">2.23</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+			<relay id='ee8eb9fbb8464ac7b87d692a44773e82'>
+				<measurement log_date="2022-01-26T12:37:04.171+01:00">on</measurement>
+			</relay>
+		</services>
+		<protocols>
+			<network_router id='107eff9197c14c7e9c5569c97aafb177'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='cdb711951fde451aa66390b44643a2af'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T14:54:33.809+01:00</created_date>
+		<modified_date>2022-01-26T12:37:29.014+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='3b74c07cce3544f9bde4766737043a25'>
+				<measurement log_date="2022-01-26T12:37:03.094+01:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='7cb6ff7329dd43ee84610fd79cd07078'>
+				<measurement log_date="2022-01-26T12:37:29.005+01:00" unit="W" directionality="consumed">9.63</measurement>
+				<measurement log_date="2022-01-26T12:37:29.005+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='a7dd4e11c4a2428ba13223c29600b449'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">5.88</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<network_router id='929568cbd1324f57811a6f4c1285f73b'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='a3512dceff4d4aeea5d75c80317fa751'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4026</hardware_version>
+		<firmware_version>2011-06-27T10:52:18+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T14:56:05.466+01:00</created_date>
+		<modified_date>2022-01-26T12:37:20.343+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='11061e9c711e430c90b7bd8feb4d9ce6'>
+				<measurement log_date="2022-01-26T12:37:18.501+01:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='46469387aebd4540be99beeb9a92f57d'>
+				<measurement log_date="2022-01-26T12:37:20.333+01:00" unit="W" directionality="consumed">6.05</measurement>
+				<measurement log_date="2022-01-26T12:37:20.333+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='e8c1e9bbd4184c2b9879ac08252a106e'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">3.44</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<network_router id='1430a9df10874df39c615070f2fe9a12'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+	<module id='6e68d0911d554aa5ad22f803fac22b5d'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model model_number='0701-40' model_name='Circle type F'>NR</vendor_model>
+		<hardware_version>6539-0701-4023</hardware_version>
+		<firmware_version>2011-05-13T09:19:23+02:00</firmware_version>
+		<upgrade/>
+		<created_date>2022-01-24T20:44:31.115+01:00</created_date>
+		<modified_date>2022-01-26T12:37:15.219+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<relay id='4daac40a9de34b238acfd294efb52aff'>
+				<measurement log_date="2022-01-26T12:37:07.681+01:00">on</measurement>
+			</relay>
+			<electricity_point_meter id='b8e80edd525747b8906b39f5951fc21c'>
+				<measurement log_date="2022-01-26T12:37:15.209+01:00" unit="W" directionality="consumed">0.62</measurement>
+				<measurement log_date="2022-01-26T12:37:15.209+01:00" unit="W" directionality="produced">0.00</measurement>
+			</electricity_point_meter>
+			<electricity_interval_meter id='d131b423d920467a97abc35e03899c11'>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="consumed" interval="PT1H">0.00</measurement>
+				<measurement log_date="2022-01-26T12:00:00+01:00" unit="Wh" directionality="produced" interval="PT1H">0.00</measurement>
+			</electricity_interval_meter>
+		</services>
+		<protocols>
+			<network_router id='8bed50428c964e21ae8270cfb0176cb5'><mac_address>0123456789AB</mac_address><network id='d2bf005993784e1389a7d2be58d3af46'/></network_router>
+		</protocols>
+	</module>
+</modules>
