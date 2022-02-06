@@ -19,8 +19,8 @@ def get_version(rel_path):
 
 
 def readme():
-    with open("README.md") as f:
-        return f.read()
+    with open("README.md", encoding="utf-8") as readme_file:
+        return readme_file.read()
 
 
 setup(

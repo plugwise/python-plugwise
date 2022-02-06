@@ -1,7 +1,7 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 import asyncio
-import json
 import importlib
+import json
 
 # Fixture writing
 import logging
@@ -46,7 +46,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if not os.path.exists(os.path.dirname(datafile)):  # pragma: no cover
             os.mkdir(os.path.dirname(datafile))
 
-        with open(datafile, "w") as fixture_file:
+        with open(datafile, "w", encoding="utf-8") as fixture_file:
             fixture_file.write(
                 json.dumps(
                     data,
@@ -121,9 +121,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.appliances.xml",
         )
-        filedata = open(userdata)
-        data = filedata.read()
-        filedata.close()
+        with open(userdata, encoding="utf-8") as filedata:
+            data = filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_domain_objects(self, request):
@@ -132,9 +131,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.domain_objects.xml",
         )
-        filedata = open(userdata)
-        data = filedata.read()
-        filedata.close()
+        with open(userdata, encoding="utf-8") as filedata:
+            data = filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_locations(self, request):
@@ -143,9 +141,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.locations.xml",
         )
-        filedata = open(userdata)
-        data = filedata.read()
-        filedata.close()
+        with open(userdata, encoding="utf-8") as filedata:
+            data = filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_modules(self, request):
@@ -154,9 +151,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             os.path.dirname(__file__),
             f"../userdata/{self.smile_setup}/core.modules.xml",
         )
-        filedata = open(userdata)
-        data = filedata.read()
-        filedata.close()
+        with open(userdata, encoding="utf-8") as filedata:
+            data = filedata.read()
         return aiohttp.web.Response(text=data)
 
     async def smile_status(self, request):
@@ -166,47 +162,54 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 os.path.dirname(__file__),
                 f"../userdata/{self.smile_setup}/system_status_xml.xml",
             )
-            filedata = open(userdata)
-            data = filedata.read()
-            filedata.close()
+            with open(userdata, encoding="utf-8") as filedata:
+                data = filedata.read()
             return aiohttp.web.Response(text=data)
         except OSError:
             raise aiohttp.web.HTTPNotFound
 
-    async def smile_set_temp_or_preset(self, request):
+    @classmethod
+    async def smile_set_temp_or_preset(cls, request):
         """Render generic API calling endpoint."""
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
-    async def smile_set_schedule(self, request):
+    @classmethod
+    async def smile_set_schedule(cls, request):
         """Render generic API calling endpoint."""
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
-    async def smile_set_relay(self, request):
+    @classmethod
+    async def smile_set_relay(cls, request):
         """Render generic API calling endpoint."""
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
-    async def smile_set_relay_stretch(self, request):
+    @classmethod
+    async def smile_set_relay_stretch(cls, request):
         """Render generic API calling endpoint."""
         text = "<xml />"
         raise aiohttp.web.HTTPOk(text=text)
 
-    async def smile_del_notification(self, request):
+    @classmethod
+    async def smile_del_notification(cls, request):
         """Render generic API calling endpoint."""
         text = "<xml />"
         raise aiohttp.web.HTTPAccepted(text=text)
 
-    async def smile_timeout(self, request):
+    @classmethod
+    async def smile_timeout(cls, request):
         """Render timeout endpoint."""
         raise asyncio.TimeoutError
 
-    async def smile_broken(self, request):
+    @classmethod
+    async def smile_broken(cls, request):
         """Render server error endpoint."""
         raise aiohttp.web.HTTPInternalServerError(text="Internal Server Error")
 
-    async def smile_fail_auth(self, request):
+    @classmethod
+    async def smile_fail_auth(cls, request):
         """Render authentication error endpoint."""
         raise aiohttp.web.HTTPUnauthorized()
 
@@ -254,7 +257,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             resp = await websession.get(url)
             assumed_status = self.connect_status(broken, timeout, fail_auth)
             assert resp.status == assumed_status
-        except Exception:  # pylint disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             assert True
 
         if not broken and not timeout and not fail_auth:
@@ -271,7 +274,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 websession=None,
             )
             assert False
-        except Exception:  # pylint disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             assert True
 
         smile = pw_smile.Smile(
@@ -341,8 +344,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return await self.connect(stretch=stretch)
 
     # Generic disconnect
+    @classmethod
     @pytest.mark.asyncio
-    async def disconnect(self, server, client):
+    async def disconnect(cls, server, client):
         """Disconnect from webserver."""
         await client.session.close()
         await server.close()
@@ -389,7 +393,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._write_json("all_data", data)
         self._write_json("notifications", extra["notifications"])
 
-        location_list = smile._thermo_locs
+        location_list = smile._thermo_locs  # pylint: disable=protected-access
 
         _LOGGER.info("Gateway id = %s", extra["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
@@ -640,7 +644,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert not self.notifications
 
@@ -741,7 +745,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert not self.notifications
 
@@ -812,7 +816,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
         assert not self.notifications
 
         await smile.close_connection()
@@ -849,7 +854,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
         assert not self.notifications
 
         await smile.close_connection()
@@ -931,7 +937,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert not self.notifications
 
@@ -976,7 +982,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
 
         await self.tinker_thermostat(
             smile,
@@ -1027,7 +1033,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert not self.notifications
 
@@ -1076,7 +1082,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert not self.notifications
 
@@ -1163,7 +1169,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert not self.notifications
 
@@ -1223,7 +1229,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert not self.notifications
 
@@ -1422,7 +1428,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile._sm_thermostat
+        assert not smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
 
         switch_change = await self.tinker_switch(
@@ -1572,7 +1578,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile._sm_thermostat
+        assert not smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -1977,7 +1983,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile._sm_thermostat
+        assert not smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -2075,7 +2081,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy  # pylint: disable=protected-access
 
         await self.device_test(smile, testdata)
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
         assert not self.cooling_present
         assert not self.notifications
 
@@ -2111,7 +2118,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert nomaster thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
         assert not self.notifications
 
         await smile.close_connection()
@@ -2164,7 +2172,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
         assert not self.notifications
 
         await smile.close_connection()
@@ -2217,7 +2226,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
         await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert self.cooling_present
         assert not self.notifications
@@ -2271,7 +2280,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
         assert self.active_device_present
         assert self.cooling_present
         assert not self.notifications
@@ -2303,7 +2312,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat
+        assert smile._sm_thermostat  # pylint: disable=protected-access
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -2495,7 +2504,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2771,7 +2781,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
 
         switch_change = await self.tinker_switch(
             smile, "2587a7fcdd7e482dab03fda256076b4b"
@@ -2819,7 +2830,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
 
         switch_change = await self.tinker_switch(
             smile, "8b8d14b242e24cd789743c828b9a2ea9"
@@ -2874,7 +2886,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
-        assert smile._sm_thermostat is None  # it's not a thermostat :)
+        # it's not a thermostat :)
+        assert smile._sm_thermostat is None  # pylint: disable=protected-access
         assert not self.notifications
 
         await smile.close_connection()
@@ -2918,9 +2931,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_timeout(self, timeout_test):
         """Wrap connect to raise timeout during get."""
 
+        # pylint: disable=unused-variable
         try:
             self.smile_setup = "p1v4"
-            server, smile, client = await self.connect_wrapper()
+            (
+                server,
+                smile,
+                client,
+            ) = await self.connect_wrapper()
             assert False  # pragma: no cover
         except pw_exceptions.DeviceTimeoutError:
             assert True
