@@ -168,7 +168,7 @@ jobs:
     needs: commitcheck
     strategy:
       matrix:
-        python-version: ${{ PYTHON_VERSIONS }}
+        python-version: ${{ env.PYTHON_VERSIONS }}
     steps:
       - name: Check out committed code
         uses: actions/checkout@v2
@@ -207,7 +207,7 @@ jobs:
     needs: prepare-test-cache
     strategy:
       matrix:
-        python-version: ${{ PYTHON_VERSIONS }}
+        python-version: ${{ env.PYTHON_VERSIONS }}
 
     steps:
       - name: Check out committed code
