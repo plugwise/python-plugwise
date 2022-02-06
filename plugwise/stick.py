@@ -316,7 +316,9 @@ class Stick:
         """Timeout for initial scan."""
         if not self.msg_controller.discovery_finished:
             for mac in self._nodes_to_discover:
-                if mac not in self._device_nodes.keys():
+                #  TODO: 20220206 is there 'mac' in the dict? Otherwise it can be rewritten as below (twice as fast above .get)
+                #        if mac not in self._device_nodes:
+                if not self._device_nodes.get(mac):
                     _LOGGER.info(
                         "Failed to discover node type for registered MAC '%s'. This is expected for battery powered nodes, they will be discovered at their first awake",
                         str(mac),

@@ -4,13 +4,13 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 3
+  CACHE_VERSION: 4
   DEFAULT_PYTHON: "3.9"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
 
 on:
   schedule:
-    - cron: "0 0 * * 0" # weekly
+    - cron: "2 4 * * 0" # weekly
   workflow_dispatch:
   push:
 # pull_request:
@@ -167,7 +167,7 @@ jobs:
     needs: commitcheck
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10"]
+        python-version: [3.9, "3.10"]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v2
@@ -206,7 +206,7 @@ jobs:
     needs: prepare-test-cache
     strategy:
       matrix:
-        python-version: [3.8, 3.9, "3.10"]
+        python-version: [3.9, "3.10"]
 
     steps:
       - name: Check out committed code
