@@ -1,6 +1,8 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise backend module for Home Assistant Core.
 """
+from typing import Optional
+
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -262,7 +264,7 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self._notifications: dict[str, str] = {}
-        self.smile_hostname: str = "Unknown"
+        self.smile_hostname: Optional[str] = None
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
