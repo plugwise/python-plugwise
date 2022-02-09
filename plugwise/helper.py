@@ -3,6 +3,7 @@ Plugwise Smile protocol helpers.
 """
 import asyncio
 import datetime as dt
+from typing import Any
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientSession, ClientTimeout, ServerTimeoutError
@@ -271,36 +272,36 @@ class SmileHelper:
 
     def __init__(self):
         """Set the constructor for this class."""
-        self._appl_data = None
-        self._appliances = None
-        self._cooling_present = None
-        self._cp_state = None
-        self._devices = None
-        self._domain_objects = None
-        self._heater_id = None
-        self._home_location = None
-        self._last_active = {}
-        self._loc_data = None
-        self._locations = None
-        self._modules = None
-        self._on_off_device = None
-        self._ot_device = None
-        self._outdoor_temp = None
-        self._sm_thermostat = None
-        self._thermo_locs = None
+        self._appl_data: dict[str, Any] = {}
+        self._appliances: etree = None
+        self._cooling_present: bool = False
+        self._devices: dict[str, str] = {}
+        self._domain_objects: etree = None
+        self._heater_id: str = None
+        self._home_location: str = None
+        self._last_active: dict[str, str] = {}
+        self._loc_data: dict[str, Any] = {}
+        self._locations: etree = None
+        self._modules: etree = None
+        self._on_off_device: bool = False
+        self._opentherm_device: bool = False
+        self._outdoor_temp: float = None
+        self._is_thermostat: bool = False
+        self._multi_thermostats: bool = False
+        self._thermo_locs: dict[str, Any] = {}
 
-        self._smile_legacy = None
-        self._stretch_v2 = None
-        self._stretch_v3 = None
+        self._smile_legacy: bool = False
+        self._stretch_v2: bool = False
+        self._stretch_v3: bool = False
 
-        self.cooling_active = None
-        self.gateway_id = None
-        self.gw_data = {}
-        self.gw_devices = {}
+        self.cooling_active: bool = False
+        self.gateway_id: str = None
+        self.gw_data: dict[str, Any] = {}
+        self.gw_devices: dict[str, Any] = {}
 
-        self.smile_name = None
-        self.smile_type = None
-        self.smile_version = []
+        self.smile_name: str = None
+        self.smile_type: str = None
+        self.smile_version: list[str] = []
 
     def _locations_legacy(self):
         """Helper-function for _all_locations().
@@ -348,7 +349,6 @@ class SmileHelper:
 
     def _all_locations(self):
         """Collect all locations."""
-        self._loc_data = {}
         loc = Munch()
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
@@ -476,7 +476,7 @@ class SmileHelper:
                 return appl
 
             # Remove heater_central when no active device present
-            if not self._ot_device and not self._on_off_device:
+            if not self._opentherm_device and not self._on_off_device:
                 return None
 
             self._heater_id = appliance.attrib["id"]
@@ -531,9 +531,6 @@ class SmileHelper:
 
     def _all_appliances(self):
         """Collect all appliances with relevant info."""
-        self._appl_data = {}
-        self._cp_state = None
-
         self._all_locations()
 
         # Create a gateway for legacy Anna, P1 and Stretches
@@ -572,7 +569,7 @@ class SmileHelper:
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        self._ot_device = ch_state is not None and ot_fault_code is not None
+        self._opentherm_device = ch_state is not None and ot_fault_code is not None
         self._on_off_device = ch_state is not None and ot_fault_code is None
 
         for appliance in self._appliances.findall("./appliance"):
@@ -767,7 +764,7 @@ class SmileHelper:
 
         appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
         measurements = DEVICE_MEASUREMENTS.items()
-        if self._ot_device or self._on_off_device:
+        if self._opentherm_device or self._on_off_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
                 **HEATER_CENTRAL_MEASUREMENTS,
@@ -1203,7 +1200,7 @@ class SmileHelper:
             for item in BINARY_SENSORS:
                 if list(item.keys())[0] == key:
                     data.pop(key)
-                    if self._ot_device or self._on_off_device:
+                    if self._opentherm_device or self._on_off_device:
                         bs_dict[key] = value
             for item in SENSORS:
                 if list(item.keys())[0] == key:

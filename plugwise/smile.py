@@ -1,9 +1,8 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise backend module for Home Assistant Core.
 """
-import logging
-
 import aiohttp
+from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
@@ -18,6 +17,7 @@ from .constants import (
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
+    LOGGER,
     MODULES,
     NOTIFICATIONS,
     PW_NOTIFICATION,
@@ -31,8 +31,6 @@ from .constants import (
 from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
 from .helper import SmileComm, SmileHelper, pw_notification_updater, update_helper
 
-_LOGGER = logging.getLogger(__name__)
-
 
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
@@ -42,7 +40,7 @@ class SmileData(SmileHelper):
         When conditions are met, the plugwise_notification binary_sensor is appended.
         """
         if d_id == self.gateway_id:
-            if self._sm_thermostat is not None:
+            if self._is_thermostat:
                 bs_dict.update(PW_NOTIFICATION)
 
     def _all_device_data(self):
@@ -69,11 +67,13 @@ class SmileData(SmileHelper):
 
             self.gw_devices[dev_id] = dev_and_data
 
-        self.gw_data["active_device"] = self._ot_device or self._on_off_device
+        self.gw_data["active_device"] = self._opentherm_device or self._on_off_device
         self.gw_data["cooling_present"] = self._cooling_present
         self.gw_data["gateway_id"] = self.gateway_id
         self.gw_data["heater_id"] = self._heater_id
-        self.gw_data["single_master_thermostat"] = self._sm_thermostat
+        self.gw_data["single_master_thermostat"] = (
+            self._is_thermostat and not self._multi_thermostats
+        )
         self.gw_data["smile_name"] = self.smile_name
 
     def get_all_devices(self):
@@ -221,10 +221,9 @@ class SmileData(SmileHelper):
         return device_data
 
     def single_master_thermostat(self):
-        """Determine if there is a single master thermostat in the setup.
-        Possible output: None, True, False.
-        """
+        """Determine if there is a single master thermostat in the setup."""
         if self.smile_type == "thermostat":
+            self._is_thermostat = True
             count = 0
             for dummy, data in self._thermo_locs.items():
                 if "master_prio" in data:
@@ -232,9 +231,9 @@ class SmileData(SmileHelper):
                         count += 1
 
             if count == 1:
-                self._sm_thermostat = True
+                self._multi_thermostats = False
             if count > 1:
-                self._sm_thermostat = False
+                self._multi_thermostats = True
 
 
 class Smile(SmileComm, SmileData):
@@ -244,13 +243,13 @@ class Smile(SmileComm, SmileData):
 
     def __init__(
         self,
-        host,
-        password,
-        username=DEFAULT_USERNAME,
-        port=DEFAULT_PORT,
-        timeout=DEFAULT_TIMEOUT,
+        host: str,
+        password: str,
+        username: str = DEFAULT_USERNAME,
+        port: str = DEFAULT_PORT,
+        timeout: str = DEFAULT_TIMEOUT,
         websession: aiohttp.ClientSession = None,
-    ):
+    ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
@@ -262,17 +261,17 @@ class Smile(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
-        self._notifications = {}
-        self.smile_hostname = None
+        self._notifications: dict[str, str] = {}
+        self.smile_hostname: str = "Unknown"
 
-    async def connect(self):
+    async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
-        names = []
+        names: list[str] = []
 
-        result = await self._request(DOMAIN_OBJECTS)
-        dsmrmain = result.find(".//module/protocols/dsmrmain")
+        result: etree = await self._request(DOMAIN_OBJECTS)
+        dsmrmain: etree | None = result.find(".//module/protocols/dsmrmain")
 
-        vendor_names = result.findall(".//module/vendor_name")
+        vendor_names: list[etree] = result.findall(".//module/vendor_name")
         if not vendor_names:
             # Work-around for Stretch fv 2.7.18
             result = await self._request(MODULES)
@@ -283,7 +282,7 @@ class Smile(SmileComm, SmileData):
 
         if "Plugwise" not in names:
             if dsmrmain is None:  # pragma: no cover
-                _LOGGER.error(
+                LOGGER.error(
                     "Connected but expected text not returned, \
                               we got %s",
                     result,
@@ -298,23 +297,23 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result, dsmrmain):
+    async def _smile_detect_legacy(self, result, dsmrmain) -> None:
         """Helper-function for _smile_detect()."""
-        network = result.find(".//module/protocols/master_controller")
+        network: etree = result.find(".//module/protocols/master_controller")
 
         # Assume legacy
         self._smile_legacy = True
         # Try if it is an Anna, assuming appliance thermostat
-        anna = result.find('.//appliance[type="thermostat"]')
+        anna: etree = result.find('.//appliance[type="thermostat"]')
         # Fake insert version assuming Anna
         # couldn't find another way to identify as legacy Anna
-        version = "1.8.0"
-        model = "smile_thermo"
+        version: str = "1.8.0"
+        model: str = "smile_thermo"
         if anna is None:
             # P1 legacy:
             if dsmrmain is not None:
                 try:
-                    status = await self._request(STATUS)
+                    status: etree = await self._request(STATUS)
                     version = status.find(".//system/version").text
                     model = status.find(".//system/product").text
                     self.smile_hostname = status.find(".//network/hostname").text
@@ -334,7 +333,7 @@ class Smile(SmileComm, SmileData):
                     raise ConnectionFailedError
             else:  # pragma: no cover
                 # No cornercase, just end of the line
-                _LOGGER.error("Connected but no gateway device information found")
+                LOGGER.error("Connected but no gateway device information found")
                 raise ConnectionFailedError
         return model, version
 
@@ -353,14 +352,14 @@ class Smile(SmileComm, SmileData):
 
         if model is None or version is None:  # pragma: no cover
             # Corner case check
-            _LOGGER.error("Unable to find model or version information")
+            LOGGER.error("Unable to find model or version information")
             raise UnsupportedDeviceError
 
         ver = semver.VersionInfo.parse(version)
         target_smile = f"{model}_v{ver.major}"
-        _LOGGER.debug("Plugwise identified as %s", target_smile)
+        LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
-            _LOGGER.error(
+            LOGGER.error(
                 'Your version Smile identified as "%s" seems\
                  unsupported by our plugin, please create an issue\
                  on http://github.com/plugwise/python-plugwise!',
@@ -407,9 +406,9 @@ class Smile(SmileComm, SmileData):
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
                 self._notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self._notifications)
+                LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
-                _LOGGER.info(
+                LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
