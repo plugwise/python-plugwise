@@ -1,4 +1,7 @@
 """Plugwise Stick and Smile constants."""
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
 ATTR_DEVICE_CLASS = "device_class"
@@ -365,6 +368,15 @@ SYSTEM = "/system"
 STATUS = "/system/status.xml"
 
 ATTR_TYPE = "type"
+DAYS = {
+    "mo": 0,
+    "tu": 1,
+    "we": 2,
+    "th": 3,
+    "fr": 4,
+    "sa": 5,
+    "su": 6,
+}
 DEFAULT_TIMEOUT = 30
 DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80

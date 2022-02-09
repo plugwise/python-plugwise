@@ -3,7 +3,6 @@ Plugwise Smile protocol helpers.
 """
 import asyncio
 import datetime as dt
-import logging
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientSession, ClientTimeout, ServerTimeoutError
@@ -20,6 +19,7 @@ from .constants import (
     ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
+    DAYS,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -27,6 +27,7 @@ from .constants import (
     HEATER_CENTRAL_MEASUREMENTS,
     HOME_MEASUREMENTS,
     LOCATIONS,
+    LOGGER,
     POWER_WATT,
     SENSORS,
     SWITCH_GROUP_TYPES,
@@ -46,17 +47,6 @@ from .util import (
     version_to_model,
 )
 
-_LOGGER = logging.getLogger(__name__)
-
-DAYS = {
-    "mo": 0,
-    "tu": 1,
-    "we": 2,
-    "th": 3,
-    "fr": 4,
-    "sa": 5,
-    "su": 6,
-}
 
 
 def pw_notification_updater(devs, d_id, d_dict, notifs):
@@ -223,14 +213,14 @@ class SmileComm:
 
         result = await resp.text()
         if not result or "<error>" in result:
-            _LOGGER.error("Smile response empty or error in %s", result)
+            LOGGER.error("Smile response empty or error in %s", result)
             raise ResponseError
 
         try:
             # Encode to ensure utf8 parsing
             xml = etree.XML(escape_illegal_xml_characters(result).encode())
         except etree.ParseError:
-            _LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
+            LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
             raise InvalidXMLError
 
         return xml
@@ -265,7 +255,7 @@ class SmileComm:
                 )
         except ServerTimeoutError:
             if retry < 1:
-                _LOGGER.error("Timed out sending command to Plugwise: %s", command)
+                LOGGER.error("Timed out sending command to Plugwise: %s", command)
                 raise DeviceTimeoutError
             return await self._request(command, retry - 1)
 
