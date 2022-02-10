@@ -1643,7 +1643,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "schedule_temperature": 15.0,
                 "last_used": "Badkamer Schema",
-                "mode": "off",
+                "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
