@@ -1051,21 +1051,21 @@ class SmileHelper:
         if preset is not None:
             return preset.text
 
-    def _schemas_legacy(self, avail, sched_temp, sel):
+    def _schemas_legacy(self, avail, sched_temp, sel) -> tuple[str, ...]:
         """Helper-function for _schemas().
         Collect available schemas/schedules for the legacy thermostat.
         """
-        name = None
-        schemas = {}
+        name: str | None = None
+        schemas: dict[str] = {}
 
         for schema in self._domain_objects.findall(".//rule"):
             if rule_name := schema.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
 
-        log_type = "schedule_state"
-        locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
-        active = False
+        log_type: str = "schedule_state"
+        locator: str = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
+        active: bool = False
         if (result := self._domain_objects.find(locator)) is not None:
             active = result.text == "on"
 
@@ -1077,16 +1077,16 @@ class SmileHelper:
 
         return avail, sel, sched_temp, None
 
-    def _schemas(self, location):
+    def _schemas(self, location: str) -> tuple[str, ...]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schemas/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available = ["None"]
-        last_used = None
-        rule_ids = {}
-        schedule_temperature = None
-        selected = "None"
+        available: list[str] = ["None"]
+        last_used: str | None = None
+        rule_ids: dict[str] = {}
+        schedule_temperature: str | None = None
+        selected: str = "None"
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
@@ -1097,18 +1097,18 @@ class SmileHelper:
         if location not in self._last_active:
             self._last_active[location] = None
 
-        tag = "zone_preset_based_on_time_and_presence_with_override"
+        tag: str = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperature, None
 
-        schedules = {}
+        schedules: dict[str] = {}
         for rule_id, loc_id in rule_ids.items():
-            name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            schedule = {}
-            locator = f'rule[@id="{rule_id}"]/directives'
-            directives = self._domain_objects.find(locator)
+            name: str = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            schedule: dict[str] = {}
+            locator: str = f'rule[@id="{rule_id}"]/directives'
+            directives: etree | None = self._domain_objects.find(locator)
             for directive in directives:
-                entry = directive.find("then").attrib
+                entry: str = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
                     schedule[directive.attrib["time"]] = float(
@@ -1135,28 +1135,30 @@ class SmileHelper:
 
         return available, selected, schedule_temperature, last_used
 
-    def _last_used_schedule(self, loc_id, rule_ids):
+    def _last_used_schedule(self, loc_id, rule_ids) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
         """
         # First, find last_used == selected
-        last_used = self._last_active.get(loc_id)
+        last_used: str | None = self._last_active.get(loc_id)
         if last_used is not None:
             return last_used
 
         # Alternatively, find last_used by finding the most recent modified_date
-        epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        schemas = {}
+        epoch: dt.datetime = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
+        schemas: dict[str] | None = {}
 
         if not rule_ids:
             return  # pragma: no cover
 
         for rule_id, dummy in rule_ids.items():
-            schema_name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            schema_date = self._domain_objects.find(
+            schema_name: str = self._domain_objects.find(
+                f'rule[@id="{rule_id}"]/name'
+            ).text
+            schema_date: str = self._domain_objects.find(
                 f'rule[@id="{rule_id}"]/modified_date'
             ).text
-            schema_time = parse(schema_date)
+            schema_time: dt.datetime = parse(schema_date)
             schemas[schema_name] = (schema_time - epoch).total_seconds()
 
         if schemas:
@@ -1164,12 +1166,13 @@ class SmileHelper:
 
         return last_used
 
-    def _object_value(self, obj_id, measurement):
+    def _object_value(self, obj_id, measurement) -> float | int | None:
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
         Obtain the value/state for the given object.
         """
-        search = self._domain_objects
-        locator = (
+        val: float | int | None = None
+        search: etree = self._domain_objects
+        locator: str = (
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
@@ -1177,28 +1180,28 @@ class SmileHelper:
             val = format_measure(search.find(locator).text, None)
             return val
 
-        return None
+        return val
 
-    def _get_lock_state(self, xml):
+    def _get_lock_state(self, xml) -> dict[str, Any]:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
-        data = {}
-        actuator = "actuator_functionalities"
-        func_type = "relay_functionality"
+        data: dict[str, Any] = {}
+        actuator: str = "actuator_functionalities"
+        func_type: str = "relay_functionality"
         if self.smile_type == "stretch" and self.smile_version[1].major == 2:
             actuator = "actuators"
             func_type = "relay"
-        appl_class = xml.find("type").text
+        appl_class: str = xml.find("type").text
         if appl_class not in ["central_heating_pump", "valve_actuator"]:
-            locator = f".//{actuator}/{func_type}/lock"
+            locator: str = f".//{actuator}/{func_type}/lock"
             if xml.find(locator) is not None:
-                measure = xml.find(locator).text
+                measure: str = xml.find(locator).text
                 data["lock"] = format_measure(measure, None)
 
         return data
 
-    def _create_dicts_from_data(self, data, bs_dict, s_dict, sw_dict):
+    def _create_dicts_from_data(self, data, bs_dict, s_dict, sw_dict) -> None:
         """Helper-function for smile.py: _all_device_data().
         Create dicts of binary_sensors, sensors, switches from the relevant data.
         """
