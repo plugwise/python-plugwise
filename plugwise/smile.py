@@ -607,8 +607,6 @@ class Smile(SmileComm, SmileData):
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
                 return False
-            await self._request(uri, method="put", data=data)
-            return True
 
         await self._request(uri, method="put", data=data)
         return True
