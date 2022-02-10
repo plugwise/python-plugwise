@@ -349,7 +349,7 @@ class SmileHelper:
 
     def _all_locations(self) -> None:
         """Collect all locations."""
-        loc = Munch()
+        loc: Munch = Munch()
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         if len(self._locations) == 0 and self._smile_legacy:
@@ -406,7 +406,7 @@ class SmileHelper:
                 return [v_name, v_model, hw_version, fw_version]
         return [None, None, None, None]
 
-    def _energy_device_info_finder(self, appliance, appl):
+    def _energy_device_info_finder(self, appliance, appl) -> Munch:
         """Helper-function for _appliance_info_finder().
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
@@ -432,7 +432,7 @@ class SmileHelper:
             appl.fw = module_data[3]
             return appl
 
-    def _appliance_info_finder(self, appliance, appl):
+    def _appliance_info_finder(self, appliance, appl) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
@@ -505,7 +505,7 @@ class SmileHelper:
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
 
-    def _appliance_types_finder(self, appliance, appl):
+    def _appliance_types_finder(self, appliance, appl) -> Munch:
         """Helper-function for _all_appliances() - determine type(s) per appliance."""
         # Appliance with location (i.e. a device)
         if appliance.find("location") is not None:
@@ -577,7 +577,7 @@ class SmileHelper:
         self._on_off_device = ch_state is not None and ot_fault_code is None
 
         for appliance in self._appliances.findall("./appliance"):
-            appl = Munch()
+            appl: Munch = Munch()
             appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
             if appl.pwclass == "open_therm_gateway":
@@ -1000,7 +1000,7 @@ class SmileHelper:
         Collect the power-data based on Location ID.
         """
         direct_data = {}
-        loc = Munch()
+        loc: Munch = Munch()
 
         if self.smile_type != "power":
             return
