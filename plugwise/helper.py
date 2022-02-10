@@ -1131,7 +1131,7 @@ class SmileHelper:
                     self._last_active[location] = selected
                 schedules[name] = schedule
             else:
-                _LOGGER.error(
+                _LOGGER.debug(
                     "Schedule %s has no preset switching moments, ignoring.", name
                 )
 
