@@ -80,7 +80,7 @@ class SmileData(SmileHelper):
 
     def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
-        self._devices: dict[str, Any] = {}
+        self._devices: dict[str, dict[str, Any]] = {}
         self._scan_thermostats()
         self.single_master_thermostat()
 
@@ -420,7 +420,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> tuple[dict, dict]:
+    async def async_update(self) -> dict[str, Any]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -465,7 +465,7 @@ class Smile(SmileComm, SmileData):
 
     async def _set_schedule_state_legacy(self, name: str, status: str) -> bool:
         """Helper-function for set_schedule_state()."""
-        schema_rule_id: str = None
+        schema_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
                 schema_rule_id = rule.attrib["id"]
@@ -525,6 +525,18 @@ class Smile(SmileComm, SmileData):
 
         return True
 
+    async def _set_preset_legacy(self, preset) -> bool:
+        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
+        locator: str = f'rule/directives/when/then[@icon="{preset}"].../.../...'
+        if (rule := self._domain_objects.find(locator)) is None:
+            return False
+
+        uri: str = f"{RULES}"
+        data: str = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
+
+        await self._request(uri, method="put", data=data)
+        return True
+
     async def set_preset(self, loc_id: str, preset: str) -> bool:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if self._smile_legacy:
@@ -558,9 +570,7 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def _set_groupswitch_member_state(
-        self, members: dict[str], state: str, switch: str
-    ) -> bool:
+    async def _set_groupswitch_member_state(self, members, state, switch) -> bool:
         """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
         """
@@ -579,7 +589,7 @@ class Smile(SmileComm, SmileData):
         return True
 
     async def set_switch_state(
-        self, appl_id: str, members: dict[str] | None, model: str, state: str
+        self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
         switch = Munch()
@@ -619,18 +629,6 @@ class Smile(SmileComm, SmileData):
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
                 return False
-
-        await self._request(uri, method="put", data=data)
-        return True
-
-    async def _set_preset_legacy(self, preset: str) -> bool:
-        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        locator: str = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        if (rule := self._domain_objects.find(locator)) is None:
-            return False
-
-        uri: str = f"{RULES}"
-        data: str = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
         await self._request(uri, method="put", data=data)
         return True
