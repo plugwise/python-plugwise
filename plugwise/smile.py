@@ -300,7 +300,7 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result, dsmrmain) -> None:
+    async def _smile_detect_legacy(self, result, dsmrmain) -> (str, str):
         """Helper-function for _smile_detect()."""
         network: etree = result.find(".//module/protocols/master_controller")
 
