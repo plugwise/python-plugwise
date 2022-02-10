@@ -171,20 +171,16 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = last_active
 
-        # Operation mode: auto, heat, cool, off
+        # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
         schedule_status = False
         if sel_schema != "None":
             schedule_status = True
         if not schedule_status:
-            # Mimic HomeKit behavior
-            if self._preset(loc_id) == "away":
-                device_data["mode"] = "off"  # pragma: no cover
-            else:
-                device_data["mode"] = "heat"
-                if self._heater_id is not None:
-                    if self.cooling_active:
-                        device_data["mode"] = "cool"
+            device_data["mode"] = "heat"
+            if self._heater_id is not None:
+                if self.cooling_active:
+                    device_data["mode"] = "cool"
 
         # Control_state
         if ctrl_state := self._control_state(loc_id):
