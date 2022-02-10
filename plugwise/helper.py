@@ -327,7 +327,7 @@ class SmileHelper:
                 "members": appliances,
             }
 
-    def _locations_specials(self, loc, location):
+    def _locations_specials(self, loc, location) -> Munch:
         """Helper-function for _all_locations().
         Correct location info in special cases.
         """
@@ -616,11 +616,11 @@ class SmileHelper:
             ):
                 self._appl_data.pop(appl.dev_id)
 
-    def _match_locations(self):
+    def _match_locations(self) -> dict[str, Any]:
         """Helper-function for _scan_thermostats().
         Update locations with present appliance-types.
         """
-        matched_locations = {}
+        matched_locations: dict[str, Any] = {}
 
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
@@ -630,13 +630,13 @@ class SmileHelper:
 
         return matched_locations
 
-    def _control_state(self, loc_id):
+    def _control_state(self, loc_id) -> str | None:
         """Helper-function for _device_data_climate().
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local master thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
-        locator = f'location[@id="{loc_id}"]'
+        locator: str = f'location[@id="{loc_id}"]'
         if (location := self._domain_objects.find(locator)) is not None:
             locator = (
                 ".//actuator_functionalities/thermostat_functionality/control_state"
@@ -646,9 +646,9 @@ class SmileHelper:
 
         return
 
-    def _presets_legacy(self):
+    def _presets_legacy(self) -> dict[str, Any]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
-        preset_dictionary = {}
+        preset_dictionary: dict[str, Any] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
             if directive is not None and "icon" in directive.keys():
                 # Ensure list of heating_setpoint, cooling_setpoint
@@ -659,11 +659,11 @@ class SmileHelper:
 
         return preset_dictionary
 
-    def _presets(self, loc_id):
+    def _presets(self, loc_id) -> dict[str, Any]:
         """Collect Presets for a Thermostat based on location_id."""
-        presets = {}
-        tag_1 = "zone_setpoint_and_state_based_on_preset"
-        tag_2 = "Thermostat presets"
+        presets: dict[str, Any] = {}
+        tag_1: str = "zone_setpoint_and_state_based_on_preset"
+        tag_2: str = "Thermostat presets"
 
         if self._smile_legacy:
             return self._presets_legacy()
@@ -673,10 +673,12 @@ class SmileHelper:
                 return presets  # pragma: no cover
 
         for rule_id in rule_ids:
-            directives = self._domain_objects.find(f'rule[@id="{rule_id}"]/directives')
+            directives: etree = self._domain_objects.find(
+                f'rule[@id="{rule_id}"]/directives'
+            )
 
             for directive in directives:
-                preset = directive.find("then").attrib
+                preset: str = directive.find("then").attrib
                 keys, dummy = zip(*preset.items())
                 if str(keys[0]) == "setpoint":
                     presets[directive.attrib["preset"]] = [float(preset["setpoint"]), 0]
@@ -688,12 +690,12 @@ class SmileHelper:
 
         return presets
 
-    def _rule_ids_by_name(self, name, loc_id):
+    def _rule_ids_by_name(self, name, loc_id) -> dict[str]:
         """Helper-function for _presets().
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
-        schema_ids = {}
-        locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
+        schema_ids: dict[str] = {}
+        locator: str = f'.//contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
@@ -702,13 +704,13 @@ class SmileHelper:
 
         return schema_ids
 
-    def _rule_ids_by_tag(self, tag, loc_id):
+    def _rule_ids_by_tag(self, tag, loc_id) -> dict[str]:
         """Helper-function for _presets(), _schemas() and _last_active_schema().
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
-        schema_ids = {}
-        locator1 = f'.//template[@tag="{tag}"]'
-        locator2 = f'.//contexts/context/zone/location[@id="{loc_id}"]'
+        schema_ids: dict[str] = {}
+        locator1: str = f'.//template[@tag="{tag}"]'
+        locator2: str = f'.//contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(".//rule"):
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
