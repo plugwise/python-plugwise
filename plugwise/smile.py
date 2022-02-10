@@ -1,7 +1,9 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise backend module for Home Assistant Core.
 """
-from typing import Any, Optional, Tuple
+from __future__ import annotations
+
+from typing import Any
 
 import aiohttp
 from defusedxml import ElementTree as etree
@@ -266,14 +268,14 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self._notifications: dict[str, str] = {}
-        self.smile_hostname: Optional[str] = None
+        self.smile_hostname: str | None = None
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
         names: list[str] = []
 
         result: etree = await self._request(DOMAIN_OBJECTS)
-        dsmrmain: etree = result.find(".//module/protocols/dsmrmain")
+        dsmrmain: etree | None = result.find(".//module/protocols/dsmrmain")
 
         vendor_names: list[etree] = result.findall(".//module/vendor_name")
         if not vendor_names:
@@ -302,14 +304,14 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result, dsmrmain) -> Tuple[str, str]:
+    async def _smile_detect_legacy(self, result, dsmrmain) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
-        network: etree = result.find(".//module/protocols/master_controller")
+        network: etree | None = result.find(".//module/protocols/master_controller")
 
         # Assume legacy
         self._smile_legacy = True
         # Try if it is an Anna, assuming appliance thermostat
-        anna: etree = result.find('.//appliance[type="thermostat"]')
+        anna: etree | None = result.find('.//appliance[type="thermostat"]')
         # Fake insert version assuming Anna
         # couldn't find another way to identify as legacy Anna
         version: str = "1.8.0"
@@ -424,7 +426,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> Tuple[dict, dict]:
+    async def async_update(self) -> tuple[dict, dict]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
