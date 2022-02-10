@@ -37,7 +37,7 @@ from .helper import SmileComm, SmileHelper, pw_notification_updater, update_help
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def _append_special(self, data, d_id, bs_dict, s_dict):
+    def _append_special(self, d_id, bs_dict, s_dict) -> None:
         """Helper-function for smile.py: _all_device_data().
         When conditions are met, the plugwise_notification binary_sensor is appended.
         """
@@ -45,19 +45,19 @@ class SmileData(SmileHelper):
             if self._is_thermostat:
                 bs_dict.update(PW_NOTIFICATION)
 
-    def _all_device_data(self):
+    def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for dev_id, dev_dict in self._devices.items():
-            dev_and_data = dev_dict
-            temp_bs_dict = {}
-            temp_s_dict = {}
-            temp_sw_dict = {}
-            data = self._get_device_data(dev_id)
+            dev_and_data: dict[str, Any] = dev_dict
+            temp_bs_dict: dict[str, bool] = {}
+            temp_s_dict: dict[str, Any] = {}
+            temp_sw_dict: dict[str, str] = {}
+            data: dict[str, Any] = self._get_device_data(dev_id)
 
             self._create_dicts_from_data(data, temp_bs_dict, temp_s_dict, temp_sw_dict)
-            self._append_special(data, dev_id, temp_bs_dict, temp_s_dict)
+            self._append_special(dev_id, temp_bs_dict, temp_s_dict)
 
             dev_and_data.update(data)
             if temp_bs_dict:
@@ -78,14 +78,14 @@ class SmileData(SmileHelper):
         )
         self.gw_data["smile_name"] = self.smile_name
 
-    def get_all_devices(self):
+    def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
-        self._devices = {}
+        self._devices: dict[str, Any] = {}
         self._scan_thermostats()
         self.single_master_thermostat()
 
         for appliance, details in self._appl_data.items():
-            loc_id = details["location"]
+            loc_id: str = details["location"]
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if loc_id is None and details["class"] not in THERMOSTAT_CLASSES:
                 details["location"] = self._home_location
@@ -106,14 +106,14 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-    def _device_data_switching_group(self, details, device_data):
+    def _device_data_switching_group(self, details, device_data) -> dict[str, Any]:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
         if details["class"] in SWITCH_GROUP_TYPES:
-            counter = 0
+            counter: int = 0
             for member in details["members"]:
-                appl_data = self._get_appliance_data(member)
+                appl_data: dict[str, Any] = self._get_appliance_data(member)
                 if appl_data["relay"]:
                     counter += 1
 
@@ -123,7 +123,7 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_adam(self, details, device_data):
+    def _device_data_adam(self, details, device_data) -> dict[str, Any]:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
@@ -137,16 +137,16 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_climate(self, details, device_data):
+    def _device_data_climate(self, details, device_data) -> dict[str, Any]:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
-        loc_id = details["location"]
+        loc_id: str = details["location"]
 
         # Presets
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
-        presets = self._presets(loc_id)
+        presets: dict[str, Any] = self._presets(loc_id)
         if presets:
             device_data["presets"] = presets
             device_data["preset_modes"] = list(presets)
@@ -165,7 +165,7 @@ class SmileData(SmileHelper):
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
-        schedule_status = False
+        schedule_status: bool = False
         if sel_schema != "None":
             schedule_status = True
         if not schedule_status:
@@ -180,27 +180,29 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _get_device_data(self, dev_id):
+    def _get_device_data(self, dev_id) -> dict[str, Any]:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        devices = self._devices
-        details = devices.get(dev_id)
-        device_data = self._get_appliance_data(dev_id)
+        devices: dict[str, Any] = self._devices
+        details: dict[str, Any] = devices.get(dev_id)
+        device_data: dict[str, Any] = self._get_appliance_data(dev_id)
 
         # Generic
         if details["class"] == "gateway" or dev_id == self.gateway_id:
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
             # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             if self.smile_type == "thermostat":
-                outdoor_temperature = self._object_value(
+                outdoor_temperature: str = self._object_value(
                     self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
             # Get P1 data from LOCATIONS
-            power_data = self._power_data_from_location(details["location"])
+            power_data: dict[str, Any] = self._power_data_from_location(
+                details["location"]
+            )
             if power_data is not None:
                 device_data.update(power_data)
 
@@ -222,11 +224,11 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def single_master_thermostat(self):
+    def single_master_thermostat(self) -> None:
         """Determine if there is a single master thermostat in the setup."""
         if self.smile_type == "thermostat":
             self._is_thermostat = True
-            count = 0
+            count: int = 0
             for dummy, data in self._thermo_locs.items():
                 if "master_prio" in data:
                     if data.get("master_prio") > 0:
@@ -465,9 +467,9 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name, status):
+    async def _set_schedule_state_legacy(self, name: str, status: str) -> bool:
         """Helper-function for set_schedule_state()."""
-        schema_rule_id = None
+        schema_rule_id: str = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
                 schema_rule_id = rule.attrib["id"]
@@ -475,16 +477,16 @@ class Smile(SmileComm, SmileData):
         if schema_rule_id is None:
             return False
 
-        template_id = None
-        state = "false"
-        if str(status) == "on":
+        template_id: str = None
+        state: str = "false"
+        if status == "on":
             state = "true"
-        locator = f'.//*[@id="{schema_rule_id}"]/template'
+        locator: etree = f'.//*[@id="{schema_rule_id}"]/template'
         for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
 
-        uri = f"{RULES};id={schema_rule_id}"
-        data = (
+        uri: str = f"{RULES};id={schema_rule_id}"
+        data: str = (
             "<rules><rule"
             f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
             f' id="{template_id}" /><active>{state}</active></rule></rules>'
@@ -493,32 +495,32 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def set_schedule_state(self, loc_id, name, state):
+    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> bool:
         """Set the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         """
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
-        schema_rule = self._rule_ids_by_name(str(name), loc_id)
+        schema_rule = self._rule_ids_by_name(name, loc_id)
         if not schema_rule or schema_rule is None:
             return False
 
-        schema_rule_id = next(iter(schema_rule))
-        info = ""
+        schema_rule_id: str = next(iter(schema_rule))
+        info: str = ""
         if state == "on":
             info = f'<context><zone><location id="{loc_id}" /></zone></context>'
 
-        template = (
+        template: str = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
         if self.smile_name != "Adam":
-            locator = f'.//*[@id="{schema_rule_id}"]/template'
+            locator: str = f'.//*[@id="{schema_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
-            template = f'<template id="{template_id}" />'
+            template: str = f'<template id="{template_id}" />'
 
-        uri = f"{RULES};id={schema_rule_id}"
-        data = (
+        uri: str = f"{RULES};id={schema_rule_id}"
+        data: str = (
             f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name>'
             f"{template}<contexts>{info}</contexts></rule></rules>"
         )
@@ -527,20 +529,20 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def set_preset(self, loc_id, preset):
+    async def set_preset(self, loc_id: str, preset: str) -> bool:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if self._smile_legacy:
             return await self._set_preset_legacy(preset)
 
-        current_location = self._locations.find(f'location[@id="{loc_id}"]')
-        location_name = current_location.find("name").text
-        location_type = current_location.find("type").text
+        current_location: etree = self._locations.find(f'location[@id="{loc_id}"]')
+        location_name: str = current_location.find("name").text
+        location_type: str = current_location.find("type").text
 
         if preset not in self._presets(loc_id):
             return False
 
-        uri = f"{LOCATIONS};id={loc_id}"
-        data = (
+        uri: str = f"{LOCATIONS};id={loc_id}"
+        data: str = (
             "<locations><location"
             f' id="{loc_id}"><name>{location_name}</name><type>{location_type}'
             f"</type><preset>{preset}</preset></location></locations>"
@@ -549,11 +551,10 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def set_temperature(self, loc_id, temperature):
+    async def set_temperature(self, loc_id: str, temperature: str) -> bool:
         """Set the given Temperature on the relevant Thermostat."""
-        temperature = str(temperature)
-        uri = self._temperature_uri(loc_id)
-        data = (
+        uri: str = self._temperature_uri(loc_id)
+        data: str = (
             "<thermostat_functionality><setpoint>"
             f"{temperature}</setpoint></thermostat_functionality>"
         )
@@ -561,24 +562,29 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def _set_groupswitch_member_state(self, members, state, switch):
+    async def _set_groupswitch_member_state(
+        self, members: dict[str], state: str, switch: str
+    ) -> bool:
         """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
         """
         for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._appliances.find(locator).attrib["id"]
-            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
+            locator: str = (
+                f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
+            )
+            switch_id: str = self._appliances.find(locator).attrib["id"]
+            uri: str = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
             if self._stretch_v2:
                 uri = f"{APPLIANCES};id={member}/{switch.device}"
-            state = str(state)
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
+            data: str = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
             await self._request(uri, method="put", data=data)
 
         return True
 
-    async def set_switch_state(self, appl_id, members, model, state):
+    async def set_switch_state(
+        self, appl_id: str, members: dict[str], model: str, state: str
+    ) -> bool:
         """Set the given State of the relevant Switch."""
         switch = Munch()
         switch.actuator = "actuator_functionalities"
@@ -600,18 +606,20 @@ class Smile(SmileComm, SmileData):
         if members is not None:
             return await self._set_groupswitch_member_state(members, state, switch)
 
-        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        switch_id = self._appliances.find(locator).attrib["id"]
-        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
+        locator: str = (
+            f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
+        )
+        switch_id: str = self._appliances.find(locator).attrib["id"]
+        uri: str = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self._stretch_v2:
             uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
-        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
+        data: str = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
         if model == "relay":
             locator = (
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
-            lock_state = self._appliances.find(locator).text
+            lock_state: str = self._appliances.find(locator).text
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
                 return False
@@ -619,21 +627,21 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def _set_preset_legacy(self, preset):
+    async def _set_preset_legacy(self, preset: str) -> bool:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
+        locator: str = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         if (rule := self._domain_objects.find(locator)) is None:
             return False
 
-        uri = f"{RULES}"
-        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
+        uri: str = f"{RULES}"
+        data: str = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
         await self._request(uri, method="put", data=data)
         return True
 
-    async def delete_notification(self):
+    async def delete_notification(self) -> bool:
         """Delete the active Plugwise Notification."""
-        uri = f"{NOTIFICATIONS}"
+        uri: str = f"{NOTIFICATIONS}"
 
         await self._request(uri, method="delete")
         return True
