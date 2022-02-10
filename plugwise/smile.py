@@ -271,7 +271,7 @@ class Smile(SmileComm, SmileData):
         names: list[str] = []
 
         result: etree = await self._request(DOMAIN_OBJECTS)
-        dsmrmain: etree | None = result.find(".//module/protocols/dsmrmain")
+        dsmrmain: etree = result.find(".//module/protocols/dsmrmain")
 
         vendor_names: list[etree] = result.findall(".//module/vendor_name")
         if not vendor_names:
@@ -286,7 +286,8 @@ class Smile(SmileComm, SmileData):
             if dsmrmain is None:  # pragma: no cover
                 LOGGER.error(
                     "Connected but expected text not returned, \
-                              we got %s",
+                    we got %s. Please create an issue on \
+                    http://github.com/plugwise/python-plugwise",
                     result,
                 )
                 raise ConnectionFailedError
@@ -326,7 +327,7 @@ class Smile(SmileComm, SmileData):
             # Stretch:
             elif network is not None:
                 try:
-                    system = await self._request(SYSTEM)
+                    system: etree = await self._request(SYSTEM)
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
@@ -335,18 +336,21 @@ class Smile(SmileComm, SmileData):
                     raise ConnectionFailedError
             else:  # pragma: no cover
                 # No cornercase, just end of the line
-                LOGGER.error("Connected but no gateway device information found")
+                LOGGER.error(
+                    "Connected but no gateway device information found, please create \
+                     an issue on http://github.com/plugwise/python-plugwise"
+                )
                 raise ConnectionFailedError
         return model, version
 
-    async def _smile_detect(self, result, dsmrmain):
+    async def _smile_detect(self, result, dsmrmain) -> None:
         """Helper-function for connect().
         Detect which type of Smile is connected.
         """
-        model = None
+        model: str = None
         if (gateway := result.find(".//gateway")) is not None:
             model = result.find(".//gateway/vendor_model").text
-            version = result.find(".//gateway/firmware_version").text
+            version: str = result.find(".//gateway/firmware_version").text
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
         else:
@@ -354,17 +358,20 @@ class Smile(SmileComm, SmileData):
 
         if model is None or version is None:  # pragma: no cover
             # Corner case check
-            LOGGER.error("Unable to find model or version information")
+            LOGGER.error(
+                "Unable to find model or version information, please create \
+                 an issue on http://github.com/plugwise/python-plugwise"
+            )
             raise UnsupportedDeviceError
 
-        ver = semver.VersionInfo.parse(version)
-        target_smile = f"{model}_v{ver.major}"
+        ver: semver = semver.VersionInfo.parse(version)
+        target_smile: str = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
             LOGGER.error(
                 'Your version Smile identified as "%s" seems\
                  unsupported by our plugin, please create an issue\
-                 on http://github.com/plugwise/python-plugwise!',
+                 on http://github.com/plugwise/python-plugwise',
                 target_smile,
             )
             raise UnsupportedDeviceError
