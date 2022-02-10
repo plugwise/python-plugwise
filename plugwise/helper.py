@@ -720,15 +720,17 @@ class SmileHelper:
 
         return schema_ids
 
-    def _appliance_measurements(self, appliance, data, measurements):
+    def _appliance_measurements(self, appliance, data, measurements) -> dict[str, Any]:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements:
-            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
+            p_locator: str = (
+                f'.//logs/point_log[type="{measurement}"]/period/measurement'
+            )
             if appliance.find(p_locator) is not None:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
                     continue
 
-                measure = appliance.find(p_locator).text
+                measure: str = appliance.find(p_locator).text
                 # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
                 # this measurement appears at power-on and is never updated, therefore remove.
                 if (
@@ -750,9 +752,11 @@ class SmileHelper:
                 if measurement == "outdoor_temperature":
                     self._outdoor_temp = data[measurement]
 
-            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
+            i_locator: str = (
+                f'.//logs/interval_log[type="{measurement}"]/period/measurement'
+            )
             if appliance.find(i_locator) is not None:
-                name = f"{measurement}_interval"
+                name: str = f"{measurement}_interval"
                 measure = appliance.find(i_locator).text
                 data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
@@ -763,13 +767,13 @@ class SmileHelper:
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data = {}
+        data: dict[str, Any] = {}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
-        measurements = DEVICE_MEASUREMENTS.items()
+        appliance: etree | None = self._appliances.find(f'.//appliance[@id="{d_id}"]')
+        measurements: dict[str, Any] = DEVICE_MEASUREMENTS.items()
         if self._opentherm_device or self._on_off_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
@@ -810,10 +814,10 @@ class SmileHelper:
 
     def _rank_thermostat(
         self, thermo_matching, loc_id, appliance_id, appliance_details
-    ):
+    ) -> str:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
-        appl_class = appliance_details["class"]
+        appl_class: str = appliance_details["class"]
 
         if (
             loc_id == appliance_details["location"]
@@ -838,20 +842,20 @@ class SmileHelper:
 
         return appl_class
 
-    def _scan_thermostats(self, debug_text="missing text"):
+    def _scan_thermostats(self, debug_text="missing text") -> None:
         """Helper-function for smile.py: get_all_devices() and single_master_thermostat().
         Update locations with thermostat ranking results.
         """
         self._thermo_locs = self._match_locations()
 
-        thermo_matching = {
+        thermo_matching: dict[str, int] = {
             "thermostat": 3,
             "zone_thermometer": 2,
             "zone_thermostat": 2,
             "thermostatic_radiator_valve": 1,
         }
 
-        high_prio = 0
+        high_prio: int = 0
         for loc_id, location_details in self._thermo_locs.items():
             self._thermo_locs[loc_id] = location_details
 
@@ -875,55 +879,55 @@ class SmileHelper:
                     if thermo_matching[appl_class] > high_prio:
                         high_prio = thermo_matching[appl_class]
 
-    def _temperature_uri_legacy(self):
+    def _temperature_uri_legacy(self) -> str:
         """Helper-function for _temperature_uri().
         Determine the location-set_temperature uri - from APPLIANCES.
         """
-        locator = ".//appliance[type='thermostat']"
-        appliance_id = self._appliances.find(locator).attrib["id"]
+        locator: str = ".//appliance[type='thermostat']"
+        appliance_id: str = self._appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
 
-    def _temperature_uri(self, loc_id):
+    def _temperature_uri(self, loc_id) -> str:
         """Helper-function for smile.py: set_temperature().
         Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
             return self._temperature_uri_legacy()
 
-        locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
-        thermostat_functionality_id = self._locations.find(locator).attrib["id"]
+        locator: str = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
+        thermostat_functionality_id: str = self._locations.find(locator).attrib["id"]
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self):
+    def _group_switches(self) -> dict[str]:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
-        switch_groups = {}
+        switch_groups: dict[str] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
-        search = self._domain_objects
+        search: etree = self._domain_objects
 
-        appliances = search.findall("./appliance")
-        groups = search.findall("./group")
+        appliances: etree = search.findall("./appliance")
+        groups: etree = search.findall("./group")
 
         for group in groups:
-            group_appl = {}
-            members = []
-            group_id = group.attrib["id"]
-            group_name = group.find("name").text
-            group_type = group.find("type").text
+            group_appl: dict[str] = {}
+            members: list[str] = []
+            group_id: str = group.attrib["id"]
+            group_name: str = group.find("name").text
+            group_type: str = group.find("type").text
             if self.smile_type == "stretch":
-                group_appliance = group.findall("appliances/appliance")
+                group_appliance: etree | None = group.findall("appliances/appliance")
                 for dummy in group_appliance:
                     members.append(dummy.attrib["id"])
             else:
                 for appliance in appliances:
                     if appliance.find("./groups/group") is not None:
-                        appl_id = appliance.attrib["id"]
-                        apl_gr_id = appliance.find("./groups/group").attrib["id"]
+                        appl_id: str = appliance.attrib["id"]
+                        apl_gr_id: str = appliance.find("./groups/group").attrib["id"]
                         if apl_gr_id == group_id:
                             members.append(appl_id)
 
@@ -943,27 +947,27 @@ class SmileHelper:
 
         return switch_groups
 
-    def _heating_valves(self):
+    def _heating_valves(self) -> int | None:
         """Helper-function for smile.py: _device_data_adam().
         Collect amount of open valves indicating active direct heating.
         For cases where the heat is provided from an external shared source (city heating).
         """
-        loc_found = 0
-        open_valve_count = 0
+        loc_found: int = 0
+        open_valve_count: int = 0
         for appliance in self._appliances.findall(".//appliance"):
-            locator = './/logs/point_log[type="valve_position"]/period/measurement'
+            locator: str = './/logs/point_log[type="valve_position"]/period/measurement'
             if appliance.find(locator) is not None:
                 loc_found += 1
-                measure = appliance.find(locator).text
+                measure: str = appliance.find(locator).text
                 if float(measure) > 0.0:
                     open_valve_count += 1
 
         return None if loc_found == 0 else open_valve_count
 
-    def _power_data_peak_value(self, loc):
+    def _power_data_peak_value(self, loc) -> Munch:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
-        no_tariffs = False
+        no_tariffs: bool = False
 
         # Only once try to find P1 Legacy values
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
@@ -984,7 +988,7 @@ class SmileHelper:
 
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
-        log_found = loc.log_type.split("_")[0]
+        log_found: str = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
         # P1 with fw 2.x does not have tariff indicators for point_log values
         if no_tariffs:
@@ -992,7 +996,7 @@ class SmileHelper:
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
-        val = loc.logs.find(loc.locator).text
+        val: str = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
@@ -1001,16 +1005,16 @@ class SmileHelper:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID.
         """
-        direct_data = {}
+        direct_data: dict[str, any] = {}
         loc: Munch = Munch()
 
         if self.smile_type != "power":
             return
 
-        search = self._locations
-        log_list = ["point_log", "cumulative_log", "interval_log"]
-        peak_list = ["nl_peak", "nl_offpeak"]
-        t_string = "tariff"
+        search: etree = self._locations
+        log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
+        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
+        t_string: str = "tariff"
         if self._smile_legacy:
             t_string = "tariff_indicator"
 
@@ -1034,20 +1038,20 @@ class SmileHelper:
 
         return direct_data
 
-    def _preset(self, loc_id):
+    def _preset(self, loc_id) -> str | None:
         """Helper-function for smile.py: device_data_climate().
         Collect the active preset based on Location ID.
         """
         if self._smile_legacy:
-            active_rule = self._domain_objects.find(
+            active_rule: etree | None = self._domain_objects.find(
                 "rule[active='true']/directives/when/then"
             )
             if active_rule is None or "icon" not in active_rule.keys():
                 return
             return active_rule.attrib["icon"]
 
-        locator = f'.//location[@id="{loc_id}"]/preset'
-        preset = self._domain_objects.find(locator)
+        locator: str = f'.//location[@id="{loc_id}"]/preset'
+        preset: etree | None = self._domain_objects.find(locator)
         if preset is not None:
             return preset.text
 
