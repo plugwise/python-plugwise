@@ -55,8 +55,8 @@ class SmileData(SmileHelper):
             temp_bs_dict: dict[str, bool] = {}
             temp_s_dict: dict[str, Any] = {}
             temp_sw_dict: dict[str, bool] = {}
-
             data: dict[str, Any] = self._get_device_data(device_id)
+
             self._create_dicts_from_data(data, temp_bs_dict, temp_s_dict, temp_sw_dict)
             self._append_special(device_id, temp_bs_dict, temp_s_dict)
             device.update(data)
@@ -85,7 +85,7 @@ class SmileData(SmileHelper):
         self.single_master_thermostat()
 
         for appliance, details in self._appl_data.items():
-            loc_id: str = details["location"]
+            loc_id: str | None = details["location"]
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if loc_id is None and details["class"] not in THERMOSTAT_CLASSES:
                 details["location"] = self._home_location
@@ -106,15 +106,15 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-    def _device_data_switching_group(self, details, device_data) -> dict[str, Any]:
+    def _device_data_switching_group(self, details, device_data) -> dict[str, bool]:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
         if details["class"] in SWITCH_GROUP_TYPES:
             counter: int = 0
             for member in details["members"]:
-                appl_data: dict[str, Any] = self._get_appliance_data(member)
-                if appl_data["relay"]:
+                member_data: dict[str, Any] = self._get_appliance_data(member)
+                if member_data["relay"]:
                     counter += 1
 
             device_data["relay"] = True
@@ -123,7 +123,7 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_adam(self, details, device_data) -> dict[str, Any]:
+    def _device_data_adam(self, details, device_data) -> dict[str, bool]:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
@@ -156,12 +156,11 @@ class SmileData(SmileHelper):
         avail_schemas, sel_schema, sched_setpoint, last_active = self._schemas(loc_id)
         device_data["available_schedules"] = avail_schemas
         device_data["selected_schedule"] = sel_schema
-        if not self._smile_legacy:
-            device_data["schedule_temperature"] = sched_setpoint
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
             device_data["last_used"] = last_active
+            device_data["schedule_temperature"] = sched_setpoint
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
@@ -184,8 +183,7 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        devices: dict[str, Any] = self._devices
-        details: dict[str, Any] = devices.get(dev_id)
+        details: dict[str, Any] = self._devices.get(dev_id)
         device_data: dict[str, Any] = self._get_appliance_data(dev_id)
 
         # Generic
@@ -193,14 +191,14 @@ class SmileData(SmileHelper):
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
             # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             if self.smile_type == "thermostat":
-                outdoor_temperature: str = self._object_value(
+                outdoor_temperature: str | None = self._object_value(
                     self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
             # Get P1 data from LOCATIONS
-            power_data: dict[str, Any] = self._power_data_from_location(
+            power_data: dict[str, Any] | None = self._power_data_from_location(
                 details["location"]
             )
             if power_data is not None:
@@ -583,7 +581,7 @@ class Smile(SmileComm, SmileData):
         return True
 
     async def set_switch_state(
-        self, appl_id: str, members: dict[str], model: str, state: str
+        self, appl_id: str, members: dict[str] | None, model: str, state: str
     ) -> bool:
         """Set the given State of the relevant Switch."""
         switch = Munch()
