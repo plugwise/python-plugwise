@@ -16,7 +16,6 @@ from .constants import (
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
-    DEVICE_STATE,
     DOMAIN_OBJECTS,
     LOCATIONS,
     MODULES,
@@ -30,13 +29,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
 )
 from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
-from .helper import (
-    SmileComm,
-    SmileHelper,
-    device_state_updater,
-    pw_notification_updater,
-    update_helper,
-)
+from .helper import SmileComm, SmileHelper, pw_notification_updater, update_helper
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -46,14 +39,11 @@ class SmileData(SmileHelper):
 
     def _append_special(self, data, d_id, bs_dict, s_dict):
         """Helper-function for smile.py: _all_device_data().
-        When conditions are met, the plugwise_notification binary_sensor
-        and/or the device_state sensor are appended.
+        When conditions are met, the plugwise_notification binary_sensor is appended.
         """
         if d_id == self.gateway_id:
             if self._sm_thermostat is not None:
                 bs_dict.update(PW_NOTIFICATION)
-        if d_id == self._heater_id and self._sm_thermostat is not None:
-            s_dict.update(DEVICE_STATE)
 
     def _all_device_data(self):
         """Helper-function for get_all_devices().
@@ -455,7 +445,6 @@ class Smile(SmileComm, SmileData):
                     update_helper(
                         data, self.gw_devices, dev_dict, dev_id, "sensors", key
                     )
-                device_state_updater(data, self.gw_devices, dev_id, dev_dict)
             if "switches" in dev_dict:
                 for key, value in list(data.items()):
                     update_helper(

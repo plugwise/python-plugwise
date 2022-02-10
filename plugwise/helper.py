@@ -59,43 +59,6 @@ DAYS = {
 }
 
 
-def device_state_updater(data, devs, d_id, d_dict):
-    """Helper-function for async_update().
-    Update the Device_State sensor state.
-    """
-    for item in d_dict["sensors"]:
-        if item == "device_state":
-            result = update_device_state(data, d_dict)
-            devs[d_id]["sensors"][item] = result
-
-
-def update_device_state(data, d_dict):
-    """Helper-function for _device_state_updater()."""
-    _cooling_state = False
-    _dhw_state = False
-    _heating_state = False
-    result = "idle"
-
-    if "binary_sensors" in d_dict:
-        for item, state in d_dict["binary_sensors"].items():
-            if item == "dhw_state" and state:
-                result = "dhw-heating"
-                _dhw_state = True
-
-    if "heating_state" in data and data["heating_state"]:
-        result = "heating"
-        _heating_state = True
-    if _heating_state and _dhw_state:
-        result = "dhw and heating"
-    if "cooling_state" in data and data["cooling_state"]:
-        result = "cooling"
-        _cooling_state = True
-    if _cooling_state and _dhw_state:
-        result = "dhw and cooling"
-
-    return result
-
-
 def pw_notification_updater(devs, d_id, d_dict, notifs):
     """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
