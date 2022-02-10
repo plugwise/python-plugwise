@@ -61,7 +61,7 @@ def pw_notification_updater(devs, d_id, d_dict, notifs):
             devs[d_id]["binary_sensors"][item] = notifs != {}
 
 
-def update_helper(data, devs, d_dict, d_id, e_type, key):
+def update_helper(data, devs, d_dict, d_id, e_type, key) -> None:
     """Helper-function for async_update()."""
     for dummy in d_dict[e_type]:
         if key != dummy:
@@ -72,7 +72,7 @@ def update_helper(data, devs, d_dict, d_id, e_type, key):
             devs[d_id][e_type][item] = data[key]
 
 
-def check_model(name, v_name):
+def check_model(name, v_name) -> str:
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
@@ -84,16 +84,16 @@ def check_model(name, v_name):
         return name
 
 
-def schemas_schedule_temp(schedules, name):
+def schemas_schedule_temp(schedules, name) -> float:
     """Helper-function for schemas().
     Obtain the schedule temperature of the schema/schedule.
     """
     if name == "None":
         return  # pragma: no cover
 
-    schema_list = []
+    schema_list: list[str] | None = []  # ???
     for period, temp in schedules[name].items():
-        tmp_list = []
+        tmp_list: list[tuple[str, str, float]] = []
         moment, dummy = period.split(",")
         moment = moment.replace("[", "").split(" ")
         day_nr = DAYS.get(moment[0], "None")
@@ -101,7 +101,7 @@ def schemas_schedule_temp(schedules, name):
         tmp_list.extend((day_nr, start_time, temp))
         schema_list.append(tmp_list)
 
-    length = len(schema_list)
+    length: int = len(schema_list)
     schema_list = sorted(schema_list)
 
     # Schema with less than 2 items
@@ -303,7 +303,7 @@ class SmileHelper:
         self.smile_type: str = None
         self.smile_version: list[str] = []
 
-    def _locations_legacy(self):
+    def _locations_legacy(self) -> None:
         """Helper-function for _all_locations().
         Create locations for legacy devices.
         """
@@ -347,7 +347,7 @@ class SmileHelper:
 
         return loc
 
-    def _all_locations(self):
+    def _all_locations(self) -> None:
         """Collect all locations."""
         loc = Munch()
 
@@ -360,7 +360,7 @@ class SmileHelper:
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
-            locator = ".//services"
+            locator: str = ".//services"
             if (
                 self._smile_legacy
                 and self.smile_type == "power"
@@ -388,20 +388,20 @@ class SmileHelper:
 
         return
 
-    def _get_module_data(self, appliance, locator, mod_type):
+    def _get_module_data(self, appliance, locator, mod_type) -> list[str | None]:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
         Collect requested info from MODULES.
         """
         appl_search = appliance.find(locator)
         if appl_search is not None:
-            link_id = appl_search.attrib["id"]
-            locator = f".//{mod_type}[@id='{link_id}']...."
-            module = self._modules.find(locator)
+            link_id: str = appl_search.attrib["id"]
+            locator: str = f".//{mod_type}[@id='{link_id}']...."
+            module: etree | None = self._modules.find(locator)
             if module is not None:
-                v_name = module.find("vendor_name").text
-                v_model = module.find("vendor_model").text
-                hw_version = module.find("hardware_version").text
-                fw_version = module.find("firmware_version").text
+                v_name: str = module.find("vendor_name").text
+                v_model: str = module.find("vendor_model").text
+                hw_version: str = module.find("hardware_version").text
+                fw_version: str = module.find("firmware_version").text
 
                 return [v_name, v_model, hw_version, fw_version]
         return [None, None, None, None]
@@ -411,8 +411,8 @@ class SmileHelper:
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
         if self._stretch_v2 or self._stretch_v3:
-            locator = ".//services/electricity_point_meter"
-            mod_type = "electricity_point_meter"
+            locator: str = ".//services/electricity_point_meter"
+            mod_type: str = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data[0]
             if appl.model != "Switchgroup":
@@ -442,9 +442,11 @@ class SmileHelper:
             appl.v_name = "Plugwise B.V."
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
-            mode_list = []
-            locator = "./actuator_functionalities/regulation_mode_control_functionality"
-            search = appliance.find(locator)
+            mode_list: list[str] = []
+            locator: str = (
+                "./actuator_functionalities/regulation_mode_control_functionality"
+            )
+            search: etree | None = appliance.find(locator)
             if search is not None:
                 if search.find("mode") is not None:
                     self.cooling_active = search.find("mode").text == "cooling"
@@ -457,7 +459,7 @@ class SmileHelper:
 
         if appl.pwclass in THERMOSTAT_CLASSES:
             locator = ".//logs/point_log[type='thermostat']/thermostat"
-            mod_type = "thermostat"
+            mod_type: str = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data[0]
             appl.model = check_model(module_data[1], appl.v_name)
@@ -481,8 +483,8 @@ class SmileHelper:
 
             self._heater_id = appliance.attrib["id"]
             appl.name = "OpenTherm"
-            locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
-            locator2 = ".//services/boiler_state"
+            locator1: str = ".//logs/point_log[type='flame_state']/boiler_state"
+            locator2: str = ".//services/boiler_state"
             mod_type = "boiler_state"
             module_data = self._get_module_data(appliance, locator1, mod_type)
             if module_data == [None, None, None, None]:
@@ -517,9 +519,11 @@ class SmileHelper:
             appl.types = self._loc_data[self._home_location]["types"]
 
         # Determine appliance_type from functionality
-        relay_func = appliance.find(".//actuator_functionalities/relay_functionality")
-        relay_act = appliance.find(".//actuators/relay")
-        thermo_func = appliance.find(
+        relay_func: etree | None = appliance.find(
+            ".//actuator_functionalities/relay_functionality"
+        )
+        relay_act: etree | None = appliance.find(".//actuators/relay")
+        thermo_func: etree | None = appliance.find(
             ".//actuator_functionalities/thermostat_functionality"
         )
         if relay_func is not None or relay_act is not None:
@@ -529,7 +533,7 @@ class SmileHelper:
 
         return appl
 
-    def _all_appliances(self):
+    def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
 
@@ -563,10 +567,10 @@ class SmileHelper:
                 )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        ch_state = self._appliances.find(
+        ch_state: etree | None = self._appliances.find(
             ".//logs/point_log[type='central_heating_state']"
         )
-        ot_fault_code = self._appliances.find(
+        ot_fault_code: etree | None = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
         self._opentherm_device = ch_state is not None and ot_fault_code is not None
@@ -582,7 +586,7 @@ class SmileHelper:
             appl.location = None
             appl.types = set()
 
-            appl.id = appliance.attrib["id"]
+            appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.fw = None
@@ -597,7 +601,7 @@ class SmileHelper:
             if not appl:
                 continue
 
-            self._appl_data[appl.id] = {
+            self._appl_data[appl.dev_id] = {
                 "class": appl.pwclass,
                 "fw": appl.fw,
                 "location": appl.location,
@@ -610,7 +614,7 @@ class SmileHelper:
                 and appl.pwclass == "thermostat"
                 and appl.location is None
             ):
-                self._appl_data.pop(appl.id)
+                self._appl_data.pop(appl.dev_id)
 
     def _match_locations(self):
         """Helper-function for _scan_thermostats().
