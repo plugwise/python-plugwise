@@ -1,7 +1,7 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise backend module for Home Assistant Core.
 """
-from typing import Optional
+from typing import Any, Optional, Tuple
 
 import aiohttp
 from defusedxml import ElementTree as etree
@@ -300,7 +300,7 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result, dsmrmain) -> (str, str):
+    async def _smile_detect_legacy(self, result, dsmrmain) -> Tuple[str, str]:
         """Helper-function for _smile_detect()."""
         network: etree = result.find(".//module/protocols/master_controller")
 
@@ -387,7 +387,7 @@ class Smile(SmileComm, SmileData):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-    async def _full_update_device(self):
+    async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
@@ -400,7 +400,7 @@ class Smile(SmileComm, SmileData):
         if self.smile_type != "power":
             await self._update_domain_objects()
 
-    async def _update_domain_objects(self):
+    async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
         Request domain_objects data.
         """
@@ -408,12 +408,12 @@ class Smile(SmileComm, SmileData):
 
         # If Plugwise notifications present:
         self._notifications = {}
-        notifications = self._domain_objects.findall(".//notification")
+        notifications: etree = self._domain_objects.findall(".//notification")
         for notification in notifications:
             try:
-                msg_id = notification.attrib["id"]
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
+                msg_id: str = notification.attrib["id"]
+                msg_type: str = notification.find("type").text
+                msg: str = notification.find("message").text
                 self._notifications.update({msg_id: {msg_type: msg}})
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
@@ -422,7 +422,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self):
+    async def async_update(self) -> Tuple[dict, dict]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -436,7 +436,7 @@ class Smile(SmileComm, SmileData):
         self.gw_data["notifications"] = self._notifications
 
         for dev_id, dev_dict in self.gw_devices.items():
-            data = self._get_device_data(dev_id)
+            data: dict[str, Any] = self._get_device_data(dev_id)
             for key, value in list(data.items()):
                 if key in dev_dict:
                     dev_dict[key] = value
