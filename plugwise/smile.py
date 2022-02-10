@@ -184,7 +184,7 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         details: dict[str, Any] = self._devices.get(dev_id)
-        device_data: dict[str, Any] = self._get_appliance_data(dev_id)
+        device_data = self._get_appliance_data(dev_id)
 
         # Generic
         if details["class"] == "gateway" or dev_id == self.gateway_id:
@@ -198,9 +198,7 @@ class SmileData(SmileHelper):
                     device_data["outdoor_temperature"] = outdoor_temperature
 
             # Get P1 data from LOCATIONS
-            power_data: dict[str, Any] | None = self._power_data_from_location(
-                details["location"]
-            )
+            power_data = self._power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
 

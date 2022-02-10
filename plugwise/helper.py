@@ -1,6 +1,8 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise Smile protocol helpers.
 """
+from __future__ import annotations
+
 import asyncio
 import datetime as dt
 from typing import Any
@@ -750,7 +752,7 @@ class SmileHelper:
 
         return data
 
-    def _get_appliance_data(self, d_id):
+    def _get_appliance_data(self, d_id) -> dict[str, Any]:
         """Helper-function for smile.py: _get_device_data().
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
@@ -989,7 +991,7 @@ class SmileHelper:
 
         return loc
 
-    def _power_data_from_location(self, loc_id):
+    def _power_data_from_location(self, loc_id) -> dict[str, Any] | None:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID.
         """
