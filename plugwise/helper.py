@@ -288,17 +288,15 @@ class SmileHelper:
         self._outdoor_temp: float = None
         self._is_thermostat: bool = False
         self._multi_thermostats: bool = False
-        self._thermo_locs: dict[str, Any] = {}
-
         self._smile_legacy: bool = False
         self._stretch_v2: bool = False
         self._stretch_v3: bool = False
+        self._thermo_locs: dict[str, Any] = {}
 
         self.cooling_active: bool = False
         self.gateway_id: str = None
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
-
         self.smile_name: str = None
         self.smile_type: str = None
         self.smile_version: list[str] = []
