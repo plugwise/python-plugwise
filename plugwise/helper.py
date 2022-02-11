@@ -432,9 +432,10 @@ class SmileHelper:
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
-                mac_loc = appliance.find(".//protocols/zig_bee_node/mac_address")
-                if mac_loc:
-                    model_data["mac_address"] = mac_loc.text
+                mac_locator = "protocols/zig_bee_node/mac_address"
+                # 20220211 TODO: for some reason find doesn't work, findall with [0] does
+                if module.findall(mac_locator):
+                    model_data["mac_address"] = module.findall(mac_locator)[0].text
 
         return model_data
 
@@ -454,6 +455,7 @@ class SmileHelper:
                 hw_version = module_data["hardware_version"].replace("-", "")
                 appl.model = version_to_model(hw_version)
             appl.fw = module_data["firmware_version"]
+            appl.mac = module_data["mac_address"]
             return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
@@ -464,6 +466,7 @@ class SmileHelper:
             appl.model = version_to_model(module_data["vendor_model"])
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
+            appl.mac = module_data["mac_address"]
             return appl
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
@@ -625,6 +628,7 @@ class SmileHelper:
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.fw = None
             appl.hw = None
+            appl.mac = None
             appl.v_name = None
 
             # Determine types for this appliance
@@ -640,6 +644,7 @@ class SmileHelper:
                 "class": appl.pwclass,
                 "fw": appl.fw,
                 "hw": appl.hw,
+                "mac_address": appl.mac,
                 "location": appl.location,
                 "model": appl.model,
                 "name": appl.name,
