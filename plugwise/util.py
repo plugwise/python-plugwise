@@ -89,12 +89,12 @@ def int_to_uint(val, octals):
     return val
 
 
-def escape_illegal_xml_characters(xmldata) -> str:
+def escape_illegal_xml_characters(xmldata: str) -> str:
     """Replace illegal &-characters."""
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure, unit) -> float | int | bool:
+def format_measure(measure: str, unit: str) -> float | int | bool:
     """Format measure to correct type."""
     try:
         measure = int(measure)
@@ -123,18 +123,9 @@ def format_measure(measure, unit) -> float | int | bool:
     return measure
 
 
-def determine_selected(available, selected, schemas) -> tuple[str, str]:
-    """Determine selected schema from available schemas."""
-    for schema, active in schemas.items():
-        if "None" in available:
-            available.remove("None")
-        available.append(schema)
-        if active:
-            selected = schema
-    return available, selected
-
-
-def in_between(now, start, end) -> datetime.time:
+def in_between(
+    now: datetime.time, start: datetime.time, end: datetime.time
+) -> datetime.time:
     """Determine timing for schedules."""
     if start <= end:
         return start <= now < end
