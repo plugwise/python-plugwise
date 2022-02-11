@@ -598,6 +598,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Thermostat schedule",
                 "mode": "auto",
                 "sensors": {"temperature": 20.4, "setpoint": 20.5, "illuminance": 151},
+                "lower_bound": 4,
+                "upper_bound": 30,
+                "resolution": 0.1,
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
@@ -617,6 +620,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 21.7,
                     "water_pressure": 1.2,
                 },
+                "lower_bound": 50,
+                "upper_bound": 90,
+                "resolution": 1,
             },
             # Gateway
             "0000aaaa0000aaaa0000aaaa0000aa00": {
@@ -1144,6 +1150,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Test",
                 "mode": "auto",
                 "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
+                "lower_bound": 4,
+                "upper_bound": 30,
+                "resolution": 0.1,
             },
             # Gateway
             "a270735e4ccd45239424badc0578a2b1": {

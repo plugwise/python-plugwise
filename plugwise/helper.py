@@ -777,6 +777,22 @@ class SmileHelper:
                 measure = appliance.find(i_locator).text
                 data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
+            t_locator = (
+                f".//actuator_functionalities/thermostat_functionality/{measurement}"
+            )
+            t_functions = appliance.find(t_locator)
+            if t_functions is not None and t_functions.text:
+                # Thermostat actuator measurements
+
+                try:
+                    measurement = attrs[ATTR_NAME]
+                except KeyError:
+                    pass
+
+                data[measurement] = format_measure(
+                    t_functions.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                )
+
         return data
 
     def _get_appliance_data(self, d_id: str) -> dict[str, Any]:
