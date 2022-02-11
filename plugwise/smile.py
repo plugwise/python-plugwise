@@ -164,7 +164,7 @@ class SmileData(SmileHelper):
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
-        schedule_status: bool = False
+        schedule_status = False
         if sel_schema != "None":
             schedule_status = True
         if not schedule_status:
@@ -308,8 +308,8 @@ class Smile(SmileComm, SmileData):
         anna: etree | None = result.find('.//appliance[type="thermostat"]')
         # Fake insert version assuming Anna
         # couldn't find another way to identify as legacy Anna
-        version: str = "1.8.0"
-        model: str = "smile_thermo"
+        version = "1.8.0"
+        model = "smile_thermo"
         if anna is None:
             # P1 legacy:
             if dsmrmain is not None:
@@ -503,20 +503,20 @@ class Smile(SmileComm, SmileData):
             return False
 
         schema_rule_id: str = next(iter(schema_rule))
-        info: str = ""
+        info = ""
         if state == "on":
             info = f'<context><zone><location id="{loc_id}" /></zone></context>'
 
-        template: str = (
+        template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
         if self.smile_name != "Adam":
-            locator: str = f'.//*[@id="{schema_rule_id}"]/template'
+            locator = f'.//*[@id="{schema_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
-            template: str = f'<template id="{template_id}" />'
+            template = f'<template id="{template_id}" />'
 
-        uri: str = f"{RULES};id={schema_rule_id}"
-        data: str = (
+        uri = f"{RULES};id={schema_rule_id}"
+        data = (
             f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name>'
             f"{template}<contexts>{info}</contexts></rule></rules>"
         )
@@ -531,7 +531,7 @@ class Smile(SmileComm, SmileData):
         if (rule := self._domain_objects.find(locator)) is None:
             return False
 
-        uri: str = f"{RULES}"
+        uri = RULES
         data: str = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
         await self._request(uri, method="put", data=data)
@@ -635,7 +635,7 @@ class Smile(SmileComm, SmileData):
 
     async def delete_notification(self) -> bool:
         """Delete the active Plugwise Notification."""
-        uri: str = f"{NOTIFICATIONS}"
+        uri = NOTIFICATIONS
 
         await self._request(uri, method="delete")
         return True
