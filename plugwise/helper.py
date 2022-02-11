@@ -194,7 +194,7 @@ class SmileComm:
         host: str,
         password: str,
         username: str,
-        port: str,
+        port: int,
         timeout: float,
         websession: ClientSession,
     ):
