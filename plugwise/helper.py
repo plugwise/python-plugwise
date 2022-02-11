@@ -1157,11 +1157,11 @@ class SmileHelper:
             return last_used
 
         # Alternatively, find last_used by finding the most recent modified_date
-        epoch: dt.datetime = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        schemas: dict[str] | None = {}
-
         if not rule_ids:
             return  # pragma: no cover
+
+        epoch: dt.datetime = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
+        schemas: dict[str] | None = {}
 
         for rule_id in rule_ids:
             schema_name: str = self._domain_objects.find(
