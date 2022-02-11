@@ -122,14 +122,14 @@ def schemas_schedule_temp(schedules, name) -> float | None:
                 return schema_list[i][2]
 
 
-def types_finder(data):
+def types_finder(data) -> set:
     """Detect types within locations from logs."""
-    types = set()
+    types: set = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
-        locator = f".//logs/point_log[type='{measure}']"
+        locator: str = f".//logs/point_log[type='{measure}']"
         if data.find(locator) is not None:
-            log = data.find(locator)
-            p_locator = ".//electricity_point_meter"
+            log: etree = data.find(locator)
+            p_locator: str = ".//electricity_point_meter"
             if log.find(p_locator) is not None:
                 if log.find(p_locator).get("id"):
                     types.add(attrs[ATTR_TYPE])
