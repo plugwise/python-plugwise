@@ -8,7 +8,13 @@ import datetime as dt
 from typing import Any
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from aiohttp import BasicAuth, ClientSession, ClientTimeout, ServerTimeoutError
+from aiohttp import (
+    BasicAuth,
+    ClientResponse,
+    ClientSession,
+    ClientTimeout,
+    ServerTimeoutError,
+)
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -76,7 +82,7 @@ def check_model(name, v_name) -> str:
     if v_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
             return "Anna"
-        model = version_to_model(name)
+        model: str = version_to_model(name)
         if model != "Unknown":
             return model
     else:
@@ -137,9 +143,9 @@ def types_finder(data) -> set:
     return types
 
 
-def power_data_local_format(attrs, key_string, val) -> float | int:
+def power_data_local_format(attrs, key_string, val) -> float | int | str:
     """Format power data."""
-    f_val: float | int = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+    f_val: float | int | str = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
     if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
         f_val = int(round(float(val)))
@@ -203,7 +209,7 @@ class SmileComm:
         self._endpoint: str = f"http://{host}:{str(port)}"
         self._timeout: str = timeout
 
-    async def _request_validate(self, resp, method):
+    async def _request_validate(self, resp, method) -> etree:
         """Helper-function for _request(): validate the returned data."""
         # Command accepted gives empty body with status 202
         if resp.status == 202:
@@ -215,14 +221,14 @@ class SmileComm:
         if resp.status == 401:
             raise InvalidAuthentication
 
-        result = await resp.text()
+        result: str = await resp.text()
         if not result or "<error>" in result:
             LOGGER.error("Smile response empty or error in %s", result)
             raise ResponseError
 
         try:
             # Encode to ensure utf8 parsing
-            xml = etree.XML(escape_illegal_xml_characters(result).encode())
+            xml: etree = etree.XML(escape_illegal_xml_characters(result).encode())
         except etree.ParseError:
             LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
             raise InvalidXMLError
@@ -236,9 +242,9 @@ class SmileComm:
         method: str = "get",
         data: str = None,
         headers: dict[str, str] = None,
-    ):
+    ) -> etree:
         """Get/put/delete data from a give URL."""
-        resp = None
+        resp: ClientResponse = None
         url: str = f"{self._endpoint}{command}"
 
         try:
