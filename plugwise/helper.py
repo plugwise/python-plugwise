@@ -315,9 +315,11 @@ class SmileHelper:
         self._thermo_locs: dict[str, Any] = {}
 
         self.cooling_active = False
+        self.smile_fw_version: str | None = None
         self.gateway_id: str | None = None
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
+        self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
         self.smile_type: str | None = None
@@ -580,6 +582,7 @@ class SmileHelper:
             self._appl_data[self._home_location] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
+                "hw": self.smile_hw_version,
                 "mac_address": self.smile_mac_address,
                 "location": self._home_location,
                 "vendor": "Plugwise B.V.",
@@ -644,6 +647,8 @@ class SmileHelper:
 
             if appl.pwclass == "gateway":
                 appl.mac = self.smile_mac_address
+                appl.fw = self.smile_fw_version
+                appl.hw = self.smile_hw_version
 
             self._appl_data[appl.dev_id] = {
                 "class": appl.pwclass,

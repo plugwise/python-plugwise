@@ -634,6 +634,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "mac_address": None,
+                "hw": None,
             },
         }
 
@@ -1166,6 +1167,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 3.56},
                 "mac_address": "0123456789AB",
+                "hw": "AME Smile 2.0 board",
             },
         }
 

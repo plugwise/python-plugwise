@@ -318,14 +318,14 @@ class Smile(SmileComm, SmileData):
         anna = result.find('.//appliance[type="thermostat"]')
         # Fake insert version assuming Anna
         # couldn't find another way to identify as legacy Anna
-        version = "1.8.0"
+        self.smile_fw_version = "1.8.0"
         model = "smile_thermo"
         if anna is None:
             # P1 legacy:
             if dsmrmain is not None:
                 try:
                     status = await self._request(STATUS)
-                    version = status.find(".//system/version").text
+                    self.smile_fw_version = status.find(".//system/version").text
                     model = status.find(".//system/product").text
                     self.smile_hostname = status.find(".//network/hostname").text
                     self.smile_mac_address = status.find(".//network/mac_address").text
@@ -337,7 +337,7 @@ class Smile(SmileComm, SmileData):
             elif network is not None:
                 try:
                     system = await self._request(SYSTEM)
-                    version = system.find(".//gateway/firmware").text
+                    self.smile_fw_version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
                     self.smile_mac_address = system.find(".//eth0/mac").text
@@ -351,7 +351,7 @@ class Smile(SmileComm, SmileData):
                      an issue on http://github.com/plugwise/python-plugwise"
                 )
                 raise ConnectionFailedError
-        return model, version
+        return model
 
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
@@ -360,15 +360,16 @@ class Smile(SmileComm, SmileData):
         model: str | None = None
         if (gateway := result.find(".//gateway")) is not None:
             model = result.find(".//gateway/vendor_model").text
-            version = result.find(".//gateway/firmware_version").text
+            self.smile_fw_version = result.find(".//gateway/firmware_version").text
+            self.smile_hw_version = result.find(".//gateway/hardware_version").text
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
             if gateway.find("mac_address") is not None:
                 self.smile_mac_address = gateway.find("mac_address").text
         else:
-            model, version = await self._smile_detect_legacy(result, dsmrmain)
+            model = await self._smile_detect_legacy(result, dsmrmain)
 
-        if model is None or version is None:  # pragma: no cover
+        if model is None or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
             LOGGER.error(
                 "Unable to find model or version information, please create \
@@ -376,7 +377,7 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
-        ver = semver.VersionInfo.parse(version)
+        ver = semver.VersionInfo.parse(self.smile_fw_version)
         target_smile = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
@@ -390,7 +391,7 @@ class Smile(SmileComm, SmileData):
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
-        self.smile_version = (version, ver)
+        self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
             self._smile_legacy = SMILES[target_smile]["legacy"]

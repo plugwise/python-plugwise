@@ -3,7 +3,7 @@
 TODO: delete before merge :)
 
 - [ ] Fetch hardwarwe version (str|None)
-  - [ ] inside objects as `<module id=` -> `<hardware_version`
+  - [x] Hardware version displayed 
 - [ ] Look into binary sensor for firmware update 
 - [ ] Add mac addresses (str|none) where applicable
   - [x] Gateways
