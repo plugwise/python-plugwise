@@ -238,10 +238,10 @@ class SmileComm:
     async def _request(
         self,
         command: str,
-        retry: int = 3,
-        method: str = "get",
-        data: str = None,
-        headers: dict[str, str] = None,
+        retry=3,
+        method="get",
+        data: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> etree:
         """Get/put/delete data from a give URL."""
         resp: ClientResponse | None = None
@@ -281,19 +281,19 @@ class SmileHelper:
     def __init__(self):
         """Set the constructor for this class."""
         self._appl_data: dict[str, Any] = {}
-        self._appliances: etree = None
+        self._appliances: etree | None = None
         self._cooling_present = False
         self._devices: dict[str, str] = {}
-        self._domain_objects: etree = None
-        self._heater_id: str = None
-        self._home_location: str = None
+        self._domain_objects: etree | None = None
+        self._heater_id: str | None = None
+        self._home_location: str | None = None
         self._last_active: dict[str, str] = {}
         self._loc_data: dict[str, Any] = {}
-        self._locations: etree = None
-        self._modules: etree = None
+        self._locations: etree | None = None
+        self._modules: etree | None = None
         self._on_off_device = False
         self._opentherm_device = False
-        self._outdoor_temp: float = None
+        self._outdoor_temp: float | None = None
         self._is_thermostat = False
         self._multi_thermostats = False
         self._smile_legacy = False
@@ -302,11 +302,11 @@ class SmileHelper:
         self._thermo_locs: dict[str, Any] = {}
 
         self.cooling_active = False
-        self.gateway_id: str = None
+        self.gateway_id: str | None = None
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
-        self.smile_name: str = None
-        self.smile_type: str = None
+        self.smile_name: str | None = None
+        self.smile_type: str | None = None
         self.smile_version: list[str] = []
 
     def _locations_legacy(self) -> None:
@@ -355,7 +355,7 @@ class SmileHelper:
 
     def _all_locations(self) -> None:
         """Collect all locations."""
-        loc: Munch = Munch()
+        loc = Munch()
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         if len(self._locations) == 0 and self._smile_legacy:
@@ -663,7 +663,7 @@ class SmileHelper:
 
         return preset_dictionary
 
-    def _presets(self, loc_id) -> dict[str, Any]:
+    def _presets(self, loc_id: str) -> dict[str, Any]:
         """Collect Presets for a Thermostat based on location_id."""
         presets: dict[str, Any] = {}
         tag_1 = "zone_setpoint_and_state_based_on_preset"
