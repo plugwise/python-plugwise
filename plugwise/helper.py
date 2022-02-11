@@ -90,13 +90,13 @@ def schemas_schedule_temp(schedules, name) -> float | None:
     if name == "None":
         return  # pragma: no cover
 
-    schema_list: list[str] | None = []  # ???
+    schema_list: list[list[int, dt.time, float]] | None = []
     for period, temp in schedules[name].items():
-        tmp_list: list[tuple[str, str, float]] = []
+        tmp_list: list[int, dt.time, float] = []
         moment, dummy = period.split(",")
         moment = moment.replace("[", "").split(" ")
-        day_nr: str = DAYS.get(moment[0], "None")
-        start_time: dt.datetime = dt.datetime.strptime(moment[1], "%H:%M").time()
+        day_nr: int = DAYS.get(moment[0], "None")
+        start_time: dt.time = dt.datetime.strptime(moment[1], "%H:%M").time()
         tmp_list.extend((day_nr, start_time, temp))
         schema_list.append(tmp_list)
 
@@ -108,12 +108,12 @@ def schemas_schedule_temp(schedules, name) -> float | None:
         return schema_list[0][2]
 
     for i in range(length):
-        result_1 = schema_list[i][0]
-        start = schema_list[i][1]
-        j = (i + 1) % (length - 1)
-        result_2 = schema_list[j][0]
-        end = schema_list[j][1]
-        now = dt.datetime.now().time()
+        result_1: int = schema_list[i][0]
+        start: dt.time = schema_list[i][1]
+        j: int = (i + 1) % (length - 1)
+        result_2: int = schema_list[j][0]
+        end: dt.time = schema_list[j][1]
+        now: dt.time = dt.datetime.now().time()
         if (
             result_1 == dt.datetime.now().weekday()
             or result_2 == dt.datetime.now().weekday()
