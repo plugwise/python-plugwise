@@ -51,7 +51,6 @@ from .util import (
 )
 
 
-
 def pw_notification_updater(devs, d_id, d_dict, notifs):
     """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
@@ -1128,7 +1127,7 @@ class SmileHelper:
                     self._last_active[location] = selected
                 schedules[name] = schedule
             else:
-                _LOGGER.debug(
+                LOGGER.debug(
                     "Schedule %s has no preset switching moments, ignoring.", name
                 )
 
