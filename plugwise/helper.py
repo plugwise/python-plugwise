@@ -318,6 +318,7 @@ class SmileHelper:
         self.gateway_id: str | None = None
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
+        self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
         self.smile_type: str | None = None
         self.smile_version: list[str] = []
@@ -579,6 +580,7 @@ class SmileHelper:
             self._appl_data[self._home_location] = {
                 "class": "gateway",
                 "fw": self.smile_version[0],
+                "mac_address": self.smile_mac_address,
                 "location": self._home_location,
                 "vendor": "Plugwise B.V.",
             }
@@ -639,6 +641,9 @@ class SmileHelper:
             # Skip on heater_central when no active device present
             if not appl:
                 continue
+
+            if appl.pwclass == "gateway":
+                appl.mac = self.smile_mac_address
 
             self._appl_data[appl.dev_id] = {
                 "class": appl.pwclass,

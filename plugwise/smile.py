@@ -328,6 +328,7 @@ class Smile(SmileComm, SmileData):
                     version = status.find(".//system/version").text
                     model = status.find(".//system/product").text
                     self.smile_hostname = status.find(".//network/hostname").text
+                    self.smile_mac_address = status.find(".//network/mac_address").text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -339,6 +340,7 @@ class Smile(SmileComm, SmileData):
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
+                    self.smile_mac_address = system.find(".//eth0/mac").text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -361,6 +363,8 @@ class Smile(SmileComm, SmileData):
             version = result.find(".//gateway/firmware_version").text
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
+            if gateway.find("mac_address") is not None:
+                self.smile_mac_address = gateway.find("mac_address").text
         else:
             model, version = await self._smile_detect_legacy(result, dsmrmain)
 
