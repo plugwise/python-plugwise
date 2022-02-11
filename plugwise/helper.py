@@ -900,8 +900,8 @@ class SmileHelper:
                     if thermo_matching[appl_class] > high_prio:
                         high_prio = thermo_matching[appl_class]
 
-    def _temperature_uri_legacy(self) -> str:
-        """Helper-function for _temperature_uri().
+    def _thermostat_uri_legacy(self) -> str:
+        """Helper-function for _thermostat_uri().
         Determine the location-set_temperature uri - from APPLIANCES.
         """
         locator = ".//appliance[type='thermostat']"
@@ -909,11 +909,11 @@ class SmileHelper:
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
 
-    def _temperature_uri(self, loc_id: str) -> str:
+    def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().
         Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
-            return self._temperature_uri_legacy()
+            return self._thermostat_uri_legacy()
 
         locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]

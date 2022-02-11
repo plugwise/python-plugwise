@@ -570,7 +570,8 @@ class Smile(SmileComm, SmileData):
 
     async def set_temperature(self, loc_id: str, temperature: str) -> bool:
         """Set the given Temperature on the relevant Thermostat."""
-        uri = self._temperature_uri(loc_id)
+        temperature = str(temperature)
+        uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
             f"{temperature}</setpoint></thermostat_functionality>"
