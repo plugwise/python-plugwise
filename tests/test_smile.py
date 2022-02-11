@@ -615,7 +615,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "modulation_level": 0.0,
                     "return_temperature": 21.7,
                     "water_pressure": 1.2,
-                    "device_state": "heating",
                 },
             },
             # Gateway
@@ -715,7 +714,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "modulation_level": 0.0,
                     "return_temperature": 0.0,
                     "water_pressure": 1.7,
-                    "device_state": "idle",
                 },
             },
             # Gateway
@@ -906,7 +904,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "modulation_level": 0.0,
                     "return_temperature": 42.0,
                     "water_pressure": 2.1,
-                    "device_state": "heating",
                 },
                 "switches": {"dhw_cm_switch": False},
             },
@@ -1116,7 +1113,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": None,
                 "heating_state": True,
                 "cooling_active": False,
-                "sensors": {"device_state": "heating"},
             },
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
@@ -1395,7 +1391,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "water_temperature": 37.0,
                     "intended_boiler_temperature": 38.1,
-                    "device_state": "heating",
                 },
                 "switches": {"dhw_cm_switch": False},
             },
@@ -1460,7 +1455,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "2743216f626f43948deec1f7ab3b3d70": {
                 "binary_sensors": {"dhw_state": True},
                 "heating_state": True,
-                "sensors": {"device_state": "dhw and heating"},
             },
             # Lisa Badkamer
             "453e510de7cb47af8ec5b44fbf40cbe5": {
@@ -1483,7 +1477,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
                 "cooling_state": True,
-                "sensors": {"device_state": "cooling"},
             },
         }
 
@@ -1503,7 +1496,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "2743216f626f43948deec1f7ab3b3d70": {
                 "binary_sensors": {"dhw_state": True},
                 "cooling_state": True,
-                "sensors": {"device_state": "dhw and cooling"},
             }
         }
 
@@ -1521,7 +1513,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             "90986d591dcd426cae3ec3e8111ff730": {
                 "heating_state": False,
-                "sensors": {"device_state": "idle"},
             },
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
@@ -1652,7 +1643,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "schedule_temperature": 15.0,
                 "last_used": "Badkamer Schema",
-                "mode": "off",
+                "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
@@ -1781,7 +1772,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "water_temperature": 70.0,
                     "intended_boiler_temperature": 70.0,
                     "modulation_level": 1,
-                    "device_state": "heating",
                 },
             },
             "cd0ddb54ef694e11ac18ed1cbce5dbbd": {
