@@ -414,18 +414,29 @@ class SmileHelper:
         Collect requested info from MODULES.
         """
         appl_search = appliance.find(locator)
+        model_data = {
+            "contents": False,
+            "vendor_name": None,
+            "vendor_model": None,
+            "hardware_version": None,
+            "firmware_version": None,
+            "mac_address": None,
+        }
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
             module = self._modules.find(locator)
             if module is not None:
-                v_name = module.find("vendor_name").text
-                v_model = module.find("vendor_model").text
-                hw_version = module.find("hardware_version").text
-                fw_version = module.find("firmware_version").text
+                model_data["contents"] = True
+                model_data["vendor_name"] = module.find("vendor_name").text
+                model_data["vendor_model"] = module.find("vendor_model").text
+                model_data["hardware_version"] = module.find("hardware_version").text
+                model_data["firmware_version"] = module.find("firmware_version").text
+                mac_loc = appliance.find(".//protocols/zig_bee_node/mac_address")
+                if mac_loc:
+                    model_data["mac_address"] = mac_loc.text
 
-                return [v_name, v_model, hw_version, fw_version]
-        return [None, None, None, None]
+        return model_data
 
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
@@ -435,22 +446,24 @@ class SmileHelper:
             locator = ".//services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
+            appl.v_name = module_data["vendor_name"]
             if appl.model != "Switchgroup":
                 appl.model = None
-            if module_data[2] is not None:
-                hw_version = module_data[2].replace("-", "")
+            appl.hw = module_data["hardware_version"]
+            if appl.hw:
+                hw_version = module_data["hardware_version"].replace("-", "")
                 appl.model = version_to_model(hw_version)
-            appl.fw = module_data[3]
+            appl.fw = module_data["firmware_version"]
             return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
             locator = ".//logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
-            appl.model = version_to_model(module_data[1])
-            appl.fw = module_data[3]
+            appl.v_name = module_data["vendor_name"]
+            appl.model = version_to_model(module_data["vendor_model"])
+            appl.hw = module_data["hardware_version"]
+            appl.fw = module_data["firmware_version"]
             return appl
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
@@ -480,9 +493,10 @@ class SmileHelper:
             locator = ".//logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
-            appl.model = check_model(module_data[1], appl.v_name)
-            appl.fw = module_data[3]
+            appl.v_name = module_data["vendor_name"]
+            appl.model = check_model(module_data["vendor_model"], appl.v_name)
+            appl.hw = module_data["hardware_version"]
+            appl.fw = module_data["firmware_version"]
 
             return appl
 
@@ -506,10 +520,11 @@ class SmileHelper:
             locator2 = ".//services/boiler_state"
             mod_type = "boiler_state"
             module_data = self._get_module_data(appliance, locator1, mod_type)
-            if module_data == [None, None, None, None]:
+            if not module_data["contents"]:
                 module_data = self._get_module_data(appliance, locator2, mod_type)
-            appl.v_name = module_data[0]
-            appl.model = check_model(module_data[1], appl.v_name)
+            appl.v_name = module_data["vendor_name"]
+            appl.hw = module_data["hardware_version"]
+            appl.model = check_model(module_data["vendor_model"], appl.v_name)
             if appl.model is None:
                 appl.model = (
                     "Generic heater/cooler"
@@ -609,6 +624,7 @@ class SmileHelper:
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.fw = None
+            appl.hw = None
             appl.v_name = None
 
             # Determine types for this appliance
@@ -623,6 +639,7 @@ class SmileHelper:
             self._appl_data[appl.dev_id] = {
                 "class": appl.pwclass,
                 "fw": appl.fw,
+                "hw": appl.hw,
                 "location": appl.location,
                 "model": appl.model,
                 "name": appl.name,
