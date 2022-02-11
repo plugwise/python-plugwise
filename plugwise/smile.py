@@ -39,7 +39,9 @@ from .helper import SmileComm, SmileHelper, pw_notification_updater, update_help
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def _append_special(self, d_id, bs_dict, s_dict) -> None:
+    def _append_special(
+        self, d_id: str, bs_dict: dict[str, bool], s_dict: dict[str, Any]
+    ) -> None:
         """Helper-function for smile.py: _all_device_data().
         When conditions are met, the plugwise_notification binary_sensor is appended.
         """
@@ -106,7 +108,9 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-    def _device_data_switching_group(self, details, device_data) -> dict[str, bool]:
+    def _device_data_switching_group(
+        self, details: dict[str, Any], device_data: dict[str, Any]
+    ) -> dict[str, bool]:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
@@ -123,7 +127,9 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_adam(self, details, device_data) -> dict[str, bool]:
+    def _device_data_adam(
+        self, details: dict[str, Any], device_data: dict[str, Any]
+    ) -> dict[str, bool]:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
@@ -137,7 +143,9 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_climate(self, details, device_data) -> dict[str, Any]:
+    def _device_data_climate(
+        self, details: dict[str, Any], device_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
@@ -179,7 +187,7 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _get_device_data(self, dev_id) -> dict[str, Any]:
+    def _get_device_data(self, dev_id: str) -> dict[str, Any]:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
@@ -298,7 +306,9 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result, dsmrmain) -> tuple[str, str]:
+    async def _smile_detect_legacy(
+        self, result: etree, dsmrmain: etree
+    ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
         network = result.find(".//module/protocols/master_controller")
 
@@ -341,7 +351,7 @@ class Smile(SmileComm, SmileData):
                 raise ConnectionFailedError
         return model, version
 
-    async def _smile_detect(self, result, dsmrmain) -> None:
+    async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
         Detect which type of Smile is connected.
         """
@@ -463,7 +473,7 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name, status) -> bool:
+    async def _set_schedule_state_legacy(self, name: str, status: str) -> bool:
         """Helper-function for set_schedule_state()."""
         schema_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
@@ -524,7 +534,7 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _set_preset_legacy(self, preset) -> bool:
+    async def _set_preset_legacy(self, preset: str) -> bool:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         if (rule := self._domain_objects.find(locator)) is None:
@@ -569,7 +579,9 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def _set_groupswitch_member_state(self, members, state, switch) -> bool:
+    async def _set_groupswitch_member_state(
+        self, members: list[str] | None, state: str, switch: Munch
+    ) -> bool:
         """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
         """
