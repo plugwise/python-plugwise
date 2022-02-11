@@ -633,6 +633,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
+                "mac_address": None,
             },
         }
 
@@ -1164,6 +1165,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 3.56},
+                "mac_address": "0123456789AB",
             },
         }
 
@@ -1694,6 +1696,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": -0.2,
                     "valve_position": 0.0,
                 },
+                "mac_address": None,
             },
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "class": "zone_thermostat",
@@ -1808,6 +1811,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
+                "mac_address": "0123456789AB",
             },
             "4a810418d5394b3f82727340b91ba740": {
                 "class": "router",
