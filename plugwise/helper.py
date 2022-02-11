@@ -130,12 +130,12 @@ def schemas_schedule_temp(schedules, name) -> float | None:
 
 def types_finder(data) -> set:
     """Detect types within locations from logs."""
-    types: set = set()
+    types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
-        locator: str = f".//logs/point_log[type='{measure}']"
+        locator = f".//logs/point_log[type='{measure}']"
         if data.find(locator) is not None:
             log: etree = data.find(locator)
-            p_locator: str = ".//electricity_point_meter"
+            p_locator = ".//electricity_point_meter"
             if log.find(p_locator) is not None:
                 if log.find(p_locator).get("id"):
                     types.add(attrs[ATTR_TYPE])
@@ -1163,7 +1163,7 @@ class SmileHelper:
         if not rule_ids:
             return  # pragma: no cover
 
-        for rule_id, dummy in rule_ids.items():
+        for rule_id in rule_ids:
             schema_name: str = self._domain_objects.find(
                 f'rule[@id="{rule_id}"]/name'
             ).text
