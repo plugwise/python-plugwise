@@ -244,7 +244,7 @@ class SmileComm:
         headers: dict[str, str] = None,
     ) -> etree:
         """Get/put/delete data from a give URL."""
-        resp: ClientResponse = None
+        resp: ClientResponse | None = None
         url: str = f"{self._endpoint}{command}"
 
         try:
@@ -264,13 +264,13 @@ class SmileComm:
                 )
         except ServerTimeoutError:
             if retry < 1:
-                LOGGER.error("Timed out sending command to Plugwise: %s", command)
+                LOGGER.error("Timed out sending %s command to Plugwise", command)
                 raise DeviceTimeoutError
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
 
-    async def close_connection(self):
+    async def close_connection(self) -> ClientSession:
         """Close the Plugwise connection."""
         await self._websession.close()
 
@@ -313,7 +313,7 @@ class SmileHelper:
         """Helper-function for _all_locations().
         Create locations for legacy devices.
         """
-        appliances = set()
+        appliances: set = set()
         self._home_location = FAKE_LOC
 
         # Add Anna appliances
@@ -398,7 +398,7 @@ class SmileHelper:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
         Collect requested info from MODULES.
         """
-        appl_search = appliance.find(locator)
+        appl_search: etree | None = appliance.find(locator)
         if appl_search is not None:
             link_id: str = appl_search.attrib["id"]
             locator: str = f".//{mod_type}[@id='{link_id}']...."
@@ -424,7 +424,7 @@ class SmileHelper:
             if appl.model != "Switchgroup":
                 appl.model = None
             if module_data[2] is not None:
-                hw_version = module_data[2].replace("-", "")
+                hw_version: str = module_data[2].replace("-", "")
                 appl.model = version_to_model(hw_version)
             appl.fw = module_data[3]
             return appl
@@ -573,14 +573,16 @@ class SmileHelper:
                 )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        ch_state: etree | None = self._appliances.find(
+        c_heating_state: etree | None = self._appliances.find(
             ".//logs/point_log[type='central_heating_state']"
         )
         ot_fault_code: etree | None = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        self._opentherm_device = ch_state is not None and ot_fault_code is not None
-        self._on_off_device = ch_state is not None and ot_fault_code is None
+        self._opentherm_device = (
+            c_heating_state is not None and ot_fault_code is not None
+        )
+        self._on_off_device = c_heating_state is not None and ot_fault_code is None
 
         for appliance in self._appliances.findall("./appliance"):
             appl: Munch = Munch()
