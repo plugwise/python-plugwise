@@ -143,7 +143,7 @@ def types_finder(data) -> set:
     return types
 
 
-def power_data_local_format(attrs, key_string, val) -> float | int | str:
+def power_data_local_format(attrs, key_string, val) -> float | int | bool:
     """Format power data."""
     f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
