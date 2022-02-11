@@ -85,7 +85,7 @@ class SmileData(SmileHelper):
         self.single_master_thermostat()
 
         for appliance, details in self._appl_data.items():
-            loc_id: str | None = details["location"]
+            loc_id = details["location"]
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if loc_id is None and details["class"] not in THERMOSTAT_CLASSES:
                 details["location"] = self._home_location
@@ -146,7 +146,7 @@ class SmileData(SmileHelper):
         # Presets
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
-        presets: dict[str, Any] = self._presets(loc_id)
+        presets = self._presets(loc_id)
         if presets:
             device_data["presets"] = presets
             device_data["preset_modes"] = list(presets)
@@ -183,7 +183,7 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        details: dict[str, Any] = self._devices.get(dev_id)
+        details = self._devices.get(dev_id)
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
@@ -268,8 +268,8 @@ class Smile(SmileComm, SmileData):
         """Connect to Plugwise device and determine its name, type and version."""
         names: list[str] = []
 
-        result: etree = await self._request(DOMAIN_OBJECTS)
-        dsmrmain: etree | None = result.find(".//module/protocols/dsmrmain")
+        result = await self._request(DOMAIN_OBJECTS)
+        dsmrmain = result.find(".//module/protocols/dsmrmain")
 
         vendor_names: list[etree] = result.findall(".//module/vendor_name")
         if not vendor_names:
@@ -300,12 +300,12 @@ class Smile(SmileComm, SmileData):
 
     async def _smile_detect_legacy(self, result, dsmrmain) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
-        network: etree | None = result.find(".//module/protocols/master_controller")
+        network = result.find(".//module/protocols/master_controller")
 
         # Assume legacy
         self._smile_legacy = True
         # Try if it is an Anna, assuming appliance thermostat
-        anna: etree | None = result.find('.//appliance[type="thermostat"]')
+        anna = result.find('.//appliance[type="thermostat"]')
         # Fake insert version assuming Anna
         # couldn't find another way to identify as legacy Anna
         version = "1.8.0"
@@ -314,7 +314,7 @@ class Smile(SmileComm, SmileData):
             # P1 legacy:
             if dsmrmain is not None:
                 try:
-                    status: etree = await self._request(STATUS)
+                    status = await self._request(STATUS)
                     version = status.find(".//system/version").text
                     model = status.find(".//system/product").text
                     self.smile_hostname = status.find(".//network/hostname").text
@@ -325,7 +325,7 @@ class Smile(SmileComm, SmileData):
             # Stretch:
             elif network is not None:
                 try:
-                    system: etree = await self._request(SYSTEM)
+                    system = await self._request(SYSTEM)
                     version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
@@ -345,10 +345,10 @@ class Smile(SmileComm, SmileData):
         """Helper-function for connect().
         Detect which type of Smile is connected.
         """
-        model: str = None
+        model: str | None = None
         if (gateway := result.find(".//gateway")) is not None:
             model = result.find(".//gateway/vendor_model").text
-            version: str = result.find(".//gateway/firmware_version").text
+            version = result.find(".//gateway/firmware_version").text
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
         else:
@@ -362,8 +362,8 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
-        ver: semver = semver.VersionInfo.parse(version)
-        target_smile: str = f"{model}_v{ver.major}"
+        ver = semver.VersionInfo.parse(version)
+        target_smile = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
             LOGGER.error(
@@ -473,7 +473,6 @@ class Smile(SmileComm, SmileData):
         if schema_rule_id is None:
             return False
 
-        template_id: str = None
         state: str = "false"
         if status == "on":
             state = "true"
