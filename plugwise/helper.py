@@ -195,7 +195,7 @@ class SmileComm:
         password: str,
         username: str,
         port: str,
-        timeout: str,
+        timeout: float,
         websession: ClientSession,
     ):
         """Set the constructor for this class."""
