@@ -51,7 +51,7 @@ from .util import (
 )
 
 
-def pw_notification_updater(devs, d_id, d_dict, notifs):
+def pw_notification_updater(devs, d_id, d_dict, notifs) -> None:
     """Helper-function for async_update().
     Update the PW_Notification binary_sensor state.
     """
@@ -83,7 +83,7 @@ def check_model(name, v_name) -> str:
         return name
 
 
-def schemas_schedule_temp(schedules, name) -> float:
+def schemas_schedule_temp(schedules, name) -> float | None:
     """Helper-function for schemas().
     Obtain the schedule temperature of the schema/schedule.
     """
@@ -95,8 +95,8 @@ def schemas_schedule_temp(schedules, name) -> float:
         tmp_list: list[tuple[str, str, float]] = []
         moment, dummy = period.split(",")
         moment = moment.replace("[", "").split(" ")
-        day_nr = DAYS.get(moment[0], "None")
-        start_time = dt.datetime.strptime(moment[1], "%H:%M").time()
+        day_nr: str = DAYS.get(moment[0], "None")
+        start_time: dt.datetime = dt.datetime.strptime(moment[1], "%H:%M").time()
         tmp_list.extend((day_nr, start_time, temp))
         schema_list.append(tmp_list)
 
@@ -137,9 +137,9 @@ def types_finder(data):
     return types
 
 
-def power_data_local_format(attrs, key_string, val):
+def power_data_local_format(attrs, key_string, val) -> float | int:
     """Format power data."""
-    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+    f_val: float | int = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
     if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
         f_val = int(round(float(val)))
@@ -149,10 +149,12 @@ def power_data_local_format(attrs, key_string, val):
     return f_val
 
 
-def power_data_energy_diff(measurement, net_string, f_val, direct_data):
+def power_data_energy_diff(
+    measurement, net_string, f_val, direct_data
+) -> dict[str, Any]:
     """Calculate differential energy."""
     if "electricity" in measurement and "interval" not in net_string:
-        diff = 1
+        diff: int = 1
         if "produced" in measurement:
             diff = -1
         if net_string not in direct_data:
@@ -182,14 +184,14 @@ class SmileComm:
         """Set the constructor for this class."""
         if not websession:
 
-            aio_timeout = ClientTimeout(total=timeout)
+            aio_timeout: ClientTimeout = ClientTimeout(total=timeout)
 
             async def _create_session() -> ClientSession:
                 return ClientSession(timeout=aio_timeout)  # pragma: no cover
 
             loop = asyncio.get_event_loop()
             if loop.is_running():
-                self._websession = ClientSession(timeout=aio_timeout)
+                self._websession: ClientSession = ClientSession(timeout=aio_timeout)
             else:
                 self._websession = loop.run_until_complete(
                     _create_session()
@@ -197,9 +199,9 @@ class SmileComm:
         else:
             self._websession = websession
 
-        self._auth = BasicAuth(username, password=password)
-        self._endpoint = f"http://{host}:{str(port)}"
-        self._timeout = timeout
+        self._auth: BasicAuth = BasicAuth(username, password=password)
+        self._endpoint: str = f"http://{host}:{str(port)}"
+        self._timeout: str = timeout
 
     async def _request_validate(self, resp, method):
         """Helper-function for _request(): validate the returned data."""
@@ -229,18 +231,17 @@ class SmileComm:
 
     async def _request(
         self,
-        command,
-        retry=3,
-        method="get",
-        data=None,
-        headers=None,
+        command: str,
+        retry: int = 3,
+        method: str = "get",
+        data: str = None,
+        headers: dict[str, str] = None,
     ):
         """Get/put/delete data from a give URL."""
         resp = None
-        url = f"{self._endpoint}{command}"
+        url: str = f"{self._endpoint}{command}"
 
         try:
-
             if method == "delete":
                 resp = await self._websession.delete(url, auth=self._auth)
             if method == "get":
