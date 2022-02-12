@@ -2564,6 +2564,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
+                "zigbee_mac_address": "0123456789AB",
             },
             "33a1c784a9ff4c2d8766a0212714be09": {
                 "class": "lighting",
