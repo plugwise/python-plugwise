@@ -18,6 +18,8 @@ from unittest.mock import patch
 import aiohttp
 import pytest
 
+from plugwise.constants import MAC_NETWORK, MAC_ZIGBEE
+
 pw_exceptions = importlib.import_module("plugwise.exceptions")
 pw_smile = importlib.import_module("plugwise.smile")
 pw_constants = importlib.import_module("plugwise.constants")
@@ -633,7 +635,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
-                "mac_address": None,
+                "mac_addresses": {},
                 "hw": None,
             },
         }
@@ -1166,7 +1168,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 3.56},
-                "mac_address": "0123456789AB",
+                "mac_addresses": {pw_constants.MAC_NETWORK: "0123456789AB"},
                 "hw": "AME Smile 2.0 board",
             },
         }
@@ -1570,6 +1572,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "fe799307f1624099878210aa0b9f1475": {
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.69},
+                "mac_addresses": {
+                    MAC_NETWORK: "0123456789AB",
+                    MAC_ZIGBEE: "0123456789AB",
+                },
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
@@ -1698,7 +1704,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": -0.2,
                     "valve_position": 0.0,
                 },
-                "mac_address": None,
+                "mac_addresses": {},
             },
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "class": "zone_thermostat",
@@ -1813,7 +1819,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-                "mac_address": "0123456789AB",
+                "mac_addresses": {pw_constants.MAC_ZIGBEE: "0123456789AB"},
             },
             "4a810418d5394b3f82727340b91ba740": {
                 "class": "router",
@@ -2541,6 +2547,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Stretch",
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
+                "mac_addresses": {
+                    "wlan0": "01:23:45:67:89:AB",
+                    "eth0": "01:23:45:67:89:AB",
+                },
             },
             "09c8ce93d7064fa6a233c0e4c2449bfe": {
                 "class": "lamp",

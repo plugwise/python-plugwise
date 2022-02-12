@@ -37,6 +37,7 @@ from .constants import (
     HOME_MEASUREMENTS,
     LOCATIONS,
     LOGGER,
+    MAC_ZIGBEE,
     POWER_WATT,
     SENSORS,
     SWITCH_GROUP_TYPES,
@@ -320,7 +321,7 @@ class SmileHelper:
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
         self.smile_hw_version: str | None = None
-        self.smile_mac_address: str | None = None
+        self.smile_mac_address: dict[str, Any] = {}
         self.smile_name: str | None = None
         self.smile_type: str | None = None
         self.smile_version: list[str] = []
@@ -437,7 +438,9 @@ class SmileHelper:
                 model_data["firmware_version"] = module.find("firmware_version").text
                 mac_locator = ".//protocols/zig_bee_node/mac_address"
                 if module.findall(mac_locator):
-                    model_data["mac_address"] = module.find(mac_locator).text
+                    model_data["mac_address"] = {
+                        MAC_ZIGBEE: module.find(mac_locator).text
+                    }
 
         return model_data
 
@@ -477,8 +480,14 @@ class SmileHelper:
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
             appl.fw = self.smile_version[0]
+            appl.mac = self.smile_mac_address
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
+
+            # Adam: check for ZigBee mac address
+            mac_locator = ".//protocols/zig_bee_coordinator/mac_address"
+            if self._domain_objects and self._domain_objects.findall(mac_locator):
+                appl.mac[MAC_ZIGBEE] = self._domain_objects.findall(mac_locator)[0].text
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
@@ -582,7 +591,7 @@ class SmileHelper:
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "hw": self.smile_hw_version,
-                "mac_address": self.smile_mac_address,
+                "mac_addresses": self.smile_mac_address,
                 "location": self._home_location,
                 "vendor": "Plugwise B.V.",
             }
@@ -632,7 +641,7 @@ class SmileHelper:
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.fw = None
             appl.hw = None
-            appl.mac = None
+            appl.mac = {}
             appl.v_name = None
 
             # Determine types for this appliance
@@ -645,7 +654,6 @@ class SmileHelper:
                 continue
 
             if appl.pwclass == "gateway":
-                appl.mac = self.smile_mac_address
                 appl.fw = self.smile_fw_version
                 appl.hw = self.smile_hw_version
 
@@ -653,7 +661,7 @@ class SmileHelper:
                 "class": appl.pwclass,
                 "fw": appl.fw,
                 "hw": appl.hw,
-                "mac_address": appl.mac,
+                "mac_addresses": appl.mac,
                 "location": appl.location,
                 "model": appl.model,
                 "name": appl.name,

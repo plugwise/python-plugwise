@@ -648,3 +648,8 @@ SWITCHES = [
     LOCK,
     RELAY,
 ]
+
+# Networking
+MAC_NETWORK = "network"
+MAC_ZIGBEE = "zigbee"
+NETWORK_TYPES = ["wlan0", "eth0"]
