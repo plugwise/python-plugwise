@@ -22,9 +22,7 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
-    MAC_NETWORK,
     MODULES,
-    NETWORK_TYPES,
     NOTIFICATIONS,
     PW_NOTIFICATION,
     RULES,
@@ -330,9 +328,7 @@ class Smile(SmileComm, SmileData):
                     self.smile_fw_version = status.find(".//system/version").text
                     model = status.find(".//system/product").text
                     self.smile_hostname = status.find(".//network/hostname").text
-                    self.smile_mac_address[MAC_NETWORK] = status.find(
-                        ".//network/mac_address"
-                    ).text
+                    self.smile_mac_address = status.find(".//network/mac_address").text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -344,12 +340,11 @@ class Smile(SmileComm, SmileData):
                     self.smile_fw_version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
-                    for network in NETWORK_TYPES:
+                    # If wlan0 contains data it's active, so eth0 should be checked last
+                    for network in ["wlan0", "eth0"]:
                         net_locator = f".//{network}/mac"
                         if system.findall(net_locator):
-                            self.smile_mac_address[network] = system.findall(
-                                net_locator
-                            )[0].text
+                            self.smile_mac_address = system.findall(net_locator)[0].text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -374,7 +369,7 @@ class Smile(SmileComm, SmileData):
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
             if gateway.find("mac_address") is not None:
-                self.smile_mac_address[MAC_NETWORK] = gateway.find("mac_address").text
+                self.smile_mac_address = gateway.find("mac_address").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain)
 

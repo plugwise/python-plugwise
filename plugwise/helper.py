@@ -37,7 +37,6 @@ from .constants import (
     HOME_MEASUREMENTS,
     LOCATIONS,
     LOGGER,
-    MAC_ZIGBEE,
     POWER_WATT,
     SENSORS,
     SWITCH_GROUP_TYPES,
@@ -321,7 +320,7 @@ class SmileHelper:
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
         self.smile_hw_version: str | None = None
-        self.smile_mac_address: dict[str, Any] = {}
+        self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
         self.smile_type: str | None = None
         self.smile_version: list[str] = []
@@ -424,7 +423,7 @@ class SmileHelper:
             "vendor_model": None,
             "hardware_version": None,
             "firmware_version": None,
-            "mac_address": None,
+            "zigbee_mac_address": None,
         }
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
@@ -438,9 +437,7 @@ class SmileHelper:
                 model_data["firmware_version"] = module.find("firmware_version").text
                 mac_locator = ".//protocols/zig_bee_node/mac_address"
                 if module.findall(mac_locator):
-                    model_data["mac_address"] = {
-                        MAC_ZIGBEE: module.find(mac_locator).text
-                    }
+                    model_data["zigbee_mac_address"] = module.find(mac_locator).text
 
         return model_data
 
@@ -460,7 +457,7 @@ class SmileHelper:
                 hw_version = module_data["hardware_version"].replace("-", "")
                 appl.model = version_to_model(hw_version)
             appl.fw = module_data["firmware_version"]
-            appl.mac = module_data["mac_address"]
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
             return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
@@ -471,7 +468,7 @@ class SmileHelper:
             appl.model = version_to_model(module_data["vendor_model"])
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
-            appl.mac = module_data["mac_address"]
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
             return appl
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
@@ -487,7 +484,7 @@ class SmileHelper:
             # Adam: check for ZigBee mac address
             mac_locator = ".//protocols/zig_bee_coordinator/mac_address"
             if self._domain_objects and self._domain_objects.findall(mac_locator):
-                appl.mac[MAC_ZIGBEE] = self._domain_objects.findall(mac_locator)[0].text
+                appl.zigbee_mac = self._domain_objects.findall(mac_locator)[0].text
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
@@ -591,7 +588,7 @@ class SmileHelper:
                 "class": "gateway",
                 "fw": self.smile_version[0],
                 "hw": self.smile_hw_version,
-                "mac_addresses": self.smile_mac_address,
+                "mac_address": self.smile_mac_address,
                 "location": self._home_location,
                 "vendor": "Plugwise B.V.",
             }
@@ -641,7 +638,8 @@ class SmileHelper:
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.fw = None
             appl.hw = None
-            appl.mac = {}
+            appl.mac = None
+            appl.zigbee_mac = None
             appl.v_name = None
 
             # Determine types for this appliance
@@ -661,12 +659,20 @@ class SmileHelper:
                 "class": appl.pwclass,
                 "fw": appl.fw,
                 "hw": appl.hw,
-                "mac_addresses": appl.mac,
                 "location": appl.location,
+                "mac_address": appl.mac,
                 "model": appl.model,
                 "name": appl.name,
                 "vendor": appl.v_name,
             }
+
+            if appl.zigbee_mac:
+                self._appl_data[appl.dev_id].update(
+                    {
+                        "zigbee_mac_address": appl.zigbee_mac,
+                    }
+                )
+
             if (
                 not self._smile_legacy
                 and appl.pwclass == "thermostat"
