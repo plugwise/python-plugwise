@@ -436,7 +436,6 @@ class SmileHelper:
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
                 if found := module.find(".//protocols/zig_bee_node"):
-                    LOGGER.debug("HOI 439")
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
 
         return model_data
@@ -485,7 +484,6 @@ class SmileHelper:
             if self.smile_name == "Adam" and (
                 found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
             ):
-                LOGGER.debug("HOI 487")
                 appl.zigbee_mac = found.find("mac_address").text
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
