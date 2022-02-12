@@ -435,7 +435,11 @@ class SmileHelper:
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
+                # Adam
                 if found := module.find(".//protocols/zig_bee_node"):
+                    model_data["zigbee_mac_address"] = found.find("mac_address").text
+                # Stretches
+                if found := module.find(".//protocols/network_router"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
 
         return model_data
