@@ -435,10 +435,9 @@ class SmileHelper:
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
-                mac_locator = "protocols/zig_bee_node/mac_address"
-                # 20220211 TODO: for some reason find doesn't work, findall with [0] does
+                mac_locator = ".//protocols/zig_bee_node/mac_address"
                 if module.findall(mac_locator):
-                    model_data["mac_address"] = module.findall(mac_locator)[0].text
+                    model_data["mac_address"] = module.find(mac_locator).text
 
         return model_data
 
