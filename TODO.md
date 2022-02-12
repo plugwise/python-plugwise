@@ -4,7 +4,6 @@ TODO: delete before merge :)
 
 - [ ] Fetch hardwarwe version (str|None)
   - [x] Hardware version displayed 
-- [ ] Look into binary sensor for firmware update 
 - [ ] Add mac addresses (str|none) where applicable
   - [x] Gateways
   - [x] Plugs
