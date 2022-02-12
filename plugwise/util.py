@@ -3,6 +3,8 @@ Use of this source code is governed by the MIT license found in the LICENSE file
 
 Plugwise protocol helpers
 """
+from __future__ import annotations
+
 import binascii
 import datetime
 import re
@@ -34,7 +36,7 @@ def validate_mac(mac):
     return True
 
 
-def version_to_model(version):
+def version_to_model(version) -> str:
     """Translate hardware_version to device type."""
     if version is None:
         return None
@@ -87,12 +89,12 @@ def int_to_uint(val, octals):
     return val
 
 
-def escape_illegal_xml_characters(xmldata):
+def escape_illegal_xml_characters(xmldata: str) -> str:
     """Replace illegal &-characters."""
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure, unit):
+def format_measure(measure: str, unit: str) -> float | int | bool:
     """Format measure to correct type."""
     try:
         measure = int(measure)
@@ -121,18 +123,9 @@ def format_measure(measure, unit):
     return measure
 
 
-def determine_selected(available, selected, schemas):
-    """Determine selected schema from available schemas."""
-    for schema, active in schemas.items():
-        if "None" in available:
-            available.remove("None")
-        available.append(schema)
-        if active:
-            selected = schema
-    return available, selected
-
-
-def in_between(now, start, end):
+def in_between(
+    now: datetime.time, start: datetime.time, end: datetime.time
+) -> datetime.time:
     """Determine timing for schedules."""
     if start <= end:
         return start <= now < end

@@ -1,9 +1,12 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
 Plugwise backend module for Home Assistant Core.
 """
-import logging
+from __future__ import annotations
+
+from typing import Any
 
 import aiohttp
+from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
@@ -18,6 +21,7 @@ from .constants import (
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
+    LOGGER,
     MODULES,
     NOTIFICATIONS,
     PW_NOTIFICATION,
@@ -31,54 +35,54 @@ from .constants import (
 from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
 from .helper import SmileComm, SmileHelper, pw_notification_updater, update_helper
 
-_LOGGER = logging.getLogger(__name__)
-
 
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def _append_special(self, data, d_id, bs_dict, s_dict):
+    def _append_special(
+        self, d_id: str, bs_dict: dict[str, bool], s_dict: dict[str, Any]
+    ) -> None:
         """Helper-function for smile.py: _all_device_data().
         When conditions are met, the plugwise_notification binary_sensor is appended.
         """
         if d_id == self.gateway_id:
-            if self._sm_thermostat is not None:
+            if self._is_thermostat:
                 bs_dict.update(PW_NOTIFICATION)
 
-    def _all_device_data(self):
+    def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        for dev_id, dev_dict in self._devices.items():
-            dev_and_data = dev_dict
-            temp_bs_dict = {}
-            temp_s_dict = {}
-            temp_sw_dict = {}
-            data = self._get_device_data(dev_id)
+        for device_id, device in self._devices.items():
+            temp_bs_dict: dict[str, bool] = {}
+            temp_s_dict: dict[str, Any] = {}
+            temp_sw_dict: dict[str, bool] = {}
+            data = self._get_device_data(device_id)
 
             self._create_dicts_from_data(data, temp_bs_dict, temp_s_dict, temp_sw_dict)
-            self._append_special(data, dev_id, temp_bs_dict, temp_s_dict)
-
-            dev_and_data.update(data)
+            self._append_special(device_id, temp_bs_dict, temp_s_dict)
+            device.update(data)
             if temp_bs_dict:
-                dev_and_data["binary_sensors"] = temp_bs_dict
+                device["binary_sensors"] = temp_bs_dict
             if temp_s_dict:
-                dev_and_data["sensors"] = temp_s_dict
+                device["sensors"] = temp_s_dict
             if temp_sw_dict:
-                dev_and_data["switches"] = temp_sw_dict
+                device["switches"] = temp_sw_dict
 
-            self.gw_devices[dev_id] = dev_and_data
+            self.gw_devices[device_id] = device
 
-        self.gw_data["active_device"] = self._ot_device or self._on_off_device
+        self.gw_data["active_device"] = self._opentherm_device or self._on_off_device
         self.gw_data["cooling_present"] = self._cooling_present
         self.gw_data["gateway_id"] = self.gateway_id
         self.gw_data["heater_id"] = self._heater_id
-        self.gw_data["single_master_thermostat"] = self._sm_thermostat
+        self.gw_data["single_master_thermostat"] = (
+            self._is_thermostat and not self._multi_thermostats
+        )
         self.gw_data["smile_name"] = self.smile_name
 
-    def get_all_devices(self):
+    def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
-        self._devices = {}
+        self._devices: dict[str, dict[str, Any]] = {}
         self._scan_thermostats()
         self.single_master_thermostat()
 
@@ -104,15 +108,17 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-    def _device_data_switching_group(self, details, device_data):
+    def _device_data_switching_group(
+        self, details: dict[str, Any], device_data: dict[str, Any]
+    ) -> dict[str, bool]:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
         if details["class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
-                appl_data = self._get_appliance_data(member)
-                if appl_data["relay"]:
+                member_data = self._get_appliance_data(member)
+                if member_data["relay"]:
                     counter += 1
 
             device_data["relay"] = True
@@ -121,7 +127,9 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_adam(self, details, device_data):
+    def _device_data_adam(
+        self, details: dict[str, Any], device_data: dict[str, Any]
+    ) -> dict[str, bool]:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
@@ -135,7 +143,9 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _device_data_climate(self, details, device_data):
+    def _device_data_climate(
+        self, details: dict[str, Any], device_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
@@ -154,12 +164,11 @@ class SmileData(SmileHelper):
         avail_schemas, sel_schema, sched_setpoint, last_active = self._schemas(loc_id)
         device_data["available_schedules"] = avail_schemas
         device_data["selected_schedule"] = sel_schema
-        if not self._smile_legacy:
-            device_data["schedule_temperature"] = sched_setpoint
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schemas))
         else:
             device_data["last_used"] = last_active
+            device_data["schedule_temperature"] = sched_setpoint
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
@@ -178,12 +187,11 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _get_device_data(self, dev_id):
+    def _get_device_data(self, dev_id: str) -> dict[str, Any]:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        devices = self._devices
-        details = devices.get(dev_id)
+        details = self._devices.get(dev_id)
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
@@ -220,11 +228,10 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def single_master_thermostat(self):
-        """Determine if there is a single master thermostat in the setup.
-        Possible output: None, True, False.
-        """
+    def single_master_thermostat(self) -> None:
+        """Determine if there is a single master thermostat in the setup."""
         if self.smile_type == "thermostat":
+            self._is_thermostat = True
             count = 0
             for dummy, data in self._thermo_locs.items():
                 if "master_prio" in data:
@@ -232,9 +239,9 @@ class SmileData(SmileHelper):
                         count += 1
 
             if count == 1:
-                self._sm_thermostat = True
+                self._multi_thermostats = False
             if count > 1:
-                self._sm_thermostat = False
+                self._multi_thermostats = True
 
 
 class Smile(SmileComm, SmileData):
@@ -244,13 +251,13 @@ class Smile(SmileComm, SmileData):
 
     def __init__(
         self,
-        host,
-        password,
-        username=DEFAULT_USERNAME,
-        port=DEFAULT_PORT,
-        timeout=DEFAULT_TIMEOUT,
+        host: str,
+        password: str,
+        username: str = DEFAULT_USERNAME,
+        port: str = DEFAULT_PORT,
+        timeout: str = DEFAULT_TIMEOUT,
         websession: aiohttp.ClientSession = None,
-    ):
+    ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
@@ -262,17 +269,17 @@ class Smile(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
-        self._notifications = {}
-        self.smile_hostname = None
+        self._notifications: dict[str, str] = {}
+        self.smile_hostname: str | None = None
 
-    async def connect(self):
+    async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
-        names = []
+        names: list[str] = []
 
         result = await self._request(DOMAIN_OBJECTS)
         dsmrmain = result.find(".//module/protocols/dsmrmain")
 
-        vendor_names = result.findall(".//module/vendor_name")
+        vendor_names: list[etree] = result.findall(".//module/vendor_name")
         if not vendor_names:
             # Work-around for Stretch fv 2.7.18
             result = await self._request(MODULES)
@@ -283,9 +290,10 @@ class Smile(SmileComm, SmileData):
 
         if "Plugwise" not in names:
             if dsmrmain is None:  # pragma: no cover
-                _LOGGER.error(
+                LOGGER.error(
                     "Connected but expected text not returned, \
-                              we got %s",
+                    we got %s. Please create an issue on \
+                    http://github.com/plugwise/python-plugwise",
                     result,
                 )
                 raise ConnectionFailedError
@@ -298,7 +306,9 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result, dsmrmain):
+    async def _smile_detect_legacy(
+        self, result: etree, dsmrmain: etree
+    ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
         network = result.find(".//module/protocols/master_controller")
 
@@ -334,15 +344,18 @@ class Smile(SmileComm, SmileData):
                     raise ConnectionFailedError
             else:  # pragma: no cover
                 # No cornercase, just end of the line
-                _LOGGER.error("Connected but no gateway device information found")
+                LOGGER.error(
+                    "Connected but no gateway device information found, please create \
+                     an issue on http://github.com/plugwise/python-plugwise"
+                )
                 raise ConnectionFailedError
         return model, version
 
-    async def _smile_detect(self, result, dsmrmain):
+    async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
         Detect which type of Smile is connected.
         """
-        model = None
+        model: str | None = None
         if (gateway := result.find(".//gateway")) is not None:
             model = result.find(".//gateway/vendor_model").text
             version = result.find(".//gateway/firmware_version").text
@@ -353,17 +366,20 @@ class Smile(SmileComm, SmileData):
 
         if model is None or version is None:  # pragma: no cover
             # Corner case check
-            _LOGGER.error("Unable to find model or version information")
+            LOGGER.error(
+                "Unable to find model or version information, please create \
+                 an issue on http://github.com/plugwise/python-plugwise"
+            )
             raise UnsupportedDeviceError
 
         ver = semver.VersionInfo.parse(version)
         target_smile = f"{model}_v{ver.major}"
-        _LOGGER.debug("Plugwise identified as %s", target_smile)
+        LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
-            _LOGGER.error(
+            LOGGER.error(
                 'Your version Smile identified as "%s" seems\
                  unsupported by our plugin, please create an issue\
-                 on http://github.com/plugwise/python-plugwise!',
+                 on http://github.com/plugwise/python-plugwise',
                 target_smile,
             )
             raise UnsupportedDeviceError
@@ -379,7 +395,7 @@ class Smile(SmileComm, SmileData):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-    async def _full_update_device(self):
+    async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
@@ -392,7 +408,7 @@ class Smile(SmileComm, SmileData):
         if self.smile_type != "power":
             await self._update_domain_objects()
 
-    async def _update_domain_objects(self):
+    async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
         Request domain_objects data.
         """
@@ -400,21 +416,21 @@ class Smile(SmileComm, SmileData):
 
         # If Plugwise notifications present:
         self._notifications = {}
-        notifications = self._domain_objects.findall(".//notification")
+        notifications: etree = self._domain_objects.findall(".//notification")
         for notification in notifications:
             try:
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
                 self._notifications.update({msg_id: {msg_type: msg}})
-                _LOGGER.debug("Plugwise notifications: %s", self._notifications)
+                LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
-                _LOGGER.info(
+                LOGGER.info(
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self):
+    async def async_update(self) -> dict[str, Any]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -457,9 +473,9 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name, status):
+    async def _set_schedule_state_legacy(self, name: str, status: str) -> bool:
         """Helper-function for set_schedule_state()."""
-        schema_rule_id = None
+        schema_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
                 schema_rule_id = rule.attrib["id"]
@@ -467,9 +483,8 @@ class Smile(SmileComm, SmileData):
         if schema_rule_id is None:
             return False
 
-        template_id = None
         state = "false"
-        if str(status) == "on":
+        if status == "on":
             state = "true"
         locator = f'.//*[@id="{schema_rule_id}"]/template'
         for rule in self._domain_objects.findall(locator):
@@ -485,18 +500,18 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def set_schedule_state(self, loc_id, name, state):
+    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> bool:
         """Set the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         """
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
-        schema_rule = self._rule_ids_by_name(str(name), loc_id)
+        schema_rule = self._rule_ids_by_name(name, loc_id)
         if not schema_rule or schema_rule is None:
             return False
 
-        schema_rule_id = next(iter(schema_rule))
+        schema_rule_id: str = next(iter(schema_rule))
         info = ""
         if state == "on":
             info = f'<context><zone><location id="{loc_id}" /></zone></context>'
@@ -519,7 +534,19 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def set_preset(self, loc_id, preset):
+    async def _set_preset_legacy(self, preset: str) -> bool:
+        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
+        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
+        if (rule := self._domain_objects.find(locator)) is None:
+            return False
+
+        uri = RULES
+        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def set_preset(self, loc_id: str, preset: str) -> bool:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if self._smile_legacy:
             return await self._set_preset_legacy(preset)
@@ -541,9 +568,8 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def set_temperature(self, loc_id, temperature):
+    async def set_temperature(self, loc_id: str, temperature: str) -> bool:
         """Set the given Temperature on the relevant Thermostat."""
-        temperature = str(temperature)
         uri = self._temperature_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
@@ -553,7 +579,9 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def _set_groupswitch_member_state(self, members, state, switch):
+    async def _set_groupswitch_member_state(
+        self, members: list[str] | None, state: str, switch: Munch
+    ) -> bool:
         """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
         """
@@ -563,14 +591,15 @@ class Smile(SmileComm, SmileData):
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
             if self._stretch_v2:
                 uri = f"{APPLIANCES};id={member}/{switch.device}"
-            state = str(state)
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
             await self._request(uri, method="put", data=data)
 
         return True
 
-    async def set_switch_state(self, appl_id, members, model, state):
+    async def set_switch_state(
+        self, appl_id: str, members: list[str] | None, model: str, state: str
+    ) -> bool:
         """Set the given State of the relevant Switch."""
         switch = Munch()
         switch.actuator = "actuator_functionalities"
@@ -603,7 +632,7 @@ class Smile(SmileComm, SmileData):
             locator = (
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
-            lock_state = self._appliances.find(locator).text
+            lock_state: str = self._appliances.find(locator).text
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
                 return False
@@ -611,21 +640,9 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         return True
 
-    async def _set_preset_legacy(self, preset):
-        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        if (rule := self._domain_objects.find(locator)) is None:
-            return False
-
-        uri = f"{RULES}"
-        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
-
-        await self._request(uri, method="put", data=data)
-        return True
-
-    async def delete_notification(self):
+    async def delete_notification(self) -> bool:
         """Delete the active Plugwise Notification."""
-        uri = f"{NOTIFICATIONS}"
+        uri = NOTIFICATIONS
 
         await self._request(uri, method="delete")
         return True

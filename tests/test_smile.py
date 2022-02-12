@@ -1,3 +1,4 @@
+# pylint: disable=protected-access
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 import asyncio
 import importlib
@@ -286,8 +287,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         if not timeout:
-            assert smile._timeout == 30  # pylint: disable=protected-access
-        assert smile._domain_objects is None  # pylint: disable=protected-access
+            assert smile._timeout == 30
+        assert smile._domain_objects is None
         assert smile.smile_type is None
 
         # Connect to the smile
@@ -393,7 +394,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._write_json("all_data", data)
         self._write_json("notifications", extra["notifications"])
 
-        location_list = smile._thermo_locs  # pylint: disable=protected-access
+        location_list = smile._thermo_locs
 
         _LOGGER.info("Gateway id = %s", extra["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
@@ -639,11 +640,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "1.8.0"
         _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
+        assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert not self.notifications
 
@@ -739,11 +741,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "1.8.0"
         _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
+        assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert not self.notifications
 
@@ -810,12 +813,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "2.5.9"
         _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
+        assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
         assert not self.notifications
 
         await smile.close_connection()
@@ -848,12 +851,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "2.5.9"
         _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
+        assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
         assert not self.notifications
 
         await smile.close_connection()
@@ -930,11 +933,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.0.15"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert not self.notifications
 
@@ -975,11 +979,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.0.15"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
 
         await self.tinker_thermostat(
             smile,
@@ -1026,11 +1031,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.1.11"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert not self.notifications
 
@@ -1075,11 +1081,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.0.15"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert not self.notifications
 
@@ -1161,11 +1168,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.2.1"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert not self.notifications
 
@@ -1221,11 +1229,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.0.15"
         _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert not self.notifications
 
@@ -1419,11 +1428,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.6.4"
         _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert smile._multi_thermostats
         assert self.active_device_present
 
         switch_change = await self.tinker_switch(
@@ -1565,11 +1575,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.0.15"
         _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert smile._multi_thermostats
         assert self.active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -1969,11 +1980,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.0.15"
         _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert not smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert smile._multi_thermostats
         assert self.active_device_present
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -2068,11 +2080,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "power"
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.3.6"
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
         assert not self.cooling_present
         assert not self.notifications
 
@@ -2104,12 +2116,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.3.6"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert nomaster thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
         assert not self.notifications
 
         await smile.close_connection()
@@ -2158,12 +2170,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.3.9"
         _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
         assert not self.notifications
 
         await smile.close_connection()
@@ -2211,12 +2223,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.0.15"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
         await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert self.cooling_present
         assert not self.notifications
@@ -2266,11 +2279,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.0.15"
         _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
         assert self.active_device_present
         assert self.cooling_present
         assert not self.notifications
@@ -2298,11 +2312,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.0.23"
         _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata, True)
         _LOGGER.info(" # Assert master thermostat")
-        assert smile._sm_thermostat  # pylint: disable=protected-access
+        assert smile._is_thermostat
+        assert not smile._multi_thermostats
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -2490,12 +2505,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "3.1.11"
         _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
+        assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2767,12 +2782,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "2.3.12"
         _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
+        assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
 
         switch_change = await self.tinker_switch(
             smile, "2587a7fcdd7e482dab03fda256076b4b"
@@ -2816,12 +2831,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "2.7.18"
         _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy  # pylint: disable=protected-access
+        assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
 
         switch_change = await self.tinker_switch(
             smile, "8b8d14b242e24cd789743c828b9a2ea9"
@@ -2872,12 +2887,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.1.1"
         _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy  # pylint: disable=protected-access
+        assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
         _LOGGER.info(" # Assert no master thermostat")
         # it's not a thermostat :)
-        assert smile._sm_thermostat is None  # pylint: disable=protected-access
+        assert not smile._is_thermostat
         assert not self.notifications
 
         await smile.close_connection()
