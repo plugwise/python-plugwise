@@ -482,9 +482,10 @@ class SmileHelper:
             appl.v_name = "Plugwise B.V."
 
             # Adam: check for ZigBee mac address
-            mac_locator = ".//protocols/zig_bee_coordinator/mac_address"
-            if self._domain_objects and self._domain_objects.findall(mac_locator):
-                appl.zigbee_mac = self._domain_objects.findall(mac_locator)[0].text
+            if self.smile_name == "Adam" and found := self._domain_objects.find(mac_locator
+                ".//protocols/zig_bee_coordinator/mac_address"
+            ):
+                appl.zigbee_mac = found.text
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
