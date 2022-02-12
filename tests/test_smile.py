@@ -1222,13 +1222,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "binary_sensors": {"flame_state": False},
                 "heating_state": False,
             },
-            "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
-                "sensors": {"outdoor_temperature": 11.9}
-            },
             # Plug MediaCenter
             "aa6b0002df0a46e1b1eb94beb61eddfe": {
                 "sensors": {"electricity_consumed": 10.3},
                 "switches": {"lock": False, "relay": True},
+            },
+            # Gateway
+            "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
+                "hw": "AME Smile 2.0 board",
+                "mac_address": "0123456789AB",
+                "zigbee_mac_address": "0123456789AB",
+                "sensors": {
+                    "outdoor_temperature": 11.9,
+                },
             },
         }
 
