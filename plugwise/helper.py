@@ -435,8 +435,8 @@ class SmileHelper:
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
-                if found := module.findall(".//protocols/zig_bee_node/mac_address"):
-                    model_data["zigbee_mac_address"] = found[0].text
+                if found := module.find(".//protocols/zig_bee_node/mac_address"):
+                    model_data["zigbee_mac_address"] = found.text
 
         return model_data
 
@@ -482,11 +482,11 @@ class SmileHelper:
 
             # Adam: check for ZigBee mac address
             if self.smile_name == "Adam" and (
-                found := self._domain_objects.findall(
+                found := self._domain_objects.find(
                     ".//protocols/zig_bee_coordinator/mac_address"
                 )
             ):
-                appl.zigbee_mac = found[0].text
+                appl.zigbee_mac = found.text
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
