@@ -311,7 +311,8 @@ class Smile(SmileComm, SmileData):
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
         # Stretch: check for orphaned Sticks
-        stretch = result.find(".//module/protocols/master_controller")
+        if stretch := result.find(".//module/protocols/master_controller"):
+            self.smile_zigbee_mac_address = stretch.find("mac_address").text
         networks = result.findall(".//network")
         if networks:
             for network in networks:
