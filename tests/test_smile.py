@@ -2429,21 +2429,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "switches": {"relay": True, "lock": False},
             },
-            "e309b52ea5684cf1a22f30cf0cd15051": {
-                "class": "computer_desktop",
-                "fw": None,
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": None,
-                "name": "Computer (788618)",
-                "vendor": None,
-                "sensors": {
-                    "electricity_consumed": 156,
-                    "electricity_consumed_interval": 163,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": True},
-            },
             "71e1944f2a944b26ad73323e399efef0": {
                 "class": "switching",
                 "fw": None,
