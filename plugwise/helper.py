@@ -494,10 +494,6 @@ class SmileHelper:
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
-            # Stretch: add Stick Zigbee mac address
-            if self.smile_type == "stretch":
-                appl.zigbee_mac = self.smile_zigbee_mac_address
-
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
@@ -622,7 +618,11 @@ class SmileHelper:
 
             if self.smile_type == "stretch":
                 self._appl_data[self._home_location].update(
-                    {"model": "Stretch", "name": "Stretch"}
+                    {
+                        "model": "Stretch",
+                        "name": "Stretch",
+                        "zigbee_mac_address": self.smile_zigbee_mac_address,
+                    }
                 )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
