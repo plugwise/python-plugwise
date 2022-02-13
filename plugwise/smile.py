@@ -311,17 +311,14 @@ class Smile(SmileComm, SmileData):
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
         # Stretch: check for orphaned Sticks
-        network = False
         networks = result.findall(".//network")
         if not networks:
-            network = result.find(".//module/protocols/master_controller")
+            stretch = result.find(".//module/protocols/master_controller")
         else:
             for network in networks:
-                if found := network.find(".//nodes/network_router"):
-                    network = True
-                    self.smile_zigbee_mac_address = found.find(
-                        ".//master_controller/mac_address"
-                    ).text
+                if network.find(".//nodes/network_router"):
+                    stretch = network.find(".//master_controller")
+                    self.smile_zigbee_mac_address = stretch.find("mac_address").text
 
         # Assume legacy
         self._smile_legacy = True
@@ -345,7 +342,7 @@ class Smile(SmileComm, SmileData):
                     raise ConnectionFailedError
 
             # Stretch:
-            elif network is not None:
+            elif stretch is not None:
                 try:
                     system = await self._request(SYSTEM)
                     self.smile_fw_version = system.find(".//gateway/firmware").text
