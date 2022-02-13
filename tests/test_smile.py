@@ -2355,7 +2355,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "class": "gateway",
                 "fw": "3.1.11",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": "0123456789AB",
+                "mac_address": "01:23:45:67:89:AB",
                 "model": "Stretch",
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
