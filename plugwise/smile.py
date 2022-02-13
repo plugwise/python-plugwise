@@ -311,10 +311,9 @@ class Smile(SmileComm, SmileData):
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
         # Stretch: check for orphaned Sticks
+        stretch = result.find(".//module/protocols/master_controller")
         networks = result.findall(".//network")
-        if not networks:
-            stretch = result.find(".//module/protocols/master_controller")
-        else:
+        if networks:
             for network in networks:
                 if network.find(".//nodes/network_router"):
                     stretch = network.find(".//master_controller")
