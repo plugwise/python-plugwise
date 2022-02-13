@@ -321,7 +321,7 @@ class Smile(SmileComm, SmileData):
                     network = True
                     self.smile_zigbee_mac_address = found.find(
                         ".//master_controller/mac_address"
-                    )
+                    ).text
 
         # Assume legacy
         self._smile_legacy = True
