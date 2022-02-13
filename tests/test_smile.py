@@ -2507,6 +2507,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
                 "mac_address": "01:23:45:67:89:AB",
+                "zigbee_mac_address": "0123456789AB",
             },
             "09c8ce93d7064fa6a233c0e4c2449bfe": {
                 "class": "lamp",
