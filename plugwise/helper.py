@@ -452,6 +452,9 @@ class SmileHelper:
             locator = ".//services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
+            if not module_data["contents"]:
+                return None
+
             appl.v_name = module_data["vendor_name"]
             if appl.model != "Switchgroup":
                 appl.model = None
@@ -549,7 +552,9 @@ class SmileHelper:
             return appl
 
         # Handle stretches
-        self._energy_device_info_finder(appliance, appl)
+        appl = self._energy_device_info_finder(appliance, appl)
+        if not appl:
+            return None
 
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
@@ -651,7 +656,7 @@ class SmileHelper:
 
             # Determine class for this appliance
             appl = self._appliance_info_finder(appliance, appl)
-            # Skip on heater_central when no active device present
+            # Skip on heater_central when no active device present or on orphaned stretch devices
             if not appl:
                 continue
 
