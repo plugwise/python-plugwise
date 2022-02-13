@@ -2355,9 +2355,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "class": "gateway",
                 "fw": "3.1.11",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "mac_address": "0123456789AB",
                 "model": "Stretch",
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
+                "zigbee_mac_address": "0123456789AB",
             },
             "5871317346d045bc9f6b987ef25ee638": {
                 "class": "water_heater_vessel",

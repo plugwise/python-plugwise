@@ -310,7 +310,18 @@ class Smile(SmileComm, SmileData):
         self, result: etree, dsmrmain: etree
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
-        network = result.find(".//module/protocols/master_controller")
+        # Stretch: check for orphaned Sticks
+        network = False
+        networks = result.findall(".//network")
+        if not networks:
+            network = result.find(".//module/protocols/master_controller")
+        else:
+            for network in networks:
+                if found := network.find(".//nodes/network_router"):
+                    network = True
+                    self.smile_zigbee_mac_address = found.find(
+                        ".//master_controller/mac_address"
+                    )
 
         # Assume legacy
         self._smile_legacy = True

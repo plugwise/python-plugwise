@@ -324,6 +324,7 @@ class SmileHelper:
         self.smile_name: str | None = None
         self.smile_type: str | None = None
         self.smile_version: list[str] = []
+        self.smile_zigbee_mac_address: str | None = None
 
     def _locations_legacy(self) -> None:
         """Helper-function for _all_locations().
@@ -492,6 +493,10 @@ class SmileHelper:
                 found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
             ):
                 appl.zigbee_mac = found.find("mac_address").text
+
+            # Stretch: add Stick Zigbee mac address
+            if self.smile_type == "stretch":
+                appl.zigbee_mac = self.smile_zigbee_mac_address
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
