@@ -2359,21 +2359,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
             },
-            "5ca521ac179d468e91d772eeeb8a2117": {
-                "class": "zz_misc",
-                "fw": None,
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": None,
-                "name": "Oven (793F84)",
-                "vendor": None,
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": False},
-            },
             "5871317346d045bc9f6b987ef25ee638": {
                 "class": "water_heater_vessel",
                 "fw": "2011-06-27T10:52:18+02:00",
@@ -2429,21 +2414,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "99f89d097be34fca88d8598c6dbc18ea": {
-                "class": "router",
-                "fw": None,
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": None,
-                "name": "Meterkast (787BFB)",
-                "vendor": None,
-                "sensors": {
-                    "electricity_consumed": 27.6,
-                    "electricity_consumed_interval": 28.2,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": True},
             },
             "059e4d03c7a34d278add5c7a4a781d19": {
                 "class": "washingmachine",
