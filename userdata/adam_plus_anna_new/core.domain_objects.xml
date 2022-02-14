@@ -1967,7 +1967,7 @@
 		<vendor_model>smile_open_therm</vendor_model>
 		<hardware_version>AME Smile 2.0 board</hardware_version>
 		<firmware_version>3.6.4</firmware_version>
-		<mac_address>0123456789AB</mac_address>
+		<mac_address>012345670001</mac_address>
 		<short_id>abcdefgh</short_id>
 		<send_data>true</send_data>
 		<anonymous>false</anonymous>
