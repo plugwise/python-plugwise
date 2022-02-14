@@ -449,7 +449,7 @@
 		<vendor_model>smile_thermo</vendor_model>
 		<hardware_version>AME Smile 2.0 board</hardware_version>
 		<firmware_version>4.0.15</firmware_version>
-		<mac_address>0123456789AB</mac_address>
+		<mac_address>012345670001</mac_address>
 		<short_id>abcdefgh</short_id>
 		<send_data>false</send_data>
 		<anonymous>false</anonymous>
