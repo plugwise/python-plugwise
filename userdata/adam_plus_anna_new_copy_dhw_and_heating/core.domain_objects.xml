@@ -11,7 +11,7 @@
 		<services/>
 		<protocols>
 			<zig_bee_coordinator id='fcd3478dede94c5c87b5ea39a3404708'>
-				<mac_address>0123456789AB</mac_address>
+				<mac_address>012345670101</mac_address>
 				<permit_joining>false</permit_joining>
 				<neighbors><zig_bee_node id='0374084c2e2843f19688e289235859ce'/><zig_bee_node id='87f66dac0b92499897598c95fe55286e'/><zig_bee_node id='9074cd5161764e8eb0261d5ba99a0428'/><zig_bee_node id='9ca5df0038564aeeb59709ab3de23f97'/><zig_bee_node id='a7c4a564cd4943a1ab9eee428270b2ae'/></neighbors>
 				<zig_bee_nodes><zig_bee_node id='0374084c2e2843f19688e289235859ce'/><zig_bee_node id='87f66dac0b92499897598c95fe55286e'/><zig_bee_node id='9074cd5161764e8eb0261d5ba99a0428'/><zig_bee_node id='9ca5df0038564aeeb59709ab3de23f97'/><zig_bee_node id='a7c4a564cd4943a1ab9eee428270b2ae'/></zig_bee_nodes>
@@ -81,7 +81,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='9074cd5161764e8eb0261d5ba99a0428'>
-				<mac_address>0123456789AB</mac_address>
+				<mac_address>012345670A01</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -219,7 +219,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='0374084c2e2843f19688e289235859ce'>
-				<mac_address>0123456789AB</mac_address>
+				<mac_address>012345670A02</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -350,7 +350,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='87f66dac0b92499897598c95fe55286e'>
-				<mac_address>0123456789AB</mac_address>
+				<mac_address>012345670A03</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -590,7 +590,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='9ca5df0038564aeeb59709ab3de23f97'>
-				<mac_address>0123456789AB</mac_address>
+				<mac_address>012345670A04</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -1580,7 +1580,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='a7c4a564cd4943a1ab9eee428270b2ae'>
-				<mac_address>0123456789AB</mac_address>
+				<mac_address>012345670A05</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -1799,7 +1799,7 @@
 		<vendor_model>smile_open_therm</vendor_model>
 		<hardware_version>AME Smile 2.0 board</hardware_version>
 		<firmware_version>3.2.4</firmware_version>
-		<mac_address>0123456789AB</mac_address>
+		<mac_address>012345670001</mac_address>
 		<short_id>abcdefgh</short_id>
 		<send_data>true</send_data>
 		<anonymous>false</anonymous>
