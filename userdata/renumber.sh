@@ -75,7 +75,7 @@ echo ""
 echo "Changing coordinator!"
 # Coordinator change
 # shellcheck disable=2086
-sed -i".bck" '/'${coord}'/{n;s#0123456789AB#'${mac_coord}'#;}' "${domain_objects}" "${modules}"
+sed -i".sedbck" '/'${coord}'/{n;s#0123456789AB#'${mac_coord}'#;}' "${domain_objects}" "${modules}"
 
 echo ""
 echo "Changing nodes!"
@@ -88,7 +88,7 @@ for node_id in ${nodes}; do
      		counter="0${counter}"
         fi
 	# shellcheck disable=2086
-	sed -i".bck" '/'${node_id}'/{n;s#0123456789AB#'${mac_node_pre}${counter}'#;}' "${domain_objects}" "${modules}"
+	sed -i".sedbck" '/'${node_id}'/{n;s#0123456789AB#'${mac_node_pre}${counter}'#;}' "${domain_objects}" "${modules}"
 done
 
 echo ""
@@ -97,7 +97,7 @@ if [ "$(grep -c "0123456789AB" "${domain_objects}" )" -gt 1 ]; then
 	echo "Unable to change gateway mac for ${domain_objects} => do this manually"
 else 
 	echo "Modifying main network address (assuming LAN)"
-	sed -i".bck" 's#0123456789AB#'${mac_lan}'#' "${domain_objects}"
+	sed -i".sedbck" 's#0123456789AB#'${mac_lan}'#' "${domain_objects}"
 fi
 
 echo ""
