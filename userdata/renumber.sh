@@ -102,12 +102,12 @@ fi
 
 echo ""
 echo "Checking for strays"
-domaincount=$(grep -c -EB1 "0123456789AB" "${domain_objects}")
-modulecount=$(grep -c -EB1 "0123456789AB" "${modules}")
+domaincount=$(grep -v "neighbor" "${domain_objects}" | grep -c -EB1 "0123456789AB")
+modulecount=$(grep -v "neighbor" "${modules}" | grep -c -EB1 "0123456789AB")
 totalcount=$((domaincount+modulecount))
 if [ "${totalcount}" -gt 1 ]; then
 	echo "Strays detected: (dumping found items)"
-	grep -EB1 "0123456789AB" "${domain_objects}" "${modules}"
+	grep -EB1 "0123456789AB" "${domain_objects}" "${modules}" | grep -v "neighbor"
 else
 	echo "All ok"
 fi
