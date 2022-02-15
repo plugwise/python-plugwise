@@ -432,6 +432,10 @@ DEVICE_MEASUREMENTS = {
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "relay": {ATTR_UNIT_OF_MEASUREMENT: None},
+    # Added measurements from actuator_functionalities/thermostat_functionality
+    "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "resolution": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
 HEATER_CENTRAL_MEASUREMENTS = {

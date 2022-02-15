@@ -598,6 +598,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Thermostat schedule",
                 "mode": "auto",
                 "sensors": {"temperature": 20.4, "setpoint": 20.5, "illuminance": 151},
+                "lower_bound": 4,
+                "upper_bound": 30,
+                "resolution": 0.1,
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
@@ -617,6 +620,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 21.7,
                     "water_pressure": 1.2,
                 },
+                "lower_bound": 50,
+                "upper_bound": 90,
+                "resolution": 1,
             },
             # Gateway
             "0000aaaa0000aaaa0000aaaa0000aa00": {
@@ -627,6 +633,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
+                "mac_address": None,
+                "hw": None,
             },
         }
 
@@ -800,6 +808,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "gas_consumed_cumulative": 584.431,
                     "gas_consumed_interval": 0.014,
                 },
+                "mac_address": "012345670001",
             },
         }
 
@@ -1144,6 +1153,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Test",
                 "mode": "auto",
                 "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
+                "lower_bound": 4,
+                "upper_bound": 30,
+                "resolution": 0.1,
             },
             # Gateway
             "a270735e4ccd45239424badc0578a2b1": {
@@ -1155,6 +1167,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 3.56},
+                "mac_address": "012345670001",
+                "hw": "AME Smile 2.0 board",
             },
         }
 
@@ -1209,13 +1223,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "binary_sensors": {"flame_state": False},
                 "heating_state": False,
             },
-            "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
-                "sensors": {"outdoor_temperature": 11.9}
-            },
             # Plug MediaCenter
             "aa6b0002df0a46e1b1eb94beb61eddfe": {
                 "sensors": {"electricity_consumed": 10.3},
                 "switches": {"lock": False, "relay": True},
+            },
+            # Gateway
+            "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
+                "hw": "AME Smile 2.0 board",
+                "mac_address": "012345670001",
+                "zigbee_mac_address": "012345670101",
+                "sensors": {
+                    "outdoor_temperature": 11.9,
+                },
             },
         }
 
@@ -1557,6 +1577,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "fe799307f1624099878210aa0b9f1475": {
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.69},
+                "mac_address": "012345670001",
+                "zigbee_mac_address": "012345670101",
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
@@ -1685,6 +1707,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": -0.2,
                     "valve_position": 0.0,
                 },
+                "mac_address": None,
             },
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "class": "zone_thermostat",
@@ -1799,6 +1822,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
+                "zigbee_mac_address": "012345670A14",
             },
             "4a810418d5394b3f82727340b91ba740": {
                 "class": "router",
@@ -2068,6 +2092,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
                 },
+                "mac_address": "012345670001",
             }
         }
 
@@ -2332,24 +2357,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "class": "gateway",
                 "fw": "3.1.11",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "mac_address": "01:23:45:67:89:AB",
                 "model": "Stretch",
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
-            },
-            "5ca521ac179d468e91d772eeeb8a2117": {
-                "class": "zz_misc",
-                "fw": None,
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": None,
-                "name": "Oven (793F84)",
-                "vendor": None,
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": False},
+                "zigbee_mac_address": "012345670101",
             },
             "5871317346d045bc9f6b987ef25ee638": {
                 "class": "water_heater_vessel",
@@ -2407,21 +2419,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "switches": {"relay": True, "lock": False},
             },
-            "99f89d097be34fca88d8598c6dbc18ea": {
-                "class": "router",
-                "fw": None,
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": None,
-                "name": "Meterkast (787BFB)",
-                "vendor": None,
-                "sensors": {
-                    "electricity_consumed": 27.6,
-                    "electricity_consumed_interval": 28.2,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": True},
-            },
             "059e4d03c7a34d278add5c7a4a781d19": {
                 "class": "washingmachine",
                 "fw": "2011-06-27T10:52:18+02:00",
@@ -2435,21 +2432,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "e309b52ea5684cf1a22f30cf0cd15051": {
-                "class": "computer_desktop",
-                "fw": None,
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": None,
-                "name": "Computer (788618)",
-                "vendor": None,
-                "sensors": {
-                    "electricity_consumed": 156,
-                    "electricity_consumed_interval": 163,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": True},
             },
             "71e1944f2a944b26ad73323e399efef0": {
                 "class": "switching",
@@ -2526,6 +2508,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Stretch",
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
+                "mac_address": "01:23:45:67:89:AB",
+                "zigbee_mac_address": "012345670101",
             },
             "09c8ce93d7064fa6a233c0e4c2449bfe": {
                 "class": "lamp",
@@ -2540,6 +2524,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
+                "zigbee_mac_address": "012345670A01",
             },
             "33a1c784a9ff4c2d8766a0212714be09": {
                 "class": "lighting",

@@ -310,7 +310,15 @@ class Smile(SmileComm, SmileData):
         self, result: etree, dsmrmain: etree
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
-        network = result.find(".//module/protocols/master_controller")
+        if network := result.find(".//module/protocols/master_controller"):
+            self.smile_zigbee_mac_address = network.find("mac_address").text
+        # Stretch: check for orphaned Sticks
+        zb_networks = result.findall(".//network")
+        if zb_networks:
+            for zb_network in zb_networks:
+                if zb_network.find(".//nodes/network_router"):
+                    network = zb_network.find(".//master_controller")
+                    self.smile_zigbee_mac_address = network.find("mac_address").text
 
         # Assume legacy
         self._smile_legacy = True
@@ -318,16 +326,17 @@ class Smile(SmileComm, SmileData):
         anna = result.find('.//appliance[type="thermostat"]')
         # Fake insert version assuming Anna
         # couldn't find another way to identify as legacy Anna
-        version = "1.8.0"
+        self.smile_fw_version = "1.8.0"
         model = "smile_thermo"
         if anna is None:
             # P1 legacy:
             if dsmrmain is not None:
                 try:
                     status = await self._request(STATUS)
-                    version = status.find(".//system/version").text
+                    self.smile_fw_version = status.find(".//system/version").text
                     model = status.find(".//system/product").text
                     self.smile_hostname = status.find(".//network/hostname").text
+                    self.smile_mac_address = status.find(".//network/mac_address").text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -336,9 +345,14 @@ class Smile(SmileComm, SmileData):
             elif network is not None:
                 try:
                     system = await self._request(SYSTEM)
-                    version = system.find(".//gateway/firmware").text
+                    self.smile_fw_version = system.find(".//gateway/firmware").text
                     model = system.find(".//gateway/product").text
                     self.smile_hostname = system.find(".//gateway/hostname").text
+                    # If wlan0 contains data it's active, so eth0 should be checked last
+                    for network in ["wlan0", "eth0"]:
+                        net_locator = f".//{network}/mac"
+                        if system.findall(net_locator):
+                            self.smile_mac_address = system.findall(net_locator)[0].text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -349,7 +363,7 @@ class Smile(SmileComm, SmileData):
                      an issue on http://github.com/plugwise/python-plugwise"
                 )
                 raise ConnectionFailedError
-        return model, version
+        return model
 
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
@@ -358,13 +372,16 @@ class Smile(SmileComm, SmileData):
         model: str | None = None
         if (gateway := result.find(".//gateway")) is not None:
             model = result.find(".//gateway/vendor_model").text
-            version = result.find(".//gateway/firmware_version").text
+            self.smile_fw_version = result.find(".//gateway/firmware_version").text
+            self.smile_hw_version = result.find(".//gateway/hardware_version").text
             if gateway.find("hostname") is not None:
                 self.smile_hostname = gateway.find("hostname").text
+            if gateway.find("mac_address") is not None:
+                self.smile_mac_address = gateway.find("mac_address").text
         else:
-            model, version = await self._smile_detect_legacy(result, dsmrmain)
+            model = await self._smile_detect_legacy(result, dsmrmain)
 
-        if model is None or version is None:  # pragma: no cover
+        if model is None or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
             LOGGER.error(
                 "Unable to find model or version information, please create \
@@ -372,7 +389,7 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
-        ver = semver.VersionInfo.parse(version)
+        ver = semver.VersionInfo.parse(self.smile_fw_version)
         target_smile = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
@@ -386,7 +403,7 @@ class Smile(SmileComm, SmileData):
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
-        self.smile_version = (version, ver)
+        self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
             self._smile_legacy = SMILES[target_smile]["legacy"]
@@ -570,7 +587,8 @@ class Smile(SmileComm, SmileData):
 
     async def set_temperature(self, loc_id: str, temperature: str) -> bool:
         """Set the given Temperature on the relevant Thermostat."""
-        uri = self._temperature_uri(loc_id)
+        temperature = str(temperature)
+        uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
             f"{temperature}</setpoint></thermostat_functionality>"

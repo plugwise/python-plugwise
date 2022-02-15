@@ -315,12 +315,16 @@ class SmileHelper:
         self._thermo_locs: dict[str, Any] = {}
 
         self.cooling_active = False
+        self.smile_fw_version: str | None = None
         self.gateway_id: str | None = None
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
+        self.smile_hw_version: str | None = None
+        self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
         self.smile_type: str | None = None
         self.smile_version: list[str] = []
+        self.smile_zigbee_mac_address: str | None = None
 
     def _locations_legacy(self) -> None:
         """Helper-function for _all_locations().
@@ -414,18 +418,32 @@ class SmileHelper:
         Collect requested info from MODULES.
         """
         appl_search = appliance.find(locator)
+        model_data = {
+            "contents": False,
+            "vendor_name": None,
+            "vendor_model": None,
+            "hardware_version": None,
+            "firmware_version": None,
+            "zigbee_mac_address": None,
+        }
         if appl_search is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
             module = self._modules.find(locator)
             if module is not None:
-                v_name = module.find("vendor_name").text
-                v_model = module.find("vendor_model").text
-                hw_version = module.find("hardware_version").text
-                fw_version = module.find("firmware_version").text
+                model_data["contents"] = True
+                model_data["vendor_name"] = module.find("vendor_name").text
+                model_data["vendor_model"] = module.find("vendor_model").text
+                model_data["hardware_version"] = module.find("hardware_version").text
+                model_data["firmware_version"] = module.find("firmware_version").text
+                # Adam
+                if found := module.find(".//protocols/zig_bee_node"):
+                    model_data["zigbee_mac_address"] = found.find("mac_address").text
+                # Stretches
+                if found := module.find(".//protocols/network_router"):
+                    model_data["zigbee_mac_address"] = found.find("mac_address").text
 
-                return [v_name, v_model, hw_version, fw_version]
-        return [None, None, None, None]
+        return model_data
 
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
@@ -435,22 +453,29 @@ class SmileHelper:
             locator = ".//services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
+            if not module_data["contents"]:
+                return None
+
+            appl.v_name = module_data["vendor_name"]
             if appl.model != "Switchgroup":
                 appl.model = None
-            if module_data[2] is not None:
-                hw_version = module_data[2].replace("-", "")
+            appl.hw = module_data["hardware_version"]
+            if appl.hw:
+                hw_version = module_data["hardware_version"].replace("-", "")
                 appl.model = version_to_model(hw_version)
-            appl.fw = module_data[3]
+            appl.fw = module_data["firmware_version"]
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
             return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
             locator = ".//logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
-            appl.model = version_to_model(module_data[1])
-            appl.fw = module_data[3]
+            appl.v_name = module_data["vendor_name"]
+            appl.model = version_to_model(module_data["vendor_model"])
+            appl.hw = module_data["hardware_version"]
+            appl.fw = module_data["firmware_version"]
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
             return appl
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
@@ -458,9 +483,16 @@ class SmileHelper:
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
-            appl.fw = self.smile_version[0]
+            appl.fw = self.smile_fw_version
+            appl.mac = self.smile_mac_address
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
+
+            # Adam: check for ZigBee mac address
+            if self.smile_name == "Adam" and (
+                found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
+            ):
+                appl.zigbee_mac = found.find("mac_address").text
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
@@ -480,9 +512,10 @@ class SmileHelper:
             locator = ".//logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data[0]
-            appl.model = check_model(module_data[1], appl.v_name)
-            appl.fw = module_data[3]
+            appl.v_name = module_data["vendor_name"]
+            appl.model = check_model(module_data["vendor_model"], appl.v_name)
+            appl.hw = module_data["hardware_version"]
+            appl.fw = module_data["firmware_version"]
 
             return appl
 
@@ -506,10 +539,11 @@ class SmileHelper:
             locator2 = ".//services/boiler_state"
             mod_type = "boiler_state"
             module_data = self._get_module_data(appliance, locator1, mod_type)
-            if module_data == [None, None, None, None]:
+            if not module_data["contents"]:
                 module_data = self._get_module_data(appliance, locator2, mod_type)
-            appl.v_name = module_data[0]
-            appl.model = check_model(module_data[1], appl.v_name)
+            appl.v_name = module_data["vendor_name"]
+            appl.hw = module_data["hardware_version"]
+            appl.model = check_model(module_data["vendor_model"], appl.v_name)
             if appl.model is None:
                 appl.model = (
                     "Generic heater/cooler"
@@ -519,7 +553,9 @@ class SmileHelper:
             return appl
 
         # Handle stretches
-        self._energy_device_info_finder(appliance, appl)
+        appl = self._energy_device_info_finder(appliance, appl)
+        if not appl:
+            return None
 
         # Cornercase just return existing dict-object
         return appl  # pragma: no cover
@@ -560,7 +596,9 @@ class SmileHelper:
         if self._smile_legacy:
             self._appl_data[self._home_location] = {
                 "class": "gateway",
-                "fw": self.smile_version[0],
+                "fw": self.smile_fw_version,
+                "hw": self.smile_hw_version,
+                "mac_address": self.smile_mac_address,
                 "location": self._home_location,
                 "vendor": "Plugwise B.V.",
             }
@@ -580,7 +618,11 @@ class SmileHelper:
 
             if self.smile_type == "stretch":
                 self._appl_data[self._home_location].update(
-                    {"model": "Stretch", "name": "Stretch"}
+                    {
+                        "model": "Stretch",
+                        "name": "Stretch",
+                        "zigbee_mac_address": self.smile_zigbee_mac_address,
+                    }
                 )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
@@ -609,6 +651,9 @@ class SmileHelper:
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.fw = None
+            appl.hw = None
+            appl.mac = None
+            appl.zigbee_mac = None
             appl.v_name = None
 
             # Determine types for this appliance
@@ -616,18 +661,32 @@ class SmileHelper:
 
             # Determine class for this appliance
             appl = self._appliance_info_finder(appliance, appl)
-            # Skip on heater_central when no active device present
+            # Skip on heater_central when no active device present or on orphaned stretch devices
             if not appl:
                 continue
+
+            if appl.pwclass == "gateway":
+                appl.fw = self.smile_fw_version
+                appl.hw = self.smile_hw_version
 
             self._appl_data[appl.dev_id] = {
                 "class": appl.pwclass,
                 "fw": appl.fw,
+                "hw": appl.hw,
                 "location": appl.location,
+                "mac_address": appl.mac,
                 "model": appl.model,
                 "name": appl.name,
                 "vendor": appl.v_name,
             }
+
+            if appl.zigbee_mac:
+                self._appl_data[appl.dev_id].update(
+                    {
+                        "zigbee_mac_address": appl.zigbee_mac,
+                    }
+                )
+
             if (
                 not self._smile_legacy
                 and appl.pwclass == "thermostat"
@@ -777,6 +836,22 @@ class SmileHelper:
                 measure = appliance.find(i_locator).text
                 data[name] = format_measure(measure, ENERGY_WATT_HOUR)
 
+            t_locator = (
+                f".//actuator_functionalities/thermostat_functionality/{measurement}"
+            )
+            t_functions = appliance.find(t_locator)
+            if t_functions is not None and t_functions.text:
+                # Thermostat actuator measurements
+
+                try:
+                    measurement = attrs[ATTR_NAME]
+                except KeyError:
+                    pass
+
+                data[measurement] = format_measure(
+                    t_functions.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                )
+
         return data
 
     def _get_appliance_data(self, d_id: str) -> dict[str, Any]:
@@ -900,8 +975,8 @@ class SmileHelper:
                     if thermo_matching[appl_class] > high_prio:
                         high_prio = thermo_matching[appl_class]
 
-    def _temperature_uri_legacy(self) -> str:
-        """Helper-function for _temperature_uri().
+    def _thermostat_uri_legacy(self) -> str:
+        """Helper-function for _thermostat_uri().
         Determine the location-set_temperature uri - from APPLIANCES.
         """
         locator = ".//appliance[type='thermostat']"
@@ -909,11 +984,11 @@ class SmileHelper:
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
 
-    def _temperature_uri(self, loc_id: str) -> str:
+    def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().
         Determine the location-set_temperature uri - from LOCATIONS."""
         if self._smile_legacy:
-            return self._temperature_uri_legacy()
+            return self._thermostat_uri_legacy()
 
         locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
@@ -1214,7 +1289,7 @@ class SmileHelper:
         data: dict[str, Any] = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
-        if self.smile_type == "stretch" and self.smile_version[1].major == 2:
+        if self._stretch_v2:
             actuator = "actuators"
             func_type = "relay"
         appl_class = xml.find("type").text
