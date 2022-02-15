@@ -808,6 +808,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "gas_consumed_cumulative": 584.431,
                     "gas_consumed_interval": 0.014,
                 },
+                "mac_address": "012345670001",
             },
         }
 
@@ -2091,6 +2092,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
                 },
+                "mac_address": "012345670001",
             }
         }
 
