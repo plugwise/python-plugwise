@@ -1,5 +1,8 @@
 # Changelog
 
+- ongoing
+  - Changed mac-addresses in userdata/fixtures to be obfuscated but unique 
+
 # v0.16.2 - Generic and Stretch
   - As per Core deprecation of python 3.8, removed CI/CD testing and bumped pypi to 3.9 and production
   - Add support for Stretch with fw 2.7.18

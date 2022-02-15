@@ -1446,7 +1446,7 @@
 				<interval/>
 				<network_address id='f33dd0b1873646128e89c28b7f3325b6'/>
 				<period start_date="2021-12-24T15:23:49+01:00" end_date="2021-12-24T15:23:49+01:00">
-					<measurement log_date="2021-12-24T15:23:49+01:00">127.0.0.1</measurement>
+					<measurement log_date="2021-12-24T15:23:49+01:00">127.0.0.2</measurement>
 				</period>
 			</point_log>
 			<point_log id='b25164d984a740cb8bb6da790ba5d2f4'>

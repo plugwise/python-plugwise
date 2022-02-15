@@ -48,15 +48,32 @@ Don't commit test-data in `tests` that shouldn't be available to 'the internet'.
 To prevent this we've included a pre-commit hook that checks and validates that no private information is there (but do double-check yourselves!)
 See 'pre-commit.sh' for details
 
-Excerpt:
+### Excerpt:
 
- - [ ] modify `domain_objects` and `modules` and set all occurrences of `mac-address` to `0123456789AB`
  - [ ] modify `domain_objects` and set `short_id` to `abcdefgh`
- - [ ] modify `domain_objects` and set `wifi_ip` to `127.0.0.1`
+ - [ ] modify `domain_objects` and set `wifi_ip` to `127.0.0.2`
  - [ ] modify `domain_objects` and set `lan_ip` to `127.0.0.1`
- - [ ] modify `domain_objects` and set all `ip_addresses` to `127.0.0.1`
+ - [ ] modify `domain_objects` and set all `ip_addresses` to `127.0.0.3`
  - [ ] modify `domain_objects` and set `hostname` to `smile000000`
  - [ ] modify `domain_objects` and set `longitude` to `4.49`
  - [ ] modify `domain_objects` and set `latitude` to `52.21`
  - [ ] modify `domain_objects` and set `city` to `Sassenheim`
  - [ ] modify `domain_objects` and set `postal_code` to `2171`
+
+### Obfuscating mac-addresses
+
+We used to obfuscate them as they weren't used within our module nor HomeAssistant.
+With 0.16.4 this was changed as such we recommend leaving them in, if you do wish to obfuscate
+
+Prefix: 
+
+  - `01234567`
+
+Postfix:
+
+  - Anything you'd normally have (last 4 digits can remain)
+  - When standardizing:
+    - 0001 = Network Mac Address
+    - 0101 = Controller Zigbee Mac Address
+    - 0Axx = Nodes Zigbee mac addresses
+
