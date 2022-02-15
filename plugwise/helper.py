@@ -483,7 +483,7 @@ class SmileHelper:
         # Find gateway and heater_central devices
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
-            appl.fw = self.smile_version[0]
+            appl.fw = self.smile_fw_version
             appl.mac = self.smile_mac_address
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
@@ -596,7 +596,7 @@ class SmileHelper:
         if self._smile_legacy:
             self._appl_data[self._home_location] = {
                 "class": "gateway",
-                "fw": self.smile_version[0],
+                "fw": self.smile_fw_version,
                 "hw": self.smile_hw_version,
                 "mac_address": self.smile_mac_address,
                 "location": self._home_location,
@@ -1289,7 +1289,7 @@ class SmileHelper:
         data: dict[str, Any] = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
-        if self.smile_type == "stretch" and self.smile_version[1].major == 2:
+        if self._stretch_v2:
             actuator = "actuators"
             func_type = "relay"
         appl_class = xml.find("type").text
