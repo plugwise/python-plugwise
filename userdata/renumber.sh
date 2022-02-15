@@ -61,7 +61,7 @@ echo " - Found coordinator at ${coord}"
 
 echo ""
 echo "Searching for Zigbee nodes:"
-nodes=$(grep -EB1 "0123456789AB" "${domain_objects}" | grep -E "<zig_bee_node" | cut -f 2 -d "'")
+nodes=$(grep -EB1 "0123456789AB" "${domain_objects}" | grep -E "<(zig_bee_node|network_router)" | cut -f 2 -d "'")
 nodecount=$(echo "${nodes}" | wc -l)
 
 if [ "${nodecount}" -gt 98 ]; then
