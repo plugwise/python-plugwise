@@ -1149,7 +1149,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Test",
-                "schedule_temperature": 21.0,
+                "schedule_temperature": None,
                 "last_used": "Test",
                 "mode": "auto",
                 "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
