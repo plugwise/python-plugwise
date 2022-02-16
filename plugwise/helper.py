@@ -98,7 +98,7 @@ def check_model(name: str, v_name: str) -> str:
         return name
 
 
-def schemas_schedule_temp(schedules: dict[str], name: str) -> float | None:
+def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
     """Helper-function for schemas().
     Obtain the schedule temperature of the schema/schedule.
     """
@@ -120,7 +120,8 @@ def schemas_schedule_temp(schedules: dict[str], name: str) -> float | None:
 
     # Schema with less than 2 items
     if length == 1:
-        return schema_list[0][2]
+        LOGGER.debug("Invalid schedule, only one entry, ignoring.")
+        return
 
     for i in range(length):
         result_1 = schema_list[i][0]
@@ -1203,10 +1204,10 @@ class SmileHelper:
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperature, None
 
-        schedules: dict[str] = {}
+        schedules: dict[str, Any] = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            schedule: dict[str] = {}
+            schedule: dict[str, float] = {}
             locator = f'rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
             for directive in directives:
@@ -1225,10 +1226,6 @@ class SmileHelper:
                     selected = name
                     self._last_active[location] = selected
                 schedules[name] = schedule
-            else:
-                LOGGER.debug(
-                    "Schedule %s has no preset switching moments, ignoring.", name
-                )
 
         if schedules:
             available.remove("None")
