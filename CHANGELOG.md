@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.16.5 - Smile: small improvements
+  - Move schedule debug-message to the correct position
+  - Code quality fixes
+
 # v0.16.4 - Adding measurements
   - Expose mac-addresses for network and zigbee devices
   - Expose min/max thermostat (and heater) values and resolution (step in HA)
