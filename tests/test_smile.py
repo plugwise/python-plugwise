@@ -2112,7 +2112,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         # it's not a thermostat :)
         assert not smile._is_thermostat
-        assert not self.cooling_present
         assert not self.notifications
 
         await smile.close_connection()
