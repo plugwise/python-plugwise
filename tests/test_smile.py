@@ -388,7 +388,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         extra = data[0]
         device_list = data[1]
 
-        if extra["is_thermostat"]:
+        if extra["is_thermostat_gateway"]:
             self.active_device_present = extra["active_device"]
             self.cooling_present = extra["cooling_present"]
         self.notifications = extra["notifications"]
