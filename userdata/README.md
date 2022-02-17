@@ -64,10 +64,11 @@ See 'pre-commit.sh' for details
 
 We used to obfuscate them as they weren't used within our module nor HomeAssistant.
 With 0.16.4 this was changed as such we recommend leaving them in, if you do wish to obfuscate
+Note: Zigbee mac addresses are 64bit (not 48bit like Ethernet mac addresses)
 
 Prefix: 
 
-  - `01234567`
+  - `ABCD01234567`
 
 Postfix:
 

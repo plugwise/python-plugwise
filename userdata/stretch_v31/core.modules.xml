@@ -13,7 +13,7 @@
 		</services>
 		<protocols>
 			<master_controller id='f0bcf042cad9418ea65ecf0bf6133250'>
-				<mac_address>012345670101</mac_address>
+				<mac_address>ABCD012345670101</mac_address>
 				<network id='259882df3c05415b99c2d962534ce820'/><network id='259882df3c05415b99c2d962534ce820'/>
 			</master_controller>
 		</protocols>
@@ -53,7 +53,7 @@
 		</services>
 		<protocols>
 			<network_router id='f323d992f1c44ec880386c568d809645'>
-				<mac_address>012345670A04</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+				<mac_address>ABCD012345670A04</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
 			</network_router>
 		</protocols>
 	</module>
@@ -92,7 +92,7 @@
 		</services>
 		<protocols>
 			<network_router id='51408e71a38745c98c9fe992412bc6e0'>
-				<mac_address>012345670A01</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+				<mac_address>ABCD012345670A01</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
 			</network_router>
 		</protocols>
 	</module>
@@ -109,7 +109,7 @@
 		</services>
 		<protocols>
 			<master_controller id='fee80187abd54cc5982f7503b4c7c17f'>
-				<mac_address>012345670101</mac_address>
+				<mac_address>ABCD012345670101</mac_address>
 				<network id='56de2443c34743c799353c3cedbff0eb'/><network id='56de2443c34743c799353c3cedbff0eb'/>
 			</master_controller>
 		</protocols>
@@ -190,7 +190,7 @@
 		</services>
 		<protocols>
 			<network_router id='57b6184bdc5140898eb8c53462589097'>
-				<mac_address>012345670A02</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+				<mac_address>ABCD012345670A02</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
 			</network_router>
 		</protocols>
 	</module>
@@ -260,7 +260,7 @@
 		</services>
 		<protocols>
 			<network_router id='af7ebe75a9aa47d9b3ae26297be742d7'>
-				<mac_address>012345670A07</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
+				<mac_address>ABCD012345670A07</mac_address><network id='259882df3c05415b99c2d962534ce820'/>
 			</network_router>
 		</protocols>
 	</module>
