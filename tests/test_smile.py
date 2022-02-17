@@ -388,9 +388,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         extra = data[0]
         device_list = data[1]
 
-        self.active_device_present = extra["active_device"]
-        self.cooling_present = extra["cooling_present"]
-        self.notifications = extra["notifications"]
+        if extra["is_thermostat"]:
+            self.active_device_present = extra["active_device"]
+            self.cooling_present = extra["cooling_present"]
+            self.notifications = extra["notifications"]
         self._write_json("all_data", data)
         self._write_json("notifications", extra["notifications"])
 
