@@ -76,9 +76,6 @@ class SmileData(SmileHelper):
         self.gw_data["is_thermostat_gateway"] = self._is_thermostat
         if self._is_thermostat:
             self.gw_data["heater_id"] = self._heater_id
-            self.gw_data["active_device"] = (
-                self._opentherm_device or self._on_off_device
-            )
             self.gw_data["cooling_present"] = self._cooling_present
 
     def get_all_devices(self) -> None:
