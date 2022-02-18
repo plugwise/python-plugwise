@@ -610,9 +610,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "4.21",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
-                "heating_state": True,
                 "cooling_active": False,
-                "binary_sensors": {"flame_state": True},
+                "binary_sensors": {"flame_state": True, "heating_state": True},
                 "sensors": {
                     "water_temperature": 23.6,
                     "intended_boiler_temperature": 17.0,
@@ -715,9 +714,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": None,
-                "heating_state": False,
                 "cooling_active": False,
-                "binary_sensors": {"flame_state": False},
+                "binary_sensors": {"flame_state": False, "heating_state": False},
                 "sensors": {
                     "water_temperature": 54.0,
                     "intended_boiler_temperature": 0.0,
@@ -907,9 +905,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "2.32",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
-                "heating_state": True,
                 "cooling_active": False,
-                "binary_sensors": {"dhw_state": False, "flame_state": True},
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "flame_state": True,
+                    "heating_state": True,
+                },
                 "sensors": {
                     "water_temperature": 52.0,
                     "intended_boiler_temperature": 48.6,
@@ -1129,6 +1130,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": None,
                 "heating_state": True,
                 "cooling_active": False,
+                "binary_sensors": {"heating_state": True},
             },
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
@@ -1220,8 +1222,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"flame_state": False},
-                "heating_state": False,
+                "binary_sensors": {"flame_state": False, "heating_state": False},
             },
             # Plug MediaCenter
             "aa6b0002df0a46e1b1eb94beb61eddfe": {
@@ -1413,10 +1414,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": None,
-                "heating_state": True,
-                "cooling_state": False,
                 "cooling_active": False,
-                "binary_sensors": {"dhw_state": False, "flame_state": False},
+                "binary_sensors": {
+                    "cooling_state": False,
+                    "dhw_state": False,
+                    "flame_state": False,
+                    "heating_state": True,
+                },
                 "sensors": {
                     "water_temperature": 37.0,
                     "intended_boiler_temperature": 38.1,
@@ -1483,8 +1487,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"dhw_state": True},
-                "heating_state": True,
+                "binary_sensors": {"dhw_state": True, "heating_state": True},
             },
             # Lisa Badkamer
             "453e510de7cb47af8ec5b44fbf40cbe5": {
@@ -1506,7 +1509,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "cooling_state": True,
+                "binary_sensors": {"cooling_state": True},
             },
         }
 
@@ -1524,8 +1527,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"dhw_state": True},
-                "cooling_state": True,
+                "binary_sensors": {"cooling_state": True, "dhw_state": True},
             }
         }
 
@@ -1542,7 +1544,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a broad setup of Adam with a zone per device setup."""
         testdata = {
             "90986d591dcd426cae3ec3e8111ff730": {
-                "heating_state": False,
+                "binary_sensors": {"heating_state": False},
             },
             # Lisa WK
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
@@ -1801,7 +1803,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "OnOff",
                 "vendor": None,
                 "cooling_active": False,
-                "heating_state": True,
+                "binary_sensors": {"heating_state": True},
                 "sensors": {
                     "water_temperature": 70.0,
                     "intended_boiler_temperature": 70.0,
@@ -2223,9 +2225,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "cooling_active": False,
-                "cooling_state": False,
-                "heating_state": True,
-                "binary_sensors": {"dhw_state": False},
+                "binary_sensors": {
+                    "cooling_state": False,
+                    "dhw_state": False,
+                    "heating_state": True,
+                },
                 "sensors": {
                     "outdoor_temperature": 3.0,
                     "water_temperature": 29.1,
@@ -2279,9 +2283,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "cooling_active": True,
-                "cooling_state": True,
-                "heating_state": False,
-                "binary_sensors": {"dhw_state": False},
+                "binary_sensors": {
+                    "cooling_state": True,
+                    "dhw_state": False,
+                    "heating_state": False,
+                },
                 "sensors": {
                     "outdoor_temperature": 22.0,
                     "water_temperature": 24.7,
@@ -2323,7 +2329,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "2743216f626f43948deec1f7ab3b3d70": {
-                "heating_state": False,
+                "binary_sensors": {"heating_state": False},
             },
         }
 
