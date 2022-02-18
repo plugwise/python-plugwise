@@ -546,14 +546,18 @@ NO_NOTIFICATION_ICON = "mdi:mailbox-outline"
 SWITCH_ICON = "mdi:electric-switch"
 
 # Binary Sensors
+COOLING_STATE = {"cooling_state": False}
 DHW_STATE = {"dhw_state": False}
 FLAME_STATE = {"flame_state": False}
+HEATING_STATE = {"heating_state": False}
 PW_NOTIFICATION = {"plugwise_notification": False}
 SLAVE_BOILER_STATE = {"slave_boiler_state": False}
 
 BINARY_SENSORS = [
+    COOLING_STATE,
     DHW_STATE,
     FLAME_STATE,
+    HEATING_STATE,
     SLAVE_BOILER_STATE,
 ]
 
