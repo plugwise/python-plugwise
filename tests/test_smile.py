@@ -1128,7 +1128,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Unknown",
                 "name": "OnOff",
                 "vendor": None,
-                "heating_state": True,
                 "cooling_active": False,
                 "binary_sensors": {"heating_state": True},
             },
