@@ -1381,7 +1381,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "OpenTherm",
                 "vendor": None,
                 "binary_sensors": {
-                    "cooling_state": False,
                     "dhw_state": False,
                     "flame_state": False,
                     "heating_state": True,
@@ -1458,42 +1457,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
 
         self.smile_setup = "adam_plus_anna_new_copy_dhw_and_heating"
-        server, smile, client = await self.connect_wrapper()
-
-        await self.device_test(smile, testdata)
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_adam_plus_anna_new_copy_cooling(self):
-        """Test Adam with Anna and cooling."""
-        testdata = {
-            # Central
-            "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"cooling_state": True},
-            },
-        }
-
-        self.smile_setup = "adam_plus_anna_new_copy_cooling"
-        server, smile, client = await self.connect_wrapper()
-
-        await self.device_test(smile, testdata)
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_adam_plus_anna_new_copy_dhw_and_cooling(self):
-        """Test Adam with Anna and cooling."""
-        testdata = {
-            # Central
-            "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"cooling_state": True, "dhw_state": True},
-            }
-        }
-
-        self.smile_setup = "adam_plus_anna_new_copy_dhw_and_cooling"
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
