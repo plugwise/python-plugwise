@@ -610,7 +610,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "4.21",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
-                "cooling_active": False,
                 "binary_sensors": {"flame_state": True, "heating_state": True},
                 "sensors": {
                     "water_temperature": 23.6,
@@ -711,7 +710,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": None,
-                "cooling_active": False,
                 "binary_sensors": {"flame_state": False, "heating_state": False},
                 "sensors": {
                     "water_temperature": 54.0,
@@ -893,7 +891,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "2.32",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
-                "cooling_active": False,
                 "binary_sensors": {
                     "dhw_state": False,
                     "flame_state": True,
@@ -1105,7 +1102,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Unknown",
                 "name": "OnOff",
                 "vendor": None,
-                "cooling_active": False,
                 "binary_sensors": {"heating_state": True},
             },
             # Anna
@@ -1384,7 +1380,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": None,
-                "cooling_active": False,
                 "binary_sensors": {
                     "cooling_state": False,
                     "dhw_state": False,
@@ -1766,7 +1761,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Unknown",
                 "name": "OnOff",
                 "vendor": None,
-                "cooling_active": False,
                 "binary_sensors": {"heating_state": True},
                 "sensors": {
                     "water_temperature": 70.0,
