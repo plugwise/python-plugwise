@@ -73,7 +73,6 @@ class SmileData(SmileHelper):
 
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["gateway_id"] = self.gateway_id
-        self.gw_data["is_thermostat_gateway"] = self._is_thermostat
         if self._is_thermostat:
             self.gw_data["heater_id"] = self._heater_id
             self.gw_data["cooling_present"] = self._cooling_present
