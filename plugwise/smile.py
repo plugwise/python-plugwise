@@ -105,6 +105,15 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
+        # Don't show cooling_state when no cooling present
+        for _, device in self.gw_devices.items():
+            if (
+                not self._cooling_present
+                and "binary_sensors" in device
+                and "cooling_state" in device["binary_sensors"]
+            ):
+                device["binary_sensors"].pop("cooling_state")
+
     def _device_data_switching_group(
         self, details: dict[str, Any], device_data: dict[str, Any]
     ) -> dict[str, bool]:
