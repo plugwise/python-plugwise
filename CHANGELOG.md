@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.16.6 - Smile
+  - Provide cooling_state and heating_state as `binary_sensors`, show cooling_state only when cooling is present
+  - Clean up gw_data, e.g. remove `single_master_thermostat` key
+
 # v0.16.5 - Smile: small improvements
   - Move schedule debug-message to the correct position
   - Code quality fixes
