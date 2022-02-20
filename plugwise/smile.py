@@ -71,14 +71,11 @@ class SmileData(SmileHelper):
 
             self.gw_devices[device_id] = device
 
-        self.gw_data["active_device"] = self._opentherm_device or self._on_off_device
-        self.gw_data["cooling_present"] = self._cooling_present
-        self.gw_data["gateway_id"] = self.gateway_id
-        self.gw_data["heater_id"] = self._heater_id
-        self.gw_data["single_master_thermostat"] = (
-            self._is_thermostat and not self._multi_thermostats
-        )
         self.gw_data["smile_name"] = self.smile_name
+        self.gw_data["gateway_id"] = self.gateway_id
+        if self._is_thermostat:
+            self.gw_data["heater_id"] = self._heater_id
+            self.gw_data["cooling_present"] = self._cooling_present
 
     def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
