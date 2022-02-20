@@ -34,7 +34,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='04ed662277f045b288312eb607b2c234'>
-				<mac_address>012345670A01</mac_address>
+				<mac_address>ABCD012345670A01</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -377,7 +377,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='0af3463d7dec46408244e48c7df0914d'>
-				<mac_address>012345670A02</mac_address>
+				<mac_address>ABCD012345670A02</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -579,7 +579,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='9468211aeaf340aab36c58624ce8abfe'>
-				<mac_address>012345670A03</mac_address>
+				<mac_address>ABCD012345670A03</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -630,7 +630,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='9f6a2117b2164257845422183d832caa'>
-				<mac_address>012345670A04</mac_address>
+				<mac_address>ABCD012345670A04</mac_address>
 				<type>router</type>
 				<reachable>false</reachable>
 				<power_source>mains</power_source>
@@ -771,7 +771,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='6326dbad401e4745a31cce1650b29851'>
-				<mac_address>012345670A05</mac_address>
+				<mac_address>ABCD012345670A05</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -876,7 +876,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='6a5ccc5908ba4308996b79751aca45b2'>
-				<mac_address>012345670A06</mac_address>
+				<mac_address>ABCD012345670A06</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -997,7 +997,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='b9425487affb4cf687461eb4be8ff15e'>
-				<mac_address>012345670A07</mac_address>
+				<mac_address>ABCD012345670A07</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -1043,7 +1043,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='d0ab902b286147b3a3aa130789e1fddd'>
-				<mac_address>012345670A08</mac_address>
+				<mac_address>ABCD012345670A08</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -1098,7 +1098,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='1314db193c454638940d8f9629f588ca'>
-				<mac_address>012345670A09</mac_address>
+				<mac_address>ABCD012345670A09</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -1408,7 +1408,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='65dd9860b14b4813879658b5fcd8c236'>
-				<mac_address>012345670A10</mac_address>
+				<mac_address>ABCD012345670A10</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -1754,7 +1754,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='416c77c0526149b1938bb6c4e67dbd83'>
-				<mac_address>012345670A11</mac_address>
+				<mac_address>ABCD012345670A11</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>
@@ -1855,7 +1855,7 @@
 		<services/>
 		<protocols>
 			<zig_bee_coordinator id='547bdc305c3a47a58fa9f5f170ca3fc2'>
-				<mac_address>012345670101</mac_address>
+				<mac_address>ABCD012345670101</mac_address>
 				<permit_joining>false</permit_joining>
 				<neighbors><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='416c77c0526149b1938bb6c4e67dbd83'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='9abefede88bf4ea9acc3ad0638cddfaf'/><zig_bee_node id='9f6a2117b2164257845422183d832caa'/><zig_bee_node id='b9425487affb4cf687461eb4be8ff15e'/></neighbors>
 				<zig_bee_nodes><zig_bee_node id='04ed662277f045b288312eb607b2c234'/><zig_bee_node id='0af3463d7dec46408244e48c7df0914d'/><zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'/><zig_bee_node id='1314db193c454638940d8f9629f588ca'/><zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'/><zig_bee_node id='2202545a9c764e56afead1f729f8b1de'/><zig_bee_node id='416c77c0526149b1938bb6c4e67dbd83'/><zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'/><zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'/><zig_bee_node id='6326dbad401e4745a31cce1650b29851'/><zig_bee_node id='65dd9860b14b4813879658b5fcd8c236'/><zig_bee_node id='6a5ccc5908ba4308996b79751aca45b2'/><zig_bee_node id='9468211aeaf340aab36c58624ce8abfe'/><zig_bee_node id='9abefede88bf4ea9acc3ad0638cddfaf'/><zig_bee_node id='9f6a2117b2164257845422183d832caa'/><zig_bee_node id='b9425487affb4cf687461eb4be8ff15e'/><zig_bee_node id='d0ab902b286147b3a3aa130789e1fddd'/></zig_bee_nodes>
@@ -1927,7 +1927,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='4788d5fbffc84aacbcd91b1abab8ff90'>
-				<mac_address>012345670A12</mac_address>
+				<mac_address>ABCD012345670A12</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -2997,7 +2997,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='1b6b24fc75b74c12b97e65d1f60c2dfc'>
-				<mac_address>012345670A13</mac_address>
+				<mac_address>ABCD012345670A13</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -3048,7 +3048,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='0c09007091e149dba4b8cc465a9e1bd9'>
-				<mac_address>012345670A14</mac_address>
+				<mac_address>ABCD012345670A14</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -3099,7 +3099,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='56ce8175cbaa4ee886015bfa09373dff'>
-				<mac_address>012345670A15</mac_address>
+				<mac_address>ABCD012345670A15</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -3129,7 +3129,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='2202545a9c764e56afead1f729f8b1de'>
-				<mac_address>012345670A16</mac_address>
+				<mac_address>ABCD012345670A16</mac_address>
 				<type>router</type>
 				<reachable>true</reachable>
 				<power_source>mains</power_source>
@@ -3408,7 +3408,7 @@
 		</services>
 		<protocols>
 			<zig_bee_node id='9abefede88bf4ea9acc3ad0638cddfaf'>
-				<mac_address>012345670A17</mac_address>
+				<mac_address>ABCD012345670A17</mac_address>
 				<type>end_device</type>
 				<reachable>true</reachable>
 				<power_source>battery</power_source>

@@ -51,6 +51,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             fixture_file.write(
                 json.dumps(
                     data,
+                    indent=2,
                     default=lambda x: list(x) if isinstance(x, set) else x,
                 )
             )
@@ -1202,7 +1203,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
                 "hw": "AME Smile 2.0 board",
                 "mac_address": "012345670001",
-                "zigbee_mac_address": "012345670101",
+                "zigbee_mac_address": "ABCD012345670101",
                 "sensors": {
                     "outdoor_temperature": 11.9,
                 },
@@ -1505,7 +1506,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.69},
                 "mac_address": "012345670001",
-                "zigbee_mac_address": "012345670101",
+                "zigbee_mac_address": "ABCD012345670101",
             },
             # Modem
             "675416a629f343c495449970e2ca37b5": {
@@ -1745,7 +1746,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-                "zigbee_mac_address": "012345670A14",
+                "zigbee_mac_address": "ABCD012345670A14",
             },
             "4a810418d5394b3f82727340b91ba740": {
                 "class": "router",
@@ -2268,7 +2269,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Stretch",
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
-                "zigbee_mac_address": "012345670101",
+                "zigbee_mac_address": "ABCD012345670101",
             },
             "5871317346d045bc9f6b987ef25ee638": {
                 "class": "water_heater_vessel",
@@ -2413,7 +2414,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
                 "mac_address": "01:23:45:67:89:AB",
-                "zigbee_mac_address": "012345670101",
+                "zigbee_mac_address": "ABCD012345670101",
             },
             "09c8ce93d7064fa6a233c0e4c2449bfe": {
                 "class": "lamp",
@@ -2428,7 +2429,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
-                "zigbee_mac_address": "012345670A01",
+                "zigbee_mac_address": "ABCD012345670A01",
             },
             "33a1c784a9ff4c2d8766a0212714be09": {
                 "class": "lighting",
