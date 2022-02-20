@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.16.6 - Smile
+# v0.16.6 - Smile: various changes/improvements
   - Provide cooling_state and heating_state as `binary_sensors`, show cooling_state only when cooling is present
   - Clean up gw_data, e.g. remove `single_master_thermostat` key
 
