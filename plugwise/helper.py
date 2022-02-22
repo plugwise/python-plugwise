@@ -1310,15 +1310,15 @@ class SmileHelper:
         """
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
-                if list(item.keys())[0] == key:
+                if item == key:
                     data.pop(key)
                     if self._opentherm_device or self._on_off_device:
                         bs_dict[key] = value
             for item in SENSORS:
-                if list(item.keys())[0] == key:
+                if item == key:
                     data.pop(key)
                     s_dict[key] = value
             for item in SWITCHES:
-                if list(item.keys())[0] == key:
+                if item == key:
                     data.pop(key)
                     sw_dict[key] = value
