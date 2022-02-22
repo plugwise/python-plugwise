@@ -545,110 +545,57 @@ NOTIFICATION_ICON = "mdi:mailbox-up-outline"
 NO_NOTIFICATION_ICON = "mdi:mailbox-outline"
 SWITCH_ICON = "mdi:electric-switch"
 
-# Binary Sensors
-COOLING_STATE = {"cooling_state": False}
-DHW_STATE = {"dhw_state": False}
-FLAME_STATE = {"flame_state": False}
-HEATING_STATE = {"heating_state": False}
-PW_NOTIFICATION = {"plugwise_notification": False}
-SLAVE_BOILER_STATE = {"slave_boiler_state": False}
-
 BINARY_SENSORS = [
-    COOLING_STATE,
-    DHW_STATE,
-    FLAME_STATE,
-    HEATING_STATE,
-    SLAVE_BOILER_STATE,
+    "cooling_state",
+    "dhw_state",
+    "flame_state",
+    "heating_state",
+    "plugwise_notification",
+    "slave_boiler_state",
 ]
-
-# Sensors
-BATTERY = {"battery": None}
-COOL_ACT_THRESHOLD = {"cooling_activation_outdoor_temperature": None}
-COOL_DEACT_THRESHOLD = {"cooling_deactivation_threshold": None}
-CURRENT_TEMP = {"temperature": None}
-DEVICE_STATE = {"device_state": None}
-EL_CONSUMED = {"electricity_consumed": None}
-EL_CONSUMED_INTERVAL = {"electricity_consumed_interval": None}
-EL_CONSUMED_OFF_PEAK_CUMULATIVE = {"electricity_consumed_off_peak_cumulative": None}
-EL_CONSUMED_OFF_PEAK_INTERVAL = {"electricity_consumed_off_peak_interval": None}
-EL_CONSUMED_OFF_PEAK_POINT = {"electricity_consumed_off_peak_point": None}
-EL_CONSUMED_PEAK_CUMULATIVE = {"electricity_consumed_peak_cumulative": None}
-EL_CONSUMED_PEAK_INTERVAL = {"electricity_consumed_peak_interval": None}
-EL_CONSUMED_PEAK_POINT = {"electricity_consumed_peak_point": None}
-EL_CONSUMED_POINT = {"electricity_consumed_point": None}
-EL_PRODUCED = {"electricity_produced": None}
-EL_PRODUCED_INTERVAL = {"electricity_produced_interval": None}
-EL_PRODUCED_OFF_PEAK_CUMULATIVE = {"electricity_produced_off_peak_cumulative": None}
-EL_PRODUCED_OFF_PEAK_INTERVAL = {"electricity_produced_off_peak_interval": None}
-EL_PRODUCED_OFF_PEAK_POINT = {"electricity_produced_off_peak_point": None}
-EL_PRODUCED_PEAK_CUMULATIVE = {"electricity_produced_peak_cumulative": None}
-EL_PRODUCED_PEAK_INTERVAL = {"electricity_produced_peak_interval": None}
-EL_PRODUCED_PEAK_POINT = {"electricity_produced_peak_point": None}
-EL_PRODUCED_POINT = {"electricity_produced_point": None}
-GAS_CONSUMED_CUMULATIVE = {"gas_consumed_cumulative": None}
-GAS_CONSUMED_INTERVAL = {"gas_consumed_interval": None}
-HUMIDITY = {"humidity": None}
-ILLUMINANCE = {"illuminance": None}
-INTENDED_BOILER_TEMP = {"intended_boiler_temperature": None}
-MOD_LEVEL = {"modulation_level": None}
-NET_EL_CUMULATIVE = {"net_electricity_cumulative": None}
-NET_EL_POINT = {"net_electricity_point": None}
-OUTDOOR_TEMP = {"outdoor_temperature": None}
-RETURN_TEMP = {"return_temperature": None}
-TARGET_TEMP = {"setpoint": None}
-TEMP_DIFF = {"temperature_difference": None}
-VALVE_POS = {"valve_position": None}
-WATER_PRESSURE = {"water_pressure": None}
-WATER_TEMP = {"water_temperature": None}
 
 SENSORS = [
-    BATTERY,
-    COOL_ACT_THRESHOLD,
-    COOL_DEACT_THRESHOLD,
-    CURRENT_TEMP,
-    DEVICE_STATE,
-    EL_CONSUMED,
-    EL_CONSUMED_INTERVAL,
-    EL_CONSUMED_OFF_PEAK_CUMULATIVE,
-    EL_CONSUMED_OFF_PEAK_INTERVAL,
-    EL_CONSUMED_OFF_PEAK_POINT,
-    EL_CONSUMED_PEAK_CUMULATIVE,
-    EL_CONSUMED_PEAK_INTERVAL,
-    EL_CONSUMED_PEAK_POINT,
-    EL_CONSUMED_POINT,
-    EL_PRODUCED,
-    EL_PRODUCED_INTERVAL,
-    EL_PRODUCED_OFF_PEAK_CUMULATIVE,
-    EL_PRODUCED_OFF_PEAK_INTERVAL,
-    EL_PRODUCED_OFF_PEAK_POINT,
-    EL_PRODUCED_PEAK_CUMULATIVE,
-    EL_PRODUCED_PEAK_INTERVAL,
-    EL_PRODUCED_PEAK_POINT,
-    EL_PRODUCED_POINT,
-    GAS_CONSUMED_CUMULATIVE,
-    GAS_CONSUMED_INTERVAL,
-    HUMIDITY,
-    ILLUMINANCE,
-    INTENDED_BOILER_TEMP,
-    MOD_LEVEL,
-    NET_EL_CUMULATIVE,
-    NET_EL_POINT,
-    OUTDOOR_TEMP,
-    RETURN_TEMP,
-    TARGET_TEMP,
-    TEMP_DIFF,
-    VALVE_POS,
-    WATER_PRESSURE,
-    WATER_TEMP,
+    "battery",
+    "cooling_activation_outdoor_temperature",
+    "cooling_deactivation_threshold",
+    "temperature",
+    "electricity_consumed",
+    "electricity_consumed_interval",
+    "electricity_consumed_off_peak_cumulative",
+    "electricity_consumed_off_peak_interval",
+    "electricity_consumed_off_peak_point",
+    "electricity_consumed_peak_cumulative",
+    "electricity_consumed_peak_interval",
+    "electricity_consumed_peak_point",
+    "electricity_consumed_point",
+    "electricity_produced",
+    "electricity_produced_interval",
+    "electricity_produced_off_peak_cumulative",
+    "electricity_produced_off_peak_interval",
+    "electricity_produced_off_peak_point",
+    "electricity_produced_peak_cumulative",
+    "electricity_produced_peak_interval",
+    "electricity_produced_peak_point",
+    "electricity_produced_point",
+    "gas_consumed_cumulative",
+    "gas_consumed_interval",
+    "humidity",
+    "illuminance",
+    "intended_boiler_temperature",
+    "modulation_level",
+    "net_electricity_cumulative",
+    "net_electricity_point",
+    "outdoor_temperature",
+    "return_temperature",
+    "setpoint",
+    "temperature_difference",
+    "valve_position",
+    "water_pressure",
+    "water_temperature",
 ]
 
-# Switches
-DHW_COMF_MODE = {"dhw_cm_switch": False}
-LOCK = {"lock": False}
-RELAY = {"relay": False}
-
 SWITCHES = [
-    DHW_COMF_MODE,
-    LOCK,
-    RELAY,
+    "dhw_cm_switch",
+    "lock",
+    "relay",
 ]
