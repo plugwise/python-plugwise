@@ -534,16 +534,7 @@ ATTR_ICON = "icon"
 
 EXTRA_STATE_ATTRIBS = {}
 
-# Icons
-COOLING_ICON = "mdi:snowflake"
-FLAME_ICON = "mdi:fire"
-FLOW_OFF_ICON = "mdi:water-pump-off"
-FLOW_ON_ICON = "mdi:water-pump"
-HEATING_ICON = "mdi:radiator"
-IDLE_ICON = "mdi:circle-off-outline"
-NOTIFICATION_ICON = "mdi:mailbox-up-outline"
-NO_NOTIFICATION_ICON = "mdi:mailbox-outline"
-SWITCH_ICON = "mdi:electric-switch"
+# All available Binary Sensor, Sensor, and Switch Types
 
 BINARY_SENSORS = [
     "cooling_state",
