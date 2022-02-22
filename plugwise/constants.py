@@ -4,16 +4,11 @@ import logging
 LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
-ATTR_DEVICE_CLASS = "device_class"
 ATTR_NAME = "name"
 ATTR_STATE = "state"
 ATTR_STATE_CLASS = "state_class"
 ATTR_UNIT_OF_MEASUREMENT = "unit_of_measurement"
 DEGREE = "°"
-HVAC_MODE_AUTO = "auto"
-HVAC_MODE_HEAT = "heat"
-HVAC_MODE_HEAT_COOL = "heat_cool"
-HVAC_MODE_OFF = "off"
 ENERGY_KILO_WATT_HOUR = "kWh"
 ENERGY_WATT_HOUR = "Wh"
 PERCENTAGE = "%"
@@ -24,7 +19,6 @@ SIGNAL_STRENGTH_DECIBELS_MILLIWATT = "dBm"
 TEMP_CELSIUS = "°C"
 TEMP_KELVIN = "°K"
 TIME_MILLISECONDS = "ms"
-UNIT = "unit"
 UNIT_LUMEN = "lm"
 VOLUME_CUBIC_METERS = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR = "m³/h"
@@ -356,17 +350,12 @@ FEATURE_RSSI_OUT = {
     "unit": "Unknown",
 }
 
+
 ### Smile constants ###
 
-APPLIANCES = "/core/appliances"
-DOMAIN_OBJECTS = "/core/domain_objects"
-LOCATIONS = "/core/locations"
-MODULES = "/core/modules"
-NOTIFICATIONS = "/core/notifications"
-RULES = "/core/rules"
-SYSTEM = "/system"
-STATUS = "/system/status.xml"
-
+ATTR_ENABLED = "enabled_default"
+ATTR_ID = "id"
+ATTR_ICON = "icon"
 ATTR_TYPE = "type"
 DAYS = {
     "mo": 0,
@@ -381,7 +370,6 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80
 FAKE_LOC = "0000aaaa0000aaaa0000aaaa0000aa00"
-
 SEVERITIES = ["other", "info", "warning", "error"]
 SWITCH_GROUP_TYPES = ["switching", "report"]
 THERMOSTAT_CLASSES = [
@@ -390,6 +378,18 @@ THERMOSTAT_CLASSES = [
     "zone_thermostat",
     "thermostatic_radiator_valve",
 ]
+
+# XML data paths
+APPLIANCES = "/core/appliances"
+DOMAIN_OBJECTS = "/core/domain_objects"
+LOCATIONS = "/core/locations"
+MODULES = "/core/modules"
+NOTIFICATIONS = "/core/notifications"
+RULES = "/core/rules"
+SYSTEM = "/system"
+STATUS = "/system/status.xml"
+
+# P1 related measurements:
 HOME_MEASUREMENTS = {
     "electricity_consumed": {
         ATTR_TYPE: "power",
@@ -405,9 +405,10 @@ HOME_MEASUREMENTS = {
     },
 }
 
+# Thermostat and Plug/Stretch related measurements
 # Excluded:
-# zone_thermosstat 'temperature_offset'
-# radiator_valve 'uncorrected_temperature', 'temperature_offset'
+# zone_thermosstat: 'temperature_offset'
+# radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 DEVICE_MEASUREMENTS = {
     # HA Core thermostat current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
@@ -438,6 +439,7 @@ DEVICE_MEASUREMENTS = {
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
+# Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS = {
     "boiler_temperature": {
         ATTR_NAME: "water_temperature",
@@ -488,6 +490,7 @@ HEATER_CENTRAL_MEASUREMENTS = {
     },
 }
 
+# Known types of Smiles and Stretches
 SMILES = {
     "smile_open_therm_v3": {
         "type": "thermostat",
@@ -527,128 +530,60 @@ SMILES = {
     "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
 }
 
-# Newly added smileclasses constants
-ATTR_ENABLED = "enabled_default"
-ATTR_ID = "id"
-ATTR_ICON = "icon"
 
-EXTRA_STATE_ATTRIBS = {}
-
-# Icons
-COOLING_ICON = "mdi:snowflake"
-FLAME_ICON = "mdi:fire"
-FLOW_OFF_ICON = "mdi:water-pump-off"
-FLOW_ON_ICON = "mdi:water-pump"
-HEATING_ICON = "mdi:radiator"
-IDLE_ICON = "mdi:circle-off-outline"
-NOTIFICATION_ICON = "mdi:mailbox-up-outline"
-NO_NOTIFICATION_ICON = "mdi:mailbox-outline"
-SWITCH_ICON = "mdi:electric-switch"
-
-# Binary Sensors
-COOLING_STATE = {"cooling_state": False}
-DHW_STATE = {"dhw_state": False}
-FLAME_STATE = {"flame_state": False}
-HEATING_STATE = {"heating_state": False}
-PW_NOTIFICATION = {"plugwise_notification": False}
-SLAVE_BOILER_STATE = {"slave_boiler_state": False}
+# All available Binary Sensor, Sensor, and Switch Types
 
 BINARY_SENSORS = [
-    COOLING_STATE,
-    DHW_STATE,
-    FLAME_STATE,
-    HEATING_STATE,
-    SLAVE_BOILER_STATE,
+    "cooling_state",
+    "dhw_state",
+    "flame_state",
+    "heating_state",
+    "plugwise_notification",
+    "slave_boiler_state",
 ]
-
-# Sensors
-BATTERY = {"battery": None}
-COOL_ACT_THRESHOLD = {"cooling_activation_outdoor_temperature": None}
-COOL_DEACT_THRESHOLD = {"cooling_deactivation_threshold": None}
-CURRENT_TEMP = {"temperature": None}
-DEVICE_STATE = {"device_state": None}
-EL_CONSUMED = {"electricity_consumed": None}
-EL_CONSUMED_INTERVAL = {"electricity_consumed_interval": None}
-EL_CONSUMED_OFF_PEAK_CUMULATIVE = {"electricity_consumed_off_peak_cumulative": None}
-EL_CONSUMED_OFF_PEAK_INTERVAL = {"electricity_consumed_off_peak_interval": None}
-EL_CONSUMED_OFF_PEAK_POINT = {"electricity_consumed_off_peak_point": None}
-EL_CONSUMED_PEAK_CUMULATIVE = {"electricity_consumed_peak_cumulative": None}
-EL_CONSUMED_PEAK_INTERVAL = {"electricity_consumed_peak_interval": None}
-EL_CONSUMED_PEAK_POINT = {"electricity_consumed_peak_point": None}
-EL_CONSUMED_POINT = {"electricity_consumed_point": None}
-EL_PRODUCED = {"electricity_produced": None}
-EL_PRODUCED_INTERVAL = {"electricity_produced_interval": None}
-EL_PRODUCED_OFF_PEAK_CUMULATIVE = {"electricity_produced_off_peak_cumulative": None}
-EL_PRODUCED_OFF_PEAK_INTERVAL = {"electricity_produced_off_peak_interval": None}
-EL_PRODUCED_OFF_PEAK_POINT = {"electricity_produced_off_peak_point": None}
-EL_PRODUCED_PEAK_CUMULATIVE = {"electricity_produced_peak_cumulative": None}
-EL_PRODUCED_PEAK_INTERVAL = {"electricity_produced_peak_interval": None}
-EL_PRODUCED_PEAK_POINT = {"electricity_produced_peak_point": None}
-EL_PRODUCED_POINT = {"electricity_produced_point": None}
-GAS_CONSUMED_CUMULATIVE = {"gas_consumed_cumulative": None}
-GAS_CONSUMED_INTERVAL = {"gas_consumed_interval": None}
-HUMIDITY = {"humidity": None}
-ILLUMINANCE = {"illuminance": None}
-INTENDED_BOILER_TEMP = {"intended_boiler_temperature": None}
-MOD_LEVEL = {"modulation_level": None}
-NET_EL_CUMULATIVE = {"net_electricity_cumulative": None}
-NET_EL_POINT = {"net_electricity_point": None}
-OUTDOOR_TEMP = {"outdoor_temperature": None}
-RETURN_TEMP = {"return_temperature": None}
-TARGET_TEMP = {"setpoint": None}
-TEMP_DIFF = {"temperature_difference": None}
-VALVE_POS = {"valve_position": None}
-WATER_PRESSURE = {"water_pressure": None}
-WATER_TEMP = {"water_temperature": None}
 
 SENSORS = [
-    BATTERY,
-    COOL_ACT_THRESHOLD,
-    COOL_DEACT_THRESHOLD,
-    CURRENT_TEMP,
-    DEVICE_STATE,
-    EL_CONSUMED,
-    EL_CONSUMED_INTERVAL,
-    EL_CONSUMED_OFF_PEAK_CUMULATIVE,
-    EL_CONSUMED_OFF_PEAK_INTERVAL,
-    EL_CONSUMED_OFF_PEAK_POINT,
-    EL_CONSUMED_PEAK_CUMULATIVE,
-    EL_CONSUMED_PEAK_INTERVAL,
-    EL_CONSUMED_PEAK_POINT,
-    EL_CONSUMED_POINT,
-    EL_PRODUCED,
-    EL_PRODUCED_INTERVAL,
-    EL_PRODUCED_OFF_PEAK_CUMULATIVE,
-    EL_PRODUCED_OFF_PEAK_INTERVAL,
-    EL_PRODUCED_OFF_PEAK_POINT,
-    EL_PRODUCED_PEAK_CUMULATIVE,
-    EL_PRODUCED_PEAK_INTERVAL,
-    EL_PRODUCED_PEAK_POINT,
-    EL_PRODUCED_POINT,
-    GAS_CONSUMED_CUMULATIVE,
-    GAS_CONSUMED_INTERVAL,
-    HUMIDITY,
-    ILLUMINANCE,
-    INTENDED_BOILER_TEMP,
-    MOD_LEVEL,
-    NET_EL_CUMULATIVE,
-    NET_EL_POINT,
-    OUTDOOR_TEMP,
-    RETURN_TEMP,
-    TARGET_TEMP,
-    TEMP_DIFF,
-    VALVE_POS,
-    WATER_PRESSURE,
-    WATER_TEMP,
+    "battery",
+    "cooling_activation_outdoor_temperature",
+    "cooling_deactivation_threshold",
+    "temperature",
+    "electricity_consumed",
+    "electricity_consumed_interval",
+    "electricity_consumed_off_peak_cumulative",
+    "electricity_consumed_off_peak_interval",
+    "electricity_consumed_off_peak_point",
+    "electricity_consumed_peak_cumulative",
+    "electricity_consumed_peak_interval",
+    "electricity_consumed_peak_point",
+    "electricity_consumed_point",
+    "electricity_produced",
+    "electricity_produced_interval",
+    "electricity_produced_off_peak_cumulative",
+    "electricity_produced_off_peak_interval",
+    "electricity_produced_off_peak_point",
+    "electricity_produced_peak_cumulative",
+    "electricity_produced_peak_interval",
+    "electricity_produced_peak_point",
+    "electricity_produced_point",
+    "gas_consumed_cumulative",
+    "gas_consumed_interval",
+    "humidity",
+    "illuminance",
+    "intended_boiler_temperature",
+    "modulation_level",
+    "net_electricity_cumulative",
+    "net_electricity_point",
+    "outdoor_temperature",
+    "return_temperature",
+    "setpoint",
+    "temperature_difference",
+    "valve_position",
+    "water_pressure",
+    "water_temperature",
 ]
 
-# Switches
-DHW_COMF_MODE = {"dhw_cm_switch": False}
-LOCK = {"lock": False}
-RELAY = {"relay": False}
-
 SWITCHES = [
-    DHW_COMF_MODE,
-    LOCK,
-    RELAY,
+    "dhw_cm_switch",
+    "lock",
+    "relay",
 ]
