@@ -350,17 +350,12 @@ FEATURE_RSSI_OUT = {
     "unit": "Unknown",
 }
 
+
 ### Smile constants ###
 
-APPLIANCES = "/core/appliances"
-DOMAIN_OBJECTS = "/core/domain_objects"
-LOCATIONS = "/core/locations"
-MODULES = "/core/modules"
-NOTIFICATIONS = "/core/notifications"
-RULES = "/core/rules"
-SYSTEM = "/system"
-STATUS = "/system/status.xml"
-
+ATTR_ENABLED = "enabled_default"
+ATTR_ID = "id"
+ATTR_ICON = "icon"
 ATTR_TYPE = "type"
 DAYS = {
     "mo": 0,
@@ -375,7 +370,6 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_USERNAME = "smile"
 DEFAULT_PORT = 80
 FAKE_LOC = "0000aaaa0000aaaa0000aaaa0000aa00"
-
 SEVERITIES = ["other", "info", "warning", "error"]
 SWITCH_GROUP_TYPES = ["switching", "report"]
 THERMOSTAT_CLASSES = [
@@ -384,6 +378,18 @@ THERMOSTAT_CLASSES = [
     "zone_thermostat",
     "thermostatic_radiator_valve",
 ]
+
+# XML data paths
+APPLIANCES = "/core/appliances"
+DOMAIN_OBJECTS = "/core/domain_objects"
+LOCATIONS = "/core/locations"
+MODULES = "/core/modules"
+NOTIFICATIONS = "/core/notifications"
+RULES = "/core/rules"
+SYSTEM = "/system"
+STATUS = "/system/status.xml"
+
+# P1 related measurements:
 HOME_MEASUREMENTS = {
     "electricity_consumed": {
         ATTR_TYPE: "power",
@@ -399,9 +405,10 @@ HOME_MEASUREMENTS = {
     },
 }
 
+# Thermostat and Plug/Stretch related measurements
 # Excluded:
-# zone_thermosstat 'temperature_offset'
-# radiator_valve 'uncorrected_temperature', 'temperature_offset'
+# zone_thermosstat: 'temperature_offset'
+# radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 DEVICE_MEASUREMENTS = {
     # HA Core thermostat current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
@@ -432,6 +439,7 @@ DEVICE_MEASUREMENTS = {
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
+# Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS = {
     "boiler_temperature": {
         ATTR_NAME: "water_temperature",
@@ -482,6 +490,7 @@ HEATER_CENTRAL_MEASUREMENTS = {
     },
 }
 
+# Known types of Smiles and Stretches
 SMILES = {
     "smile_open_therm_v3": {
         "type": "thermostat",
@@ -521,12 +530,6 @@ SMILES = {
     "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
 }
 
-# Newly added smileclasses constants
-ATTR_ENABLED = "enabled_default"
-ATTR_ID = "id"
-ATTR_ICON = "icon"
-
-EXTRA_STATE_ATTRIBS = {}
 
 # All available Binary Sensor, Sensor, and Switch Types
 
