@@ -24,7 +24,6 @@ from .constants import (
     LOGGER,
     MODULES,
     NOTIFICATIONS,
-    PW_NOTIFICATION,
     RULES,
     SMILES,
     STATUS,
@@ -47,7 +46,7 @@ class SmileData(SmileHelper):
         """
         if d_id == self.gateway_id:
             if self._is_thermostat:
-                bs_dict.update(PW_NOTIFICATION)
+                bs_dict.update("plugwise_notification")
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
