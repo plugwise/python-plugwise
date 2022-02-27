@@ -301,6 +301,7 @@ class SmileHelper:
         self._domain_objects: etree | None = None
         self._heater_id: str | None = None
         self._home_location: str | None = None
+        self._is_thermostat = False
         self._last_active: dict[str, str] = {}
         self._loc_data: dict[str, Any] = {}
         self._locations: etree | None = None
@@ -308,17 +309,16 @@ class SmileHelper:
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float | None = None
-        self._is_thermostat = False
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._thermo_locs: dict[str, Any] = {}
 
         self.cooling_active = False
-        self.smile_fw_version: str | None = None
         self.gateway_id: str | None = None
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
+        self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
@@ -338,6 +338,7 @@ class SmileHelper:
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
+            self._is_thermostat = True
             self._loc_data[FAKE_LOC] = {
                 "name": "Home",
                 "types": {"temperature"},
