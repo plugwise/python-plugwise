@@ -413,7 +413,7 @@ class Smile(SmileComm, SmileData):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
-        # No need to import domain_objects and modules for P1, no useful info
+        # No need to import domain_objects for P1, no useful info
         if self.smile_type != "power":
             await self._update_domain_objects()
 
@@ -434,7 +434,7 @@ class Smile(SmileComm, SmileData):
                 self._notifications.update({msg_id: {msg_type: msg}})
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
-                LOGGER.info(
+                LOGGER.debug(
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )

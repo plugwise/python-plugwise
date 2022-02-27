@@ -491,7 +491,7 @@ class SmileHelper:
 
             # Adam: check for ZigBee mac address
             if self.smile_name == "Adam" and (
-                found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
+                found := self._modules.find(".//protocols/zig_bee_coordinator")
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
@@ -711,12 +711,12 @@ class SmileHelper:
 
     def _control_state(self, loc_id: str) -> str | None:
         """Helper-function for _device_data_climate().
-        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        Adam: find the thermostat control_state of a location, from LOCATIONS.
         Represents the heating/cooling demand-state of the local master thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         locator = f'location[@id="{loc_id}"]'
-        if (location := self._domain_objects.find(locator)) is not None:
+        if (location := self._locations.find(locator)) is not None:
             locator = (
                 ".//actuator_functionalities/thermostat_functionality/control_state"
             )
@@ -1169,7 +1169,7 @@ class SmileHelper:
         log_type = "schedule_state"
         locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
-        if (result := self._domain_objects.find(locator)) is not None:
+        if (result := self._appliances.find(locator)) is not None:
             active = result.text == "on"
 
         if name is not None:
@@ -1268,7 +1268,7 @@ class SmileHelper:
         Obtain the value/state for the given object.
         """
         val: float | int | None = None
-        search = self._domain_objects
+        search = self._locations
         locator = (
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
