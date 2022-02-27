@@ -309,7 +309,6 @@ class SmileHelper:
         self._opentherm_device = False
         self._outdoor_temp: float | None = None
         self._is_thermostat = False
-        self._multi_thermostats = False
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
@@ -940,7 +939,7 @@ class SmileHelper:
         return appl_class
 
     def _scan_thermostats(self, debug_text="missing text") -> None:
-        """Helper-function for smile.py: get_all_devices() and single_master_thermostat().
+        """Helper-function for smile.py: get_all_devices().
         Update locations with thermostat ranking results.
         """
         self._thermo_locs = self._match_locations()

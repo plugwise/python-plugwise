@@ -80,7 +80,6 @@ class SmileData(SmileHelper):
         """Determine the devices present from the obtained XML-data."""
         self._devices: dict[str, dict[str, Any]] = {}
         self._scan_thermostats()
-        self.single_master_thermostat()
 
         for appliance, details in self._appl_data.items():
             loc_id = details["location"]
@@ -232,21 +231,6 @@ class SmileData(SmileHelper):
         device_data = self._device_data_climate(details, device_data)
 
         return device_data
-
-    def single_master_thermostat(self) -> None:
-        """Determine if there is a single master thermostat in the setup."""
-        if self.smile_type == "thermostat":
-            self._is_thermostat = True
-            count = 0
-            for dummy, data in self._thermo_locs.items():
-                if "master_prio" in data:
-                    if data.get("master_prio") > 0:
-                        count += 1
-
-            if count == 1:
-                self._multi_thermostats = False
-            if count > 1:
-                self._multi_thermostats = True
 
 
 class Smile(SmileComm, SmileData):
@@ -408,6 +392,8 @@ class Smile(SmileComm, SmileData):
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
+        if self.smile_type == "thermostat":
+            self._is_thermostat = True
         self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
