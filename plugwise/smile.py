@@ -392,6 +392,8 @@ class Smile(SmileComm, SmileData):
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
+        if self.smile_type == "thermostat":
+            self._is_thermostat = True
         self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
