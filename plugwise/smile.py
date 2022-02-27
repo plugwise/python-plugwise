@@ -392,8 +392,6 @@ class Smile(SmileComm, SmileData):
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
-        if self.smile_type == "thermostat":
-            self._is_thermostat = True
         self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
@@ -402,6 +400,9 @@ class Smile(SmileComm, SmileData):
         if self.smile_type == "stretch":
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
+
+        if self.smile_type == "thermostat":
+            self._is_thermostat = True
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
