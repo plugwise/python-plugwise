@@ -1161,7 +1161,8 @@ class SmileHelper:
         name: str | None = None
         schemas: dict[str] = {}
 
-        for schema in self._domain_objects.findall(".//rule"):
+        search = self._domain_objects
+        for schema in search.findall(".//rule"):
             if rule_name := schema.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
@@ -1169,7 +1170,7 @@ class SmileHelper:
         log_type = "schedule_state"
         locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
-        if (result := self._appliances.find(locator)) is not None:
+        if (result := search.find(locator)) is not None:
             active = result.text == "on"
 
         if name is not None:
