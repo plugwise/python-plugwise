@@ -195,11 +195,6 @@ class SmileData(SmileHelper):
             if power_data is not None:
                 device_data.update(power_data)
 
-        # Adam: indicate active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if details["class"] == "heater_central" and self._cooling_present:
-            device_data["cooling_active"] = self.cooling_active
-
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
         # Specific, not generic Adam data
@@ -456,14 +451,6 @@ class Smile(SmileComm, SmileData):
                     update_helper(
                         data, self.gw_devices, dev_dict, dev_id, "switches", key
                     )
-
-        # Anna: update cooling_active to it's final value after all entities have been updated
-        if (
-            not self._smile_legacy
-            and self.smile_name == "Anna"
-            and self._cooling_present
-        ):
-            self.gw_devices[self._heater_id]["cooling_active"] = self.cooling_active
 
         return [self.gw_data, self.gw_devices]
 
