@@ -114,7 +114,7 @@ class SmileData(SmileHelper):
 
     def _device_data_adam(
         self, details: dict[str, Any], device_data: dict[str, Any]
-    ) -> dict[str, bool]:
+    ) -> dict[str, Any]:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
