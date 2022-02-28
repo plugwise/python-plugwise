@@ -43,23 +43,13 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._devices.items():
-            temp_bs_dict: dict[str, bool] = {}
-            temp_s_dict: dict[str, Any] = {}
-            temp_sw_dict: dict[str, bool] = {}
+            bs_dict: dict[str, bool] = {}
+            s_dict: dict[str, Any] = {}
+            sw_dict: dict[str, bool] = {}
             data = self._get_device_data(device_id)
-            self._create_dicts_from_data(
-                device_id, data, temp_bs_dict, temp_s_dict, temp_sw_dict
+            self.gw_devices[device_id] = self._create_dicts_from_data(
+                device_id, data, device, bs_dict, s_dict, sw_dict
             )
-
-            device.update(data)
-            if temp_bs_dict:
-                device["binary_sensors"] = temp_bs_dict
-            if temp_s_dict:
-                device["sensors"] = temp_s_dict
-            if temp_sw_dict:
-                device["switches"] = temp_sw_dict
-
-            self.gw_devices[device_id] = device
 
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["gateway_id"] = self.gateway_id

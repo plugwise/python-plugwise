@@ -1303,10 +1303,11 @@ class SmileHelper:
         self,
         d_id: str,
         data: dict[str, Any],
+        device: dict[str, Any],
         bs_dict: dict[str, bool],
         s_dict: dict[str, Any],
         sw_dict: dict[str, bool],
-    ) -> None:
+    ) -> dict[str, Any]:
         """Helper-function for smile.py: _all_device_data().
         Create dicts of binary_sensors, sensors, switches from the relevant data.
         """
@@ -1329,3 +1330,13 @@ class SmileHelper:
         if d_id == self.gateway_id:
             if self._is_thermostat:
                 bs_dict["plugwise_notification"] = False
+
+        device.update(data)
+        if bs_dict:
+            device["binary_sensors"] = bs_dict
+        if s_dict:
+            device["sensors"] = s_dict
+        if sw_dict:
+            device["switches"] = sw_dict
+
+        return device
