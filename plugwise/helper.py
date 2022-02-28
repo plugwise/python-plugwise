@@ -338,7 +338,6 @@ class SmileHelper:
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._is_thermostat = True
             self._loc_data[FAKE_LOC] = {
                 "name": "Home",
                 "types": {"temperature"},
