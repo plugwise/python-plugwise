@@ -710,7 +710,7 @@ class SmileHelper:
         return matched_locations
 
     def _control_state(self, loc_id: str) -> str | None:
-        """Helper-function for _device_data_climate().
+        """Helper-function for _device_data_adam().
         Adam: find the thermostat control_state of a location, from LOCATIONS.
         Represents the heating/cooling demand-state of the local master thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
