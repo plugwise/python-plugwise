@@ -1301,6 +1301,7 @@ class SmileHelper:
 
     def _create_dicts_from_data(
         self,
+        d_id: str,
         data: dict[str, Any],
         bs_dict: dict[str, bool],
         s_dict: dict[str, Any],
@@ -1323,3 +1324,8 @@ class SmileHelper:
                 if item == key:
                     data.pop(key)
                     sw_dict[key] = value
+
+        # Add plugwise notification binary_sensor to the relevant gateway
+        if d_id == self.gateway_id:
+            if self._is_thermostat:
+                bs_dict["plugwise_notification"] = False

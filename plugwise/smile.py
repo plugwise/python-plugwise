@@ -38,16 +38,6 @@ from .helper import SmileComm, SmileHelper, pw_notification_updater, update_help
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def _append_special(
-        self, d_id: str, bs_dict: dict[str, bool], s_dict: dict[str, Any]
-    ) -> None:
-        """Helper-function for smile.py: _all_device_data().
-        When conditions are met, the plugwise_notification binary_sensor is appended.
-        """
-        if d_id == self.gateway_id:
-            if self._is_thermostat:
-                bs_dict["plugwise_notification"] = False
-
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
@@ -57,9 +47,10 @@ class SmileData(SmileHelper):
             temp_s_dict: dict[str, Any] = {}
             temp_sw_dict: dict[str, bool] = {}
             data = self._get_device_data(device_id)
+            self._create_dicts_from_data(
+                device_id, data, temp_bs_dict, temp_s_dict, temp_sw_dict
+            )
 
-            self._create_dicts_from_data(data, temp_bs_dict, temp_s_dict, temp_sw_dict)
-            self._append_special(device_id, temp_bs_dict, temp_s_dict)
             device.update(data)
             if temp_bs_dict:
                 device["binary_sensors"] = temp_bs_dict
