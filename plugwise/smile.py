@@ -47,7 +47,7 @@ class SmileData(SmileHelper):
             s_dict: dict[str, Any] = {}
             sw_dict: dict[str, bool] = {}
             data = self._get_device_data(device_id)
-            self.gw_devices[device_id] = self._create_dicts_from_data(
+            self.gw_devices[device_id] = self._update_device_with_dicts(
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
 

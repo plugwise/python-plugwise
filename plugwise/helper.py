@@ -1299,7 +1299,7 @@ class SmileHelper:
 
         return data
 
-    def _create_dicts_from_data(
+    def _update_device_with_dicts(
         self,
         d_id: str,
         data: dict[str, Any],
@@ -1309,7 +1309,8 @@ class SmileHelper:
         sw_dict: dict[str, bool],
     ) -> dict[str, Any]:
         """Helper-function for smile.py: _all_device_data().
-        Create dicts of binary_sensors, sensors, switches from the relevant data.
+        Move relevant data into dicts of binary_sensors, sensors, switches,
+        and add these to the output.
         """
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
