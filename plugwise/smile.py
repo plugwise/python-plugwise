@@ -126,10 +126,6 @@ class SmileData(SmileHelper):
                     if self._heating_valves() == 0:
                         device_data["heating_state"] = False
 
-            # Control_state
-            if ctrl_state := self._control_state(details["location"]):
-                device_data["control_state"] = ctrl_state
-
         return device_data
 
     def _device_data_climate(
@@ -169,6 +165,10 @@ class SmileData(SmileHelper):
             if self._heater_id is not None:
                 if self.cooling_active:
                     device_data["mode"] = "cool"
+
+        # Control_state, only for Adam master thermostats
+        if ctrl_state := self._control_state(details["location"]):
+            device_data["control_state"] = ctrl_state
 
         return device_data
 
