@@ -223,11 +223,11 @@ class SmileData(SmileHelper):
         device_data = self._device_data_switching_group(details, device_data)
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
-        # Unless thermostat based, no need to walk presets
+        # No need to obtain thermostat data when the device is not a thermostat
         if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
 
-        # Climate based data (presets, temperatures etc)
+        # Thermostat data (presets, temperatures etc)
         device_data = self._device_data_climate(details, device_data)
 
         return device_data
