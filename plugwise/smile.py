@@ -63,19 +63,21 @@ class SmileData(SmileHelper):
         self._scan_thermostats()
 
         for appliance, details in self._appl_data.items():
-            loc_id = details["location"]
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
-            if loc_id is None and details["class"] not in THERMOSTAT_CLASSES:
+            if (
+                details.get("location") is None
+                and details.get("class") not in THERMOSTAT_CLASSES
+            ):
                 details["location"] = self._home_location
 
             # Override slave thermostat class
-            if loc_id in self._thermo_locs:
+            if (loc_id := details.get("location")) in self._thermo_locs:
                 if "slaves" in self._thermo_locs[loc_id]:
                     if appliance in self._thermo_locs[loc_id]["slaves"]:
                         details["class"] = "thermo_sensor"
 
             # Filter for thermostat-devices without a location
-            if details["location"] is not None:
+            if details.get("location") is not None:
                 self._devices[appliance] = details
 
         if (group_data := self._group_switches()) is not None:
@@ -99,11 +101,11 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
-        if details["class"] in SWITCH_GROUP_TYPES:
+        if details.get("class") in SWITCH_GROUP_TYPES:
             counter = 0
-            for member in details["members"]:
+            for member in details.get("members"):
                 member_data = self._get_appliance_data(member)
-                if member_data["relay"]:
+                if member_data.get("relay"):
                     counter += 1
 
             device_data["relay"] = True
@@ -120,7 +122,7 @@ class SmileData(SmileHelper):
         """
         if self.smile_name == "Adam":
             # Indicate heating_state based on valves being open in case of city-provided heating
-            if details["class"] == "heater_central":
+            if details.get("class") == "heater_central":
                 if self._on_off_device and self._heating_valves() is not None:
                     device_data["heating_state"] = True
                     if self._heating_valves() == 0:
@@ -134,7 +136,7 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
-        loc_id = details["location"]
+        loc_id = details.get("location")
 
         # Presets
         device_data["preset_modes"] = None
@@ -167,7 +169,7 @@ class SmileData(SmileHelper):
                     device_data["mode"] = "cool"
 
         # Control_state, only for Adam master thermostats
-        if ctrl_state := self._control_state(details["location"]):
+        if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
         return device_data
@@ -180,7 +182,7 @@ class SmileData(SmileHelper):
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
-        if details["class"] == "gateway" or dev_id == self.gateway_id:
+        if details.get("class") == "gateway" or dev_id == self.gateway_id:
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
             # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             if self.smile_type == "thermostat":
@@ -200,7 +202,7 @@ class SmileData(SmileHelper):
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details["class"] not in THERMOSTAT_CLASSES:
+        if details.get("class") not in THERMOSTAT_CLASSES:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
@@ -366,12 +368,12 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
-        self.smile_name = SMILES[target_smile]["friendly_name"]
-        self.smile_type = SMILES[target_smile]["type"]
+        self.smile_name = SMILES[target_smile].get("friendly_name")
+        self.smile_type = SMILES[target_smile].get("type")
         self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
-            self._smile_legacy = SMILES[target_smile]["legacy"]
+            self._smile_legacy = SMILES[target_smile].get("legacy")
 
         if self.smile_type == "stretch":
             self._stretch_v2 = self.smile_version[1].major == 2
