@@ -440,16 +440,17 @@ class Smile(SmileComm, SmileData):
                 notifs = None
                 if item == "binary_sensors":
                     notifs = self._notifications
-                for key, value in list(data.items()):
-                    update_helper(
-                        data,
-                        self.gw_devices,
-                        dev_dict,
-                        dev_id,
-                        item,
-                        key,
-                        notifs,
-                    )
+                if item in dev_dict:
+                    for key, value in list(data.items()):
+                        update_helper(
+                            data,
+                            self.gw_devices,
+                            dev_dict,
+                            dev_id,
+                            item,
+                            key,
+                            notifs,
+                        )
 
         return [self.gw_data, self.gw_devices]
 
