@@ -67,19 +67,19 @@ def update_helper(
     notifs: dict[str, str],
 ) -> None:
     """Helper-function for async_update()."""
-    for dummy in d_dict[e_type]:
-        if key != dummy:
+    for d_item in d_dict[e_type]:
+        if key != d_item:
             continue
         for item in devs[d_id][e_type]:
             if key != item:
                 continue
             devs[d_id][e_type][item] = data[key]
 
-            # Update the PW_Notification binary_sensor state
-            if e_type != "binary_sensors":
-                continue
-            if item == "plugwise_notification":
-                devs[d_id][e_type][item] = notifs != {}
+        # Update the PW_Notification binary_sensor state
+        if e_type != "binary_sensors":
+            continue
+        if d_item == "plugwise_notification":
+            devs[d_id][e_type][d_item] = notifs != {}
 
 
 def check_model(name: str, v_name: str) -> str:
