@@ -76,10 +76,9 @@ def update_helper(
             devs[d_id][e_type][item] = data[key]
 
         # Update the PW_Notification binary_sensor state
-        if e_type != "binary_sensors":
-            continue
-        if d_item == "plugwise_notification":
-            devs[d_id][e_type][d_item] = notifs != {}
+        if e_type == "binary_sensors":
+            if d_item == "plugwise_notification":
+                devs[d_id][e_type][d_item] = notifs != {}
 
 
 def check_model(name: str, v_name: str) -> str:
