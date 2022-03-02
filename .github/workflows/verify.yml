@@ -22,7 +22,7 @@ jobs:
     name: Prepare
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v3
@@ -71,7 +71,7 @@ jobs:
     needs: prepare
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
@@ -116,7 +116,7 @@ jobs:
     needs: black
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v3
@@ -170,7 +170,7 @@ jobs:
         python-version: [3.9, "3.10"]
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
@@ -210,7 +210,7 @@ jobs:
 
     steps:
       - name: Check out committed code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
@@ -244,7 +244,7 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Run ShellCheck
       uses: ludeeus/action-shellcheck@master
 
@@ -254,7 +254,7 @@ jobs:
     needs: pytest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v3
@@ -292,7 +292,7 @@ jobs:
     needs: coverage
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v3
@@ -330,7 +330,7 @@ jobs:
     needs: coverage
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v3
