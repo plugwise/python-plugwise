@@ -57,17 +57,6 @@ from .util import (
 )
 
 
-def pw_notification_updater(
-    devs: dict[str, Any], d_id: str, d_dict: dict[str, Any], notifs: dict[str, str]
-) -> None:
-    """Helper-function for async_update().
-    Update the PW_Notification binary_sensor state.
-    """
-    for item in d_dict["binary_sensors"]:
-        if item == "plugwise_notification":
-            devs[d_id]["binary_sensors"][item] = notifs != {}
-
-
 def update_helper(
     data: dict[str, Any],
     devs: dict[str, Any],
@@ -75,6 +64,7 @@ def update_helper(
     d_id: str,
     e_type: str,
     key: str,
+    notifs: dict[str, str],
 ) -> None:
     """Helper-function for async_update()."""
     for dummy in d_dict[e_type]:
@@ -84,6 +74,12 @@ def update_helper(
             if key != item:
                 continue
             devs[d_id][e_type][item] = data[key]
+
+            # Update the PW_Notification binary_sensor state
+            if e_type != "binary_sensors":
+                continue
+            if item == "plugwise_notification":
+                devs[d_id][e_type][item] = notifs != {}
 
 
 def check_model(name: str, v_name: str) -> str:

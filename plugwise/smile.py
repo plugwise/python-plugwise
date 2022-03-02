@@ -32,7 +32,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
 )
 from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
-from .helper import SmileComm, SmileHelper, pw_notification_updater, update_helper
+from .helper import SmileComm, SmileHelper, update_helper
 
 
 class SmileData(SmileHelper):
@@ -435,23 +435,20 @@ class Smile(SmileComm, SmileData):
             for key, value in list(data.items()):
                 if key in dev_dict:
                     dev_dict[key] = value
-            if "binary_sensors" in dev_dict:
+
+            for item in ["binary_sensors", "sensors", "switches"]:
+                notifs = None
+                if item == "binary_sensors":
+                    notifs = self._notifications
                 for key, value in list(data.items()):
                     update_helper(
-                        data, self.gw_devices, dev_dict, dev_id, "binary_sensors", key
-                    )
-                pw_notification_updater(
-                    self.gw_devices, dev_id, dev_dict, self._notifications
-                )
-            if "sensors" in dev_dict:
-                for key, value in list(data.items()):
-                    update_helper(
-                        data, self.gw_devices, dev_dict, dev_id, "sensors", key
-                    )
-            if "switches" in dev_dict:
-                for key, value in list(data.items()):
-                    update_helper(
-                        data, self.gw_devices, dev_dict, dev_id, "switches", key
+                        data,
+                        self.gw_devices,
+                        dev_dict,
+                        dev_id,
+                        item,
+                        key,
+                        notifs,
                     )
 
         return [self.gw_data, self.gw_devices]
