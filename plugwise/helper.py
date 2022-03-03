@@ -561,8 +561,8 @@ class SmileHelper:
     def _appliance_types_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _all_appliances() - determine type(s) per appliance."""
         # Appliance with location (i.e. a device)
-        if appliance.find("location") is not None:
-            appl.location = appliance.find("location").attrib["id"]
+        if (appl_loc := appliance.find("location")) is not None:
+            appl.location = appl_loc.attrib["id"]
             for appl_type in types_finder(appliance):
                 appl.types.add(appl_type)
         else:
@@ -579,7 +579,7 @@ class SmileHelper:
         )
         if relay_func is not None or relay_act is not None:
             appl.types.add("plug")
-        elif thermo_func is not None:
+        if thermo_func is not None:
             appl.types.add("thermostat")
 
         return appl
@@ -624,16 +624,15 @@ class SmileHelper:
                 )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
-        c_heating_state = self._appliances.find(
-            ".//logs/point_log[type='central_heating_state']"
-        )
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        self._opentherm_device = (
-            c_heating_state is not None and ot_fault_code is not None
-        )
-        self._on_off_device = c_heating_state is not None and ot_fault_code is None
+        if (
+            self._appliances.find(".//logs/point_log[type='central_heating_state']")
+            is not None
+        ):
+            self._opentherm_device = ot_fault_code is not None
+            self._on_off_device = ot_fault_code is None
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -805,16 +804,15 @@ class SmileHelper:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements:
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            if appliance.find(p_locator) is not None:
+            if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
                     continue
 
-                measure = appliance.find(p_locator).text
                 # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
                 # this measurement appears at power-on and is never updated, therefore remove.
                 if (
                     measurement == "central_heater_water_pressure"
-                    and float(measure) > 3.5
+                    and float(appl_p_loc.text) > 3.5
                 ):
                     continue
 
@@ -824,7 +822,7 @@ class SmileHelper:
                     pass
 
                 data[measurement] = format_measure(
-                    measure, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
+                    appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
                 # Anna: use the local outdoor temperature as reference for turning cooling on/off
@@ -832,18 +830,17 @@ class SmileHelper:
                     self._outdoor_temp = data.get(measurement)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            if appliance.find(i_locator) is not None:
+            if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
-                measure = appliance.find(i_locator).text
-                data[name] = format_measure(measure, ENERGY_WATT_HOUR)
+                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
             t_locator = (
                 f".//actuator_functionalities/thermostat_functionality/{measurement}"
             )
-            t_functions = appliance.find(t_locator)
-            if t_functions is not None and t_functions.text:
+            if (
+                t_functions := appliance.find(t_locator)
+            ) is not None and t_functions.text:
                 # Thermostat actuator measurements
-
                 try:
                     measurement = attrs[ATTR_NAME]
                 except KeyError:
@@ -865,7 +862,6 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
         measurements = DEVICE_MEASUREMENTS.items()
         if self._opentherm_device or self._on_off_device:
             measurements = {
@@ -873,7 +869,9 @@ class SmileHelper:
                 **HEATER_CENTRAL_MEASUREMENTS,
             }.items()
 
-        if appliance is not None:
+        if (
+            appliance := self._appliances.find(f'.//appliance[@id="{d_id}"]')
+        ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
 
@@ -913,7 +911,6 @@ class SmileHelper:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
         appl_class = appliance_details.get("class")
-
         appl_d_loc = appliance_details.get("location")
         if (
             loc_id == appl_d_loc or (self._smile_legacy and not appl_d_loc)
@@ -923,7 +920,6 @@ class SmileHelper:
             if thermo_matching.get(appl_class) > self._thermo_locs[loc_id].get(
                 "master_prio"
             ):
-
                 # Demote former master
                 if (tl_master := self._thermo_locs[loc_id].get("master")) is not None:
                     self._thermo_locs[loc_id]["slaves"].add(tl_master)
@@ -1020,10 +1016,9 @@ class SmileHelper:
                     members.append(dummy.attrib["id"])
             else:
                 for appliance in appliances:
-                    if appliance.find("./groups/group") is not None:
+                    if (appl_group := appliance.find("./groups/group")) is not None:
                         appl_id: str = appliance.attrib["id"]
-                        apl_gr_id: str = appliance.find("./groups/group").attrib["id"]
-                        if apl_gr_id == group_id:
+                        if appl_group.attrib["id"] == group_id:
                             members.append(appl_id)
 
             if group_type in SWITCH_GROUP_TYPES:
@@ -1051,10 +1046,9 @@ class SmileHelper:
         open_valve_count = 0
         for appliance in self._appliances.findall(".//appliance"):
             locator = './/logs/point_log[type="valve_position"]/period/measurement'
-            if appliance.find(locator) is not None:
+            if (appl_loc := appliance.find(locator)) is not None:
                 loc_found += 1
-                measure = appliance.find(locator).text
-                if float(measure) > 0.0:
+                if float(appl_loc.text) > 0.0:
                     open_valve_count += 1
 
         return None if loc_found == 0 else open_valve_count
@@ -1137,18 +1131,17 @@ class SmileHelper:
         """Helper-function for smile.py: device_data_climate().
         Collect the active preset based on Location ID.
         """
-        if self._smile_legacy:
-            active_rule = self._domain_objects.find(
-                "rule[active='true']/directives/when/then"
-            )
-            if active_rule is None or "icon" not in active_rule.keys():
-                return
-            return active_rule.attrib["icon"]
+        if not self._smile_legacy:
+            locator = f'.//location[@id="{loc_id}"]/preset'
+            if (preset := self._domain_objects.find(locator)) is not None:
+                return preset.text
 
-        locator = f'.//location[@id="{loc_id}"]/preset'
-        preset = self._domain_objects.find(locator)
-        if preset is not None:
-            return preset.text
+        locator = "rule[active='true']/directives/when/then"
+        if (
+            active_rule := self._domain_objects.find(locator)
+        ) is None or "icon" not in active_rule.keys():
+            return
+        return active_rule.attrib["icon"]
 
     def _schemas_legacy(
         self, avail: list[str], sched_temp: str, sel: str
@@ -1238,8 +1231,8 @@ class SmileHelper:
         Determine the last-used schedule based on the location or the modified date.
         """
         # First, find last_used == selected
-        last_used = self._last_active.get(loc_id)
-        if last_used is not None:
+
+        if (last_used := self._last_active.get(loc_id)) is not None:
             return last_used
 
         # Alternatively, find last_used by finding the most recent modified_date
@@ -1272,8 +1265,8 @@ class SmileHelper:
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
-        if search.find(locator) is not None:
-            val = format_measure(search.find(locator).text, None)
+        if (found := search.find(locator)) is not None:
+            val = format_measure(found.text, None)
             return val
 
         return val
@@ -1291,9 +1284,8 @@ class SmileHelper:
         appl_class = xml.find("type").text
         if appl_class not in ["central_heating_pump", "valve_actuator"]:
             locator = f".//{actuator}/{func_type}/lock"
-            if xml.find(locator) is not None:
-                measure = xml.find(locator).text
-                data["lock"] = format_measure(measure, None)
+            if (found := xml.find(locator)) is not None:
+                data["lock"] = format_measure(found.text, None)
 
         return data
 
