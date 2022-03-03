@@ -143,7 +143,7 @@ def types_finder(data: etree) -> set:
             p_locator = ".//electricity_point_meter"
             if log.find(p_locator) is not None:
                 if log.find(p_locator).get("id"):
-                    types.add(attrs[ATTR_TYPE])
+                    types.add(attrs.get(ATTR_TYPE))
 
     return types
 
@@ -152,9 +152,10 @@ def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: float | int
 ) -> float | int | bool:
     """Format power data."""
-    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+    attrs_uom = attrs.get(ATTR_UNIT_OF_MEASUREMENT)
+    f_val = format_measure(val, attrs_uom)
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
-    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
+    if attrs_uom == POWER_WATT:
         f_val = int(round(float(val)))
     if all(item in key_string for item in ["electricity", "cumulative"]):
         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
@@ -177,7 +178,9 @@ def power_data_energy_diff(
             direct_data[net_string] += f_val * diff
         else:
             direct_data[net_string] += float(f_val * diff)
-            direct_data[net_string] = float(f"{round(direct_data[net_string], 3):.3f}")
+            direct_data[net_string] = float(
+                f"{round(direct_data.get(net_string), 3):.3f}"
+            )
 
     return direct_data
 
@@ -566,7 +569,7 @@ class SmileHelper:
             # Provide a home_location for legacy_anna, preset all types applicable to home
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-            appl.types = self._loc_data[self._home_location]["types"]
+            appl.types = self._loc_data[self._home_location].get("types")
 
         # Determine appliance_type from functionality
         relay_func = appliance.find(".//actuator_functionalities/relay_functionality")
@@ -698,7 +701,7 @@ class SmileHelper:
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self._appl_data.items():
-                if appliance_details["location"] == location_id:
+                if appliance_details.get("location") == location_id:
                     matched_locations[location_id] = location_details
 
         return matched_locations
@@ -754,11 +757,14 @@ class SmileHelper:
                 preset = directive.find("then").attrib
                 keys, dummy = zip(*preset.items())
                 if str(keys[0]) == "setpoint":
-                    presets[directive.attrib["preset"]] = [float(preset["setpoint"]), 0]
+                    presets[directive.attrib["preset"]] = [
+                        float(preset.get("setpoint")),
+                        0,
+                    ]
                 else:
                     presets[directive.attrib["preset"]] = [
-                        float(preset["heating_setpoint"]),
-                        float(preset["cooling_setpoint"]),
+                        float(preset.get("heating_setpoint")),
+                        float(preset.get("cooling_setpoint")),
                     ]
 
         return presets
@@ -818,12 +824,12 @@ class SmileHelper:
                     pass
 
                 data[measurement] = format_measure(
-                    measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    measure, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
                 # Anna: use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "outdoor_temperature":
-                    self._outdoor_temp = data[measurement]
+                    self._outdoor_temp = data.get(measurement)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if appliance.find(i_locator) is not None:
@@ -844,7 +850,7 @@ class SmileHelper:
                     pass
 
                 data[measurement] = format_measure(
-                    t_functions.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    t_functions.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
         return data
@@ -874,7 +880,7 @@ class SmileHelper:
         # Elga doesn't use intended_cental_heating_state to show the generic heating state
         if "c_heating_state" in data:
             if "heating_state" in data:
-                if data["c_heating_state"] and not data["heating_state"]:
+                if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
             data.pop("c_heating_state")
 
@@ -886,14 +892,12 @@ class SmileHelper:
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if "cooling_activation_outdoor_temperature" in data:
             self._cooling_present = True
-            if (
-                not self.cooling_active
-                and self._outdoor_temp > data["cooling_activation_outdoor_temperature"]
+            if not self.cooling_active and self._outdoor_temp > data.get(
+                "cooling_activation_outdoor_temperature"
             ):
                 self.cooling_active = True
-            if (
-                self.cooling_active
-                and self._outdoor_temp < data["cooling_deactivation_threshold"]
+            if self.cooling_active and self._outdoor_temp < data.get(
+                "cooling_deactivation_threshold"
             ):
                 self.cooling_active = False
 
@@ -908,21 +912,21 @@ class SmileHelper:
     ) -> str:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
-        appl_class = appliance_details["class"]
+        appl_class = appliance_details.get("class")
 
+        appl_d_loc = appliance_details.get("location")
         if (
-            loc_id == appliance_details["location"]
-            or (self._smile_legacy and not appliance_details["location"])
+            loc_id == appl_d_loc or (self._smile_legacy and not appl_d_loc)
         ) and appl_class in thermo_matching:
 
             # Pre-elect new master
-            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
+            if thermo_matching.get(appl_class) > self._thermo_locs[loc_id].get(
+                "master_prio"
+            ):
 
                 # Demote former master
-                if self._thermo_locs[loc_id]["master"] is not None:
-                    self._thermo_locs[loc_id]["slaves"].add(
-                        self._thermo_locs[loc_id]["master"]
-                    )
+                if (tl_master := self._thermo_locs[loc_id].get("master")) is not None:
+                    self._thermo_locs[loc_id]["slaves"].add(tl_master)
 
                 # Crown master
                 self._thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
@@ -967,8 +971,8 @@ class SmileHelper:
 
                 # Find highest ranking thermostat
                 if appl_class in thermo_matching:
-                    if thermo_matching[appl_class] > high_prio:
-                        high_prio = thermo_matching[appl_class]
+                    if (tm_a_class := thermo_matching.get(appl_class)) > high_prio:
+                        high_prio = tm_a_class
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().
@@ -1213,7 +1217,7 @@ class SmileHelper:
                         self._presets(loc_id)[entry["preset"]][0]
                     )
                 else:
-                    schedule[directive.attrib["time"]] = float(entry["setpoint"])
+                    schedule[directive.attrib["time"]] = float(entry.get("setpoint"))
 
             if schedule:
                 available.append(name)
