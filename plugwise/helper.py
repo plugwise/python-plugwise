@@ -119,17 +119,13 @@ def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
         return
 
     for i in range(length):
-        result_1 = schema_list[i][0]
-        start = schema_list[i][1]
         j = (i + 1) % (length - 1)
-        result_2 = schema_list[j][0]
-        end = schema_list[j][1]
         now = dt.datetime.now().time()
         if (
-            result_1 == dt.datetime.now().weekday()
-            or result_2 == dt.datetime.now().weekday()
+            schema_list[i][0] == dt.datetime.now().weekday()
+            or schema_list[j][0] == dt.datetime.now().weekday()
         ):
-            if in_between(now, start, end):
+            if in_between(now, schema_list[i][1], schema_list[j][1]):
                 return schema_list[i][2]
 
 
@@ -138,12 +134,12 @@ def types_finder(data: etree) -> set:
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
         locator = f".//logs/point_log[type='{measure}']"
-        if data.find(locator) is not None:
-            log: etree = data.find(locator)
-            p_locator = ".//electricity_point_meter"
-            if log.find(p_locator) is not None:
-                if log.find(p_locator).get("id"):
-                    types.add(attrs.get(ATTR_TYPE))
+        if (log := data.find(locator)) is None:
+            continue
+
+        p_locator = ".//electricity_point_meter"
+        if (p_log := log.find(p_locator)) is not None and p_log.get("id"):
+            types.add(attrs.get(ATTR_TYPE))
 
     return types
 
