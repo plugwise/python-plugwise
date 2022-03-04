@@ -72,9 +72,9 @@ class SmileData(SmileHelper):
 
             # Override slave thermostat class
             if (loc_id := details.get("location")) in self._thermo_locs:
-                if "slaves" in self._thermo_locs.get(loc_id):
-                    if appliance in self._thermo_locs[loc_id].get("slaves"):
-                        details["class"] = "thermo_sensor"
+                tl_loc_id = self._thermo_locs.get(loc_id)
+                if "slaves" in tl_loc_id and appliance in tl_loc_id.get("slaves"):
+                    details["class"] = "thermo_sensor"
 
             # Next, filter for thermostat-devices without a location
             if details.get("location") is not None:
