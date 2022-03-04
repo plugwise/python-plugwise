@@ -410,7 +410,6 @@ class SmileHelper:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
         Collect requested info from MODULES.
         """
-        appl_search = appliance.find(locator)
         model_data = {
             "contents": False,
             "vendor_name": None,
@@ -419,7 +418,7 @@ class SmileHelper:
             "firmware_version": None,
             "zigbee_mac_address": None,
         }
-        if appl_search is not None:
+        if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
             module = self._modules.find(locator)
