@@ -76,7 +76,7 @@ class SmileData(SmileHelper):
                     if appliance in self._thermo_locs[loc_id].get("slaves"):
                         details["class"] = "thermo_sensor"
 
-            # Filter for thermostat-devices without a location
+            # Next, filter for thermostat-devices without a location
             if details.get("location") is not None:
                 self._devices[appliance] = details
 
@@ -141,8 +141,7 @@ class SmileData(SmileHelper):
         # Presets
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
-        presets = self._presets(loc_id)
-        if presets:
+        if presets := self._presets(loc_id):
             device_data["presets"] = presets
             device_data["preset_modes"] = list(presets)
             device_data["active_preset"] = self._preset(loc_id)
