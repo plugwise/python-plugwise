@@ -489,8 +489,7 @@ class SmileHelper:
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
-            search = appliance.find(locator)
-            if search is not None:
+            if (search := appliance.find(locator)) is not None:
                 if search.find("mode") is not None:
                     self.cooling_active = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
