@@ -229,8 +229,7 @@ class SmileComm:
         if resp.status == 401:
             raise InvalidAuthentication
 
-        result = await resp.text()
-        if not result or "<error>" in result:
+        if not (result := await resp.text()) or "<error>" in result:
             LOGGER.error("Smile response empty or error in %s", result)
             raise ResponseError
 
@@ -390,8 +389,8 @@ class SmileHelper:
 
             # Group of appliances
             locator = ".//appliances/appliance"
-            if location.find(locator) is not None:
-                for member in location.findall(locator):
+            if (locs := location.findall(locator)) is not None:
+                for member in locs:
                     loc.members.add(member.attrib["id"])
 
             # Specials
