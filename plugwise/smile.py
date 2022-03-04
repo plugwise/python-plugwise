@@ -240,20 +240,18 @@ class Smile(SmileComm, SmileData):
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
-        names: list[str] = []
-
         result = await self._request(DOMAIN_OBJECTS)
-        dsmrmain = result.find(".//module/protocols/dsmrmain")
-
         vendor_names: list[etree] = result.findall(".//module/vendor_name")
         if not vendor_names:
             # Work-around for Stretch fv 2.7.18
             result = await self._request(MODULES)
             vendor_names = result.findall(".//module/vendor_name")
 
+        names: list[str] = []
         for name in vendor_names:
             names.append(name.text)
 
+        dsmrmain = result.find(".//module/protocols/dsmrmain")
         if "Plugwise" not in names:
             if dsmrmain is None:  # pragma: no cover
                 LOGGER.error(
@@ -279,8 +277,7 @@ class Smile(SmileComm, SmileData):
         if network := result.find(".//module/protocols/master_controller"):
             self.smile_zigbee_mac_address = network.find("mac_address").text
         # Stretch: check for orphaned Sticks
-        zb_networks = result.findall(".//network")
-        if zb_networks:
+        if zb_networks := result.findall(".//network"):
             for zb_network in zb_networks:
                 if zb_network.find(".//nodes/network_router"):
                     network = zb_network.find(".//master_controller")
@@ -288,14 +285,12 @@ class Smile(SmileComm, SmileData):
 
         # Assume legacy
         self._smile_legacy = True
-        # Try if it is an Anna, assuming appliance thermostat
-        anna = result.find('.//appliance[type="thermostat"]')
-        # Fake insert version assuming Anna
-        # couldn't find another way to identify as legacy Anna
+        # Try if it is a legacy Anna, assuming appliance thermostat,
+        # fake insert version assuming Anna, couldn't find another way to identify as legacy Anna
         self.smile_fw_version = "1.8.0"
         model = "smile_thermo"
-        if anna is None:
-            # P1 legacy:
+        if result.find('.//appliance[type="thermostat"]') is None:
+            # It's a P1 legacy:
             if dsmrmain is not None:
                 try:
                     status = await self._request(STATUS)
@@ -307,7 +302,7 @@ class Smile(SmileComm, SmileData):
                     # Corner case check
                     raise ConnectionFailedError
 
-            # Stretch:
+            # Or a legacy Stretch:
             elif network is not None:
                 try:
                     system = await self._request(SYSTEM)
