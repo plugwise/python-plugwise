@@ -57,17 +57,6 @@ from .util import (
 )
 
 
-def pw_notification_updater(
-    devs: dict[str, Any], d_id: str, d_dict: dict[str, Any], notifs: dict[str, str]
-) -> None:
-    """Helper-function for async_update().
-    Update the PW_Notification binary_sensor state.
-    """
-    for item in d_dict["binary_sensors"]:
-        if item == "plugwise_notification":
-            devs[d_id]["binary_sensors"][item] = notifs != {}
-
-
 def update_helper(
     data: dict[str, Any],
     devs: dict[str, Any],
@@ -75,10 +64,16 @@ def update_helper(
     d_id: str,
     e_type: str,
     key: str,
+    notifs: dict[str, str],
 ) -> None:
     """Helper-function for async_update()."""
-    for dummy in d_dict[e_type]:
-        if key != dummy:
+    for d_item in d_dict[e_type]:
+        # Update the PW_Notification binary_sensor state
+        if e_type == "binary_sensors":
+            if d_item == "plugwise_notification":
+                devs[d_id][e_type][d_item] = notifs != {}
+
+        if key != d_item:
             continue
         for item in devs[d_id][e_type]:
             if key != item:
@@ -124,17 +119,13 @@ def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
         return
 
     for i in range(length):
-        result_1 = schema_list[i][0]
-        start = schema_list[i][1]
         j = (i + 1) % (length - 1)
-        result_2 = schema_list[j][0]
-        end = schema_list[j][1]
         now = dt.datetime.now().time()
         if (
-            result_1 == dt.datetime.now().weekday()
-            or result_2 == dt.datetime.now().weekday()
+            schema_list[i][0] == dt.datetime.now().weekday()
+            or schema_list[j][0] == dt.datetime.now().weekday()
         ):
-            if in_between(now, start, end):
+            if in_between(now, schema_list[i][1], schema_list[j][1]):
                 return schema_list[i][2]
 
 
@@ -143,12 +134,12 @@ def types_finder(data: etree) -> set:
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
         locator = f".//logs/point_log[type='{measure}']"
-        if data.find(locator) is not None:
-            log: etree = data.find(locator)
-            p_locator = ".//electricity_point_meter"
-            if log.find(p_locator) is not None:
-                if log.find(p_locator).get("id"):
-                    types.add(attrs[ATTR_TYPE])
+        if (log := data.find(locator)) is None:
+            continue
+
+        p_locator = ".//electricity_point_meter"
+        if (p_log := log.find(p_locator)) is not None and p_log.get("id"):
+            types.add(attrs.get(ATTR_TYPE))
 
     return types
 
@@ -157,9 +148,10 @@ def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: float | int
 ) -> float | int | bool:
     """Format power data."""
-    f_val = format_measure(val, attrs[ATTR_UNIT_OF_MEASUREMENT])
+    attrs_uom = attrs.get(ATTR_UNIT_OF_MEASUREMENT)
+    f_val = format_measure(val, attrs_uom)
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
-    if attrs[ATTR_UNIT_OF_MEASUREMENT] == POWER_WATT:
+    if attrs_uom == POWER_WATT:
         f_val = int(round(float(val)))
     if all(item in key_string for item in ["electricity", "cumulative"]):
         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
@@ -182,7 +174,9 @@ def power_data_energy_diff(
             direct_data[net_string] += f_val * diff
         else:
             direct_data[net_string] += float(f_val * diff)
-            direct_data[net_string] = float(f"{round(direct_data[net_string], 3):.3f}")
+            direct_data[net_string] = float(
+                f"{round(direct_data.get(net_string), 3):.3f}"
+            )
 
     return direct_data
 
@@ -235,8 +229,7 @@ class SmileComm:
         if resp.status == 401:
             raise InvalidAuthentication
 
-        result = await resp.text()
-        if not result or "<error>" in result:
+        if not (result := await resp.text()) or "<error>" in result:
             LOGGER.error("Smile response empty or error in %s", result)
             raise ResponseError
 
@@ -301,6 +294,7 @@ class SmileHelper:
         self._domain_objects: etree | None = None
         self._heater_id: str | None = None
         self._home_location: str | None = None
+        self._is_thermostat = False
         self._last_active: dict[str, str] = {}
         self._loc_data: dict[str, Any] = {}
         self._locations: etree | None = None
@@ -308,18 +302,16 @@ class SmileHelper:
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float | None = None
-        self._is_thermostat = False
-        self._multi_thermostats = False
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._thermo_locs: dict[str, Any] = {}
 
         self.cooling_active = False
-        self.smile_fw_version: str | None = None
         self.gateway_id: str | None = None
         self.gw_data: dict[str, Any] = {}
         self.gw_devices: dict[str, Any] = {}
+        self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
@@ -397,8 +389,8 @@ class SmileHelper:
 
             # Group of appliances
             locator = ".//appliances/appliance"
-            if location.find(locator) is not None:
-                for member in location.findall(locator):
+            if (locs := location.findall(locator)) is not None:
+                for member in locs:
                     loc.members.add(member.attrib["id"])
 
             # Specials
@@ -418,7 +410,6 @@ class SmileHelper:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
         Collect requested info from MODULES.
         """
-        appl_search = appliance.find(locator)
         model_data = {
             "contents": False,
             "vendor_name": None,
@@ -427,7 +418,7 @@ class SmileHelper:
             "firmware_version": None,
             "zigbee_mac_address": None,
         }
-        if appl_search is not None:
+        if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
             module = self._modules.find(locator)
@@ -491,15 +482,14 @@ class SmileHelper:
 
             # Adam: check for ZigBee mac address
             if self.smile_name == "Adam" and (
-                found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
+                found := self._modules.find(".//protocols/zig_bee_coordinator")
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
-            search = appliance.find(locator)
-            if search is not None:
+            if (search := appliance.find(locator)) is not None:
                 if search.find("mode") is not None:
                     self.cooling_active = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
@@ -564,15 +554,15 @@ class SmileHelper:
     def _appliance_types_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _all_appliances() - determine type(s) per appliance."""
         # Appliance with location (i.e. a device)
-        if appliance.find("location") is not None:
-            appl.location = appliance.find("location").attrib["id"]
+        if (appl_loc := appliance.find("location")) is not None:
+            appl.location = appl_loc.attrib["id"]
             for appl_type in types_finder(appliance):
                 appl.types.add(appl_type)
         else:
             # Provide a home_location for legacy_anna, preset all types applicable to home
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-            appl.types = self._loc_data[self._home_location]["types"]
+            appl.types = self._loc_data[self._home_location].get("types")
 
         # Determine appliance_type from functionality
         relay_func = appliance.find(".//actuator_functionalities/relay_functionality")
@@ -582,7 +572,7 @@ class SmileHelper:
         )
         if relay_func is not None or relay_act is not None:
             appl.types.add("plug")
-        elif thermo_func is not None:
+        if thermo_func is not None:
             appl.types.add("thermostat")
 
         return appl
@@ -633,10 +623,9 @@ class SmileHelper:
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        self._opentherm_device = (
-            c_heating_state is not None and ot_fault_code is not None
-        )
-        self._on_off_device = c_heating_state is not None and ot_fault_code is None
+        if c_heating_state is not None:
+            self._opentherm_device = ot_fault_code is not None
+            self._on_off_device = ot_fault_code is None
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -704,19 +693,19 @@ class SmileHelper:
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self._appl_data.items():
-                if appliance_details["location"] == location_id:
+                if appliance_details.get("location") == location_id:
                     matched_locations[location_id] = location_details
 
         return matched_locations
 
     def _control_state(self, loc_id: str) -> str | None:
-        """Helper-function for _device_data_climate().
-        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        """Helper-function for _device_data_adam().
+        Adam: find the thermostat control_state of a location, from LOCATIONS.
         Represents the heating/cooling demand-state of the local master thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         locator = f'location[@id="{loc_id}"]'
-        if (location := self._domain_objects.find(locator)) is not None:
+        if (location := self._locations.find(locator)) is not None:
             locator = (
                 ".//actuator_functionalities/thermostat_functionality/control_state"
             )
@@ -760,11 +749,14 @@ class SmileHelper:
                 preset = directive.find("then").attrib
                 keys, dummy = zip(*preset.items())
                 if str(keys[0]) == "setpoint":
-                    presets[directive.attrib["preset"]] = [float(preset["setpoint"]), 0]
+                    presets[directive.attrib["preset"]] = [
+                        float(preset.get("setpoint")),
+                        0,
+                    ]
                 else:
                     presets[directive.attrib["preset"]] = [
-                        float(preset["heating_setpoint"]),
-                        float(preset["cooling_setpoint"]),
+                        float(preset.get("heating_setpoint")),
+                        float(preset.get("cooling_setpoint")),
                     ]
 
         return presets
@@ -805,16 +797,15 @@ class SmileHelper:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements:
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            if appliance.find(p_locator) is not None:
+            if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
                     continue
 
-                measure = appliance.find(p_locator).text
                 # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
                 # this measurement appears at power-on and is never updated, therefore remove.
                 if (
                     measurement == "central_heater_water_pressure"
-                    and float(measure) > 3.5
+                    and float(appl_p_loc.text) > 3.5
                 ):
                     continue
 
@@ -824,33 +815,32 @@ class SmileHelper:
                     pass
 
                 data[measurement] = format_measure(
-                    measure, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
                 # Anna: use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "outdoor_temperature":
-                    self._outdoor_temp = data[measurement]
+                    self._outdoor_temp = data.get(measurement)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            if appliance.find(i_locator) is not None:
+            if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
-                measure = appliance.find(i_locator).text
-                data[name] = format_measure(measure, ENERGY_WATT_HOUR)
+                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
-            t_locator = (
-                f".//actuator_functionalities/thermostat_functionality/{measurement}"
-            )
-            t_functions = appliance.find(t_locator)
-            if t_functions is not None and t_functions.text:
-                # Thermostat actuator measurements
-
+            # Thermostat actuator measurements
+            t_locator = f'.//actuator_functionalities/thermostat_functionality[type="thermostat"]/{measurement}'
+            if (t_function := appliance.find(t_locator)) is not None:
                 try:
                     measurement = attrs[ATTR_NAME]
                 except KeyError:
                     pass
 
+                # Avoid double processing
+                if measurement == "setpoint":
+                    continue
+
                 data[measurement] = format_measure(
-                    t_functions.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
                 )
 
         return data
@@ -865,7 +855,6 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        appliance = self._appliances.find(f'.//appliance[@id="{d_id}"]')
         measurements = DEVICE_MEASUREMENTS.items()
         if self._opentherm_device or self._on_off_device:
             measurements = {
@@ -873,14 +862,16 @@ class SmileHelper:
                 **HEATER_CENTRAL_MEASUREMENTS,
             }.items()
 
-        if appliance is not None:
+        if (
+            appliance := self._appliances.find(f'.//appliance[@id="{d_id}"]')
+        ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
 
         # Elga doesn't use intended_cental_heating_state to show the generic heating state
         if "c_heating_state" in data:
             if "heating_state" in data:
-                if data["c_heating_state"] and not data["heating_state"]:
+                if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
             data.pop("c_heating_state")
 
@@ -892,14 +883,12 @@ class SmileHelper:
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if "cooling_activation_outdoor_temperature" in data:
             self._cooling_present = True
-            if (
-                not self.cooling_active
-                and self._outdoor_temp > data["cooling_activation_outdoor_temperature"]
+            if not self.cooling_active and self._outdoor_temp > data.get(
+                "cooling_activation_outdoor_temperature"
             ):
                 self.cooling_active = True
-            if (
-                self.cooling_active
-                and self._outdoor_temp < data["cooling_deactivation_threshold"]
+            if self.cooling_active and self._outdoor_temp < data.get(
+                "cooling_deactivation_threshold"
             ):
                 self.cooling_active = False
 
@@ -914,21 +903,19 @@ class SmileHelper:
     ) -> str:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
-        appl_class = appliance_details["class"]
-
+        appl_class = appliance_details.get("class")
+        appl_d_loc = appliance_details.get("location")
         if (
-            loc_id == appliance_details["location"]
-            or (self._smile_legacy and not appliance_details["location"])
+            loc_id == appl_d_loc or (self._smile_legacy and not appl_d_loc)
         ) and appl_class in thermo_matching:
 
             # Pre-elect new master
-            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
-
+            if thermo_matching.get(appl_class) > self._thermo_locs[loc_id].get(
+                "master_prio"
+            ):
                 # Demote former master
-                if self._thermo_locs[loc_id]["master"] is not None:
-                    self._thermo_locs[loc_id]["slaves"].add(
-                        self._thermo_locs[loc_id]["master"]
-                    )
+                if (tl_master := self._thermo_locs[loc_id].get("master")) is not None:
+                    self._thermo_locs[loc_id]["slaves"].add(tl_master)
 
                 # Crown master
                 self._thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
@@ -940,7 +927,7 @@ class SmileHelper:
         return appl_class
 
     def _scan_thermostats(self, debug_text="missing text") -> None:
-        """Helper-function for smile.py: get_all_devices() and single_master_thermostat().
+        """Helper-function for smile.py: get_all_devices().
         Update locations with thermostat ranking results.
         """
         self._thermo_locs = self._match_locations()
@@ -973,8 +960,8 @@ class SmileHelper:
 
                 # Find highest ranking thermostat
                 if appl_class in thermo_matching:
-                    if thermo_matching[appl_class] > high_prio:
-                        high_prio = thermo_matching[appl_class]
+                    if (tm_a_class := thermo_matching.get(appl_class)) > high_prio:
+                        high_prio = tm_a_class
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().
@@ -1022,10 +1009,9 @@ class SmileHelper:
                     members.append(dummy.attrib["id"])
             else:
                 for appliance in appliances:
-                    if appliance.find("./groups/group") is not None:
+                    if (appl_group := appliance.find("./groups/group")) is not None:
                         appl_id: str = appliance.attrib["id"]
-                        apl_gr_id: str = appliance.find("./groups/group").attrib["id"]
-                        if apl_gr_id == group_id:
+                        if appl_group.attrib["id"] == group_id:
                             members.append(appl_id)
 
             if group_type in SWITCH_GROUP_TYPES:
@@ -1053,10 +1039,9 @@ class SmileHelper:
         open_valve_count = 0
         for appliance in self._appliances.findall(".//appliance"):
             locator = './/logs/point_log[type="valve_position"]/period/measurement'
-            if appliance.find(locator) is not None:
+            if (appl_loc := appliance.find(locator)) is not None:
                 loc_found += 1
-                measure = appliance.find(locator).text
-                if float(measure) > 0.0:
+                if float(appl_loc.text) > 0.0:
                     open_valve_count += 1
 
         return None if loc_found == 0 else open_valve_count
@@ -1139,18 +1124,17 @@ class SmileHelper:
         """Helper-function for smile.py: device_data_climate().
         Collect the active preset based on Location ID.
         """
-        if self._smile_legacy:
-            active_rule = self._domain_objects.find(
-                "rule[active='true']/directives/when/then"
-            )
-            if active_rule is None or "icon" not in active_rule.keys():
-                return
-            return active_rule.attrib["icon"]
+        if not self._smile_legacy:
+            locator = f'.//location[@id="{loc_id}"]/preset'
+            if (preset := self._domain_objects.find(locator)) is not None:
+                return preset.text
 
-        locator = f'.//location[@id="{loc_id}"]/preset'
-        preset = self._domain_objects.find(locator)
-        if preset is not None:
-            return preset.text
+        locator = "rule[active='true']/directives/when/then"
+        if (
+            active_rule := self._domain_objects.find(locator)
+        ) is None or "icon" not in active_rule.keys():
+            return
+        return active_rule.attrib["icon"]
 
     def _schemas_legacy(
         self, avail: list[str], sched_temp: str, sel: str
@@ -1161,7 +1145,8 @@ class SmileHelper:
         name: str | None = None
         schemas: dict[str] = {}
 
-        for schema in self._domain_objects.findall(".//rule"):
+        search = self._domain_objects
+        for schema in search.findall(".//rule"):
             if rule_name := schema.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
@@ -1169,7 +1154,7 @@ class SmileHelper:
         log_type = "schedule_state"
         locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
-        if (result := self._domain_objects.find(locator)) is not None:
+        if (result := search.find(locator)) is not None:
             active = result.text == "on"
 
         if name is not None:
@@ -1218,7 +1203,7 @@ class SmileHelper:
                         self._presets(loc_id)[entry["preset"]][0]
                     )
                 else:
-                    schedule[directive.attrib["time"]] = float(entry["setpoint"])
+                    schedule[directive.attrib["time"]] = float(entry.get("setpoint"))
 
             if schedule:
                 available.append(name)
@@ -1239,8 +1224,8 @@ class SmileHelper:
         Determine the last-used schedule based on the location or the modified date.
         """
         # First, find last_used == selected
-        last_used = self._last_active.get(loc_id)
-        if last_used is not None:
+
+        if (last_used := self._last_active.get(loc_id)) is not None:
             return last_used
 
         # Alternatively, find last_used by finding the most recent modified_date
@@ -1268,13 +1253,13 @@ class SmileHelper:
         Obtain the value/state for the given object.
         """
         val: float | int | None = None
-        search = self._domain_objects
+        search = self._locations
         locator = (
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
-        if search.find(locator) is not None:
-            val = format_measure(search.find(locator).text, None)
+        if (found := search.find(locator)) is not None:
+            val = format_measure(found.text, None)
             return val
 
         return val
@@ -1292,21 +1277,23 @@ class SmileHelper:
         appl_class = xml.find("type").text
         if appl_class not in ["central_heating_pump", "valve_actuator"]:
             locator = f".//{actuator}/{func_type}/lock"
-            if xml.find(locator) is not None:
-                measure = xml.find(locator).text
-                data["lock"] = format_measure(measure, None)
+            if (found := xml.find(locator)) is not None:
+                data["lock"] = format_measure(found.text, None)
 
         return data
 
-    def _create_dicts_from_data(
+    def _update_device_with_dicts(
         self,
+        d_id: str,
         data: dict[str, Any],
+        device: dict[str, Any],
         bs_dict: dict[str, bool],
         s_dict: dict[str, Any],
         sw_dict: dict[str, bool],
-    ) -> None:
+    ) -> dict[str, Any]:
         """Helper-function for smile.py: _all_device_data().
-        Create dicts of binary_sensors, sensors, switches from the relevant data.
+        Move relevant data into dicts of binary_sensors, sensors, switches,
+        and add these to the output.
         """
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
@@ -1322,3 +1309,18 @@ class SmileHelper:
                 if item == key:
                     data.pop(key)
                     sw_dict[key] = value
+
+        # Add plugwise notification binary_sensor to the relevant gateway
+        if d_id == self.gateway_id:
+            if self._is_thermostat:
+                bs_dict["plugwise_notification"] = False
+
+        device.update(data)
+        if bs_dict:
+            device["binary_sensors"] = bs_dict
+        if s_dict:
+            device["sensors"] = s_dict
+        if sw_dict:
+            device["switches"] = sw_dict
+
+        return device

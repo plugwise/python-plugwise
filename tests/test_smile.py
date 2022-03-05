@@ -619,9 +619,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 21.7,
                     "water_pressure": 1.2,
                 },
-                "lower_bound": 50,
-                "upper_bound": 90,
-                "resolution": 1,
             },
             # Gateway
             "0000aaaa0000aaaa0000aaaa0000aa00": {
@@ -650,7 +647,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert not self.notifications
 
         await self.tinker_thermostat(
@@ -746,7 +742,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert not self.notifications
 
         await self.tinker_thermostat(
@@ -932,7 +927,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert not self.notifications
 
         await self.tinker_thermostat(
@@ -975,7 +969,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
 
         await self.tinker_thermostat(
             smile,
@@ -1025,7 +1018,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert not self.notifications
 
         await self.tinker_thermostat(
@@ -1072,7 +1064,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert not self.notifications
 
         await self.tinker_thermostat(
@@ -1160,7 +1151,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert not self.notifications
 
         await self.tinker_thermostat(
@@ -1223,7 +1213,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert not self.notifications
 
         await self.tinker_thermostat(
@@ -1420,7 +1409,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert smile._multi_thermostats
 
         switch_change = await self.tinker_switch(
             smile,
@@ -1528,7 +1516,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert smile._multi_thermostats
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -1931,7 +1918,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert smile._multi_thermostats
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -2126,6 +2112,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "None",
                 "active_preset": "home",
+                "mode": "heat",
                 "sensors": {
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
@@ -2134,7 +2121,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "cooling_active": False,
                 "binary_sensors": {
                     "cooling_state": False,
                     "dhw_state": False,
@@ -2166,7 +2152,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
         await self.device_test(smile, testdata, True)
-        assert not smile._multi_thermostats
         assert self.cooling_present
         assert not self.notifications
 
@@ -2181,6 +2166,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "None",
                 "active_preset": "home",
+                "mode": "cool",
                 "sensors": {
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
@@ -2189,7 +2175,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "cooling_active": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -2203,7 +2188,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {
-                "sensors": {"outdoor_temperature": 22.0}
+                "sensors": {"outdoor_temperature": 20.2}
             },
         }
 
@@ -2220,7 +2205,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert not smile._multi_thermostats
         assert self.cooling_present
         assert not self.notifications
 
@@ -2250,7 +2234,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata, True)
-        assert not smile._multi_thermostats
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
