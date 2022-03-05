@@ -1,62 +1,69 @@
 # Changelog
 
+# v0.xy.z - Smile: more changes and improvements
+- Combine helper-functions, possible after removing code related to the device_state sensor.
+- Remove single_master_thermostat() function and the related self's, no longer needed.
+- Use .get() where possible.
+- Implement walrus constructs ( := ) where possible.
+- Improve and simplify.
+
 # v0.16.6 - Smile: various changes/improvements
-  - Provide cooling_state and heating_state as `binary_sensors`, show cooling_state only when cooling is present
-  - Clean up gw_data, e.g. remove `single_master_thermostat` key
+- Provide cooling_state and heating_state as `binary_sensors`, show cooling_state only when cooling is present
+- Clean up gw_data, e.g. remove `single_master_thermostat` key
 
 # v0.16.5 - Smile: small improvements
-  - Move schedule debug-message to the correct position
-  - Code quality fixes
+- Move schedule debug-message to the correct position
+- Code quality fixes
 
 # v0.16.4 - Adding measurements
-  - Expose mac-addresses for network and zigbee devices
-  - Expose min/max thermostat (and heater) values and resolution (step in HA)
-  - Changed mac-addresses in userdata/fixtures to be obfuscated but unique 
+- Expose mac-addresses for network and zigbee devices
+- Expose min/max thermostat (and heater) values and resolution (step in HA)
+- Changed mac-addresses in userdata/fixtures to be obfuscated but unique 
 
 # v0.16.3 - Typing
-  - Code quality improvements
+- Code quality improvements
 
 # v0.16.2 - Generic and Stretch
-  - As per Core deprecation of python 3.8, removed CI/CD testing and bumped pypi to 3.9 and production
-  - Add support for Stretch with fw 2.7.18
+- As per Core deprecation of python 3.8, removed CI/CD testing and bumped pypi to 3.9 and production
+- Add support for Stretch with fw 2.7.18
 
 # v0.16.1 - Smile - various updates:
-  - BREAKING: Change active device detection, detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
-  - Stretch: base detection on the always present Stick
-  - Add Adam v3.6.x (beta) and Anna firmware 4.2 support (representation and switching on/off of a schedule has changed)
-  - Anna: Fix cooling_active prediction
-  - Schedules: always show `available_schemas` and `selected_schema`, also with "None" available and/or selected
-  - Cleanup and optimize code
-  - Adapt and improve testcode
+- BREAKING: Change active device detection, detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
+- Stretch: base detection on the always present Stick
+- Add Adam v3.6.x (beta) and Anna firmware 4.2 support (representation and switching on/off of a schedule has changed)
+- Anna: Fix cooling_active prediction
+- Schedules: always show `available_schemas` and `selected_schema`, also with "None" available and/or selected
+- Cleanup and optimize code
+- Adapt and improve testcode
 
 # v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
-  - Change from list- to dict-format for binary_sensors, sensors and switches
-  - Provide gateway-devices for Legacy Anna and Stretch
-  - Code-optimizations
+- Change from list- to dict-format for binary_sensors, sensors and switches
+- Provide gateway-devices for Legacy Anna and Stretch
+- Code-optimizations
 
 # v0.15.7 - Smile - Improve implementation of cooling-function-detection
- - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
- - Adam: also provide a heating/cooling-mode active indication
- - Fixing #171
- - Improved dependency handling (@dependabot)
+- Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
+- Adam: also provide a heating/cooling-mode active indication
+- Fixing #171
+- Improved dependency handling (@dependabot)
 
 # v0.15.6 - Smile - Various fixes and improvements
-  - Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
-  - Adam: collect `allowed_modes` and look for `cooling`, indicating cooling capability being available
-  - Optimize code: use `_all_appliances()` once instead of 3 times, by updating/changing `single_master_thermostat()`,
-  - Protect several more variables,
-  - Change/improve how `illuminance` and `outdoor_temperature` are obtained,
-  - Use walrus operator where applicable,
-  - Various small code improvements,
-  - Add and adapt testcode
-  - Add testing for python 3.10, improve dependencies (github workflow)
-  - Bump aiohttp to 3.8.1, remove fixed dependencies
+- Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
+- Adam: collect `allowed_modes` and look for `cooling`, indicating cooling capability being available
+- Optimize code: use `_all_appliances()` once instead of 3 times, by updating/changing `single_master_thermostat()`,
+- Protect several more variables,
+- Change/improve how `illuminance` and `outdoor_temperature` are obtained,
+- Use walrus operator where applicable,
+- Various small code improvements,
+- Add and adapt testcode
+- Add testing for python 3.10, improve dependencies (github workflow)
+- Bump aiohttp to 3.8.1, remove fixed dependencies
 
 # v0.15.5 - Skipping, not released
 
 ## v0.15.4 - Smile - Bugfix: handle removed thermostats
-  - Recognize when a thermostat has been removed from a zone and don't show it in Core
-  - Rename Group Switch to Switchgroup, remove vendor name
+- Recognize when a thermostat has been removed from a zone and don't show it in Core
+- Rename Group Switch to Switchgroup, remove vendor name
 
 ## v0.15.3 - Skipping, not released
 
@@ -77,7 +84,7 @@
 
 ## v0.14.1 - Smile: removing further `last_reset`s
 
- - As per https://developers.home-assistant.io/blog/2021/08/16/state_class_total
+- As per https://developers.home-assistant.io/blog/2021/08/16/state_class_total
 
 ## v0.14.0 - Smile: sensor-platform updates - 2021.9 compatible
 
