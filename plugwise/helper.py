@@ -842,7 +842,6 @@ class SmileHelper:
                 data[measurement] = format_measure(
                     t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
                 )
-                LOGGER.debug("HOI %s %s", measurement, t_function.text)
 
         return data
 
