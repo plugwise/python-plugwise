@@ -58,7 +58,7 @@ repos:
           - pydocstyle==5.1.1
         files: ^(plugwise|tests)/.+\.py$
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.3
+    rev: 1.7.4
     hooks:
       - id: bandit
         args:
