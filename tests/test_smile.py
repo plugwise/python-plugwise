@@ -619,9 +619,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 21.7,
                     "water_pressure": 1.2,
                 },
-                "lower_bound": 50,
-                "upper_bound": 90,
-                "resolution": 1,
             },
             # Gateway
             "0000aaaa0000aaaa0000aaaa0000aa00": {
