@@ -617,13 +617,13 @@ class SmileHelper:
                 )
 
         # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
+        c_heating_state = self._appliances.find(
+            ".//logs/point_log[type='central_heating_state']"
+        )
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        if (
-            self._appliances.find(".//logs/point_log[type='central_heating_state']")
-            is not None
-        ):
+        if c_heating_state is not None:
             self._opentherm_device = ot_fault_code is not None
             self._on_off_device = ot_fault_code is None
 
@@ -827,21 +827,22 @@ class SmileHelper:
                 name = f"{measurement}_interval"
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
-            t_locator = (
-                f".//actuator_functionalities/thermostat_functionality/{measurement}"
-            )
-            if (
-                t_functions := appliance.find(t_locator)
-            ) is not None and t_functions.text:
-                # Thermostat actuator measurements
+            # Thermostat actuator measurements
+            t_locator = f'.//actuator_functionalities/thermostat_functionality[type="thermostat"]/{measurement}'
+            if (t_function := appliance.find(t_locator)) is not None:
                 try:
                     measurement = attrs[ATTR_NAME]
                 except KeyError:
                     pass
 
+                # Avoid double processing
+                if measurement == "setpoint":
+                    continue
+
                 data[measurement] = format_measure(
-                    t_functions.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
+                    t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
                 )
+                LOGGER.debug("HOI %s %s", measurement, t_function.text)
 
         return data
 
