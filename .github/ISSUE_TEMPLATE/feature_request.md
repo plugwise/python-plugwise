@@ -1,31 +1,121 @@
----
 name: Feature request
-about: Suggest an idea for this project
-title: "[FEATURE]"
-labels: enhancement
-assignees: ''
+description: Suggest an idea for this project.
+title: "[FEATURE]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue form is for requesting features. Please note that we are
+        not affiliated to Plugwise nor Nabu Casa and just humble developers
+        supporting Plugwise hardware to work via this module with Home Assistant.
 
----
+        While the module is not exclusive to Home Assistant, it's written with
+        Home Assistant in mind, nevertheless it was written in e generic way and
+        provides proper functionality to any python based integration.
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+        If you have a problem, please use the appropriate [issue template][it].
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+        [it]: https://github.com/plugwise/python-plugwise/issues/new/choose
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Describe the solution you are looking for
+      description: >-
+        A clear and concise description of any alternative solutions or features you've considered.
+  - type: textarea
+    validations:
+      required: false
+    attributes:
+      label: Is your feature request related to a problem? (optional)
+      description: >-
+        A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Describe alternatives you've considered
+      description: >-
+        A clear and concise description of any alternative solutions or features you've considered.
+  - type: markdown
+    attributes:
+      value: |
+        # Your setup
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: What type of installation are you running?
+      description: >
+        Can be found in: [Configuration panel -> Info](https://my.home-assistant.io/redirect/info/). **If not using Home Assistant, provide information on what you integrated with.**
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+        When selecting `Core`: remember to specify your way of running in the `additional information` textarea at the bottom, including your python version!
 
-**Home Assistant (please complete the following information):**
- - Version: [e.g. `0.108.2`]
- - Deployment: [e.g. 'raspberry/hassio' or 'py-venv']
- - Installed plugwise version: [e.g. 'plugwise-beta or HA-core']
- - Installed through [e.g. 'HACS', 'Core' or manual custom_component]
+        [![Open your Home Assistant instance and show your Home Assistant version information.](https://my.home-assistant.io/badges/info.svg)](https://my.home-assistant.io/redirect/info/)
+      options:
+        - Home Assistant OS
+        - Home Assistant Container
+        - Home Assistant Supervised
+        - Home Assistant Core
+        - Other tool(ing) (i.e. not Home Assistant)
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: How did you install python-plugwise (or `plugwise`) for short
+      description: >
+        If you are a Home Assistant user and are not aware of anything special, choose `Home Assistant Core`.
+      options:
+        - Other use (installed using `pip`)
+        - Other use (cloned from Github)
+        - Home Assistant Core
+        - HA using HACS
+        - HA using Manually installed `custom_component`
+        - Cloned from GitHub
+  - type: markdown
+    attributes:
+      value: |
+        # Plugwise Information
+  - type: dropdown
+    validations:
+      required: true
+    attributes:
+      label: What kind of Plugwise device is having issues?
+      description: >
+        Select the best possible option (i.e. for issues with a Lisa or Tom, select Adam - for issues with a Circle, select Stretch or USB).
+      options:
+        - "Smile: Adam (including Lisa, Tom, Floor)"
+        - "Smile: Anna"
+        - "Smile: P1"
+        - "Smile: Stretch"
+        - "USB: Stick"
+        - "Other product (we might not (yet) know of it's existence!)"
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: What firmware version is your Plugwise product at?
+      placeholder: core-
+      description: >
+        If not using Home Assistant or unsure, please check the Plugwise mobile app.
 
-**Plugwise product and setup (please complete the following information):**
- - Type: [e.g. Adam/Anna/P1/Stretch/Stick (with a Circle/Stealth/etc.)]
- - Firmware: [check through the app or the integrations page in Home Assistant]
- - Setup: [what additional components do you have such as Anna, Lisa, Koen, Floor, Tom, etc. - what kind of auxiliary devices as boilers/heaters/heat-exchangers]
+        Check within Home Assistant by following the below link to your integrations page. You can find your firmware version on the device page. Otherwise check the Plugwise mobile app.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+        [![Open your Home Assistant instance and show the integration page.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Your setup
+      description: >
+        What additional components do you have such as Anna, Lisa, Koen, Floor, Tom, etc. - what kind of auxiliary devices as boilers/heaters/heat-exchangers
+  - type: markdown
+    attributes:
+      value: |
+        # Additional information
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: >
+        Add any other context or screenshots about the feature request here.
