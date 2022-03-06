@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Home Assistant Core integration
+    url: https://www.home-assistant.io/integrations/plugwise/
+    about: For more details on the Core integration this module works best with.
+  - name: Custom component (beta-testing) for Home Assistant
+    url: https://github.com/plugwise/plugwise-beta/
+    about: For more information on the component.
+  - name: Plugwise Support
+    url: https://www.plugwise.com/support/
+    about: For product support from Plugwise.
+  - name: Home Assistant Community forum
+    url: https://community.home-assistant.io/t/plugwise-core-and-custom-component/236250
+    about: Please ask and answer questions here.
