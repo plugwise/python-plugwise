@@ -274,6 +274,7 @@ class Smile(SmileComm, SmileData):
         self, result: etree, dsmrmain: etree
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
+        # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if network := result.find(".//module/protocols/master_controller"):
             self.smile_zigbee_mac_address = network.find("mac_address").text
         # Stretch: check for orphaned Sticks
