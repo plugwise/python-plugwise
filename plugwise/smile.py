@@ -274,9 +274,10 @@ class Smile(SmileComm, SmileData):
         self, result: etree, dsmrmain: etree
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
+        # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if network := result.find(".//module/protocols/master_controller"):
             self.smile_zigbee_mac_address = network.find("mac_address").text
-        # Stretch: check for orphaned Sticks
+        # Find the active MAC in case there is an orphaned Stick
         if zb_networks := result.findall(".//network"):
             for zb_network in zb_networks:
                 if zb_network.find(".//nodes/network_router"):
@@ -332,13 +333,11 @@ class Smile(SmileComm, SmileData):
         """
         model: str | None = None
         if (gateway := result.find(".//gateway")) is not None:
-            model = result.find(".//gateway/vendor_model").text
-            self.smile_fw_version = result.find(".//gateway/firmware_version").text
-            self.smile_hw_version = result.find(".//gateway/hardware_version").text
-            if gateway.find("hostname") is not None:
-                self.smile_hostname = gateway.find("hostname").text
-            if gateway.find("mac_address") is not None:
-                self.smile_mac_address = gateway.find("mac_address").text
+            model = gateway.find("vendor_model").text
+            self.smile_fw_version = gateway.find("firmware_version").text
+            self.smile_hw_version = gateway.find("hardware_version").text
+            self.smile_hostname = gateway.find("hostname").text
+            self.smile_mac_address = gateway.find("mac_address").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain)
 
@@ -397,8 +396,7 @@ class Smile(SmileComm, SmileData):
 
         # If Plugwise notifications present:
         self._notifications = {}
-        notifications: etree = self._domain_objects.findall(".//notification")
-        for notification in notifications:
+        for notification in self._domain_objects.findall(".//notification"):
             try:
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text

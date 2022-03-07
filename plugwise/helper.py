@@ -480,7 +480,7 @@ class SmileHelper:
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
 
-            # Adam: check for ZigBee mac address
+            # Adam: look for the ZigBee MAC address of the Smile
             if self.smile_name == "Adam" and (
                 found := self._modules.find(".//protocols/zig_bee_coordinator")
             ):
@@ -700,15 +700,13 @@ class SmileHelper:
 
     def _control_state(self, loc_id: str) -> str | None:
         """Helper-function for _device_data_adam().
-        Adam: find the thermostat control_state of a location, from LOCATIONS.
+        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local master thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         locator = f'location[@id="{loc_id}"]'
-        if (location := self._locations.find(locator)) is not None:
-            locator = (
-                ".//actuator_functionalities/thermostat_functionality/control_state"
-            )
+        if (location := self._domain_objects.find(locator)) is not None:
+            locator = './/actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
             if (ctrl_state := location.find(locator)) is not None:
                 return ctrl_state.text
 
@@ -1085,7 +1083,7 @@ class SmileHelper:
 
     def _power_data_from_location(self, loc_id: str) -> dict[str, Any] | None:
         """Helper-function for smile.py: _get_device_data().
-        Collect the power-data based on Location ID.
+        Collect the power-data based on Location ID, from LOCATIONS.
         """
         direct_data: dict[str, any] = {}
         loc = Munch()
@@ -1250,10 +1248,10 @@ class SmileHelper:
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | bool | None:
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
-        Obtain the value/state for the given object.
+        Obtain the value/state for the given object from DOMAIN_OBJECTS.
         """
         val: float | int | None = None
-        search = self._locations
+        search = self._domain_objects
         locator = (
             f'.//location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'

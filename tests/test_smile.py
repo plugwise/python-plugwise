@@ -2188,7 +2188,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {
-                "sensors": {"outdoor_temperature": 20.2}
+                "sensors": {"outdoor_temperature": 22.0}
             },
         }
 
