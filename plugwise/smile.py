@@ -277,7 +277,7 @@ class Smile(SmileComm, SmileData):
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if network := result.find(".//module/protocols/master_controller"):
             self.smile_zigbee_mac_address = network.find("mac_address").text
-        # Stretch: check for orphaned Sticks
+        # Find the active MAC in case there is an orphaned Stick
         if zb_networks := result.findall(".//network"):
             for zb_network in zb_networks:
                 if zb_network.find(".//nodes/network_router"):
