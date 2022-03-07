@@ -706,9 +706,7 @@ class SmileHelper:
         """
         locator = f'location[@id="{loc_id}"]'
         if (location := self._locations.find(locator)) is not None:
-            locator = (
-                ".//actuator_functionalities/thermostat_functionality/control_state"
-            )
+            locator = './/actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
             if (ctrl_state := location.find(locator)) is not None:
                 return ctrl_state.text
 
