@@ -480,7 +480,7 @@ class SmileHelper:
             appl.model = appl.name = self.smile_name
             appl.v_name = "Plugwise B.V."
 
-            # Adam: check for ZigBee mac address
+            # Adam: look for the ZigBee MAC address of the Smile
             if self.smile_name == "Adam" and (
                 found := self._modules.find(".//protocols/zig_bee_coordinator")
             ):
