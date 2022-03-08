@@ -312,9 +312,9 @@ class Smile(SmileComm, SmileData):
                     self.smile_hostname = system.find(".//gateway/hostname").text
                     # If wlan0 contains data it's active, so eth0 should be checked last
                     for network in ["wlan0", "eth0"]:
-                        net_locator = f".//{network}/mac"
-                        if system.findall(net_locator):
-                            self.smile_mac_address = system.findall(net_locator)[0].text
+                        locator = f".//{network}/mac"
+                        if (net_locator := system.find(locator)) is not None:
+                            self.smile_mac_address = net_locator.text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
