@@ -130,11 +130,11 @@ def types_finder(data: etree) -> set:
     """Detect types within locations from logs."""
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
-        locator = f".//logs/point_log[type='{measure}']"
+        locator = f"./logs/point_log[type='{measure}']"
         if (log := data.find(locator)) is None:
             continue
 
-        p_locator = ".//electricity_point_meter"
+        p_locator = "./electricity_point_meter"
         if (p_log := log.find(p_locator)) is not None and p_log.get("id"):
             types.add(attrs.get(ATTR_TYPE))
 
@@ -373,7 +373,7 @@ class SmileHelper:
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
-            locator = ".//services"
+            locator = "./services"
             if (
                 self._smile_legacy
                 and self.smile_type == "power"
@@ -385,7 +385,7 @@ class SmileHelper:
             loc.members = set()
 
             # Group of appliances
-            locator = ".//appliances/appliance"
+            locator = "./appliances/appliance"
             if (locs := location.findall(locator)) is not None:
                 for member in locs:
                     loc.members.add(member.attrib["id"])
@@ -426,10 +426,10 @@ class SmileHelper:
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
                 # Adam
-                if found := module.find(".//protocols/zig_bee_node"):
+                if found := module.find("./protocols/zig_bee_node"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
                 # Stretches
-                if found := module.find(".//protocols/network_router"):
+                if found := module.find("./protocols/network_router"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
 
         return model_data
@@ -439,7 +439,7 @@ class SmileHelper:
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
         if self._stretch_v2 or self._stretch_v3:
-            locator = ".//services/electricity_point_meter"
+            locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
             if not module_data["contents"]:
@@ -457,7 +457,7 @@ class SmileHelper:
             return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
-            locator = ".//logs/point_log/electricity_point_meter"
+            locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data["vendor_name"]
@@ -485,9 +485,7 @@ class SmileHelper:
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
-            locator = (
-                ".//actuator_functionalities/regulation_mode_control_functionality"
-            )
+            locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
                 self.cooling_active = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
@@ -498,7 +496,7 @@ class SmileHelper:
             return appl
 
         if appl.pwclass in THERMOSTAT_CLASSES:
-            locator = ".//logs/point_log[type='thermostat']/thermostat"
+            locator = "./logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.v_name = module_data["vendor_name"]
@@ -524,8 +522,8 @@ class SmileHelper:
 
             self._heater_id = appliance.attrib["id"]
             appl.name = "OpenTherm"
-            locator1 = ".//logs/point_log[type='flame_state']/boiler_state"
-            locator2 = ".//services/boiler_state"
+            locator1 = "./logs/point_log[type='flame_state']/boiler_state"
+            locator2 = "./services/boiler_state"
             mod_type = "boiler_state"
             module_data = self._get_module_data(appliance, locator1, mod_type)
             if not module_data["contents"]:
@@ -563,10 +561,10 @@ class SmileHelper:
             appl.types = self._loc_data[self._home_location].get("types")
 
         # Determine appliance_type from functionality
-        relay_func = appliance.find(".//actuator_functionalities/relay_functionality")
-        relay_act = appliance.find(".//actuators/relay")
+        relay_func = appliance.find("./actuator_functionalities/relay_functionality")
+        relay_act = appliance.find("./actuators/relay")
         thermo_func = appliance.find(
-            ".//actuator_functionalities/thermostat_functionality"
+            "./actuator_functionalities/thermostat_functionality"
         )
         if relay_func is not None or relay_act is not None:
             appl.types.add("plug")
@@ -704,7 +702,7 @@ class SmileHelper:
         """
         locator = f'location[@id="{loc_id}"]'
         if (location := self._domain_objects.find(locator)) is not None:
-            locator = './/actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
+            locator = './actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
             if (ctrl_state := location.find(locator)) is not None:
                 return ctrl_state.text
 
