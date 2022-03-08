@@ -241,17 +241,17 @@ class Smile(SmileComm, SmileData):
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
-        vendor_names: list[etree] = result.findall(".//module/vendor_name")
+        vendor_names: list[etree] = result.findall("./module/vendor_name")
         if not vendor_names:
             # Work-around for Stretch fv 2.7.18
             result = await self._request(MODULES)
-            vendor_names = result.findall(".//module/vendor_name")
+            vendor_names = result.findall("./module/vendor_name")
 
         names: list[str] = []
         for name in vendor_names:
             names.append(name.text)
 
-        dsmrmain = result.find(".//module/protocols/dsmrmain")
+        dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names:
             if dsmrmain is None:  # pragma: no cover
                 LOGGER.error(
@@ -275,10 +275,10 @@ class Smile(SmileComm, SmileData):
     ) -> tuple[str, str]:
         """Helper-function for _smile_detect()."""
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
-        if network := result.find(".//module/protocols/master_controller"):
+        if network := result.find("./module/protocols/master_controller"):
             self.smile_zigbee_mac_address = network.find("mac_address").text
         # Find the active MAC in case there is an orphaned Stick
-        if zb_networks := result.findall(".//network"):
+        if zb_networks := result.findall("./network"):
             for zb_network in zb_networks:
                 if zb_network.find(".//nodes/network_router"):
                     network = zb_network.find(".//master_controller")
@@ -290,7 +290,7 @@ class Smile(SmileComm, SmileData):
         # fake insert version assuming Anna, couldn't find another way to identify as legacy Anna
         self.smile_fw_version = "1.8.0"
         model = "smile_thermo"
-        if result.find('.//appliance[type="thermostat"]') is None:
+        if result.find('./appliance[type="thermostat"]') is None:
             # It's a P1 legacy:
             if dsmrmain is not None:
                 try:
@@ -396,7 +396,7 @@ class Smile(SmileComm, SmileData):
 
         # If Plugwise notifications present:
         self._notifications = {}
-        for notification in self._domain_objects.findall(".//notification"):
+        for notification in self._domain_objects.findall("./notification"):
             try:
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
