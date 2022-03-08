@@ -73,12 +73,10 @@ def update_helper(
             if d_item == "plugwise_notification":
                 devs[d_id][e_type][d_item] = notifs != {}
 
-        if key != d_item:
-            continue
-        for item in devs[d_id][e_type]:
-            if key != item:
-                continue
-            devs[d_id][e_type][item] = data[key]
+        if d_item == key:
+            for item in devs[d_id][e_type]:
+                if item == key:
+                    devs[d_id][e_type][item] = data[key]
 
 
 def check_model(name: str, v_name: str) -> str:
