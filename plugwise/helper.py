@@ -986,12 +986,7 @@ class SmileHelper:
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
-        search = self._domain_objects
-        groups = search.findall("./group")
-        if not groups:
-            return switch_groups
-
-        for group in groups:
+        for group in self._domain_objects.findall("./group"):
             group_appl: dict[str] = {}
             members: list[str] = []
             group_id = group.attrib["id"]
