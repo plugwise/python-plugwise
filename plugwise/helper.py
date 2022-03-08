@@ -987,9 +987,9 @@ class SmileHelper:
             return switch_groups
 
         search = self._domain_objects
-
-        appliances = search.findall("./appliance")
         groups = search.findall("./group")
+        if not groups:
+            return switch_groups
 
         for group in groups:
             group_appl: dict[str] = {}
@@ -997,16 +997,9 @@ class SmileHelper:
             group_id = group.attrib["id"]
             group_name = group.find("name").text
             group_type = group.find("type").text
-            if self.smile_type == "stretch":
-                group_appliance: etree | None = group.findall("appliances/appliance")
-                for dummy in group_appliance:
-                    members.append(dummy.attrib["id"])
-            else:
-                for appliance in appliances:
-                    if (appl_group := appliance.find("./groups/group")) is not None:
-                        appl_id: str = appliance.attrib["id"]
-                        if appl_group.attrib["id"] == group_id:
-                            members.append(appl_id)
+            group_appliances = group.findall("appliances/appliance")
+            for item in group_appliances:
+                members.append(item.attrib["id"])
 
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl[group_id] = {
