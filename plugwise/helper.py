@@ -485,7 +485,9 @@ class SmileHelper:
 
             # Adam: check for cooling capability and active heating/cooling operation-mode
             mode_list: list[str] = []
-            locator = "./actuator_functionalities/regulation_mode_control_functionality"
+            locator = (
+                ".//actuator_functionalities/regulation_mode_control_functionality"
+            )
             if (search := appliance.find(locator)) is not None:
                 self.cooling_active = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
@@ -761,7 +763,7 @@ class SmileHelper:
         """
         schema_ids: dict[str] = {}
         locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(f'.//rule[name="{name}"]'):
+        for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
             else:
@@ -776,7 +778,7 @@ class SmileHelper:
         schema_ids: dict[str] = {}
         locator1 = f'.//template[@tag="{tag}"]'
         locator2 = f'.//contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(".//rule"):
+        for rule in self._domain_objects.findall("./rule"):
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
                     schema_ids[rule.attrib["id"]] = loc_id
@@ -857,7 +859,7 @@ class SmileHelper:
             }.items()
 
         if (
-            appliance := self._appliances.find(f'.//appliance[@id="{d_id}"]')
+            appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
@@ -961,7 +963,7 @@ class SmileHelper:
         """Helper-function for _thermostat_uri().
         Determine the location-set_temperature uri - from APPLIANCES.
         """
-        locator = ".//appliance[type='thermostat']"
+        locator = "./appliance[type='thermostat']"
         appliance_id = self._appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
@@ -1019,7 +1021,7 @@ class SmileHelper:
         """
         loc_found = 0
         open_valve_count = 0
-        for appliance in self._appliances.findall(".//appliance"):
+        for appliance in self._appliances.findall("./appliance"):
             locator = './/logs/point_log[type="valve_position"]/period/measurement'
             if (appl_loc := appliance.find(locator)) is not None:
                 loc_found += 1
@@ -1082,7 +1084,7 @@ class SmileHelper:
         if self._smile_legacy:
             t_string = "tariff_indicator"
 
-        loc.logs = search.find(f'.//location[@id="{loc_id}"]/logs')
+        loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in HOME_MEASUREMENTS.items():
             for loc.log_type in log_list:
@@ -1107,7 +1109,7 @@ class SmileHelper:
         Collect the active preset based on Location ID.
         """
         if not self._smile_legacy:
-            locator = f'.//location[@id="{loc_id}"]/preset'
+            locator = f'./location[@id="{loc_id}"]/preset'
             if (preset := self._domain_objects.find(locator)) is not None:
                 return preset.text
 
@@ -1128,7 +1130,7 @@ class SmileHelper:
         schemas: dict[str] = {}
 
         search = self._domain_objects
-        for schema in search.findall(".//rule"):
+        for schema in search.findall("./rule"):
             if rule_name := schema.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
@@ -1237,7 +1239,7 @@ class SmileHelper:
         val: float | int | None = None
         search = self._domain_objects
         locator = (
-            f'.//location[@id="{obj_id}"]/logs/point_log'
+            f'./location[@id="{obj_id}"]/logs/point_log'
             f'[type="{measurement}"]/period/measurement'
         )
         if (found := search.find(locator)) is not None:
