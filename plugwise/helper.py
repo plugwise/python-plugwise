@@ -119,12 +119,11 @@ def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
     for i in range(length):
         j = (i + 1) % (length - 1)
         now = dt.datetime.now().time()
-        if (
-            schema_list[i][0] == dt.datetime.now().weekday()
-            or schema_list[j][0] == dt.datetime.now().weekday()
+        today = dt.datetime.now().weekday()
+        if today in [schema_list[i][0], schema_list[j][0]] and in_between(
+            now, schema_list[i][1], schema_list[j][1]
         ):
-            if in_between(now, schema_list[i][1], schema_list[j][1]):
-                return schema_list[i][2]
+            return schema_list[i][2]
 
 
 def types_finder(data: etree) -> set:
