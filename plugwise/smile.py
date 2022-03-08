@@ -280,8 +280,8 @@ class Smile(SmileComm, SmileData):
         # Find the active MAC in case there is an orphaned Stick
         if zb_networks := result.findall("./network"):
             for zb_network in zb_networks:
-                if zb_network.find(".//nodes/network_router"):
-                    network = zb_network.find(".//master_controller")
+                if zb_network.find("./nodes/network_router"):
+                    network = zb_network.find("./master_controller")
                     self.smile_zigbee_mac_address = network.find("mac_address").text
 
         # Assume legacy
@@ -295,10 +295,10 @@ class Smile(SmileComm, SmileData):
             if dsmrmain is not None:
                 try:
                     status = await self._request(STATUS)
-                    self.smile_fw_version = status.find(".//system/version").text
-                    model = status.find(".//system/product").text
-                    self.smile_hostname = status.find(".//network/hostname").text
-                    self.smile_mac_address = status.find(".//network/mac_address").text
+                    self.smile_fw_version = status.find("./system/version").text
+                    model = status.find("./system/product").text
+                    self.smile_hostname = status.find("./network/hostname").text
+                    self.smile_mac_address = status.find("./network/mac_address").text
                 except InvalidXMLError:  # pragma: no cover
                     # Corner case check
                     raise ConnectionFailedError
@@ -307,12 +307,12 @@ class Smile(SmileComm, SmileData):
             elif network is not None:
                 try:
                     system = await self._request(SYSTEM)
-                    self.smile_fw_version = system.find(".//gateway/firmware").text
-                    model = system.find(".//gateway/product").text
-                    self.smile_hostname = system.find(".//gateway/hostname").text
+                    self.smile_fw_version = system.find("./gateway/firmware").text
+                    model = system.find("./gateway/product").text
+                    self.smile_hostname = system.find("./gateway/hostname").text
                     # If wlan0 contains data it's active, so eth0 should be checked last
                     for network in ["wlan0", "eth0"]:
-                        locator = f".//{network}/mac"
+                        locator = f"./{network}/mac"
                         if (net_locator := system.find(locator)) is not None:
                             self.smile_mac_address = net_locator.text
                 except InvalidXMLError:  # pragma: no cover
@@ -332,7 +332,7 @@ class Smile(SmileComm, SmileData):
         Detect which type of Smile is connected.
         """
         model: str | None = None
-        if (gateway := result.find(".//gateway")) is not None:
+        if (gateway := result.find("./gateway")) is not None:
             model = gateway.find("vendor_model").text
             self.smile_fw_version = gateway.find("firmware_version").text
             self.smile_hw_version = gateway.find("hardware_version").text
