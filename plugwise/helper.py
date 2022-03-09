@@ -760,7 +760,7 @@ class SmileHelper:
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
         schema_ids: dict[str] = {}
-        locator = f'.//contexts/context/zone/location[@id="{loc_id}"]'
+        locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schema_ids[rule.attrib["id"]] = loc_id
@@ -774,8 +774,8 @@ class SmileHelper:
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
         schema_ids: dict[str] = {}
-        locator1 = f'.//template[@tag="{tag}"]'
-        locator2 = f'.//contexts/context/zone/location[@id="{loc_id}"]'
+        locator1 = f'./template[@tag="{tag}"]'
+        locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall("./rule"):
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
@@ -972,7 +972,7 @@ class SmileHelper:
         if self._smile_legacy:
             return self._thermostat_uri_legacy()
 
-        locator = f'location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
+        locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
@@ -1020,7 +1020,7 @@ class SmileHelper:
         loc_found = 0
         open_valve_count = 0
         for appliance in self._appliances.findall("./appliance"):
-            locator = './/logs/point_log[type="valve_position"]/period/measurement'
+            locator = './logs/point_log[type="valve_position"]/period/measurement'
             if (appl_loc := appliance.find(locator)) is not None:
                 loc_found += 1
                 if float(appl_loc.text) > 0.0:
@@ -1042,7 +1042,7 @@ class SmileHelper:
                 return loc
 
             loc.locator = (
-                f'.//{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+                f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
             )
 
         # Locator not found
@@ -1088,7 +1088,7 @@ class SmileHelper:
             for loc.log_type in log_list:
                 for loc.peak_select in peak_list:
                     loc.locator = (
-                        f'.//{loc.log_type}[type="{loc.measurement}"]/period/'
+                        f'./{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
                     loc = self._power_data_peak_value(loc)
@@ -1111,7 +1111,7 @@ class SmileHelper:
             if (preset := self._domain_objects.find(locator)) is not None:
                 return preset.text
 
-        locator = "rule[active='true']/directives/when/then"
+        locator = "./rule[active='true']/directives/when/then"
         if (
             active_rule := self._domain_objects.find(locator)
         ) is None or "icon" not in active_rule.keys():
@@ -1134,7 +1134,7 @@ class SmileHelper:
                     name = rule_name
 
         log_type = "schedule_state"
-        locator = f"appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
+        locator = f"./appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
         if (result := search.find(locator)) is not None:
             active = result.text == "on"
@@ -1173,9 +1173,9 @@ class SmileHelper:
 
         schedules: dict[str, Any] = {}
         for rule_id, loc_id in rule_ids.items():
-            name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, float] = {}
-            locator = f'rule[@id="{rule_id}"]/directives'
+            locator = f'./rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
             for directive in directives:
                 entry = directive.find("then").attrib
@@ -1218,9 +1218,11 @@ class SmileHelper:
         schemas: dict[str] | None = {}
 
         for rule_id in rule_ids:
-            schema_name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            schema_name = self._domain_objects.find(
+                f'./rule[@id="{rule_id}"]/name'
+            ).text
             schema_date = self._domain_objects.find(
-                f'rule[@id="{rule_id}"]/modified_date'
+                f'./rule[@id="{rule_id}"]/modified_date'
             ).text
             schema_time = parse(schema_date)
             schemas[schema_name] = (schema_time - epoch).total_seconds()
@@ -1236,10 +1238,7 @@ class SmileHelper:
         """
         val: float | int | None = None
         search = self._domain_objects
-        locator = (
-            f'./location[@id="{obj_id}"]/logs/point_log'
-            f'[type="{measurement}"]/period/measurement'
-        )
+        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
             val = format_measure(found.text, None)
             return val
@@ -1258,7 +1257,7 @@ class SmileHelper:
             func_type = "relay"
         appl_class = xml.find("type").text
         if appl_class not in ["central_heating_pump", "valve_actuator"]:
-            locator = f".//{actuator}/{func_type}/lock"
+            locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
                 data["lock"] = format_measure(found.text, None)
 
