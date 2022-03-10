@@ -242,14 +242,18 @@ class Smile(SmileComm, SmileData):
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
         vendor_names: list[etree] = result.findall("./module/vendor_name")
+        vendor_models: list[etree] = result.findall("./module/vendor_model")
+        # Work-around for Stretch fv 2.7.18
         if not vendor_names:
-            # Work-around for Stretch fv 2.7.18
             result = await self._request(MODULES)
             vendor_names = result.findall("./module/vendor_name")
 
         names: list[str] = []
+        models: list[str] = []
         for name in vendor_names:
             names.append(name.text)
+        for model in vendor_models:
+            models.append(model.text)
 
         dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names:
@@ -261,6 +265,14 @@ class Smile(SmileComm, SmileData):
                     result,
                 )
                 raise ConnectionFailedError
+
+        # Check if Anna is connected to an Adam
+        if "159.2" in models:
+            LOGGER.error(
+                "Your Anna is connected to an Adam, make \
+                sure to only add the Adam as integration.",
+            )
+            raise ConnectedFailedError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
