@@ -31,7 +31,12 @@ from .constants import (
     SYSTEM,
     THERMOSTAT_CLASSES,
 )
-from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
+from .exceptions import (
+    ConnectionFailedError,
+    InvalidSetupError,
+    InvalidXMLError,
+    UnsupportedDeviceError,
+)
 from .helper import SmileComm, SmileHelper, update_helper
 
 
@@ -285,7 +290,7 @@ class Smile(SmileComm, SmileData):
                 "Your Anna is connected to an Adam, make \
                 sure to only add the Adam as integration.",
             )
-            raise ConnectionFailedError
+            raise InvalidSetupError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
