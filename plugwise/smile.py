@@ -272,7 +272,7 @@ class Smile(SmileComm, SmileData):
                 "Your Anna is connected to an Adam, make \
                 sure to only add the Adam as integration.",
             )
-            raise ConnectedFailedError
+            raise ConnectionFailedError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
