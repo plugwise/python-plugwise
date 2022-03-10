@@ -171,6 +171,19 @@ class SmileData(SmileHelper):
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        if "cooling_activation_outdoor_temperature" in details:
+            self._cooling_present = True
+            if not self.cooling_active and self._outdoor_temp > details.get(
+                "cooling_activation_outdoor_temperature"
+            ):
+                self.cooling_active = True
+            if self.cooling_active and self._outdoor_temp < details.get(
+                "cooling_deactivation_threshold"
+            ):
+                self.cooling_active = False
+
         return device_data
 
     def _get_device_data(self, dev_id: str) -> dict[str, Any]:

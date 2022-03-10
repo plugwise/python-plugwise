@@ -873,19 +873,6 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        # Anna: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if "cooling_activation_outdoor_temperature" in data:
-            self._cooling_present = True
-            if not self.cooling_active and self._outdoor_temp > data.get(
-                "cooling_activation_outdoor_temperature"
-            ):
-                self.cooling_active = True
-            if self.cooling_active and self._outdoor_temp < data.get(
-                "cooling_deactivation_threshold"
-            ):
-                self.cooling_active = False
-
         return data
 
     def _rank_thermostat(
