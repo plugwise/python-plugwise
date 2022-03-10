@@ -156,17 +156,6 @@ class SmileData(SmileHelper):
             device_data["last_used"] = last_active
             device_data["schedule_temperature"] = sched_setpoint
 
-        # Operation mode: auto, heat, cool
-        device_data["mode"] = "auto"
-        schedule_status = False
-        if sel_schema != "None":
-            schedule_status = True
-        if not schedule_status:
-            device_data["mode"] = "heat"
-            if self._heater_id is not None:
-                if self.cooling_active:
-                    device_data["mode"] = "cool"
-
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
@@ -183,6 +172,17 @@ class SmileData(SmileHelper):
                 "cooling_deactivation_threshold"
             ):
                 self.cooling_active = False
+
+        # Operation mode: auto, heat, cool
+        device_data["mode"] = "auto"
+        schedule_status = False
+        if sel_schema != "None":
+            schedule_status = True
+        if not schedule_status:
+            device_data["mode"] = "heat"
+            if self._heater_id is not None:
+                if self.cooling_active:
+                    device_data["mode"] = "cool"
 
         return device_data
 
