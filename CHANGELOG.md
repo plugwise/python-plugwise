@@ -1,6 +1,8 @@
 # Changelog
 
-# v0.xy.z - Smile: more changes and improvements
+# v0.16.7 - Smile: more changes and improvements
+- Fix #158: error setting up for systems with an Anna and and Elga (heatpump).
+- Block connecting to the Anna when an Adam is present (fixes pw-beta #231).
 - Combine helper-functions, possible after removing code related to the device_state sensor.
 - Remove single_master_thermostat() function and the related self's, no longer needed.
 - Use .get() where possible.
@@ -8,24 +10,24 @@
 - Improve and simplify.
 
 # v0.16.6 - Smile: various changes/improvements
-- Provide cooling_state and heating_state as `binary_sensors`, show cooling_state only when cooling is present
-- Clean up gw_data, e.g. remove `single_master_thermostat` key
+- Provide cooling_state and heating_state as `binary_sensors`, show cooling_state only when cooling is present.
+- Clean up gw_data, e.g. remove `single_master_thermostat` key.
 
 # v0.16.5 - Smile: small improvements
-- Move schedule debug-message to the correct position
-- Code quality fixes
+- Move schedule debug-message to the correct position.
+- Code quality fixes.
 
 # v0.16.4 - Adding measurements
-- Expose mac-addresses for network and zigbee devices
-- Expose min/max thermostat (and heater) values and resolution (step in HA)
-- Changed mac-addresses in userdata/fixtures to be obfuscated but unique 
+- Expose mac-addresses for network and zigbee devices.
+- Expose min/max thermostat (and heater) values and resolution (step in HA).
+- Changed mac-addresses in userdata/fixtures to be obfuscated but unique. 
 
 # v0.16.3 - Typing
-- Code quality improvements
+- Code quality improvements.
 
 # v0.16.2 - Generic and Stretch
-- As per Core deprecation of python 3.8, removed CI/CD testing and bumped pypi to 3.9 and production
-- Add support for Stretch with fw 2.7.18
+- As per Core deprecation of python 3.8, removed CI/CD testing and bumped pypi to 3.9 and production.
+- Add support for Stretch with fw 2.7.18.
 
 # v0.16.1 - Smile - various updates:
 - BREAKING: Change active device detection, detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
