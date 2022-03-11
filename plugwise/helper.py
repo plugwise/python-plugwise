@@ -508,20 +508,19 @@ class SmileHelper:
             return appl
 
         if appl.pwclass == "heater_central":
-            # Provide info for On-Off device
-            if self._on_off_device:
-                self._heater_id = appliance.attrib["id"]
-                appl.name = "OnOff"
-                appl.v_name = None
-                appl.model = "Unknown"
-
-                return appl
-
             # Remove heater_central when no active device present
             if not self._opentherm_device and not self._on_off_device:
                 return None
 
             self._heater_id = appliance.attrib["id"]
+            #  info for On-Off device
+            if self._on_off_device:
+                appl.name = "OnOff"
+                appl.v_name = None
+                appl.model = "Unknown"
+                return appl
+
+            # Obtain info for OpenTherm device
             appl.name = "OpenTherm"
             locator1 = "./logs/point_log[type='flame_state']/boiler_state"
             locator2 = "./services/boiler_state"
