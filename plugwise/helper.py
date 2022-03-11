@@ -418,6 +418,7 @@ class SmileHelper:
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
+            # Not possible to walrus...
             module = self._modules.find(locator)
             if module is not None:
                 model_data["contents"] = True
@@ -507,20 +508,19 @@ class SmileHelper:
             return appl
 
         if appl.pwclass == "heater_central":
-            # Provide info for On-Off device
-            if self._on_off_device:
-                self._heater_id = appliance.attrib["id"]
-                appl.name = "OnOff"
-                appl.v_name = None
-                appl.model = "Unknown"
-
-                return appl
-
             # Remove heater_central when no active device present
             if not self._opentherm_device and not self._on_off_device:
                 return None
 
             self._heater_id = appliance.attrib["id"]
+            #  info for On-Off device
+            if self._on_off_device:
+                appl.name = "OnOff"
+                appl.v_name = None
+                appl.model = "Unknown"
+                return appl
+
+            # Obtain info for OpenTherm device
             appl.name = "OpenTherm"
             locator1 = "./logs/point_log[type='flame_state']/boiler_state"
             locator2 = "./services/boiler_state"
@@ -872,19 +872,6 @@ class SmileHelper:
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
-
-        # Anna: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if "cooling_activation_outdoor_temperature" in data:
-            self._cooling_present = True
-            if not self.cooling_active and self._outdoor_temp > data.get(
-                "cooling_activation_outdoor_temperature"
-            ):
-                self.cooling_active = True
-            if self.cooling_active and self._outdoor_temp < data.get(
-                "cooling_deactivation_threshold"
-            ):
-                self.cooling_active = False
 
         return data
 

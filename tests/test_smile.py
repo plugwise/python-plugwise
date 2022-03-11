@@ -2774,6 +2774,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert True
 
     @pytest.mark.asyncio
+    async def test_fail_anna_connected_to_adam(self):
+        """Test erroneous legacy stretch system."""
+        self.smile_setup = "anna_connected_to_adam"
+        try:
+            _server, _smile, _client = await self.connect_wrapper()
+            assert False  # pragma: no cover
+        except pw_exceptions.InvalidSetupError:
+            assert True
+
+    @pytest.mark.asyncio
     async def test_invalid_credentials(self):
         """Test P1 with invalid credentials setup."""
 

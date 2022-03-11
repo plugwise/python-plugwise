@@ -55,6 +55,10 @@ class InvalidAuthentication(PlugwiseException):
     """Raised when unable to authenticate."""
 
 
+class InvalidSetupError(PlugwiseException):
+    """Raised when adding an Anna while an Adam exists."""
+
+
 class UnsupportedDeviceError(PlugwiseException):
     """Raised when device is not supported."""
 

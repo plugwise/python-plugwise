@@ -31,7 +31,12 @@ from .constants import (
     SYSTEM,
     THERMOSTAT_CLASSES,
 )
-from .exceptions import ConnectionFailedError, InvalidXMLError, UnsupportedDeviceError
+from .exceptions import (
+    ConnectionFailedError,
+    InvalidSetupError,
+    InvalidXMLError,
+    UnsupportedDeviceError,
+)
 from .helper import SmileComm, SmileHelper, update_helper
 
 
@@ -108,9 +113,7 @@ class SmileData(SmileHelper):
                 if member_data.get("relay"):
                     counter += 1
 
-            device_data["relay"] = True
-            if counter == 0:
-                device_data["relay"] = False
+            device_data["relay"] = counter != 0
 
         return device_data
 
@@ -124,9 +127,7 @@ class SmileData(SmileHelper):
             # Indicate heating_state based on valves being open in case of city-provided heating
             if details.get("class") == "heater_central":
                 if self._on_off_device and self._heating_valves() is not None:
-                    device_data["heating_state"] = True
-                    if self._heating_valves() == 0:
-                        device_data["heating_state"] = False
+                    device_data["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
@@ -156,20 +157,29 @@ class SmileData(SmileHelper):
             device_data["last_used"] = last_active
             device_data["schedule_temperature"] = sched_setpoint
 
-        # Operation mode: auto, heat, cool
-        device_data["mode"] = "auto"
-        schedule_status = False
-        if sel_schema != "None":
-            schedule_status = True
-        if not schedule_status:
-            device_data["mode"] = "heat"
-            if self._heater_id is not None:
-                if self.cooling_active:
-                    device_data["mode"] = "cool"
-
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
+
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        if "cooling_activation_outdoor_temperature" in device_data:
+            self._cooling_present = True
+            if not self.cooling_active and self._outdoor_temp > device_data.get(
+                "cooling_activation_outdoor_temperature"
+            ):
+                self.cooling_active = True
+            if self.cooling_active and self._outdoor_temp < device_data.get(
+                "cooling_deactivation_threshold"
+            ):
+                self.cooling_active = False
+
+        # Operation mode: auto, heat, cool
+        device_data["mode"] = "auto"
+        if sel_schema == "None":
+            device_data["mode"] = "heat"
+            if self._heater_id is not None and self.cooling_active:
+                device_data["mode"] = "cool"
 
         return device_data
 
@@ -242,14 +252,18 @@ class Smile(SmileComm, SmileData):
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
         vendor_names: list[etree] = result.findall("./module/vendor_name")
+        vendor_models: list[etree] = result.findall("./module/vendor_model")
+        # Work-around for Stretch fv 2.7.18
         if not vendor_names:
-            # Work-around for Stretch fv 2.7.18
             result = await self._request(MODULES)
             vendor_names = result.findall("./module/vendor_name")
 
         names: list[str] = []
+        models: list[str] = []
         for name in vendor_names:
             names.append(name.text)
+        for model in vendor_models:
+            models.append(model.text)
 
         dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names:
@@ -261,6 +275,14 @@ class Smile(SmileComm, SmileData):
                     result,
                 )
                 raise ConnectionFailedError
+
+        # Check if Anna is connected to an Adam
+        if "159.2" in models:
+            LOGGER.error(
+                "Your Anna is connected to an Adam, make \
+                sure to only add the Adam as integration.",
+            )
+            raise InvalidSetupError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
@@ -372,8 +394,7 @@ class Smile(SmileComm, SmileData):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-        if self.smile_type == "thermostat":
-            self._is_thermostat = True
+        self._is_thermostat = self.smile_type == "thermostat"
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
