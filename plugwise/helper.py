@@ -208,6 +208,10 @@ class SmileComm:
         else:
             self._websession = websession
 
+        # Quickfix IPv6 formatting
+        if host.count(":") > 2:
+            host = f"[{host}]"
+
         self._auth = BasicAuth(username, password=password)
         self._endpoint = f"http://{host}:{str(port)}"
         self._timeout = timeout
