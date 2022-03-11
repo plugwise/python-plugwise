@@ -203,11 +203,12 @@ HW_MODELS = {
     "120006": "Sense Legrand",
     "070051": "Switch",
     "080029": "Switch",
-    "168-01": "Jip",
-    "160-01": "Plug",
+    "143.1": "Anna",
+    "159.2": "Adam",
     "106-03": "Tom/Floor",
     "158-01": "Lisa",
-    "143.1": "Anna",
+    "160-01": "Plug",
+    "168-01": "Jip",
 }
 
 # Defaults for SED's (Sleeping End Devices)
