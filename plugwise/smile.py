@@ -113,9 +113,7 @@ class SmileData(SmileHelper):
                 if member_data.get("relay"):
                     counter += 1
 
-            device_data["relay"] = True
-            if counter == 0:
-                device_data["relay"] = False
+            device_data["relay"] = counter != 0
 
         return device_data
 
@@ -129,9 +127,7 @@ class SmileData(SmileHelper):
             # Indicate heating_state based on valves being open in case of city-provided heating
             if details.get("class") == "heater_central":
                 if self._on_off_device and self._heating_valves() is not None:
-                    device_data["heating_state"] = True
-                    if self._heating_valves() == 0:
-                        device_data["heating_state"] = False
+                    device_data["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
@@ -398,8 +394,7 @@ class Smile(SmileComm, SmileData):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-        if self.smile_type == "thermostat":
-            self._is_thermostat = True
+        self._is_thermostat = self.smile_type == "thermostat"
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
