@@ -180,14 +180,10 @@ class SmileData(SmileHelper):
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
-        schedule_status = False
-        if sel_schema != "None":
-            schedule_status = True
-        if not schedule_status:
+        if sel_schema == "None":
             device_data["mode"] = "heat"
-            if self._heater_id is not None:
-                if self.cooling_active:
-                    device_data["mode"] = "cool"
+            if self._heater_id is not None and self.cooling_active:
+                device_data["mode"] = "cool"
 
         return device_data
 
