@@ -418,6 +418,7 @@ class SmileHelper:
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
             locator = f".//{mod_type}[@id='{link_id}']...."
+            # Not possible to walrus...
             module = self._modules.find(locator)
             if module is not None:
                 model_data["contents"] = True
