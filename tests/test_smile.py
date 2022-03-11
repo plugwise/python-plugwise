@@ -250,9 +250,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         client = aiohttp.test_utils.TestClient(server)
         websession = client.session
 
-        url = "{}://{}:{}/core/locations".format(
-            server.scheme, server.host, server.port
-        )
+        url = f"{server.scheme}://{server.host}:{server.port}/core/locations"
 
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
@@ -426,9 +424,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
-                            "  + Testing {} (should be {})".format(
-                                measure_key, measure_assert
-                            ),
+                            f"  + Testing {measure_key} (should be {measure_assert})",
                         )
                         tests += 1
                         if measure_key in bsw_list:
@@ -2201,6 +2197,59 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.0.15"
+        _LOGGER.info(" # Assert no legacy")
+        assert not smile._smile_legacy
+
+        await self.device_test(smile, testdata)
+        assert self.cooling_present
+        assert not self.notifications
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_anna_elga_outdoor_temp(self):
+        """Test a Anna with Elga setup in cooling mode with missing outdoor temperature."""
+        testdata = {
+            # Anna
+            "3cb70739631c4d17a86b8b12e8a5161b": {
+                "selected_schedule": "None",
+                "active_preset": "home",
+                "mode": "cool",
+                "sensors": {
+                    "illuminance": 25.5,
+                    "cooling_activation_outdoor_temperature": 21.0,
+                    "cooling_deactivation_threshold": 6,
+                },
+            },
+            # Heater central
+            "573c152e7d4f4720878222bd75638f5b": {
+                "binary_sensors": {
+                    "cooling_state": True,
+                    "dhw_state": False,
+                    "heating_state": False,
+                },
+                "sensors": {
+                    "outdoor_temperature": 14.0,
+                    "water_temperature": 23.39,
+                    "water_pressure": 1.61,
+                },
+            },
+            # Gateway
+            "c53888603af34264bbed2a05998ee572": {
+                "sensors": {"outdoor_temperature": 14.0}
+            },
+        }
+
+        self.smile_setup = "anna_elga_outdoor_temp"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.2.1"
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
