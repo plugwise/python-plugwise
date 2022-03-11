@@ -1,7 +1,7 @@
 # Changelog
 
-# v0.16.7 - Smile: more changes and improvements
-- Fix #158: error setting up for systems with an Anna and and Elga (heatpump).
+# v0.16.7 - Smile: Bugfixes, more changes and improvements
+- Fix for #158: error setting up for systems with an Anna and and Elga (heatpump).
 - Block connecting to the Anna when an Adam is present (fixes pw-beta #231).
 - Combine helper-functions, possible after removing code related to the device_state sensor.
 - Remove single_master_thermostat() function and the related self's, no longer needed.
