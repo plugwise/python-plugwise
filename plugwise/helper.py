@@ -208,8 +208,8 @@ class SmileComm:
         else:
             self._websession = websession
 
-        # Quickfix IPv6 formatting
-        if host.count(":") > 2:
+        # Quickfix IPv6 formatting, not covering
+        if host.count(":") > 2:  # pragma: no cover
             host = f"[{host}]"
 
         self._auth = BasicAuth(username, password=password)
