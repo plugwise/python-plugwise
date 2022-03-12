@@ -163,6 +163,8 @@ class SmileData(SmileHelper):
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
+        LOGGER.debug("HOI5, %s, %s", details, device_data)
+
         # Anna: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if "cooling_activation_outdoor_temperature" in device_data:
