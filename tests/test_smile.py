@@ -2212,32 +2212,80 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a Anna with Elga setup in cooling mode with missing outdoor temperature."""
         testdata = {
             # Anna
-            "3cb70739631c4d17a86b8b12e8a5161b": {
-                "selected_schedule": "None",
+            "ebd90df1ab334565b5895f37590ccff4": {
+                "class": "thermostat",
+                "fw": "2018-02-08T11:15:53+01:00",
+                "hw": "6539-1301-5002",
+                "location": "d3ce834534114348be628b61b26d9220",
+                "mac_address": None,
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "lower_bound": 4,
+                "upper_bound": 30,
+                "resolution": 0.1,
+                "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
                 "active_preset": "home",
-                "mode": "cool",
+                "presets": {
+                    "away": [15.0, 25.0],
+                    "no_frost": [10.0, 30.0],
+                    "vacation": [15.0, 27.0],
+                    "home": [19.5, 23.0],
+                    "asleep": [19.0, 23.0],
+                },
+                "available_schedules": ["Thermostat schedule"],
+                "selected_schedule": "Thermostat schedule",
+                "last_used": "Thermostat schedule",
+                "schedule_temperature": 19.5,
+                "mode": "auto",
                 "sensors": {
-                    "illuminance": 25.5,
-                    "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 6,
+                    "temperature": 20.9,
+                    "setpoint": 19.5,
+                    "illuminance": 0.5,
+                    "cooling_activation_outdoor_temperature": 26.0,
+                    "cooling_deactivation_threshold": 3,
                 },
             },
             # Heater central
             "573c152e7d4f4720878222bd75638f5b": {
+                "class": "heater_central",
+                "fw": None,
+                "hw": None,
+                "location": "d34dfe6ab90b410c98068e75de3eb631",
+                "mac_address": None,
+                "model": "Generic heater",
+                "name": "OpenTherm",
+                "vendor": "Techneco",
+                "compressor_state": False,
                 "binary_sensors": {
-                    "cooling_state": True,
                     "dhw_state": False,
                     "heating_state": False,
+                    "cooling_state": False,
+                    "slave_boiler_state": False,
+                    "flame_state": False,
                 },
                 "sensors": {
                     "outdoor_temperature": 14.0,
-                    "water_temperature": 23.39,
-                    "water_pressure": 1.61,
+                    "water_temperature": 22.8,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 23.4,
+                    "water_pressure": 0.5,
                 },
+                "switches": {"dhw_cm_switch": True},
             },
             # Gateway
-            "c53888603af34264bbed2a05998ee572": {
-                "sensors": {"outdoor_temperature": 14.0}
+            "fb49af122f6e4b0f91267e1cf7666d6f": {
+                "class": "gateway",
+                "fw": "4.2.1",
+                "hw": "AME Smile 2.0 board",
+                "location": "d34dfe6ab90b410c98068e75de3eb631",
+                "mac_address": "C4930002FE76",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise B.V.",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 13.0},
             },
         }
 
