@@ -847,7 +847,7 @@ class SmileHelper:
                     continue
 
                 data[measurement] = format_measure(
-                    t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    t_function.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
         return data
