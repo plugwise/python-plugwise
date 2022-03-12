@@ -2211,7 +2211,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "None",
                 "active_preset": "home",
-                "mode": "cool",
+                "mode": "heat",
                 "sensors": {
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
@@ -2221,12 +2221,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "binary_sensors": {
-                    "cooling_state": True,
+                    "cooling_state": False,
                     "dhw_state": False,
                     "heating_state": False,
                 },
                 "sensors": {
-                    "outdoor_temperature": 22.0,
+                    "outdoor_temperature": 3.0,
                     "water_temperature": 24.7,
                     "water_pressure": 1.61,
                 },
