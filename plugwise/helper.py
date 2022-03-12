@@ -826,7 +826,7 @@ class SmileHelper:
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
-                    self._cao_present = True
+                    self._cao_present = self._cooling_present = True
                     self._cao_temp = data.get(measurement)
                 if measurement == "cooling_deactivation_threshold":
                     self._cdt_temp = data.get(measurement)
