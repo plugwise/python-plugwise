@@ -2147,7 +2147,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
-        await self.device_test(smile, testdata, True)
+        await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
 
