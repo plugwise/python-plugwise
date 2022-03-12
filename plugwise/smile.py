@@ -91,6 +91,8 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
+        LOGGER.debug("HOI4, %s", self._devices)
+
         # Don't show cooling_state when no cooling present
         for _, device in self.gw_devices.items():
             if (
