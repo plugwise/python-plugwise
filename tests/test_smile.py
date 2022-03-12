@@ -2200,7 +2200,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, testdata)
+        await self.device_test(smile, testdata, True)
         assert self.cooling_present
         assert not self.notifications
 
@@ -2253,7 +2253,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, testdata)
+        await self.device_test(smile, testdata, True)
         assert self.cooling_present
         assert not self.notifications
 
