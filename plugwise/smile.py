@@ -93,6 +93,19 @@ class SmileData(SmileHelper):
 
         LOGGER.debug("HOI4, %s", self._devices)
 
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        # if "cooling_activation_outdoor_temperature" in device_data:
+        #    self._cooling_present = True
+        #    if not self.cooling_active and self._outdoor_temp > device_data.get(
+        #        "cooling_activation_outdoor_temperature"
+        #    ):
+        #        self.cooling_active = True
+        #    if self.cooling_active and self._outdoor_temp < device_data.get(
+        #        "cooling_deactivation_threshold"
+        #    ):
+        #        self.cooling_active = False
+
         # Don't show cooling_state when no cooling present
         for _, device in self.gw_devices.items():
             if (
@@ -164,19 +177,6 @@ class SmileData(SmileHelper):
             device_data["control_state"] = ctrl_state
 
         LOGGER.debug("HOI5, %s, %s", details, device_data)
-
-        # Anna: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if "cooling_activation_outdoor_temperature" in device_data:
-            self._cooling_present = True
-            if not self.cooling_active and self._outdoor_temp > device_data.get(
-                "cooling_activation_outdoor_temperature"
-            ):
-                self.cooling_active = True
-            if self.cooling_active and self._outdoor_temp < device_data.get(
-                "cooling_deactivation_threshold"
-            ):
-                self.cooling_active = False
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
