@@ -290,9 +290,9 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._appl_data: dict[str, Any] = {}
         self._appliances: etree | None = None
-        self._cao_present: bool = False
-        self._cao_temp: float | None = None
-        self._cdt_temp: float | None = None
+        self._anna_cooling_present: bool = False
+        self._cooling_activation_outdoor_temp: float | None = None
+        self._cooling_deactivation_threshold: float | None = None
         self._cooling_present = False
         self._devices: dict[str, str] = {}
         self._domain_objects: etree | None = None
@@ -626,11 +626,9 @@ class SmileHelper:
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        LOGGER.debug("HOI1 %s, %s", c_heating_state, ot_fault_code)
         if c_heating_state is not None:
             self._opentherm_device = ot_fault_code is not None
             self._on_off_device = ot_fault_code is None
-        LOGGER.debug("HOI2 %s, %s", self._opentherm_device, self._on_off_device)
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -688,8 +686,6 @@ class SmileHelper:
                 and appl.location is None
             ):
                 self._appl_data.pop(appl.dev_id)
-
-        LOGGER.debug("HOI3 %s", self._appl_data)
 
     def _match_locations(self) -> dict[str, Any]:
         """Helper-function for _scan_thermostats().
@@ -826,10 +822,10 @@ class SmileHelper:
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
-                    self._cao_present = self._cooling_present = True
-                    self._cao_temp = data.get(measurement)
+                    self._anna_cooling_present = self._cooling_present = True
+                    self._cooling_activation_outdoor_temp = data.get(measurement)
                 if measurement == "cooling_deactivation_threshold":
-                    self._cdt_temp = data.get(measurement)
+                    self._cooling_deactivation_threshold = data.get(measurement)
                 if measurement == "outdoor_temperature":
                     self._outdoor_temp = data.get(measurement)
 

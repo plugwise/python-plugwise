@@ -56,7 +56,6 @@ class SmileData(SmileHelper):
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
 
-        LOGGER.debug("HOI6 %s", self._cooling_present)
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["gateway_id"] = self.gateway_id
         if self._is_thermostat:
@@ -92,22 +91,18 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-        LOGGER.debug("HOI4, %s", self._devices)
-        LOGGER.debug(
-            "HOI4a %s, %s, %s, %s",
-            self._outdoor_temp,
-            self._cao_present,
-            self._cao_temp,
-            self._cdt_temp,
-        )
-
         # Anna: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._cao_present:
-            self._cooling_present = True
-            if not self.cooling_active and self._outdoor_temp > self._cao_temp:
+        if self._anna_cooling_present:
+            if (
+                not self.cooling_active
+                and self._outdoor_temp > self._cooling_activation_outdoor_temp
+            ):
                 self.cooling_active = True
-            if self.cooling_active and self._outdoor_temp < self._cdt_temp:
+            if (
+                self.cooling_active
+                and self._outdoor_temp < self._cooling_deactivation_threshold
+            ):
                 self.cooling_active = False
 
         # Don't show cooling_state when no cooling present
@@ -179,8 +174,6 @@ class SmileData(SmileHelper):
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
-
-        LOGGER.debug("HOI5, %s, %s", details, device_data)
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
