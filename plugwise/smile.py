@@ -56,6 +56,7 @@ class SmileData(SmileHelper):
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
 
+        LOGGER.debug("HOI6 %s", self._cooling_present)
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["gateway_id"] = self.gateway_id
         if self._is_thermostat:
