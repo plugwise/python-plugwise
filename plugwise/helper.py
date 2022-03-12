@@ -686,6 +686,8 @@ class SmileHelper:
             ):
                 self._appl_data.pop(appl.dev_id)
 
+        LOGGER.debug("HOI3 %s", self._appl_data)
+
     def _match_locations(self) -> dict[str, Any]:
         """Helper-function for _scan_thermostats().
         Update locations with present appliance-types.
