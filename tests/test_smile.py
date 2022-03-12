@@ -2208,6 +2208,47 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_heatpump_cooling_to_off(self):
+        """Test a Anna with Elga setup in cooling mode, to cooling off ."""
+        testdata = {
+            # Anna
+            "3cb70739631c4d17a86b8b12e8a5161b": {
+                "selected_schedule": "None",
+                "active_preset": "home",
+                "mode": "cool",
+                "sensors": {
+                    "illuminance": 25.5,
+                    "cooling_activation_outdoor_temperature": 21.0,
+                    "cooling_deactivation_threshold": 6,
+                },
+            },
+            # Heater central
+            "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "binary_sensors": {
+                    "cooling_state": True,
+                    "dhw_state": False,
+                    "heating_state": False,
+                },
+                "sensors": {
+                    "outdoor_temperature": 22.0,
+                    "water_temperature": 24.7,
+                    "water_pressure": 1.61,
+                },
+            },
+            # Gateway
+            "015ae9ea3f964e668e490fa39da3870b": {
+                "sensors": {"outdoor_temperature": 22.0}
+            },
+        }
+
+        self.smile_setup = "anna_heatpump_cooling"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata, True)
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
         """Test a Anna with Elga setup in cooling mode (with missing outdoor temperature - solved)."""
         testdata = {
