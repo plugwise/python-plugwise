@@ -374,15 +374,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 assert False
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=pw_smile.Smile, testdata=None, preset=False):
+    async def device_test(self, smile=pw_smile.Smile, testdata=None):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         smile.get_all_devices()
-        # Preset smile.cooling_active for testing of a state-change
-        smile.cooling_active = False
-        if preset:
-            smile.cooling_active = True
         data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
@@ -2200,7 +2196,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, testdata, True)
+        await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
 
@@ -2342,7 +2338,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, testdata, True)
+        await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
 
@@ -2371,7 +2367,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, testdata, True)
+        await self.device_test(smile, testdata)
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
