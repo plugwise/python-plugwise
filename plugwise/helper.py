@@ -623,10 +623,11 @@ class SmileHelper:
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        LOGGER.debug("HOI %s, %s", c_heating_state, ot_fault_code)
+        LOGGER.debug("HOI1 %s, %s", c_heating_state, ot_fault_code)
         if c_heating_state is not None:
             self._opentherm_device = ot_fault_code is not None
             self._on_off_device = ot_fault_code is None
+        LOGGER.debug("HOI2 %s, %s", self._opentherm_device, self._on_off_device)
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
