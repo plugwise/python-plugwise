@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.16.8a2 - Smile: bugfixes, continued
+- Fix for https://github.com/home-assistant/core/issues/68003
+- Refix solution for #158 
+
 # v0.16.7 - Smile: Bugfixes, more changes and improvements
 - Fix for #158: error setting up for systems with an Anna and and Elga (heatpump).
 - Block connecting to the Anna when an Adam is present (fixes pw-beta #231).
