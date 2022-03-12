@@ -92,6 +92,7 @@ class SmileData(SmileHelper):
         self._all_device_data()
 
         LOGGER.debug("HOI4, %s", self._devices)
+        LOGGER.debug("HOI4a %s", self._outdoor_temp)
 
         # Anna: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
