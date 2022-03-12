@@ -437,7 +437,7 @@ DEVICE_MEASUREMENTS = {
     # Added measurements from actuator_functionalities/thermostat_functionality
     "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_KELVIN},
+    "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
 }
 
 # Heater Central related measurements
