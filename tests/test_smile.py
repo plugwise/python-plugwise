@@ -2208,8 +2208,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_anna_elga_outdoor_temp(self):
-        """Test a Anna with Elga setup in cooling mode with missing outdoor temperature."""
+    async def test_connect_anna_elga_2(self):
+        """Test a Anna with Elga setup in cooling mode (with missing outdoor temperature - solved)."""
         testdata = {
             # Anna
             "ebd90df1ab334565b5895f37590ccff4": {
@@ -2289,7 +2289,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
         }
 
-        self.smile_setup = "anna_elga_outdoor_temp"
+        self.smile_setup = "anna_elga_2"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
