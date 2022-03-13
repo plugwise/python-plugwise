@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.16.8a2 - Smile: bugfixes, continued
+# v0.16.8 - Smile: bugfixes, continued
 - Fix for https://github.com/home-assistant/core/issues/68003
 - Refix solution for #158 
 
