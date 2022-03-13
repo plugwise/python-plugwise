@@ -2215,7 +2215,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "heating_state": True,
                 },
                 "sensors": {
-                    "outdoor_temperature": 3.0,
+                    "lokal_outdoor_temperature": 3.0,
                     "water_temperature": 29.1,
                     "water_pressure": 1.57,
                 },
@@ -2274,7 +2274,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "heating_state": False,
                 },
                 "sensors": {
-                    "outdoor_temperature": 22.0,
+                    "local_outdoor_temperature": 22.0,
                     "water_temperature": 24.7,
                     "water_pressure": 1.61,
                 },
@@ -2331,7 +2331,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "heating_state": False,
                 },
                 "sensors": {
-                    "outdoor_temperature": 3.0,
+                    "local_outdoor_temperature": 3.0,
                     "water_temperature": 24.7,
                     "water_pressure": 1.61,
                 },
@@ -2408,7 +2408,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "flame_state": False,
                 },
                 "sensors": {
-                    "outdoor_temperature": 14.0,
+                    "local_outdoor_temperature": 14.0,
                     "water_temperature": 22.8,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 0.0,
