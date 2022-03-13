@@ -826,7 +826,7 @@ class SmileHelper:
                     self._cooling_activation_outdoor_temp = data.get(measurement)
                 if measurement == "cooling_deactivation_threshold":
                     self._cooling_deactivation_threshold = data.get(measurement)
-                if measurement == "outdoor_temperature":
+                if measurement == "local_outdoor_temperature":
                     self._outdoor_temp = data.get(measurement)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
