@@ -290,6 +290,9 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._appl_data: dict[str, Any] = {}
         self._appliances: etree | None = None
+        self._anna_cooling_present: bool = False
+        self._cooling_activation_outdoor_temp: float | None = None
+        self._cooling_deactivation_threshold: float | None = None
         self._cooling_present = False
         self._devices: dict[str, str] = {}
         self._domain_objects: etree | None = None
@@ -816,7 +819,13 @@ class SmileHelper:
                     appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
-                # Anna: use the local outdoor temperature as reference for turning cooling on/off
+                # Anna: save cooling-related measurements for later use
+                # Use the local outdoor temperature as reference for turning cooling on/off
+                if measurement == "cooling_activation_outdoor_temperature":
+                    self._anna_cooling_present = self._cooling_present = True
+                    self._cooling_activation_outdoor_temp = data.get(measurement)
+                if measurement == "cooling_deactivation_threshold":
+                    self._cooling_deactivation_threshold = data.get(measurement)
                 if measurement == "outdoor_temperature":
                     self._outdoor_temp = data.get(measurement)
 
@@ -838,7 +847,7 @@ class SmileHelper:
                     continue
 
                 data[measurement] = format_measure(
-                    t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT]
+                    t_function.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
         return data

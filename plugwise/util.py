@@ -18,6 +18,7 @@ from .constants import (
     LOGADDR_OFFSET,
     PERCENTAGE,
     PLUGWISE_EPOCH,
+    TEMP_CELSIUS,
     UTF8_DECODE,
     VOLUME_CUBIC_METERS,
 )
@@ -98,6 +99,8 @@ def format_measure(measure: str, unit: str) -> float | int | bool:
     """Format measure to correct type."""
     try:
         measure = int(measure)
+        if unit == TEMP_CELSIUS:
+            measure = float(measure)
     except ValueError:
         if unit == PERCENTAGE:
             if 0 < float(measure) <= 1:

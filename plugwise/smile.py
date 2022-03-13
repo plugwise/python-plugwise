@@ -91,6 +91,20 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
+        # Anna: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        if self._anna_cooling_present:
+            if (
+                not self.cooling_active
+                and self._outdoor_temp > self._cooling_activation_outdoor_temp
+            ):
+                self.cooling_active = True
+            if (
+                self.cooling_active
+                and self._outdoor_temp < self._cooling_deactivation_threshold
+            ):
+                self.cooling_active = False
+
         # Don't show cooling_state when no cooling present
         for _, device in self.gw_devices.items():
             if (
@@ -160,19 +174,6 @@ class SmileData(SmileHelper):
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
-
-        # Anna: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if "cooling_activation_outdoor_temperature" in device_data:
-            self._cooling_present = True
-            if not self.cooling_active and self._outdoor_temp > device_data.get(
-                "cooling_activation_outdoor_temperature"
-            ):
-                self.cooling_active = True
-            if self.cooling_active and self._outdoor_temp < device_data.get(
-                "cooling_deactivation_threshold"
-            ):
-                self.cooling_active = False
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
