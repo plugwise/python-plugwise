@@ -45,7 +45,7 @@ http://{ip_of_your_smile}/core/modules
 
 Don't commit test-data in `tests` that shouldn't be available to 'the internet'.
 To prevent this we've included a pre-commit hook that checks and validates that no private information is there (but do double-check yourselves!)
-See 'pre-commit.sh' for details
+See 'scripts/pre-commit.sh' for details
 
 ### Excerpt:
 
