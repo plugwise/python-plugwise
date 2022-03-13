@@ -417,8 +417,6 @@ DEVICE_MEASUREMENTS = {
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Specific for an Anna
     "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
-    # Outdoor temperature from APPLIANCES - present for a heatpump
-    "outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Schedule temperature - only present for a legacy Anna or an Anna v3
     "schedule_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Specific for an Anna with heatpump extension installed
@@ -488,6 +486,11 @@ HEATER_CENTRAL_MEASUREMENTS = {
     "intended_boiler_state": {
         ATTR_NAME: "heating_state",
         ATTR_UNIT_OF_MEASUREMENT: None,
+    },
+    # Outdoor temperature from APPLIANCES - present for a heatpump
+    "outdoor_temperature": {
+        ATTR_NAME: "local_outdoor_temperature",
+        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
 }
 
