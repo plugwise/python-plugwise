@@ -36,7 +36,6 @@ Either use wget/curl or use your 'developer view' from your browser to copy the 
  
 ```
 http://{ip_of_your_smile}/core/appliances
-http://{ip_of_your_smile}/core/direct_objects
 http://{ip_of_your_smile}/core/domain_objects
 http://{ip_of_your_smile}/core/locations
 http://{ip_of_your_smile}/core/modules
@@ -63,7 +62,7 @@ See 'pre-commit.sh' for details
 ### Obfuscating mac-addresses
 
 We used to obfuscate them as they weren't used within our module nor HomeAssistant.
-With 0.16.4 this was changed as such we recommend leaving them in, if you do wish to obfuscate
+From v0.16.4 this was changed as such we recommend leaving them in, if you do wish to obfuscate
 Note: Zigbee mac addresses are 64bit (not 48bit like Ethernet mac addresses)
 
 Prefix: 
