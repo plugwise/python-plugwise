@@ -2215,7 +2215,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "heating_state": True,
                 },
                 "sensors": {
-                    "lokal_outdoor_temperature": 3.0,
+                    "local_outdoor_temperature": 3.0,
                     "water_temperature": 29.1,
                     "water_pressure": 1.57,
                 },
