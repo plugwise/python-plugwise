@@ -574,6 +574,7 @@ SENSORS = [
     "humidity",
     "illuminance",
     "intended_boiler_temperature",
+    "local_outdoor_temperature",
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
