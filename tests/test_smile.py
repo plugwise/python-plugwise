@@ -2152,7 +2152,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling(self):
-        """Test a Anna with Elga setup in cooling mode."""
+        """
+        Test an Anna with Elga setup in cooling mode.
+        This test also covers the situation that the operation-mode it switched
+        from heating to cooliing due to the outdoor temperature rising above the
+        cooling_activation_outdoor_temperature threshold.
+        """
         testdata = {
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
@@ -2205,7 +2210,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling_to_off(self):
-        """Test a Anna with Elga setup in cooling mode, to cooling off ."""
+        """
+        This test covers the situation that the operation-mode it switched back
+        from cooling to heating due to the outdoor temperature dropping below the
+        cooling_deactivation_threshold.
+        """
         testdata = {
             # Anna
             "3cb70739631c4d17a86b8b12e8a5161b": {
