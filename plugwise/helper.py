@@ -877,7 +877,7 @@ class SmileHelper:
 
         # Elga doesn't use intended_cental_heating_state to show the generic heating state
         if "c_heating_state" in data:
-            if "heating_state" in data:
+            if self._anna_cooling_present and "heating_state" in data:
                 if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
             data.pop("c_heating_state")
