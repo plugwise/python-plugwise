@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.16.9a0 - Smile: bugfix
+- Fix for https://github.com/plugwise/plugwise-beta/issues/250
+
 # v0.16.8 - Smile: bugfixes, continued
 - Fix for https://github.com/home-assistant/core/issues/68003
 - Refix solution for #158 
