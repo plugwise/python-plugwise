@@ -1,7 +1,8 @@
 # Changelog
 
-# v0.16.9a0 - Smile: bugfix
+# v0.16.9a1 - Smile: bugfix and improve
 - Fix for https://github.com/plugwise/plugwise-beta/issues/250
+- Rename heatpump outdoor_temperature sensor to outdoor_unit_temperature sensor
 
 # v0.16.8 - Smile: bugfixes, continued
 - Fix for https://github.com/home-assistant/core/issues/68003
