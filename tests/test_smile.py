@@ -940,6 +940,102 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_v4_dhw(self):
+        """Test an Anna firmware 4 setup without a boiler."""
+        testdata = {
+            # Anna
+            "01b85360fdd243d0aaad4d6ac2a5ba7e": {
+                "class": "thermostat",
+                "fw": "2018-02-08T11:15:53+01:00",
+                "location": "eb5309212bf5407bb143e5bfa3b18aee",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
+                "active_preset": "home",
+                "presets": {
+                    "vacation": [15.0, 28.0],
+                    "no_frost": [10.0, 30.0],
+                    "away": [17.5, 25.0],
+                    "asleep": [17.0, 24.0],
+                    "home": [20.5, 22.0],
+                },
+                "available_schedules": ["Standaard", "Thuiswerken"],
+                "selected_schedule": "None",
+                "schedule_temperature": 20.5,
+                "last_used": "Standaard",
+                "mode": "heat",
+                "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
+            },
+            # Central
+            "cd0e6156b1f04d5f952349ffbe397481": {
+                "class": "heater_central",
+                "fw": None,
+                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                "model": "2.32",
+                "name": "OpenTherm",
+                "vendor": "Bosch Thermotechniek B.V.",
+                "binary_sensors": {
+                    "dhw_state": True,
+                    "flame_state": True,
+                    "heating_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 52.0,
+                    "intended_boiler_temperature": 48.6,
+                    "modulation_level": 0.0,
+                    "return_temperature": 42.0,
+                    "water_pressure": 2.1,
+                },
+                "switches": {"dhw_cm_switch": False},
+            },
+            # Gateway
+            "0466eae8520144c78afb29628384edeb": {
+                "class": "gateway",
+                "fw": "4.0.15",
+                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise B.V.",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 7.44},
+            },
+        }
+
+        self.smile_setup = "anna_v4_dhw"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.0.15"
+        _LOGGER.info(" # Assert no legacy")
+        assert not smile._smile_legacy
+
+        await self.device_test(smile, testdata)
+        assert not self.notifications
+
+        await self.tinker_thermostat(
+            smile,
+            "eb5309212bf5407bb143e5bfa3b18aee",
+            good_schemas=["Standaard", "Thuiswerken"],
+        )
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.tinker_thermostat(
+            smile,
+            "eb5309212bf5407bb143e5bfa3b18aee",
+            good_schemas=["Standaard", "Thuiswerken"],
+            unhappy=True,
+        )
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_v4_no_tag(self):
         """Test an Anna firmware 4 setup without a boiler - no presets."""
         testdata = {
