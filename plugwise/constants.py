@@ -489,7 +489,7 @@ HEATER_CENTRAL_MEASUREMENTS = {
     },
     # Outdoor temperature from APPLIANCES - present for a heatpump
     "outdoor_temperature": {
-        ATTR_NAME: "outdoor_unit_temperature",
+        ATTR_NAME: "outdoor_air_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
 }
@@ -577,8 +577,8 @@ SENSORS = [
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
+    "outdoor_air_temperature",
     "outdoor_temperature",
-    "outdoor_unit_temperature",
     "return_temperature",
     "setpoint",
     "temperature_difference",
