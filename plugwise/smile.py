@@ -193,14 +193,17 @@ class SmileData(SmileHelper):
 
         # Generic
         if details.get("class") == "gateway" or dev_id == self.gateway_id:
-            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             if self.smile_type == "thermostat":
+                # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+                # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
                 outdoor_temperature = self._object_value(
                     self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
+
+                # Show the allowed regulation modes
+                device_data["regulation_modes"] = self._allowed_modes
 
             # Get P1 data from LOCATIONS
             power_data = self._power_data_from_location(details.get("location"))
