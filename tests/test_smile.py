@@ -571,6 +571,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert_state = True
             warning = ""
             if mode[0] == "!":
+                assert_state = False
                 warning = " Negative test"
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
