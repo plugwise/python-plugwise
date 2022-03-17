@@ -441,6 +441,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, Any]] = {
     "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
 # Heater Central related measurements
@@ -584,6 +585,7 @@ SENSORS: Final[list[str]] = [
     "net_electricity_point",
     "outdoor_air_temperature",
     "outdoor_temperature",
+    "regulation_mode",
     "return_temperature",
     "setpoint",
     "temperature_difference",
