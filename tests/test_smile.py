@@ -569,6 +569,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Toggle regulation_mode to test functionality."""
         for mode in ["bleeding_cold", "heating", "!bogus"]:
             assert_state = True
+            if unhappy:
+                assert_state = False
             warning = ""
             if mode[0] == "!":
                 assert_state = False
