@@ -126,7 +126,7 @@ def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
             return schema_list[i][2]
 
 
-def types_finder(data: etree) -> set:
+def types_finder(data: etree) -> set[str]:
     """Detect types within locations from logs."""
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
@@ -414,7 +414,7 @@ class SmileHelper:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
         Collect requested info from MODULES.
         """
-        model_data = {
+        model_data: dict[str, Any] = {
             "contents": False,
             "vendor_name": None,
             "vendor_model": None,
@@ -1018,8 +1018,8 @@ class SmileHelper:
         Collect amount of open valves indicating active direct heating.
         For cases where the heat is provided from an external shared source (city heating).
         """
-        loc_found = 0
-        open_valve_count = 0
+        loc_found: int = 0
+        open_valve_count: int = 0
         for appliance in self._appliances.findall("./appliance"):
             locator = './logs/point_log[type="valve_position"]/period/measurement'
             if (appl_loc := appliance.find(locator)) is not None:
@@ -1077,8 +1077,8 @@ class SmileHelper:
             return
 
         search = self._locations
-        log_list = ["point_log", "cumulative_log", "interval_log"]
-        peak_list = ["nl_peak", "nl_offpeak"]
+        log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
+        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff"
         if self._smile_legacy:
             t_string = "tariff_indicator"
@@ -1153,7 +1153,7 @@ class SmileHelper:
         Obtain the available schemas/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available = ["None"]
+        available: list[str] = ["None"]
         last_used: str | None = None
         rule_ids: dict[str] = {}
         schedule_temperature: str | None = None
@@ -1233,7 +1233,7 @@ class SmileHelper:
 
         return last_used
 
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | bool | None:
+    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
         Obtain the value/state for the given object from DOMAIN_OBJECTS.
         """
