@@ -290,7 +290,7 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._appl_data: dict[str, Any] = {}
         self._appliances: etree | None = None
-        self._allowed_modes: list[str] | None = None
+        self._allowed_modes: list[str] = []
         self._anna_cooling_present: bool = False
         self._cooling_activation_outdoor_temp: float | None = None
         self._cooling_deactivation_threshold: float | None = None
