@@ -642,7 +642,7 @@ class Smile(SmileComm, SmileData):
 
     async def set_regulation_mode(self, mode: str) -> bool:
         """Set the heating regulation mode."""
-        if self._allowed_modes is None or mode not in self._allowed_modes:
+        if mode not in self._allowed_modes:
             return False
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
