@@ -642,7 +642,7 @@ class Smile(SmileComm, SmileData):
 
     async def set_regulation_mode(self, mode: str) -> bool:
         """Set the heating regulation mode."""
-        if mode not in self._allowed_modes:
+        if self._allowed_modes is None or mode not in self._allowed_modes:
             return False
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
@@ -652,7 +652,6 @@ class Smile(SmileComm, SmileData):
         data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)
-
         return True
 
     async def delete_notification(self) -> bool:
