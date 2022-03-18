@@ -567,7 +567,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     async def tinker_regulation_mode(smile):
         """Toggle regulation_mode to test functionality."""
-        for mode in ["bleeding_cold", "heating", "!bogus"]:
+        for mode in ["off", "heating", "bleeding_cold", "!bogus"]:
             assert_state = True
             warning = ""
             if mode[0] == "!":
