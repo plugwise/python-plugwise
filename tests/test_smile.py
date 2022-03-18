@@ -564,32 +564,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat_preset(smile, loc_id, unhappy)
         await self.tinker_thermostat_schema(smile, loc_id, good_schemas, unhappy)
 
-    @pytest.mark.asyncio
-    async def tinker_regulation_mode(self, smile, unhappy=False):
+    @staticmethod
+    async def tinker_regulation_mode(smile):
         """Toggle regulation_mode to test functionality."""
         for mode in ["bleeding_cold", "heating", "!bogus"]:
             assert_state = True
-            if unhappy:
-                assert_state = False
             warning = ""
             if mode[0] == "!":
                 assert_state = False
                 warning = " Negative test"
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
-            try:
-                mode_change = await smile.set_regulation_mode(mode)
-                assert mode_change == assert_state
-                _LOGGER.info("  + worked as intended")
-            except (
-                pw_exceptions.ErrorSendingCommandError,
-                pw_exceptions.ResponseError,
-            ):
-                if unhappy:
-                    _LOGGER.info("  + failed as expected")
-                else:  # pragma: no cover
-                    _LOGGER.info("  - failed unexpectedly")
-                    raise self.UnexpectedError
+            mode_change = await smile.set_regulation_mode(mode)
+            assert mode_change == assert_state
+            _LOGGER.info("  + worked as intended")
 
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
@@ -1548,11 +1536,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.tinker_regulation_mode(smile)
 
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.tinker_regulation_mode(smile, unhappy=True)
         await smile.close_connection()
         await self.disconnect(server, client)
 
