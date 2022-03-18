@@ -817,9 +817,12 @@ class SmileHelper:
                 except KeyError:
                     pass
 
-                data[measurement] = format_measure(
-                    appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
-                )
+                data[measurement] = appl_p_loc.text
+                # measurements with states "on" or "off" that need to be passed directly
+                if measurement not in ["regulation_mode"]:
+                    data[measurement] = format_measure(
+                        appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
+                    )
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
