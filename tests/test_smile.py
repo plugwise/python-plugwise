@@ -1463,9 +1463,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Adam",
                 "vendor": "Plugwise B.V.",
                 "zigbee_mac_address": "ABCD012345670101",
+                "regulation_mode": "heating",
                 "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
                 "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"regulation_mode": "heating", "outdoor_temperature": -1.25},
+                "sensors": {"outdoor_temperature": -1.25},
             },
             # Central
             "056ee145a816487eaa69243c3280f8bf": {
