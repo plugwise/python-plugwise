@@ -585,7 +585,6 @@ SENSORS: Final[list[str]] = [
     "net_electricity_point",
     "outdoor_air_temperature",
     "outdoor_temperature",
-    "regulation_mode",
     "return_temperature",
     "setpoint",
     "temperature_difference",
