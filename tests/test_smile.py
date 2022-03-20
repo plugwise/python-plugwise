@@ -1548,6 +1548,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.tinker_regulation_mode(smile)
 
+        await self.tinker_max_boiler_temp(smile)
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
