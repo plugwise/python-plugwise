@@ -618,6 +618,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "4.21",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
+                "maximum_boiler_temperature": 50.0,
                 "binary_sensors": {"flame_state": True, "heating_state": True},
                 "sensors": {
                     "water_temperature": 23.6,
@@ -1476,6 +1477,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": None,
+                "maximum_boiler_temperature": 60.0,
                 "binary_sensors": {
                     "dhw_state": False,
                     "flame_state": False,
