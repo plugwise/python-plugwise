@@ -579,6 +579,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert mode_change == assert_state
             _LOGGER.info("  + worked as intended")
 
+    @staticmethod
+    async def tinker_max_boiler_temp(smile):
+        """Change max boiler temp setpoint to test functionality."""
+        new_temp = 60.0
+        _LOGGER.info("- Adjusting temperature to %s", new_temp)
+        temp_change = await smile.set_max_boiler_temperature(new_temp)
+        assert temp_change
+        _LOGGER.info("  + worked as intended")
+
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
