@@ -583,15 +583,16 @@ class Smile(SmileComm, SmileData):
         """Set the max. Boiler Temperature on the Central heating boiler."""
         temperature = str(temperature)
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
-        therm_funcs = self._appliances.findall(locator)
-        for thf in therm_funcs:
-            if thf.find("type").text == "maximum_boiler_temperature":
-                therm_func_id = thf.attrib["id"]
+        th_func = self._appliances.find(locator)
+        if th_func.find("type").text == "maximum_boiler_temperature":
+            thermostat_id = th_func.attrib["id"]
+        else:
+            return False
 
-        uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={therm_func_id}"
+        uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
         data = f"<thermostat_functionality><setpoint>{temperature}</setpoint></thermostat_functionality>"
 
-        await self._request(uri, method="post", data=data)
+        await self._request(uri, method="put", data=data)
         return True
 
     async def _set_groupswitch_member_state(
