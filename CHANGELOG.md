@@ -1,5 +1,10 @@
 # Changelog
 
+# v0.17.0 - Smile: add more outputs
+- Add regulation_mode and regulation_modes to gateway dict, add related set-function
+- Add max_boiler_temperature to heater_central dict, add related set-function
+- Improve typing hints
+
 # v0.16.9 - Smile: bugfix and improve
 - Fix for https://github.com/plugwise/plugwise-beta/issues/250
 - Rename heatpump outdoor_temperature sensor to outdoor_air_temperature sensor

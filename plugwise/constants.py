@@ -441,6 +441,8 @@ DEVICE_MEASUREMENTS: Final[dict[str, Any]] = {
     "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: None},
 }
 
 # Heater Central related measurements

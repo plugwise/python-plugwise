@@ -193,14 +193,18 @@ class SmileData(SmileHelper):
 
         # Generic
         if details.get("class") == "gateway" or dev_id == self.gateway_id:
-            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             if self.smile_type == "thermostat":
+                # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+                # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
                 outdoor_temperature = self._object_value(
                     self._home_location, "outdoor_temperature"
                 )
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
+
+                if self.smile_name == "Adam":
+                    # Show the allowed regulation modes
+                    device_data["regulation_modes"] = self._allowed_modes
 
             # Get P1 data from LOCATIONS
             power_data = self._power_data_from_location(details.get("location"))
@@ -565,12 +569,24 @@ class Smile(SmileComm, SmileData):
 
     async def set_temperature(self, loc_id: str, temperature: str) -> bool:
         """Set the given Temperature on the relevant Thermostat."""
-        temperature = str(temperature)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
             f"{temperature}</setpoint></thermostat_functionality>"
         )
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def set_max_boiler_temperature(self, temperature: str) -> bool:
+        """Set the max. Boiler Temperature on the Central heating boiler."""
+        locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
+        th_func = self._appliances.find(locator)
+        if th_func.find("type").text == "maximum_boiler_temperature":
+            thermostat_id = th_func.attrib["id"]
+
+        uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
+        data = f"<thermostat_functionality><setpoint>{temperature}</setpoint></thermostat_functionality>"
 
         await self._request(uri, method="put", data=data)
         return True
@@ -632,6 +648,20 @@ class Smile(SmileComm, SmileData):
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
                 return False
+
+        await self._request(uri, method="put", data=data)
+        return True
+
+    async def set_regulation_mode(self, mode: str) -> bool:
+        """Set the heating regulation mode."""
+        if mode not in self._allowed_modes:
+            return False
+
+        uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
+        duration = ""
+        if "bleeding" in mode:
+            duration = "<duration>300</duration>"
+        data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)
         return True

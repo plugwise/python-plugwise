@@ -290,6 +290,7 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._appl_data: dict[str, Any] = {}
         self._appliances: etree | None = None
+        self._allowed_modes: list[str] = []
         self._anna_cooling_present: bool = False
         self._cooling_activation_outdoor_temp: float | None = None
         self._cooling_deactivation_threshold: float | None = None
@@ -500,6 +501,7 @@ class SmileHelper:
                     for mode in search.find("allowed_modes"):
                         mode_list.append(mode.text)
                     self._cooling_present = "cooling" in mode_list
+                    self._allowed_modes = mode_list
 
             return appl
 
@@ -815,9 +817,12 @@ class SmileHelper:
                 except KeyError:
                     pass
 
-                data[measurement] = format_measure(
-                    appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
-                )
+                data[measurement] = appl_p_loc.text
+                # measurements with states "on" or "off" that need to be passed directly
+                if measurement not in ["regulation_mode"]:
+                    data[measurement] = format_measure(
+                        appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
+                    )
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off

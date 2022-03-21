@@ -564,6 +564,30 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat_preset(smile, loc_id, unhappy)
         await self.tinker_thermostat_schema(smile, loc_id, good_schemas, unhappy)
 
+    @staticmethod
+    async def tinker_regulation_mode(smile):
+        """Toggle regulation_mode to test functionality."""
+        for mode in ["off", "heating", "bleeding_cold", "!bogus"]:
+            assert_state = True
+            warning = ""
+            if mode[0] == "!":
+                assert_state = False
+                warning = " Negative test"
+                mode = mode[1:]
+            _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
+            mode_change = await smile.set_regulation_mode(mode)
+            assert mode_change == assert_state
+            _LOGGER.info("  + worked as intended")
+
+    @staticmethod
+    async def tinker_max_boiler_temp(smile):
+        """Change max boiler temp setpoint to test functionality."""
+        new_temp = 60.0
+        _LOGGER.info("- Adjusting temperature to %s", new_temp)
+        temp_change = await smile.set_max_boiler_temperature(new_temp)
+        assert temp_change
+        _LOGGER.info("  + worked as intended")
+
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
@@ -603,6 +627,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "4.21",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
+                "maximum_boiler_temperature": 50.0,
                 "binary_sensors": {"flame_state": True, "heating_state": True},
                 "sensors": {
                     "water_temperature": 23.6,
@@ -1447,6 +1472,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Adam",
                 "name": "Adam",
                 "vendor": "Plugwise B.V.",
+                "zigbee_mac_address": "ABCD012345670101",
+                "regulation_mode": "heating",
+                "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": -1.25},
             },
@@ -1458,6 +1486,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": None,
+                "maximum_boiler_temperature": 60.0,
                 "binary_sensors": {
                     "dhw_state": False,
                     "flame_state": False,
@@ -1516,6 +1545,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile, "2568cc4b9c1e401495d4741a5f89bee1"
         )
         assert not switch_change
+
+        await self.tinker_regulation_mode(smile)
+
+        await self.tinker_max_boiler_temp(smile)
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
