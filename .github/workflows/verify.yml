@@ -5,7 +5,6 @@ name: Latest commit
 
 env:
   CACHE_VERSION: 7
-  DEFAULT_PYTHON: "3.10"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
 
 on:
@@ -26,12 +25,12 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
+          python-version: ${{ matrix.python-version }}
+      - name: Restore base Python ${{ matrix.python-version }} virtual environment
         id: cache-venv
         uses: actions/cache@v3
         with:
@@ -80,12 +79,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: false
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
+          python-version: ${{ matrix.python-version }}
+      - name: Restore base Python ${{ matrix.python-version }} virtual environment
         id: cache-venv
         uses: actions/cache@v3
         with:
@@ -98,7 +97,7 @@ jobs:
       - name: Fail job if Python cache restore failed
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
-          echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
+          echo "Failed to restore Python ${{ matrix.python-version }} virtual environment from cache"
           exit 1
       - name: Run black --check --exclude venv .
         run: |
@@ -126,12 +125,12 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
+          python-version: ${{ matrix.python-version }}
+      - name: Restore base Python ${{ matrix.python-version }} virtual environment
         id: cache-venv
         uses: actions/cache@v3
         with:
@@ -144,7 +143,7 @@ jobs:
       - name: Fail job if Python cache restore failed
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
-          echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
+          echo "Failed to restore Python ${{ matrix.python-version }} virtual environment from cache"
           exit 1
       - name: Restore pre-commit environment from cache
         id: cache-precommit
@@ -264,12 +263,12 @@ jobs:
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v3
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
+          python-version: ${{ matrix.python-version }}
+      - name: Restore base Python ${{ matrix.python-version }} virtual environment
         id: cache-venv
         uses: actions/cache@v3
         with:
@@ -302,12 +301,12 @@ jobs:
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v3
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
+          python-version: ${{ matrix.python-version }}
+      - name: Restore base Python ${{ matrix.python-version }} virtual environment
         id: cache-venv
         uses: actions/cache@v3
         with:
@@ -340,12 +339,12 @@ jobs:
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v3
-      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      - name: Set up Python ${{ matrix.python-version }}
         id: python
         uses: actions/setup-python@v3
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
+          python-version: ${{ matrix.python-version }}
+      - name: Restore base Python ${{ matrix.python-version }} virtual environment
         id: cache-venv
         uses: actions/cache@v3
         with:
