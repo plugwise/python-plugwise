@@ -21,7 +21,7 @@ jobs:
     name: Prepare
     strategy:
       matrix:
-        python-version: [ "3.10", "3.9" ]
+        python-version: [ "3.9" ]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
@@ -73,7 +73,7 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        python-version: [ "3.10" ]
+        python-version: [ "3.9" ]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
@@ -121,7 +121,7 @@ jobs:
     needs: black
     strategy:
       matrix:
-        python-version: [ "3.10" ]
+        python-version: [ "3.9" ]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
@@ -175,7 +175,7 @@ jobs:
     needs: commitcheck
     strategy:
       matrix:
-        python-version: [ "3.10", "3.9" ]
+        python-version: [ "3.9" ]
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
@@ -214,7 +214,7 @@ jobs:
     needs: prepare-test-cache
     strategy:
       matrix:
-        python-version: [ "3.10", "3.9" ]
+        python-version: [ "3.9" ]
 
     steps:
       - name: Check out committed code
