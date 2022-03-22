@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-pyversions=(3.10 3.9)
+pyversions=("3.10" "3.9")
 my_path=$(git rev-parse --show-toplevel)
 my_venv=${my_path}/venv
 
