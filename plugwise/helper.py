@@ -623,9 +623,7 @@ class SmileHelper:
 
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
         # Legacy Anna only:
-        boiler_state = self._appliances.find(
-            ".//logs/point_log[type='boiler_state']"
-        )
+        boiler_state = self._appliances.find(".//logs/point_log[type='boiler_state']")
         # Anna, Adam:
         c_heating_state = self._appliances.find(
             ".//logs/point_log[type='central_heating_state']"
