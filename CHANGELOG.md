@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.17.1 - Smile: bugfix for https://github.com/home-assistant/core/issues/68621
+
 # v0.17.0 - Smile: add more outputs
 - Add regulation_mode and regulation_modes to gateway dict, add related set-function
 - Add max_boiler_temperature to heater_central dict, add related set-function

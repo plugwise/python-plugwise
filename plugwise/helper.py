@@ -621,14 +621,17 @@ class SmileHelper:
                     }
                 )
 
-        # The presence of either indicates a local active device, e.g. heat-pump or gas-fired heater
+        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
+        # Legacy Anna only:
+        boiler_state = self._appliances.find(".//logs/point_log[type='boiler_state']")
+        # Anna, Adam:
         c_heating_state = self._appliances.find(
             ".//logs/point_log[type='central_heating_state']"
         )
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
-        if c_heating_state is not None:
+        if boiler_state is not None or c_heating_state is not None:
             self._opentherm_device = ot_fault_code is not None
             self._on_off_device = ot_fault_code is None
 
