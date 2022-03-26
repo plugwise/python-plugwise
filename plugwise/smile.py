@@ -517,7 +517,7 @@ class Smile(SmileComm, SmileData):
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
             if state == "off":
-                contexts = "<contexts></contexts>"
+                contexts = "<contexts> </contexts>"
             if state == "on":
                 contexts = f'<contexts><context><zone><location id="{loc_id}" /></zone></context></contexts>'
         else:  # Adam
