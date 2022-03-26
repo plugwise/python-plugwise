@@ -511,24 +511,37 @@ class Smile(SmileComm, SmileData):
             return False
 
         schema_rule_id: str = next(iter(schema_rule))
-        info = ""
-        if state == "on":
-            info = f'<context><zone><location id="{loc_id}" /></zone></context>'
 
-        template = (
-            '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
-        )
         if self.smile_name != "Adam":
             locator = f'.//*[@id="{schema_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
+            if state == "off":
+                contexts = "<contexts></contexts>"
+            if state == "on":
+                contexts = f'<contexts><context><zone><location id="{loc_id}" /></zone></context></contexts>'
+        else:  # Adam
+            template = '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
+            locator = f'.//*[@id="{schema_rule_id}"]/contexts'
+            contexts = self._domain_objects.find(locator)
+            locator = f'.//*[@id="{loc_id}"].../...'
+            subject = contexts.find(locator)
+            if subject is None:
+                subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+                subject = etree.fromstring(subject)
+
+            if state == "off":
+                contexts.remove(subject)
+            if state == "on":
+                contexts.append(subject)
+
+            contexts = etree.tostring(contexts, encoding="unicode").rstrip()
 
         uri = f"{RULES};id={schema_rule_id}"
         data = (
             f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name>'
-            f"{template}<contexts>{info}</contexts></rule></rules>"
+            f"{template}{contexts}</rule></rules>"
         )
-
         await self._request(uri, method="put", data=data)
 
         return True
