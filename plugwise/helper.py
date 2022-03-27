@@ -1194,7 +1194,6 @@ class SmileHelper:
                     temp[directive.attrib["time"]] = float(entry.get("setpoint"))
                 count += 1
 
-            LOGGER.debug("HOI 1 %s, %s", count, name)
             if count > 1:
                 schedule = temp
             else:
@@ -1208,7 +1207,6 @@ class SmileHelper:
                     self._last_active[location] = selected
                 schedules[name] = schedule
 
-        LOGGER.debug("HOI 2 %s", schedules)
         if schedules:
             available.remove("None")
             tmp_last_used = self._last_used_schedule(location, rule_ids)
