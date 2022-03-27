@@ -5,6 +5,7 @@
 - Improve tracking of the last used schedule, needed due to the changes in set_schedule_state()
 - Improve invalid schedule handling
 - Update & add related testcases
+- Naming cleanup
 
 # v0.17.1 - Smile: bugfix for https://github.com/home-assistant/core/issues/68621
 
