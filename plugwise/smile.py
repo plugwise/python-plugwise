@@ -522,8 +522,11 @@ class Smile(SmileComm, SmileData):
 
         locator = f'.//*[@id="{schema_rule_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
-        subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
-        subject = etree.fromstring(subject)
+        locator = f'.//*[@id="{loc_id}"].../...'
+        subject = contexts.find(locator)
+        if subject is None:
+            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+            subject = etree.fromstring(subject)
 
         if state == "off":
             self._last_active[loc_id] = name
