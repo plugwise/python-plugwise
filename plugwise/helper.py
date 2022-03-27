@@ -91,14 +91,14 @@ def check_model(name: str, v_name: str) -> str:
         return name
 
 
-def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
-    """Helper-function for schemas().
-    Obtain the schedule temperature of the schema/schedule.
+def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
+    """Helper-function for schedules().
+    Obtain the schedule temperature of the schedule/schedule.
     """
     if name == "None":
         return  # pragma: no cover
 
-    schema_list: list[list[int, dt.time, float]] | None = []
+    schedule_list: list[list[int, dt.time, float]] | None = []
     for period, temp in schedules[name].items():
         tmp_list: list[int, dt.time, float] = []
         moment, dummy = period.split(",")
@@ -106,18 +106,18 @@ def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
         day_nr = DAYS.get(moment[0], "None")
         start_time = dt.datetime.strptime(moment[1], "%H:%M").time()
         tmp_list.extend((day_nr, start_time, temp))
-        schema_list.append(tmp_list)
+        schedule_list.append(tmp_list)
 
-    length = len(schema_list)
-    schema_list = sorted(schema_list)
+    length = len(schedule_list)
+    schedule_list = sorted(schedule_list)
     for i in range(length):
         j = (i + 1) % (length - 1)
         now = dt.datetime.now().time()
         today = dt.datetime.now().weekday()
-        if today in [schema_list[i][0], schema_list[j][0]] and in_between(
-            now, schema_list[i][1], schema_list[j][1]
+        if today in [schedule_list[i][0], schedule_list[j][0]] and in_between(
+            now, schedule_list[i][1], schedule_list[j][1]
         ):
-            return schema_list[i][2]
+            return schedule_list[i][2]
 
 
 def types_finder(data: etree) -> set[str]:
@@ -765,31 +765,31 @@ class SmileHelper:
         """Helper-function for _presets().
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
-        schema_ids: dict[str] = {}
+        schedule_ids: dict[str] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             if rule.find(locator) is not None:
-                schema_ids[rule.attrib["id"]] = loc_id
+                schedule_ids[rule.attrib["id"]] = loc_id
             else:
-                schema_ids[rule.attrib["id"]] = None
+                schedule_ids[rule.attrib["id"]] = None
 
-        return schema_ids
+        return schedule_ids
 
     def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str]:
-        """Helper-function for _presets(), _schemas() and _last_active_schema().
+        """Helper-function for _presets(), _schedules() and _last_active_schedule().
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
-        schema_ids: dict[str] = {}
+        schedule_ids: dict[str] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall("./rule"):
             if rule.find(locator1) is not None:
                 if rule.find(locator2) is not None:
-                    schema_ids[rule.attrib["id"]] = loc_id
+                    schedule_ids[rule.attrib["id"]] = loc_id
                 else:
-                    schema_ids[rule.attrib["id"]] = None
+                    schedule_ids[rule.attrib["id"]] = None
 
-        return schema_ids
+        return schedule_ids
 
     def _appliance_measurements(
         self, appliance: etree, data: dict[str, Any], measurements: dict[str, Any]
@@ -1121,18 +1121,18 @@ class SmileHelper:
             return
         return active_rule.attrib["icon"]
 
-    def _schemas_legacy(
+    def _schedules_legacy(
         self, avail: list[str], sched_temp: str, sel: str
     ) -> tuple[str, ...]:
-        """Helper-function for _schemas().
-        Collect available schemas/schedules for the legacy thermostat.
+        """Helper-function for _schedules().
+        Collect available schedules/schedules for the legacy thermostat.
         """
         name: str | None = None
-        schemas: dict[str] = {}
+        schedules: dict[str] = {}
 
         search = self._domain_objects
-        for schema in search.findall("./rule"):
-            if rule_name := schema.find("name").text:
+        for schedule in search.findall("./rule"):
+            if rule_name := schedule.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
 
@@ -1143,16 +1143,16 @@ class SmileHelper:
             active = result.text == "on"
 
         if name is not None:
-            schemas[name] = active
+            schedules[name] = active
             avail = [name]
             if active:
                 sel = name
 
         return avail, sel, sched_temp, None
 
-    def _schemas(self, location: str) -> tuple[str, ...]:
+    def _schedules(self, location: str) -> tuple[str, ...]:
         """Helper-function for smile.py: _device_data_climate().
-        Obtain the available schemas/schedules. Adam: a schedule can be connected to more than one location.
+        Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available: list[str] = ["None"]
@@ -1164,7 +1164,7 @@ class SmileHelper:
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
-            return self._schemas_legacy(available, schedule_temperature, selected)
+            return self._schedules_legacy(available, schedule_temperature, selected)
 
         # Adam schedules, one schedule can be linked to various locations
         # self._last_active contains the locations and the active schedule name per location, or None
@@ -1197,7 +1197,7 @@ class SmileHelper:
             if count > 1:
                 schedule = temp
             else:
-                # Schema with less than 2 items
+                # Schedule with less than 2 items
                 LOGGER.debug("Invalid schedule, only one entry, ignoring.")
 
             if schedule:
@@ -1212,7 +1212,7 @@ class SmileHelper:
             tmp_last_used = self._last_used_schedule(location, rule_ids)
             if tmp_last_used in schedules:
                 last_used = tmp_last_used
-                schedule_temperature = schemas_schedule_temp(schedules, last_used)
+                schedule_temperature = schedules_schedule_temp(schedules, last_used)
 
         return available, selected, schedule_temperature, last_used
 
@@ -1230,20 +1230,20 @@ class SmileHelper:
             return  # pragma: no cover
 
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        schemas: dict[str] | None = {}
+        schedules: dict[str] | None = {}
 
         for rule_id in rule_ids:
-            schema_name = self._domain_objects.find(
+            schedule_name = self._domain_objects.find(
                 f'./rule[@id="{rule_id}"]/name'
             ).text
-            schema_date = self._domain_objects.find(
+            schedule_date = self._domain_objects.find(
                 f'./rule[@id="{rule_id}"]/modified_date'
             ).text
-            schema_time = parse(schema_date)
-            schemas[schema_name] = (schema_time - epoch).total_seconds()
+            schedule_time = parse(schedule_date)
+            schedules[schedule_name] = (schedule_time - epoch).total_seconds()
 
-        if schemas:
-            last_used = sorted(schemas.items(), key=lambda kv: kv[1])[-1][0]
+        if schedules:
+            last_used = sorted(schedules.items(), key=lambda kv: kv[1])[-1][0]
 
         return last_used
 
