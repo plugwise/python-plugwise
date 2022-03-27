@@ -524,7 +524,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_thermostat_schedule(
-        self, smile, loc_id, good_schedules=None, unhappy=False
+        self, smile, loc_id, state, good_schedules=None, unhappy=False
     ):
         if good_schedules != []:
             good_schedules.append("!VeryBogusScheduleNameThatNobodyEverUsesOrShouldUse")
@@ -538,7 +538,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
                     schedule_change = await smile.set_schedule_state(
-                        loc_id, new_schedule, "on"
+                        loc_id, new_schedule, state
                     )
                     assert schedule_change == assert_state
                     _LOGGER.info("  + failed as intended")
@@ -564,7 +564,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.tinker_thermostat_temp(smile, loc_id, unhappy)
         await self.tinker_thermostat_preset(smile, loc_id, unhappy)
-        await self.tinker_thermostat_schedule(smile, loc_id, good_schedules, unhappy)
+        await self.tinker_thermostat_schedule(
+            smile, loc_id, "on", good_schedules, unhappy
+        )
 
     @staticmethod
     async def tinker_regulation_mode(smile):
