@@ -162,11 +162,13 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        avail_schemas, sel_schema, sched_setpoint, last_active = self._schemas(loc_id)
-        device_data["available_schedules"] = avail_schemas
-        device_data["selected_schedule"] = sel_schema
+        avail_schedules, sel_schedule, sched_setpoint, last_active = self._schedules(
+            loc_id
+        )
+        device_data["available_schedules"] = avail_schedules
+        device_data["selected_schedule"] = sel_schedule
         if self._smile_legacy:
-            device_data["last_used"] = "".join(map(str, avail_schemas))
+            device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
             device_data["schedule_temperature"] = sched_setpoint
@@ -177,7 +179,7 @@ class SmileData(SmileHelper):
 
         # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
-        if sel_schema == "None":
+        if sel_schedule == "None":
             device_data["mode"] = "heat"
             if self._heater_id is not None and self.cooling_active:
                 device_data["mode"] = "cool"
@@ -474,25 +476,25 @@ class Smile(SmileComm, SmileData):
 
     async def _set_schedule_state_legacy(self, name: str, status: str) -> bool:
         """Helper-function for set_schedule_state()."""
-        schema_rule_id: str | None = None
+        schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
-                schema_rule_id = rule.attrib["id"]
+                schedule_rule_id = rule.attrib["id"]
 
-        if schema_rule_id is None:
+        if schedule_rule_id is None:
             return False
 
         state = "false"
         if status == "on":
             state = "true"
-        locator = f'.//*[@id="{schema_rule_id}"]/template'
+        locator = f'.//*[@id="{schedule_rule_id}"]/template'
         for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
 
-        uri = f"{RULES};id={schema_rule_id}"
+        uri = f"{RULES};id={schedule_rule_id}"
         data = (
             "<rules><rule"
-            f' id="{schema_rule_id}"><name><![CDATA[{name}]]></name><template'
+            f' id="{schedule_rule_id}"><name><![CDATA[{name}]]></name><template'
             f' id="{template_id}" /><active>{state}</active></rule></rules>'
         )
 
@@ -506,29 +508,41 @@ class Smile(SmileComm, SmileData):
         if self._smile_legacy:
             return await self._set_schedule_state_legacy(name, state)
 
-        schema_rule = self._rule_ids_by_name(name, loc_id)
-        if not schema_rule or schema_rule is None:
+        schedule_rule = self._rule_ids_by_name(name, loc_id)
+        if not schedule_rule or schedule_rule is None:
             return False
 
-        schema_rule_id: str = next(iter(schema_rule))
-        info = ""
-        if state == "on":
-            info = f'<context><zone><location id="{loc_id}" /></zone></context>'
+        schedule_rule_id: str = next(iter(schedule_rule))
 
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
         if self.smile_name != "Adam":
-            locator = f'.//*[@id="{schema_rule_id}"]/template'
+            locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
 
-        uri = f"{RULES};id={schema_rule_id}"
-        data = (
-            f'<rules><rule id="{schema_rule_id}"><name><![CDATA[{name}]]></name>'
-            f"{template}<contexts>{info}</contexts></rule></rules>"
-        )
+        locator = f'.//*[@id="{schedule_rule_id}"]/contexts'
+        contexts = self._domain_objects.find(locator)
+        locator = f'.//*[@id="{loc_id}"].../...'
+        subject = contexts.find(locator)
+        if subject is None:
+            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+            subject = etree.fromstring(subject)
 
+        if state == "off":
+            self._last_active[loc_id] = name
+            contexts.remove(subject)
+        if state == "on":
+            contexts.append(subject)
+
+        contexts = etree.tostring(contexts, encoding="unicode").rstrip()
+
+        uri = f"{RULES};id={schedule_rule_id}"
+        data = (
+            f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
+            f"{template}{contexts}</rule></rules>"
+        )
         await self._request(uri, method="put", data=data)
 
         return True
