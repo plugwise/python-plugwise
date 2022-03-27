@@ -556,7 +556,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_thermostat(
-        self, smile, loc_id, schedule_on=False, good_schedules=None, unhappy=False
+        self, smile, loc_id, schedule_on=True, good_schedules=None, unhappy=False
     ):
         """Toggle various climate settings to test functionality."""
         if good_schedules is None:  # pragma: no cover
