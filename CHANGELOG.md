@@ -1,5 +1,11 @@
 # Changelog
 
+# v0.17.2 - Smile Adam: more bugfixes, improvementds
+- Bugfix: update set_schedule_state() to handle multi thermostat scenario's
+- Improve tracking of the last used schedule, needed due to the changes in set_schedule_state()
+- Improve invalid schedule handling
+- Update & add related testcases
+
 # v0.17.1 - Smile: bugfix for https://github.com/home-assistant/core/issues/68621
 
 # v0.17.0 - Smile: add more outputs
