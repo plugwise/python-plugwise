@@ -110,12 +110,6 @@ def schemas_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
 
     length = len(schema_list)
     schema_list = sorted(schema_list)
-
-    # Schema with less than 2 items
-    if length == 1:
-        LOGGER.debug("Invalid schedule, only one entry, ignoring.")
-        return
-
     for i in range(length):
         j = (i + 1) % (length - 1)
         now = dt.datetime.now().time()
@@ -1166,6 +1160,7 @@ class SmileHelper:
         rule_ids: dict[str] = {}
         schedule_temperature: str | None = None
         selected = "None"
+        tmp_last_used: str | None = None
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
@@ -1184,17 +1179,27 @@ class SmileHelper:
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, float] = {}
+            temp: dict[str, float] = {}
             locator = f'./rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
+            count = 0
             for directive in directives:
                 entry = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
-                    schedule[directive.attrib["time"]] = float(
+                    temp[directive.attrib["time"]] = float(
                         self._presets(loc_id)[entry["preset"]][0]
                     )
                 else:
-                    schedule[directive.attrib["time"]] = float(entry.get("setpoint"))
+                    temp[directive.attrib["time"]] = float(entry.get("setpoint"))
+                count += 1
+
+            LOGGER.debug("HOI 1 %s, %s", count, name)
+            if count > 1:
+                schedule = temp
+            else:
+                # Schema with less than 2 items
+                LOGGER.debug("Invalid schedule, only one entry, ignoring.")
 
             if schedule:
                 available.append(name)
@@ -1203,10 +1208,13 @@ class SmileHelper:
                     self._last_active[location] = selected
                 schedules[name] = schedule
 
+        LOGGER.debug("HOI 2 %s", schedules)
         if schedules:
             available.remove("None")
-            last_used = self._last_used_schedule(location, rule_ids)
-            schedule_temperature = schemas_schedule_temp(schedules, last_used)
+            tmp_last_used = self._last_used_schedule(location, rule_ids)
+            if tmp_last_used in schedules:
+                last_used = tmp_last_used
+                schedule_temperature = schemas_schedule_temp(schedules, last_used)
 
         return available, selected, schedule_temperature, last_used
 
