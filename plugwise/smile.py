@@ -531,6 +531,7 @@ class Smile(SmileComm, SmileData):
                 subject = etree.fromstring(subject)
 
             if state == "off":
+                self._last_active[loc_id] = name
                 contexts.remove(subject)
             if state == "on":
                 contexts.append(subject)
