@@ -567,6 +567,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat_schedule(
             smile, loc_id, "on", good_schedules, unhappy
         )
+        await self.tinker_thermostat_schedule(
+            smile, loc_id, "off", good_schedules, unhappy
+        )
+        await self.tinker_thermostat_schedule(
+            smile, loc_id, "on", good_schedules, unhappy
+        )
 
     @staticmethod
     async def tinker_regulation_mode(smile):
