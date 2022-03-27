@@ -560,7 +560,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Toggle various climate settings to test functionality."""
         if good_schedules is None:  # pragma: no cover
-            good_schedules = ["Weekschedule"]
+            good_schedules = ["Weekschema"]
 
         await self.tinker_thermostat_temp(smile, loc_id, unhappy)
         await self.tinker_thermostat_preset(smile, loc_id, unhappy)
@@ -1291,8 +1291,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "ee62cad889f94e8ca3d09021f03a660b": {
                 "sensors": {"setpoint": 20.5, "temperature": 20.5},
-                "selected_schedule": "Weekschedule",
-                "last_used": "Weekschedule",
+                "selected_schedule": "Weekschema",
+                "last_used": "Weekschema",
                 "active_preset": "home",
             },
             # Central
@@ -1331,7 +1331,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         await self.tinker_thermostat(
-            smile, "009490cc2f674ce6b576863fbb64f867", good_schedules=["Weekschedule"]
+            smile, "009490cc2f674ce6b576863fbb64f867", good_schedules=["Weekschema"]
         )
         switch_change = await self.tinker_switch(
             smile, "aa6b0002df0a46e1b1eb94beb61eddfe"
@@ -1344,7 +1344,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
-            good_schedules=["Weekschedule"],
+            good_schedules=["Weekschema"],
             unhappy=True,
         )
         switch_change = await self.tinker_switch(
@@ -1375,10 +1375,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "vacation": [15.0, 28.0],
                     "no_frost": [10.0, 30.0],
                 },
-                "available_schedules": ["Weekschedule", "Badkamer", "Test"],
-                "selected_schedule": "Weekschedule",
+                "available_schedules": ["Weekschema", "Badkamer", "Test"],
+                "selected_schedule": "Weekschema",
                 "schedule_temperature": 18.5,
-                "last_used": "Weekschedule",
+                "last_used": "Weekschema",
                 "mode": "auto",
                 "control_state": "heating",
                 "sensors": {"temperature": 18.1, "setpoint": 18.5},
@@ -1459,7 +1459,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "vacation": [15.0, 28.0],
                     "no_frost": [10.0, 30.0],
                 },
-                "available_schedules": ["Weekschedule", "Badkamer", "Test"],
+                "available_schedules": ["Weekschema", "Badkamer", "Test"],
                 "selected_schedule": "Badkamer",
                 "schedule_temperature": 16.0,
                 "last_used": "Badkamer",
@@ -1682,14 +1682,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schedule met Film Avond",
+                    "Bios Schema met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schedule",
+                    "Badkamer Schema",
                     "CV Jessie",
                 ],
                 "selected_schedule": "None",
                 "schedule_temperature": 15.0,
-                "last_used": "Badkamer Schedule",
+                "last_used": "Badkamer Schema",
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
@@ -1741,9 +1741,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schedule met Film Avond",
+                    "Bios Schema met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schedule",
+                    "Badkamer Schema",
                     "CV Jessie",
                 ],
                 "selected_schedule": "GF7  Woonkamer",
@@ -1900,9 +1900,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schedule met Film Avond",
+                    "Bios Schema met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schedule",
+                    "Badkamer Schema",
                     "CV Jessie",
                 ],
                 "selected_schedule": "CV Jessie",
@@ -1944,14 +1944,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schedule met Film Avond",
+                    "Bios Schema met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schedule",
+                    "Badkamer Schema",
                     "CV Jessie",
                 ],
-                "selected_schedule": "Badkamer Schedule",
+                "selected_schedule": "Badkamer Schema",
                 "schedule_temperature": 20.0,
-                "last_used": "Badkamer Schedule",
+                "last_used": "Badkamer Schema",
                 "mode": "auto",
                 "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
             },
@@ -1988,14 +1988,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schedule met Film Avond",
+                    "Bios Schema met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schedule",
+                    "Badkamer Schema",
                     "CV Jessie",
                 ],
                 "selected_schedule": "None",
                 "schedule_temperature": 15.0,
-                "last_used": "Badkamer Schedule",
+                "last_used": "Badkamer Schema",
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
