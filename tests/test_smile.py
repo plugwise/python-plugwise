@@ -1537,6 +1537,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
 
+        await self.tinker_thermostat(
+            smile,
+            "f2bf9048bef64cc5b6d5110154e33c81",
+            good_schedules=["Weekschema", "Badkamer", "Test"],
+        )
+
         switch_change = await self.tinker_switch(
             smile,
             "e8ef2a01ed3b4139a53bf749204fe6b4",
