@@ -523,24 +523,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     raise self.UnexpectedError
 
     @pytest.mark.asyncio
-    async def tinker_thermostat_schema(
-        self, smile, loc_id, good_schemas=None, unhappy=False
+    async def tinker_thermostat_schedule(
+        self, smile, loc_id, good_schedules=None, unhappy=False
     ):
-        if good_schemas != []:
-            good_schemas.append("!VeryBogusSchemaNameThatNobodyEverUsesOrShouldUse")
-            for new_schema in good_schemas:
+        if good_schedules != []:
+            good_schedules.append("!VeryBogusScheduleNameThatNobodyEverUsesOrShouldUse")
+            for new_schedule in good_schedules:
                 assert_state = True
                 warning = ""
-                if new_schema[0] == "!":
+                if new_schedule[0] == "!":
                     assert_state = False
                     warning = " Negative test"
-                    new_schema = new_schema[1:]
-                _LOGGER.info("- Adjusting schedule to %s", f"{new_schema}{warning}")
+                    new_schedule = new_schedule[1:]
+                _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    schema_change = await smile.set_schedule_state(
-                        loc_id, new_schema, "on"
+                    schedule_change = await smile.set_schedule_state(
+                        loc_id, new_schedule, "on"
                     )
-                    assert schema_change == assert_state
+                    assert schedule_change == assert_state
                     _LOGGER.info("  + failed as intended")
                 except (
                     pw_exceptions.ErrorSendingCommandError,
@@ -552,17 +552,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         _LOGGER.info("  - succeeded unexpectedly for some reason")
                         raise self.UnexpectedError
         else:  # pragma: no cover
-            _LOGGER.info("- Skipping schema adjustments")
+            _LOGGER.info("- Skipping schedule adjustments")
 
     @pytest.mark.asyncio
-    async def tinker_thermostat(self, smile, loc_id, good_schemas=None, unhappy=False):
+    async def tinker_thermostat(
+        self, smile, loc_id, good_schedules=None, unhappy=False
+    ):
         """Toggle various climate settings to test functionality."""
-        if good_schemas is None:  # pragma: no cover
-            good_schemas = ["Weekschema"]
+        if good_schedules is None:  # pragma: no cover
+            good_schedules = ["Weekschedule"]
 
         await self.tinker_thermostat_temp(smile, loc_id, unhappy)
         await self.tinker_thermostat_preset(smile, loc_id, unhappy)
-        await self.tinker_thermostat_schema(smile, loc_id, good_schemas, unhappy)
+        await self.tinker_thermostat_schedule(smile, loc_id, good_schedules, unhappy)
 
     @staticmethod
     async def tinker_regulation_mode(smile):
@@ -669,7 +671,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=[
+            good_schedules=[
                 "Thermostat schedule",
             ],
         )
@@ -680,7 +682,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=[
+            good_schedules=[
                 "Thermostat schedule",
             ],
             unhappy=True,
@@ -764,7 +766,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=[
+            good_schedules=[
                 "Thermostat schedule",
             ],
         )
@@ -775,7 +777,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=[
+            good_schedules=[
                 "Thermostat schedule",
             ],
             unhappy=True,
@@ -949,7 +951,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
-            good_schemas=["Standaard", "Thuiswerken"],
+            good_schedules=["Standaard", "Thuiswerken"],
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -958,7 +960,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
-            good_schemas=["Standaard", "Thuiswerken"],
+            good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
         await smile.close_connection()
@@ -1045,7 +1047,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
-            good_schemas=["Standaard", "Thuiswerken"],
+            good_schedules=["Standaard", "Thuiswerken"],
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1054,7 +1056,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
-            good_schemas=["Standaard", "Thuiswerken"],
+            good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
         await smile.close_connection()
@@ -1086,7 +1088,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
-            good_schemas=["Standaard", "Thuiswerken"],
+            good_schedules=["Standaard", "Thuiswerken"],
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1095,7 +1097,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
-            good_schemas=["Standaard", "Thuiswerken"],
+            good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
         await smile.close_connection()
@@ -1134,7 +1136,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Test", "Normal"]
+            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Test", "Normal"]
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1143,7 +1145,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=["Test", "Normal"],
+            good_schedules=["Test", "Normal"],
             unhappy=True,
         )
         await smile.close_connection()
@@ -1180,7 +1182,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Test", "Normal"]
+            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Test", "Normal"]
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1189,7 +1191,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=["Test", "Normal"],
+            good_schedules=["Test", "Normal"],
             unhappy=True,
         )
         await smile.close_connection()
@@ -1267,7 +1269,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Normal"]
+            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Normal"]
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1276,7 +1278,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=["Normal"],
+            good_schedules=["Normal"],
             unhappy=True,
         )
         await smile.close_connection()
@@ -1289,8 +1291,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "ee62cad889f94e8ca3d09021f03a660b": {
                 "sensors": {"setpoint": 20.5, "temperature": 20.5},
-                "selected_schedule": "Weekschema",
-                "last_used": "Weekschema",
+                "selected_schedule": "Weekschedule",
+                "last_used": "Weekschedule",
                 "active_preset": "home",
             },
             # Central
@@ -1329,7 +1331,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         await self.tinker_thermostat(
-            smile, "009490cc2f674ce6b576863fbb64f867", good_schemas=["Weekschema"]
+            smile, "009490cc2f674ce6b576863fbb64f867", good_schedules=["Weekschedule"]
         )
         switch_change = await self.tinker_switch(
             smile, "aa6b0002df0a46e1b1eb94beb61eddfe"
@@ -1342,7 +1344,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
-            good_schemas=["Weekschema"],
+            good_schedules=["Weekschedule"],
             unhappy=True,
         )
         switch_change = await self.tinker_switch(
@@ -1373,10 +1375,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "vacation": [15.0, 28.0],
                     "no_frost": [10.0, 30.0],
                 },
-                "available_schedules": ["Weekschema", "Badkamer", "Test"],
-                "selected_schedule": "Weekschema",
+                "available_schedules": ["Weekschedule", "Badkamer", "Test"],
+                "selected_schedule": "Weekschedule",
                 "schedule_temperature": 18.5,
-                "last_used": "Weekschema",
+                "last_used": "Weekschedule",
                 "mode": "auto",
                 "control_state": "heating",
                 "sensors": {"temperature": 18.1, "setpoint": 18.5},
@@ -1457,7 +1459,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "vacation": [15.0, 28.0],
                     "no_frost": [10.0, 30.0],
                 },
-                "available_schedules": ["Weekschema", "Badkamer", "Test"],
+                "available_schedules": ["Weekschedule", "Badkamer", "Test"],
                 "selected_schedule": "Badkamer",
                 "schedule_temperature": 16.0,
                 "last_used": "Badkamer",
@@ -1621,10 +1623,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.delete_notification()
 
         await self.tinker_thermostat(
-            smile, "c50f167537524366a5af7aa3942feb1e", good_schemas=["GF7  Woonkamer"]
+            smile, "c50f167537524366a5af7aa3942feb1e", good_schedules=["GF7  Woonkamer"]
         )
         await self.tinker_thermostat(
-            smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
+            smile, "82fa13f017d240daa0d0ea1775420f24", good_schedules=["CV Jessie"]
         )
         switch_change = await self.tinker_switch(
             smile, "675416a629f343c495449970e2ca37b5"
@@ -1638,14 +1640,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
-            good_schemas=["GF7  Woonkamer"],
+            good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
 
         await self.tinker_thermostat(
             smile,
             "82fa13f017d240daa0d0ea1775420f24",
-            good_schemas=["CV Jessie"],
+            good_schedules=["CV Jessie"],
             unhappy=True,
         )
 
@@ -1680,14 +1682,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schema met Film Avond",
+                    "Bios Schedule met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schema",
+                    "Badkamer Schedule",
                     "CV Jessie",
                 ],
                 "selected_schedule": "None",
                 "schedule_temperature": 15.0,
-                "last_used": "Badkamer Schema",
+                "last_used": "Badkamer Schedule",
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
@@ -1739,9 +1741,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schema met Film Avond",
+                    "Bios Schedule met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schema",
+                    "Badkamer Schedule",
                     "CV Jessie",
                 ],
                 "selected_schedule": "GF7  Woonkamer",
@@ -1898,9 +1900,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schema met Film Avond",
+                    "Bios Schedule met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schema",
+                    "Badkamer Schedule",
                     "CV Jessie",
                 ],
                 "selected_schedule": "CV Jessie",
@@ -1942,14 +1944,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schema met Film Avond",
+                    "Bios Schedule met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schema",
+                    "Badkamer Schedule",
                     "CV Jessie",
                 ],
-                "selected_schedule": "Badkamer Schema",
+                "selected_schedule": "Badkamer Schedule",
                 "schedule_temperature": 20.0,
-                "last_used": "Badkamer Schema",
+                "last_used": "Badkamer Schedule",
                 "mode": "auto",
                 "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
             },
@@ -1986,14 +1988,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "available_schedules": [
                     "CV Roan",
-                    "Bios Schema met Film Avond",
+                    "Bios Schedule met Film Avond",
                     "GF7  Woonkamer",
-                    "Badkamer Schema",
+                    "Badkamer Schedule",
                     "CV Jessie",
                 ],
                 "selected_schedule": "None",
                 "schedule_temperature": 15.0,
-                "last_used": "Badkamer Schema",
+                "last_used": "Badkamer Schedule",
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
@@ -2022,10 +2024,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
         await self.tinker_thermostat(
-            smile, "c50f167537524366a5af7aa3942feb1e", good_schemas=["GF7  Woonkamer"]
+            smile, "c50f167537524366a5af7aa3942feb1e", good_schedules=["GF7  Woonkamer"]
         )
         await self.tinker_thermostat(
-            smile, "82fa13f017d240daa0d0ea1775420f24", good_schemas=["CV Jessie"]
+            smile, "82fa13f017d240daa0d0ea1775420f24", good_schedules=["CV Jessie"]
         )
         switch_change = await self.tinker_switch(
             smile, "675416a629f343c495449970e2ca37b5"
@@ -2038,13 +2040,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
-            good_schemas=["GF7  Woonkamer"],
+            good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
         await self.tinker_thermostat(
             smile,
             "82fa13f017d240daa0d0ea1775420f24",
-            good_schemas=["CV Jessie"],
+            good_schedules=["CV Jessie"],
             unhappy=True,
         )
         await smile.close_connection()
