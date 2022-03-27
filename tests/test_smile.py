@@ -1226,11 +1226,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "home": [21.0, 22.0],
                     "vacation": [18.5, 28.0],
                 },
-                "available_schedules": ["Test", "Normal"],
-                "selected_schedule": "Test",
+                "available_schedules": ["Normal"],
+                "selected_schedule": "None",
                 "schedule_temperature": None,
-                "last_used": "Test",
-                "mode": "auto",
+                "last_used": None,
+                "mode": "heat",
                 "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
                 "lower_bound": 4,
                 "upper_bound": 30,
@@ -1267,7 +1267,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Test", "Normal"]
+            smile, "c34c6864216446528e95d88985e714cc", good_schemas=["Normal"]
         )
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1276,7 +1276,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
-            good_schemas=["Test", "Normal"],
+            good_schemas=["Normal"],
             unhappy=True,
         )
         await smile.close_connection()
