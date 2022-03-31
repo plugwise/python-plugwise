@@ -384,6 +384,11 @@ THERMOSTAT_CLASSES: Final[list[str]] = [
     "zone_thermostat",
     "thermostatic_radiator_valve",
 ]
+UNLOCKABLE_TYPES: Final[list[str]] = [
+    "central_heating_pump",
+    "valve_actuator",
+    "heater_electric",
+]
 
 # XML data paths
 APPLIANCES: Final = "/core/appliances"
