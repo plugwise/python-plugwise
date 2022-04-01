@@ -39,10 +39,10 @@ from .constants import (
     LOGGER,
     POWER_WATT,
     SENSORS,
+    SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     SWITCHES,
     THERMOSTAT_CLASSES,
-    UNLOCKABLE_TYPES,
 )
 from .exceptions import (
     DeviceTimeoutError,
@@ -1272,7 +1272,7 @@ class SmileHelper:
             actuator = "actuators"
             func_type = "relay"
         appl_class = xml.find("type").text
-        if appl_class not in UNLOCKABLE_TYPES:
+        if appl_class not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
                 data["lock"] = format_measure(found.text, None)
