@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.17.3 - Smile Adam: add support for heater_electric type Plugs
+
 # v0.17.2 - Smile Adam: more bugfixes, improvementds
 - Bugfix: update set_schedule_state() to handle multi thermostat scenario's
 - Improve tracking of the last used schedule, needed due to the changes in set_schedule_state()
