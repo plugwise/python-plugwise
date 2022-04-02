@@ -1306,7 +1306,11 @@ class SmileHelper:
                 if item == key:
                     data.pop(key)
                     # Represent special plug-types as binary_sensors
-                    if key == "relay" and "lock" not in data:
+                    if (
+                        self.smile_name == "Adam"
+                        and key == "relay"
+                        and "lock" not in data
+                    ):
                         bs_dict[key] = value
                     else:
                         sw_dict[key] = value
