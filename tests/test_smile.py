@@ -1435,13 +1435,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Plug",
                 "name": "Plug Vloerverwarming",
                 "vendor": "Plugwise",
+                "binary_sensors": {"relay": True},
                 "sensors": {
                     "electricity_consumed": 46.8,
                     "electricity_consumed_interval": 0.0,
                     "electricity_produced": 0.0,
                     "electricity_produced_interval": 0.0,
                 },
-                "switches": {"relay": True},
             },
             "1772a4ea304041adb83f357b751341ff": {
                 "class": "thermo_sensor",
@@ -1820,13 +1820,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Plug",
                 "name": "CV Pomp",
                 "vendor": "Plugwise",
+                "binary_sensors": {"relay": True},
                 "sensors": {
                     "electricity_consumed": 35.6,
                     "electricity_consumed_interval": 7.37,
                     "electricity_produced": 0.0,
                     "electricity_produced_interval": 0.0,
                 },
-                "switches": {"relay": True},
             },
             "90986d591dcd426cae3ec3e8111ff730": {
                 "class": "heater_central",
