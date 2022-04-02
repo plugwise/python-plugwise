@@ -384,6 +384,11 @@ THERMOSTAT_CLASSES: Final[list[str]] = [
     "zone_thermostat",
     "thermostatic_radiator_valve",
 ]
+SPECIAL_PLUG_TYPES: Final[list[str]] = [
+    "central_heating_pump",
+    "valve_actuator",
+    "heater_electric",
+]
 
 # XML data paths
 APPLIANCES: Final = "/core/appliances"
