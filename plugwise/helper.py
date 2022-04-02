@@ -1308,8 +1308,8 @@ class SmileHelper:
                     # Represent special plug-types as binary_sensors
                     if (
                         self.smile_name == "Adam"
+                        and device["class"] in SPECIAL_PLUG_TYPES
                         and key == "relay"
-                        and "lock" not in data
                     ):
                         bs_dict[key] = value
                     else:
