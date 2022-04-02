@@ -1601,8 +1601,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # CV pomp
             "78d1126fc4c743db81b61c20e88342a7": {
+                "binary_sensors": {"relay": True},
                 "sensors": {"electricity_consumed": 35.8},
-                "switches": {"relay": True},
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
