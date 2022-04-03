@@ -1442,6 +1442,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                     "electricity_produced_interval": 0.0,
                 },
+                "switches": {"relay": True},
             },
             "1772a4ea304041adb83f357b751341ff": {
                 "class": "thermo_sensor",
@@ -1603,6 +1604,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "78d1126fc4c743db81b61c20e88342a7": {
                 "binary_sensors": {"relay": True},
                 "sensors": {"electricity_consumed": 35.8},
+                "switches": {"relay": True},
             },
             # Lisa Bios
             "df4a4a8169904cdb9c03d61a21f42140": {
@@ -1827,6 +1829,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                     "electricity_produced_interval": 0.0,
                 },
+                "switches": {"relay": True},
             },
             "90986d591dcd426cae3ec3e8111ff730": {
                 "class": "heater_central",
