@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.17.4 - Smile Adam: add binary_sensors showing the state of special purpose plugs
+
 # v0.17.3 - Smile Adam: add support for heater_electric type Plugs
 
 # v0.17.2 - Smile Adam: more bugfixes, improvementds
