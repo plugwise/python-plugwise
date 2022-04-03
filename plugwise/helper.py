@@ -1305,11 +1305,11 @@ class SmileHelper:
             for item in SWITCHES:
                 if item == key:
                     data.pop(key)
-                    # Represent special plug-types as binary_sensors
+                    sw_dict[key] = value
+                    # Represent special plug-types as binary_sensors as well
+                    # Temporary, the relevant switches will be depreciated later
                     if device["class"] in SPECIAL_PLUG_TYPES and key == "relay":
                         bs_dict[key] = value
-                    else:
-                        sw_dict[key] = value
 
         # Add plugwise notification binary_sensor to the relevant gateway
         if d_id == self.gateway_id:
