@@ -272,6 +272,7 @@ jobs:
       - name: Run mypy
         run: |
           . venv/bin/activate
+          pip list | grep -i mypy
           mypy plugwise/
 
   shellcheck:
