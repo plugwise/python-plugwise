@@ -99,34 +99,39 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
 
 def format_measure(measure: str, unit: str) -> float | int | bool:
     """Format measure to correct type."""
+    # TODO: handle with appropriate care 20220405
+    # continuously reassigning the same value with different type isn't
+    # to typings liking
+    result: int | float | bool = False
     try:
+        result = int(measure)
         if unit == TEMP_CELSIUS:
-            return float(measure)
-        return int(measure)
+            result = float(measure)
     except ValueError:
-        if unit == PERCENTAGE:
-            if 0 < float(measure) <= 1:
-                return int(float(measure) * 100)
-
-        f_measure = float(measure)
-        if unit == ENERGY_KILO_WATT_HOUR:
-            f_measure = f_measure / 1000
         try:
+            float_measure = float(measure)
+            if unit == PERCENTAGE:
+                if 0 < float_measure <= 1:
+                    return int(float_measure * 100)
+
+            if unit == ENERGY_KILO_WATT_HOUR:
+                float_measure = float_measure / 1000
+
             if unit in SPECIAL_FORMAT:
-                f_measure = float(f"{round(f_measure, 3):.3f}")
+                result = float(f"{round(float_measure, 3):.3f}")
             else:
-                if abs(f_measure) < 10:
-                    f_measure = float(f"{round(f_measure, 2):.2f}")
-                elif abs(f_measure) >= 10 and abs(f_measure) < 100:
-                    f_measure = float(f"{round(f_measure, 1):.1f}")
-                elif abs(f_measure) >= 100:
-                    f_measure = int(round(f_measure))
+                if abs(float_measure) < 10:
+                    result = float(f"{round(float_measure, 2):.2f}")
+                elif abs(float_measure) >= 10 and abs(float_measure) < 100:
+                    result = float(f"{round(float_measure, 1):.1f}")
+                elif abs(float_measure) >= 100:
+                    result = int(round(float_measure))
         except ValueError:
             if measure in ["on", "true"]:
-                return True
+                result = True
             if measure in ["off", "false"]:
-                return False
-    return f_measure
+                result = False
+    return result
 
 
 def in_between(now: datetime.time, start: datetime.time, end: datetime.time) -> bool:
