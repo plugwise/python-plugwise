@@ -1,6 +1,4 @@
 ignore: |
-  azure-*.yml
-  .travis*.yml
   .github*
 rules:
   braces:
@@ -61,4 +59,3 @@ rules:
     level: error
   truthy:
     level: error
-
