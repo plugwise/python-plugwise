@@ -320,7 +320,7 @@ jobs:
   test-publishing:
     name: Build and publish Python 🐍 distributions 📦 to TestPyPI
     runs-on: ubuntu-latest
-    needs: coverage, mypy
+    needs: [coverage, mypy]
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v3
