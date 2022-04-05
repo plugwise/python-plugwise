@@ -2,3 +2,5 @@
 -e .
 pytest-cover
 radon
+types-python-dateutil
+types-pytz

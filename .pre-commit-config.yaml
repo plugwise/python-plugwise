@@ -98,7 +98,7 @@ repos:
         language: script
         types: [python]
         require_serial: true
-        files: ^plugwise/.+\.py$
+        files: ^plugwise/$
       - id: pylint
         name: pylint
         entry: scripts/run-in-env.sh pylint -j 0
