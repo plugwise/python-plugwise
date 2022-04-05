@@ -240,6 +240,37 @@ jobs:
           name: coverage-${{ matrix.python-version }}
           path: .coverage
 
+  mypy:
+    runs-on: ubuntu-latest
+    name: Run mypy using Python ${{ env.DEFAULT_PYTHON }}
+    needs: pytest
+    steps:
+      - name: Check out committed code
+        uses: actions/checkout@v3
+      - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+        id: python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ env.DEFAULT_PYTHON }}
+      - name: Restore full Python ${{ env.DEFAULT_PYTHON }} virtual environment
+        id: cache-venv
+        uses: actions/cache@v3
+        with:
+          path: venv
+          key: >-
+            ${{ env.CACHE_VERSION}}-${{ runner.os }}-venv-${{ env.DEFAULT_PYTHON 
+            }}-${{ hashFiles('requirements_test.txt')
+            }}-${{ hashFiles('setup.py') }}
+      - name: Fail job if Python cache restore failed
+        if: steps.cache-venv.outputs.cache-hit != 'true'
+        run: |
+          echo "Failed to restore Python virtual environment from cache"
+          exit 1
+      - name: Run all tests
+        run: |
+          . venv/bin/activate
+          mypy plugwise/
+
   shellcheck:
     name: Shellcheck
     runs-on: ubuntu-latest
@@ -251,7 +282,7 @@ jobs:
   coverage:
     name: Process test coverage
     runs-on: ubuntu-latest
-    needs: pytest
+    needs: mpyp
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v3
