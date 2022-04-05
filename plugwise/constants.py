@@ -95,7 +95,7 @@ REQUEST_FAILED = (
     SENSE_INTERVAL_FAILED,
     SLEEP_FAILED,
 )
-STATUS_RESPONSES: Final[dict[str, str]] = {
+STATUS_RESPONSES: Final[dict[bytes, str]] = {
     # NodeAckSmallResponse
     RESPONSE_TYPE_SUCCESS: "success",
     RESPONSE_TYPE_ERROR: "error",
