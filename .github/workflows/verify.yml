@@ -242,7 +242,7 @@ jobs:
 
   mypy:
     runs-on: ubuntu-latest
-    name: Run mypy using Python ${{ env.DEFAULT_PYTHON }}
+    name: Run mypy
     needs: pytest
     steps:
       - name: Check out committed code
