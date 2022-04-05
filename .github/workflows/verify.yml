@@ -247,26 +247,29 @@ jobs:
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
         uses: actions/setup-python@v3
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Restore full Python ${{ env.DEFAULT_PYTHON }} virtual environment
+      - name: Restore base Python ${{ env.DEFAULT_PYTHON }} virtual environment
         id: cache-venv
         uses: actions/cache@v3
         with:
           path: venv
           key: >-
-            ${{ env.CACHE_VERSION}}-${{ runner.os }}-venv-${{ env.DEFAULT_PYTHON 
-            }}-${{ hashFiles('requirements_test.txt')
-            }}-${{ hashFiles('setup.py') }}
+            ${{ env.CACHE_VERSION}}-${{ runner.os }}-base-venv-${{
+            steps.python.outputs.python-version }}-${{
+            hashFiles('requirements_test.txt') }}-${{
+            hashFiles('setup.py') }}
       - name: Fail job if Python cache restore failed
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
-          echo "Failed to restore Python virtual environment from cache"
+          echo "Failed to restore Python ${{ env.DEFAULT_PYTHON }} virtual environment from cache"
           exit 1
-      - name: Run all tests
+      - name: Run mypy
         run: |
           . venv/bin/activate
           mypy plugwise/
