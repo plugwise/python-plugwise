@@ -157,6 +157,4 @@ exclude = [
     "nodes",
     "messages",
     "connections",
-    "helper.py",
-    "smile.py",
 ]
