@@ -189,7 +189,7 @@ class SmileComm:
         username: str,
         port: int,
         timeout: float,
-        websession: ClientSession,
+        websession: ClientSession | None,
     ):
         """Set the constructor for this class."""
         if not websession:
@@ -291,10 +291,10 @@ class SmileHelper:
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._anna_cooling_present: bool = False
-        self._cooling_activation_outdoor_temp: float | None = None
-        self._cooling_deactivation_threshold: float | None = None
+        self._cooling_activation_outdoor_temp: float
+        self._cooling_deactivation_threshold: float
         self._cooling_present = False
-        self._devices: dict[str, str] = {}
+        self._devices: dict[str, dict[str, Any]]
         self._domain_objects: etree
         self._heater_id: str | None = None
         self._home_location: str
@@ -305,7 +305,7 @@ class SmileHelper:
         self._modules: etree
         self._on_off_device = False
         self._opentherm_device = False
-        self._outdoor_temp: float | None = None
+        self._outdoor_temp: float
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
@@ -320,7 +320,7 @@ class SmileHelper:
         self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
         self.smile_type: str | None = None
-        self.smile_version: list[str] = []
+        self.smile_version: tuple[str, Any]
         self.smile_zigbee_mac_address: str | None = None
 
     def _locations_legacy(self) -> None:
@@ -831,11 +831,11 @@ class SmileHelper:
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
                     self._anna_cooling_present = self._cooling_present = True
-                    self._cooling_activation_outdoor_temp = data.get(measurement)
+                    self._cooling_activation_outdoor_temp = data[measurement]
                 if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data.get(measurement)
+                    self._cooling_deactivation_threshold = data[measurement]
                 if measurement == "outdoor_air_temperature":
-                    self._outdoor_temp = data.get(measurement)
+                    self._outdoor_temp = data[measurement]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
