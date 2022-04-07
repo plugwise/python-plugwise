@@ -375,6 +375,7 @@ DAYS: Final[dict[str, int]] = {
 DEFAULT_TIMEOUT: Final = 30
 DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
+NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
 SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
 SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]

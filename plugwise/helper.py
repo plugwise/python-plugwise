@@ -37,6 +37,7 @@ from .constants import (
     HOME_MEASUREMENTS,
     LOCATIONS,
     LOGGER,
+    NONE,
     POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
@@ -95,7 +96,7 @@ def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> Any:
     """Helper-function for schedules().
     Obtain the schedule temperature of the schedule/schedule.
     """
-    if name == "None":
+    if name == NONE:
         return None  # pragma: no cover
 
     schedule_list: list[list[Any]] = []
@@ -1160,11 +1161,11 @@ class SmileHelper:
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available: list[str] = ["None"]
+        available: list[str] = [NONE]
         last_used: str | None = None
         rule_ids: dict[str, str] = {}
         schedule_temperature: str | None = None
-        selected = "None"
+        selected = NONE
         tmp_last_used: str | None = None
 
         # Legacy Anna schedule, only one schedule allowed
@@ -1213,7 +1214,7 @@ class SmileHelper:
                 schedules[name] = schedule
 
         if schedules:
-            available.remove("None")
+            available.remove(NONE)
             tmp_last_used = self._last_used_schedule(location, rule_ids)
             if tmp_last_used in schedules:
                 last_used = tmp_last_used
@@ -1260,7 +1261,7 @@ class SmileHelper:
         search = self._domain_objects
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
-            val = format_measure(found.text, None)
+            val = format_measure(found.text, NONE)
             return val
 
         return val
@@ -1279,7 +1280,7 @@ class SmileHelper:
         if appl_class not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
-                data["lock"] = format_measure(found.text, None)
+                data["lock"] = format_measure(found.text, NONE)
 
         return data
 
