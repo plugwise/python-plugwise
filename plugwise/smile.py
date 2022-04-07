@@ -64,7 +64,7 @@ class SmileData(SmileHelper):
 
     def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
-        self._devices: dict[str, dict[str, Any]] = {}
+        self._devices = {}
         self._scan_thermostats()
 
         for appliance, details in self._appl_data.items():
@@ -76,9 +76,9 @@ class SmileData(SmileHelper):
                 details["location"] = self._home_location
 
             # Override slave thermostat class
-            if (loc_id := details.get("location")) in self._thermo_locs:
-                tl_loc_id = self._thermo_locs.get(loc_id)
-                if "slaves" in tl_loc_id and appliance in tl_loc_id.get("slaves"):
+            if (loc_id := details["location"]) in self._thermo_locs:
+                tl_loc_id = self._thermo_locs[loc_id]
+                if "slaves" in tl_loc_id and appliance in tl_loc_id["slaves"]:
                     details["class"] = "thermo_sensor"
 
             # Next, filter for thermostat-devices without a location
@@ -120,9 +120,9 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
-        if details.get("class") in SWITCH_GROUP_TYPES:
+        if details["class"] in SWITCH_GROUP_TYPES:
             counter = 0
-            for member in details.get("members"):
+            for member in details["members"]:
                 member_data = self._get_appliance_data(member)
                 if member_data.get("relay"):
                     counter += 1
@@ -151,7 +151,7 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
-        loc_id = details.get("location")
+        loc_id = details["location"]
 
         # Presets
         device_data["preset_modes"] = None
@@ -190,11 +190,11 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        details = self._devices.get(dev_id)
+        details = self._devices[dev_id]
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
-        if details.get("class") == "gateway" or dev_id == self.gateway_id:
+        if details["class"] == "gateway" or dev_id == self.gateway_id:
             if self.smile_type == "thermostat":
                 # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
                 # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
@@ -209,7 +209,7 @@ class SmileData(SmileHelper):
                     device_data["regulation_modes"] = self._allowed_modes
 
             # Get P1 data from LOCATIONS
-            power_data = self._power_data_from_location(details.get("location"))
+            power_data = self._power_data_from_location(details["location"])
             if power_data is not None:
                 device_data.update(power_data)
 
@@ -218,7 +218,7 @@ class SmileData(SmileHelper):
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details.get("class") not in THERMOSTAT_CLASSES:
+        if details["class"] not in THERMOSTAT_CLASSES:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
@@ -237,9 +237,9 @@ class Smile(SmileComm, SmileData):
         host: str,
         password: str,
         username: str = DEFAULT_USERNAME,
-        port: str = DEFAULT_PORT,
-        timeout: str = DEFAULT_TIMEOUT,
-        websession: aiohttp.ClientSession = None,
+        port: int = DEFAULT_PORT,
+        timeout: float = DEFAULT_TIMEOUT,
+        websession: aiohttp.ClientSession | None = None,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
@@ -299,9 +299,7 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(
-        self, result: etree, dsmrmain: etree
-    ) -> tuple[str, str]:
+    async def _smile_detect_legacy(self, result: etree, dsmrmain: etree) -> str:
         """Helper-function for _smile_detect()."""
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if network := result.find("./module/protocols/master_controller"):
@@ -390,8 +388,8 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
-        self.smile_name = SMILES[target_smile].get("friendly_name")
-        self.smile_type = SMILES[target_smile].get("type")
+        self.smile_name = SMILES[target_smile]["friendly_name"]
+        self.smile_type = SMILES[target_smile]["type"]
         self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
@@ -437,7 +435,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> dict[str, Any]:
+    async def async_update(self) -> list[dict[str, Any]]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -457,7 +455,7 @@ class Smile(SmileComm, SmileData):
                     dev_dict[key] = value
 
             for item in ["binary_sensors", "sensors", "switches"]:
-                notifs = None
+                notifs: dict[str, str] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
                 if item in dev_dict:
@@ -606,7 +604,7 @@ class Smile(SmileComm, SmileData):
         return True
 
     async def _set_groupswitch_member_state(
-        self, members: list[str] | None, state: str, switch: Munch
+        self, members: list[str], state: str, switch: Munch
     ) -> bool:
         """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
