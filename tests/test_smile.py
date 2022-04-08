@@ -3041,7 +3041,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             _server, _smile, _client = await self.connect_wrapper()
             assert False  # pragma: no cover
-        except pw_exceptions.ConnectionFailedError:
+        except pw_exceptions.InvalidXMLError:
             assert True
 
     @pytest.mark.asyncio
