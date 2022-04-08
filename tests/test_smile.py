@@ -581,8 +581,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 warning = " Negative test"
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
-            await smile.set_regulation_mode(mode)
-            _LOGGER.info("  + worked as intended")
+            try:
+                await smile.set_regulation_mode(mode)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseException:
+                _LOGGER.info("  + failed as expected")
 
     @staticmethod
     async def tinker_max_boiler_temp(smile):
