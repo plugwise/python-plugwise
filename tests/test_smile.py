@@ -496,7 +496,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     raise self.UnexpectedError
 
     @pytest.mark.asyncio
-    async def tinker_thermostat_preset(self, smile, loc_id):
+    async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
         for new_preset in ["asleep", "home", "!bogus"]:
             warning = ""
@@ -507,11 +507,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_preset(loc_id, new_preset)
                 _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseException:
+                _LOGGER.info("  + failed as expected")
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
-                if new_preset[0] == "!":
+                if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
