@@ -37,6 +37,7 @@ from .constants import (
     HOME_MEASUREMENTS,
     LOCATIONS,
     LOGGER,
+    NONE,
     POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
@@ -80,7 +81,7 @@ def update_helper(
                     devs[d_id][e_type][item] = data[key]
 
 
-def check_model(name: str, v_name: str) -> str:
+def check_model(name: str | None, v_name: str) -> str | None:
     """Model checking before using version_to_model."""
     if v_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
@@ -88,23 +89,22 @@ def check_model(name: str, v_name: str) -> str:
         model = version_to_model(name)
         if model != "Unknown":
             return model
-    else:
-        return name
+    return name
 
 
-def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
+def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> Any:
     """Helper-function for schedules().
     Obtain the schedule temperature of the schedule/schedule.
     """
-    if name == "None":
-        return  # pragma: no cover
+    if name == NONE:
+        return None  # pragma: no cover
 
-    schedule_list: list[list[int, dt.time, float]] | None = []
+    schedule_list: list[list[Any]] = []
     for period, temp in schedules[name].items():
-        tmp_list: list[int, dt.time, float] = []
+        tmp_list: list[Any] = []
         moment, dummy = period.split(",")
         moment = moment.replace("[", "").split(" ")
-        day_nr = DAYS.get(moment[0], "None")
+        day_nr = DAYS[moment[0]]
         start_time = dt.datetime.strptime(moment[1], "%H:%M").time()
         tmp_list.extend((day_nr, start_time, temp))
         schedule_list.append(tmp_list)
@@ -115,10 +115,14 @@ def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> float | Non
         j = (i + 1) % (length - 1)
         now = dt.datetime.now().time()
         today = dt.datetime.now().weekday()
-        if today in [schedule_list[i][0], schedule_list[j][0]] and in_between(
-            now, schedule_list[i][1], schedule_list[j][1]
-        ):
+        day_0 = schedule_list[i][0]
+        day_1 = schedule_list[j][0]
+        time_0 = schedule_list[i][1]
+        time_1 = schedule_list[j][1]
+        if today in [day_0, day_1] and in_between(now, time_0, time_1):
             return schedule_list[i][2]
+
+    return None
 
 
 def types_finder(data: etree) -> set[str]:
@@ -137,10 +141,10 @@ def types_finder(data: etree) -> set[str]:
 
 
 def power_data_local_format(
-    attrs: dict[str, str], key_string: str, val: float | int
+    attrs: dict[str, str], key_string: str, val: str
 ) -> float | int | bool:
     """Format power data."""
-    attrs_uom = attrs.get(ATTR_UNIT_OF_MEASUREMENT)
+    attrs_uom = attrs[ATTR_UNIT_OF_MEASUREMENT]
     f_val = format_measure(val, attrs_uom)
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
     if attrs_uom == POWER_WATT:
@@ -160,15 +164,17 @@ def power_data_energy_diff(
         if "produced" in measurement:
             diff = -1
         if net_string not in direct_data:
-            direct_data[net_string] = 0
+            tmp_val: float | int = 0
+        else:
+            tmp_val = direct_data[net_string]
 
         if isinstance(f_val, int):
-            direct_data[net_string] += f_val * diff
+            tmp_val += f_val * diff
         else:
-            direct_data[net_string] += float(f_val * diff)
-            direct_data[net_string] = float(
-                f"{round(direct_data.get(net_string), 3):.3f}"
-            )
+            tmp_val += float(f_val * diff)
+            tmp_val = float(f"{round(tmp_val, 3):.3f}")
+
+        direct_data[net_string] = tmp_val
 
     return direct_data
 
@@ -183,7 +189,7 @@ class SmileComm:
         username: str,
         port: int,
         timeout: float,
-        websession: ClientSession,
+        websession: ClientSession | None,
     ):
         """Set the constructor for this class."""
         if not websession:
@@ -211,9 +217,7 @@ class SmileComm:
         self._endpoint = f"http://{host}:{str(port)}"
         self._timeout = timeout
 
-    async def _request_validate(
-        self, resp: ClientResponse | None, method: str
-    ) -> etree:
+    async def _request_validate(self, resp: ClientResponse, method: str) -> etree:
         """Helper-function for _request(): validate the returned data."""
         # Command accepted gives empty body with status 202
         if resp.status == 202:
@@ -241,13 +245,13 @@ class SmileComm:
     async def _request(
         self,
         command: str,
-        retry=3,
-        method="get",
+        retry: int = 3,
+        method: str = "get",
         data: str | None = None,
         headers: dict[str, str] | None = None,
     ) -> etree:
         """Get/put/delete data from a give URL."""
-        resp: ClientResponse | None = None
+        resp: ClientResponse
         url = f"{self._endpoint}{command}"
 
         try:
@@ -273,7 +277,7 @@ class SmileComm:
 
         return await self._request_validate(resp, method)
 
-    async def close_connection(self) -> ClientSession:
+    async def close_connection(self) -> None:
         """Close the Plugwise connection."""
         await self._websession.close()
 
@@ -281,27 +285,27 @@ class SmileComm:
 class SmileHelper:
     """The SmileHelper class."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._appl_data: dict[str, Any] = {}
-        self._appliances: etree | None = None
+        self._appl_data: dict[str, dict[str, Any]] = {}
+        self._appliances: etree
         self._allowed_modes: list[str] = []
         self._anna_cooling_present: bool = False
-        self._cooling_activation_outdoor_temp: float | None = None
-        self._cooling_deactivation_threshold: float | None = None
+        self._cooling_activation_outdoor_temp: float
+        self._cooling_deactivation_threshold: float
         self._cooling_present = False
-        self._devices: dict[str, str] = {}
-        self._domain_objects: etree | None = None
+        self._devices: dict[str, dict[str, Any]]
+        self._domain_objects: etree
         self._heater_id: str | None = None
-        self._home_location: str | None = None
+        self._home_location: str
         self._is_thermostat = False
-        self._last_active: dict[str, str] = {}
-        self._loc_data: dict[str, Any] = {}
-        self._locations: etree | None = None
-        self._modules: etree | None = None
+        self._last_active: dict[str, str | None] = {}
+        self._loc_data: dict[str, dict[str, Any]] = {}
+        self._locations: etree
+        self._modules: etree
         self._on_off_device = False
         self._opentherm_device = False
-        self._outdoor_temp: float | None = None
+        self._outdoor_temp: float
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
@@ -316,7 +320,7 @@ class SmileHelper:
         self.smile_mac_address: str | None = None
         self.smile_name: str | None = None
         self.smile_type: str | None = None
-        self.smile_version: list[str] = []
+        self.smile_version: tuple[str, Any]
         self.smile_zigbee_mac_address: str | None = None
 
     def _locations_legacy(self) -> None:
@@ -368,11 +372,12 @@ class SmileHelper:
         loc = Munch()
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
-        if len(self._locations) == 0 and self._smile_legacy:
+        locations = self._locations.findall("./location")
+        if not locations and self._smile_legacy:
             self._locations_legacy()
             return
 
-        for location in self._locations.findall("./location"):
+        for location in locations:
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
@@ -406,7 +411,7 @@ class SmileHelper:
 
     def _get_module_data(
         self, appliance: etree, locator: str, mod_type: str
-    ) -> list[str | None]:
+    ) -> dict[str, Any]:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
         Collect requested info from MODULES.
         """
@@ -701,7 +706,7 @@ class SmileHelper:
 
         return matched_locations
 
-    def _control_state(self, loc_id: str) -> str | None:
+    def _control_state(self, loc_id: str) -> Any:
         """Helper-function for _device_data_adam().
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local master thermostat.
@@ -762,11 +767,11 @@ class SmileHelper:
 
         return presets
 
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str]:
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, Any]:
         """Helper-function for _presets().
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
-        schedule_ids: dict[str] = {}
+        schedule_ids: dict[str, str | None] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             if rule.find(locator) is not None:
@@ -776,11 +781,11 @@ class SmileHelper:
 
         return schedule_ids
 
-    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str]:
+    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, Any]:
         """Helper-function for _presets(), _schedules() and _last_active_schedule().
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
-        schedule_ids: dict[str] = {}
+        schedule_ids: dict[str, str | None] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall("./rule"):
@@ -796,7 +801,7 @@ class SmileHelper:
         self, appliance: etree, data: dict[str, Any], measurements: dict[str, Any]
     ) -> dict[str, Any]:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
-        for measurement, attrs in measurements:
+        for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
@@ -826,11 +831,11 @@ class SmileHelper:
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
                     self._anna_cooling_present = self._cooling_present = True
-                    self._cooling_activation_outdoor_temp = data.get(measurement)
+                    self._cooling_activation_outdoor_temp = data[measurement]
                 if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data.get(measurement)
+                    self._cooling_deactivation_threshold = data[measurement]
                 if measurement == "outdoor_air_temperature":
-                    self._outdoor_temp = data.get(measurement)
+                    self._outdoor_temp = data[measurement]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
@@ -865,12 +870,12 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
-        measurements = DEVICE_MEASUREMENTS.items()
+        measurements = DEVICE_MEASUREMENTS
         if self._opentherm_device or self._on_off_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
                 **HEATER_CENTRAL_MEASUREMENTS,
-            }.items()
+            }
 
         if (
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
@@ -898,7 +903,7 @@ class SmileHelper:
         loc_id: str,
         appliance_id: str,
         appliance_details: dict[str, Any],
-    ) -> str:
+    ) -> Any:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
         appl_class = appliance_details.get("class")
@@ -924,7 +929,7 @@ class SmileHelper:
 
         return appl_class
 
-    def _scan_thermostats(self, debug_text="missing text") -> None:
+    def _scan_thermostats(self) -> None:
         """Helper-function for smile.py: get_all_devices().
         Update locations with thermostat ranking results.
         """
@@ -958,7 +963,7 @@ class SmileHelper:
 
                 # Find highest ranking thermostat
                 if appl_class in thermo_matching:
-                    if (tm_a_class := thermo_matching.get(appl_class)) > high_prio:
+                    if (tm_a_class := thermo_matching[appl_class]) > high_prio:
                         high_prio = tm_a_class
 
     def _thermostat_uri_legacy(self) -> str:
@@ -981,17 +986,17 @@ class SmileHelper:
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self) -> dict[str]:
+    def _group_switches(self) -> dict[str, dict[str, Any]]:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
-        switch_groups: dict[str] = {}
+        switch_groups: dict[str, dict[str, Any]] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
-            group_appl: dict[str] = {}
+            group_appl: dict[str, Any] = {}
             members: list[str] = []
             group_id = group.attrib["id"]
             group_name = group.find("name").text
@@ -1032,7 +1037,7 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
-    def _power_data_peak_value(self, loc: str) -> Munch:
+    def _power_data_peak_value(self, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
         no_tariffs = False
@@ -1073,11 +1078,11 @@ class SmileHelper:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: dict[str, any] = {}
+        direct_data: dict[str, Any] = {}
         loc = Munch()
 
         if self.smile_type != "power":
-            return
+            return None
 
         search = self._locations
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
@@ -1106,7 +1111,7 @@ class SmileHelper:
 
         return direct_data
 
-    def _preset(self, loc_id: str) -> str | None:
+    def _preset(self, loc_id: str) -> Any:
         """Helper-function for smile.py: device_data_climate().
         Collect the active preset based on Location ID.
         """
@@ -1123,13 +1128,12 @@ class SmileHelper:
         return active_rule.attrib["icon"]
 
     def _schedules_legacy(
-        self, avail: list[str], sched_temp: str, sel: str
-    ) -> tuple[str, ...]:
+        self, avail: list[str], sched_temp: str | None, sel: str
+    ) -> tuple[list[str], str, str | None, None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
         """
         name: str | None = None
-        schedules: dict[str] = {}
 
         search = self._domain_objects
         for schedule in search.findall("./rule"):
@@ -1144,23 +1148,24 @@ class SmileHelper:
             active = result.text == "on"
 
         if name is not None:
-            schedules[name] = active
             avail = [name]
             if active:
                 sel = name
 
         return avail, sel, sched_temp, None
 
-    def _schedules(self, location: str) -> tuple[str, ...]:
+    def _schedules(
+        self, location: str
+    ) -> tuple[list[str], str, str | None, str | None]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-        available: list[str] = ["None"]
+        available: list[str] = [NONE]
         last_used: str | None = None
-        rule_ids: dict[str] = {}
+        rule_ids: dict[str, str] = {}
         schedule_temperature: str | None = None
-        selected = "None"
+        selected = NONE
         tmp_last_used: str | None = None
 
         # Legacy Anna schedule, only one schedule allowed
@@ -1176,7 +1181,7 @@ class SmileHelper:
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperature, None
 
-        schedules: dict[str, Any] = {}
+        schedules: dict[str, dict[str, float]] = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, float] = {}
@@ -1192,7 +1197,7 @@ class SmileHelper:
                         self._presets(loc_id)[entry["preset"]][0]
                     )
                 else:
-                    temp[directive.attrib["time"]] = float(entry.get("setpoint"))
+                    temp[directive.attrib["time"]] = float(entry["setpoint"])
                 count += 1
 
             if count > 1:
@@ -1209,7 +1214,7 @@ class SmileHelper:
                 schedules[name] = schedule
 
         if schedules:
-            available.remove("None")
+            available.remove(NONE)
             tmp_last_used = self._last_used_schedule(location, rule_ids)
             if tmp_last_used in schedules:
                 last_used = tmp_last_used
@@ -1217,7 +1222,7 @@ class SmileHelper:
 
         return available, selected, schedule_temperature, last_used
 
-    def _last_used_schedule(self, loc_id: str, rule_ids: dict[str]) -> str | None:
+    def _last_used_schedule(self, loc_id: str, rule_ids: dict[str, str]) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
         """
@@ -1228,10 +1233,10 @@ class SmileHelper:
 
         # Alternatively, find last_used by finding the most recent modified_date
         if not rule_ids:
-            return  # pragma: no cover
+            return None  # pragma: no cover
 
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        schedules: dict[str] | None = {}
+        schedules: dict[str, float] = {}
 
         for rule_id in rule_ids:
             schedule_name = self._domain_objects.find(
@@ -1256,12 +1261,12 @@ class SmileHelper:
         search = self._domain_objects
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
-            val = format_measure(found.text, None)
+            val = format_measure(found.text, NONE)
             return val
 
         return val
 
-    def _get_lock_state(self, xml: str) -> dict[str, Any]:
+    def _get_lock_state(self, xml: etree) -> dict[str, Any]:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
@@ -1275,7 +1280,7 @@ class SmileHelper:
         if appl_class not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
-                data["lock"] = format_measure(found.text, None)
+                data["lock"] = format_measure(found.text, NONE)
 
         return data
 

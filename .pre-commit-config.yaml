@@ -3,18 +3,6 @@ default_language_version:
   python: python3.9
 repos:
   # Run manually in CI skipping the branch checks
-  - repo: https://github.com/PyCQA/pylint
-    rev: v2.12.2
-    hooks:
-      - id: pylint
-        name: pylint
-        entry: scripts/run-in-env.sh pylint
-        language: system
-        types: [python]
-        args: [
-          "-rn",  # Only display messages
-          "-sn",  # Don't display the score
-        ]
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
     hooks:
@@ -28,10 +16,10 @@ repos:
         args:
           - --branch=main
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.31.0
+    rev: v2.31.1
     hooks:
       - id: pyupgrade
-        args: [--py37-plus]
+        args: [--py39-plus]
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:
@@ -45,17 +33,22 @@ repos:
     hooks:
       - id: codespell
         args:
-          - --ignore-words-list=hass,alot,datas,dof,dur,farenheit,hist,iff,ines,ist,lightsensor,mut,nd,pres,referer,ser,serie,te,technik,ue,uint,visability,wan,wanna,withing,iam,incomfort
+          - --ignore-words-list=hass,alot,datas,dof,dur,ether,farenheit,hist,iff,iif,ines,ist,lightsensor,mut,nd,pres,referer,rime,ser,serie,te,technik,ue,uint,visability,wan,wanna,withing,iam,incomfort,ba,haa,pullrequests
           - --skip="./.*,*.csv,*.json"
           - --quiet-level=2
         exclude_types: [csv, json]
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.2
+    rev: 4.0.1
     hooks:
       - id: flake8
         additional_dependencies:
-          - flake8-docstrings==1.5.0
-          - pydocstyle==5.1.1
+          - pycodestyle==2.8.0
+          - pyflakes==2.4.0
+          - flake8-docstrings==1.6.0
+          - pydocstyle==6.1.1
+          - flake8-comprehensions==3.8.0
+          - flake8-noqa==1.2.1
+          - mccabe==0.6.1
         files: ^(plugwise|tests)/.+\.py$
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.4
@@ -70,11 +63,23 @@ repos:
     rev: v1.26.3
     hooks:
       - id: yamllint
-  - repo: https://github.com/prettier/prettier
-    rev: 2.5.1
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.6.1
     hooks:
       - id: prettier
+  - repo: https://github.com/cdce8p/python-typing-update
+    rev: v0.3.5
+    hooks:
+      # Run `python-typing-update` hook manually from time to time
+      # to update python typing syntax.
+      # Will require manual work, before submitting changes!
+      - id: python-typing-update
         stages: [manual]
+        args:
+          - --py39-plus
+          - --force
+          - --keep-updates
+        files: ^(plugwise|tests)/.+\.py$
   - repo: local
     hooks:
       # Run mypy through our wrapper script in order to get the possible
@@ -93,4 +98,10 @@ repos:
         language: script
         types: [python]
         require_serial: true
+        files: ^plugwise/$
+      - id: pylint
+        name: pylint
+        entry: scripts/run-in-env.sh pylint -j 0
+        language: script
+        types: [python]
         files: ^plugwise/.+\.py$

@@ -287,7 +287,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         if not timeout:
             assert smile._timeout == 30
-        assert smile._domain_objects is None
+        # assert smile._domain_objects is None - domain_objects no longer inited as None
         assert smile.smile_type is None
 
         # Connect to the smile
