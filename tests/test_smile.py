@@ -470,6 +470,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 pw_exceptions.ResponseError,
             ):
                 if unhappy:
+                    switch_change = False
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
