@@ -553,7 +553,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules = ["Weekschema"]
 
         await self.tinker_thermostat_temp(smile, loc_id, unhappy)
-        await self.tinker_thermostat_preset(smile, loc_id, unhappy)
+        await self.tinker_thermostat_preset(smile, loc_id)
         await self.tinker_thermostat_schedule(
             smile, loc_id, "on", good_schedules, unhappy
         )
