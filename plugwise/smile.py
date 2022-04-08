@@ -637,7 +637,7 @@ class Smile(SmileComm, SmileData):
             lock_state: str = self._appliances.find(locator).text
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
-                return
+                raise PlugwiseException("Cannot switch a locked Relay.")
 
         await self._request(uri, method="put", data=data)
 
