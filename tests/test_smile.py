@@ -534,6 +534,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 try:
                     await smile.set_schedule_state(loc_id, new_schedule, state)
                     _LOGGER.info("  + failed as intended")
+                except pw_exceptions.PlugwiseException:
+                    _LOGGER.info("  + failed as expected")
                 except (
                     pw_exceptions.ErrorSendingCommandError,
                     pw_exceptions.ResponseError,
@@ -555,7 +557,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules = ["Weekschema"]
 
         await self.tinker_thermostat_temp(smile, loc_id, unhappy)
-        await self.tinker_thermostat_preset(smile, loc_id)
+        await self.tinker_thermostat_preset(smile, loc_id, unhappy)
         await self.tinker_thermostat_schedule(
             smile, loc_id, "on", good_schedules, unhappy
         )
