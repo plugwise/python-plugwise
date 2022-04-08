@@ -465,12 +465,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
                 switch_change = True
+            except pw_exceptions.PlugwiseException:
+                _LOGGER.info("  + failed as expected")
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
+                switch_change = False
                 if unhappy:
-                    switch_change = False
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
