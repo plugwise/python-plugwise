@@ -490,7 +490,8 @@ class Smile(SmileComm, SmileData):
         Determined from - DOMAIN_OBJECTS.
         """
         if self._smile_legacy:
-            return await self._set_schedule_state_legacy(name, state)
+            await self._set_schedule_state_legacy(name, state)
+            return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         if not schedule_rule or schedule_rule is None:
@@ -544,6 +545,7 @@ class Smile(SmileComm, SmileData):
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if self._smile_legacy:
             await self._set_preset_legacy(preset)
+            return
 
         current_location = self._locations.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
