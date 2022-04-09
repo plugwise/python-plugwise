@@ -1,5 +1,11 @@
 # Changelog
 
+# v0.17.5: Smile: rework to raise instead of return
+- raise in error-cases, move LOGGER.debug messages into raise
+- clean up code
+
+# v0.17.4 - Smile: improve typing hints, implement mypy testing
+
 # v0.17.3 - Smile Adam: add support for heater_electric type Plugs
 
 # v0.17.2 - Smile Adam: more bugfixes, improvementds
