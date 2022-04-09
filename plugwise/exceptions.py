@@ -59,6 +59,10 @@ class InvalidSetupError(PlugwiseException):
     """Raised when adding an Anna while an Adam exists."""
 
 
+class PlugwiseError(PlugwiseException):
+    """Raise when a non-specific error happens."""
+
+
 class UnsupportedDeviceError(PlugwiseException):
     """Raised when device is not supported."""
 

@@ -463,13 +463,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for new_state in [False, True, False]:
             _LOGGER.info("- Switching %s", new_state)
             try:
-                switch_change = await smile.set_switch_state(
-                    dev_id, members, model, new_state
-                )
+                await smile.set_switch_state(dev_id, members, model, new_state)
+                switch_change = True
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + locked, not switched as expected")
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
+                switch_change = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
@@ -484,8 +486,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for new_temp in [20.0, 22.9]:
             _LOGGER.info("- Adjusting temperature to %s", new_temp)
             try:
-                temp_change = await smile.set_temperature(loc_id, new_temp)
-                assert temp_change
+                await smile.set_temperature(loc_id, new_temp)
                 _LOGGER.info("  + worked as intended")
             except (
                 pw_exceptions.ErrorSendingCommandError,
@@ -501,17 +502,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
         for new_preset in ["asleep", "home", "!bogus"]:
-            assert_state = True
             warning = ""
             if new_preset[0] == "!":
-                assert_state = False
                 warning = " Negative test"
                 new_preset = new_preset[1:]
             _LOGGER.info("%s", f"- Adjusting preset to {new_preset}{warning}")
             try:
-                preset_change = await smile.set_preset(loc_id, new_preset)
-                assert preset_change == assert_state
+                await smile.set_preset(loc_id, new_preset)
                 _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + found invalid preset, as expected")
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
@@ -529,19 +529,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if good_schedules != []:
             good_schedules.append("!VeryBogusScheduleNameThatNobodyEverUsesOrShouldUse")
             for new_schedule in good_schedules:
-                assert_state = True
                 warning = ""
                 if new_schedule[0] == "!":
-                    assert_state = False
                     warning = " Negative test"
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    schedule_change = await smile.set_schedule_state(
-                        loc_id, new_schedule, state
-                    )
-                    assert schedule_change == assert_state
-                    _LOGGER.info("  + failed as intended")
+                    await smile.set_schedule_state(loc_id, new_schedule, state)
+                    _LOGGER.info("  + found invalid schedule, as intended")
+                except pw_exceptions.PlugwiseError:
+                    _LOGGER.info("  + failed as expected")
                 except (
                     pw_exceptions.ErrorSendingCommandError,
                     pw_exceptions.ResponseError,
@@ -579,24 +576,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_regulation_mode(smile):
         """Toggle regulation_mode to test functionality."""
         for mode in ["off", "heating", "bleeding_cold", "!bogus"]:
-            assert_state = True
             warning = ""
             if mode[0] == "!":
-                assert_state = False
                 warning = " Negative test"
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
-            mode_change = await smile.set_regulation_mode(mode)
-            assert mode_change == assert_state
-            _LOGGER.info("  + worked as intended")
+            try:
+                await smile.set_regulation_mode(mode)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + found invalid mode, as expected")
 
     @staticmethod
     async def tinker_max_boiler_temp(smile):
         """Change max boiler temp setpoint to test functionality."""
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
-        temp_change = await smile.set_max_boiler_temperature(new_temp)
-        assert temp_change
+        await smile.set_max_boiler_temperature(new_temp)
         _LOGGER.info("  + worked as intended")
 
     @pytest.mark.asyncio
@@ -3045,7 +3041,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             _server, _smile, _client = await self.connect_wrapper()
             assert False  # pragma: no cover
-        except pw_exceptions.ConnectionFailedError:
+        except pw_exceptions.InvalidXMLError:
             assert True
 
     @pytest.mark.asyncio

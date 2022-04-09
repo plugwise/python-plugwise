@@ -34,7 +34,7 @@ from .constants import (
 from .exceptions import (
     ConnectionFailedError,
     InvalidSetupError,
-    InvalidXMLError,
+    PlugwiseError,
     UnsupportedDeviceError,
 )
 from .helper import SmileComm, SmileHelper, update_helper
@@ -275,21 +275,18 @@ class Smile(SmileComm, SmileData):
         dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names:
             if dsmrmain is None:  # pragma: no cover
-                LOGGER.error(
-                    "Connected but expected text not returned, \
-                    we got %s. Please create an issue on \
-                    http://github.com/plugwise/python-plugwise",
-                    result,
+                raise ConnectionFailedError(
+                    f"Connected but expected text not returned, \
+                    we got {result}. Please create an issue on \
+                    http://github.com/plugwise/python-plugwise"
                 )
-                raise ConnectionFailedError
 
         # Check if Anna is connected to an Adam
         if "159.2" in models:
-            LOGGER.error(
+            raise InvalidSetupError(
                 "Your Anna is connected to an Adam, make \
-                sure to only add the Adam as integration.",
+                sure to only add the Adam as integration."
             )
-            raise InvalidSetupError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
@@ -320,38 +317,31 @@ class Smile(SmileComm, SmileData):
         if result.find('./appliance[type="thermostat"]') is None:
             # It's a P1 legacy:
             if dsmrmain is not None:
-                try:
-                    status = await self._request(STATUS)
-                    self.smile_fw_version = status.find("./system/version").text
-                    model = status.find("./system/product").text
-                    self.smile_hostname = status.find("./network/hostname").text
-                    self.smile_mac_address = status.find("./network/mac_address").text
-                except InvalidXMLError:  # pragma: no cover
-                    # Corner case check
-                    raise ConnectionFailedError
+                status = await self._request(STATUS)
+                self.smile_fw_version = status.find("./system/version").text
+                model = status.find("./system/product").text
+                self.smile_hostname = status.find("./network/hostname").text
+                self.smile_mac_address = status.find("./network/mac_address").text
 
             # Or a legacy Stretch:
             elif network is not None:
-                try:
-                    system = await self._request(SYSTEM)
-                    self.smile_fw_version = system.find("./gateway/firmware").text
-                    model = system.find("./gateway/product").text
-                    self.smile_hostname = system.find("./gateway/hostname").text
-                    # If wlan0 contains data it's active, so eth0 should be checked last
-                    for network in ["wlan0", "eth0"]:
-                        locator = f"./{network}/mac"
-                        if (net_locator := system.find(locator)) is not None:
-                            self.smile_mac_address = net_locator.text
-                except InvalidXMLError:  # pragma: no cover
-                    # Corner case check
-                    raise ConnectionFailedError
+                system = await self._request(SYSTEM)
+                self.smile_fw_version = system.find("./gateway/firmware").text
+                model = system.find("./gateway/product").text
+                self.smile_hostname = system.find("./gateway/hostname").text
+                # If wlan0 contains data it's active, so eth0 should be checked last
+                for network in ["wlan0", "eth0"]:
+                    locator = f"./{network}/mac"
+                    if (net_locator := system.find(locator)) is not None:
+                        self.smile_mac_address = net_locator.text
+
             else:  # pragma: no cover
                 # No cornercase, just end of the line
-                LOGGER.error(
+                raise ConnectionFailedError(
                     "Connected but no gateway device information found, please create \
                      an issue on http://github.com/plugwise/python-plugwise"
                 )
-                raise ConnectionFailedError
+
         return model
 
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
@@ -370,23 +360,20 @@ class Smile(SmileComm, SmileData):
 
         if model is None or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
-            LOGGER.error(
+            raise UnsupportedDeviceError(
                 "Unable to find model or version information, please create \
                  an issue on http://github.com/plugwise/python-plugwise"
             )
-            raise UnsupportedDeviceError
 
         ver = semver.VersionInfo.parse(self.smile_fw_version)
         target_smile = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
-            LOGGER.error(
-                'Your version Smile identified as "%s" seems\
+            raise UnsupportedDeviceError(
+                "Your version Smile identified as {target_smile} seems\
                  unsupported by our plugin, please create an issue\
-                 on http://github.com/plugwise/python-plugwise',
-                target_smile,
+                 on http://github.com/plugwise/python-plugwise"
             )
-            raise UnsupportedDeviceError
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
@@ -472,7 +459,7 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name: str, status: str) -> bool:
+    async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
         """Helper-function for set_schedule_state()."""
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
@@ -480,7 +467,7 @@ class Smile(SmileComm, SmileData):
                 schedule_rule_id = rule.attrib["id"]
 
         if schedule_rule_id is None:
-            return False
+            raise PlugwiseError("No schedule available.")
 
         state = "false"
         if status == "on":
@@ -497,18 +484,18 @@ class Smile(SmileComm, SmileData):
         )
 
         await self._request(uri, method="put", data=data)
-        return True
 
-    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> bool:
+    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> None:
         """Set the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         """
         if self._smile_legacy:
-            return await self._set_schedule_state_legacy(name, state)
+            await self._set_schedule_state_legacy(name, state)
+            return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         if not schedule_rule or schedule_rule is None:
-            return False
+            raise PlugwiseError("No schedule with this name available.")
 
         schedule_rule_id: str = next(iter(schedule_rule))
 
@@ -543,31 +530,29 @@ class Smile(SmileComm, SmileData):
         )
         await self._request(uri, method="put", data=data)
 
-        return True
-
-    async def _set_preset_legacy(self, preset: str) -> bool:
+    async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         if (rule := self._domain_objects.find(locator)) is None:
-            return False
+            raise PlugwiseError("Invalid preset.")
 
         uri = RULES
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
         await self._request(uri, method="put", data=data)
-        return True
 
-    async def set_preset(self, loc_id: str, preset: str) -> bool:
+    async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if self._smile_legacy:
-            return await self._set_preset_legacy(preset)
+            await self._set_preset_legacy(preset)
+            return
 
         current_location = self._locations.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
 
         if preset not in self._presets(loc_id):
-            return False
+            raise PlugwiseError("Invalid preset.")
 
         uri = f"{LOCATIONS};id={loc_id}"
         data = (
@@ -577,9 +562,8 @@ class Smile(SmileComm, SmileData):
         )
 
         await self._request(uri, method="put", data=data)
-        return True
 
-    async def set_temperature(self, loc_id: str, temperature: str) -> bool:
+    async def set_temperature(self, loc_id: str, temperature: str) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         uri = self._thermostat_uri(loc_id)
         data = (
@@ -588,9 +572,8 @@ class Smile(SmileComm, SmileData):
         )
 
         await self._request(uri, method="put", data=data)
-        return True
 
-    async def set_max_boiler_temperature(self, temperature: str) -> bool:
+    async def set_max_boiler_temperature(self, temperature: str) -> None:
         """Set the max. Boiler Temperature on the Central heating boiler."""
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
         th_func = self._appliances.find(locator)
@@ -601,11 +584,10 @@ class Smile(SmileComm, SmileData):
         data = f"<thermostat_functionality><setpoint>{temperature}</setpoint></thermostat_functionality>"
 
         await self._request(uri, method="put", data=data)
-        return True
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
-    ) -> bool:
+    ) -> None:
         """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
         """
@@ -619,11 +601,9 @@ class Smile(SmileComm, SmileData):
 
             await self._request(uri, method="put", data=data)
 
-        return True
-
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> None:
         """Set the given State of the relevant Switch."""
         switch = Munch()
         switch.actuator = "actuator_functionalities"
@@ -659,15 +639,14 @@ class Smile(SmileComm, SmileData):
             lock_state: str = self._appliances.find(locator).text
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
-                return False
+                raise PlugwiseError("Cannot switch a locked Relay.")
 
         await self._request(uri, method="put", data=data)
-        return True
 
-    async def set_regulation_mode(self, mode: str) -> bool:
+    async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._allowed_modes:
-            return False
+            raise PlugwiseError("Invalid regulation mode.")
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         duration = ""
@@ -676,11 +655,9 @@ class Smile(SmileComm, SmileData):
         data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)
-        return True
 
-    async def delete_notification(self) -> bool:
+    async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
         uri = NOTIFICATIONS
 
         await self._request(uri, method="delete")
-        return True
