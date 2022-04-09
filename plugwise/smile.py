@@ -459,7 +459,7 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name: str, status: str) -> bool:
+    async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
         """Helper-function for set_schedule_state()."""
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
@@ -485,7 +485,7 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> bool:
+    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> None:
         """Set the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         """
@@ -540,7 +540,7 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_preset(self, loc_id: str, preset: str) -> bool:
+    async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if self._smile_legacy:
             return await self._set_preset_legacy(preset)
@@ -561,7 +561,7 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temperature: str) -> bool:
+    async def set_temperature(self, loc_id: str, temperature: str) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         uri = self._thermostat_uri(loc_id)
         data = (
@@ -571,7 +571,7 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_max_boiler_temperature(self, temperature: str) -> bool:
+    async def set_max_boiler_temperature(self, temperature: str) -> None:
         """Set the max. Boiler Temperature on the Central heating boiler."""
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
         th_func = self._appliances.find(locator)
@@ -585,7 +585,7 @@ class Smile(SmileComm, SmileData):
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
-    ) -> bool:
+    ) -> None:
         """Helper-function for set_switch_state() .
         Set the given State of the relevant Switch within a group of members.
         """
@@ -601,7 +601,7 @@ class Smile(SmileComm, SmileData):
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
-    ) -> bool:
+    ) -> None:
         """Set the given State of the relevant Switch."""
         switch = Munch()
         switch.actuator = "actuator_functionalities"
@@ -641,7 +641,7 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_regulation_mode(self, mode: str) -> bool:
+    async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._allowed_modes:
             raise PlugwiseError("Invalid regulation mode.")
@@ -654,7 +654,7 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def delete_notification(self) -> bool:
+    async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
         uri = NOTIFICATIONS
 
