@@ -529,7 +529,7 @@ class Smile(SmileComm, SmileData):
         )
         await self._request(uri, method="put", data=data)
 
-    async def _set_preset_legacy(self, preset: str) -> bool:
+    async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         if (rule := self._domain_objects.find(locator)) is None:
@@ -543,7 +543,7 @@ class Smile(SmileComm, SmileData):
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
         if self._smile_legacy:
-            return await self._set_preset_legacy(preset)
+            await self._set_preset_legacy(preset)
 
         current_location = self._locations.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
