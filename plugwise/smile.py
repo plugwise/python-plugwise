@@ -34,7 +34,7 @@ from .constants import (
 from .exceptions import (
     ConnectionFailedError,
     InvalidSetupError,
-    PlugwiseException,
+    PlugwiseError,
     UnsupportedDeviceError,
 )
 from .helper import SmileComm, SmileHelper, update_helper
@@ -467,7 +467,7 @@ class Smile(SmileComm, SmileData):
                 schedule_rule_id = rule.attrib["id"]
 
         if schedule_rule_id is None:
-            raise PlugwiseException("No schedule available.")
+            raise PlugwiseError("No schedule available.")
 
         state = "false"
         if status == "on":
@@ -494,7 +494,7 @@ class Smile(SmileComm, SmileData):
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         if not schedule_rule or schedule_rule is None:
-            raise PlugwiseException("No schedule available.")
+            raise PlugwiseError("No schedule with this name available.")
 
         schedule_rule_id: str = next(iter(schedule_rule))
 
@@ -533,7 +533,7 @@ class Smile(SmileComm, SmileData):
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         if (rule := self._domain_objects.find(locator)) is None:
-            raise PlugwiseException("No presets available.")
+            raise PlugwiseError("Invalid preset.")
 
         uri = RULES
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
@@ -550,7 +550,7 @@ class Smile(SmileComm, SmileData):
         location_type = current_location.find("type").text
 
         if preset not in self._presets(loc_id):
-            raise PlugwiseException("Preset not available.")
+            raise PlugwiseError("Invalid preset.")
 
         uri = f"{LOCATIONS};id={loc_id}"
         data = (
@@ -637,14 +637,14 @@ class Smile(SmileComm, SmileData):
             lock_state: str = self._appliances.find(locator).text
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
-                raise PlugwiseException("Cannot switch a locked Relay.")
+                raise PlugwiseError("Cannot switch a locked Relay.")
 
         await self._request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> bool:
         """Set the heating regulation mode."""
         if mode not in self._allowed_modes:
-            raise PlugwiseException("Invalid regulation mode.")
+            raise PlugwiseError("Invalid regulation mode.")
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         duration = ""
