@@ -465,7 +465,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
                 switch_change = True
-            except pw_exceptions.PlugwiseException:
+            except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as expected")
             except (
                 pw_exceptions.ErrorSendingCommandError,
@@ -510,7 +510,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_preset(loc_id, new_preset)
                 _LOGGER.info("  + worked as intended")
-            except pw_exceptions.PlugwiseException:
+            except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as expected")
             except (
                 pw_exceptions.ErrorSendingCommandError,
@@ -537,7 +537,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 try:
                     await smile.set_schedule_state(loc_id, new_schedule, state)
                     _LOGGER.info("  + failed as intended")
-                except pw_exceptions.PlugwiseException:
+                except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
                 except (
                     pw_exceptions.ErrorSendingCommandError,
@@ -584,7 +584,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_regulation_mode(mode)
                 _LOGGER.info("  + worked as intended")
-            except pw_exceptions.PlugwiseException:
+            except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as expected")
 
     @staticmethod
