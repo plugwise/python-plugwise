@@ -275,17 +275,20 @@ class Smile(SmileComm, SmileData):
         dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names:
             if dsmrmain is None:  # pragma: no cover
-                raise ConnectionFailedError(
-                    f"Connected but expected text not returned, \
-                    we got {result}. Please create an issue on \
-                    http://github.com/plugwise/python-plugwise"
+                LOGGER.error(
+                    "Connected but expected text not returned, we got %s. Please create \
+                    an issue on http://github.com/plugwise/python-plugwise",
+                    result,
                 )
+                raise ConnectionFailedError("Plugwise error, check log for more info.")
 
         # Check if Anna is connected to an Adam
         if "159.2" in models:
+            LOGGER.error(
+                "Your Anna is connected to an Adam, make sure to only add the Adam as integration."
+            )
             raise InvalidSetupError(
-                "Your Anna is connected to an Adam, make \
-                sure to only add the Adam as integration."
+                "Plugwise invalid setup error, check log for more info."
             )
 
         # Determine smile specifics
@@ -337,10 +340,11 @@ class Smile(SmileComm, SmileData):
 
             else:  # pragma: no cover
                 # No cornercase, just end of the line
-                raise ConnectionFailedError(
+                LOGGER.error(
                     "Connected but no gateway device information found, please create \
                      an issue on http://github.com/plugwise/python-plugwise"
                 )
+                raise ConnectionFailedError("Plugwise error, check log for more info.")
 
         return model
 
@@ -360,20 +364,22 @@ class Smile(SmileComm, SmileData):
 
         if model is None or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
-            raise UnsupportedDeviceError(
+            LOGGER.error(
                 "Unable to find model or version information, please create \
                  an issue on http://github.com/plugwise/python-plugwise"
             )
+            raise UnsupportedDeviceError("Plugwise error, check log for more info.")
 
         ver = semver.VersionInfo.parse(self.smile_fw_version)
         target_smile = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
-            raise UnsupportedDeviceError(
-                "Your version Smile identified as {target_smile} seems\
-                 unsupported by our plugin, please create an issue\
-                 on http://github.com/plugwise/python-plugwise"
+            LOGGER.error(
+                'Your version Smile identified as "%s" seems unsupported by our plugin, please \
+                create an issue on http://github.com/plugwise/python-plugwise',
+                target_smile,
             )
+            raise UnsupportedDeviceError("Plugwise error, check log for more info.")
 
         self.smile_name = SMILES[target_smile]["friendly_name"]
         self.smile_type = SMILES[target_smile]["type"]
@@ -467,7 +473,7 @@ class Smile(SmileComm, SmileData):
                 schedule_rule_id = rule.attrib["id"]
 
         if schedule_rule_id is None:
-            raise PlugwiseError("No schedule available.")
+            raise PlugwiseError("Plugwise: no schedule available.")
 
         state = "false"
         if status == "on":
@@ -495,7 +501,7 @@ class Smile(SmileComm, SmileData):
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         if not schedule_rule or schedule_rule is None:
-            raise PlugwiseError("No schedule with this name available.")
+            raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         schedule_rule_id: str = next(iter(schedule_rule))
 
@@ -534,7 +540,7 @@ class Smile(SmileComm, SmileData):
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         if (rule := self._domain_objects.find(locator)) is None:
-            raise PlugwiseError("Invalid preset.")
+            raise PlugwiseError("Plugwise: invalid preset.")
 
         uri = RULES
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
@@ -552,7 +558,7 @@ class Smile(SmileComm, SmileData):
         location_type = current_location.find("type").text
 
         if preset not in self._presets(loc_id):
-            raise PlugwiseError("Invalid preset.")
+            raise PlugwiseError("Plugwise: invalid preset.")
 
         uri = f"{LOCATIONS};id={loc_id}"
         data = (
@@ -639,14 +645,14 @@ class Smile(SmileComm, SmileData):
             lock_state: str = self._appliances.find(locator).text
             # Don't bother switching a relay when the corresponding lock-state is true
             if lock_state == "true":
-                raise PlugwiseError("Cannot switch a locked Relay.")
+                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._allowed_modes:
-            raise PlugwiseError("Invalid regulation mode.")
+            raise PlugwiseError("Plugwise: invalid regulation mode.")
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         duration = ""
