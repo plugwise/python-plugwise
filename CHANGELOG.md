@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.17.6: Smile: revert removing LOGGER.error messages
+
 # v0.17.5: Smile: rework to raise instead of return
 - raise in error-cases, move LOGGER.debug messages into raise
 - clean up code
