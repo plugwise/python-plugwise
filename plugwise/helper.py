@@ -469,7 +469,9 @@ class SmileHelper:
                 appl.model = version_to_model(hw_version)
             appl.fw = module_data["firmware_version"]
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            return appl
+            # Filter appliance without zigbee_mac, it's an orphaned device
+            if appl.zigbee_mac:
+                return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
             locator = "./logs/point_log/electricity_point_meter"
