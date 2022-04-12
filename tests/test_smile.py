@@ -1446,6 +1446,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Tom/Floor",
                 "name": "Tom Badkamer",
                 "vendor": "Plugwise",
+                "zigbee_mac_address": "ABCD012345670A01",
                 "sensors": {
                     "temperature": 21.6,
                     "setpoint": 15.0,
@@ -1461,6 +1462,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Lisa",
                 "name": "Lisa Badkamer",
                 "vendor": "Plugwise",
+                "zigbee_mac_address": "ABCD012345670A04",
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "home",
                 "presets": {
