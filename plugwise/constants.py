@@ -551,6 +551,7 @@ SMILES: Final[dict[str, Any]] = {
 # All available Binary Sensor, Sensor, and Switch Types
 
 BINARY_SENSORS: Final[list[str]] = [
+    "compressor_state",
     "cooling_state",
     "dhw_state",
     "flame_state",
