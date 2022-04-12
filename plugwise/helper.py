@@ -519,6 +519,7 @@ class SmileHelper:
             appl.model = check_model(module_data["vendor_model"], appl.v_name)
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
 
             return appl
 
