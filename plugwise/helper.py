@@ -601,22 +601,21 @@ class SmileHelper:
                 "class": "gateway",
                 "fw": self.smile_fw_version,
                 "hw": self.smile_hw_version,
-                "mac_address": self.smile_mac_address,
                 "location": self._home_location,
-                "vendor": "Plugwise B.V.",
+                "mac_address": self.smile_mac_address,
             }
             self.gateway_id = self._home_location
 
             if self.smile_type == "power":
                 self._appl_data[self._home_location].update(
-                    {"model": "P1", "name": "P1"}
+                    {"model": "P1", "name": "P1", "vendor": "Plugwise B.V."}
                 )
                 # legacy p1 has no more devices
                 return
 
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
-                    {"model": "Anna", "name": "Anna"}
+                    {"model": "Anna", "name": "Anna", "vendor": "Plugwise B.V."}
                 )
 
             if self.smile_type == "stretch":
@@ -624,6 +623,7 @@ class SmileHelper:
                     {
                         "model": "Stretch",
                         "name": "Stretch",
+                        "vendor": "Plugwise B.V.",
                         "zigbee_mac_address": self.smile_zigbee_mac_address,
                     }
                 )
