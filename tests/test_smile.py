@@ -2431,8 +2431,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
-                "compressor_state": False,
                 "binary_sensors": {
+                    "compressor_state": False,
                     "dhw_state": False,
                     "heating_state": False,
                     "cooling_state": False,
