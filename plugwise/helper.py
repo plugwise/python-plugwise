@@ -1019,7 +1019,6 @@ class SmileHelper:
                     "model": "Switchgroup",
                     "name": group_name,
                     "members": members,
-                    "types": {"switch_group"},
                     "vendor": None,
                 }
 
