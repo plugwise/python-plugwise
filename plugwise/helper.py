@@ -125,7 +125,7 @@ def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> Any:
     return None
 
 
-def types_finder(data: etree) -> set[str]:
+def types_finder(data: etree) -> set[str | None]:
     """Detect types within locations from logs."""
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
