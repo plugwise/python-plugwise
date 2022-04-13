@@ -125,7 +125,7 @@ def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> Any:
     return None
 
 
-def types_finder(data: etree) -> set[str]:
+def types_finder(data: etree) -> set[str | None]:
     """Detect types within locations from logs."""
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
@@ -449,39 +449,43 @@ class SmileHelper:
 
         return model_data
 
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch | None:
         """Helper-function for _appliance_info_finder().
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
         if self._stretch_v2 or self._stretch_v3:
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
 
+            module_data = self._get_module_data(appliance, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             if appl.zigbee_mac is None:
-                return appl
+                return None
 
             appl.v_name = module_data["vendor_name"]
-            if appl.model != "Switchgroup":
-                appl.model = None
             appl.hw = module_data["hardware_version"]
             if appl.hw:
                 hw_version = module_data["hardware_version"].replace("-", "")
                 appl.model = version_to_model(hw_version)
             appl.fw = module_data["firmware_version"]
+
             return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
+            # Filter appliance without zigbee_mac, it's an orphaned device
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
+            if appl.zigbee_mac is None:
+                return None
+
             appl.v_name = module_data["vendor_name"]
             appl.model = version_to_model(module_data["vendor_model"])
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
+
             return appl
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
@@ -668,7 +672,7 @@ class SmileHelper:
             # Determine class for this appliance
             appl = self._appliance_info_finder(appliance, appl)
             # Skip on heater_central when no active device present or on orphaned stretch devices
-            if not appl:
+            if appl is None:
                 continue
 
             if appl.pwclass == "gateway":
