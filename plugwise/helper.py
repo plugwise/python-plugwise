@@ -488,6 +488,8 @@ class SmileHelper:
 
             return appl
 
+        return None
+
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Collect gateway device info
