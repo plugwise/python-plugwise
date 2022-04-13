@@ -1,5 +1,13 @@
 # Changelog
 
+# v0.17.7: Smile: Corrections, fixes, clean up
+- Move compressor_state into binary_sensors
+- Adam: add missing zigbee_mac to wireless thermostats
+- Stretch & Adam: don't show devices without a zigbee_mac, should be orphaned devices
+- Harmonize appliance dicts for legacy devices
+- Typing improvements
+- Fix related test asserts
+
 # v0.17.6: Smile: revert removing LOGGER.error messages
 
 # v0.17.5: Smile: rework to raise instead of return
