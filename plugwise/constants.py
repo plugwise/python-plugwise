@@ -510,7 +510,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
 }
 
 # Known types of Smiles and Stretches
-SMILES: Final[dict[str, dict[str, str | bool]]] = {
+SMILES: Final[dict[str, dict[str, Any]]] = {
     "smile_open_therm_v3": {
         "type": "thermostat",
         "friendly_name": "Adam",
