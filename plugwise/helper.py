@@ -457,13 +457,12 @@ class SmileHelper:
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            if not module_data["contents"]:
-                return appl
 
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             if appl.zigbee_mac is None:
                 return appl
+
             appl.v_name = module_data["vendor_name"]
             if appl.model != "Switchgroup":
                 appl.model = None
@@ -487,7 +486,7 @@ class SmileHelper:
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-        # Find gateway and heater_central devices
+        # Collect gateway device info
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
             appl.fw = self.smile_fw_version
@@ -514,6 +513,7 @@ class SmileHelper:
 
             return appl
 
+        # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
             locator = "./logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
@@ -526,20 +526,21 @@ class SmileHelper:
 
             return appl
 
+        # Collect heater_central device info
         if appl.pwclass == "heater_central":
             # Remove heater_central when no active device present
             if not self._opentherm_device and not self._on_off_device:
                 return None
 
             self._heater_id = appliance.attrib["id"]
-            #  info for On-Off device
+            #  Info for On-Off device
             if self._on_off_device:
                 appl.name = "OnOff"
                 appl.v_name = None
                 appl.model = "Unknown"
                 return appl
 
-            # Obtain info for OpenTherm device
+            # Info for OpenTherm device
             appl.name = "OpenTherm"
             locator1 = "./logs/point_log[type='flame_state']/boiler_state"
             locator2 = "./services/boiler_state"
@@ -558,13 +559,10 @@ class SmileHelper:
                 )
             return appl
 
-        # Handle stretches
+        # Collect info from Stretches
         appl = self._energy_device_info_finder(appliance, appl)
-        if not appl:
-            return None
 
-        # Cornercase just return existing dict-object
-        return appl  # pragma: no cover
+        return appl
 
     def _appliance_types_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _all_appliances() - determine type(s) per appliance."""
