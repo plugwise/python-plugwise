@@ -402,7 +402,7 @@ SYSTEM: Final = "/system"
 STATUS: Final = "/system/status.xml"
 
 # P1 related measurements:
-HOME_MEASUREMENTS: Final[dict[str, dict[str, str]] = {
+HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "electricity_consumed": {
         ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
