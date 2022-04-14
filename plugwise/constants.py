@@ -1,4 +1,6 @@
 """Plugwise Stick and Smile constants."""
+from __future__ import annotations
+
 import logging
 from typing import Any, Final
 
@@ -402,7 +404,7 @@ SYSTEM: Final = "/system"
 STATUS: Final = "/system/status.xml"
 
 # P1 related measurements:
-HOME_MEASUREMENTS: Final[dict[str, Any]] = {
+HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "electricity_consumed": {
         ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
@@ -421,7 +423,7 @@ HOME_MEASUREMENTS: Final[dict[str, Any]] = {
 # Excluded:
 # zone_thermosstat: 'temperature_offset'
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
-DEVICE_MEASUREMENTS: Final[dict[str, Any]] = {
+DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
     # HA Core thermostat current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core thermostat setpoint
@@ -452,7 +454,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, Any]] = {
 }
 
 # Heater Central related measurements
-HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, Any]] = {
+HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
     "boiler_temperature": {
         ATTR_NAME: "water_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
@@ -508,7 +510,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, Any]] = {
 }
 
 # Known types of Smiles and Stretches
-SMILES: Final[dict[str, Any]] = {
+SMILES: Final[dict[str, dict[str, Any]]] = {
     "smile_open_therm_v3": {
         "type": "thermostat",
         "friendly_name": "Adam",
@@ -551,6 +553,7 @@ SMILES: Final[dict[str, Any]] = {
 # All available Binary Sensor, Sensor, and Switch Types
 
 BINARY_SENSORS: Final[list[str]] = [
+    "compressor_state",
     "cooling_state",
     "dhw_state",
     "flame_state",

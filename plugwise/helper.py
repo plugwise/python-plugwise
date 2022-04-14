@@ -125,7 +125,7 @@ def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> Any:
     return None
 
 
-def types_finder(data: etree) -> set[str]:
+def types_finder(data: etree) -> set[str | None]:
     """Detect types within locations from logs."""
     types = set()
     for measure, attrs in HOME_MEASUREMENTS.items():
@@ -449,42 +449,50 @@ class SmileHelper:
 
         return model_data
 
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch | None:
         """Helper-function for _appliance_info_finder().
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
         if self._stretch_v2 or self._stretch_v3:
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
+
             module_data = self._get_module_data(appliance, locator, mod_type)
-            if not module_data["contents"]:
+            # Filter appliance without zigbee_mac, it's an orphaned device
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
+            if appl.zigbee_mac is None:
                 return None
 
             appl.v_name = module_data["vendor_name"]
-            if appl.model != "Switchgroup":
-                appl.model = None
             appl.hw = module_data["hardware_version"]
             if appl.hw:
                 hw_version = module_data["hardware_version"].replace("-", "")
                 appl.model = version_to_model(hw_version)
             appl.fw = module_data["firmware_version"]
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
+
             return appl
 
         if self.smile_type != "stretch" and "plug" in appl.types:
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
+            # Filter appliance without zigbee_mac, it's an orphaned device
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
+            if appl.zigbee_mac is None:
+                return None
+
             appl.v_name = module_data["vendor_name"]
             appl.model = version_to_model(module_data["vendor_model"])
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
+
             return appl
+
+        return appl  # pragma: no cover
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-        # Find gateway and heater_central devices
+        # Collect gateway device info
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
             appl.fw = self.smile_fw_version
@@ -511,6 +519,7 @@ class SmileHelper:
 
             return appl
 
+        # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
             locator = "./logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
@@ -519,23 +528,25 @@ class SmileHelper:
             appl.model = check_model(module_data["vendor_model"], appl.v_name)
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
 
             return appl
 
+        # Collect heater_central device info
         if appl.pwclass == "heater_central":
             # Remove heater_central when no active device present
             if not self._opentherm_device and not self._on_off_device:
                 return None
 
             self._heater_id = appliance.attrib["id"]
-            #  info for On-Off device
+            #  Info for On-Off device
             if self._on_off_device:
                 appl.name = "OnOff"
                 appl.v_name = None
                 appl.model = "Unknown"
                 return appl
 
-            # Obtain info for OpenTherm device
+            # Info for OpenTherm device
             appl.name = "OpenTherm"
             locator1 = "./logs/point_log[type='flame_state']/boiler_state"
             locator2 = "./services/boiler_state"
@@ -554,13 +565,10 @@ class SmileHelper:
                 )
             return appl
 
-        # Handle stretches
+        # Collect info from Stretches
         appl = self._energy_device_info_finder(appliance, appl)
-        if not appl:
-            return None
 
-        # Cornercase just return existing dict-object
-        return appl  # pragma: no cover
+        return appl
 
     def _appliance_types_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _all_appliances() - determine type(s) per appliance."""
@@ -600,22 +608,21 @@ class SmileHelper:
                 "class": "gateway",
                 "fw": self.smile_fw_version,
                 "hw": self.smile_hw_version,
-                "mac_address": self.smile_mac_address,
                 "location": self._home_location,
-                "vendor": "Plugwise B.V.",
+                "mac_address": self.smile_mac_address,
             }
             self.gateway_id = self._home_location
 
             if self.smile_type == "power":
                 self._appl_data[self._home_location].update(
-                    {"model": "P1", "name": "P1"}
+                    {"model": "P1", "name": "P1", "vendor": "Plugwise B.V."}
                 )
                 # legacy p1 has no more devices
                 return
 
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
-                    {"model": "Anna", "name": "Anna"}
+                    {"model": "Anna", "name": "Anna", "vendor": "Plugwise B.V."}
                 )
 
             if self.smile_type == "stretch":
@@ -623,6 +630,7 @@ class SmileHelper:
                     {
                         "model": "Stretch",
                         "name": "Stretch",
+                        "vendor": "Plugwise B.V.",
                         "zigbee_mac_address": self.smile_zigbee_mac_address,
                     }
                 )
@@ -666,7 +674,7 @@ class SmileHelper:
             # Determine class for this appliance
             appl = self._appliance_info_finder(appliance, appl)
             # Skip on heater_central when no active device present or on orphaned stretch devices
-            if not appl:
+            if appl is None:
                 continue
 
             if appl.pwclass == "gateway":
@@ -1019,7 +1027,6 @@ class SmileHelper:
                     "model": "Switchgroup",
                     "name": group_name,
                     "members": members,
-                    "types": {"switch_group"},
                     "vendor": None,
                 }
 
