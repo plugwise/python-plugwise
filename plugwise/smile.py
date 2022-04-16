@@ -30,6 +30,9 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
+    PlugwiseSmileBinarySensors,
+    PlugwiseSmileSensors,
+    PlugwiseSmileSwitches,
 )
 from .exceptions import (
     ConnectionFailedError,
@@ -48,9 +51,9 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._devices.items():
-            bs_dict: dict[str, bool] = {}
-            s_dict: dict[str, Any] = {}
-            sw_dict: dict[str, bool] = {}
+            bs_dict: PlugwiseSmileBinarySensors = {}
+            s_dict: PlugwiseSmileSensors = {}
+            sw_dict: PlugwiseSmileSwitches = {}
             data = self._get_device_data(device_id)
             self.gw_devices[device_id] = self._update_device_with_dicts(
                 device_id, data, device, bs_dict, s_dict, sw_dict
