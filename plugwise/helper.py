@@ -44,9 +44,9 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SWITCHES,
     THERMOSTAT_CLASSES,
-    PlugwiseSmileBinarySensors,
-    PlugwiseSmileSensors,
-    PlugwiseSmileSwitches,
+    SmileBinarySensors,
+    SmileSensors,
+    SmileSwitches,
 )
 from .exceptions import (
     DeviceTimeoutError,
@@ -1308,9 +1308,9 @@ class SmileHelper:
         d_id: str,
         data: dict[str, Any],
         device: dict[str, Any],
-        bs_dict: PlugwiseSmileBinarySensors,
-        s_dict: PlugwiseSmileSensors,
-        sw_dict: PlugwiseSmileSwitches,
+        bs_dict: SmileBinarySensors,
+        s_dict: SmileSensors,
+        sw_dict: SmileSwitches,
     ) -> dict[str, Any]:
         """Helper-function for smile.py: _all_device_data().
         Move relevant data into dicts of binary_sensors, sensors, switches,

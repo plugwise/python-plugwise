@@ -610,7 +610,7 @@ SWITCHES: Final[list[str]] = [
 ]
 
 
-class PlugwiseSmileBinarySensors(TypedDict):
+class SmileBinarySensors(TypedDict):
     """Smile Binary Sensors class."""
 
     compressor_state: bool
@@ -622,7 +622,7 @@ class PlugwiseSmileBinarySensors(TypedDict):
     slave_boiler_state: bool
 
 
-class PlugwiseSmileSensors(TypedDict):
+class SmileSensors(TypedDict):
     """Smile Sensors class."""
 
     battery: float
@@ -665,7 +665,7 @@ class PlugwiseSmileSensors(TypedDict):
     water_temperature: float
 
 
-class PlugwiseSmileSwitches(TypedDict):
+class SmileSwitches(TypedDict):
     """Smile Switches class."""
 
     dhw_cm_switch: bool
