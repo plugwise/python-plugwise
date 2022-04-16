@@ -366,7 +366,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info(
                         "      + Device: %s",
                         "{} ({} - {})".format(
-                            dev_info["name"], dev_info["class"], dev_id
+                            dev_info["name"], dev_info["dev_class"], dev_id
                         ),
                     )
             if device_count == 0:  # pragma: no cover
@@ -603,7 +603,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "0d266432d64443e283b5d708ae98b455": {
-                "class": "thermostat",
+                "dev_class": "thermostat",
                 "fw": "2017-03-13T11:54:58+01:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "Anna",
@@ -630,7 +630,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "4.21",
@@ -648,7 +648,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "0000aaaa0000aaaa0000aaaa0000aa00": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "1.8.0",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "Anna",
@@ -703,7 +703,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "9e7377867dc24e51b8098a5ba02bd89d": {
-                "class": "thermostat",
+                "dev_class": "thermostat",
                 "fw": "2017-03-13T11:54:58+01:00",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
                 "model": "Anna",
@@ -727,7 +727,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "ea5d8a7177e541b0a4b52da815166de4": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
                 "model": "Generic heater",
@@ -744,7 +744,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "be81e3f8275b4129852c4d8d550ae2eb": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "1.8.0",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
                 "model": "Anna",
@@ -798,7 +798,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "938696c4bcdb4b8a9a595cb38ed43913": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "2.5.9",
                 "location": "938696c4bcdb4b8a9a595cb38ed43913",
                 "model": "P1",
@@ -883,7 +883,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "class": "thermostat",
+                "dev_class": "thermostat",
                 "fw": "2018-02-08T11:15:53+01:00",
                 "location": "eb5309212bf5407bb143e5bfa3b18aee",
                 "model": "Anna",
@@ -907,7 +907,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "model": "2.32",
@@ -929,7 +929,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "0466eae8520144c78afb29628384edeb": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "4.0.15",
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "model": "Anna",
@@ -981,7 +981,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "class": "thermostat",
+                "dev_class": "thermostat",
                 "fw": "2018-02-08T11:15:53+01:00",
                 "location": "eb5309212bf5407bb143e5bfa3b18aee",
                 "model": "Anna",
@@ -1005,7 +1005,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "model": "2.32",
@@ -1027,7 +1027,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "0466eae8520144c78afb29628384edeb": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "4.0.15",
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "model": "Anna",
@@ -1216,7 +1216,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Central
             "c46b4794d28149699eacf053deedd003": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "model": "Unknown",
@@ -1226,7 +1226,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Anna
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
-                "class": "thermostat",
+                "dev_class": "thermostat",
                 "fw": "2018-02-08T11:15:53+01:00",
                 "location": "c34c6864216446528e95d88985e714cc",
                 "model": "Anna",
@@ -1253,7 +1253,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "a270735e4ccd45239424badc0578a2b1": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "4.2.1",
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "model": "Anna",
@@ -1373,7 +1373,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "ad4838d7d35c4d6ea796ee12ae5aedf8": {
-                "class": "thermostat",
+                "dev_class": "thermostat",
                 "fw": None,
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
                 "model": "Anna",
@@ -1397,7 +1397,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"temperature": 18.1, "setpoint": 18.5},
             },
             "29542b2b6a6a4169acecc15c72a599b8": {
-                "class": "hometheater",
+                "dev_class": "hometheater",
                 "fw": "2020-11-10T01:00:00+01:00",
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
                 "model": "Plug",
@@ -1412,7 +1412,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "2568cc4b9c1e401495d4741a5f89bee1": {
-                "class": "computer_desktop",
+                "dev_class": "computer_desktop",
                 "fw": "2020-11-10T01:00:00+01:00",
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
                 "model": "Plug",
@@ -1427,7 +1427,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "854f8a9b0e7e425db97f1f110e1ce4b3": {
-                "class": "central_heating_pump",
+                "dev_class": "central_heating_pump",
                 "fw": "2020-11-10T01:00:00+01:00",
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
                 "model": "Plug",
@@ -1442,7 +1442,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True},
             },
             "1772a4ea304041adb83f357b751341ff": {
-                "class": "thermo_sensor",
+                "dev_class": "thermo_sensor",
                 "fw": "2020-11-04T01:00:00+01:00",
                 "location": "f871b8c4d63549319221e294e4f88074",
                 "model": "Tom/Floor",
@@ -1458,7 +1458,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             "e2f4322d57924fa090fbbc48b3a140dc": {
-                "class": "zone_thermostat",
+                "dev_class": "zone_thermostat",
                 "fw": "2016-10-10T02:00:00+02:00",
                 "location": "f871b8c4d63549319221e294e4f88074",
                 "model": "Lisa",
@@ -1483,7 +1483,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"temperature": 17.9, "setpoint": 15.0, "battery": 56},
             },
             "da224107914542988a88561b4452b0f6": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "3.6.4",
                 "location": "bc93488efab249e5bc54fd7e175a6f91",
                 "model": "Adam",
@@ -1497,7 +1497,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             "056ee145a816487eaa69243c3280f8bf": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "location": "bc93488efab249e5bc54fd7e175a6f91",
                 "model": "Generic heater",
@@ -1517,7 +1517,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Test Switch
             "e8ef2a01ed3b4139a53bf749204fe6b4": {
-                "class": "switching",
+                "dev_class": "switching",
                 "fw": None,
                 "location": None,
                 "model": "Switchgroup",
@@ -1685,7 +1685,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a broad setup of Adam with multiple devices per zone setup."""
         testdata = {
             "df4a4a8169904cdb9c03d61a21f42140": {
-                "class": "zone_thermostat",
+                "dev_class": "zone_thermostat",
                 "fw": "2016-10-27T02:00:00+02:00",
                 "location": "12493538af164a409c6a1c79e38afe1c",
                 "model": "Lisa",
@@ -1714,7 +1714,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
-                "class": "thermo_sensor",
+                "dev_class": "thermo_sensor",
                 "fw": "2019-03-27T01:00:00+01:00",
                 "location": "c50f167537524366a5af7aa3942feb1e",
                 "model": "Tom/Floor",
@@ -1728,7 +1728,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             "a2c3583e0a6349358998b760cea82d2a": {
-                "class": "thermo_sensor",
+                "dev_class": "thermo_sensor",
                 "fw": "2019-03-27T01:00:00+01:00",
                 "location": "12493538af164a409c6a1c79e38afe1c",
                 "model": "Tom/Floor",
@@ -1744,7 +1744,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mac_address": None,
             },
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
-                "class": "zone_thermostat",
+                "dev_class": "zone_thermostat",
                 "fw": "2016-08-02T02:00:00+02:00",
                 "location": "c50f167537524366a5af7aa3942feb1e",
                 "model": "Lisa",
@@ -1773,7 +1773,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"temperature": 20.9, "setpoint": 21.5, "battery": 34},
             },
             "fe799307f1624099878210aa0b9f1475": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "3.0.15",
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
                 "model": "Adam",
@@ -1783,7 +1783,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"outdoor_temperature": 7.81},
             },
             "d3da73bde12a47d5a6b8f9dad971f2ec": {
-                "class": "thermo_sensor",
+                "dev_class": "thermo_sensor",
                 "fw": "2019-03-27T01:00:00+01:00",
                 "location": "82fa13f017d240daa0d0ea1775420f24",
                 "model": "Tom/Floor",
@@ -1798,7 +1798,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             "21f2b542c49845e6bb416884c55778d6": {
-                "class": "game_console",
+                "dev_class": "game_console",
                 "fw": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
                 "model": "Plug",
@@ -1813,7 +1813,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "78d1126fc4c743db81b61c20e88342a7": {
-                "class": "central_heating_pump",
+                "dev_class": "central_heating_pump",
                 "fw": "2019-06-21T02:00:00+02:00",
                 "location": "c50f167537524366a5af7aa3942feb1e",
                 "model": "Plug",
@@ -1828,7 +1828,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True},
             },
             "90986d591dcd426cae3ec3e8111ff730": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
                 "model": "Unknown",
@@ -1842,7 +1842,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             "cd0ddb54ef694e11ac18ed1cbce5dbbd": {
-                "class": "vcr",
+                "dev_class": "vcr",
                 "fw": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
                 "model": "Plug",
@@ -1858,7 +1858,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A14",
             },
             "4a810418d5394b3f82727340b91ba740": {
-                "class": "router",
+                "dev_class": "router",
                 "fw": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
                 "model": "Plug",
@@ -1873,7 +1873,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "02cf28bfec924855854c544690a609ef": {
-                "class": "vcr",
+                "dev_class": "vcr",
                 "fw": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
                 "model": "Plug",
@@ -1888,7 +1888,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "a28f588dc4a049a483fd03a30361ad3a": {
-                "class": "settop",
+                "dev_class": "settop",
                 "fw": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
                 "model": "Plug",
@@ -1903,7 +1903,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "6a3bf693d05e48e0b460c815a4fdd09d": {
-                "class": "zone_thermostat",
+                "dev_class": "zone_thermostat",
                 "fw": "2016-10-27T02:00:00+02:00",
                 "location": "82fa13f017d240daa0d0ea1775420f24",
                 "model": "Lisa",
@@ -1932,7 +1932,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"temperature": 17.2, "setpoint": 15.0, "battery": 37},
             },
             "680423ff840043738f42cc7f1ff97a36": {
-                "class": "thermo_sensor",
+                "dev_class": "thermo_sensor",
                 "fw": "2019-03-27T01:00:00+01:00",
                 "location": "08963fec7c53423ca5680aa4cb502c63",
                 "model": "Tom/Floor",
@@ -1947,7 +1947,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             "f1fee6043d3642a9b0a65297455f008e": {
-                "class": "zone_thermostat",
+                "dev_class": "zone_thermostat",
                 "fw": "2016-10-27T02:00:00+02:00",
                 "location": "08963fec7c53423ca5680aa4cb502c63",
                 "model": "Lisa",
@@ -1976,7 +1976,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
             },
             "675416a629f343c495449970e2ca37b5": {
-                "class": "router",
+                "dev_class": "router",
                 "fw": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
                 "model": "Plug",
@@ -1991,7 +1991,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "e7693eb9582644e5b865dba8d4447cf1": {
-                "class": "thermostatic_radiator_valve",
+                "dev_class": "thermostatic_radiator_valve",
                 "fw": "2019-03-27T01:00:00+01:00",
                 "location": "446ac08dd04d4eff8ac57489757b7314",
                 "model": "Tom/Floor",
@@ -2100,7 +2100,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "3.3.6",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "model": "P1",
@@ -2181,7 +2181,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "3.3.9",
                 "location": "cd3e822288064775a7c4afcdd70bdda2",
                 "model": "P1",
@@ -2390,7 +2390,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Anna
             "ebd90df1ab334565b5895f37590ccff4": {
-                "class": "thermostat",
+                "dev_class": "thermostat",
                 "fw": "2018-02-08T11:15:53+01:00",
                 "hw": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
@@ -2425,7 +2425,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             "573c152e7d4f4720878222bd75638f5b": {
-                "class": "heater_central",
+                "dev_class": "heater_central",
                 "fw": None,
                 "hw": None,
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
@@ -2453,7 +2453,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             "fb49af122f6e4b0f91267e1cf7666d6f": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "4.2.1",
                 "hw": "AME Smile 2.0 board",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
@@ -2519,7 +2519,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         testdata = {
             "0000aaaa0000aaaa0000aaaa0000aa00": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "3.1.11",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "mac_address": "01:23:45:67:89:AB",
@@ -2546,7 +2546,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "5871317346d045bc9f6b987ef25ee638": {
-                "class": "water_heater_vessel",
+                "dev_class": "water_heater_vessel",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "Circle type F",
@@ -2561,7 +2561,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "aac7b735042c4832ac9ff33aae4f453b": {
-                "class": "dishwasher",
+                "dev_class": "dishwasher",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "Circle type F",
@@ -2576,7 +2576,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "cfe95cf3de1948c0b8955125bf754614": {
-                "class": "dryer",
+                "dev_class": "dryer",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "Circle type F",
@@ -2591,7 +2591,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "059e4d03c7a34d278add5c7a4a781d19": {
-                "class": "washingmachine",
+                "dev_class": "washingmachine",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "Circle type F",
@@ -2606,7 +2606,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "71e1944f2a944b26ad73323e399efef0": {
-                "class": "switching",
+                "dev_class": "switching",
                 "fw": None,
                 "location": None,
                 "model": "Switchgroup",
@@ -2616,7 +2616,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True},
             },
             "d950b314e9d8499f968e6db8d82ef78c": {
-                "class": "report",
+                "dev_class": "report",
                 "fw": None,
                 "location": None,
                 "model": "Switchgroup",
@@ -2632,7 +2632,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True},
             },
             "d03738edfcc947f7b8f4573571d90d2d": {
-                "class": "switching",
+                "dev_class": "switching",
                 "fw": None,
                 "location": None,
                 "model": "Switchgroup",
@@ -2668,7 +2668,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         testdata = {
             "0000aaaa0000aaaa0000aaaa0000aa00": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "2.3.12",
                 "hw": None,
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2697,7 +2697,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "09c8ce93d7064fa6a233c0e4c2449bfe": {
-                "class": "lamp",
+                "dev_class": "lamp",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2714,7 +2714,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": False, "lock": False},
             },
             "33a1c784a9ff4c2d8766a0212714be09": {
-                "class": "lighting",
+                "dev_class": "lighting",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2732,7 +2732,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": False, "lock": False},
             },
             "199fd4b2caa44197aaf5b3128f6464ed": {
-                "class": "airconditioner",
+                "dev_class": "airconditioner",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2750,7 +2750,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "713427748874454ca1eb4488d7919cf2": {
-                "class": "freezer",
+                "dev_class": "freezer",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2767,7 +2767,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": False, "lock": False},
             },
             "fd1b74f59e234a9dae4e23b2b5cf07ed": {
-                "class": "dryer",
+                "dev_class": "dryer",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2784,7 +2784,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "c71f1cb2100b42ca942f056dcb7eb01f": {
-                "class": "tv",
+                "dev_class": "tv",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2802,7 +2802,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "2cc9a0fe70ef4441a9e4f55dfd64b776": {
-                "class": "lamp",
+                "dev_class": "lamp",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2820,7 +2820,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "6518f3f72a82486c97b91e26f2e9bd1d": {
-                "class": "charger",
+                "dev_class": "charger",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2838,7 +2838,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "828f6ce1e36744689baacdd6ddb1d12c": {
-                "class": "washingmachine",
+                "dev_class": "washingmachine",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2855,7 +2855,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": True},
             },
             "71e3e65ffc5a41518b19460c6e8ee34f": {
-                "class": "tv",
+                "dev_class": "tv",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2872,7 +2872,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": False, "lock": False},
             },
             "305452ce97c243c0a7b4ab2a4ebfe6e3": {
-                "class": "lamp",
+                "dev_class": "lamp",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2890,7 +2890,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": False, "lock": False},
             },
             "bc0adbebc50d428d9444a5d805c89da9": {
-                "class": "watercooker",
+                "dev_class": "watercooker",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2907,7 +2907,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "407aa1c1099d463c9137a3a9eda787fd": {
-                "class": "zz_misc",
+                "dev_class": "zz_misc",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2924,7 +2924,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": False, "lock": False},
             },
             "2587a7fcdd7e482dab03fda256076b4b": {
-                "class": "zz_misc",
+                "dev_class": "zz_misc",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2941,7 +2941,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "a28e6f5afc0e4fc68498c1f03e82a052": {
-                "class": "lamp",
+                "dev_class": "lamp",
                 "fw": "2011-06-27T10:52:18+02:00",
                 "hw": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2959,7 +2959,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True, "lock": False},
             },
             "f7b145c8492f4dd7a4de760456fdef3e": {
-                "class": "switching",
+                "dev_class": "switching",
                 "fw": None,
                 "location": None,
                 "model": "Switchgroup",
@@ -3064,7 +3064,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
-                "class": "gateway",
+                "dev_class": "gateway",
                 "fw": "4.1.1",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "model": "P1",
