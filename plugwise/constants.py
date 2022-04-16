@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Final
+from typing import Any, Final, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -608,3 +608,66 @@ SWITCHES: Final[list[str]] = [
     "lock",
     "relay",
 ]
+
+
+class PlugwiseSmileBinarySensors(TypedDict):
+    """Smile Binary Sensors class."""
+
+    compressor_state: bool
+    cooling_state: bool
+    dhw_state: bool
+    flame_state: bool
+    heating_state: bool
+    plugwise_notification: bool
+    slave_boiler_state: bool
+
+
+class PlugwiseSmileSensors(TypedDict):
+    """Smile Sensors class."""
+
+    battery: float
+    cooling_activation_outdoor_temperature: float
+    cooling_deactivation_threshold: float
+    temperature: float
+    electricity_consumed: float
+    electricity_consumed_interval: float
+    electricity_consumed_off_peak_cumulative: float
+    electricity_consumed_off_peak_interval: float
+    electricity_consumed_off_peak_point: int
+    electricity_consumed_peak_cumulative: float
+    electricity_consumed_peak_interval: float
+    electricity_consumed_peak_point: int
+    electricity_consumed_point: float
+    electricity_produced: float
+    electricity_produced_interval: float
+    electricity_produced_off_peak_cumulative: float
+    electricity_produced_off_peak_interval: int
+    electricity_produced_off_peak_point: int
+    electricity_produced_peak_cumulative: float
+    electricity_produced_peak_interval: float
+    electricity_produced_peak_point: int
+    electricity_produced_point: float
+    gas_consumed_cumulative: float
+    gas_consumed_interval: float
+    humidity: float
+    illuminance: float
+    intended_boiler_temperature: float
+    modulation_level: float
+    net_electricity_cumulative: float
+    net_electricity_point: int
+    outdoor_air_temperature: float
+    outdoor_temperature: float
+    return_temperature: float
+    setpoint: float
+    temperature_difference: float
+    valve_position: float
+    water_pressure: float
+    water_temperature: float
+
+
+class PlugwiseSmileSwitches(TypedDict):
+    """Smile Switches class."""
+
+    dhw_cm_switch: bool
+    lock: bool
+    relay: bool
