@@ -44,6 +44,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SWITCHES,
     THERMOSTAT_CLASSES,
+    ApplianceData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -296,7 +297,7 @@ class SmileHelper:
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._appl_data: dict[str, dict[str, Any]] = {}
+        self._appl_data: dict[str, ApplianceData] = {}
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._anna_cooling_present: bool = False
@@ -610,35 +611,37 @@ class SmileHelper:
         # and inject a home_location as device id for legacy so
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
-            self._appl_data[self._home_location] = {
-                "class": "gateway",
-                "fw": self.smile_fw_version,
-                "hw": self.smile_hw_version,
-                "location": self._home_location,
-                "mac_address": self.smile_mac_address,
-            }
+            self._appl_data[self._home_location] = ApplianceData(
+                dev_class="gateway",
+                firmware=self.smile_fw_version,
+                hardware=self.smile_hw_version,
+                location=self._home_location,
+                mac_address=self.smile_mac_address,
+            )
             self.gateway_id = self._home_location
 
             if self.smile_type == "power":
                 self._appl_data[self._home_location].update(
-                    {"model": "P1", "name": "P1", "vendor": "Plugwise B.V."}
+                    model="P1",
+                    name="P1",
+                    vendor="Plugwise B.V.",
                 )
                 # legacy p1 has no more devices
                 return
 
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
-                    {"model": "Anna", "name": "Anna", "vendor": "Plugwise B.V."}
+                    model="Anna",
+                    name="Anna",
+                    vendor="Plugwise B.V.",
                 )
 
             if self.smile_type == "stretch":
                 self._appl_data[self._home_location].update(
-                    {
-                        "model": "Stretch",
-                        "name": "Stretch",
-                        "vendor": "Plugwise B.V.",
-                        "zigbee_mac_address": self.smile_zigbee_mac_address,
-                    }
+                    model="Stretch",
+                    name="Stretch",
+                    vendor="Plugwise B.V.",
+                    zigbee_mac_address=self.smile_zigbee_mac_address,
                 )
 
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
@@ -687,23 +690,19 @@ class SmileHelper:
                 appl.fw = self.smile_fw_version
                 appl.hw = self.smile_hw_version
 
-            self._appl_data[appl.dev_id] = {
-                "class": appl.pwclass,
-                "fw": appl.fw,
-                "hw": appl.hw,
-                "location": appl.location,
-                "mac_address": appl.mac,
-                "model": appl.model,
-                "name": appl.name,
-                "vendor": appl.v_name,
-            }
+            self._appl_data[appl.dev_id] = ApplianceData(
+                dev_class=appl.pwclass,
+                firmware=appl.fw,
+                hardware=appl.hw,
+                location=appl.location,
+                mac_address=appl.mac,
+                model=appl.model,
+                name=appl.name,
+                vendor=appl.v_name,
+            )
 
             if appl.zigbee_mac:
-                self._appl_data[appl.dev_id].update(
-                    {
-                        "zigbee_mac_address": appl.zigbee_mac,
-                    }
-                )
+                self._appl_data[appl.dev_id].update(zigbee_mac_address=appl.zigbee_mac)
 
             if (
                 not self._smile_legacy
@@ -1006,7 +1005,7 @@ class SmileHelper:
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self) -> dict[str, dict[str, Any]]:
+    def _group_switches(self) -> dict[str, ApplianceData]:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
@@ -1016,7 +1015,7 @@ class SmileHelper:
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
-            group_appl: dict[str, Any] = {}
+            group_appl: ApplianceData = {}
             members: list[str] = []
             group_id = group.attrib["id"]
             group_name = group.find("name").text
@@ -1026,15 +1025,12 @@ class SmileHelper:
                 members.append(item.attrib["id"])
 
             if group_type in SWITCH_GROUP_TYPES:
-                group_appl[group_id] = {
-                    "class": group_type,
-                    "fw": None,
-                    "location": None,
-                    "model": "Switchgroup",
-                    "name": group_name,
-                    "members": members,
-                    "vendor": None,
-                }
+                group_appl[group_id] = ApplianceData(
+                    dev_class=group_type,
+                    model="Switchgroup",
+                    name=group_name,
+                    members=members,
+                )
 
             switch_groups.update(group_appl)
 

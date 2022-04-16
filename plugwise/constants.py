@@ -610,6 +610,22 @@ SWITCHES: Final[list[str]] = [
 ]
 
 
+class ApplianceData(TypedDict):
+    """The Appliance Data class."""
+
+    dev_id: str
+    dev_class: str
+    firmware: str
+    hardware: str
+    location: str
+    mac_address: str
+    members: list[str]
+    model: str
+    name: str
+    vendor: str
+    zigbee_mac_address: str
+
+
 class SmileBinarySensors(TypedDict):
     """Smile Binary Sensors class."""
 
