@@ -361,7 +361,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             )
             device_count = 0
             for dev_id, dev_info in device_list.items():
-                if dev_info["location"] == loc_id:
+                if dev_info.get("location", "not_found") == loc_id:
                     device_count += 1
                     _LOGGER.info(
                         "      + Device: %s",
