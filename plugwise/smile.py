@@ -74,7 +74,7 @@ class SmileData(SmileHelper):
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if (
                 details.get("location") is None
-                and details.get("class") not in THERMOSTAT_CLASSES
+                and details.get("dev_class") not in THERMOSTAT_CLASSES
             ):
                 details["location"] = self._home_location
 
@@ -82,7 +82,7 @@ class SmileData(SmileHelper):
             if (loc_id := details["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
                 if "slaves" in tl_loc_id and appliance in tl_loc_id["slaves"]:
-                    details["class"] = "thermo_sensor"
+                    details["dev_class"] = "thermo_sensor"
 
             # Next, filter for thermostat-devices without a location
             if details.get("location") is not None:
@@ -123,7 +123,7 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
-        if details["class"] in SWITCH_GROUP_TYPES:
+        if details["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
                 member_data = self._get_appliance_data(member)
@@ -142,7 +142,7 @@ class SmileData(SmileHelper):
         """
         if self.smile_name == "Adam":
             # Indicate heating_state based on valves being open in case of city-provided heating
-            if details.get("class") == "heater_central":
+            if details.get("dev_class") == "heater_central":
                 if self._on_off_device and self._heating_valves() is not None:
                     device_data["heating_state"] = self._heating_valves() != 0
 
@@ -197,7 +197,7 @@ class SmileData(SmileHelper):
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
-        if details["class"] == "gateway" or dev_id == self.gateway_id:
+        if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
             if self.smile_type == "thermostat":
                 # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
                 # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
@@ -221,7 +221,7 @@ class SmileData(SmileHelper):
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details["class"] not in THERMOSTAT_CLASSES:
+        if details["dev_class"] not in THERMOSTAT_CLASSES:
             return device_data
 
         # Thermostat data (presets, temperatures etc)

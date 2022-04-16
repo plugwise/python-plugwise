@@ -925,7 +925,7 @@ class SmileHelper:
     ) -> Any:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
-        appl_class = appliance_details.get("class")
+        appl_class = appliance_details.get("dev_class")
         appl_d_loc = appliance_details.get("location")
         if (
             loc_id == appl_d_loc or (self._smile_legacy and not appl_d_loc)
