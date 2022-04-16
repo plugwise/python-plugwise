@@ -632,10 +632,10 @@ class PlugwiseSmileSensors(TypedDict):
     electricity_consumed: float
     electricity_consumed_interval: float
     electricity_consumed_off_peak_cumulative: float
-    electricity_consumed_off_peak_interval: float
+    electricity_consumed_off_peak_interval: int
     electricity_consumed_off_peak_point: int
     electricity_consumed_peak_cumulative: float
-    electricity_consumed_peak_interval: float
+    electricity_consumed_peak_interval: int
     electricity_consumed_peak_point: int
     electricity_consumed_point: float
     electricity_produced: float
@@ -644,7 +644,7 @@ class PlugwiseSmileSensors(TypedDict):
     electricity_produced_off_peak_interval: int
     electricity_produced_off_peak_point: int
     electricity_produced_peak_cumulative: float
-    electricity_produced_peak_interval: float
+    electricity_produced_peak_interval: int
     electricity_produced_peak_point: int
     electricity_produced_point: float
     gas_consumed_cumulative: float
