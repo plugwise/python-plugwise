@@ -1518,15 +1518,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Test Switch
             "e8ef2a01ed3b4139a53bf749204fe6b4": {
                 "dev_class": "switching",
-                "firmware": None,
-                "location": None,
                 "model": "Switchgroup",
                 "name": "Test",
                 "members": [
                     "2568cc4b9c1e401495d4741a5f89bee1",
                     "29542b2b6a6a4169acecc15c72a599b8",
                 ],
-                "vendor": None,
                 "switches": {"relay": True},
             },
         }
@@ -2607,18 +2604,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "71e1944f2a944b26ad73323e399efef0": {
                 "dev_class": "switching",
-                "firmware": None,
-                "location": None,
                 "model": "Switchgroup",
                 "name": "Test",
                 "members": ["5ca521ac179d468e91d772eeeb8a2117"],
-                "vendor": None,
                 "switches": {"relay": True},
             },
             "d950b314e9d8499f968e6db8d82ef78c": {
                 "dev_class": "report",
-                "firmware": None,
-                "location": None,
                 "model": "Switchgroup",
                 "name": "Stroomvreters",
                 "members": [
@@ -2628,20 +2620,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cfe95cf3de1948c0b8955125bf754614",
                     "e1c884e7dede431dadee09506ec4f859",
                 ],
-                "vendor": None,
                 "switches": {"relay": True},
             },
             "d03738edfcc947f7b8f4573571d90d2d": {
                 "dev_class": "switching",
-                "firmware": None,
-                "location": None,
                 "model": "Switchgroup",
                 "name": "Schakel",
                 "members": [
                     "059e4d03c7a34d278add5c7a4a781d19",
                     "cfe95cf3de1948c0b8955125bf754614",
                 ],
-                "vendor": None,
                 "switches": {"relay": True},
             },
         }
@@ -2960,12 +2948,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "f7b145c8492f4dd7a4de760456fdef3e": {
                 "dev_class": "switching",
-                "firmware": None,
-                "location": None,
                 "model": "Switchgroup",
                 "name": "Test",
                 "members": ["407aa1c1099d463c9137a3a9eda787fd"],
-                "vendor": None,
                 "switches": {"relay": False},
             },
         }
