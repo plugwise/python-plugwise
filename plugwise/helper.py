@@ -701,7 +701,7 @@ class SmileHelper:
             for key, value in {
                 "firmware": appl.fw,
                 "hardware": appl.hw,
-                "mac_address": appl.mac_address,
+                "mac_address": appl.mac,
                 "zigbee_mac_address": appl.zigbee_mac,
                 "vendor": appl.v_name,
             }.items():
