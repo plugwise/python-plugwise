@@ -75,7 +75,7 @@ class SmileData(SmileHelper):
             if (loc_id := details["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
                 if "slaves" in tl_loc_id and appliance in tl_loc_id["slaves"]:
-                    self._appl_data[appliance] = {"dev_class": "thermo_sensor"}
+                    details.update({"dev_class": "thermo_sensor"})
 
         if (group_data := self._group_switches()) is not None:
             self._appl_data.update(group_data)
