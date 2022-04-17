@@ -631,7 +631,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
                 "dev_class": "heater_central",
-                "firmware": None,
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "4.21",
                 "name": "OpenTherm",
@@ -655,8 +654,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
-                "mac_address": None,
-                "hardware": None,
             },
         }
 
@@ -728,11 +725,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "ea5d8a7177e541b0a4b52da815166de4": {
                 "dev_class": "heater_central",
-                "firmware": None,
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
                 "model": "Generic heater",
                 "name": "OpenTherm",
-                "vendor": None,
                 "binary_sensors": {"flame_state": False, "heating_state": False},
                 "sensors": {
                     "water_temperature": 54.0,
@@ -908,7 +903,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "dev_class": "heater_central",
-                "firmware": None,
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "model": "2.32",
                 "name": "OpenTherm",
@@ -1006,7 +1000,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "dev_class": "heater_central",
-                "firmware": None,
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "model": "2.32",
                 "name": "OpenTherm",
@@ -1217,11 +1210,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "c46b4794d28149699eacf053deedd003": {
                 "dev_class": "heater_central",
-                "firmware": None,
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "model": "Unknown",
                 "name": "OnOff",
-                "vendor": None,
                 "binary_sensors": {"heating_state": True},
             },
             # Anna
@@ -1374,7 +1365,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Anna
             "ad4838d7d35c4d6ea796ee12ae5aedf8": {
                 "dev_class": "thermostat",
-                "firmware": None,
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
                 "model": "Anna",
                 "name": "Anna",
@@ -1498,11 +1488,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Central
             "056ee145a816487eaa69243c3280f8bf": {
                 "dev_class": "heater_central",
-                "firmware": None,
                 "location": "bc93488efab249e5bc54fd7e175a6f91",
                 "model": "Generic heater",
                 "name": "OpenTherm",
-                "vendor": None,
                 "maximum_boiler_temperature": 60.0,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -1738,7 +1726,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": -0.2,
                     "valve_position": 0.0,
                 },
-                "mac_address": None,
             },
             "b59bcebaf94b499ea7d46e4a66fb62d8": {
                 "dev_class": "zone_thermostat",
@@ -1826,11 +1813,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "90986d591dcd426cae3ec3e8111ff730": {
                 "dev_class": "heater_central",
-                "firmware": None,
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
                 "model": "Unknown",
                 "name": "OnOff",
-                "vendor": None,
                 "binary_sensors": {"heating_state": True},
                 "sensors": {
                     "water_temperature": 70.0,
@@ -2391,7 +2376,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
-                "mac_address": None,
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
@@ -2423,10 +2407,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Heater central
             "573c152e7d4f4720878222bd75638f5b": {
                 "dev_class": "heater_central",
-                "firmware": None,
-                "hardware": None,
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "mac_address": None,
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
@@ -2658,7 +2639,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "0000aaaa0000aaaa0000aaaa0000aa00": {
                 "dev_class": "gateway",
                 "firmware": "2.3.12",
-                "hardware": None,
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "mac_address": "01:23:45:67:89:AB",
                 "model": "Stretch",
@@ -2689,7 +2669,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "kerstboom buiten 043B016",
                 "vendor": "Plugwise",
@@ -2706,7 +2685,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Barverlichting",
                 "vendor": "Plugwise",
@@ -2724,7 +2702,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Airco 25F69E3",
                 "vendor": "Plugwise",
@@ -2742,7 +2719,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Leeg 043220D",
                 "vendor": "Plugwise",
@@ -2759,7 +2735,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Wasdroger 043AECA",
                 "vendor": "Plugwise",
@@ -2776,7 +2751,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Tv hoek 25F6790",
                 "vendor": "Plugwise",
@@ -2794,7 +2768,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Lamp TV 025F698F",
                 "vendor": "Plugwise",
@@ -2812,7 +2785,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Bed 025F6768",
                 "vendor": "Plugwise",
@@ -2830,7 +2802,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Wasmachine 043AEC7",
                 "vendor": "Plugwise",
@@ -2847,7 +2818,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Leeg 043AEC6",
                 "vendor": "Plugwise",
@@ -2864,7 +2834,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Lamp piano 025F6819",
                 "vendor": "Plugwise",
@@ -2882,7 +2851,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Waterkoker 043AF7F",
                 "vendor": "Plugwise",
@@ -2899,7 +2867,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "0043B013",
                 "vendor": "Plugwise",
@@ -2916,7 +2883,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "00469CA1",
                 "vendor": "Plugwise",
@@ -2933,7 +2899,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
                 "model": "Circle type F",
                 "name": "Lamp bank 25F67F8",
                 "vendor": "Plugwise",
