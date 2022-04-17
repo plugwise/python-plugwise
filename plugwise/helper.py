@@ -308,7 +308,7 @@ class SmileHelper:
         self._cooling_present = False
         self._devices: dict[str, ApplianceData]
         self._domain_objects: etree
-        self._heater_id: str | None = None
+        self._heater_id: str
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
@@ -324,14 +324,14 @@ class SmileHelper:
         self._thermo_locs: dict[str, Any] = {}
 
         self.cooling_active = False
-        self.gateway_id: str | None = None
+        self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: GatewayDevices = {}
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
-        self.smile_name: str | None = None
-        self.smile_type: str | None = None
+        self.smile_name: str
+        self.smile_type: str
         self.smile_version: tuple[str, Any]
         self.smile_zigbee_mac_address: str | None = None
 
