@@ -689,11 +689,7 @@ class SmileHelper:
                 appl.fw = self.smile_fw_version
                 appl.hw = self.smile_hw_version
 
-            if (
-                not self._smile_legacy
-                and appl.pwclass == "thermostat"
-                and appl.location is None
-            ):
+            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 LOGGER.debug("HOI no location %s", appl.name)
                 continue
 
