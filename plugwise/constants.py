@@ -636,6 +636,36 @@ class GatewayData(TypedDict):
     notifications: dict[str, str]
 
 
+class GatewayDevices(ApplianceData):
+    """The gateway devices class."""
+
+    # gateway
+    regulation_mode: str
+    regulation_modes: list[str]
+
+    # heater_central
+    maximum_boiler_temperature: float
+
+    # master_thermostats
+    lower_bound: float
+    upper_bound: float
+    resolution: float
+    preset_modes: list[str]
+    active_preset: str | None
+    presets: dict[str, list[float]]
+    available_schedules: list[str]
+    selected_schedule: str
+    last_used: str | None
+    schedule_temperature: float | None
+    mode: str
+    # Adam master_thermostats
+    control_state: str
+
+    binary_sensors: dict[str, bool] | None
+    sensors: dict[str, float | int] | None
+    switches: dict[str, bool] | None
+
+
 class SmileBinarySensors(TypedDict):
     """Smile Binary Sensors class."""
 
