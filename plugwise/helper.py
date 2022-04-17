@@ -306,7 +306,6 @@ class SmileHelper:
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
-        self._devices: dict[str, ApplianceData]
         self._domain_objects: etree
         self._heater_id: str
         self._home_location: str

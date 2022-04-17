@@ -51,7 +51,7 @@ class SmileData(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        for device_id, device in self._devices.items():
+        for device_id, device in self._appl_data.items():
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
@@ -68,7 +68,6 @@ class SmileData(SmileHelper):
 
     def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
-        self._devices = {}
         self._scan_thermostats()
 
         for appliance, details in self._appl_data.items():
@@ -76,14 +75,10 @@ class SmileData(SmileHelper):
             if (loc_id := details["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
                 if "slaves" in tl_loc_id and appliance in tl_loc_id["slaves"]:
-                    details["dev_class"] = "thermo_sensor"
-
-            # Next, filter for thermostat-devices without a location
-            if details.get("location") is not None:
-                self._devices[appliance] = details
+                    self._appl_data[appliance] = {"dev_class": "thermo_sensor"}
 
         if (group_data := self._group_switches()) is not None:
-            self._devices.update(group_data)
+            self._appl_data.update(group_data)
 
         # Collect data for each device via helper function
         self._all_device_data()
@@ -187,7 +182,7 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        details = self._devices[dev_id]
+        details = self._appl_data[dev_id]
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
