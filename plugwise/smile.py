@@ -223,7 +223,7 @@ class SmileData(SmileHelper):
         # Thermostat data (presets, temperatures etc)
         device_data = self._device_data_climate(details, device_data)
 
-        LOGGER("HOI %s", device_data)
+        LOGGER.debug("HOI %s", device_data)
         return device_data
 
 
