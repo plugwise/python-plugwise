@@ -692,17 +692,20 @@ class SmileHelper:
 
             self._appl_data[appl.dev_id] = ApplianceData(
                 dev_class=appl.pwclass,
-                firmware=appl.fw,
-                hardware=appl.hw,
                 location=appl.location,
                 mac_address=appl.mac,
                 model=appl.model,
                 name=appl.name,
-                vendor=appl.v_name,
             )
 
-            if appl.zigbee_mac:
-                self._appl_data[appl.dev_id].update(zigbee_mac_address=appl.zigbee_mac)
+            for key, value in {
+                "firmware": appl.fw,
+                "hardware": appl.hw,
+                "zigbee_mac_address": appl.zigbee_mac,
+                "vendor": appl.v_name,
+            }.items():
+                if value:
+                    self._appl_data[appl.dev_id].update({key: value})
 
             if (
                 not self._smile_legacy
