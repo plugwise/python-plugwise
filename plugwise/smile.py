@@ -74,7 +74,7 @@ class SmileData(SmileHelper):
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if (
                 details.get("location") is None
-                and details["class"] not in THERMOSTAT_CLASSES
+                and details["dev_class"] not in THERMOSTAT_CLASSES
             ):
                 details["location"] = self._home_location
 
