@@ -926,7 +926,7 @@ class SmileHelper:
         thermo_matching: dict[str, int],
         loc_id: str,
         appliance_id: str,
-        appliance_details: dict[str, Any],
+        appliance_details: ApplianceData,
     ) -> Any:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
@@ -1014,13 +1014,13 @@ class SmileHelper:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
-        switch_groups: dict[str, dict[str, Any]] = {}
+        switch_groups: dict[str, ApplianceData] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
-            group_appl: ApplianceData = {}
+            group_appl: dict[str, ApplianceData] = {}
             members: list[str] = []
             group_id = group.attrib["id"]
             group_name = group.find("name").text
@@ -1307,8 +1307,8 @@ class SmileHelper:
     def _update_device_with_dicts(
         self,
         d_id: str,
-        data: dict[str, Any],
-        device: dict[str, Any],
+        data: dict[str, ApplianceData],
+        device: dict[str, GatewayDevices],
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
