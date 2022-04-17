@@ -707,11 +707,8 @@ class SmileHelper:
                 if value:
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-            if (
-                not self._smile_legacy
-                and appl.pwclass == "thermostat"
-                and appl.location is None
-            ):
+            # Remove thermostat-types without a location, these are orphaned
+            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 self._appl_data.pop(appl.dev_id)
 
     def _match_locations(self) -> dict[str, Any]:

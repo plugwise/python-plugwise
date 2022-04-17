@@ -72,13 +72,6 @@ class SmileData(SmileHelper):
         self._scan_thermostats()
 
         for appliance, details in self._appl_data.items():
-            # Don't assign the _home_location to thermostat-devices without a location, they are not active
-            if (
-                details.get("location") is None
-                and details.get("dev_class") not in THERMOSTAT_CLASSES
-            ):
-                details["location"] = self._home_location
-
             # Override slave thermostat class
             if (loc_id := details["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
