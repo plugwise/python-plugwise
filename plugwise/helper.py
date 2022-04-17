@@ -711,6 +711,7 @@ class SmileHelper:
                 and appl.pwclass == "thermostat"
                 and appl.location is None
             ):
+                LOGGER.debug("HOI no location %s", appl.name)
                 self._appl_data.pop(appl.dev_id)
 
     def _match_locations(self) -> dict[str, Any]:
