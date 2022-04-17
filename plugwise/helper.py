@@ -47,6 +47,7 @@ from .constants import (
     ApplianceData,
     GatewayData,
     GatewayDevices,
+    LocationData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -311,7 +312,7 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
-        self._loc_data: dict[str, dict[str, Any]] = {}
+        self._loc_data: LocationData = {}
         self._locations: etree
         self._modules: etree
         self._on_off_device = False
@@ -412,11 +413,11 @@ class SmileHelper:
             # Specials
             loc = self._locations_specials(loc, location)
 
-            self._loc_data[loc.id] = {
-                "name": loc.name,
-                "types": loc.types,
-                "members": loc.members,
-            }
+            self._loc_data[loc.id] = LocationData(
+                name=loc.name,
+                types=loc.types,
+                members=loc.members,
+            )
 
         return
 

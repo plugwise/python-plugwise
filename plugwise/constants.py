@@ -665,6 +665,14 @@ class GatewayDevices(ApplianceData, total=False):
     switches: dict[str, bool] | None
 
 
+class LocationData(TypedDict):
+    """Location data class."""
+
+    name: str
+    types: set()
+    members: set()
+
+
 class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
