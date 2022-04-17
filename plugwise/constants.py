@@ -613,7 +613,6 @@ SWITCHES: Final[list[str]] = [
 class ApplianceData(TypedDict):
     """The Appliance Data class."""
 
-    dev_id: str
     dev_class: str
     firmware: str
     hardware: str
