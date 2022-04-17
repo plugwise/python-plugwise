@@ -701,10 +701,11 @@ class SmileHelper:
             for key, value in {
                 "firmware": appl.fw,
                 "hardware": appl.hw,
+                "mac_address": appl.mac_address,
                 "zigbee_mac_address": appl.zigbee_mac,
                 "vendor": appl.v_name,
             }.items():
-                if value:
+                if value is not None:
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
             # Remove thermostat-types without a location, these are orphaned
