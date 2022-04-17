@@ -288,13 +288,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if not timeout:
             assert smile._timeout == 30
         # assert smile._domain_objects is None - domain_objects no longer inited as None
-        assert smile.smile_type is None
+        # assert smile.smile_type is None
 
         # Connect to the smile
         try:
             connection_state = await smile.connect()
             assert connection_state
-            assert smile.smile_type is not None
+            # assert smile.smile_type is not None
             return server, smile, client
         except (
             pw_exceptions.DeviceTimeoutError,
