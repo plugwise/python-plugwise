@@ -689,6 +689,14 @@ class SmileHelper:
                 appl.fw = self.smile_fw_version
                 appl.hw = self.smile_hw_version
 
+            if (
+                not self._smile_legacy
+                and appl.pwclass == "thermostat"
+                and appl.location is None
+            ):
+                LOGGER.debug("HOI no location %s", appl.name)
+                continue
+
             self._appl_data[appl.dev_id] = ApplianceData(
                 dev_class=appl.pwclass,
                 location=appl.location,
@@ -705,14 +713,6 @@ class SmileHelper:
             }.items():
                 if value is not None:
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
-
-            if (
-                not self._smile_legacy
-                and appl.pwclass == "thermostat"
-                and appl.location is None
-            ):
-                LOGGER.debug("HOI no location %s", appl.name)
-                self._appl_data.pop(appl.dev_id)
 
     def _match_locations(self) -> dict[str, Any]:
         """Helper-function for _scan_thermostats().
