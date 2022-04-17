@@ -624,26 +624,24 @@ class SmileHelper:
 
             if self.smile_type == "power":
                 self._appl_data[self._home_location].update(
-                    model="P1",
-                    name="P1",
-                    vendor="Plugwise B.V.",
+                    {"model": "P1", "name": "P1", "vendor": "Plugwise B.V."}
                 )
                 # legacy p1 has no more devices
                 return
 
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
-                    model="Anna",
-                    name="Anna",
-                    vendor="Plugwise B.V.",
+                    {"model": "Anna", "name": "Anna", "vendor": "Plugwise B.V."}
                 )
 
             if self.smile_type == "stretch":
                 self._appl_data[self._home_location].update(
-                    model="Stretch",
-                    name="Stretch",
-                    vendor="Plugwise B.V.",
-                    zigbee_mac_address=self.smile_zigbee_mac_address,
+                    {
+                        "model": "Stretch",
+                        "name": "Stretch",
+                        "vendor": "Plugwise B.V.",
+                        "zigbee_mac_address": self.smile_zigbee_mac_address,
+                    }
                 )
 
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater

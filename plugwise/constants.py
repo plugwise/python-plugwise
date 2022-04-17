@@ -614,15 +614,15 @@ class ApplianceData(TypedDict, total=False):
     """The Appliance Data class."""
 
     dev_class: str
-    firmware: str
-    hardware: str
+    firmware: str | None
+    hardware: str | None
     location: str
-    mac_address: str
-    members: list[str]
+    mac_address: str | None
+    members: list[str] | None
     model: str
     name: str
-    vendor: str
-    zigbee_mac_address: str
+    vendor: str | None
+    zigbee_mac_address: str | None
 
 
 class GatewayData(TypedDict, total=False):
