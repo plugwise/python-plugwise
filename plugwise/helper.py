@@ -689,8 +689,12 @@ class SmileHelper:
                 appl.fw = self.smile_fw_version
                 appl.hw = self.smile_hw_version
 
-            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
-                LOGGER.debug("HOI no location %s", appl.name)
+            # Don't show orphaned non-legacy thermostat-types.
+            if (
+                not self._smile_legacy
+                and appl.pwclass in THERMOSTAT_CLASSES
+                and appl.location is None
+            ):
                 continue
 
             self._appl_data[appl.dev_id] = ApplianceData(
