@@ -4,8 +4,6 @@ from __future__ import annotations
 import logging
 from typing import Any, Final, TypedDict
 
-from typing_extensions import NotRequired
-
 LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
@@ -612,22 +610,22 @@ SWITCHES: Final[list[str]] = [
 ]
 
 
-class ApplianceData(TypedDict):
+class ApplianceData(TypedDict, total=False):
     """The Appliance Data class."""
 
     dev_class: str
-    firmware: NotRequired[str]
-    hardware: NotRequired[str]
+    firmware: str
+    hardware: str
     location: str
-    mac_address: NotRequired[str]
-    members: NotRequired[list[str]]
-    model: NotRequired[str]
+    mac_address: str
+    members: list[str]
+    model: str
     name: str
-    vendor: NotRequired[str]
-    zigbee_mac_address: NotRequired[str]
+    vendor: str
+    zigbee_mac_address: str
 
 
-class GatewayData(TypedDict):
+class GatewayData(TypedDict, total=False):
     """The gateway data class."""
 
     smile_name: str
@@ -637,37 +635,37 @@ class GatewayData(TypedDict):
     notifications: dict[str, str]
 
 
-class GatewayDevices(ApplianceData):
+class GatewayDevices(ApplianceData, total=False):
     """The gateway devices class."""
 
     # gateway
-    regulation_mode: NotRequired[str]
-    regulation_modes: NotRequired[list[str]]
+    regulation_mode: str
+    regulation_modes: list[str]
 
     # heater_central
-    maximum_boiler_temperature: NotRequired[float]
+    maximum_boiler_temperature: float
 
     # master_thermostats
-    lower_bound: NotRequired[float]
-    upper_bound: NotRequired[float]
-    resolution: NotRequired[float]
-    preset_modes: NotRequired[list[str]]
-    active_preset: NotRequired[str | None]
-    presets: NotRequired[dict[str, list[float]]]
-    available_schedules: NotRequired[list[str]]
-    selected_schedule: NotRequired[str]
-    last_used: NotRequired[str | None]
-    schedule_temperature: NotRequired[float | None]
-    mode: NotRequired[str]
+    lower_bound: float
+    upper_bound: float
+    resolution: float
+    preset_modes: list[str]
+    active_preset: str | None
+    presets: dict[str, list[float]]
+    available_schedules: list[str]
+    selected_schedule: str
+    last_used: str | None
+    schedule_temperature: float | None
+    mode: str
     # Adam master_thermostats
-    control_state: NotRequired[str]
+    control_state: str
 
-    binary_sensors: NotRequired[dict[str, bool] | None]
-    sensors: NotRequired[dict[str, float | int] | None]
-    switches: NotRequired[dict[str, bool] | None]
+    binary_sensors: dict[str, bool] | None
+    sensors: dict[str, float | int] | None
+    switches: dict[str, bool] | None
 
 
-class SmileBinarySensors(TypedDict):
+class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
     compressor_state: bool
@@ -679,7 +677,7 @@ class SmileBinarySensors(TypedDict):
     slave_boiler_state: bool
 
 
-class SmileSensors(TypedDict):
+class SmileSensors(TypedDict, total=False):
     """Smile Sensors class."""
 
     battery: float
@@ -722,7 +720,7 @@ class SmileSensors(TypedDict):
     water_temperature: float
 
 
-class SmileSwitches(TypedDict):
+class SmileSwitches(TypedDict, total=False):
     """Smile Switches class."""
 
     dhw_cm_switch: bool
