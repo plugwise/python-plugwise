@@ -59,11 +59,11 @@ class SmileData(SmileHelper):
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
 
-        self.gw_data["smile_name"] = self.smile_name
-        self.gw_data["gateway_id"] = self.gateway_id
+        self.gw_data.update(smile_name=self.smile_name)
+        self.gw_data.update(gateway_id=self.gateway_id)
         if self._is_thermostat:
-            self.gw_data["heater_id"] = self._heater_id
-            self.gw_data["cooling_present"] = self._cooling_present
+            self.gw_data.update(heater_id=self._heater_id)
+            self.gw_data.update(cooling_present=self._cooling_present)
 
     def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
@@ -442,7 +442,7 @@ class Smile(SmileComm, SmileData):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
-        self.gw_data["notifications"] = self._notifications
+        self.gw_data.update(notifications=self._notifications)
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)

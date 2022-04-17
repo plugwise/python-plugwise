@@ -45,6 +45,7 @@ from .constants import (
     SWITCHES,
     THERMOSTAT_CLASSES,
     ApplianceData,
+    GatewayData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -323,7 +324,7 @@ class SmileHelper:
 
         self.cooling_active = False
         self.gateway_id: str | None = None
-        self.gw_data: dict[str, Any] = {}
+        self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, Any] = {}
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
