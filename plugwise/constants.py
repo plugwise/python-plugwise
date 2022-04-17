@@ -734,3 +734,75 @@ class SmileSwitches(TypedDict, total=False):
     dhw_cm_switch: bool
     lock: bool
     relay: bool
+
+
+# P1 related measurements:
+HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
+    "electricity_consumed": {
+        ATTR_TYPE: "power",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "electricity_produced": {
+        ATTR_TYPE: "power",
+        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
+    },
+    "gas_consumed": {
+        ATTR_TYPE: "gas",
+        ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
+    },
+}
+
+
+# electricity_consumed
+# electricity_consumed_interval
+# electricity_consumed_off_peak_cumulative
+# electricity_consumed_off_peak_interval
+# electricity_consumed_off_peak_point
+# electricity_consumed_peak_cumulative
+# electricity_consumed_peak_interval
+# electricity_consumed_peak_point
+# electricity_consumed_point
+# electricity_produced
+# electricity_produced_interval
+# electricity_produced_off_peak_cumulative
+# electricity_produced_off_peak_interval
+# electricity_produced_off_peak_point
+# electricity_produced_peak_cumulative
+# electricity_produced_peak_interval
+# electricity_produced_peak_point
+# electricity_produced_point
+# gas_consumed_cumulative
+# gas_consumed_interval
+# net_electricity_cumulative
+# net_electricity_point
+
+# temperature
+# setpoint
+# illuminance
+# schedule_temperature
+# cooling_activation_outdoor_temperature
+# cooling_deactivation_threshold
+# battery
+# temperature_difference
+# valve_position
+# humidity
+# electricity_consumed
+# electricity_produced
+# relay
+# lower_bound
+# upper_bound
+# resolution
+# regulation_mode
+# maximum_boiler_temperature
+# water_temperature""dhw_cm_switch
+# dhw_state
+# intended_boiler_temperature
+# c_heating_state
+# modulation_level
+# return_temperature
+# cooling_state
+# slave_boiler_state
+# water_pressure
+# flame_state
+# heating_state
+# outdoor_air_temperature
