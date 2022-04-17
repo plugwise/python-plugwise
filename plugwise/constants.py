@@ -4,6 +4,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Final, TypedDict
 
+from typing_extensions import NotRequired
+
 LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
@@ -614,7 +616,7 @@ class ApplianceData(TypedDict):
     """The Appliance Data class."""
 
     dev_class: str
-    firmware: str
+    firmware: NotRequired[str]
     hardware: str
     location: str
     mac_address: str
