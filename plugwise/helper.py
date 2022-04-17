@@ -705,7 +705,7 @@ class SmileHelper:
                 "vendor": appl.v_name,
             }.items():
                 if value:
-                    self._appl_data[appl.dev_id].update({key: value})
+                    self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
             if (
                 not self._smile_legacy
@@ -1320,15 +1320,15 @@ class SmileHelper:
                 if item == key:
                     data.pop(key)
                     if self._opentherm_device or self._on_off_device:
-                        bs_dict[key] = value
+                        bs_dict[key] = value  # type: ignore[literal-required]
             for item in SENSORS:
                 if item == key:
                     data.pop(key)
-                    s_dict[key] = value
+                    s_dict[key] = value  # type: ignore[literal-required]
             for item in SWITCHES:
                 if item == key:
                     data.pop(key)
-                    sw_dict[key] = value
+                    sw_dict[key] = value  # type: ignore[literal-required]
 
         # Add plugwise notification binary_sensor to the relevant gateway
         if d_id == self.gateway_id:
