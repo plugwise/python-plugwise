@@ -689,10 +689,16 @@ class SmileHelper:
                 appl.fw = self.smile_fw_version
                 appl.hw = self.smile_hw_version
 
+            if appl.location is None:
+                if appl.pwclass not in THERMOSTAT_CLASSES:
+                    appl.location = self._home_location
+                # Remove thermostat-types without a location, these are orphaned
+                else:
+                    continue
+
             self._appl_data[appl.dev_id] = ApplianceData(
                 dev_class=appl.pwclass,
                 location=appl.location,
-                mac_address=appl.mac,
                 model=appl.model,
                 name=appl.name,
             )
@@ -706,10 +712,6 @@ class SmileHelper:
             }.items():
                 if value is not None:
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
-
-            # Remove thermostat-types without a location, these are orphaned
-            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
-                self._appl_data.pop(appl.dev_id)
 
     def _match_locations(self) -> dict[str, Any]:
         """Helper-function for _scan_thermostats().
