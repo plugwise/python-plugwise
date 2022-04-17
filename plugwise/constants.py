@@ -617,14 +617,14 @@ class ApplianceData(TypedDict):
 
     dev_class: str
     firmware: NotRequired[str]
-    hardware: str
+    hardware: NotRequired[str]
     location: str
-    mac_address: str
-    members: list[str]
-    model: str
+    mac_address: NotRequired[str]
+    members: NotRequired[list[str]]
+    model: NotRequired[str]
     name: str
-    vendor: str
-    zigbee_mac_address: str
+    vendor: NotRequired[str]
+    zigbee_mac_address: NotRequired[str]
 
 
 class GatewayData(TypedDict):
@@ -641,30 +641,30 @@ class GatewayDevices(ApplianceData):
     """The gateway devices class."""
 
     # gateway
-    regulation_mode: str
-    regulation_modes: list[str]
+    regulation_mode: NotRequired[str]
+    regulation_modes: NotRequired[list[str]]
 
     # heater_central
-    maximum_boiler_temperature: float
+    maximum_boiler_temperature: NotRequired[float]
 
     # master_thermostats
-    lower_bound: float
-    upper_bound: float
-    resolution: float
-    preset_modes: list[str]
-    active_preset: str | None
-    presets: dict[str, list[float]]
-    available_schedules: list[str]
-    selected_schedule: str
-    last_used: str | None
-    schedule_temperature: float | None
-    mode: str
+    lower_bound: NotRequired[float]
+    upper_bound: NotRequired[float]
+    resolution: NotRequired[float]
+    preset_modes: NotRequired[list[str]]
+    active_preset: NotRequired[str | None]
+    presets: NotRequired[dict[str, list[float]]]
+    available_schedules: NotRequired[list[str]]
+    selected_schedule: NotRequired[str]
+    last_used: NotRequired[str | None]
+    schedule_temperature: NotRequired[float | None]
+    mode: NotRequired[str]
     # Adam master_thermostats
-    control_state: str
+    control_state: NotRequired[str]
 
-    binary_sensors: dict[str, bool] | None
-    sensors: dict[str, float | int] | None
-    switches: dict[str, bool] | None
+    binary_sensors: NotRequired[dict[str, bool] | None]
+    sensors: NotRequired[dict[str, float | int] | None]
+    switches: NotRequired[dict[str, bool] | None]
 
 
 class SmileBinarySensors(TypedDict):
