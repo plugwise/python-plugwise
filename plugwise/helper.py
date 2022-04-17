@@ -690,6 +690,7 @@ class SmileHelper:
                 appl.hw = self.smile_hw_version
 
             if appl.location is None:
+                LOGGER.debug("HOI not location for %s", appl.name)
                 if appl.pwclass not in THERMOSTAT_CLASSES:
                     appl.location = self._home_location
                 # Remove thermostat-types without a location, these are orphaned
