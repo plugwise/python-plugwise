@@ -30,6 +30,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
+    GatewayDevices,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -189,7 +190,7 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _get_device_data(self, dev_id: str) -> dict[str, Any]:
+    def _get_device_data(self, dev_id: str) -> dict[str, GatewayDevices]:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
