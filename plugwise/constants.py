@@ -626,6 +626,16 @@ class ApplianceData(TypedDict):
     zigbee_mac_address: str
 
 
+class GatewayData(TypedDict):
+    """The gateway data class."""
+
+    smile_name: str
+    gateway_id: str
+    heater_id: str
+    cooling_present: bool
+    notifications: dict[str, str]
+
+
 class SmileBinarySensors(TypedDict):
     """Smile Binary Sensors class."""
 
