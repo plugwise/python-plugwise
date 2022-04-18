@@ -603,62 +603,75 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
-        testdata = {
+        testdata = [
             # Anna
-            "0d266432d64443e283b5d708ae98b455": {
-                "dev_class": "thermostat",
-                "firmware": "2017-03-13T11:54:58+01:00",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "schedule_temperature": 20.0,
-                "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
-                "active_preset": "home",
-                "presets": {
-                    "away": [19.0, 0],
-                    "vacation": [15.0, 0],
-                    "asleep": [19.0, 0],
-                    "home": [20.0, 0],
-                    "no_frost": [10.0, 0],
+            {
+                "dev_id": "0d266432d64443e283b5d708ae98b455",
+                "data": {
+                    "dev_class": "thermostat",
+                    "firmware": "2017-03-13T11:54:58+01:00",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise",
+                    "schedule_temperature": 20.0,
+                    "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
+                    "active_preset": "home",
+                    "presets": {
+                        "away": [19.0, 0],
+                        "vacation": [15.0, 0],
+                        "asleep": [19.0, 0],
+                        "home": [20.0, 0],
+                        "no_frost": [10.0, 0],
+                    },
+                    "available_schedules": ["Thermostat schedule"],
+                    "selected_schedule": "Thermostat schedule",
+                    "last_used": "Thermostat schedule",
+                    "mode": "auto",
+                    "sensors": {
+                        "temperature": 20.4,
+                        "setpoint": 20.5,
+                        "illuminance": 151,
+                    },
+                    "lower_bound": 4,
+                    "upper_bound": 30,
+                    "resolution": 0.1,
                 },
-                "available_schedules": ["Thermostat schedule"],
-                "selected_schedule": "Thermostat schedule",
-                "last_used": "Thermostat schedule",
-                "mode": "auto",
-                "sensors": {"temperature": 20.4, "setpoint": 20.5, "illuminance": 151},
-                "lower_bound": 4,
-                "upper_bound": 30,
-                "resolution": 0.1,
             },
             # Central
-            "04e4cbfe7f4340f090f85ec3b9e6a950": {
-                "dev_class": "heater_central",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "4.21",
-                "name": "OpenTherm",
-                "vendor": "Bosch Thermotechniek B.V.",
-                "maximum_boiler_temperature": 50.0,
-                "binary_sensors": {"flame_state": True, "heating_state": True},
-                "sensors": {
-                    "water_temperature": 23.6,
-                    "intended_boiler_temperature": 17.0,
-                    "modulation_level": 0.0,
-                    "return_temperature": 21.7,
-                    "water_pressure": 1.2,
+            {
+                "dev_id": "04e4cbfe7f4340f090f85ec3b9e6a950",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "4.21",
+                    "name": "OpenTherm",
+                    "vendor": "Bosch Thermotechniek B.V.",
+                    "maximum_boiler_temperature": 50.0,
+                    "binary_sensors": {"flame_state": True, "heating_state": True},
+                    "sensors": {
+                        "water_temperature": 23.6,
+                        "intended_boiler_temperature": 17.0,
+                        "modulation_level": 0.0,
+                        "return_temperature": 21.7,
+                        "water_pressure": 1.2,
+                    },
                 },
             },
             # Gateway
-            "0000aaaa0000aaaa0000aaaa0000aa00": {
-                "dev_class": "gateway",
-                "firmware": "1.8.0",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": False},
+            {
+                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "1.8.0",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": False},
+                },
             },
-        }
+        ]
 
         self.smile_setup = "legacy_anna"
         server, smile, client = await self.connect_wrapper()
