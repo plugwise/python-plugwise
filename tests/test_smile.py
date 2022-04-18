@@ -360,7 +360,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "  --> Location: %s", "{} ({})".format(loc_info["name"], loc_id)
             )
             device_count = 0
-            for dev_id, dev_info in device_list.items():
+            for gw_dict in device_list:
+                dev_id = gw_dict["dev_id"]
+                dev_info = gw_dict["data"]
                 if dev_info.get("location", "not_found") == loc_id:
                     device_count += 1
                     _LOGGER.info(
@@ -407,16 +409,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             #    _LOGGER.info("Device {} to test against {} not found in device_list for {}".format(testdevice,measurements,self.smile_setup))
             # else:
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
-            for dev_id, details in device_list.items():
+            for gw_dict in device_list:
+                dev_id = gw_dict["dev_id"]
+                details = gw_dict["data"]
                 if testdevice == dev_id:
-                    dev_data = device_list[dev_id]
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
                             details["name"], dev_id
                         ),
                     )
-                    _LOGGER.info("  + Device data: %s", dev_data)
+                    _LOGGER.info("  + Device data: %s", details)
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
@@ -427,7 +430,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             tests -= 1
                             for key_1, val_1 in measure_assert.items():
                                 tests += 1
-                                for key_2, val_2 in dev_data[measure_key].items():
+                                for key_2, val_2 in details[measure_key].items():
                                     if key_1 != key_2:
                                         continue
 
@@ -438,14 +441,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             # so the value can differ when testing at different times during the day.
                             if measure_key == "schedule_temperature":
                                 _LOGGER.debug(
-                                    "Schedule temperature = %s", dev_data[measure_key]
+                                    "Schedule temperature = %s", details[measure_key]
                                 )
                                 if measure_assert is not None:
                                     assert isinstance(dev_data[measure_key], float)
                                     asserts += 1
                                 else:  # edge-case: schedule_temperature = None
                                     assert (
-                                        dev_data[measure_key] == measure_assert
+                                        details[measure_key] == measure_assert
                                     )  # pragma: no cover
                                     asserts += 1
                             else:
