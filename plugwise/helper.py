@@ -402,7 +402,6 @@ class SmileHelper:
         for location in locations:
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
-            LOGGER.debug("HOI 1 %s %s", loc.name, loc.id)
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if (
@@ -435,7 +434,6 @@ class SmileHelper:
                 },
             )
 
-        LOGGER.debug("HOI 2 %s", self._loc_data)
         return
 
     def _get_module_data(
@@ -763,12 +761,6 @@ class SmileHelper:
             location_details = item_1["data"]
             for item_2 in self._appl_data:
                 appliance_details = item_2["data"]
-                LOGGER.debug(
-                    "HOII %s, %s, %s",
-                    location_id,
-                    location_details,
-                    appliance_details,
-                )
                 if appliance_details["location"] == location_id:
                     matched_locations[location_id] = location_details
 

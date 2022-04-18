@@ -52,6 +52,7 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for item in self._appl_data:
+            LOGGER.debug("HOI %s", item)
             device_id = item["dev_id"]
             device = item["data"]
             bs_dict: SmileBinarySensors = {}
@@ -239,7 +240,6 @@ class SmileData(SmileHelper):
         # Thermostat data (presets, temperatures etc)
         device_data = self._device_data_climate(details, device_data)
 
-        LOGGER.debug("HOI %s", device_data)
         return device_data
 
 
