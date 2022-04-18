@@ -630,18 +630,16 @@ class SmileHelper:
         # and inject a home_location as device id for legacy so
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
-            temp_dict: ApplianceData = (
-                {
-                    "dev_id": self._home_location,
-                    "data": {
-                        "dev_class": "gateway",
-                        "firmware": self.smile_fw_version,
-                        "hardware": self.smile_hw_version,
-                        "location": self._home_location,
-                        "mac_address": self.smile_mac_address,
-                    },
+            temp_dict: ApplianceData = {
+                "dev_id": self._home_location,
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": self.smile_fw_version,
+                    "hardware": self.smile_hw_version,
+                    "location": self._home_location,
+                    "mac_address": self.smile_mac_address,
                 },
-            )
+            }
             self.gateway_id = self._home_location
 
             if self.smile_type == "power":
