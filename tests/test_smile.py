@@ -401,7 +401,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         tests = 0
         asserts = 0
-        for testdevice, measurements in testdata.items():
+        for gw_dict in testdata:
+            testdevice = gw_dict["dev_id"]
+            measurements = gw_dict["data"]
             tests += 1
             assert testdevice in device_list
             asserts += 1
