@@ -717,58 +717,71 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_legacy_anna_2(self):
         """Test a legacy Anna device."""
-        testdata = {
+        testdata = [
             # Anna
-            "9e7377867dc24e51b8098a5ba02bd89d": {
-                "dev_class": "thermostat",
-                "firmware": "2017-03-13T11:54:58+01:00",
-                "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "schedule_temperature": 15.0,
-                "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
-                "active_preset": None,
-                "presets": {
-                    "vacation": [15.0, 0],
-                    "away": [15.0, 0],
-                    "no_frost": [10.0, 0],
-                    "home": [18.0, 0],
-                    "asleep": [15.0, 0],
+            {
+                "dev_id": "9e7377867dc24e51b8098a5ba02bd89d",
+                "data": {
+                    "dev_class": "thermostat",
+                    "firmware": "2017-03-13T11:54:58+01:00",
+                    "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise",
+                    "schedule_temperature": 15.0,
+                    "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
+                    "active_preset": None,
+                    "presets": {
+                        "vacation": [15.0, 0],
+                        "away": [15.0, 0],
+                        "no_frost": [10.0, 0],
+                        "home": [18.0, 0],
+                        "asleep": [15.0, 0],
+                    },
+                    "available_schedules": ["Thermostat schedule"],
+                    "selected_schedule": "None",
+                    "last_used": "Thermostat schedule",
+                    "mode": "heat",
+                    "sensors": {
+                        "temperature": 21.4,
+                        "setpoint": 15.0,
+                        "illuminance": 19.5,
+                    },
                 },
-                "available_schedules": ["Thermostat schedule"],
-                "selected_schedule": "None",
-                "last_used": "Thermostat schedule",
-                "mode": "heat",
-                "sensors": {"temperature": 21.4, "setpoint": 15.0, "illuminance": 19.5},
             },
             # Central
-            "ea5d8a7177e541b0a4b52da815166de4": {
-                "dev_class": "heater_central",
-                "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Generic heater",
-                "name": "OpenTherm",
-                "binary_sensors": {"flame_state": False, "heating_state": False},
-                "sensors": {
-                    "water_temperature": 54.0,
-                    "intended_boiler_temperature": 0.0,
-                    "modulation_level": 0.0,
-                    "return_temperature": 0.0,
-                    "water_pressure": 1.7,
+            {
+                "dev_id": "ea5d8a7177e541b0a4b52da815166de4",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                    "model": "Generic heater",
+                    "name": "OpenTherm",
+                    "binary_sensors": {"flame_state": False, "heating_state": False},
+                    "sensors": {
+                        "water_temperature": 54.0,
+                        "intended_boiler_temperature": 0.0,
+                        "modulation_level": 0.0,
+                        "return_temperature": 0.0,
+                        "water_pressure": 1.7,
+                    },
                 },
             },
             # Gateway
-            "be81e3f8275b4129852c4d8d550ae2eb": {
-                "dev_class": "gateway",
-                "firmware": "1.8.0",
-                "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 21.0},
+            {
+                "dev_id": "be81e3f8275b4129852c4d8d550ae2eb",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "1.8.0",
+                    "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": False},
+                    "sensors": {"outdoor_temperature": 21.0},
+                },
             },
-        }
+        ]
 
         self.smile_setup = "legacy_anna_2"
         server, smile, client = await self.connect_wrapper()
@@ -810,34 +823,37 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2(self):
         """Test a legacy P1 device."""
-        testdata = {
+        testdata = [
             # Gateway / P1 itself
-            "938696c4bcdb4b8a9a595cb38ed43913": {
-                "dev_class": "gateway",
-                "firmware": "2.5.9",
-                "location": "938696c4bcdb4b8a9a595cb38ed43913",
-                "model": "P1",
-                "name": "P1",
-                "vendor": "Plugwise B.V.",
-                "sensors": {
-                    "net_electricity_point": 456,
-                    "electricity_consumed_point": 456,
-                    "net_electricity_cumulative": 1019.161,
-                    "electricity_consumed_peak_cumulative": 1155.155,
-                    "electricity_consumed_off_peak_cumulative": 1642.74,
-                    "electricity_consumed_peak_interval": 210,
-                    "electricity_consumed_off_peak_interval": 0,
-                    "electricity_produced_point": 0,
-                    "electricity_produced_peak_cumulative": 1296.136,
-                    "electricity_produced_off_peak_cumulative": 482.598,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
-                    "gas_consumed_cumulative": 584.431,
-                    "gas_consumed_interval": 0.014,
+            {
+                "dev_id": "938696c4bcdb4b8a9a595cb38ed43913",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "2.5.9",
+                    "location": "938696c4bcdb4b8a9a595cb38ed43913",
+                    "model": "P1",
+                    "name": "P1",
+                    "vendor": "Plugwise B.V.",
+                    "sensors": {
+                        "net_electricity_point": 456,
+                        "electricity_consumed_point": 456,
+                        "net_electricity_cumulative": 1019.161,
+                        "electricity_consumed_peak_cumulative": 1155.155,
+                        "electricity_consumed_off_peak_cumulative": 1642.74,
+                        "electricity_consumed_peak_interval": 210,
+                        "electricity_consumed_off_peak_interval": 0,
+                        "electricity_produced_point": 0,
+                        "electricity_produced_peak_cumulative": 1296.136,
+                        "electricity_produced_off_peak_cumulative": 482.598,
+                        "electricity_produced_peak_interval": 0,
+                        "electricity_produced_off_peak_interval": 0,
+                        "gas_consumed_cumulative": 584.431,
+                        "gas_consumed_interval": 0.014,
+                    },
+                    "mac_address": "012345670001",
                 },
-                "mac_address": "012345670001",
             },
-        }
+        ]
 
         self.smile_setup = "smile_p1_v2"
         server, smile, client = await self.connect_wrapper()
@@ -862,17 +878,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2_2(self):
         """Test another legacy P1 device."""
-        testdata = {
+        testdata = [
             # Gateway / P1 itself
-            "199aa40f126840f392983d171374ab0b": {
-                "sensors": {
-                    "electricity_consumed_point": 456.0,
-                    "net_electricity_point": 456.0,
-                    "gas_consumed_cumulative": 584.431,
-                    "electricity_produced_peak_cumulative": 1296.136,
-                }
+            {
+                "dev_id": "199aa40f126840f392983d171374ab0b",
+                "data": {
+                    "sensors": {
+                        "electricity_consumed_point": 456.0,
+                        "net_electricity_point": 456.0,
+                        "gas_consumed_cumulative": 584.431,
+                        "electricity_produced_peak_cumulative": 1296.136,
+                    }
+                },
             }
-        }
+        ]
 
         self.smile_setup = "smile_p1_v2_2"
         server, smile, client = await self.connect_wrapper()
@@ -895,64 +914,77 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_v4(self):
         """Test an Anna firmware 4 setup without a boiler."""
-        testdata = {
+        testdata = [
             # Anna
-            "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "location": "eb5309212bf5407bb143e5bfa3b18aee",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
-                "active_preset": "home",
-                "presets": {
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
-                    "away": [17.5, 25.0],
-                    "asleep": [17.0, 24.0],
-                    "home": [20.5, 22.0],
+            {
+                "dev_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
+                "data": {
+                    "dev_class": "thermostat",
+                    "firmware": "2018-02-08T11:15:53+01:00",
+                    "location": "eb5309212bf5407bb143e5bfa3b18aee",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
+                    "active_preset": "home",
+                    "presets": {
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                        "away": [17.5, 25.0],
+                        "asleep": [17.0, 24.0],
+                        "home": [20.5, 22.0],
+                    },
+                    "available_schedules": ["Standaard", "Thuiswerken"],
+                    "selected_schedule": "None",
+                    "schedule_temperature": 20.5,
+                    "last_used": "Standaard",
+                    "mode": "heat",
+                    "sensors": {
+                        "temperature": 20.5,
+                        "setpoint": 20.5,
+                        "illuminance": 40.5,
+                    },
                 },
-                "available_schedules": ["Standaard", "Thuiswerken"],
-                "selected_schedule": "None",
-                "schedule_temperature": 20.5,
-                "last_used": "Standaard",
-                "mode": "heat",
-                "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
             # Central
-            "cd0e6156b1f04d5f952349ffbe397481": {
-                "dev_class": "heater_central",
-                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
-                "model": "2.32",
-                "name": "OpenTherm",
-                "vendor": "Bosch Thermotechniek B.V.",
-                "binary_sensors": {
-                    "dhw_state": False,
-                    "flame_state": True,
-                    "heating_state": True,
+            {
+                "dev_id": "cd0e6156b1f04d5f952349ffbe397481",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                    "model": "2.32",
+                    "name": "OpenTherm",
+                    "vendor": "Bosch Thermotechniek B.V.",
+                    "binary_sensors": {
+                        "dhw_state": False,
+                        "flame_state": True,
+                        "heating_state": True,
+                    },
+                    "sensors": {
+                        "water_temperature": 52.0,
+                        "intended_boiler_temperature": 48.6,
+                        "modulation_level": 0.0,
+                        "return_temperature": 42.0,
+                        "water_pressure": 2.1,
+                    },
+                    "switches": {"dhw_cm_switch": False},
                 },
-                "sensors": {
-                    "water_temperature": 52.0,
-                    "intended_boiler_temperature": 48.6,
-                    "modulation_level": 0.0,
-                    "return_temperature": 42.0,
-                    "water_pressure": 2.1,
-                },
-                "switches": {"dhw_cm_switch": False},
             },
             # Gateway
-            "0466eae8520144c78afb29628384edeb": {
-                "dev_class": "gateway",
-                "firmware": "4.0.15",
-                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 7.44},
+            {
+                "dev_id": "0466eae8520144c78afb29628384edeb",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "4.0.15",
+                    "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": False},
+                    "sensors": {"outdoor_temperature": 7.44},
+                },
             },
-        }
+        ]
 
         self.smile_setup = "anna_v4"
         server, smile, client = await self.connect_wrapper()
@@ -992,64 +1024,77 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_v4_dhw(self):
         """Test an Anna firmware 4 setup without a boiler."""
-        testdata = {
+        testdata = [
             # Anna
-            "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "location": "eb5309212bf5407bb143e5bfa3b18aee",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
-                "active_preset": "home",
-                "presets": {
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
-                    "away": [17.5, 25.0],
-                    "asleep": [17.0, 24.0],
-                    "home": [20.5, 22.0],
+            {
+                "dev_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
+                "data": {
+                    "dev_class": "thermostat",
+                    "firmware": "2018-02-08T11:15:53+01:00",
+                    "location": "eb5309212bf5407bb143e5bfa3b18aee",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
+                    "active_preset": "home",
+                    "presets": {
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                        "away": [17.5, 25.0],
+                        "asleep": [17.0, 24.0],
+                        "home": [20.5, 22.0],
+                    },
+                    "available_schedules": ["Standaard", "Thuiswerken"],
+                    "selected_schedule": "None",
+                    "schedule_temperature": 20.5,
+                    "last_used": "Standaard",
+                    "mode": "heat",
+                    "sensors": {
+                        "temperature": 20.5,
+                        "setpoint": 20.5,
+                        "illuminance": 40.5,
+                    },
                 },
-                "available_schedules": ["Standaard", "Thuiswerken"],
-                "selected_schedule": "None",
-                "schedule_temperature": 20.5,
-                "last_used": "Standaard",
-                "mode": "heat",
-                "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
             # Central
-            "cd0e6156b1f04d5f952349ffbe397481": {
-                "dev_class": "heater_central",
-                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
-                "model": "2.32",
-                "name": "OpenTherm",
-                "vendor": "Bosch Thermotechniek B.V.",
-                "binary_sensors": {
-                    "dhw_state": True,
-                    "flame_state": True,
-                    "heating_state": False,
+            {
+                "dev_id": "cd0e6156b1f04d5f952349ffbe397481",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                    "model": "2.32",
+                    "name": "OpenTherm",
+                    "vendor": "Bosch Thermotechniek B.V.",
+                    "binary_sensors": {
+                        "dhw_state": True,
+                        "flame_state": True,
+                        "heating_state": False,
+                    },
+                    "sensors": {
+                        "water_temperature": 52.0,
+                        "intended_boiler_temperature": 48.6,
+                        "modulation_level": 0.0,
+                        "return_temperature": 42.0,
+                        "water_pressure": 2.1,
+                    },
+                    "switches": {"dhw_cm_switch": False},
                 },
-                "sensors": {
-                    "water_temperature": 52.0,
-                    "intended_boiler_temperature": 48.6,
-                    "modulation_level": 0.0,
-                    "return_temperature": 42.0,
-                    "water_pressure": 2.1,
-                },
-                "switches": {"dhw_cm_switch": False},
             },
             # Gateway
-            "0466eae8520144c78afb29628384edeb": {
-                "dev_class": "gateway",
-                "firmware": "4.0.15",
-                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 7.44},
+            {
+                "dev_id": "0466eae8520144c78afb29628384edeb",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "4.0.15",
+                    "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": False},
+                    "sensors": {"outdoor_temperature": 7.44},
+                },
             },
-        }
+        ]
 
         self.smile_setup = "anna_v4_dhw"
         server, smile, client = await self.connect_wrapper()
@@ -1132,19 +1177,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw3(self):
         """Test an Anna firmware 3 without a boiler."""
-        testdata = {
+        testdata = [
             # Anna
-            "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
-                "location": "c34c6864216446528e95d88985e714cc",
-                "sensors": {"illuminance": 35.0},
-                "selected_schedule": "Normal",
-                "active_preset": "away",
+            {
+                "dev_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
+                "data": {
+                    "location": "c34c6864216446528e95d88985e714cc",
+                    "sensors": {"illuminance": 35.0},
+                    "selected_schedule": "Normal",
+                    "active_preset": "away",
+                },
+                "a270735e4ccd45239424badc0578a2b1": {
+                    "location": "0f4f2ada20734a339fe353348fe87b96",
+                    "sensors": {"outdoor_temperature": 10.8},
+                },
             },
-            "a270735e4ccd45239424badc0578a2b1": {
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "sensors": {"outdoor_temperature": 10.8},
-            },
-        }
+        ]
 
         self.smile_setup = "anna_without_boiler_fw3"
         server, smile, client = await self.connect_wrapper()
@@ -1180,17 +1228,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw4(self):
         """Test an Anna firmware 4 without a boiler."""
-        testdata = {
+        testdata = [
             # Anna
-            "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
-                "sensors": {"illuminance": 44.8},
-                "selected_schedule": "Normal",
-                "active_preset": "home",
+            {
+                "dev_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
+                "data": {
+                    "sensors": {"illuminance": 44.8},
+                    "selected_schedule": "Normal",
+                    "active_preset": "home",
+                },
+                "a270735e4ccd45239424badc0578a2b1": {
+                    "sensors": {"outdoor_temperature": 16.6}
+                },
             },
-            "a270735e4ccd45239424badc0578a2b1": {
-                "sensors": {"outdoor_temperature": 16.6}
-            },
-        }
+        ]
 
         self.smile_setup = "anna_without_boiler_fw4"
         server, smile, client = await self.connect_wrapper()
@@ -1226,56 +1277,69 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw42(self):
         """Test an Anna firmware 4.2 setup without a boiler."""
-        testdata = {
+        testdata = [
             # Central
-            "c46b4794d28149699eacf053deedd003": {
-                "dev_class": "heater_central",
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "model": "Unknown",
-                "name": "OnOff",
-                "binary_sensors": {"heating_state": True},
+            {
+                "dev_id": "c46b4794d28149699eacf053deedd003",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "0f4f2ada20734a339fe353348fe87b96",
+                    "model": "Unknown",
+                    "name": "OnOff",
+                    "binary_sensors": {"heating_state": True},
+                },
             },
             # Anna
-            "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "location": "c34c6864216446528e95d88985e714cc",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "preset_modes": ["no_frost", "asleep", "away", "home", "vacation"],
-                "active_preset": "home",
-                "presets": {
-                    "no_frost": [10.0, 30.0],
-                    "asleep": [16.0, 24.0],
-                    "away": [16.0, 25.0],
-                    "home": [21.0, 22.0],
-                    "vacation": [18.5, 28.0],
+            {
+                "dev_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
+                "data": {
+                    "dev_class": "thermostat",
+                    "firmware": "2018-02-08T11:15:53+01:00",
+                    "location": "c34c6864216446528e95d88985e714cc",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["no_frost", "asleep", "away", "home", "vacation"],
+                    "active_preset": "home",
+                    "presets": {
+                        "no_frost": [10.0, 30.0],
+                        "asleep": [16.0, 24.0],
+                        "away": [16.0, 25.0],
+                        "home": [21.0, 22.0],
+                        "vacation": [18.5, 28.0],
+                    },
+                    "available_schedules": ["Normal"],
+                    "selected_schedule": "None",
+                    "schedule_temperature": None,
+                    "last_used": None,
+                    "mode": "heat",
+                    "sensors": {
+                        "temperature": 20.6,
+                        "setpoint": 21.0,
+                        "illuminance": 0.25,
+                    },
+                    "lower_bound": 4,
+                    "upper_bound": 30,
+                    "resolution": 0.1,
                 },
-                "available_schedules": ["Normal"],
-                "selected_schedule": "None",
-                "schedule_temperature": None,
-                "last_used": None,
-                "mode": "heat",
-                "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
-                "lower_bound": 4,
-                "upper_bound": 30,
-                "resolution": 0.1,
             },
             # Gateway
-            "a270735e4ccd45239424badc0578a2b1": {
-                "dev_class": "gateway",
-                "firmware": "4.2.1",
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 3.56},
-                "mac_address": "012345670001",
-                "hardware": "AME Smile 2.0 board",
+            {
+                "dev_id": "a270735e4ccd45239424badc0578a2b1",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "4.2.1",
+                    "location": "0f4f2ada20734a339fe353348fe87b96",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": False},
+                    "sensors": {"outdoor_temperature": 3.56},
+                    "mac_address": "012345670001",
+                    "hardware": "AME Smile 2.0 board",
+                },
             },
-        }
+        ]
 
         self.smile_setup = "anna_without_boiler_fw42"
         server, smile, client = await self.connect_wrapper()
@@ -1311,33 +1375,45 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna(self):
         """Test outdated information for Adam with Anna setup."""
-        testdata = {
+        testdata = [
             # Anna
-            "ee62cad889f94e8ca3d09021f03a660b": {
-                "sensors": {"setpoint": 20.5, "temperature": 20.5},
-                "selected_schedule": "Weekschema",
-                "last_used": "Weekschema",
-                "active_preset": "home",
-            },
-            # Central
-            "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"flame_state": False, "heating_state": False},
-            },
-            # Plug MediaCenter
-            "aa6b0002df0a46e1b1eb94beb61eddfe": {
-                "sensors": {"electricity_consumed": 10.3},
-                "switches": {"lock": False, "relay": True},
-            },
-            # Gateway
-            "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
-                "hardware": "AME Smile 2.0 board",
-                "mac_address": "012345670001",
-                "zigbee_mac_address": "ABCD012345670101",
-                "sensors": {
-                    "outdoor_temperature": 11.9,
+            {
+                "dev_id": "ee62cad889f94e8ca3d09021f03a660b",
+                "data": {
+                    "sensors": {"setpoint": 20.5, "temperature": 20.5},
+                    "selected_schedule": "Weekschema",
+                    "last_used": "Weekschema",
+                    "active_preset": "home",
                 },
             },
-        }
+            # Central
+            {
+                "dev_id": "2743216f626f43948deec1f7ab3b3d70",
+                "data": {
+                    "binary_sensors": {"flame_state": False, "heating_state": False},
+                },
+            },
+            # Plug MediaCenter
+            {
+                "dev_id": "aa6b0002df0a46e1b1eb94beb61eddfe",
+                "data": {
+                    "sensors": {"electricity_consumed": 10.3},
+                    "switches": {"lock": False, "relay": True},
+                },
+            },
+            # Gateway
+            {
+                "dev_id": "b128b4bbbd1f47e9bf4d756e8fb5ee94",
+                "data": {
+                    "hardware": "AME Smile 2.0 board",
+                    "mac_address": "012345670001",
+                    "zigbee_mac_address": "ABCD012345670101",
+                    "sensors": {
+                        "outdoor_temperature": 11.9,
+                    },
+                },
+            },
+        ]
 
         self.smile_setup = "adam_plus_anna"
         server, smile, client = await self.connect_wrapper()
@@ -1381,160 +1457,192 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
         """Test Adam with Anna and a switch-group setup."""
-        testdata = {
+        testdata = [
             # Anna
-            "ad4838d7d35c4d6ea796ee12ae5aedf8": {
-                "dev_class": "thermostat",
-                "location": "f2bf9048bef64cc5b6d5110154e33c81",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-                "active_preset": "asleep",
-                "presets": {
-                    "home": [20.0, 22.0],
-                    "asleep": [17.0, 24.0],
-                    "away": [15.0, 25.0],
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
-                },
-                "available_schedules": ["Weekschema", "Badkamer", "Test"],
-                "selected_schedule": "Weekschema",
-                "schedule_temperature": 18.5,
-                "last_used": "Weekschema",
-                "mode": "auto",
-                "control_state": "heating",
-                "sensors": {"temperature": 18.1, "setpoint": 18.5},
-            },
-            "29542b2b6a6a4169acecc15c72a599b8": {
-                "dev_class": "hometheater",
-                "firmware": "2020-11-10T01:00:00+01:00",
-                "location": "f2bf9048bef64cc5b6d5110154e33c81",
-                "model": "Plug",
-                "name": "Plug Mediacenter",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 12.2,
-                    "electricity_consumed_interval": 3.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": False},
-            },
-            "2568cc4b9c1e401495d4741a5f89bee1": {
-                "dev_class": "computer_desktop",
-                "firmware": "2020-11-10T01:00:00+01:00",
-                "location": "f2bf9048bef64cc5b6d5110154e33c81",
-                "model": "Plug",
-                "name": "Plug Werkplek",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 98.0,
-                    "electricity_consumed_interval": 24.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": True},
-            },
-            "854f8a9b0e7e425db97f1f110e1ce4b3": {
-                "dev_class": "central_heating_pump",
-                "firmware": "2020-11-10T01:00:00+01:00",
-                "location": "f2bf9048bef64cc5b6d5110154e33c81",
-                "model": "Plug",
-                "name": "Plug Vloerverwarming",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 46.8,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True},
-            },
-            "1772a4ea304041adb83f357b751341ff": {
-                "dev_class": "thermo_sensor",
-                "firmware": "2020-11-04T01:00:00+01:00",
-                "location": "f871b8c4d63549319221e294e4f88074",
-                "model": "Tom/Floor",
-                "name": "Tom Badkamer",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A01",
-                "sensors": {
-                    "temperature": 21.6,
-                    "setpoint": 15.0,
-                    "battery": 99,
-                    "temperature_difference": 2.3,
-                    "valve_position": 0.0,
+            {
+                "dev_id": "ad4838d7d35c4d6ea796ee12ae5aedf8",
+                "data": {
+                    "dev_class": "thermostat",
+                    "location": "f2bf9048bef64cc5b6d5110154e33c81",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                    "active_preset": "asleep",
+                    "presets": {
+                        "home": [20.0, 22.0],
+                        "asleep": [17.0, 24.0],
+                        "away": [15.0, 25.0],
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                    },
+                    "available_schedules": ["Weekschema", "Badkamer", "Test"],
+                    "selected_schedule": "Weekschema",
+                    "schedule_temperature": 18.5,
+                    "last_used": "Weekschema",
+                    "mode": "auto",
+                    "control_state": "heating",
+                    "sensors": {"temperature": 18.1, "setpoint": 18.5},
                 },
             },
-            "e2f4322d57924fa090fbbc48b3a140dc": {
-                "dev_class": "zone_thermostat",
-                "firmware": "2016-10-10T02:00:00+02:00",
-                "location": "f871b8c4d63549319221e294e4f88074",
-                "model": "Lisa",
-                "name": "Lisa Badkamer",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A04",
-                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-                "active_preset": "home",
-                "presets": {
-                    "home": [20.0, 22.0],
-                    "asleep": [17.0, 24.0],
-                    "away": [15.0, 25.0],
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
+            {
+                "dev_id": "29542b2b6a6a4169acecc15c72a599b8",
+                "data": {
+                    "dev_class": "hometheater",
+                    "firmware": "2020-11-10T01:00:00+01:00",
+                    "location": "f2bf9048bef64cc5b6d5110154e33c81",
+                    "model": "Plug",
+                    "name": "Plug Mediacenter",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 12.2,
+                        "electricity_consumed_interval": 3.0,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "available_schedules": ["Weekschema", "Badkamer", "Test"],
-                "selected_schedule": "Badkamer",
-                "schedule_temperature": 16.0,
-                "last_used": "Badkamer",
-                "mode": "auto",
-                "control_state": "off",
-                "sensors": {"temperature": 17.9, "setpoint": 15.0, "battery": 56},
             },
-            "da224107914542988a88561b4452b0f6": {
-                "dev_class": "gateway",
-                "firmware": "3.6.4",
-                "location": "bc93488efab249e5bc54fd7e175a6f91",
-                "model": "Adam",
-                "name": "Adam",
-                "vendor": "Plugwise B.V.",
-                "zigbee_mac_address": "ABCD012345670101",
-                "regulation_mode": "heating",
-                "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": -1.25},
+            {
+                "dev_id": "2568cc4b9c1e401495d4741a5f89bee1",
+                "data": {
+                    "dev_class": "computer_desktop",
+                    "firmware": "2020-11-10T01:00:00+01:00",
+                    "location": "f2bf9048bef64cc5b6d5110154e33c81",
+                    "model": "Plug",
+                    "name": "Plug Werkplek",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 98.0,
+                        "electricity_consumed_interval": 24.0,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
+                },
+            },
+            {
+                "dev_id": "854f8a9b0e7e425db97f1f110e1ce4b3",
+                "data": {
+                    "dev_class": "central_heating_pump",
+                    "firmware": "2020-11-10T01:00:00+01:00",
+                    "location": "f2bf9048bef64cc5b6d5110154e33c81",
+                    "model": "Plug",
+                    "name": "Plug Vloerverwarming",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 46.8,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True},
+                },
+            },
+            {
+                "dev_id": "1772a4ea304041adb83f357b751341ff",
+                "data": {
+                    "dev_class": "thermo_sensor",
+                    "firmware": "2020-11-04T01:00:00+01:00",
+                    "location": "f871b8c4d63549319221e294e4f88074",
+                    "model": "Tom/Floor",
+                    "name": "Tom Badkamer",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A01",
+                    "sensors": {
+                        "temperature": 21.6,
+                        "setpoint": 15.0,
+                        "battery": 99,
+                        "temperature_difference": 2.3,
+                        "valve_position": 0.0,
+                    },
+                },
+            },
+            {
+                "dev_id": "e2f4322d57924fa090fbbc48b3a140dc",
+                "data": {
+                    "dev_class": "zone_thermostat",
+                    "firmware": "2016-10-10T02:00:00+02:00",
+                    "location": "f871b8c4d63549319221e294e4f88074",
+                    "model": "Lisa",
+                    "name": "Lisa Badkamer",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A04",
+                    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                    "active_preset": "home",
+                    "presets": {
+                        "home": [20.0, 22.0],
+                        "asleep": [17.0, 24.0],
+                        "away": [15.0, 25.0],
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                    },
+                    "available_schedules": ["Weekschema", "Badkamer", "Test"],
+                    "selected_schedule": "Badkamer",
+                    "schedule_temperature": 16.0,
+                    "last_used": "Badkamer",
+                    "mode": "auto",
+                    "control_state": "off",
+                    "sensors": {"temperature": 17.9, "setpoint": 15.0, "battery": 56},
+                },
+            },
+            {
+                "dev_id": "da224107914542988a88561b4452b0f6",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "3.6.4",
+                    "location": "bc93488efab249e5bc54fd7e175a6f91",
+                    "model": "Adam",
+                    "name": "Adam",
+                    "vendor": "Plugwise B.V.",
+                    "zigbee_mac_address": "ABCD012345670101",
+                    "regulation_mode": "heating",
+                    "regulation_modes": [
+                        "heating",
+                        "off",
+                        "bleeding_cold",
+                        "bleeding_hot",
+                    ],
+                    "binary_sensors": {"plugwise_notification": False},
+                    "sensors": {"outdoor_temperature": -1.25},
+                },
             },
             # Central
-            "056ee145a816487eaa69243c3280f8bf": {
-                "dev_class": "heater_central",
-                "location": "bc93488efab249e5bc54fd7e175a6f91",
-                "model": "Generic heater",
-                "name": "OpenTherm",
-                "maximum_boiler_temperature": 60.0,
-                "binary_sensors": {
-                    "dhw_state": False,
-                    "flame_state": False,
-                    "heating_state": True,
+            {
+                "dev_id": "056ee145a816487eaa69243c3280f8bf",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "bc93488efab249e5bc54fd7e175a6f91",
+                    "model": "Generic heater",
+                    "name": "OpenTherm",
+                    "maximum_boiler_temperature": 60.0,
+                    "binary_sensors": {
+                        "dhw_state": False,
+                        "flame_state": False,
+                        "heating_state": True,
+                    },
+                    "sensors": {
+                        "water_temperature": 37.0,
+                        "intended_boiler_temperature": 38.1,
+                    },
+                    "switches": {"dhw_cm_switch": False},
                 },
-                "sensors": {
-                    "water_temperature": 37.0,
-                    "intended_boiler_temperature": 38.1,
-                },
-                "switches": {"dhw_cm_switch": False},
             },
             # Test Switch
-            "e8ef2a01ed3b4139a53bf749204fe6b4": {
-                "dev_class": "switching",
-                "model": "Switchgroup",
-                "name": "Test",
-                "members": [
-                    "2568cc4b9c1e401495d4741a5f89bee1",
-                    "29542b2b6a6a4169acecc15c72a599b8",
-                ],
-                "switches": {"relay": True},
+            {
+                "dev_id": "e8ef2a01ed3b4139a53bf749204fe6b4",
+                "data": {
+                    "dev_class": "switching",
+                    "model": "Switchgroup",
+                    "name": "Test",
+                    "members": [
+                        "2568cc4b9c1e401495d4741a5f89bee1",
+                        "29542b2b6a6a4169acecc15c72a599b8",
+                    ],
+                    "switches": {"relay": True},
+                },
             },
-        }
+        ]
 
         self.smile_setup = "adam_plus_anna_new"
         server, smile, client = await self.connect_wrapper()
