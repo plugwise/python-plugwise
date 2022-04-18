@@ -974,18 +974,16 @@ class SmileHelper:
     ) -> Any:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
-        appl_class = appliance_details.get("dev_class")
-        appl_d_loc = appliance_details.get("location")
+        appl_class = appliance_details["dev_class"]
+        appl_d_loc = appliance_details["location"]
         if (
             loc_id == appl_d_loc or (self._smile_legacy and not appl_d_loc)
         ) and appl_class in thermo_matching:
 
             # Pre-elect new master
-            if thermo_matching.get(appl_class) > self._thermo_locs[loc_id].get(
-                "master_prio"
-            ):
+            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
                 # Demote former master
-                if (tl_master := self._thermo_locs[loc_id].get("master")) is not None:
+                if (tl_master := self._thermo_locs[loc_id]["master"]) is not None:
                     self._thermo_locs[loc_id]["slaves"].add(tl_master)
 
                 # Crown master
@@ -1024,15 +1022,16 @@ class SmileHelper:
                 )
 
             for item in self._appl_data:
-                for appliance_id, appliance_details in item.items():
-                    appl_class = self._rank_thermostat(
-                        thermo_matching, loc_id, appliance_id, appliance_details
-                    )
+                appliance_id = item["dev_id"]
+                appliance_details = item["data"]
+                appl_class = self._rank_thermostat(
+                    thermo_matching, loc_id, appliance_id, appliance_details
+                )
 
-                    # Find highest ranking thermostat
-                    if appl_class in thermo_matching:
-                        if (tm_a_class := thermo_matching[appl_class]) > high_prio:
-                            high_prio = tm_a_class
+                # Find highest ranking thermostat
+                if appl_class in thermo_matching:
+                    if (tm_a_class := thermo_matching[appl_class]) > high_prio:
+                        high_prio = tm_a_class
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().
