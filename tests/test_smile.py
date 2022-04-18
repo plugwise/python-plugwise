@@ -413,11 +413,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for gw_dict in device_list:
                 dev_id = gw_dict["dev_id"]
-                tests += 1
-                asserts += 1
-                assert testdevice == dev_id
                 details = gw_dict["data"]
                 if testdevice == dev_id:
+                    assert testdevice == dev_id
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
