@@ -636,11 +636,11 @@ class SmileHelper:
                 "data": {
                     "dev_class": "gateway",
                     "firmware": self.smile_fw_version,
-                    "hardware": self.smile_hw_version,
                     "location": self._home_location,
-                    "mac_address": self.smile_mac_address,
                 },
             }
+            if self.smile_mac_address is not None:
+                temp_dict["data"].update({"mac_address": self.smile_mac_address})
 
             if self.smile_type == "power":
                 temp_dict["data"].update(
