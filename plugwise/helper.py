@@ -741,6 +741,7 @@ class SmileHelper:
         matched_locations: dict[str, Any] = {}
 
         self._all_appliances()
+        LOGGER.debug("HOI 1 %s", self._loc_data)
         for location_id, location_details in self._loc_data.items():
             LOGGER.debug("HOI 2 %s %s", location_id, location_details)
             for dummy, appliance_details in self._appl_data.items():
