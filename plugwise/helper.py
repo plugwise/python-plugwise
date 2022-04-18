@@ -48,6 +48,7 @@ from .constants import (
     GatewayData,
     GatewayDevices,
     LocationData,
+    LocationDetails,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -744,9 +745,9 @@ class SmileHelper:
         LOGGER.debug("HOI 1 %s", self._loc_data)
         for key_1, value_1 in self._loc_data.items():
             if key_1 == "loc_id":
-                location_id = value_1
+                location_id: str = value_1
             if key_1 == "data":
-                location_details = value_1
+                location_details: LocationDetails = value_1
             LOGGER.debug("HOI 2 %s %s", location_id, location_details)
             for key_2, value_2 in self._appl_data.items():
                 if key_2 == "data":
