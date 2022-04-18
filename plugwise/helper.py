@@ -348,20 +348,24 @@ class SmileHelper:
 
         if self.smile_type == "thermostat":
             self._loc_data.append(
-                loc_id=FAKE_LOC,
-                data={
-                    "name": "Home",
-                    "types": {"temperature"},
-                    "members": appliances,
+                {
+                    "loc_id": FAKE_LOC,
+                    "data": {
+                        "name": "Home",
+                        "types": {"temperature"},
+                        "members": appliances,
+                    },
                 },
             )
         if self.smile_type == "stretch":
             self._loc_data.append(
-                loc_id=FAKE_LOC,
-                data={
-                    "name": "Home",
-                    "types": {"power"},
-                    "members": appliances,
+                {
+                    "loc_id": FAKE_LOC,
+                    "data": {
+                        "name": "Home",
+                        "types": {"power"},
+                        "members": appliances,
+                    },
                 },
             )
 
@@ -421,11 +425,13 @@ class SmileHelper:
             loc = self._locations_specials(loc, location)
 
             self._loc_data.append(
-                loc_id=loc.id,
-                data={
-                    "name": loc.name,
-                    "types": loc.types,
-                    "members": loc.members,
+                {
+                    "loc_id": loc.id,
+                    "data": {
+                        "name": loc.name,
+                        "types": loc.types,
+                        "members": loc.members,
+                    },
                 },
             )
 
