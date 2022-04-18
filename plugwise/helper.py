@@ -743,6 +743,7 @@ class SmileHelper:
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
             for dummy, appliance_details in self._appl_data.items():
+                LOGGER.debug("HOI 2 %s", appliance_details)
                 if appliance_details.get("location") == location_id:
                     matched_locations[location_id] = location_details
 
