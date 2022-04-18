@@ -635,34 +635,11 @@ class GatewayData(TypedDict, total=False):
     notifications: dict[str, str]
 
 
-class GatewayDevices(ApplianceData, total=False):
+class GatewayDevices(TypedDict, total=False):
     """The gateway devices class."""
 
-    # gateway
-    regulation_mode: str
-    regulation_modes: list[str]
-
-    # heater_central
-    maximum_boiler_temperature: float
-
-    # master_thermostats
-    lower_bound: float
-    upper_bound: float
-    resolution: float
-    preset_modes: list[str]
-    active_preset: str | None
-    presets: dict[str, list[float]]
-    available_schedules: list[str]
-    selected_schedule: str
-    last_used: str | None
-    schedule_temperature: float | None
-    mode: str
-    # Adam master_thermostats
-    control_state: str
-
-    binary_sensors: dict[str, bool] | None
-    sensors: dict[str, float | int] | None
-    switches: dict[str, bool] | None
+    dev_id: str
+    device_data: DeviceData
 
 
 class LocationData(TypedDict):
@@ -736,7 +713,7 @@ class SmileSwitches(TypedDict, total=False):
     relay: bool
 
 
-class DeviceData(SmileBinarySensors, SmileSensors, SmileSwitches, total=False):
+class DetailsData(SmileBinarySensors, SmileSensors, SmileSwitches, total=False):
     """The gateway devices class."""
 
     # gateway
@@ -767,3 +744,7 @@ class DeviceData(SmileBinarySensors, SmileSensors, SmileSwitches, total=False):
 
     # Temporary used
     c_heating_state: str
+
+
+class DeviceData(ApplianceData, DetailsData):
+    """All device data per device_id."""

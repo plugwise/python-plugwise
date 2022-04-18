@@ -30,6 +30,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
+    DetailsData,
     GatewayDevices,
     SmileBinarySensors,
     SmileSensors,
@@ -55,7 +56,7 @@ class SmileData(SmileHelper):
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
-            data = self._get_device_data(device_id)
+            data: DetailsData = self._get_device_data(device_id)
             self.gw_devices[device_id] = self._update_device_with_dicts(
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
