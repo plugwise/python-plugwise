@@ -300,7 +300,7 @@ class SmileHelper:
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._appl_data: ApplianceData = {}
+        self._appl_data: list[ApplianceData] = []
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._anna_cooling_present: bool = False
@@ -326,7 +326,7 @@ class SmileHelper:
         self.cooling_active = False
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: GatewayDevices = {}
+        self.gw_devices: list[GatewayDevices] = []
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
@@ -630,42 +630,61 @@ class SmileHelper:
         # and inject a home_location as device id for legacy so
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
-            self._appl_data.update(
-                dev_id=self._home_location,
-                data={
-                    "dev_class": "gateway",
-                    "firmware": self.smile_fw_version,
-                    "hardware": self.smile_hw_version,
-                    "location": self._home_location,
-                    "mac_address": self.smile_mac_address,
+            temp_dict: ApplianceData = (
+                {
+                    "dev_id": self._home_location,
+                    "data": {
+                        "dev_class": "gateway",
+                        "firmware": self.smile_fw_version,
+                        "hardware": self.smile_hw_version,
+                        "location": self._home_location,
+                        "mac_address": self.smile_mac_address,
+                    },
                 },
             )
             self.gateway_id = self._home_location
 
             if self.smile_type == "power":
-                self._appl_data.update(
-                    dev_id=self._home_location,
-                    data={"model": "P1", "name": "P1", "vendor": "Plugwise B.V."},
+                temp_dict.update(
+                    {
+                        "dev_id": self._home_location,
+                        "data": {
+                            "model": "P1",
+                            "name": "P1",
+                            "vendor": "Plugwise B.V.",
+                        },
+                    }
                 )
                 # legacy p1 has no more devices
+                self._appl_data.append(temp_dict)
                 return
 
             if self.smile_type == "thermostat":
-                self._appl_data.update(
-                    dev_id=self._home_location,
-                    data={"model": "Anna", "name": "Anna", "vendor": "Plugwise B.V."},
+                temp_dict.update(
+                    {
+                        "dev_id": self._home_location,
+                        "data": {
+                            "model": "Anna",
+                            "name": "Anna",
+                            "vendor": "Plugwise B.V.",
+                        },
+                    },
                 )
 
             if self.smile_type == "stretch":
-                self._appl_data.update(
-                    dev_id=self._home_location,
-                    data={
-                        "model": "Stretch",
-                        "name": "Stretch",
-                        "vendor": "Plugwise B.V.",
-                        "zigbee_mac_address": self.smile_zigbee_mac_address,
+                temp_dict.update(
+                    {
+                        "dev_id": self._home_location,
+                        "data": {
+                            "model": "Stretch",
+                            "name": "Stretch",
+                            "vendor": "Plugwise B.V.",
+                            "zigbee_mac_address": self.smile_zigbee_mac_address,
+                        },
                     },
                 )
+
+            self._appl_data.append(temp_dict)
 
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
         # Legacy Anna only:
@@ -721,15 +740,15 @@ class SmileHelper:
             ):
                 continue
 
-            self._appl_data.update(
-                dev_id=appl.dev_id,
-                data={
+            temp_dict = {
+                "dev_id": appl.dev_id,
+                "data": {
                     "dev_class": appl.pwclass,
                     "location": appl.location,
                     "model": appl.model,
                     "name": appl.name,
                 },
-            )
+            }
 
             for key, value in {
                 "firmware": appl.fw,
@@ -739,7 +758,9 @@ class SmileHelper:
                 "vendor": appl.v_name,
             }.items():
                 if value is not None:
-                    self._appl_data.update(dev_id=appl.dev_id, data={key: value})  # type: ignore[misc]
+                    temp_dict.update({"dev_id": appl.dev_id, "data": {key: value}})  # type: ignore[misc]
+
+            self._appl_data.append(temp_dict)
 
     def _match_locations(self) -> dict[str, Any]:
         """Helper-function for _scan_thermostats().
@@ -748,11 +769,12 @@ class SmileHelper:
         matched_locations: dict[str, Any] = {}
 
         self._all_appliances()
-        for item in self._loc_data:
-            for location_id, location_details in item.items():
-                for dummy, appliance_details in self._appl_data.items():
-                    if appliance_details.get("location") == location_id:
-                        matched_locations[location_id] = location_details
+        for item_1 in self._loc_data:
+            for location_id, location_details in item_1.items():
+                for item_2 in self._appl_data:
+                    for dummy, appliance_details in item_2.items():
+                        if appliance_details["location"] == location_id:
+                            matched_locations[location_id] = location_details
 
         return matched_locations
 
@@ -1005,16 +1027,16 @@ class SmileHelper:
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
 
-            for appliance_id, appliance_details in self._appl_data.items():
+            for item in self._appl_data:
+                for appliance_id, appliance_details in item.items():
+                    appl_class = self._rank_thermostat(
+                        thermo_matching, loc_id, appliance_id, appliance_details
+                    )
 
-                appl_class = self._rank_thermostat(
-                    thermo_matching, loc_id, appliance_id, appliance_details
-                )
-
-                # Find highest ranking thermostat
-                if appl_class in thermo_matching:
-                    if (tm_a_class := thermo_matching[appl_class]) > high_prio:
-                        high_prio = tm_a_class
+                    # Find highest ranking thermostat
+                    if appl_class in thermo_matching:
+                        if (tm_a_class := thermo_matching[appl_class]) > high_prio:
+                            high_prio = tm_a_class
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().
