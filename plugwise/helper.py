@@ -747,7 +747,7 @@ class SmileHelper:
                 "vendor": appl.v_name,
             }.items():
                 if value is not None:
-                    temp_dict.update({"dev_id": appl.dev_id, "data": {key: value}})  # type: ignore[misc]
+                    temp_dict["data"].update({"data": {key: value}})  # type: ignore[misc]
 
             self._appl_data.append(temp_dict)
 
