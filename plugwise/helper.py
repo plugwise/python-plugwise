@@ -630,6 +630,7 @@ class SmileHelper:
         # and inject a home_location as device id for legacy so
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
+            self.gateway_id = self._home_location
             temp_dict: ApplianceData = {
                 "dev_id": self._home_location,
                 "data": {
@@ -640,17 +641,13 @@ class SmileHelper:
                     "mac_address": self.smile_mac_address,
                 },
             }
-            self.gateway_id = self._home_location
 
             if self.smile_type == "power":
-                temp_dict.update(
+                temp_dict["data"].update(
                     {
-                        "dev_id": self._home_location,
-                        "data": {
-                            "model": "P1",
-                            "name": "P1",
-                            "vendor": "Plugwise B.V.",
-                        },
+                        "model": "P1",
+                        "name": "P1",
+                        "vendor": "Plugwise B.V.",
                     }
                 )
                 # legacy p1 has no more devices
@@ -658,28 +655,22 @@ class SmileHelper:
                 return
 
             if self.smile_type == "thermostat":
-                temp_dict.update(
+                temp_dict["data"].update(
                     {
-                        "dev_id": self._home_location,
-                        "data": {
-                            "model": "Anna",
-                            "name": "Anna",
-                            "vendor": "Plugwise B.V.",
-                        },
-                    },
+                        "model": "Anna",
+                        "name": "Anna",
+                        "vendor": "Plugwise B.V.",
+                    }
                 )
 
             if self.smile_type == "stretch":
-                temp_dict.update(
+                temp_dict["data"].update(
                     {
-                        "dev_id": self._home_location,
-                        "data": {
-                            "model": "Stretch",
-                            "name": "Stretch",
-                            "vendor": "Plugwise B.V.",
-                            "zigbee_mac_address": self.smile_zigbee_mac_address,
-                        },
-                    },
+                        "model": "Stretch",
+                        "name": "Stretch",
+                        "vendor": "Plugwise B.V.",
+                        "zigbee_mac_address": self.smile_zigbee_mac_address,
+                    }
                 )
 
             self._appl_data.append(temp_dict)
