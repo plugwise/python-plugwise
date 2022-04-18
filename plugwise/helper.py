@@ -429,6 +429,7 @@ class SmileHelper:
                 },
             )
 
+        LOGGER.debug("HOI %s", self._loc_data)
         return
 
     def _get_module_data(
@@ -600,7 +601,6 @@ class SmileHelper:
             # Provide a home_location for legacy_anna, preset all types applicable to home
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-                LOGGER.debug("HOI %s", self._loc_data)
             appl.types = self._loc_data["data"].get("types")
 
         # Determine appliance_type from functionality
@@ -742,17 +742,15 @@ class SmileHelper:
         matched_locations: dict[str, Any] = {}
 
         self._all_appliances()
-        LOGGER.debug("HOI 1 %s", self._loc_data)
         for key_1, value_1 in self._loc_data.items():
             if key_1 == "loc_id":
                 location_id: str = value_1
             if key_1 == "data":
                 location_details: LocationDetails = value_1
-            LOGGER.debug("HOI 2 %s %s", location_id, location_details)
+
             for key_2, value_2 in self._appl_data.items():
                 if key_2 == "data":
                     appliance_details = value_2
-                LOGGER.debug("HOI 3 %s", appliance_details)
                 if appliance_details.get("location") == location_id:
                     matched_locations[location_id] = location_details
 
