@@ -22,7 +22,7 @@ from munch import Munch
 # Time related
 import pytz
 
-from .constants import (
+from .constants import (  # LocationDetails,
     APPLIANCES,
     ATTR_NAME,
     ATTR_TYPE,
@@ -48,7 +48,6 @@ from .constants import (
     GatewayData,
     GatewayDevices,
     LocationData,
-    LocationDetails,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -313,7 +312,7 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
-        self._loc_data: LocationData = {}
+        self._loc_data: list[LocationData] = []
         self._locations: etree
         self._modules: etree
         self._on_off_device = False
@@ -348,7 +347,7 @@ class SmileHelper:
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._loc_data.update(
+            self._loc_data.extend(
                 loc_id=FAKE_LOC,
                 data={
                     "name": "Home",
@@ -357,7 +356,7 @@ class SmileHelper:
                 },
             )
         if self.smile_type == "stretch":
-            self._loc_data.update(
+            self._loc_data.extend(
                 loc_id=FAKE_LOC,
                 data={
                     "name": "Home",
@@ -421,7 +420,7 @@ class SmileHelper:
             # Specials
             loc = self._locations_specials(loc, location)
 
-            self._loc_data.update(
+            self._loc_data.extend(
                 loc_id=loc.id,
                 data={
                     "name": loc.name,
@@ -602,7 +601,7 @@ class SmileHelper:
             # Provide a home_location for legacy_anna, preset all types applicable to home
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-            appl.types = self._loc_data["data"].get("types")
+            # appl.types = self._loc_data["data"].get("types")
 
         # Determine appliance_type from functionality
         relay_func = appliance.find("./actuator_functionalities/relay_functionality")
@@ -743,17 +742,11 @@ class SmileHelper:
         matched_locations: dict[str, Any] = {}
 
         self._all_appliances()
-        for key_1, value_1 in self._loc_data.items():
-            if key_1 == "loc_id":
-                location_id: str = value_1
-            if key_1 == "data":
-                location_details: LocationDetails = value_1
-
-            for key_2, value_2 in self._appl_data.items():
-                if key_2 == "data":
-                    appliance_details = value_2
-                if appliance_details.get("location") == location_id:
-                    matched_locations[location_id] = location_details
+        for item in self._loc_data:
+            for location_id, location_details in item.items():
+                for dummy, appliance_details in self._appl_data.items():
+                    if appliance_details.get("location") == location_id:
+                        matched_locations[location_id] = location_details
 
         return matched_locations
 
