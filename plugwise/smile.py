@@ -53,7 +53,7 @@ class SmileData(SmileHelper):
         """
         for item in self._appl_data:
             device_id = item["dev_id"]
-            device = item["data]"]
+            device = item["data"]
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
