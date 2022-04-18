@@ -300,7 +300,7 @@ class SmileHelper:
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._appl_data: ApplianceData
+        self._appl_data: ApplianceData = {}
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._anna_cooling_present: bool = False
