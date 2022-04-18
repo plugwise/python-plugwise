@@ -606,17 +606,34 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
         testdata = [
+            # Gateway
+            {
+                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "1.8.0",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": False},
+                },
+            },
             # Anna
             {
                 "dev_id": "0d266432d64443e283b5d708ae98b455",
                 "data": {
                     "dev_class": "thermostat",
-                    "firmware": "2017-03-13T11:54:58+01:00",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                     "model": "Anna",
                     "name": "Anna",
+                    "firmware": "2017-03-13T11:54:58+01:00",
+                    "hardware": "6539-1301-500",
                     "vendor": "Plugwise",
                     "schedule_temperature": 20.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
                     "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
                     "active_preset": "home",
                     "presets": {
@@ -635,9 +652,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "setpoint": 20.5,
                         "illuminance": 151,
                     },
-                    "lower_bound": 4,
-                    "upper_bound": 30,
-                    "resolution": 0.1,
                 },
             },
             # Central
@@ -658,19 +672,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "return_temperature": 21.7,
                         "water_pressure": 1.2,
                     },
-                },
-            },
-            # Gateway
-            {
-                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "data": {
-                    "dev_class": "gateway",
-                    "firmware": "1.8.0",
-                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                    "model": "Anna",
-                    "name": "Anna",
-                    "vendor": "Plugwise B.V.",
-                    "binary_sensors": {"plugwise_notification": False},
                 },
             },
         ]
