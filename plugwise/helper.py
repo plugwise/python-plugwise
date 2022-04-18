@@ -768,17 +768,18 @@ class SmileHelper:
 
         self._all_appliances()
         for item_1 in self._loc_data:
-            for location_id, location_details in item_1.items():
-                for item_2 in self._appl_data:
-                    for dummy, appliance_details in item_2.items():
-                        LOGGER.debug(
-                            "HOII %s, %s, %s",
-                            location_id,
-                            location_details,
-                            appliance_details,
-                        )
-                        if appliance_details["location"] == location_id:
-                            matched_locations[location_id] = location_details
+            location_id = item_1["loc_id"]
+            location_details = item_1["data"]
+            for item_2 in self._appl_data:
+                appliance_details = item_2["data"]
+                LOGGER.debug(
+                    "HOII %s, %s, %s",
+                    location_id,
+                    location_details,
+                    appliance_details,
+                )
+                if appliance_details["location"] == location_id:
+                    matched_locations[location_id] = location_details
 
         return matched_locations
 
