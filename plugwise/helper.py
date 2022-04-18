@@ -347,7 +347,7 @@ class SmileHelper:
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._loc_data.extend(
+            self._loc_data.append(
                 loc_id=FAKE_LOC,
                 data={
                     "name": "Home",
@@ -356,7 +356,7 @@ class SmileHelper:
                 },
             )
         if self.smile_type == "stretch":
-            self._loc_data.extend(
+            self._loc_data.append(
                 loc_id=FAKE_LOC,
                 data={
                     "name": "Home",
@@ -420,7 +420,7 @@ class SmileHelper:
             # Specials
             loc = self._locations_specials(loc, location)
 
-            self._loc_data.extend(
+            self._loc_data.append(
                 loc_id=loc.id,
                 data={
                     "name": loc.name,
