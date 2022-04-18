@@ -399,6 +399,7 @@ class SmileHelper:
         for location in locations:
             loc.name = location.find("name").text
             loc.id = location.attrib["id"]
+            LOGGER.debug("HOI 1 %s %s", loc.name, loc.id)
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if (
@@ -429,7 +430,7 @@ class SmileHelper:
                 },
             )
 
-        LOGGER.debug("HOI %s", self._loc_data)
+        LOGGER.debug("HOI 2 %s", self._loc_data)
         return
 
     def _get_module_data(
