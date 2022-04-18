@@ -348,7 +348,7 @@ class SmileHelper:
 
         if self.smile_type == "thermostat":
             self._loc_data.update(
-                dev_id=FAKE_LOC,
+                loc_id=FAKE_LOC,
                 data={
                     "name": "Home",
                     "types": {"temperature"},
@@ -357,7 +357,7 @@ class SmileHelper:
             )
         if self.smile_type == "stretch":
             self._loc_data.update(
-                dev_id=FAKE_LOC,
+                loc_id=FAKE_LOC,
                 data={
                     "name": "Home",
                     "types": {"power"},
