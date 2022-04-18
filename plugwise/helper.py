@@ -600,7 +600,7 @@ class SmileHelper:
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
                 LOGGER.debug("HOI %s", self._loc_data)
-            appl.types = self._loc_data.get("types")
+            appl.types = self._loc_data["data"].get("types")
 
         # Determine appliance_type from functionality
         relay_func = appliance.find("./actuator_functionalities/relay_functionality")
