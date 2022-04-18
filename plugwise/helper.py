@@ -703,7 +703,6 @@ class SmileHelper:
 
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
-            LOGGER.debug("HOI 1 %s, %s", appl.name, appl.dev_id)
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.fw = None
             appl.hw = None
