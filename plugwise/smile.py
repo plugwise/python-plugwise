@@ -96,7 +96,7 @@ class SmileData(SmileHelper):
                 if "slaves" in tl_loc_id and appliance in tl_loc_id["slaves"]:
                     details["dev_class"] = "thermo_sensor"
 
-        if (group_data := self._group_switches()) is not None:
+        if group_data := self._group_switches():
             self._appl_data.append(group_data)
 
         # Collect data for each device via helper function
