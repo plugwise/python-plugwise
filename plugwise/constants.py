@@ -642,7 +642,7 @@ class GatewayData(TypedDict, total=False):
     notifications: dict[str, str]
 
 
-class GatewayDevices(TypedDict, total=False):
+class GatewayDevice(TypedDict, total=False):
     """The gateway devices class."""
 
     device_id: str

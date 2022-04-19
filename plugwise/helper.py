@@ -48,7 +48,7 @@ from .constants import (  # LocationDetails,
     DetailsData,
     DeviceData,
     GatewayData,
-    GatewayDevices,
+    GatewayDevice,
     LocationData,
     SmileBinarySensors,
     SmileSensors,
@@ -70,7 +70,7 @@ from .util import (
 
 def update_helper(
     data: dict[str, Any],
-    devs: list[GatewayDevices],
+    devs: list[GatewayDevice],
     d_dict: dict[str, Any],
     d_id: str,
     e_type: str,
@@ -332,7 +332,7 @@ class SmileHelper:
         self.cooling_active = False
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: list[GatewayDevices] = []
+        self.gw_devices: list[GatewayDevice] = []
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
