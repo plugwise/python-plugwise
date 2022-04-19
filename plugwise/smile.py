@@ -60,8 +60,8 @@ class SmileData(SmileHelper):
             data: DetailsData = self._get_device_data(device_id)
             self.gw_devices.append(
                 {
-                    "dev_id": device_id,
-                    "data": self._update_device_with_dicts(
+                    "device_id": device_id,
+                    "device_data": self._update_device_with_dicts(
                         device_id, data, device, bs_dict, s_dict, sw_dict
                     ),
                 }
@@ -117,7 +117,7 @@ class SmileData(SmileHelper):
 
         # Don't show cooling_state when no cooling present
         for item in self.gw_devices:
-            device = item["data"]
+            device = item["device_data"]
             if (
                 not self._cooling_present
                 and "binary_sensors" in device
@@ -457,8 +457,8 @@ class Smile(SmileComm, SmileData):
         self.gw_data["notifications"] = self._notifications
 
         for gw_dict in self.gw_devices:
-            dev_id = gw_dict["dev_id"]
-            dev_dict = gw_dict["data"]
+            dev_id = gw_dict["device_id"]
+            dev_dict = gw_dict["device_data"]
             data = self._get_device_data(dev_id)
             for key, value in list(data.items()):
                 if key in dev_dict:

@@ -645,7 +645,7 @@ class GatewayData(TypedDict, total=False):
 class GatewayDevices(TypedDict, total=False):
     """The gateway devices class."""
 
-    dev_id: str
+    device_id: str
     device_data: DeviceData
 
 

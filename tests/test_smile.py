@@ -361,8 +361,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             )
             device_count = 0
             for gw_dict in device_list:
-                dev_id = gw_dict["dev_id"]
-                dev_info = gw_dict["data"]
+                dev_id = gw_dict["device_id"]
+                dev_info = gw_dict["device_data"]
                 if dev_info.get("location", "not_found") == loc_id:
                     device_count += 1
                     _LOGGER.info(
@@ -402,8 +402,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         tests = 0
         asserts = 0
         for gw_dict in testdata:
-            testdevice = gw_dict["dev_id"]
-            measurements = gw_dict["data"]
+            testdevice = gw_dict["device_id"]
+            measurements = gw_dict["device_data"]
             tests += 1
             assert testdevice in device_list
             asserts += 1
@@ -412,8 +412,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # else:
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for gw_dict in device_list:
-                dev_id = gw_dict["dev_id"]
-                details = gw_dict["data"]
+                dev_id = gw_dict["device_id"]
+                details = gw_dict["device_data"]
                 if testdevice == dev_id:
                     assert testdevice == dev_id
                     _LOGGER.info(
@@ -609,8 +609,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Gateway
             {
-                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "data": {
+                "device_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "1.8.0",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -622,8 +622,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Anna
             {
-                "dev_id": "0d266432d64443e283b5d708ae98b455",
-                "data": {
+                "device_id": "0d266432d64443e283b5d708ae98b455",
+                "device_data": {
                     "dev_class": "thermostat",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                     "model": "Anna",
@@ -657,8 +657,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             {
-                "dev_id": "04e4cbfe7f4340f090f85ec3b9e6a950",
-                "data": {
+                "device_id": "04e4cbfe7f4340f090f85ec3b9e6a950",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                     "model": "4.21",
@@ -720,8 +720,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "9e7377867dc24e51b8098a5ba02bd89d",
-                "data": {
+                "device_id": "9e7377867dc24e51b8098a5ba02bd89d",
+                "device_data": {
                     "dev_class": "thermostat",
                     "firmware": "2017-03-13T11:54:58+01:00",
                     "location": "be81e3f8275b4129852c4d8d550ae2eb",
@@ -751,8 +751,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             {
-                "dev_id": "ea5d8a7177e541b0a4b52da815166de4",
-                "data": {
+                "device_id": "ea5d8a7177e541b0a4b52da815166de4",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "be81e3f8275b4129852c4d8d550ae2eb",
                     "model": "Generic heater",
@@ -769,8 +769,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "be81e3f8275b4129852c4d8d550ae2eb",
-                "data": {
+                "device_id": "be81e3f8275b4129852c4d8d550ae2eb",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "1.8.0",
                     "location": "be81e3f8275b4129852c4d8d550ae2eb",
@@ -826,8 +826,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Gateway / P1 itself
             {
-                "dev_id": "938696c4bcdb4b8a9a595cb38ed43913",
-                "data": {
+                "device_id": "938696c4bcdb4b8a9a595cb38ed43913",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "2.5.9",
                     "location": "938696c4bcdb4b8a9a595cb38ed43913",
@@ -881,8 +881,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Gateway / P1 itself
             {
-                "dev_id": "199aa40f126840f392983d171374ab0b",
-                "data": {
+                "device_id": "199aa40f126840f392983d171374ab0b",
+                "device_data": {
                     "sensors": {
                         "electricity_consumed_point": 456.0,
                         "net_electricity_point": 456.0,
@@ -917,8 +917,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
-                "data": {
+                "device_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
+                "device_data": {
                     "dev_class": "thermostat",
                     "firmware": "2018-02-08T11:15:53+01:00",
                     "location": "eb5309212bf5407bb143e5bfa3b18aee",
@@ -948,8 +948,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             {
-                "dev_id": "cd0e6156b1f04d5f952349ffbe397481",
-                "data": {
+                "device_id": "cd0e6156b1f04d5f952349ffbe397481",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                     "model": "2.32",
@@ -972,8 +972,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "0466eae8520144c78afb29628384edeb",
-                "data": {
+                "device_id": "0466eae8520144c78afb29628384edeb",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "4.0.15",
                     "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
@@ -1027,8 +1027,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
-                "data": {
+                "device_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
+                "device_data": {
                     "dev_class": "thermostat",
                     "firmware": "2018-02-08T11:15:53+01:00",
                     "location": "eb5309212bf5407bb143e5bfa3b18aee",
@@ -1058,8 +1058,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             {
-                "dev_id": "cd0e6156b1f04d5f952349ffbe397481",
-                "data": {
+                "device_id": "cd0e6156b1f04d5f952349ffbe397481",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                     "model": "2.32",
@@ -1082,8 +1082,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "0466eae8520144c78afb29628384edeb",
-                "data": {
+                "device_id": "0466eae8520144c78afb29628384edeb",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "4.0.15",
                     "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
@@ -1137,8 +1137,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
-                "data": {
+                "device_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
+                "device_data": {
                     "active_preset": "home",
                 },
             }
@@ -1183,8 +1183,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
-                "data": {
+                "device_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
+                "device_data": {
                     "location": "c34c6864216446528e95d88985e714cc",
                     "sensors": {"illuminance": 35.0},
                     "selected_schedule": "Normal",
@@ -1234,8 +1234,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
-                "data": {
+                "device_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
+                "device_data": {
                     "sensors": {"illuminance": 44.8},
                     "selected_schedule": "Normal",
                     "active_preset": "home",
@@ -1283,8 +1283,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Central
             {
-                "dev_id": "c46b4794d28149699eacf053deedd003",
-                "data": {
+                "device_id": "c46b4794d28149699eacf053deedd003",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "0f4f2ada20734a339fe353348fe87b96",
                     "model": "Unknown",
@@ -1294,8 +1294,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Anna
             {
-                "dev_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
-                "data": {
+                "device_id": "7ffbb3ab4b6c4ab2915d7510f7bf8fe9",
+                "device_data": {
                     "dev_class": "thermostat",
                     "firmware": "2018-02-08T11:15:53+01:00",
                     "location": "c34c6864216446528e95d88985e714cc",
@@ -1328,8 +1328,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "a270735e4ccd45239424badc0578a2b1",
-                "data": {
+                "device_id": "a270735e4ccd45239424badc0578a2b1",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "4.2.1",
                     "location": "0f4f2ada20734a339fe353348fe87b96",
@@ -1381,8 +1381,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "ee62cad889f94e8ca3d09021f03a660b",
-                "data": {
+                "device_id": "ee62cad889f94e8ca3d09021f03a660b",
+                "device_data": {
                     "sensors": {"setpoint": 20.5, "temperature": 20.5},
                     "selected_schedule": "Weekschema",
                     "last_used": "Weekschema",
@@ -1391,23 +1391,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             {
-                "dev_id": "2743216f626f43948deec1f7ab3b3d70",
-                "data": {
+                "device_id": "2743216f626f43948deec1f7ab3b3d70",
+                "device_data": {
                     "binary_sensors": {"flame_state": False, "heating_state": False},
                 },
             },
             # Plug MediaCenter
             {
-                "dev_id": "aa6b0002df0a46e1b1eb94beb61eddfe",
-                "data": {
+                "device_id": "aa6b0002df0a46e1b1eb94beb61eddfe",
+                "device_data": {
                     "sensors": {"electricity_consumed": 10.3},
                     "switches": {"lock": False, "relay": True},
                 },
             },
             # Gateway
             {
-                "dev_id": "b128b4bbbd1f47e9bf4d756e8fb5ee94",
-                "data": {
+                "device_id": "b128b4bbbd1f47e9bf4d756e8fb5ee94",
+                "device_data": {
                     "hardware": "AME Smile 2.0 board",
                     "mac_address": "012345670001",
                     "zigbee_mac_address": "ABCD012345670101",
@@ -1463,8 +1463,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "ad4838d7d35c4d6ea796ee12ae5aedf8",
-                "data": {
+                "device_id": "ad4838d7d35c4d6ea796ee12ae5aedf8",
+                "device_data": {
                     "dev_class": "thermostat",
                     "location": "f2bf9048bef64cc5b6d5110154e33c81",
                     "model": "Anna",
@@ -1489,8 +1489,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "29542b2b6a6a4169acecc15c72a599b8",
-                "data": {
+                "device_id": "29542b2b6a6a4169acecc15c72a599b8",
+                "device_data": {
                     "dev_class": "hometheater",
                     "firmware": "2020-11-10T01:00:00+01:00",
                     "location": "f2bf9048bef64cc5b6d5110154e33c81",
@@ -1507,8 +1507,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "2568cc4b9c1e401495d4741a5f89bee1",
-                "data": {
+                "device_id": "2568cc4b9c1e401495d4741a5f89bee1",
+                "device_data": {
                     "dev_class": "computer_desktop",
                     "firmware": "2020-11-10T01:00:00+01:00",
                     "location": "f2bf9048bef64cc5b6d5110154e33c81",
@@ -1525,8 +1525,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "854f8a9b0e7e425db97f1f110e1ce4b3",
-                "data": {
+                "device_id": "854f8a9b0e7e425db97f1f110e1ce4b3",
+                "device_data": {
                     "dev_class": "central_heating_pump",
                     "firmware": "2020-11-10T01:00:00+01:00",
                     "location": "f2bf9048bef64cc5b6d5110154e33c81",
@@ -1543,8 +1543,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "1772a4ea304041adb83f357b751341ff",
-                "data": {
+                "device_id": "1772a4ea304041adb83f357b751341ff",
+                "device_data": {
                     "dev_class": "thermo_sensor",
                     "firmware": "2020-11-04T01:00:00+01:00",
                     "location": "f871b8c4d63549319221e294e4f88074",
@@ -1562,8 +1562,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "e2f4322d57924fa090fbbc48b3a140dc",
-                "data": {
+                "device_id": "e2f4322d57924fa090fbbc48b3a140dc",
+                "device_data": {
                     "dev_class": "zone_thermostat",
                     "firmware": "2016-10-10T02:00:00+02:00",
                     "location": "f871b8c4d63549319221e294e4f88074",
@@ -1590,8 +1590,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "da224107914542988a88561b4452b0f6",
-                "data": {
+                "device_id": "da224107914542988a88561b4452b0f6",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "3.6.4",
                     "location": "bc93488efab249e5bc54fd7e175a6f91",
@@ -1612,8 +1612,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Central
             {
-                "dev_id": "056ee145a816487eaa69243c3280f8bf",
-                "data": {
+                "device_id": "056ee145a816487eaa69243c3280f8bf",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "bc93488efab249e5bc54fd7e175a6f91",
                     "model": "Generic heater",
@@ -1633,8 +1633,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Test Switch
             {
-                "dev_id": "e8ef2a01ed3b4139a53bf749204fe6b4",
-                "data": {
+                "device_id": "e8ef2a01ed3b4139a53bf749204fe6b4",
+                "device_data": {
                     "dev_class": "switching",
                     "model": "Switchgroup",
                     "name": "Test",
@@ -1696,15 +1696,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a broad setup of Adam with a zone per device setup."""
         testdata = [
             {
-                "dev_id": "90986d591dcd426cae3ec3e8111ff730",
-                "data": {
+                "device_id": "90986d591dcd426cae3ec3e8111ff730",
+                "device_data": {
                     "binary_sensors": {"heating_state": False},
                 },
             },
             # Lisa WK
             {
-                "dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
-                "data": {
+                "device_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
+                "device_data": {
                     "sensors": {
                         "setpoint": 21.5,
                         "temperature": 21.1,
@@ -1714,8 +1714,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Floor WK
             {
-                "dev_id": "b310b72a0e354bfab43089919b9a88bf",
-                "data": {
+                "device_id": "b310b72a0e354bfab43089919b9a88bf",
+                "device_data": {
                     "sensors": {
                         "setpoint": 21.5,
                         "temperature": 26.2,
@@ -1725,16 +1725,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # CV pomp
             {
-                "dev_id": "78d1126fc4c743db81b61c20e88342a7",
-                "data": {
+                "device_id": "78d1126fc4c743db81b61c20e88342a7",
+                "device_data": {
                     "sensors": {"electricity_consumed": 35.8},
                     "switches": {"relay": True},
                 },
             },
             # Lisa Bios
             {
-                "dev_id": "df4a4a8169904cdb9c03d61a21f42140",
-                "data": {
+                "device_id": "df4a4a8169904cdb9c03d61a21f42140",
+                "device_data": {
                     "sensors": {
                         "setpoint": 13.0,
                         "temperature": 16.5,
@@ -1744,8 +1744,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Adam
             {
-                "dev_id": "fe799307f1624099878210aa0b9f1475",
-                "data": {
+                "device_id": "fe799307f1624099878210aa0b9f1475",
+                "device_data": {
                     "binary_sensors": {"plugwise_notification": True},
                     "sensors": {"outdoor_temperature": 7.69},
                     "mac_address": "012345670001",
@@ -1754,8 +1754,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Modem
             {
-                "dev_id": "675416a629f343c495449970e2ca37b5",
-                "data": {
+                "device_id": "675416a629f343c495449970e2ca37b5",
+                "device_data": {
                     "sensors": {"electricity_consumed": 12.2},
                     "switches": {"relay": True},
                 },
@@ -1822,8 +1822,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a broad setup of Adam with multiple devices per zone setup."""
         testdata = [
             {
-                "dev_id": "df4a4a8169904cdb9c03d61a21f42140",
-                "data": {
+                "device_id": "df4a4a8169904cdb9c03d61a21f42140",
+                "device_data": {
                     "dev_class": "zone_thermostat",
                     "firmware": "2016-10-27T02:00:00+02:00",
                     "location": "12493538af164a409c6a1c79e38afe1c",
@@ -1854,8 +1854,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "b310b72a0e354bfab43089919b9a88bf",
-                "data": {
+                "device_id": "b310b72a0e354bfab43089919b9a88bf",
+                "device_data": {
                     "dev_class": "thermo_sensor",
                     "firmware": "2019-03-27T01:00:00+01:00",
                     "location": "c50f167537524366a5af7aa3942feb1e",
@@ -1871,8 +1871,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "a2c3583e0a6349358998b760cea82d2a",
-                "data": {
+                "device_id": "a2c3583e0a6349358998b760cea82d2a",
+                "device_data": {
                     "dev_class": "thermo_sensor",
                     "firmware": "2019-03-27T01:00:00+01:00",
                     "location": "12493538af164a409c6a1c79e38afe1c",
@@ -1889,8 +1889,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
-                "data": {
+                "device_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
+                "device_data": {
                     "dev_class": "zone_thermostat",
                     "firmware": "2016-08-02T02:00:00+02:00",
                     "location": "c50f167537524366a5af7aa3942feb1e",
@@ -1921,8 +1921,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "fe799307f1624099878210aa0b9f1475",
-                "data": {
+                "device_id": "fe799307f1624099878210aa0b9f1475",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "3.0.15",
                     "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
@@ -1934,8 +1934,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "d3da73bde12a47d5a6b8f9dad971f2ec",
-                "data": {
+                "device_id": "d3da73bde12a47d5a6b8f9dad971f2ec",
+                "device_data": {
                     "dev_class": "thermo_sensor",
                     "firmware": "2019-03-27T01:00:00+01:00",
                     "location": "82fa13f017d240daa0d0ea1775420f24",
@@ -1952,8 +1952,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "21f2b542c49845e6bb416884c55778d6",
-                "data": {
+                "device_id": "21f2b542c49845e6bb416884c55778d6",
+                "device_data": {
                     "dev_class": "game_console",
                     "firmware": "2019-06-21T02:00:00+02:00",
                     "location": "cd143c07248f491493cea0533bc3d669",
@@ -1970,8 +1970,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "78d1126fc4c743db81b61c20e88342a7",
-                "data": {
+                "device_id": "78d1126fc4c743db81b61c20e88342a7",
+                "device_data": {
                     "dev_class": "central_heating_pump",
                     "firmware": "2019-06-21T02:00:00+02:00",
                     "location": "c50f167537524366a5af7aa3942feb1e",
@@ -1988,8 +1988,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "90986d591dcd426cae3ec3e8111ff730",
-                "data": {
+                "device_id": "90986d591dcd426cae3ec3e8111ff730",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
                     "model": "Unknown",
@@ -2003,8 +2003,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "cd0ddb54ef694e11ac18ed1cbce5dbbd",
-                "data": {
+                "device_id": "cd0ddb54ef694e11ac18ed1cbce5dbbd",
+                "device_data": {
                     "dev_class": "vcr",
                     "firmware": "2019-06-21T02:00:00+02:00",
                     "location": "cd143c07248f491493cea0533bc3d669",
@@ -2022,8 +2022,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "4a810418d5394b3f82727340b91ba740",
-                "data": {
+                "device_id": "4a810418d5394b3f82727340b91ba740",
+                "device_data": {
                     "dev_class": "router",
                     "firmware": "2019-06-21T02:00:00+02:00",
                     "location": "cd143c07248f491493cea0533bc3d669",
@@ -2040,8 +2040,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "02cf28bfec924855854c544690a609ef",
-                "data": {
+                "device_id": "02cf28bfec924855854c544690a609ef",
+                "device_data": {
                     "dev_class": "vcr",
                     "firmware": "2019-06-21T02:00:00+02:00",
                     "location": "cd143c07248f491493cea0533bc3d669",
@@ -2058,8 +2058,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "a28f588dc4a049a483fd03a30361ad3a",
-                "data": {
+                "device_id": "a28f588dc4a049a483fd03a30361ad3a",
+                "device_data": {
                     "dev_class": "settop",
                     "firmware": "2019-06-21T02:00:00+02:00",
                     "location": "cd143c07248f491493cea0533bc3d669",
@@ -2076,8 +2076,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "6a3bf693d05e48e0b460c815a4fdd09d",
-                "data": {
+                "device_id": "6a3bf693d05e48e0b460c815a4fdd09d",
+                "device_data": {
                     "dev_class": "zone_thermostat",
                     "firmware": "2016-10-27T02:00:00+02:00",
                     "location": "82fa13f017d240daa0d0ea1775420f24",
@@ -2108,8 +2108,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "680423ff840043738f42cc7f1ff97a36",
-                "data": {
+                "device_id": "680423ff840043738f42cc7f1ff97a36",
+                "device_data": {
                     "dev_class": "thermo_sensor",
                     "firmware": "2019-03-27T01:00:00+01:00",
                     "location": "08963fec7c53423ca5680aa4cb502c63",
@@ -2126,8 +2126,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "f1fee6043d3642a9b0a65297455f008e",
-                "data": {
+                "device_id": "f1fee6043d3642a9b0a65297455f008e",
+                "device_data": {
                     "dev_class": "zone_thermostat",
                     "firmware": "2016-10-27T02:00:00+02:00",
                     "location": "08963fec7c53423ca5680aa4cb502c63",
@@ -2158,8 +2158,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "675416a629f343c495449970e2ca37b5",
-                "data": {
+                "device_id": "675416a629f343c495449970e2ca37b5",
+                "device_data": {
                     "dev_class": "router",
                     "firmware": "2019-06-21T02:00:00+02:00",
                     "location": "cd143c07248f491493cea0533bc3d669",
@@ -2176,8 +2176,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "e7693eb9582644e5b865dba8d4447cf1",
-                "data": {
+                "device_id": "e7693eb9582644e5b865dba8d4447cf1",
+                "device_data": {
                     "dev_class": "thermostatic_radiator_valve",
                     "firmware": "2019-03-27T01:00:00+01:00",
                     "location": "446ac08dd04d4eff8ac57489757b7314",
@@ -2266,15 +2266,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Woonkamer - Tom
             {
-                "dev_id": "833de10f269c4deab58fb9df69901b4e",
-                "data": {
+                "device_id": "833de10f269c4deab58fb9df69901b4e",
+                "device_data": {
                     "sensors": {"valve_position": 100},
                 },
             },
             # Woonkamer - Jip
             {
-                "dev_id": "f61f1a2535f54f52ad006a3d18e459ca",
-                "data": {
+                "device_id": "f61f1a2535f54f52ad006a3d18e459ca",
+                "device_data": {
                     "sensors": {"humidity": 56.2},
                 },
             },
@@ -2294,8 +2294,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Gateway / P1 itself
             {
-                "dev_id": "ba4de7613517478da82dd9b6abea36af",
-                "data": {
+                "device_id": "ba4de7613517478da82dd9b6abea36af",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "3.3.6",
                     "location": "a455b61e52394b2db5081ce025a430f3",
@@ -2345,8 +2345,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Gateway / P1 itself
             {
-                "dev_id": "ba4de7613517478da82dd9b6abea36af",
-                "data": {
+                "device_id": "ba4de7613517478da82dd9b6abea36af",
+                "device_data": {
                     "sensors": {
                         "electricity_consumed_peak_point": 636.0,
                         "electricity_produced_peak_cumulative": 20.0,
@@ -2381,8 +2381,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Gateway / P1 itself
             {
-                "dev_id": "e950c7d5e1ee407a858e2a8b5016c8b3",
-                "data": {
+                "device_id": "e950c7d5e1ee407a858e2a8b5016c8b3",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "3.3.9",
                     "location": "cd3e822288064775a7c4afcdd70bdda2",
@@ -2435,8 +2435,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
-                "data": {
+                "device_id": "3cb70739631c4d17a86b8b12e8a5161b",
+                "device_data": {
                     "selected_schedule": "None",
                     "active_preset": "home",
                     "mode": "heat",
@@ -2449,8 +2449,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             {
-                "dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
-                "data": {
+                "device_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+                "device_data": {
                     "binary_sensors": {
                         "cooling_state": False,
                         "dhw_state": False,
@@ -2465,8 +2465,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "015ae9ea3f964e668e490fa39da3870b",
-                "data": {"sensors": {"outdoor_temperature": 20.2}},
+                "device_id": "015ae9ea3f964e668e490fa39da3870b",
+                "device_data": {"sensors": {"outdoor_temperature": 20.2}},
             },
         ]
 
@@ -2501,8 +2501,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
-                "data": {
+                "device_id": "3cb70739631c4d17a86b8b12e8a5161b",
+                "device_data": {
                     "selected_schedule": "None",
                     "active_preset": "home",
                     "mode": "cool",
@@ -2515,8 +2515,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             {
-                "dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
-                "data": {
+                "device_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+                "device_data": {
                     "binary_sensors": {
                         "cooling_state": True,
                         "dhw_state": False,
@@ -2531,8 +2531,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "015ae9ea3f964e668e490fa39da3870b",
-                "data": {"sensors": {"outdoor_temperature": 22.0}},
+                "device_id": "015ae9ea3f964e668e490fa39da3870b",
+                "device_data": {"sensors": {"outdoor_temperature": 22.0}},
             },
         ]
 
@@ -2565,8 +2565,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
-                "data": {
+                "device_id": "3cb70739631c4d17a86b8b12e8a5161b",
+                "device_data": {
                     "selected_schedule": "None",
                     "active_preset": "home",
                     "mode": "heat",
@@ -2579,8 +2579,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             {
-                "dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
-                "data": {
+                "device_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+                "device_data": {
                     "binary_sensors": {
                         "cooling_state": False,
                         "dhw_state": False,
@@ -2595,8 +2595,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "015ae9ea3f964e668e490fa39da3870b",
-                "data": {"sensors": {"outdoor_temperature": 22.0}},
+                "device_id": "015ae9ea3f964e668e490fa39da3870b",
+                "device_data": {"sensors": {"outdoor_temperature": 22.0}},
             },
         ]
 
@@ -2614,8 +2614,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Anna
             {
-                "dev_id": "ebd90df1ab334565b5895f37590ccff4",
-                "data": {
+                "device_id": "ebd90df1ab334565b5895f37590ccff4",
+                "device_data": {
                     "dev_class": "thermostat",
                     "firmware": "2018-02-08T11:15:53+01:00",
                     "hardware": "6539-1301-5002",
@@ -2651,8 +2651,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             {
-                "dev_id": "573c152e7d4f4720878222bd75638f5b",
-                "data": {
+                "device_id": "573c152e7d4f4720878222bd75638f5b",
+                "device_data": {
                     "dev_class": "heater_central",
                     "location": "d34dfe6ab90b410c98068e75de3eb631",
                     "model": "Generic heater",
@@ -2679,8 +2679,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Gateway
             {
-                "dev_id": "fb49af122f6e4b0f91267e1cf7666d6f",
-                "data": {
+                "device_id": "fb49af122f6e4b0f91267e1cf7666d6f",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "4.2.1",
                     "hardware": "AME Smile 2.0 board",
@@ -2720,8 +2720,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Central
             {
-                "dev_id": "2743216f626f43948deec1f7ab3b3d70",
-                "data": {
+                "device_id": "2743216f626f43948deec1f7ab3b3d70",
+                "device_data": {
                     "binary_sensors": {"heating_state": False},
                 },
             },
@@ -2751,8 +2751,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         testdata = [
             {
-                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "data": {
+                "device_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "3.1.11",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2764,8 +2764,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "5871317346d045bc9f6b987ef25ee638",
-                "data": {
+                "device_id": "5871317346d045bc9f6b987ef25ee638",
+                "device_data": {
                     "dev_class": "water_heater_vessel",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2782,8 +2782,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "aac7b735042c4832ac9ff33aae4f453b",
-                "data": {
+                "device_id": "aac7b735042c4832ac9ff33aae4f453b",
+                "device_data": {
                     "dev_class": "dishwasher",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2800,8 +2800,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "cfe95cf3de1948c0b8955125bf754614",
-                "data": {
+                "device_id": "cfe95cf3de1948c0b8955125bf754614",
+                "device_data": {
                     "dev_class": "dryer",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2818,8 +2818,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "059e4d03c7a34d278add5c7a4a781d19",
-                "data": {
+                "device_id": "059e4d03c7a34d278add5c7a4a781d19",
+                "device_data": {
                     "dev_class": "washingmachine",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2836,8 +2836,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "71e1944f2a944b26ad73323e399efef0",
-                "data": {
+                "device_id": "71e1944f2a944b26ad73323e399efef0",
+                "device_data": {
                     "dev_class": "switching",
                     "model": "Switchgroup",
                     "name": "Test",
@@ -2846,8 +2846,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "d950b314e9d8499f968e6db8d82ef78c",
-                "data": {
+                "device_id": "d950b314e9d8499f968e6db8d82ef78c",
+                "device_data": {
                     "dev_class": "report",
                     "model": "Switchgroup",
                     "name": "Stroomvreters",
@@ -2862,8 +2862,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "d03738edfcc947f7b8f4573571d90d2d",
-                "data": {
+                "device_id": "d03738edfcc947f7b8f4573571d90d2d",
+                "device_data": {
                     "dev_class": "switching",
                     "model": "Switchgroup",
                     "name": "Schakel",
@@ -2898,8 +2898,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         testdata = [
             {
-                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "data": {
+                "device_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "2.3.12",
                     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2911,8 +2911,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "09c8ce93d7064fa6a233c0e4c2449bfe",
-                "data": {
+                "device_id": "09c8ce93d7064fa6a233c0e4c2449bfe",
+                "device_data": {
                     "dev_class": "lamp",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -2930,8 +2930,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "33a1c784a9ff4c2d8766a0212714be09",
-                "data": {
+                "device_id": "33a1c784a9ff4c2d8766a0212714be09",
+                "device_data": {
                     "dev_class": "lighting",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "6539-0701-4026",
@@ -2950,8 +2950,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "199fd4b2caa44197aaf5b3128f6464ed",
-                "data": {
+                "device_id": "199fd4b2caa44197aaf5b3128f6464ed",
+                "device_data": {
                     "dev_class": "airconditioner",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "6539-0701-4026",
@@ -2970,8 +2970,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "713427748874454ca1eb4488d7919cf2",
-                "data": {
+                "device_id": "713427748874454ca1eb4488d7919cf2",
+                "device_data": {
                     "dev_class": "freezer",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -2989,8 +2989,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "fd1b74f59e234a9dae4e23b2b5cf07ed",
-                "data": {
+                "device_id": "fd1b74f59e234a9dae4e23b2b5cf07ed",
+                "device_data": {
                     "dev_class": "dryer",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -3008,8 +3008,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "c71f1cb2100b42ca942f056dcb7eb01f",
-                "data": {
+                "device_id": "c71f1cb2100b42ca942f056dcb7eb01f",
+                "device_data": {
                     "dev_class": "tv",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "6539-0701-4026",
@@ -3028,8 +3028,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "2cc9a0fe70ef4441a9e4f55dfd64b776",
-                "data": {
+                "device_id": "2cc9a0fe70ef4441a9e4f55dfd64b776",
+                "device_data": {
                     "dev_class": "lamp",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "6539-0701-4026",
@@ -3048,8 +3048,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "6518f3f72a82486c97b91e26f2e9bd1d",
-                "data": {
+                "device_id": "6518f3f72a82486c97b91e26f2e9bd1d",
+                "device_data": {
                     "dev_class": "charger",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "6539-0701-4026",
@@ -3068,8 +3068,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "828f6ce1e36744689baacdd6ddb1d12c",
-                "data": {
+                "device_id": "828f6ce1e36744689baacdd6ddb1d12c",
+                "device_data": {
                     "dev_class": "washingmachine",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -3087,8 +3087,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "71e3e65ffc5a41518b19460c6e8ee34f",
-                "data": {
+                "device_id": "71e3e65ffc5a41518b19460c6e8ee34f",
+                "device_data": {
                     "dev_class": "tv",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -3106,8 +3106,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "305452ce97c243c0a7b4ab2a4ebfe6e3",
-                "data": {
+                "device_id": "305452ce97c243c0a7b4ab2a4ebfe6e3",
+                "device_data": {
                     "dev_class": "lamp",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "6539-0701-4026",
@@ -3126,8 +3126,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "bc0adbebc50d428d9444a5d805c89da9",
-                "data": {
+                "device_id": "bc0adbebc50d428d9444a5d805c89da9",
+                "device_data": {
                     "dev_class": "watercooker",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -3145,8 +3145,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "407aa1c1099d463c9137a3a9eda787fd",
-                "data": {
+                "device_id": "407aa1c1099d463c9137a3a9eda787fd",
+                "device_data": {
                     "dev_class": "zz_misc",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -3164,8 +3164,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "2587a7fcdd7e482dab03fda256076b4b",
-                "data": {
+                "device_id": "2587a7fcdd7e482dab03fda256076b4b",
+                "device_data": {
                     "dev_class": "zz_misc",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "0000-0440-0107",
@@ -3183,8 +3183,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "a28e6f5afc0e4fc68498c1f03e82a052",
-                "data": {
+                "device_id": "a28e6f5afc0e4fc68498c1f03e82a052",
+                "device_data": {
                     "dev_class": "lamp",
                     "firmware": "2011-06-27T10:52:18+02:00",
                     "hardware": "6539-0701-4026",
@@ -3203,8 +3203,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
             {
-                "dev_id": "f7b145c8492f4dd7a4de760456fdef3e",
-                "data": {
+                "device_id": "f7b145c8492f4dd7a4de760456fdef3e",
+                "device_data": {
                     "dev_class": "switching",
                     "model": "Switchgroup",
                     "name": "Test",
@@ -3251,16 +3251,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # 76BF93
             {
-                "dev_id": "8b8d14b242e24cd789743c828b9a2ea9",
-                "data": {
+                "device_id": "8b8d14b242e24cd789743c828b9a2ea9",
+                "device_data": {
                     "sensors": {"electricity_consumed": 1.69},
                     "switches": {"lock": False, "relay": True},
                 },
             },
             # 25F66AD
             {
-                "dev_id": "d0122ac66eba47b99d8e5fbd1e2f5932",
-                "data": {"sensors": {"electricity_consumed_interval": 2.21}},
+                "device_id": "d0122ac66eba47b99d8e5fbd1e2f5932",
+                "device_data": {"sensors": {"electricity_consumed_interval": 2.21}},
             },
         ]
 
@@ -3293,8 +3293,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = [
             # Gateway / P1 itself
             {
-                "dev_id": "ba4de7613517478da82dd9b6abea36af",
-                "data": {
+                "device_id": "ba4de7613517478da82dd9b6abea36af",
+                "device_data": {
                     "dev_class": "gateway",
                     "firmware": "4.1.1",
                     "location": "a455b61e52394b2db5081ce025a430f3",
