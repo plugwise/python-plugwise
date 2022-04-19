@@ -83,15 +83,15 @@ def update_helper(
         if e_type == "binary_sensors":
             if d_item == "plugwise_notification":
                 for item in devs:
-                    if item["dev_id"] == d_id:
-                        item["data"][e_type][d_item] = notifs != {}
+                    if item["device_id"] == d_id:
+                        item["device_data"][e_type][d_item] = notifs != {}
 
         if d_item == key:
             for gw_dict in devs:
-                if gw_dict["dev_id"] == d_id:
-                    for item in gw_dict["data"][e_type]:
+                if gw_dict["device_id"] == d_id:
+                    for item in gw_dict["device_data"][e_type]:
                         if item == key:
-                            gw_dict["data"][e_type][item] = data[key]
+                            gw_dict["device_data"][e_type][item] = data[key]
 
 
 def check_model(name: str | None, v_name: str) -> str | None:
