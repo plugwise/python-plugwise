@@ -1695,57 +1695,71 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
         testdata = [
-            {"dev_id": "90986d591dcd426cae3ec3e8111ff730",
-            "data": {
-                "binary_sensors": {"heating_state": False},
-            }},
+            {
+                "dev_id": "90986d591dcd426cae3ec3e8111ff730",
+                "data": {
+                    "binary_sensors": {"heating_state": False},
+                },
+            },
             # Lisa WK
-            {"dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
-            "data": {
-                "sensors": {
-                    "setpoint": 21.5,
-                    "temperature": 21.1,
-                    "battery": 34,
-                }
-            }},
+            {
+                "dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
+                "data": {
+                    "sensors": {
+                        "setpoint": 21.5,
+                        "temperature": 21.1,
+                        "battery": 34,
+                    }
+                },
+            },
             # Floor WK
-            {"dev_id": "b310b72a0e354bfab43089919b9a88bf",
-            "data": {
-                "sensors": {
-                    "setpoint": 21.5,
-                    "temperature": 26.2,
-                    "valve_position": 0,
-                }
-            }},
+            {
+                "dev_id": "b310b72a0e354bfab43089919b9a88bf",
+                "data": {
+                    "sensors": {
+                        "setpoint": 21.5,
+                        "temperature": 26.2,
+                        "valve_position": 0,
+                    }
+                },
+            },
             # CV pomp
-            {"dev_id": "78d1126fc4c743db81b61c20e88342a7",
-            "data": {
-                "sensors": {"electricity_consumed": 35.8},
-                "switches": {"relay": True},
-            }},
+            {
+                "dev_id": "78d1126fc4c743db81b61c20e88342a7",
+                "data": {
+                    "sensors": {"electricity_consumed": 35.8},
+                    "switches": {"relay": True},
+                },
+            },
             # Lisa Bios
-            {"dev_id": "df4a4a8169904cdb9c03d61a21f42140",
-            "data": {
-                "sensors": {
-                    "setpoint": 13.0,
-                    "temperature": 16.5,
-                    "battery": 67,
-                }
-            }},
+            {
+                "dev_id": "df4a4a8169904cdb9c03d61a21f42140",
+                "data": {
+                    "sensors": {
+                        "setpoint": 13.0,
+                        "temperature": 16.5,
+                        "battery": 67,
+                    }
+                },
+            },
             # Adam
-            {"dev_id": "fe799307f1624099878210aa0b9f1475",
-            "data": {
-                "binary_sensors": {"plugwise_notification": True},
-                "sensors": {"outdoor_temperature": 7.69},
-                "mac_address": "012345670001",
-                "zigbee_mac_address": "ABCD012345670101",
-            }},
+            {
+                "dev_id": "fe799307f1624099878210aa0b9f1475",
+                "data": {
+                    "binary_sensors": {"plugwise_notification": True},
+                    "sensors": {"outdoor_temperature": 7.69},
+                    "mac_address": "012345670001",
+                    "zigbee_mac_address": "ABCD012345670101",
+                },
+            },
             # Modem
-            {"dev_id": "675416a629f343c495449970e2ca37b5",
-            "data": {
-                "sensors": {"electricity_consumed": 12.2},
-                "switches": {"relay": True},
-            }},
+            {
+                "dev_id": "675416a629f343c495449970e2ca37b5",
+                "data": {
+                    "sensors": {"electricity_consumed": 12.2},
+                    "switches": {"relay": True},
+                },
+            },
         ]
 
         self.smile_setup = "adam_zone_per_device"
@@ -1807,362 +1821,398 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_adam_multiple_devices_per_zone(self):
         """Test a broad setup of Adam with multiple devices per zone setup."""
         testdata = [
-            {"dev_id": "df4a4a8169904cdb9c03d61a21f42140",
-            "data": {
-                "dev_class": "zone_thermostat",
-                "firmware": "2016-10-27T02:00:00+02:00",
-                "location": "12493538af164a409c6a1c79e38afe1c",
-                "model": "Lisa",
-                "name": "Zone Lisa Bios",
-                "vendor": "Plugwise",
-                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-                "active_preset": "away",
-                "presets": {
-                    "home": [20.0, 22.0],
-                    "asleep": [17.0, 24.0],
-                    "away": [15.0, 25.0],
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
+            {
+                "dev_id": "df4a4a8169904cdb9c03d61a21f42140",
+                "data": {
+                    "dev_class": "zone_thermostat",
+                    "firmware": "2016-10-27T02:00:00+02:00",
+                    "location": "12493538af164a409c6a1c79e38afe1c",
+                    "model": "Lisa",
+                    "name": "Zone Lisa Bios",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                    "active_preset": "away",
+                    "presets": {
+                        "home": [20.0, 22.0],
+                        "asleep": [17.0, 24.0],
+                        "away": [15.0, 25.0],
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                    },
+                    "available_schedules": [
+                        "CV Roan",
+                        "Bios Schema met Film Avond",
+                        "GF7  Woonkamer",
+                        "Badkamer Schema",
+                        "CV Jessie",
+                    ],
+                    "selected_schedule": "None",
+                    "schedule_temperature": 15.0,
+                    "last_used": "Badkamer Schema",
+                    "mode": "heat",
+                    "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
                 },
-                "available_schedules": [
-                    "CV Roan",
-                    "Bios Schema met Film Avond",
-                    "GF7  Woonkamer",
-                    "Badkamer Schema",
-                    "CV Jessie",
-                ],
-                "selected_schedule": "None",
-                "schedule_temperature": 15.0,
-                "last_used": "Badkamer Schema",
-                "mode": "heat",
-                "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
-            }},
-            {"dev_id": "b310b72a0e354bfab43089919b9a88bf",
-            "data": {
-                "dev_class": "thermo_sensor",
-                "firmware": "2019-03-27T01:00:00+01:00",
-                "location": "c50f167537524366a5af7aa3942feb1e",
-                "model": "Tom/Floor",
-                "name": "Floor kraan",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "temperature": 26.0,
-                    "setpoint": 21.5,
-                    "temperature_difference": 3.5,
-                    "valve_position": 100,
+            },
+            {
+                "dev_id": "b310b72a0e354bfab43089919b9a88bf",
+                "data": {
+                    "dev_class": "thermo_sensor",
+                    "firmware": "2019-03-27T01:00:00+01:00",
+                    "location": "c50f167537524366a5af7aa3942feb1e",
+                    "model": "Tom/Floor",
+                    "name": "Floor kraan",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "temperature": 26.0,
+                        "setpoint": 21.5,
+                        "temperature_difference": 3.5,
+                        "valve_position": 100,
+                    },
                 },
-            }},
-            {"dev_id": "a2c3583e0a6349358998b760cea82d2a",
-            "data": {
-                "dev_class": "thermo_sensor",
-                "firmware": "2019-03-27T01:00:00+01:00",
-                "location": "12493538af164a409c6a1c79e38afe1c",
-                "model": "Tom/Floor",
-                "name": "Bios Cv Thermostatic Radiator ",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "temperature": 17.2,
-                    "setpoint": 13.0,
-                    "battery": 62,
-                    "temperature_difference": -0.2,
-                    "valve_position": 0.0,
+            },
+            {
+                "dev_id": "a2c3583e0a6349358998b760cea82d2a",
+                "data": {
+                    "dev_class": "thermo_sensor",
+                    "firmware": "2019-03-27T01:00:00+01:00",
+                    "location": "12493538af164a409c6a1c79e38afe1c",
+                    "model": "Tom/Floor",
+                    "name": "Bios Cv Thermostatic Radiator ",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "temperature": 17.2,
+                        "setpoint": 13.0,
+                        "battery": 62,
+                        "temperature_difference": -0.2,
+                        "valve_position": 0.0,
+                    },
                 },
-            }},
-            {"dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
-            "data": {
-                "dev_class": "zone_thermostat",
-                "firmware": "2016-08-02T02:00:00+02:00",
-                "location": "c50f167537524366a5af7aa3942feb1e",
-                "model": "Lisa",
-                "name": "Zone Lisa WK",
-                "vendor": "Plugwise",
-                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-                "active_preset": "home",
-                "presets": {
-                    "home": [20.0, 22.0],
-                    "asleep": [17.0, 24.0],
-                    "away": [15.0, 25.0],
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
+            },
+            {
+                "dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
+                "data": {
+                    "dev_class": "zone_thermostat",
+                    "firmware": "2016-08-02T02:00:00+02:00",
+                    "location": "c50f167537524366a5af7aa3942feb1e",
+                    "model": "Lisa",
+                    "name": "Zone Lisa WK",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                    "active_preset": "home",
+                    "presets": {
+                        "home": [20.0, 22.0],
+                        "asleep": [17.0, 24.0],
+                        "away": [15.0, 25.0],
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                    },
+                    "available_schedules": [
+                        "CV Roan",
+                        "Bios Schema met Film Avond",
+                        "GF7  Woonkamer",
+                        "Badkamer Schema",
+                        "CV Jessie",
+                    ],
+                    "selected_schedule": "GF7  Woonkamer",
+                    "schedule_temperature": 20.0,
+                    "last_used": "GF7  Woonkamer",
+                    "mode": "auto",
+                    "sensors": {"temperature": 20.9, "setpoint": 21.5, "battery": 34},
                 },
-                "available_schedules": [
-                    "CV Roan",
-                    "Bios Schema met Film Avond",
-                    "GF7  Woonkamer",
-                    "Badkamer Schema",
-                    "CV Jessie",
-                ],
-                "selected_schedule": "GF7  Woonkamer",
-                "schedule_temperature": 20.0,
-                "last_used": "GF7  Woonkamer",
-                "mode": "auto",
-                "sensors": {"temperature": 20.9, "setpoint": 21.5, "battery": 34},
-            }},
-            {"dev_id": "fe799307f1624099878210aa0b9f1475",
-            "data": {
-                "dev_class": "gateway",
-                "firmware": "3.0.15",
-                "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
-                "model": "Adam",
-                "name": "Adam",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": True},
-                "sensors": {"outdoor_temperature": 7.81},
-            }},
-            {"dev_id": "d3da73bde12a47d5a6b8f9dad971f2ec",
-            "data": {
-                "dev_class": "thermo_sensor",
-                "firmware": "2019-03-27T01:00:00+01:00",
-                "location": "82fa13f017d240daa0d0ea1775420f24",
-                "model": "Tom/Floor",
-                "name": "Thermostatic Radiator Jessie",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "temperature": 17.1,
-                    "setpoint": 15.0,
-                    "battery": 62,
-                    "temperature_difference": 0.1,
-                    "valve_position": 0.0,
+            },
+            {
+                "dev_id": "fe799307f1624099878210aa0b9f1475",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "3.0.15",
+                    "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
+                    "model": "Adam",
+                    "name": "Adam",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": True},
+                    "sensors": {"outdoor_temperature": 7.81},
                 },
-            }},
-            {"dev_id": "21f2b542c49845e6bb416884c55778d6",
-            "data": {
-                "dev_class": "game_console",
-                "firmware": "2019-06-21T02:00:00+02:00",
-                "location": "cd143c07248f491493cea0533bc3d669",
-                "model": "Plug",
-                "name": "Playstation Smart Plug",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 82.6,
-                    "electricity_consumed_interval": 8.6,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "d3da73bde12a47d5a6b8f9dad971f2ec",
+                "data": {
+                    "dev_class": "thermo_sensor",
+                    "firmware": "2019-03-27T01:00:00+01:00",
+                    "location": "82fa13f017d240daa0d0ea1775420f24",
+                    "model": "Tom/Floor",
+                    "name": "Thermostatic Radiator Jessie",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "temperature": 17.1,
+                        "setpoint": 15.0,
+                        "battery": 62,
+                        "temperature_difference": 0.1,
+                        "valve_position": 0.0,
+                    },
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "78d1126fc4c743db81b61c20e88342a7",
-            "data": {
-                "dev_class": "central_heating_pump",
-                "firmware": "2019-06-21T02:00:00+02:00",
-                "location": "c50f167537524366a5af7aa3942feb1e",
-                "model": "Plug",
-                "name": "CV Pomp",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 35.6,
-                    "electricity_consumed_interval": 7.37,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "21f2b542c49845e6bb416884c55778d6",
+                "data": {
+                    "dev_class": "game_console",
+                    "firmware": "2019-06-21T02:00:00+02:00",
+                    "location": "cd143c07248f491493cea0533bc3d669",
+                    "model": "Plug",
+                    "name": "Playstation Smart Plug",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 82.6,
+                        "electricity_consumed_interval": 8.6,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True},
-            }},
-            {"dev_id": "90986d591dcd426cae3ec3e8111ff730",
-            "data": {
-                "dev_class": "heater_central",
-                "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
-                "model": "Unknown",
-                "name": "OnOff",
-                "binary_sensors": {"heating_state": True},
-                "sensors": {
-                    "water_temperature": 70.0,
-                    "intended_boiler_temperature": 70.0,
-                    "modulation_level": 1,
+            },
+            {
+                "dev_id": "78d1126fc4c743db81b61c20e88342a7",
+                "data": {
+                    "dev_class": "central_heating_pump",
+                    "firmware": "2019-06-21T02:00:00+02:00",
+                    "location": "c50f167537524366a5af7aa3942feb1e",
+                    "model": "Plug",
+                    "name": "CV Pomp",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 35.6,
+                        "electricity_consumed_interval": 7.37,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True},
                 },
-            }},
-            {"dev_id": "cd0ddb54ef694e11ac18ed1cbce5dbbd",
-            "data": {
-                "dev_class": "vcr",
-                "firmware": "2019-06-21T02:00:00+02:00",
-                "location": "cd143c07248f491493cea0533bc3d669",
-                "model": "Plug",
-                "name": "NAS",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 16.5,
-                    "electricity_consumed_interval": 0.5,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "90986d591dcd426cae3ec3e8111ff730",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
+                    "model": "Unknown",
+                    "name": "OnOff",
+                    "binary_sensors": {"heating_state": True},
+                    "sensors": {
+                        "water_temperature": 70.0,
+                        "intended_boiler_temperature": 70.0,
+                        "modulation_level": 1,
+                    },
                 },
-                "switches": {"relay": True, "lock": True},
-                "zigbee_mac_address": "ABCD012345670A14",
-            }},
-            {"dev_id": "4a810418d5394b3f82727340b91ba740",
-            "data": {
-                "dev_class": "router",
-                "firmware": "2019-06-21T02:00:00+02:00",
-                "location": "cd143c07248f491493cea0533bc3d669",
-                "model": "Plug",
-                "name": "USG Smart Plug",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 8.5,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "cd0ddb54ef694e11ac18ed1cbce5dbbd",
+                "data": {
+                    "dev_class": "vcr",
+                    "firmware": "2019-06-21T02:00:00+02:00",
+                    "location": "cd143c07248f491493cea0533bc3d669",
+                    "model": "Plug",
+                    "name": "NAS",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 16.5,
+                        "electricity_consumed_interval": 0.5,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
+                    "zigbee_mac_address": "ABCD012345670A14",
                 },
-                "switches": {"relay": True, "lock": True},
-            }},
-            {"dev_id": "02cf28bfec924855854c544690a609ef",
-            "data": {
-                "dev_class": "vcr",
-                "firmware": "2019-06-21T02:00:00+02:00",
-                "location": "cd143c07248f491493cea0533bc3d669",
-                "model": "Plug",
-                "name": "NVR",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 34.0,
-                    "electricity_consumed_interval": 9.15,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "4a810418d5394b3f82727340b91ba740",
+                "data": {
+                    "dev_class": "router",
+                    "firmware": "2019-06-21T02:00:00+02:00",
+                    "location": "cd143c07248f491493cea0533bc3d669",
+                    "model": "Plug",
+                    "name": "USG Smart Plug",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 8.5,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
                 },
-                "switches": {"relay": True, "lock": True},
-            }},
-            {"dev_id": "a28f588dc4a049a483fd03a30361ad3a", 
-            "data": {
-                "dev_class": "settop",
-                "firmware": "2019-06-21T02:00:00+02:00",
-                "location": "cd143c07248f491493cea0533bc3d669",
-                "model": "Plug",
-                "name": "Fibaro HC2",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 12.5,
-                    "electricity_consumed_interval": 3.8,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "02cf28bfec924855854c544690a609ef",
+                "data": {
+                    "dev_class": "vcr",
+                    "firmware": "2019-06-21T02:00:00+02:00",
+                    "location": "cd143c07248f491493cea0533bc3d669",
+                    "model": "Plug",
+                    "name": "NVR",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 34.0,
+                        "electricity_consumed_interval": 9.15,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
                 },
-                "switches": {"relay": True, "lock": True},
-            }},
-            {"dev_id": "6a3bf693d05e48e0b460c815a4fdd09d",
-            "data": {
-                "dev_class": "zone_thermostat",
-                "firmware": "2016-10-27T02:00:00+02:00",
-                "location": "82fa13f017d240daa0d0ea1775420f24",
-                "model": "Lisa",
-                "name": "Zone Thermostat Jessie",
-                "vendor": "Plugwise",
-                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-                "active_preset": "asleep",
-                "presets": {
-                    "home": [20.0, 22.0],
-                    "asleep": [17.0, 24.0],
-                    "away": [15.0, 25.0],
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
+            },
+            {
+                "dev_id": "a28f588dc4a049a483fd03a30361ad3a",
+                "data": {
+                    "dev_class": "settop",
+                    "firmware": "2019-06-21T02:00:00+02:00",
+                    "location": "cd143c07248f491493cea0533bc3d669",
+                    "model": "Plug",
+                    "name": "Fibaro HC2",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 12.5,
+                        "electricity_consumed_interval": 3.8,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
                 },
-                "available_schedules": [
-                    "CV Roan",
-                    "Bios Schema met Film Avond",
-                    "GF7  Woonkamer",
-                    "Badkamer Schema",
-                    "CV Jessie",
-                ],
-                "selected_schedule": "CV Jessie",
-                "schedule_temperature": 15.0,
-                "last_used": "CV Jessie",
-                "mode": "auto",
-                "sensors": {"temperature": 17.2, "setpoint": 15.0, "battery": 37},
-            }},
-            {"dev_id": "680423ff840043738f42cc7f1ff97a36",
-            "data": {
-                "dev_class": "thermo_sensor",
-                "firmware": "2019-03-27T01:00:00+01:00",
-                "location": "08963fec7c53423ca5680aa4cb502c63",
-                "model": "Tom/Floor",
-                "name": "Thermostatic Radiator Badkamer",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "temperature": 19.1,
-                    "setpoint": 14.0,
-                    "battery": 51,
-                    "temperature_difference": -0.4,
-                    "valve_position": 0.0,
+            },
+            {
+                "dev_id": "6a3bf693d05e48e0b460c815a4fdd09d",
+                "data": {
+                    "dev_class": "zone_thermostat",
+                    "firmware": "2016-10-27T02:00:00+02:00",
+                    "location": "82fa13f017d240daa0d0ea1775420f24",
+                    "model": "Lisa",
+                    "name": "Zone Thermostat Jessie",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                    "active_preset": "asleep",
+                    "presets": {
+                        "home": [20.0, 22.0],
+                        "asleep": [17.0, 24.0],
+                        "away": [15.0, 25.0],
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                    },
+                    "available_schedules": [
+                        "CV Roan",
+                        "Bios Schema met Film Avond",
+                        "GF7  Woonkamer",
+                        "Badkamer Schema",
+                        "CV Jessie",
+                    ],
+                    "selected_schedule": "CV Jessie",
+                    "schedule_temperature": 15.0,
+                    "last_used": "CV Jessie",
+                    "mode": "auto",
+                    "sensors": {"temperature": 17.2, "setpoint": 15.0, "battery": 37},
                 },
-            }},
-            {"dev_id": "f1fee6043d3642a9b0a65297455f008e",
-            "data": {
-                "dev_class": "zone_thermostat",
-                "firmware": "2016-10-27T02:00:00+02:00",
-                "location": "08963fec7c53423ca5680aa4cb502c63",
-                "model": "Lisa",
-                "name": "Zone Thermostat Badkamer",
-                "vendor": "Plugwise",
-                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-                "active_preset": "away",
-                "presets": {
-                    "home": [20.0, 22.0],
-                    "asleep": [17.0, 24.0],
-                    "away": [15.0, 25.0],
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
+            },
+            {
+                "dev_id": "680423ff840043738f42cc7f1ff97a36",
+                "data": {
+                    "dev_class": "thermo_sensor",
+                    "firmware": "2019-03-27T01:00:00+01:00",
+                    "location": "08963fec7c53423ca5680aa4cb502c63",
+                    "model": "Tom/Floor",
+                    "name": "Thermostatic Radiator Badkamer",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "temperature": 19.1,
+                        "setpoint": 14.0,
+                        "battery": 51,
+                        "temperature_difference": -0.4,
+                        "valve_position": 0.0,
+                    },
                 },
-                "available_schedules": [
-                    "CV Roan",
-                    "Bios Schema met Film Avond",
-                    "GF7  Woonkamer",
-                    "Badkamer Schema",
-                    "CV Jessie",
-                ],
-                "selected_schedule": "Badkamer Schema",
-                "schedule_temperature": 20.0,
-                "last_used": "Badkamer Schema",
-                "mode": "auto",
-                "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
-            }},
-            {"dev_id": "675416a629f343c495449970e2ca37b5",
-            "data": {
-                "dev_class": "router",
-                "firmware": "2019-06-21T02:00:00+02:00",
-                "location": "cd143c07248f491493cea0533bc3d669",
-                "model": "Plug",
-                "name": "Ziggo Modem",
-                "vendor": "Plugwise",
-                "sensors": {
-                    "electricity_consumed": 12.2,
-                    "electricity_consumed_interval": 2.97,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "f1fee6043d3642a9b0a65297455f008e",
+                "data": {
+                    "dev_class": "zone_thermostat",
+                    "firmware": "2016-10-27T02:00:00+02:00",
+                    "location": "08963fec7c53423ca5680aa4cb502c63",
+                    "model": "Lisa",
+                    "name": "Zone Thermostat Badkamer",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                    "active_preset": "away",
+                    "presets": {
+                        "home": [20.0, 22.0],
+                        "asleep": [17.0, 24.0],
+                        "away": [15.0, 25.0],
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                    },
+                    "available_schedules": [
+                        "CV Roan",
+                        "Bios Schema met Film Avond",
+                        "GF7  Woonkamer",
+                        "Badkamer Schema",
+                        "CV Jessie",
+                    ],
+                    "selected_schedule": "Badkamer Schema",
+                    "schedule_temperature": 20.0,
+                    "last_used": "Badkamer Schema",
+                    "mode": "auto",
+                    "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
                 },
-                "switches": {"relay": True, "lock": True},
-            }},
-            {"dev_id": "e7693eb9582644e5b865dba8d4447cf1",
-            "data": {
-                "dev_class": "thermostatic_radiator_valve",
-                "firmware": "2019-03-27T01:00:00+01:00",
-                "location": "446ac08dd04d4eff8ac57489757b7314",
-                "model": "Tom/Floor",
-                "name": "CV Kraan Garage",
-                "vendor": "Plugwise",
-                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-                "active_preset": "no_frost",
-                "presets": {
-                    "home": [20.0, 22.0],
-                    "asleep": [17.0, 24.0],
-                    "away": [15.0, 25.0],
-                    "vacation": [15.0, 28.0],
-                    "no_frost": [10.0, 30.0],
+            },
+            {
+                "dev_id": "675416a629f343c495449970e2ca37b5",
+                "data": {
+                    "dev_class": "router",
+                    "firmware": "2019-06-21T02:00:00+02:00",
+                    "location": "cd143c07248f491493cea0533bc3d669",
+                    "model": "Plug",
+                    "name": "Ziggo Modem",
+                    "vendor": "Plugwise",
+                    "sensors": {
+                        "electricity_consumed": 12.2,
+                        "electricity_consumed_interval": 2.97,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
                 },
-                "available_schedules": [
-                    "CV Roan",
-                    "Bios Schema met Film Avond",
-                    "GF7  Woonkamer",
-                    "Badkamer Schema",
-                    "CV Jessie",
-                ],
-                "selected_schedule": "None",
-                "schedule_temperature": 15.0,
-                "last_used": "Badkamer Schema",
-                "mode": "heat",
-                "sensors": {
-                    "temperature": 15.6,
-                    "setpoint": 5.5,
-                    "battery": 68,
-                    "temperature_difference": 0.0,
-                    "valve_position": 0.0,
+            },
+            {
+                "dev_id": "e7693eb9582644e5b865dba8d4447cf1",
+                "data": {
+                    "dev_class": "thermostatic_radiator_valve",
+                    "firmware": "2019-03-27T01:00:00+01:00",
+                    "location": "446ac08dd04d4eff8ac57489757b7314",
+                    "model": "Tom/Floor",
+                    "name": "CV Kraan Garage",
+                    "vendor": "Plugwise",
+                    "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                    "active_preset": "no_frost",
+                    "presets": {
+                        "home": [20.0, 22.0],
+                        "asleep": [17.0, 24.0],
+                        "away": [15.0, 25.0],
+                        "vacation": [15.0, 28.0],
+                        "no_frost": [10.0, 30.0],
+                    },
+                    "available_schedules": [
+                        "CV Roan",
+                        "Bios Schema met Film Avond",
+                        "GF7  Woonkamer",
+                        "Badkamer Schema",
+                        "CV Jessie",
+                    ],
+                    "selected_schedule": "None",
+                    "schedule_temperature": 15.0,
+                    "last_used": "Badkamer Schema",
+                    "mode": "heat",
+                    "sensors": {
+                        "temperature": 15.6,
+                        "setpoint": 5.5,
+                        "battery": 68,
+                        "temperature_difference": 0.0,
+                        "valve_position": 0.0,
+                    },
                 },
-            }},
+            },
         ]
 
         self.smile_setup = "adam_multiple_devices_per_zone"
@@ -2215,15 +2265,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test Adam with Jip."""
         testdata = [
             # Woonkamer - Tom
-            {"dev_id": "833de10f269c4deab58fb9df69901b4e",
-            "data": {
-                "sensors": {"valve_position": 100},
-            }},
+            {
+                "dev_id": "833de10f269c4deab58fb9df69901b4e",
+                "data": {
+                    "sensors": {"valve_position": 100},
+                },
+            },
             # Woonkamer - Jip
-            {"dev_id": "f61f1a2535f54f52ad006a3d18e459ca",
-            "data": {
-                "sensors": {"humidity": 56.2},
-            }},
+            {
+                "dev_id": "f61f1a2535f54f52ad006a3d18e459ca",
+                "data": {
+                    "sensors": {"humidity": 56.2},
+                },
+            },
         ]
 
         self.smile_setup = "adam_jip"
@@ -2239,31 +2293,33 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a P1 firmware 3 with only electricity setup."""
         testdata = [
             # Gateway / P1 itself
-            {"dev_id": "ba4de7613517478da82dd9b6abea36af",
-            "data": {
-                "dev_class": "gateway",
-                "firmware": "3.3.6",
-                "location": "a455b61e52394b2db5081ce025a430f3",
-                "model": "P1",
-                "name": "P1",
-                "vendor": "Plugwise B.V.",
-                "sensors": {
-                    "net_electricity_point": 636,
-                    "electricity_consumed_peak_point": 636,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 17965.326,
-                    "electricity_consumed_peak_cumulative": 7702.167,
-                    "electricity_consumed_off_peak_cumulative": 10263.159,
-                    "electricity_consumed_peak_interval": 179,
-                    "electricity_produced_point": 0,
-                    "electricity_produced_off_peak_point": 0,
-                    "electricity_produced_peak_cumulative": 0.0,
-                    "electricity_produced_off_peak_cumulative": 0.0,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
+            {
+                "dev_id": "ba4de7613517478da82dd9b6abea36af",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "3.3.6",
+                    "location": "a455b61e52394b2db5081ce025a430f3",
+                    "model": "P1",
+                    "name": "P1",
+                    "vendor": "Plugwise B.V.",
+                    "sensors": {
+                        "net_electricity_point": 636,
+                        "electricity_consumed_peak_point": 636,
+                        "electricity_consumed_off_peak_point": 0,
+                        "net_electricity_cumulative": 17965.326,
+                        "electricity_consumed_peak_cumulative": 7702.167,
+                        "electricity_consumed_off_peak_cumulative": 10263.159,
+                        "electricity_consumed_peak_interval": 179,
+                        "electricity_produced_point": 0,
+                        "electricity_produced_off_peak_point": 0,
+                        "electricity_produced_peak_cumulative": 0.0,
+                        "electricity_produced_off_peak_cumulative": 0.0,
+                        "electricity_produced_peak_interval": 0,
+                        "electricity_produced_off_peak_interval": 0,
+                    },
+                    "mac_address": "012345670001",
                 },
-                "mac_address": "012345670001",
-            }}
+            }
         ]
 
         self.smile_setup = "p1v3"
@@ -2288,15 +2344,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a P1 firmware 3 with manually added solar setup."""
         testdata = [
             # Gateway / P1 itself
-            {"dev_id": "ba4de7613517478da82dd9b6abea36af",
-            "data": {
-                "sensors": {
-                    "electricity_consumed_peak_point": 636.0,
-                    "electricity_produced_peak_cumulative": 20.0,
-                    "electricity_consumed_off_peak_cumulative": 10263.159,
-                    "net_electricity_point": 636,
-                }
-            }}
+            {
+                "dev_id": "ba4de7613517478da82dd9b6abea36af",
+                "data": {
+                    "sensors": {
+                        "electricity_consumed_peak_point": 636.0,
+                        "electricity_produced_peak_cumulative": 20.0,
+                        "electricity_consumed_off_peak_cumulative": 10263.159,
+                        "net_electricity_point": 636,
+                    }
+                },
+            }
         ]
 
         self.smile_setup = "p1v3solarfake"
@@ -2322,33 +2380,35 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a P1 firmware 3 full option (gas and solar) setup."""
         testdata = [
             # Gateway / P1 itself
-            {"dev_id": "e950c7d5e1ee407a858e2a8b5016c8b3",
-            "data": {
-                "dev_class": "gateway",
-                "firmware": "3.3.9",
-                "location": "cd3e822288064775a7c4afcdd70bdda2",
-                "model": "P1",
-                "name": "P1",
-                "vendor": "Plugwise B.V.",
-                "sensors": {
-                    "net_electricity_point": -2816,
-                    "electricity_consumed_peak_point": 0,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 442.972,
-                    "electricity_consumed_peak_cumulative": 442.932,
-                    "electricity_consumed_off_peak_cumulative": 551.09,
-                    "electricity_consumed_peak_interval": 0,
-                    "electricity_consumed_off_peak_interval": 0,
-                    "electricity_produced_peak_point": 2816,
-                    "electricity_produced_off_peak_point": 0,
-                    "electricity_produced_peak_cumulative": 396.559,
-                    "electricity_produced_off_peak_cumulative": 154.491,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
-                    "gas_consumed_cumulative": 584.85,
-                    "gas_consumed_interval": 0.0,
+            {
+                "dev_id": "e950c7d5e1ee407a858e2a8b5016c8b3",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "3.3.9",
+                    "location": "cd3e822288064775a7c4afcdd70bdda2",
+                    "model": "P1",
+                    "name": "P1",
+                    "vendor": "Plugwise B.V.",
+                    "sensors": {
+                        "net_electricity_point": -2816,
+                        "electricity_consumed_peak_point": 0,
+                        "electricity_consumed_off_peak_point": 0,
+                        "net_electricity_cumulative": 442.972,
+                        "electricity_consumed_peak_cumulative": 442.932,
+                        "electricity_consumed_off_peak_cumulative": 551.09,
+                        "electricity_consumed_peak_interval": 0,
+                        "electricity_consumed_off_peak_interval": 0,
+                        "electricity_produced_peak_point": 2816,
+                        "electricity_produced_off_peak_point": 0,
+                        "electricity_produced_peak_cumulative": 396.559,
+                        "electricity_produced_off_peak_cumulative": 154.491,
+                        "electricity_produced_peak_interval": 0,
+                        "electricity_produced_off_peak_interval": 0,
+                        "gas_consumed_cumulative": 584.85,
+                        "gas_consumed_interval": 0.0,
+                    },
                 },
-            }}
+            }
         ]
 
         self.smile_setup = "p1v3_full_option"
@@ -2374,36 +2434,40 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a Anna with Elga setup in idle mode."""
         testdata = [
             # Anna
-            {"dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
-            "data": {
-                "selected_schedule": "None",
-                "active_preset": "home",
-                "mode": "heat",
-                "sensors": {
-                    "illuminance": 86.0,
-                    "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 4,
+            {
+                "dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
+                "data": {
+                    "selected_schedule": "None",
+                    "active_preset": "home",
+                    "mode": "heat",
+                    "sensors": {
+                        "illuminance": 86.0,
+                        "cooling_activation_outdoor_temperature": 21.0,
+                        "cooling_deactivation_threshold": 4,
+                    },
                 },
-            }},
+            },
             # Heater central
-            {"dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
-            "data": {
-                "binary_sensors": {
-                    "cooling_state": False,
-                    "dhw_state": False,
-                    "heating_state": True,
+            {
+                "dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+                "data": {
+                    "binary_sensors": {
+                        "cooling_state": False,
+                        "dhw_state": False,
+                        "heating_state": True,
+                    },
+                    "sensors": {
+                        "outdoor_air_temperature": 3.0,
+                        "water_temperature": 29.1,
+                        "water_pressure": 1.57,
+                    },
                 },
-                "sensors": {
-                    "outdoor_air_temperature": 3.0,
-                    "water_temperature": 29.1,
-                    "water_pressure": 1.57,
-                },
-            }},
+            },
             # Gateway
-            {"dev_id": "015ae9ea3f964e668e490fa39da3870b",
-            "data": {
-                "sensors": {"outdoor_temperature": 20.2}
-            }},
+            {
+                "dev_id": "015ae9ea3f964e668e490fa39da3870b",
+                "data": {"sensors": {"outdoor_temperature": 20.2}},
+            },
         ]
 
         self.smile_setup = "anna_heatpump"
@@ -2436,36 +2500,40 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """
         testdata = [
             # Anna
-            {"dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
-            "data": {
-                "selected_schedule": "None",
-                "active_preset": "home",
-                "mode": "cool",
-                "sensors": {
-                    "illuminance": 25.5,
-                    "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 6,
+            {
+                "dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
+                "data": {
+                    "selected_schedule": "None",
+                    "active_preset": "home",
+                    "mode": "cool",
+                    "sensors": {
+                        "illuminance": 25.5,
+                        "cooling_activation_outdoor_temperature": 21.0,
+                        "cooling_deactivation_threshold": 6,
+                    },
                 },
-            }},
+            },
             # Heater central
-            {"dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
-            "data": {
-                "binary_sensors": {
-                    "cooling_state": True,
-                    "dhw_state": False,
-                    "heating_state": False,
+            {
+                "dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+                "data": {
+                    "binary_sensors": {
+                        "cooling_state": True,
+                        "dhw_state": False,
+                        "heating_state": False,
+                    },
+                    "sensors": {
+                        "outdoor_air_temperature": 22.0,
+                        "water_temperature": 24.7,
+                        "water_pressure": 1.61,
+                    },
                 },
-                "sensors": {
-                    "outdoor_air_temperature": 22.0,
-                    "water_temperature": 24.7,
-                    "water_pressure": 1.61,
-                },
-            }},
+            },
             # Gateway
-            {"dev_id": "015ae9ea3f964e668e490fa39da3870b",
-            "data": {
-                "sensors": {"outdoor_temperature": 22.0}
-            }},
+            {
+                "dev_id": "015ae9ea3f964e668e490fa39da3870b",
+                "data": {"sensors": {"outdoor_temperature": 22.0}},
+            },
         ]
 
         self.smile_setup = "anna_heatpump_cooling"
@@ -2496,36 +2564,40 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """
         testdata = [
             # Anna
-            {"dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
-            "data": {
-                "selected_schedule": "None",
-                "active_preset": "home",
-                "mode": "heat",
-                "sensors": {
-                    "illuminance": 25.5,
-                    "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 6,
+            {
+                "dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
+                "data": {
+                    "selected_schedule": "None",
+                    "active_preset": "home",
+                    "mode": "heat",
+                    "sensors": {
+                        "illuminance": 25.5,
+                        "cooling_activation_outdoor_temperature": 21.0,
+                        "cooling_deactivation_threshold": 6,
+                    },
                 },
-            }},
+            },
             # Heater central
-            {"dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
-            "data": {
-                "binary_sensors": {
-                    "cooling_state": False,
-                    "dhw_state": False,
-                    "heating_state": False,
+            {
+                "dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+                "data": {
+                    "binary_sensors": {
+                        "cooling_state": False,
+                        "dhw_state": False,
+                        "heating_state": False,
+                    },
+                    "sensors": {
+                        "outdoor_air_temperature": 3.0,
+                        "water_temperature": 24.7,
+                        "water_pressure": 1.61,
+                    },
                 },
-                "sensors": {
-                    "outdoor_air_temperature": 3.0,
-                    "water_temperature": 24.7,
-                    "water_pressure": 1.61,
-                },
-            }},
+            },
             # Gateway
-            {"dev_id": "015ae9ea3f964e668e490fa39da3870b",
-            "data": {
-                "sensors": {"outdoor_temperature": 22.0}
-            }},
+            {
+                "dev_id": "015ae9ea3f964e668e490fa39da3870b",
+                "data": {"sensors": {"outdoor_temperature": 22.0}},
+            },
         ]
 
         self.smile_setup = "anna_heatpump_cooling_to_off"
@@ -2541,80 +2613,86 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a Anna with Elga setup in cooling mode (with missing outdoor temperature - solved)."""
         testdata = [
             # Anna
-            {"dev_id": "ebd90df1ab334565b5895f37590ccff4",
-            "data": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "hardware": "6539-1301-5002",
-                "location": "d3ce834534114348be628b61b26d9220",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "lower_bound": 4,
-                "upper_bound": 30,
-                "resolution": 0.1,
-                "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
-                "active_preset": "home",
-                "presets": {
-                    "away": [15.0, 25.0],
-                    "no_frost": [10.0, 30.0],
-                    "vacation": [15.0, 27.0],
-                    "home": [19.5, 23.0],
-                    "asleep": [19.0, 23.0],
+            {
+                "dev_id": "ebd90df1ab334565b5895f37590ccff4",
+                "data": {
+                    "dev_class": "thermostat",
+                    "firmware": "2018-02-08T11:15:53+01:00",
+                    "hardware": "6539-1301-5002",
+                    "location": "d3ce834534114348be628b61b26d9220",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise",
+                    "lower_bound": 4,
+                    "upper_bound": 30,
+                    "resolution": 0.1,
+                    "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
+                    "active_preset": "home",
+                    "presets": {
+                        "away": [15.0, 25.0],
+                        "no_frost": [10.0, 30.0],
+                        "vacation": [15.0, 27.0],
+                        "home": [19.5, 23.0],
+                        "asleep": [19.0, 23.0],
+                    },
+                    "available_schedules": ["Thermostat schedule"],
+                    "selected_schedule": "Thermostat schedule",
+                    "last_used": "Thermostat schedule",
+                    "schedule_temperature": 19.5,
+                    "mode": "auto",
+                    "sensors": {
+                        "temperature": 20.9,
+                        "setpoint": 19.5,
+                        "illuminance": 0.5,
+                        "cooling_activation_outdoor_temperature": 26.0,
+                        "cooling_deactivation_threshold": 3,
+                    },
                 },
-                "available_schedules": ["Thermostat schedule"],
-                "selected_schedule": "Thermostat schedule",
-                "last_used": "Thermostat schedule",
-                "schedule_temperature": 19.5,
-                "mode": "auto",
-                "sensors": {
-                    "temperature": 20.9,
-                    "setpoint": 19.5,
-                    "illuminance": 0.5,
-                    "cooling_activation_outdoor_temperature": 26.0,
-                    "cooling_deactivation_threshold": 3,
-                },
-            }},
+            },
             # Heater central
-            {"dev_id": "573c152e7d4f4720878222bd75638f5b",
-            "data": {
-                "dev_class": "heater_central",
-                "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "model": "Generic heater",
-                "name": "OpenTherm",
-                "vendor": "Techneco",
-                "binary_sensors": {
-                    "compressor_state": False,
-                    "dhw_state": False,
-                    "heating_state": False,
-                    "cooling_state": False,
-                    "slave_boiler_state": False,
-                    "flame_state": False,
+            {
+                "dev_id": "573c152e7d4f4720878222bd75638f5b",
+                "data": {
+                    "dev_class": "heater_central",
+                    "location": "d34dfe6ab90b410c98068e75de3eb631",
+                    "model": "Generic heater",
+                    "name": "OpenTherm",
+                    "vendor": "Techneco",
+                    "binary_sensors": {
+                        "compressor_state": False,
+                        "dhw_state": False,
+                        "heating_state": False,
+                        "cooling_state": False,
+                        "slave_boiler_state": False,
+                        "flame_state": False,
+                    },
+                    "sensors": {
+                        "outdoor_air_temperature": 14.0,
+                        "water_temperature": 22.8,
+                        "intended_boiler_temperature": 0.0,
+                        "modulation_level": 0.0,
+                        "return_temperature": 23.4,
+                        "water_pressure": 0.5,
+                    },
+                    "switches": {"dhw_cm_switch": True},
                 },
-                "sensors": {
-                    "outdoor_air_temperature": 14.0,
-                    "water_temperature": 22.8,
-                    "intended_boiler_temperature": 0.0,
-                    "modulation_level": 0.0,
-                    "return_temperature": 23.4,
-                    "water_pressure": 0.5,
-                },
-                "switches": {"dhw_cm_switch": True},
-            }},
+            },
             # Gateway
-            {"dev_id": "fb49af122f6e4b0f91267e1cf7666d6f",
-            "data": {
-                "dev_class": "gateway",
-                "firmware": "4.2.1",
-                "hardware": "AME Smile 2.0 board",
-                "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "mac_address": "C4930002FE76",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 13.0},
-            }},
+            {
+                "dev_id": "fb49af122f6e4b0f91267e1cf7666d6f",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "4.2.1",
+                    "hardware": "AME Smile 2.0 board",
+                    "location": "d34dfe6ab90b410c98068e75de3eb631",
+                    "mac_address": "C4930002FE76",
+                    "model": "Anna",
+                    "name": "Anna",
+                    "vendor": "Plugwise B.V.",
+                    "binary_sensors": {"plugwise_notification": False},
+                    "sensors": {"outdoor_temperature": 13.0},
+                },
+            },
         ]
 
         self.smile_setup = "anna_elga_2"
@@ -2641,10 +2719,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         testdata = [
             # Central
-            {"dev_id": "2743216f626f43948deec1f7ab3b3d70",
-            "data": {
-                "binary_sensors": {"heating_state": False},
-            }},
+            {
+                "dev_id": "2743216f626f43948deec1f7ab3b3d70",
+                "data": {
+                    "binary_sensors": {"heating_state": False},
+                },
+            },
         ]
 
         self.smile_setup = "adam_plus_anna_copy_with_error_domain_added"
@@ -2670,114 +2750,130 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_stretch_v31(self):
         """Test erroneous domain_objects file from user."""
         testdata = [
-            {"dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-            "data": {
-                "dev_class": "gateway",
-                "firmware": "3.1.11",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": "01:23:45:67:89:AB",
-                "model": "Stretch",
-                "name": "Stretch",
-                "vendor": "Plugwise B.V.",
-                "zigbee_mac_address": "ABCD012345670101",
-            }},
-            {"dev_id": "5871317346d045bc9f6b987ef25ee638",
-            "data": {
-                "dev_class": "water_heater_vessel",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Boiler (1EB31)",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A07",
-                "sensors": {
-                    "electricity_consumed": 1.19,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            {
+                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "3.1.11",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "mac_address": "01:23:45:67:89:AB",
+                    "model": "Stretch",
+                    "name": "Stretch",
+                    "vendor": "Plugwise B.V.",
+                    "zigbee_mac_address": "ABCD012345670101",
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "aac7b735042c4832ac9ff33aae4f453b",
-            "data": {
-                "dev_class": "dishwasher",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Vaatwasser (2a1ab)",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A02",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.71,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "5871317346d045bc9f6b987ef25ee638",
+                "data": {
+                    "dev_class": "water_heater_vessel",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Boiler (1EB31)",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A07",
+                    "sensors": {
+                        "electricity_consumed": 1.19,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "cfe95cf3de1948c0b8955125bf754614",
-            "data": {
-                "dev_class": "dryer",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Droger (52559)",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A04",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "aac7b735042c4832ac9ff33aae4f453b",
+                "data": {
+                    "dev_class": "dishwasher",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Vaatwasser (2a1ab)",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A02",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.71,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "059e4d03c7a34d278add5c7a4a781d19",
-            "data": {
-                "dev_class": "washingmachine",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Wasmachine (52AC1)",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A01",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "cfe95cf3de1948c0b8955125bf754614",
+                "data": {
+                    "dev_class": "dryer",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Droger (52559)",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A04",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "71e1944f2a944b26ad73323e399efef0",
-            "data": {
-                "dev_class": "switching",
-                "model": "Switchgroup",
-                "name": "Test",
-                "members": ["5ca521ac179d468e91d772eeeb8a2117"],
-                "switches": {"relay": True},
-            }},
-            {"dev_id": "d950b314e9d8499f968e6db8d82ef78c",
-            "data": {
-                "dev_class": "report",
-                "model": "Switchgroup",
-                "name": "Stroomvreters",
-                "members": [
-                    "059e4d03c7a34d278add5c7a4a781d19",
-                    "5871317346d045bc9f6b987ef25ee638",
-                    "aac7b735042c4832ac9ff33aae4f453b",
-                    "cfe95cf3de1948c0b8955125bf754614",
-                    "e1c884e7dede431dadee09506ec4f859",
-                ],
-                "switches": {"relay": True},
-            }},
-            {"dev_id": "d03738edfcc947f7b8f4573571d90d2d",
-            "data": {
-                "dev_class": "switching",
-                "model": "Switchgroup",
-                "name": "Schakel",
-                "members": [
-                    "059e4d03c7a34d278add5c7a4a781d19",
-                    "cfe95cf3de1948c0b8955125bf754614",
-                ],
-                "switches": {"relay": True},
-            }},
+            },
+            {
+                "dev_id": "059e4d03c7a34d278add5c7a4a781d19",
+                "data": {
+                    "dev_class": "washingmachine",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Wasmachine (52AC1)",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A01",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
+                },
+            },
+            {
+                "dev_id": "71e1944f2a944b26ad73323e399efef0",
+                "data": {
+                    "dev_class": "switching",
+                    "model": "Switchgroup",
+                    "name": "Test",
+                    "members": ["5ca521ac179d468e91d772eeeb8a2117"],
+                    "switches": {"relay": True},
+                },
+            },
+            {
+                "dev_id": "d950b314e9d8499f968e6db8d82ef78c",
+                "data": {
+                    "dev_class": "report",
+                    "model": "Switchgroup",
+                    "name": "Stroomvreters",
+                    "members": [
+                        "059e4d03c7a34d278add5c7a4a781d19",
+                        "5871317346d045bc9f6b987ef25ee638",
+                        "aac7b735042c4832ac9ff33aae4f453b",
+                        "cfe95cf3de1948c0b8955125bf754614",
+                        "e1c884e7dede431dadee09506ec4f859",
+                    ],
+                    "switches": {"relay": True},
+                },
+            },
+            {
+                "dev_id": "d03738edfcc947f7b8f4573571d90d2d",
+                "data": {
+                    "dev_class": "switching",
+                    "model": "Switchgroup",
+                    "name": "Schakel",
+                    "members": [
+                        "059e4d03c7a34d278add5c7a4a781d19",
+                        "cfe95cf3de1948c0b8955125bf754614",
+                    ],
+                    "switches": {"relay": True},
+                },
+            },
         ]
 
         self.smile_setup = "stretch_v31"
@@ -2801,287 +2897,321 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_stretch_v23(self):
         """Test erroneous domain_objects file from user."""
         testdata = [
-            {"dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-            "data": {
-                "dev_class": "gateway",
-                "firmware": "2.3.12",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": "01:23:45:67:89:AB",
-                "model": "Stretch",
-                "name": "Stretch",
-                "vendor": "Plugwise B.V.",
-                "zigbee_mac_address": "ABCD012345670101",
-            }},
-            {"dev_id": "09c8ce93d7064fa6a233c0e4c2449bfe",
-            "data": {
-                "dev_class": "lamp",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "kerstboom buiten 043B016",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A01",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            {
+                "dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "2.3.12",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "mac_address": "01:23:45:67:89:AB",
+                    "model": "Stretch",
+                    "name": "Stretch",
+                    "vendor": "Plugwise B.V.",
+                    "zigbee_mac_address": "ABCD012345670101",
                 },
-                "switches": {"relay": False, "lock": False},
-            }},
-            {"dev_id": "33a1c784a9ff4c2d8766a0212714be09",
-            "data": {
-                "dev_class": "lighting",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "6539-0701-4026",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Barverlichting",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A13",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "09c8ce93d7064fa6a233c0e4c2449bfe",
+                "data": {
+                    "dev_class": "lamp",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "kerstboom buiten 043B016",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A01",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": False, "lock": False},
                 },
-                "switches": {"relay": False, "lock": False},
-            }},
-            {"dev_id": "199fd4b2caa44197aaf5b3128f6464ed",
-            "data": {
-                "dev_class": "airconditioner",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "6539-0701-4026",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Airco 25F69E3",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A10",
-                "sensors": {
-                    "electricity_consumed": 2.06,
-                    "electricity_consumed_interval": 1.62,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "33a1c784a9ff4c2d8766a0212714be09",
+                "data": {
+                    "dev_class": "lighting",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "6539-0701-4026",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Barverlichting",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A13",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": False, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "713427748874454ca1eb4488d7919cf2",
-            "data": {
-                "dev_class": "freezer",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Leeg 043220D",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A12",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "199fd4b2caa44197aaf5b3128f6464ed",
+                "data": {
+                    "dev_class": "airconditioner",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "6539-0701-4026",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Airco 25F69E3",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A10",
+                    "sensors": {
+                        "electricity_consumed": 2.06,
+                        "electricity_consumed_interval": 1.62,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": False, "lock": False},
-            }},
-            {"dev_id": "fd1b74f59e234a9dae4e23b2b5cf07ed",
-            "data": {
-                "dev_class": "dryer",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Wasdroger 043AECA",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A04",
-                "sensors": {
-                    "electricity_consumed": 1.31,
-                    "electricity_consumed_interval": 0.21,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "713427748874454ca1eb4488d7919cf2",
+                "data": {
+                    "dev_class": "freezer",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Leeg 043220D",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A12",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": False, "lock": False},
                 },
-                "switches": {"relay": True, "lock": True},
-            }},
-            {"dev_id": "c71f1cb2100b42ca942f056dcb7eb01f",
-            "data": {
-                "dev_class": "tv",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "6539-0701-4026",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Tv hoek 25F6790",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A11",
-                "sensors": {
-                    "electricity_consumed": 33.3,
-                    "electricity_consumed_interval": 4.93,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "fd1b74f59e234a9dae4e23b2b5cf07ed",
+                "data": {
+                    "dev_class": "dryer",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Wasdroger 043AECA",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A04",
+                    "sensors": {
+                        "electricity_consumed": 1.31,
+                        "electricity_consumed_interval": 0.21,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "2cc9a0fe70ef4441a9e4f55dfd64b776",
-            "data": {
-                "dev_class": "lamp",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "6539-0701-4026",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Lamp TV 025F698F",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A15",
-                "sensors": {
-                    "electricity_consumed": 4.0,
-                    "electricity_consumed_interval": 0.58,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "c71f1cb2100b42ca942f056dcb7eb01f",
+                "data": {
+                    "dev_class": "tv",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "6539-0701-4026",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Tv hoek 25F6790",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A11",
+                    "sensors": {
+                        "electricity_consumed": 33.3,
+                        "electricity_consumed_interval": 4.93,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "6518f3f72a82486c97b91e26f2e9bd1d",
-            "data": {
-                "dev_class": "charger",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "6539-0701-4026",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Bed 025F6768",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A14",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "2cc9a0fe70ef4441a9e4f55dfd64b776",
+                "data": {
+                    "dev_class": "lamp",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "6539-0701-4026",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Lamp TV 025F698F",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A15",
+                    "sensors": {
+                        "electricity_consumed": 4.0,
+                        "electricity_consumed_interval": 0.58,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "828f6ce1e36744689baacdd6ddb1d12c",
-            "data": {
-                "dev_class": "washingmachine",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Wasmachine 043AEC7",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A02",
-                "sensors": {
-                    "electricity_consumed": 3.5,
-                    "electricity_consumed_interval": 0.5,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "6518f3f72a82486c97b91e26f2e9bd1d",
+                "data": {
+                    "dev_class": "charger",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "6539-0701-4026",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Bed 025F6768",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A14",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True, "lock": True},
-            }},
-            {"dev_id": "71e3e65ffc5a41518b19460c6e8ee34f",
-            "data": {
-                "dev_class": "tv",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Leeg 043AEC6",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A08",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "828f6ce1e36744689baacdd6ddb1d12c",
+                "data": {
+                    "dev_class": "washingmachine",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Wasmachine 043AEC7",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A02",
+                    "sensors": {
+                        "electricity_consumed": 3.5,
+                        "electricity_consumed_interval": 0.5,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": True},
                 },
-                "switches": {"relay": False, "lock": False},
-            }},
-            {"dev_id": "305452ce97c243c0a7b4ab2a4ebfe6e3",
-            "data": {
-                "dev_class": "lamp",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "6539-0701-4026",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Lamp piano 025F6819",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A05",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "71e3e65ffc5a41518b19460c6e8ee34f",
+                "data": {
+                    "dev_class": "tv",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Leeg 043AEC6",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A08",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": False, "lock": False},
                 },
-                "switches": {"relay": False, "lock": False},
-            }},
-            {"dev_id": "bc0adbebc50d428d9444a5d805c89da9",
-            "data": {
-                "dev_class": "watercooker",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Waterkoker 043AF7F",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A07",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "305452ce97c243c0a7b4ab2a4ebfe6e3",
+                "data": {
+                    "dev_class": "lamp",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "6539-0701-4026",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Lamp piano 025F6819",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A05",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": False, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "407aa1c1099d463c9137a3a9eda787fd",
-            "data": {
-                "dev_class": "zz_misc",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "0043B013",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A09",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "bc0adbebc50d428d9444a5d805c89da9",
+                "data": {
+                    "dev_class": "watercooker",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Waterkoker 043AF7F",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A07",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": False, "lock": False},
-            }},
-            {"dev_id": "2587a7fcdd7e482dab03fda256076b4b",
-            "data": {
-                "dev_class": "zz_misc",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "0000-0440-0107",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "00469CA1",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A16",
-                "sensors": {
-                    "electricity_consumed": 0.0,
-                    "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
+            },
+            {
+                "dev_id": "407aa1c1099d463c9137a3a9eda787fd",
+                "data": {
+                    "dev_class": "zz_misc",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "0043B013",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A09",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": False, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "a28e6f5afc0e4fc68498c1f03e82a052",
-            "data": {
-                "dev_class": "lamp",
-                "firmware": "2011-06-27T10:52:18+02:00",
-                "hardware": "6539-0701-4026",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Circle type F",
-                "name": "Lamp bank 25F67F8",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A03",
-                "sensors": {
-                    "electricity_consumed": 4.19,
-                    "electricity_consumed_interval": 0.62,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
+            },
+            {
+                "dev_id": "2587a7fcdd7e482dab03fda256076b4b",
+                "data": {
+                    "dev_class": "zz_misc",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "0000-0440-0107",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "00469CA1",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A16",
+                    "sensors": {
+                        "electricity_consumed": 0.0,
+                        "electricity_consumed_interval": 0.0,
+                        "electricity_produced": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
                 },
-                "switches": {"relay": True, "lock": False},
-            }},
-            {"dev_id": "f7b145c8492f4dd7a4de760456fdef3e",
-            "data": {
-                "dev_class": "switching",
-                "model": "Switchgroup",
-                "name": "Test",
-                "members": ["407aa1c1099d463c9137a3a9eda787fd"],
-                "switches": {"relay": False},
-            }},
+            },
+            {
+                "dev_id": "a28e6f5afc0e4fc68498c1f03e82a052",
+                "data": {
+                    "dev_class": "lamp",
+                    "firmware": "2011-06-27T10:52:18+02:00",
+                    "hardware": "6539-0701-4026",
+                    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                    "model": "Circle type F",
+                    "name": "Lamp bank 25F67F8",
+                    "vendor": "Plugwise",
+                    "zigbee_mac_address": "ABCD012345670A03",
+                    "sensors": {
+                        "electricity_consumed": 4.19,
+                        "electricity_consumed_interval": 0.62,
+                        "electricity_produced": 0.0,
+                        "electricity_produced_interval": 0.0,
+                    },
+                    "switches": {"relay": True, "lock": False},
+                },
+            },
+            {
+                "dev_id": "f7b145c8492f4dd7a4de760456fdef3e",
+                "data": {
+                    "dev_class": "switching",
+                    "model": "Switchgroup",
+                    "name": "Test",
+                    "members": ["407aa1c1099d463c9137a3a9eda787fd"],
+                    "switches": {"relay": False},
+                },
+            },
         ]
 
         self.smile_setup = "stretch_v23"
@@ -3120,16 +3250,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = [
             # 76BF93
-            {"dev_id": "8b8d14b242e24cd789743c828b9a2ea9",
-            "data": {
-                "sensors": {"electricity_consumed": 1.69},
-                "switches": {"lock": False, "relay": True},
-            }},
+            {
+                "dev_id": "8b8d14b242e24cd789743c828b9a2ea9",
+                "data": {
+                    "sensors": {"electricity_consumed": 1.69},
+                    "switches": {"lock": False, "relay": True},
+                },
+            },
             # 25F66AD
-            {"dev_id": "d0122ac66eba47b99d8e5fbd1e2f5932",
-            "data": {
-                "sensors": {"electricity_consumed_interval": 2.21}
-            }},
+            {
+                "dev_id": "d0122ac66eba47b99d8e5fbd1e2f5932",
+                "data": {"sensors": {"electricity_consumed_interval": 2.21}},
+            },
         ]
 
         self.smile_setup = "stretch_v27_no_domain"
@@ -3160,31 +3292,33 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test a P1 firmware 4 setup."""
         testdata = [
             # Gateway / P1 itself
-            {"dev_id": "ba4de7613517478da82dd9b6abea36af",
-            "data": {
-                "dev_class": "gateway",
-                "firmware": "4.1.1",
-                "location": "a455b61e52394b2db5081ce025a430f3",
-                "model": "P1",
-                "name": "P1",
-                "vendor": "Plugwise B.V.",
-                "sensors": {
-                    "net_electricity_point": 548,
-                    "electricity_consumed_peak_point": 548,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 20983.453,
-                    "electricity_consumed_peak_cumulative": 9067.554,
-                    "electricity_consumed_off_peak_cumulative": 11915.899,
-                    "electricity_consumed_peak_interval": 335,
-                    "electricity_consumed_off_peak_interval": 0,
-                    "electricity_produced_peak_point": 0,
-                    "electricity_produced_off_peak_point": 0,
-                    "electricity_produced_peak_cumulative": 0.0,
-                    "electricity_produced_off_peak_cumulative": 0.0,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
+            {
+                "dev_id": "ba4de7613517478da82dd9b6abea36af",
+                "data": {
+                    "dev_class": "gateway",
+                    "firmware": "4.1.1",
+                    "location": "a455b61e52394b2db5081ce025a430f3",
+                    "model": "P1",
+                    "name": "P1",
+                    "vendor": "Plugwise B.V.",
+                    "sensors": {
+                        "net_electricity_point": 548,
+                        "electricity_consumed_peak_point": 548,
+                        "electricity_consumed_off_peak_point": 0,
+                        "net_electricity_cumulative": 20983.453,
+                        "electricity_consumed_peak_cumulative": 9067.554,
+                        "electricity_consumed_off_peak_cumulative": 11915.899,
+                        "electricity_consumed_peak_interval": 335,
+                        "electricity_consumed_off_peak_interval": 0,
+                        "electricity_produced_peak_point": 0,
+                        "electricity_produced_off_peak_point": 0,
+                        "electricity_produced_peak_cumulative": 0.0,
+                        "electricity_produced_off_peak_cumulative": 0.0,
+                        "electricity_produced_peak_interval": 0,
+                        "electricity_produced_off_peak_interval": 0,
+                    },
                 },
-            }}
+            }
         ]
 
         self.smile_setup = "p1v4"
