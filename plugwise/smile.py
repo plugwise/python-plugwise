@@ -202,7 +202,7 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         for item in self._appl_data:
-            if item["appl__id"] == dev_id:
+            if item["appl_id"] == dev_id:
                 details = item["appl_data"]
                 break
 
