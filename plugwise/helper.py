@@ -923,6 +923,7 @@ class SmileHelper:
                     t_function.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
+        LOGGER.debug("APPL_MEAS %s", data)
         return data
 
     def _get_appliance_data(self, d_id: str) -> dict[str, Any]:
@@ -936,6 +937,9 @@ class SmileHelper:
             return data
 
         measurements = DEVICE_MEASUREMENTS
+        LOGGER.debug(
+            "HOI OpenT = %s, ONOFF = %s", self._opentherm_device, self._on_off_device
+        )
         if self._opentherm_device or self._on_off_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
