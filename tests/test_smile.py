@@ -1134,7 +1134,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_v4_no_tag(self):
         """Test an Anna firmware 4 setup without a boiler - no presets."""
-        testdata = {
+        testdata = [
             # Anna
             {
                 "dev_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
@@ -1142,7 +1142,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "active_preset": "home",
                 },
             }
-        }
+        ]
         self.smile_setup = "anna_v4_no_tag"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
@@ -1694,52 +1694,58 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
-        testdata = {
-            "90986d591dcd426cae3ec3e8111ff730": {
+        testdata = [
+            {"dev_id": "90986d591dcd426cae3ec3e8111ff730".
+            "data": {
                 "binary_sensors": {"heating_state": False},
-            },
+            }},
             # Lisa WK
-            "b59bcebaf94b499ea7d46e4a66fb62d8": {
+            {"dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
+            "data": {
                 "sensors": {
                     "setpoint": 21.5,
                     "temperature": 21.1,
                     "battery": 34,
                 }
-            },
+            }},
             # Floor WK
-            "b310b72a0e354bfab43089919b9a88bf": {
+            {"dev_id": "b310b72a0e354bfab43089919b9a88bf",
+            "data": {
                 "sensors": {
                     "setpoint": 21.5,
                     "temperature": 26.2,
                     "valve_position": 0,
                 }
-            },
+            }},
             # CV pomp
-            "78d1126fc4c743db81b61c20e88342a7": {
+            {"dev_id": "78d1126fc4c743db81b61c20e88342a7": {
                 "sensors": {"electricity_consumed": 35.8},
                 "switches": {"relay": True},
             },
             # Lisa Bios
-            "df4a4a8169904cdb9c03d61a21f42140": {
+            {"dev_id": "df4a4a8169904cdb9c03d61a21f42140",
+            "data": {
                 "sensors": {
                     "setpoint": 13.0,
                     "temperature": 16.5,
                     "battery": 67,
                 }
-            },
+            }},
             # Adam
-            "fe799307f1624099878210aa0b9f1475": {
+            {"dev_id": "fe799307f1624099878210aa0b9f1475",
+            "data": {
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.69},
                 "mac_address": "012345670001",
                 "zigbee_mac_address": "ABCD012345670101",
-            },
+            }},
             # Modem
-            "675416a629f343c495449970e2ca37b5": {
+            {"dev_id": "675416a629f343c495449970e2ca37b5",
+            "data": {
                 "sensors": {"electricity_consumed": 12.2},
                 "switches": {"relay": True},
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "adam_zone_per_device"
         server, smile, client = await self.connect_wrapper()
@@ -1799,8 +1805,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_multiple_devices_per_zone(self):
         """Test a broad setup of Adam with multiple devices per zone setup."""
-        testdata = {
-            "df4a4a8169904cdb9c03d61a21f42140": {
+        testdata = [
+            {"dev_id": "df4a4a8169904cdb9c03d61a21f42140",
+            "data": {
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-27T02:00:00+02:00",
                 "location": "12493538af164a409c6a1c79e38afe1c",
@@ -1828,8 +1835,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Badkamer Schema",
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
-            },
-            "b310b72a0e354bfab43089919b9a88bf": {
+            }},
+            {"dev_id": "b310b72a0e354bfab43089919b9a88bf",
+            "data": {
                 "dev_class": "thermo_sensor",
                 "firmware": "2019-03-27T01:00:00+01:00",
                 "location": "c50f167537524366a5af7aa3942feb1e",
@@ -1842,8 +1850,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": 3.5,
                     "valve_position": 100,
                 },
-            },
-            "a2c3583e0a6349358998b760cea82d2a": {
+            }},
+            {"dev_id": "a2c3583e0a6349358998b760cea82d2a",
+            "data": {
                 "dev_class": "thermo_sensor",
                 "firmware": "2019-03-27T01:00:00+01:00",
                 "location": "12493538af164a409c6a1c79e38afe1c",
@@ -1857,8 +1866,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": -0.2,
                     "valve_position": 0.0,
                 },
-            },
-            "b59bcebaf94b499ea7d46e4a66fb62d8": {
+            }},
+            {"dev_id": "b59bcebaf94b499ea7d46e4a66fb62d8",
+            "data": {
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-08-02T02:00:00+02:00",
                 "location": "c50f167537524366a5af7aa3942feb1e",
@@ -1886,8 +1896,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "GF7  Woonkamer",
                 "mode": "auto",
                 "sensors": {"temperature": 20.9, "setpoint": 21.5, "battery": 34},
-            },
-            "fe799307f1624099878210aa0b9f1475": {
+            }},
+            {"dev_id": "fe799307f1624099878210aa0b9f1475",
+            "data": {
                 "dev_class": "gateway",
                 "firmware": "3.0.15",
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
@@ -1896,8 +1907,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.81},
-            },
-            "d3da73bde12a47d5a6b8f9dad971f2ec": {
+            }},
+            {"dev_id": "d3da73bde12a47d5a6b8f9dad971f2ec",
+            "data": {
                 "dev_class": "thermo_sensor",
                 "firmware": "2019-03-27T01:00:00+01:00",
                 "location": "82fa13f017d240daa0d0ea1775420f24",
@@ -1911,8 +1923,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
                 },
-            },
-            "21f2b542c49845e6bb416884c55778d6": {
+            }},
+            {"dev_id": "21f2b542c49845e6bb416884c55778d6",
+            "data": {
                 "dev_class": "game_console",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
@@ -1926,8 +1939,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "78d1126fc4c743db81b61c20e88342a7": {
+            }},
+            {"dev_id": "78d1126fc4c743db81b61c20e88342a7",
+            "data": {
                 "dev_class": "central_heating_pump",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "c50f167537524366a5af7aa3942feb1e",
@@ -1941,8 +1955,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True},
-            },
-            "90986d591dcd426cae3ec3e8111ff730": {
+            }},
+            {"dev_id": "90986d591dcd426cae3ec3e8111ff730",
+            "data": {
                 "dev_class": "heater_central",
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
                 "model": "Unknown",
@@ -1953,8 +1968,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "intended_boiler_temperature": 70.0,
                     "modulation_level": 1,
                 },
-            },
-            "cd0ddb54ef694e11ac18ed1cbce5dbbd": {
+            }},
+            {"dev_id": "cd0ddb54ef694e11ac18ed1cbce5dbbd",
+            "data": {
                 "dev_class": "vcr",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
@@ -1969,8 +1985,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "switches": {"relay": True, "lock": True},
                 "zigbee_mac_address": "ABCD012345670A14",
-            },
-            "4a810418d5394b3f82727340b91ba740": {
+            }},
+            {"dev_id": "4a810418d5394b3f82727340b91ba740",
+            "data": {
                 "dev_class": "router",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
@@ -1984,8 +2001,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-            },
-            "02cf28bfec924855854c544690a609ef": {
+            }},
+            {"dev_id": "02cf28bfec924855854c544690a609ef",
+            "data": {
                 "dev_class": "vcr",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
@@ -1999,8 +2017,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-            },
-            "a28f588dc4a049a483fd03a30361ad3a": {
+            }},
+            {"dev_id": "a28f588dc4a049a483fd03a30361ad3a", 
+            "data": {
                 "dev_class": "settop",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
@@ -2014,8 +2033,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-            },
-            "6a3bf693d05e48e0b460c815a4fdd09d": {
+            }},
+            {"dev_id": "6a3bf693d05e48e0b460c815a4fdd09d",
+            "data": {
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-27T02:00:00+02:00",
                 "location": "82fa13f017d240daa0d0ea1775420f24",
@@ -2043,8 +2063,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "CV Jessie",
                 "mode": "auto",
                 "sensors": {"temperature": 17.2, "setpoint": 15.0, "battery": 37},
-            },
-            "680423ff840043738f42cc7f1ff97a36": {
+            }},
+            {"dev_id": "680423ff840043738f42cc7f1ff97a36",
+            "data": {
                 "dev_class": "thermo_sensor",
                 "firmware": "2019-03-27T01:00:00+01:00",
                 "location": "08963fec7c53423ca5680aa4cb502c63",
@@ -2058,8 +2079,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": -0.4,
                     "valve_position": 0.0,
                 },
-            },
-            "f1fee6043d3642a9b0a65297455f008e": {
+            }},
+            {"dev_id": "f1fee6043d3642a9b0a65297455f008e",
+            "data": {
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-27T02:00:00+02:00",
                 "location": "08963fec7c53423ca5680aa4cb502c63",
@@ -2087,8 +2109,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Badkamer Schema",
                 "mode": "auto",
                 "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
-            },
-            "675416a629f343c495449970e2ca37b5": {
+            }},
+            {"dev_id": "675416a629f343c495449970e2ca37b5",
+            "data": {
                 "dev_class": "router",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "cd143c07248f491493cea0533bc3d669",
@@ -2102,8 +2125,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-            },
-            "e7693eb9582644e5b865dba8d4447cf1": {
+            }},
+            {"dev_id": "e7693eb9582644e5b865dba8d4447cf1",
+            "data": {
                 "dev_class": "thermostatic_radiator_valve",
                 "firmware": "2019-03-27T01:00:00+01:00",
                 "location": "446ac08dd04d4eff8ac57489757b7314",
@@ -2137,8 +2161,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature_difference": 0.0,
                     "valve_position": 0.0,
                 },
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "adam_multiple_devices_per_zone"
         server, smile, client = await self.connect_wrapper()
@@ -2188,16 +2212,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_adam_plus_jip(self):
         """Test Adam with Jip."""
-        testdata = {
+        testdata = [
             # Woonkamer - Tom
-            "833de10f269c4deab58fb9df69901b4e": {
+            {"dev_id": "833de10f269c4deab58fb9df69901b4e",
+            "data": {
                 "sensors": {"valve_position": 100},
-            },
+            }},
             # Woonkamer - Jip
-            "f61f1a2535f54f52ad006a3d18e459ca": {
+            {"dev_id": "f61f1a2535f54f52ad006a3d18e459ca",
+            "data": {
                 "sensors": {"humidity": 56.2},
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "adam_jip"
         server, smile, client = await self.connect_wrapper()
@@ -2210,9 +2236,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v3(self):
         """Test a P1 firmware 3 with only electricity setup."""
-        testdata = {
+        testdata = [
             # Gateway / P1 itself
-            "ba4de7613517478da82dd9b6abea36af": {
+            {"dev_id": "ba4de7613517478da82dd9b6abea36af",
+            "data": {
                 "dev_class": "gateway",
                 "firmware": "3.3.6",
                 "location": "a455b61e52394b2db5081ce025a430f3",
@@ -2235,8 +2262,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_off_peak_interval": 0,
                 },
                 "mac_address": "012345670001",
-            }
-        }
+            }}
+        ]
 
         self.smile_setup = "p1v3"
         server, smile, client = await self.connect_wrapper()
@@ -2258,17 +2285,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v3solarfake(self):
         """Test a P1 firmware 3 with manually added solar setup."""
-        testdata = {
+        testdata = [
             # Gateway / P1 itself
-            "ba4de7613517478da82dd9b6abea36af": {
+            {"dev_id": "ba4de7613517478da82dd9b6abea36af",
+            "data": {
                 "sensors": {
                     "electricity_consumed_peak_point": 636.0,
                     "electricity_produced_peak_cumulative": 20.0,
                     "electricity_consumed_off_peak_cumulative": 10263.159,
                     "net_electricity_point": 636,
                 }
-            }
-        }
+            }}
+        ]
 
         self.smile_setup = "p1v3solarfake"
         server, smile, client = await self.connect_wrapper()
@@ -2291,9 +2319,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v3_full_option(self):
         """Test a P1 firmware 3 full option (gas and solar) setup."""
-        testdata = {
+        testdata = [
             # Gateway / P1 itself
-            "e950c7d5e1ee407a858e2a8b5016c8b3": {
+            {"dev_id": "e950c7d5e1ee407a858e2a8b5016c8b3",
+            "data": {
                 "dev_class": "gateway",
                 "firmware": "3.3.9",
                 "location": "cd3e822288064775a7c4afcdd70bdda2",
@@ -2318,8 +2347,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "gas_consumed_cumulative": 584.85,
                     "gas_consumed_interval": 0.0,
                 },
-            }
-        }
+            }}
+        ]
 
         self.smile_setup = "p1v3_full_option"
         server, smile, client = await self.connect_wrapper()
@@ -2342,9 +2371,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump(self):
         """Test a Anna with Elga setup in idle mode."""
-        testdata = {
+        testdata = [
             # Anna
-            "3cb70739631c4d17a86b8b12e8a5161b": {
+            {"dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
+            "data": {
                 "selected_schedule": "None",
                 "active_preset": "home",
                 "mode": "heat",
@@ -2353,9 +2383,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4,
                 },
-            },
+            }},
             # Heater central
-            "1cbf783bb11e4a7c8a6843dee3a86927": {
+            {"dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+            "data": {
                 "binary_sensors": {
                     "cooling_state": False,
                     "dhw_state": False,
@@ -2366,12 +2397,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "water_temperature": 29.1,
                     "water_pressure": 1.57,
                 },
-            },
+            }},
             # Gateway
-            "015ae9ea3f964e668e490fa39da3870b": {
+            {"dev_id": "015ae9ea3f964e668e490fa39da3870b",
+            "data": {
                 "sensors": {"outdoor_temperature": 20.2}
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "anna_heatpump"
         server, smile, client = await self.connect_wrapper()
@@ -2401,9 +2433,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         from heating to cooliing due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
         """
-        testdata = {
+        testdata = [
             # Anna
-            "3cb70739631c4d17a86b8b12e8a5161b": {
+            {"dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
+            "data": {
                 "selected_schedule": "None",
                 "active_preset": "home",
                 "mode": "cool",
@@ -2412,9 +2445,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 6,
                 },
-            },
+            }},
             # Heater central
-            "1cbf783bb11e4a7c8a6843dee3a86927": {
+            {"dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+            "data": {
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -2425,12 +2459,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "water_temperature": 24.7,
                     "water_pressure": 1.61,
                 },
-            },
+            }},
             # Gateway
-            "015ae9ea3f964e668e490fa39da3870b": {
+            {"dev_id": "015ae9ea3f964e668e490fa39da3870b",
+            "data": {
                 "sensors": {"outdoor_temperature": 22.0}
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "anna_heatpump_cooling"
         server, smile, client = await self.connect_wrapper()
@@ -2458,9 +2493,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         from cooling to heating due to the outdoor temperature dropping below the
         cooling_deactivation_threshold.
         """
-        testdata = {
+        testdata = [
             # Anna
-            "3cb70739631c4d17a86b8b12e8a5161b": {
+            {"dev_id": "3cb70739631c4d17a86b8b12e8a5161b",
+            "data": {
                 "selected_schedule": "None",
                 "active_preset": "home",
                 "mode": "heat",
@@ -2469,9 +2505,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 6,
                 },
-            },
+            }},
             # Heater central
-            "1cbf783bb11e4a7c8a6843dee3a86927": {
+            {"dev_id": "1cbf783bb11e4a7c8a6843dee3a86927",
+            "data": {
                 "binary_sensors": {
                     "cooling_state": False,
                     "dhw_state": False,
@@ -2482,12 +2519,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "water_temperature": 24.7,
                     "water_pressure": 1.61,
                 },
-            },
+            }},
             # Gateway
-            "015ae9ea3f964e668e490fa39da3870b": {
+            {"dev_id": "015ae9ea3f964e668e490fa39da3870b",
+            "data": {
                 "sensors": {"outdoor_temperature": 22.0}
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "anna_heatpump_cooling_to_off"
         server, smile, client = await self.connect_wrapper()
@@ -2500,9 +2538,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
         """Test a Anna with Elga setup in cooling mode (with missing outdoor temperature - solved)."""
-        testdata = {
+        testdata = [
             # Anna
-            "ebd90df1ab334565b5895f37590ccff4": {
+            {"dev_id": "ebd90df1ab334565b5895f37590ccff4",
+            "data": {
                 "dev_class": "thermostat",
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
@@ -2534,9 +2573,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3,
                 },
-            },
+            }},
             # Heater central
-            "573c152e7d4f4720878222bd75638f5b": {
+            {"dev_id": "573c152e7d4f4720878222bd75638f5b",
+            "data": {
                 "dev_class": "heater_central",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
                 "model": "Generic heater",
@@ -2559,9 +2599,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "water_pressure": 0.5,
                 },
                 "switches": {"dhw_cm_switch": True},
-            },
+            }},
             # Gateway
-            "fb49af122f6e4b0f91267e1cf7666d6f": {
+            {"dev_id": "fb49af122f6e4b0f91267e1cf7666d6f",
+            "data": {
                 "dev_class": "gateway",
                 "firmware": "4.2.1",
                 "hardware": "AME Smile 2.0 board",
@@ -2572,8 +2613,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 13.0},
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "anna_elga_2"
         server, smile, client = await self.connect_wrapper()
@@ -2597,12 +2638,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_copy_with_error_domain_added(self):
         """Test erroneous domain_objects file from user."""
-        testdata = {
+        testdata = [
             # Central
-            "2743216f626f43948deec1f7ab3b3d70": {
+            {"dev_id": "2743216f626f43948deec1f7ab3b3d70",
+            "data": {
                 "binary_sensors": {"heating_state": False},
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "adam_plus_anna_copy_with_error_domain_added"
         server, smile, client = await self.connect_wrapper()
@@ -2626,8 +2668,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_stretch_v31(self):
         """Test erroneous domain_objects file from user."""
-        testdata = {
-            "0000aaaa0000aaaa0000aaaa0000aa00": {
+        testdata = [
+            {"dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+            "data": {
                 "dev_class": "gateway",
                 "firmware": "3.1.11",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2636,25 +2679,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
                 "zigbee_mac_address": "ABCD012345670101",
-            },
-            "e1c884e7dede431dadee09506ec4f859": {
-                "class": "refrigerator",
-                "fw": "2011-06-27T10:47:37+02:00",
-                "hw": "6539-0700-7330",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
-                "model": "Circle+ type F",
-                "name": "Koelkast (92C4A)",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "0123456789AB",
-                "sensors": {
-                    "electricity_consumed": 50.5,
-                    "electricity_consumed_interval": 0.08,
-                    "electricity_produced": 0.0,
-                },
-                "switches": {"relay": True, "lock": False},
-            },
-            "5871317346d045bc9f6b987ef25ee638": {
+            }},
+            {"dev_id": "5871317346d045bc9f6b987ef25ee638",
+            "data": {
                 "dev_class": "water_heater_vessel",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2668,8 +2695,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "aac7b735042c4832ac9ff33aae4f453b": {
+            }},
+            {"dev_id": "aac7b735042c4832ac9ff33aae4f453b",
+            "data": {
                 "dev_class": "dishwasher",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2683,8 +2711,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "cfe95cf3de1948c0b8955125bf754614": {
+            }},
+            {"dev_id": "cfe95cf3de1948c0b8955125bf754614",
+            "data": {
                 "dev_class": "dryer",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2698,8 +2727,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "059e4d03c7a34d278add5c7a4a781d19": {
+            }},
+            {"dev_id": "059e4d03c7a34d278add5c7a4a781d19",
+            "data": {
                 "dev_class": "washingmachine",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2713,15 +2743,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "71e1944f2a944b26ad73323e399efef0": {
+            }},
+            {"dev_id": "71e1944f2a944b26ad73323e399efef0",
+            "data": {
                 "dev_class": "switching",
                 "model": "Switchgroup",
                 "name": "Test",
                 "members": ["5ca521ac179d468e91d772eeeb8a2117"],
                 "switches": {"relay": True},
-            },
-            "d950b314e9d8499f968e6db8d82ef78c": {
+            }},
+            {"dev_id": "d950b314e9d8499f968e6db8d82ef78c",
+            "data": {
                 "dev_class": "report",
                 "model": "Switchgroup",
                 "name": "Stroomvreters",
@@ -2733,8 +2765,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "e1c884e7dede431dadee09506ec4f859",
                 ],
                 "switches": {"relay": True},
-            },
-            "d03738edfcc947f7b8f4573571d90d2d": {
+            }},
+            {"dev_id": "d03738edfcc947f7b8f4573571d90d2d",
+            "data": {
                 "dev_class": "switching",
                 "model": "Switchgroup",
                 "name": "Schakel",
@@ -2743,8 +2776,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cfe95cf3de1948c0b8955125bf754614",
                 ],
                 "switches": {"relay": True},
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "stretch_v31"
         server, smile, client = await self.connect_wrapper(stretch=True)
@@ -2766,8 +2799,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_stretch_v23(self):
         """Test erroneous domain_objects file from user."""
-        testdata = {
-            "0000aaaa0000aaaa0000aaaa0000aa00": {
+        testdata = [
+            {"dev_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+            "data": {
                 "dev_class": "gateway",
                 "firmware": "2.3.12",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -2776,26 +2810,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
                 "zigbee_mac_address": "ABCD012345670101",
-            },
-            "24b2ed37c8964c73897db6340a39c129": {
-                "class": "router",
-                "fw": "2011-06-27T10:47:37+02:00",
-                "hw": "6539-0700-7325",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
-                "model": "Circle+ type F",
-                "name": "MK Netwerk 1A4455E",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "0123456789AB",
-                "sensors": {
-                    "electricity_consumed": 4.63,
-                    "electricity_consumed_interval": 0.65,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": True},
-            },
-            "09c8ce93d7064fa6a233c0e4c2449bfe": {
+            }},
+            {"dev_id": "09c8ce93d7064fa6a233c0e4c2449bfe",
+            "data": {
                 "dev_class": "lamp",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -2810,8 +2827,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
-            },
-            "33a1c784a9ff4c2d8766a0212714be09": {
+            }},
+            {"dev_id": "33a1c784a9ff4c2d8766a0212714be09",
+            "data": {
                 "dev_class": "lighting",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
@@ -2827,8 +2845,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
-            },
-            "199fd4b2caa44197aaf5b3128f6464ed": {
+            }},
+            {"dev_id": "199fd4b2caa44197aaf5b3128f6464ed",
+            "data": {
                 "dev_class": "airconditioner",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
@@ -2844,8 +2863,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "713427748874454ca1eb4488d7919cf2": {
+            }},
+            {"dev_id": "713427748874454ca1eb4488d7919cf2",
+            "data": {
                 "dev_class": "freezer",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -2860,8 +2880,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
-            },
-            "fd1b74f59e234a9dae4e23b2b5cf07ed": {
+            }},
+            {"dev_id": "fd1b74f59e234a9dae4e23b2b5cf07ed",
+            "data": {
                 "dev_class": "dryer",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -2876,8 +2897,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-            },
-            "c71f1cb2100b42ca942f056dcb7eb01f": {
+            }},
+            {"dev_id": "c71f1cb2100b42ca942f056dcb7eb01f",
+            "data": {
                 "dev_class": "tv",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
@@ -2893,8 +2915,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "2cc9a0fe70ef4441a9e4f55dfd64b776": {
+            }},
+            {"dev_id": "2cc9a0fe70ef4441a9e4f55dfd64b776",
+            "data": {
                 "dev_class": "lamp",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
@@ -2910,8 +2933,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "6518f3f72a82486c97b91e26f2e9bd1d": {
+            }},
+            {"dev_id": "6518f3f72a82486c97b91e26f2e9bd1d",
+            "data": {
                 "dev_class": "charger",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
@@ -2927,8 +2951,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "828f6ce1e36744689baacdd6ddb1d12c": {
+            }},
+            {"dev_id": "828f6ce1e36744689baacdd6ddb1d12c",
+            "data": {
                 "dev_class": "washingmachine",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -2943,8 +2968,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": True},
-            },
-            "71e3e65ffc5a41518b19460c6e8ee34f": {
+            }},
+            {"dev_id": "71e3e65ffc5a41518b19460c6e8ee34f",
+            "data": {
                 "dev_class": "tv",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -2959,8 +2985,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
-            },
-            "305452ce97c243c0a7b4ab2a4ebfe6e3": {
+            }},
+            {"dev_id": "305452ce97c243c0a7b4ab2a4ebfe6e3",
+            "data": {
                 "dev_class": "lamp",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
@@ -2976,8 +3003,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
-            },
-            "bc0adbebc50d428d9444a5d805c89da9": {
+            }},
+            {"dev_id": "bc0adbebc50d428d9444a5d805c89da9",
+            "data": {
                 "dev_class": "watercooker",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -2992,8 +3020,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "407aa1c1099d463c9137a3a9eda787fd": {
+            }},
+            {"dev_id": "407aa1c1099d463c9137a3a9eda787fd",
+            "data": {
                 "dev_class": "zz_misc",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -3008,8 +3037,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
-            },
-            "2587a7fcdd7e482dab03fda256076b4b": {
+            }},
+            {"dev_id": "2587a7fcdd7e482dab03fda256076b4b",
+            "data": {
                 "dev_class": "zz_misc",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "0000-0440-0107",
@@ -3024,8 +3054,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "a28e6f5afc0e4fc68498c1f03e82a052": {
+            }},
+            {"dev_id": "a28e6f5afc0e4fc68498c1f03e82a052",
+            "data": {
                 "dev_class": "lamp",
                 "firmware": "2011-06-27T10:52:18+02:00",
                 "hardware": "6539-0701-4026",
@@ -3041,15 +3072,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": True, "lock": False},
-            },
-            "f7b145c8492f4dd7a4de760456fdef3e": {
+            }},
+            {"dev_id": "f7b145c8492f4dd7a4de760456fdef3e",
+            "data": {
                 "dev_class": "switching",
                 "model": "Switchgroup",
                 "name": "Test",
                 "members": ["407aa1c1099d463c9137a3a9eda787fd"],
                 "switches": {"relay": False},
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "stretch_v23"
         server, smile, client = await self.connect_wrapper(stretch=True)
@@ -3085,36 +3117,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_stretch_v27_no_domain(self):
         """Test erroneous domain_objects file from user."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
-        testdata = {
-            # Circle+
-            "9b9bfdb3c7ad4ca5817ccaa235f1e094": {
-                "class": "zz_misc",
-                "fw": "2011-06-27T10:47:37+02:00",
-                "hw": "6539-0700-7326",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "mac_address": None,
-                "model": "Circle+ type F",
-                "name": "25881A2",
-                "vendor": "Plugwise",
-                "zigbee_mac_address": "ABCD012345670A04",
-                "sensors": {
-                    "electricity_consumed": 13.3,
-                    "electricity_consumed_interval": 7.77,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
-                },
-                "switches": {"relay": True, "lock": True},
-            },
+        testdata = [
             # 76BF93
-            "8b8d14b242e24cd789743c828b9a2ea9": {
+            {"dev_id": "8b8d14b242e24cd789743c828b9a2ea9",
+            "data": {
                 "sensors": {"electricity_consumed": 1.69},
                 "switches": {"lock": False, "relay": True},
-            },
+            }},
             # 25F66AD
-            "d0122ac66eba47b99d8e5fbd1e2f5932": {
+            {"dev_id": "d0122ac66eba47b99d8e5fbd1e2f5932",
+            "data": {
                 "sensors": {"electricity_consumed_interval": 2.21}
-            },
-        }
+            }},
+        ]
 
         self.smile_setup = "stretch_v27_no_domain"
         server, smile, client = await self.connect_wrapper(stretch=True)
@@ -3142,9 +3157,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_p1v4(self):
         """Test a P1 firmware 4 setup."""
-        testdata = {
+        testdata = [
             # Gateway / P1 itself
-            "ba4de7613517478da82dd9b6abea36af": {
+            {"dev_id": "ba4de7613517478da82dd9b6abea36af",
+            "data": {
                 "dev_class": "gateway",
                 "firmware": "4.1.1",
                 "location": "a455b61e52394b2db5081ce025a430f3",
@@ -3167,8 +3183,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
                 },
-            }
-        }
+            }}
+        ]
 
         self.smile_setup = "p1v4"
         server, smile, client = await self.connect_wrapper()
