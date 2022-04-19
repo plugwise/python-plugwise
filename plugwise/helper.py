@@ -45,6 +45,7 @@ from .constants import (  # LocationDetails,
     SWITCHES,
     THERMOSTAT_CLASSES,
     ApplianceData,
+    ApplianceDetails,
     DetailsData,
     DeviceData,
     GatewayData,
@@ -967,7 +968,7 @@ class SmileHelper:
         thermo_matching: dict[str, int],
         loc_id: str,
         appliance_id: str,
-        appliance_details: ApplianceData,
+        appliance_details: ApplianceDetails,
     ) -> Any:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
@@ -1071,12 +1072,14 @@ class SmileHelper:
 
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl.update(
-                    dev_id=group_id,
-                    data={
-                        "dev_class": group_type,
-                        "model": "Switchgroup",
-                        "name": group_name,
-                        "members": members,
+                    {
+                        "dev_id": group_id,
+                        "data": {
+                            "dev_class": group_type,
+                            "model": "Switchgroup",
+                            "name": group_name,
+                            "members": members,
+                        },
                     },
                 )
 
