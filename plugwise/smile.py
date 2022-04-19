@@ -58,6 +58,8 @@ class SmileData(SmileHelper):
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
             data: DetailsData = self._get_device_data(device_id)
+            LOGGER.debug("DEVICE %s", device)
+            LOGGER.debug("DATA %s", data)
             self.gw_devices.append(
                 {
                     "dev_id": device_id,
