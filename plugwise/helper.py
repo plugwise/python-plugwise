@@ -70,7 +70,7 @@ from .util import (
 
 def update_helper(
     data: dict[str, Any],
-    devs: list[GatewayData],
+    devs: list[GatewayDevices],
     d_dict: dict[str, Any],
     d_id: str,
     e_type: str,
