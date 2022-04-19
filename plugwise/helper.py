@@ -747,7 +747,7 @@ class SmileHelper:
                 "zigbee_mac_address": appl.zigbee_mac,
                 "vendor": appl.v_name,
             }.items():
-                if value is not None:
+                if value is not None or key == "location":
                     temp_dict["data"].update({key: value})  # type: ignore[misc]
 
             self._appl_data.append(temp_dict)
