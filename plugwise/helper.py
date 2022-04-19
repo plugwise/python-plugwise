@@ -867,7 +867,6 @@ class SmileHelper:
     ) -> dict[str, Any]:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
-            LOGGER.debug("MEASUREMENT %s", measurement)
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
@@ -924,7 +923,6 @@ class SmileHelper:
                     t_function.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
                 )
 
-        LOGGER.debug("APPL_MEAS %s", data)
         return data
 
     def _get_appliance_data(self, d_id: str) -> dict[str, Any]:
@@ -938,9 +936,6 @@ class SmileHelper:
             return data
 
         measurements = DEVICE_MEASUREMENTS
-        LOGGER.debug(
-            "HOI OpenT = %s, ONOFF = %s", self._opentherm_device, self._on_off_device
-        )
         if self._opentherm_device or self._on_off_device:
             measurements = {
                 **DEVICE_MEASUREMENTS,
@@ -951,7 +946,6 @@ class SmileHelper:
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
-            LOGGER.debug("ApplMeas %s", data)
             data.update(self._get_lock_state(appliance))
 
         # Remove c_heating_state from the output

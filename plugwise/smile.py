@@ -51,7 +51,6 @@ class SmileData(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        LOGGER.debug("_appl_data: %s", self._appl_data)
         for item in self._appl_data:
             device_id = item["dev_id"]
             device = item["data"]
@@ -59,8 +58,6 @@ class SmileData(SmileHelper):
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
             data: DetailsData = self._get_device_data(device_id)
-            LOGGER.debug("DEVICE %s", device)
-            LOGGER.debug("DATA %s", data)
             self.gw_devices.append(
                 {
                     "dev_id": device_id,
@@ -210,7 +207,6 @@ class SmileData(SmileHelper):
                 break
 
         device_data = self._get_appliance_data(dev_id)
-        LOGGER.debug("DEVICE_DATA %s", device_data)
 
         # Generic
         if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
