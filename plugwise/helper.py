@@ -693,7 +693,6 @@ class SmileHelper:
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
-            temp_dict = ApplianceData({})
 
             appl.pwclass = appliance.find("type").text
             # Nothing useful in opentherm so skip it
@@ -733,8 +732,12 @@ class SmileHelper:
             ):
                 continue
 
+            temp_dict: ApplianceData = {
+                "dev_id": appl.pwclass,
+                "data": {"dev_class": appl.pwclass},
+            }
+
             for key, value in {
-                "dev_class": appl.pwclass,
                 "firmware": appl.fw,
                 "hardware": appl.hw,
                 "location": appl.location,
