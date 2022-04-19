@@ -628,8 +628,8 @@ class ApplianceDetails(TypedDict, total=False):
 class ApplianceData(TypedDict, total=False):
     """The Appliance Data class."""
 
-    dev_id: str
-    data: ApplianceDetails
+    appl_id: str
+    appl_data: ApplianceDetails
 
 
 class GatewayData(TypedDict, total=False):

@@ -636,8 +636,8 @@ class SmileHelper:
         if self._smile_legacy:
             self.gateway_id = self._home_location
             temp_dict: ApplianceData = {
-                "dev_id": self._home_location,
-                "data": {
+                "appl_id": self._home_location,
+                "appl_data": {
                     "dev_class": "gateway",
                     "firmware": self.smile_fw_version,
                     "location": self._home_location,
@@ -647,7 +647,7 @@ class SmileHelper:
                 temp_dict["data"].update({"mac_address": self.smile_mac_address})
 
             if self.smile_type == "power":
-                temp_dict["data"].update(
+                temp_dict["appl_data"].update(
                     {
                         "model": "P1",
                         "name": "P1",
@@ -659,7 +659,7 @@ class SmileHelper:
                 return
 
             if self.smile_type == "thermostat":
-                temp_dict["data"].update(
+                temp_dict["appl_data"].update(
                     {
                         "model": "Anna",
                         "name": "Anna",
@@ -668,7 +668,7 @@ class SmileHelper:
                 )
 
             if self.smile_type == "stretch":
-                temp_dict["data"].update(
+                temp_dict["appl_data"].update(
                     {
                         "model": "Stretch",
                         "name": "Stretch",
@@ -735,8 +735,8 @@ class SmileHelper:
                 continue
 
             temp_dict = {
-                "dev_id": appl.dev_id,
-                "data": {"dev_class": appl.pwclass},
+                "appl_id": appl.dev_id,
+                "appl_data": {"dev_class": appl.pwclass},
             }
 
             for key, value in {
@@ -765,7 +765,7 @@ class SmileHelper:
             location_id = item_1["loc_id"]
             location_details = item_1["data"]
             for item_2 in self._appl_data:
-                appliance_details = item_2["data"]
+                appliance_details = item_2["appl_data"]
                 if appliance_details["location"] == location_id:
                     matched_locations[location_id] = location_details
 
@@ -1019,8 +1019,8 @@ class SmileHelper:
                 )
 
             for item in self._appl_data:
-                appliance_id = item["dev_id"]
-                appliance_details = item["data"]
+                appliance_id = item["appl_id"]
+                appliance_details = item["appl_data"]
                 appl_class = self._rank_thermostat(
                     thermo_matching, loc_id, appliance_id, appliance_details
                 )
@@ -1072,8 +1072,8 @@ class SmileHelper:
             if group_type in SWITCH_GROUP_TYPES:
                 group_appl.update(
                     {
-                        "dev_id": group_id,
-                        "data": {
+                        "appl_id": group_id,
+                        "appl_data": {
                             "dev_class": group_type,
                             "model": "Switchgroup",
                             "name": group_name,

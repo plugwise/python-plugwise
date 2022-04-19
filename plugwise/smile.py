@@ -52,8 +52,8 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for item in self._appl_data:
-            device_id = item["dev_id"]
-            device = item["data"]
+            device_id = item["appl_id"]
+            device = item["appl_data"]
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
@@ -80,8 +80,8 @@ class SmileData(SmileHelper):
         self._scan_thermostats()
 
         for item in self._appl_data:
-            appliance = item["dev_id"]
-            details = item["data"]
+            appliance = item["appl_id"]
+            details = item["appl_data"]
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if (
                 details.get("location") is None
@@ -202,8 +202,8 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         for item in self._appl_data:
-            if item["dev_id"] == dev_id:
-                details = item["data"]
+            if item["appl__id"] == dev_id:
+                details = item["appl_data"]
                 break
 
         device_data = self._get_appliance_data(dev_id)
