@@ -45,6 +45,8 @@ from .constants import (  # LocationDetails,
     SWITCHES,
     THERMOSTAT_CLASSES,
     ApplianceData,
+    DetailsData,
+    DeviceData,
     GatewayData,
     GatewayDevices,
     LocationData,
@@ -944,6 +946,7 @@ class SmileHelper:
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
+            LOGGER.debug("ApplMeas %s", data)
             data.update(self._get_lock_state(appliance))
 
         # Remove c_heating_state from the output
