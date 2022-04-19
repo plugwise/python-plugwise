@@ -867,6 +867,7 @@ class SmileHelper:
     ) -> dict[str, Any]:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
+            LOGGER.debug("MEASUREMENT %s", measurement)
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
