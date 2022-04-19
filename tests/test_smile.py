@@ -1695,7 +1695,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_adam_zone_per_device(self):
         """Test a broad setup of Adam with a zone per device setup."""
         testdata = [
-            {"dev_id": "90986d591dcd426cae3ec3e8111ff730".
+            {"dev_id": "90986d591dcd426cae3ec3e8111ff730",
             "data": {
                 "binary_sensors": {"heating_state": False},
             }},
@@ -1718,10 +1718,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 }
             }},
             # CV pomp
-            {"dev_id": "78d1126fc4c743db81b61c20e88342a7": {
+            {"dev_id": "78d1126fc4c743db81b61c20e88342a7",
+            "data": {
                 "sensors": {"electricity_consumed": 35.8},
                 "switches": {"relay": True},
-            },
+            }},
             # Lisa Bios
             {"dev_id": "df4a4a8169904cdb9c03d61a21f42140",
             "data": {
