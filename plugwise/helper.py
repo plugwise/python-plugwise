@@ -735,7 +735,7 @@ class SmileHelper:
                 continue
 
             temp_dict: ApplianceData = {
-                "dev_id": appl.pwclass,
+                "dev_id": appl.dev_id,
                 "data": {"dev_class": appl.pwclass},
             }
 
