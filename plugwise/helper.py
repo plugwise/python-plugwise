@@ -47,7 +47,6 @@ from .constants import (  # LocationDetails,
     ApplianceData,
     ApplianceDetails,
     DetailsData,
-    DeviceData,
     GatewayData,
     GatewayDevice,
     LocationData,
@@ -1358,7 +1357,7 @@ class SmileHelper:
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
-    ) -> DeviceData:
+    ) -> ApplianceData:
         """Helper-function for smile.py: _all_device_data().
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
