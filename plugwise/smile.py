@@ -51,6 +51,7 @@ class SmileData(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
+        LOGGER.debug("_appl_data: %s", self._appl_data)
         for item in self._appl_data:
             device_id = item["dev_id"]
             device = item["data"]
