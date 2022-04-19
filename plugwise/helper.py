@@ -644,7 +644,7 @@ class SmileHelper:
                 },
             }
             if self.smile_mac_address is not None:
-                temp_dict["data"].update({"mac_address": self.smile_mac_address})
+                temp_dict["appl_data"].update({"mac_address": self.smile_mac_address})
 
             if self.smile_type == "power":
                 temp_dict["appl_data"].update(
