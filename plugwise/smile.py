@@ -209,6 +209,7 @@ class SmileData(SmileHelper):
                 break
 
         device_data = self._get_appliance_data(dev_id)
+        LOGGER("DEVICE_DATA %s", device_data)
 
         # Generic
         if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
