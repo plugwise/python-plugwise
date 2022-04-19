@@ -1136,8 +1136,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test an Anna firmware 4 setup without a boiler - no presets."""
         testdata = {
             # Anna
-            "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "active_preset": "home",
+            {
+                "dev_id": "01b85360fdd243d0aaad4d6ac2a5ba7e",
+                "data": {
+                    "active_preset": "home",
+                },
             }
         }
         self.smile_setup = "anna_v4_no_tag"
