@@ -1140,7 +1140,7 @@ class SmileHelper:
 
         return loc
 
-    def _power_data_from_location(self, loc_id: str) -> DetailsData:
+    def _power_data_from_location(self, loc_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID, from LOCATIONS.
         """
