@@ -864,8 +864,8 @@ class SmileHelper:
         return schedule_ids
 
     def _appliance_measurements(
-        self, appliance: etree, data: DetailsData, measurements: dict[str, Any]
-    ) -> DetailsData:
+        self, appliance: etree, data: DeviceData, measurements: dict[str, Any]
+    ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
@@ -926,12 +926,12 @@ class SmileHelper:
 
         return data
 
-    def _get_appliance_data(self, d_id: str) -> DetailsData:
+    def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: DetailsData = {}
+        data: DeviceData = {}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
