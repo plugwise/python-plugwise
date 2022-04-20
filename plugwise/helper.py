@@ -106,21 +106,23 @@ def check_model(name: str | None, v_name: str) -> str | None:
     return name
 
 
-def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
+def schedules_schedule_temp(
+    schedules: dict[str, dict[str, float]], name: str
+) -> float | None:
     """Helper-function for schedules().
     Obtain the schedule temperature of the schedule/schedule.
     """
     if name == NONE:
         return None  # pragma: no cover
 
-    schedule_list: list[list[Any]] = []
+    schedule_list: list[list[int | dt.time | float]] = []
     for period, temp in schedules[name].items():
-        tmp_list: list[Any] = []
+        tmp_list: list[int | dt.time | float] = []
         moment, dummy = period.split(",")
-        moment = moment.replace("[", "").split(" ")
-        day_nr = DAYS[moment[0]]
-        start_time = dt.datetime.strptime(moment[1], "%H:%M").time()
-        tmp_list.extend((day_nr, start_time, temp))
+        moment_cleaned = moment.replace("[", "").split(" ")
+        day_nr = DAYS[moment_cleaned[0]]
+        start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
+        tmp_list.extend([day_nr, start_time, temp])
         schedule_list.append(tmp_list)
 
     length = len(schedule_list)
