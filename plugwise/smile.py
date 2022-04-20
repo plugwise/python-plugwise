@@ -29,7 +29,6 @@ from .constants import (
     SYSTEM,
     THERMOSTAT_CLASSES,
     ApplianceDetails,
-    DetailsData,
     DeviceData,
     SmileBinarySensors,
     SmileOutput,
@@ -127,7 +126,7 @@ class SmileData(SmileHelper):
                 device["binary_sensors"].pop("cooling_state")
 
     def _device_data_switching_group(
-        self, details: ApplianceDetails, device_data: DetailsData
+        self, details: ApplianceDetails, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine switching group device data.
@@ -144,7 +143,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_adam(
-        self, details: ApplianceDetails, device_data: DetailsData
+        self, details: ApplianceDetails, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine Adam device data.
@@ -158,7 +157,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_climate(
-        self, details: ApplianceDetails, device_data: DetailsData
+        self, details: ApplianceDetails, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
