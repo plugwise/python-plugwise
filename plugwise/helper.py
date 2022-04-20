@@ -1332,11 +1332,11 @@ class SmileHelper:
 
         return val
 
-    def _get_lock_state(self, xml: etree) -> DetailsData:
+    def _get_lock_state(self, xml: etree) -> DeviceData:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
-        data: DetailsData = {}
+        data: DeviceData = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
         if self._stretch_v2:
