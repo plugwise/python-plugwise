@@ -30,6 +30,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
     ApplianceDetails,
     DetailsData,
+    DeviceData,
     SmileBinarySensors,
     SmileOutput,
     SmileSensors,
@@ -127,7 +128,7 @@ class SmileData(SmileHelper):
 
     def _device_data_switching_group(
         self, details: ApplianceDetails, device_data: DetailsData
-    ) -> DetailsData:
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
@@ -144,7 +145,7 @@ class SmileData(SmileHelper):
 
     def _device_data_adam(
         self, details: ApplianceDetails, device_data: DetailsData
-    ) -> DetailsData:
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
@@ -158,7 +159,7 @@ class SmileData(SmileHelper):
 
     def _device_data_climate(
         self, details: ApplianceDetails, device_data: DetailsData
-    ) -> DetailsData:
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
@@ -197,7 +198,7 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _get_device_data(self, dev_id: str) -> DetailsData:
+    def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
