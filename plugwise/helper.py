@@ -1144,7 +1144,7 @@ class SmileHelper:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DetailsData = {}
+        direct_data: DeviceData = {}
         loc = Munch()
 
         if self.smile_type != "power":
