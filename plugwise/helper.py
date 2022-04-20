@@ -863,7 +863,7 @@ class SmileHelper:
         return schedule_ids
 
     def _appliance_measurements(
-        self, appliance: etree, data: dict[str, Any], measurements: dict[str, Any]
+        self, appliance: etree, data: DetailsData, measurements: dict[str, Any]
     ) -> DetailsData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
