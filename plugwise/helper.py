@@ -1230,7 +1230,7 @@ class SmileHelper:
         available: list[str] = [NONE]
         last_used: str | None = None
         rule_ids: dict[str, str] = {}
-        schedule_temperature: str | None = None
+        schedule_temperature: float | None = None
         selected = NONE
         tmp_last_used: str | None = None
 
