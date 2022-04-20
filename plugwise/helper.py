@@ -1331,7 +1331,7 @@ class SmileHelper:
 
         return val
 
-    def _get_lock_state(self, xml: etree) -> dict[str, Any]:
+    def _get_lock_state(self, xml: etree) -> DetailsData:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
