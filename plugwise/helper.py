@@ -1147,7 +1147,7 @@ class SmileHelper:
         loc = Munch()
 
         if self.smile_type != "power":
-            return None
+            return {}
 
         search = self._locations
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
