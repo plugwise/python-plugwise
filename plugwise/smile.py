@@ -31,6 +31,8 @@ from .constants import (
     SYSTEM,
     THERMOSTAT_CLASSES,
     DetailsData,
+    GatewayData,
+    GatewayDevice,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -443,7 +445,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> list[dict[str, Any]]:
+    async def async_update(self) -> list[GatewayData, list[GatewayDevice]]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
