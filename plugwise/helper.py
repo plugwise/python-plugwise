@@ -69,9 +69,9 @@ from .util import (
 
 
 def update_helper(
-    data: dict[str, Any],
+    data: DetailsData,
     devs: list[GatewayDevice],
-    d_dict: dict[str, Any],
+    d_dict: ApplianceDetails,
     d_id: str,
     e_type: str,
     key: str,
