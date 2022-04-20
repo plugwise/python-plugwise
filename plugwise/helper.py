@@ -71,7 +71,7 @@ from .util import (
 def update_helper(
     data: DetailsData,
     devs: list[GatewayDevice],
-    d_dict: ApplianceDetails,
+    d_dict: GatewayDevice,
     d_id: str,
     e_type: str,
     key: str,
