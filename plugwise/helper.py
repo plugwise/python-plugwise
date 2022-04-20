@@ -1354,7 +1354,7 @@ class SmileHelper:
         self,
         d_id: str,
         data: DeviceData,
-        device: ApplianceData,
+        device_in: ApplianceDetails,
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
@@ -1363,6 +1363,9 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
+        device_out: DeviceData = {}
+        for d_key, d_value in device_in.items():
+            device_out.update({d_key: d_value})
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
                 if item == key:
@@ -1383,12 +1386,12 @@ class SmileHelper:
             if self._is_thermostat:
                 bs_dict["plugwise_notification"] = False
 
-        device.update(data)
+        device_out.update(data)
         if bs_dict:
-            device["binary_sensors"] = bs_dict
+            device_out["binary_sensors"] = bs_dict
         if s_dict:
-            device["sensors"] = s_dict
+            device_out["sensors"] = s_dict
         if sw_dict:
-            device["switches"] = sw_dict
+            device_out["switches"] = sw_dict
 
-        return device
+        return device_out
