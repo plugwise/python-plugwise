@@ -743,11 +743,11 @@ class DetailsData(
     lower_bound: float
     upper_bound: float
     resolution: float
-    preset_modes: list[str]
+    preset_modes: list[str] | None
     active_preset: str | None
     presets: dict[str, list[float]]
     available_schedules: list[str]
-    selected_schedule: str
+    selected_schedule: float | None
     last_used: str | None
     schedule_temperature: float | None
     mode: str
