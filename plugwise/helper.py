@@ -1335,7 +1335,7 @@ class SmileHelper:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
-        data: dict[str, Any] = {}
+        data: DetailsData = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
         if self._stretch_v2:
