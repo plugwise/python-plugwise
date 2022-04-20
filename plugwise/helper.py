@@ -169,8 +169,8 @@ def power_data_local_format(
 
 
 def power_data_energy_diff(
-    measurement: str, net_string: str, f_val: float | int, direct_data: dict[str, Any]
-) -> dict[str, Any]:
+    measurement: str, net_string: str, f_val: float | int, direct_data: DetailsData
+) -> DetailsData:
     """Calculate differential energy."""
     if "electricity" in measurement and "interval" not in net_string:
         diff = 1
@@ -864,7 +864,7 @@ class SmileHelper:
 
     def _appliance_measurements(
         self, appliance: etree, data: dict[str, Any], measurements: dict[str, Any]
-    ) -> dict[str, Any]:
+    ) -> DetailsData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
@@ -925,12 +925,12 @@ class SmileHelper:
 
         return data
 
-    def _get_appliance_data(self, d_id: str) -> dict[str, Any]:
+    def _get_appliance_data(self, d_id: str) -> DetailsData:
         """Helper-function for smile.py: _get_device_data().
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: dict[str, Any] = {}
+        data: DetailsData = {}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
