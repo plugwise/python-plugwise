@@ -3,8 +3,6 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-from typing import Any
-
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -30,6 +28,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
+    ApplianceDetails,
     DetailsData,
     GatewayData,
     GatewayDevice,
@@ -128,8 +127,8 @@ class SmileData(SmileHelper):
                 device["binary_sensors"].pop("cooling_state")
 
     def _device_data_switching_group(
-        self, details: dict[str, Any], device_data: dict[str, Any]
-    ) -> dict[str, bool]:
+        self, details: ApplianceDetails, device_data: DetailsData
+    ) -> DetailsData:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
@@ -145,8 +144,8 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_adam(
-        self, details: dict[str, Any], device_data: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, details: ApplianceDetails, device_data: DetailsData
+    ) -> DetailsData:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
@@ -159,8 +158,8 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_climate(
-        self, details: dict[str, Any], device_data: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, details: ApplianceDetails, device_data: DetailsData
+    ) -> DetailsData:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
