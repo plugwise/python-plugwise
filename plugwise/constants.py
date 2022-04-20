@@ -747,7 +747,7 @@ class DetailsData(
     active_preset: str | None
     presets: dict[str, list[float]]
     available_schedules: list[str]
-    selected_schedule: float | None
+    selected_schedule: str
     last_used: str | None
     schedule_temperature: float | None
     mode: str
