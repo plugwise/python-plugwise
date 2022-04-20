@@ -727,7 +727,7 @@ class SmileSwitches(TypedDict, total=False):
     relay: bool
 
 
-class DetailsData(SmileBinarySensors, SmileSensors, SmileSwitches, total=False):
+class DetailsData(TypedDict, total=False):
     """The gateway devices class."""
 
     # gateway
@@ -756,9 +756,15 @@ class DetailsData(SmileBinarySensors, SmileSensors, SmileSwitches, total=False):
     c_heating_state: str
 
 
-class DeviceData(ApplianceData, DetailsData):
+class DeviceData(ApplianceData, DetailsData, TypedDict, total=False):
     """All device data per device_id."""
 
     binary_sensors: SmileBinarySensors
     sensors: SmileSensors
     switches: SmileSwitches
+
+
+class SmileOutput(GatewayData, GatewayDevice):
+    """The Smile data provided from the backend."""
+
+    smile_data: list[GatewayData, list[GatewayDevice]]
