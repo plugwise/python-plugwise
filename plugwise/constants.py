@@ -727,7 +727,9 @@ class SmileSwitches(TypedDict, total=False):
     relay: bool
 
 
-class DetailsData(TypedDict, total=False):
+class DetailsData(
+    SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
+):
     """The gateway devices class."""
 
     # gateway
