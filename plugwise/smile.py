@@ -30,6 +30,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
     ApplianceDetails,
     DetailsData,
+    DeviceData,
     SmileBinarySensors,
     SmileOutput,
     SmileSensors,
@@ -57,7 +58,7 @@ class SmileData(SmileHelper):
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
-            data: DetailsData = self._get_device_data(device_id)
+            data: DeviceData = self._get_device_data(device_id)
             self.gw_devices.append(
                 {
                     "device_id": device_id,
