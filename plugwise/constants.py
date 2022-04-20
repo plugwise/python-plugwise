@@ -618,7 +618,7 @@ class ApplianceDetails(TypedDict, total=False):
     hardware: str | None
     location: str
     mac_address: str | None
-    members: list[str] | None
+    members: list[str]
     model: str
     name: str
     vendor: str | None
