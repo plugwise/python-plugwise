@@ -752,13 +752,13 @@ class DetailsData(SmileBinarySensors, SmileSensors, SmileSwitches, total=False):
     # Adam master_thermostats
     control_state: str
 
-    binary_sensors: dict[str, bool] | None
-    sensors: dict[str, float | int] | None
-    switches: dict[str, bool] | None
-
     # Temporary used
     c_heating_state: str
 
 
 class DeviceData(ApplianceData, DetailsData):
     """All device data per device_id."""
+
+    binary_sensors: SmileBinarySensors
+    sensors: SmileSensors
+    switches: SmileSwitches
