@@ -106,7 +106,7 @@ def check_model(name: str | None, v_name: str) -> str | None:
     return name
 
 
-def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> Any:
+def schedules_schedule_temp(schedules: dict[str, Any], name: str) -> float | None:
     """Helper-function for schedules().
     Obtain the schedule temperature of the schedule/schedule.
     """
@@ -1195,7 +1195,7 @@ class SmileHelper:
 
     def _schedules_legacy(
         self, avail: list[str], sched_temp: str | None, sel: str
-    ) -> tuple[list[str], str, str | None, None]:
+    ) -> tuple[list[str], str, float | None, None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
         """
@@ -1222,7 +1222,7 @@ class SmileHelper:
 
     def _schedules(
         self, location: str
-    ) -> tuple[list[str], str, str | None, str | None]:
+    ) -> tuple[list[str], str, float | None, str | None]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
