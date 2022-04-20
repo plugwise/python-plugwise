@@ -1353,8 +1353,8 @@ class SmileHelper:
     def _update_device_with_dicts(
         self,
         d_id: str,
-        data: ApplianceData,
-        device: DeviceData,
+        data: DeviceData,
+        device: ApplianceData,
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
