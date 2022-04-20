@@ -91,6 +91,7 @@ def update_helper(
             for gw_dict in devs:
                 if gw_dict["device_id"] == d_id:
                     for item in gw_dict["device_data"][e_type]:
+                        LOGGER.debug("HOI %s, %s", item, type(item))
                         if item == key:
                             gw_dict["device_data"][e_type][item] = data[key]
 
