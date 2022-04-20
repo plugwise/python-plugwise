@@ -1194,7 +1194,7 @@ class SmileHelper:
         return active_rule.attrib["icon"]
 
     def _schedules_legacy(
-        self, avail: list[str], sched_temp: str | None, sel: str
+        self, avail: list[str], sched_temp: float | None, sel: str
     ) -> tuple[list[str], str, float | None, None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
