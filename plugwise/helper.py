@@ -91,7 +91,7 @@ def update_helper(
             for gw_dict in device_list:
                 if gw_dict["device_id"] == device_id:
                     for item in gw_dict["device_data"][bsssw_type]:  # type: ignore [literal-required]
-                        if item == key:  # type: ignore [comparison-overlap]
+                        if item == key:
                             gw_dict["device_data"][bsssw_type][item] = data[key]  # type: ignore [literal-required]
 
 
