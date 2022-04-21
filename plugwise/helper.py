@@ -79,20 +79,20 @@ def update_helper(
     notifs: dict[str, str],
 ) -> None:
     """Helper-function for async_update()."""
-    for d_item in d_dict[e_type]:
+    for d_item in d_dict[e_type]:  # type: ignore [literal-required]
         # Update the PW_Notification binary_sensor state
         if e_type == "binary_sensors":
             if d_item == "plugwise_notification":
                 for item in devs:
                     if item["device_id"] == d_id:
-                        item["device_data"][e_type][d_item] = notifs != {}
+                        item["device_data"][e_type][d_item] = notifs != {}  # type: ignore [literal-required]
 
         if d_item == key:
             for gw_dict in devs:
                 if gw_dict["device_id"] == d_id:
-                    for item in gw_dict["device_data"][e_type]:
+                    for item in gw_dict["device_data"][e_type]:  # type: ignore [literal-required]
                         if item == key:  # type: ignore [comparison-overlap]
-                            gw_dict["device_data"][e_type][item] = data[key]
+                            gw_dict["device_data"][e_type][item] = data[key]  # type: ignore [literal-required]
 
 
 def check_model(name: str | None, v_name: str) -> str | None:
@@ -182,7 +182,7 @@ def power_data_energy_diff(
         if net_string not in direct_data:
             tmp_val: float | int = 0
         else:
-            tmp_val = direct_data[net_string]
+            tmp_val = direct_data[net_string]  # type: ignore [literal-required]
 
         if isinstance(f_val, int):
             tmp_val += f_val * diff
@@ -190,7 +190,7 @@ def power_data_energy_diff(
             tmp_val += float(f_val * diff)
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
-        direct_data[net_string] = tmp_val
+        direct_data[net_string] = tmp_val  # type: ignore [literal-required]
 
     return direct_data
 
@@ -888,27 +888,27 @@ class SmileHelper:
                 except KeyError:
                     pass
 
-                data[measurement] = appl_p_loc.text
+                data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ["regulation_mode"]:
                     data[measurement] = format_measure(
                         appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
-                    )
+                    )  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
                     self._anna_cooling_present = self._cooling_present = True
-                    self._cooling_activation_outdoor_temp = data[measurement]
+                    self._cooling_activation_outdoor_temp = data[measurement]  # type: ignore [literal-required]
                 if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data[measurement]
+                    self._cooling_deactivation_threshold = data[measurement]  # type: ignore [literal-required]
                 if measurement == "outdoor_air_temperature":
-                    self._outdoor_temp = data[measurement]
+                    self._outdoor_temp = data[measurement]  # type: ignore [literal-required]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
-                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
+                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
 
             # Thermostat actuator measurements
             t_locator = f'.//actuator_functionalities/thermostat_functionality[type="thermostat"]/{measurement}'
@@ -924,7 +924,7 @@ class SmileHelper:
 
                 data[measurement] = format_measure(
                     t_function.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT)
-                )
+                )  # type: ignore [literal-required]
 
         return data
 
@@ -1175,7 +1175,7 @@ class SmileHelper:
                     direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
-                    direct_data[loc.key_string] = loc.f_val
+                    direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
 
         return direct_data
 
