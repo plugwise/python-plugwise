@@ -637,7 +637,7 @@ class GatewayData(TypedDict, total=False):
 
     smile_name: str
     gateway_id: str
-    heater_id: str
+    heater_id: str | None
     cooling_present: bool
     notifications: dict[str, str]
 
