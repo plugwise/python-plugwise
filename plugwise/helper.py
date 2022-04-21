@@ -1320,7 +1320,7 @@ class SmileHelper:
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
-        Obtain the value/state for the given object from DOMAIN_OBJECTS.
+        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
         val: float | int | None = None
         search = self._domain_objects
