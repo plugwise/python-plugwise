@@ -135,8 +135,8 @@ def schedules_schedule_temp(
         day_1 = schedule_list[j][0]
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
-        if today in [day_0, day_1] and in_between(now, time_0, time_1):
-            return schedule_list[i][2]
+        if today in [day_0, day_1] and in_between(now, time_0, time_1):  # type: ignore [arg-type]
+            return schedule_list[i][2]  # type: ignore [return-type]
 
     return None
 
@@ -1363,20 +1363,20 @@ class SmileHelper:
         """
         device_out: DeviceData = {}
         for d_key, d_value in device_in.items():
-            device_out.update({d_key: d_value})
+            device_out.update({d_key: d_value})  # type: ignore [misc]
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
                 if item == key:
-                    data.pop(key)
+                    data.pop(key)  # type: ignore [misc]
                     if self._opentherm_device or self._on_off_device:
                         bs_dict[key] = value  # type: ignore[literal-required]
             for item in SENSORS:
                 if item == key:
-                    data.pop(key)
+                    data.pop(key)  # type: ignore [misc]
                     s_dict[key] = value  # type: ignore[literal-required]
             for item in SWITCHES:
                 if item == key:
-                    data.pop(key)
+                    data.pop(key)  # type: ignore [misc]
                     sw_dict[key] = value  # type: ignore[literal-required]
 
         # Add plugwise notification binary_sensor to the relevant gateway
