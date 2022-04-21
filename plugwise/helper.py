@@ -79,20 +79,21 @@ def update_helper(
     notifs: dict[str, str],
 ) -> None:
     """Helper-function for async_update()."""
-    for dev_item in device_dict[bsssw_type]:  # type: ignore [literal-required]
+    for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
         # Update the PW_Notification binary_sensor state
-        if bsssw_type == "binary_sensors":
-            if dev_item == "plugwise_notification":
-                for gw_dict in device_list:
-                    if gw_dict["device_id"] == device_id:
-                        gw_dict["device_data"][bsssw_type][dev_item] = notifs != {}  # type: ignore [literal-required]
-
-        if dev_item == key:
+        if bsssw_type == "binary_sensors" and item == "plugwise_notification":
             for gw_dict in device_list:
                 if gw_dict["device_id"] == device_id:
-                    for item in gw_dict["device_data"][bsssw_type]:  # type: ignore [literal-required]
-                        if item == key:
-                            gw_dict["device_data"][bsssw_type][item] = data[key]  # type: ignore [literal-required]
+                    gw_dict["device_data"]["binary_sensors"][
+                        "plugwise_notification"
+                    ] = (notifs != {})
+
+        if item == key:
+            for gw_dict in device_list:
+                if gw_dict["device_id"] == device_id:
+                    for bsssw_item in gw_dict["device_data"][bsssw_type]:  # type: ignore [literal-required]
+                        if bsssw_item == key:
+                            gw_dict["device_data"][bsssw_type][bsssw_item] = data[key]  # type: ignore [literal-required]
 
 
 def check_model(name: str | None, v_name: str) -> str | None:
