@@ -110,7 +110,7 @@ def schedules_schedule_temp(
     schedules: dict[str, dict[str, float]], name: str
 ) -> float | None:
     """Helper-function for schedules().
-    Obtain the schedule temperature of the schedule/schedule.
+    Obtain the schedule temperature of the schedule.
     """
     if name == NONE:
         return None  # pragma: no cover
