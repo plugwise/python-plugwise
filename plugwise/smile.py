@@ -462,7 +462,7 @@ class Smile(SmileComm, SmileData):
             data = self._get_device_data(dev_id)
             for key, value in list(data.items()):
                 if key in dev_dict:
-                    dev_dict[key] = value
+                    dev_dict[key] = value  # type: ignore [literal-required]
 
             for item in ["binary_sensors", "sensors", "switches"]:
                 notifs: dict[str, str] = {}

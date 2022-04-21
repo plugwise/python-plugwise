@@ -136,7 +136,7 @@ def schedules_schedule_temp(
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
         if today in [day_0, day_1] and in_between(now, time_0, time_1):  # type: ignore [arg-type]
-            return schedule_list[i][2]  # type: ignore [return-type]
+            return schedule_list[i][2]  # type: ignore [return-value]
 
     return None
 
