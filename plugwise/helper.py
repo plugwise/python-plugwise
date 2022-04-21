@@ -312,7 +312,7 @@ class SmileHelper:
         self._appl_data: list[ApplianceData] = []
         self._appliances: etree
         self._allowed_modes: list[str] = []
-        self._anna_cooling_present: bool = False
+        self._anna_cooling_present = False
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
