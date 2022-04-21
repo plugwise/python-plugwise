@@ -22,7 +22,7 @@ from munch import Munch
 # Time related
 import pytz
 
-from .constants import (  # LocationDetails,
+from .constants import (
     APPLIANCES,
     ATTR_NAME,
     ATTR_TYPE,
@@ -71,28 +71,28 @@ from .util import (
 
 def update_helper(
     data: DetailsData,
-    devs: list[GatewayDevice],
-    d_dict: DeviceData,
-    d_id: str,
-    e_type: str,
+    device_list: list[GatewayDevice],
+    device_dict: DeviceData,
+    device_id: str,
+    bsssw_type: str,
     key: str,
     notifs: dict[str, str],
 ) -> None:
     """Helper-function for async_update()."""
-    for d_item in d_dict[e_type]:  # type: ignore [literal-required]
+    for dev_item in device_dict[bsssw_type]:  # type: ignore [literal-required]
         # Update the PW_Notification binary_sensor state
-        if e_type == "binary_sensors":
-            if d_item == "plugwise_notification":
-                for item in devs:
-                    if item["device_id"] == d_id:
-                        item["device_data"][e_type][d_item] = notifs != {}  # type: ignore [literal-required]
+        if bsssw_type == "binary_sensors":
+            if dev_item == "plugwise_notification":
+                for gw_dict in device_list:
+                    if gw_dict["device_id"] == device_id:
+                        gw_dict["device_data"][bsssw_type][dev_item] = notifs != {}  # type: ignore [literal-required]
 
-        if d_item == key:
-            for gw_dict in devs:
-                if gw_dict["device_id"] == d_id:
-                    for item in gw_dict["device_data"][e_type]:  # type: ignore [literal-required]
+        if dev_item == key:
+            for gw_dict in device_list:
+                if gw_dict["device_id"] == device_id:
+                    for item in gw_dict["device_data"][bsssw_type]:  # type: ignore [literal-required]
                         if item == key:  # type: ignore [comparison-overlap]
-                            gw_dict["device_data"][e_type][item] = data[key]  # type: ignore [literal-required]
+                            gw_dict["device_data"][bsssw_type][item] = data[key]  # type: ignore [literal-required]
 
 
 def check_model(name: str | None, v_name: str) -> str | None:
