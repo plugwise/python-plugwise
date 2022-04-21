@@ -116,14 +116,13 @@ def schedules_schedule_temp(
     if name == NONE:
         return None  # pragma: no cover
 
-    schedule_list: list[list[int | dt.time | float]] = []
+    schedule_list: list[tuple[int, dt.time, float]] = []
     for period, temp in schedules[name].items():
-        tmp_list: list[int | dt.time | float] = []
         moment, dummy = period.split(",")
         moment_cleaned = moment.replace("[", "").split(" ")
         day_nr = DAYS[moment_cleaned[0]]
         start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
-        tmp_list.extend([day_nr, start_time, temp])
+        tmp_list: tuple[int, dt.time, float] = (day_nr, start_time, temp)
         schedule_list.append(tmp_list)
 
     length = len(schedule_list)
@@ -136,8 +135,8 @@ def schedules_schedule_temp(
         day_1 = schedule_list[j][0]
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
-        if today in [day_0, day_1] and in_between(now, time_0, time_1):  # type: ignore [arg-type]
-            return schedule_list[i][2]  # type: ignore [return-value]
+        if today in [day_0, day_1] and in_between(now, time_0, time_1):
+            return schedule_list[i][2]
 
     return None
 
