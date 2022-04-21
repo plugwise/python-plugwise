@@ -480,7 +480,7 @@ class Smile(SmileComm, SmileData):
                             notifs,
                         )
 
-        return [self.gw_data, self.gw_devices]
+        return {"smiledata": [self.gw_data, self.gw_devices]}
 
     async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
         """Helper-function for set_schedule_state()."""
