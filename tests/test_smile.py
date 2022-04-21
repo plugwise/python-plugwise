@@ -382,8 +382,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         smile.get_all_devices()
         data = await smile.async_update()
-        extra = data[0]
-        device_list = data[1]
+        extra = data["smile"]
+        device_list = data["data"]
 
         if "heater_id" in extra:
             self.cooling_present = extra["cooling_present"]

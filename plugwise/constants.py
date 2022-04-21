@@ -769,4 +769,5 @@ class DeviceData(ApplianceData, DetailsData, TypedDict, total=False):
 class SmileOutput(GatewayData, GatewayDevice):
     """The Smile data provided from the backend."""
 
-    smile_data: list[GatewayData | list[GatewayDevice]]
+    smile: GatewayData
+    data: list[GatewayDevice]
