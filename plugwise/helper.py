@@ -317,7 +317,7 @@ class SmileHelper:
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
         self._domain_objects: etree
-        self._heater_id: str
+        self._heater_id: str | None = None
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
