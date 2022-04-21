@@ -1344,7 +1344,7 @@ class SmileHelper:
         if appl_class not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
-                data["lock"] = format_measure(found.text, NONE)
+                data["lock"] = format_measure(found.text, NONE)  # type: ignore [typeddict-item]
 
         return data
 
