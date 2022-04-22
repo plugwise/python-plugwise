@@ -614,7 +614,9 @@ class SmileHelper:
             # Provide a home_location for legacy_anna, preset all types applicable to home
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-            # appl.types = self._loc_data["data"].get("types")
+            for item in self._loc_data:
+                if item["loc_id"] == self._home_location:
+                    appl.types = item["data"].get("types")
 
         # Determine appliance_type from functionality
         relay_func = appliance.find("./actuator_functionalities/relay_functionality")
