@@ -340,23 +340,9 @@ class SmileHelper:
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._loc_data.append(
-                {
-                    "loc_id": FAKE_LOC,
-                    "data": {
-                        "name": "Home",
-                    },
-                },
-            )
+            self._loc_data.append({"loc_id": FAKE_LOC, "name": "Home"})
         if self.smile_type == "stretch":
-            self._loc_data.append(
-                {
-                    "loc_id": FAKE_LOC,
-                    "data": {
-                        "name": "Home",
-                    },
-                },
-            )
+            self._loc_data.append({"loc_id": FAKE_LOC, "name": "Home"})
 
     def _locations_specials(self, loc: Munch, location: str) -> Munch:
         """Helper-function for _all_locations().
@@ -397,14 +383,7 @@ class SmileHelper:
             # Specials
             loc = self._locations_specials(loc, location)
 
-            self._loc_data.append(
-                {
-                    "loc_id": loc.id,
-                    "data": {
-                        "name": loc.name,
-                    },
-                },
-            )
+            self._loc_data.append({"loc_id": loc.id, "name": loc.name})
 
         return
 
@@ -702,13 +681,12 @@ class SmileHelper:
         matched_locations: dict[str, Any] = {}
 
         self._all_appliances()
-        for item_1 in self._loc_data:
-            location_id = item_1["loc_id"]
-            location_details = item_1["data"]
-            for item_2 in self._appl_data:
-                appliance_details = item_2["appl_data"]
+        for location in self._loc_data:
+            location_id = location["loc_id"]
+            for appliance in self._appl_data:
+                appliance_details = appliance["appl_data"]
                 if appliance_details["location"] == location_id:
-                    matched_locations[location_id] = location_details
+                    matched_locations[location_id] = location["name"]
 
         return matched_locations
 
