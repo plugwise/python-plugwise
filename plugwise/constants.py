@@ -653,8 +653,6 @@ class LocationDetails(TypedDict, total=False):
     """Location data class."""
 
     name: str
-    types: set[str]
-    members: set[str]
 
 
 class LocationData(TypedDict, total=False):
