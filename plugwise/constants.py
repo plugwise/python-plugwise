@@ -648,17 +648,11 @@ class GatewayDevice(TypedDict, total=False):
     device_data: DeviceData
 
 
-class LocationDetails(TypedDict, total=False):
-    """Location data class."""
-
-    name: str
-
-
 class LocationData(TypedDict, total=False):
     """Location data class."""
 
     loc_id: str
-    data: LocationDetails
+    name: str
 
 
 class SmileBinarySensors(TypedDict, total=False):
