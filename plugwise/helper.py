@@ -975,7 +975,6 @@ class SmileHelper:
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
-            group_appl: ApplianceData = {}
             members: list[str] = []
             group_id = group.attrib["id"]
             group_name = group.find("name").text
@@ -985,7 +984,7 @@ class SmileHelper:
                 members.append(item.attrib["id"])
 
             if group_type in SWITCH_GROUP_TYPES:
-                group_appl.update(
+                switch_groups.update(
                     {
                         "appl_id": group_id,
                         "appl_data": {
@@ -997,8 +996,7 @@ class SmileHelper:
                     },
                 )
 
-            switch_groups.update(group_appl)
-
+        LOGGER.debug("HOI 1 %s", switch_groups)
         return switch_groups
 
     def _heating_valves(self) -> int | None:
