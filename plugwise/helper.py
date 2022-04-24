@@ -674,7 +674,7 @@ class SmileHelper:
 
             self._appl_data.append(temp_dict)
 
-    def _match_locations(self) -> dict[str, Any]:
+    def _match_locations(self) -> dict[str, dict[str, Any]]:
         """Helper-function for _scan_thermostats().
         Match appliances with locations.
         """
@@ -686,7 +686,7 @@ class SmileHelper:
             for appliance in self._appl_data:
                 appliance_details = appliance["appl_data"]
                 if appliance_details["location"] == location_id:
-                    matched_locations[location_id] = location["name"]
+                    matched_locations[location_id] = {"name": location["name"]}
 
         return matched_locations
 
