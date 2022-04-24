@@ -95,9 +95,9 @@ def update_helper(
                             gw_dict["device_data"][bsssw_type][bsssw_item] = data[key]  # type: ignore [literal-required]
 
 
-def check_model(name: str | None, v_name: str) -> str | None:
+def check_model(name: str | None, vendor_name: str) -> str | None:
     """Model checking before using version_to_model."""
-    if v_name in ["Plugwise", "Plugwise B.V."]:
+    if vendor_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
             return "Anna"
         model = version_to_model(name)
@@ -459,7 +459,7 @@ class SmileHelper:
             if appl.zigbee_mac is None:
                 return None
 
-            appl.v_name = module_data["vendor_name"]
+            appl.vendor_name = module_data["vendor_name"]
             appl.hw = module_data["hardware_version"]
             if appl.hw:
                 hw_version = module_data["hardware_version"].replace("-", "")
@@ -477,7 +477,7 @@ class SmileHelper:
             if appl.zigbee_mac is None:
                 return None
 
-            appl.v_name = module_data["vendor_name"]
+            appl.vendor_name = module_data["vendor_name"]
             appl.model = version_to_model(module_data["vendor_model"])
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
@@ -494,7 +494,7 @@ class SmileHelper:
             appl.fw = self.smile_fw_version
             appl.mac = self.smile_mac_address
             appl.model = appl.name = self.smile_name
-            appl.v_name = "Plugwise B.V."
+            appl.vendor_name = "Plugwise B.V."
 
             # Adam: look for the ZigBee MAC address of the Smile
             if self.smile_name == "Adam" and (
@@ -520,8 +520,8 @@ class SmileHelper:
             locator = "./logs/point_log[type='thermostat']/thermostat"
             mod_type = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.v_name = module_data["vendor_name"]
-            appl.model = check_model(module_data["vendor_model"], appl.v_name)
+            appl.vendor_name = module_data["vendor_name"]
+            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
             appl.hw = module_data["hardware_version"]
             appl.fw = module_data["firmware_version"]
             appl.zigbee_mac = module_data["zigbee_mac_address"]
@@ -538,7 +538,7 @@ class SmileHelper:
             #  Info for On-Off device
             if self._on_off_device:
                 appl.name = "OnOff"
-                appl.v_name = None
+                appl.vendor_name = None
                 appl.model = "Unknown"
                 return appl
 
@@ -550,9 +550,9 @@ class SmileHelper:
             module_data = self._get_module_data(appliance, locator1, mod_type)
             if not module_data["contents"]:
                 module_data = self._get_module_data(appliance, locator2, mod_type)
-            appl.v_name = module_data["vendor_name"]
+            appl.vendor_name = module_data["vendor_name"]
             appl.hw = module_data["hardware_version"]
-            appl.model = check_model(module_data["vendor_model"], appl.v_name)
+            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
             if appl.model is None:
                 appl.model = (
                     "Generic heater/cooler"
@@ -644,6 +644,9 @@ class SmileHelper:
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
+            # Provide a home_location for legacy_anna
+            elif self._smile_legacy and self.smile_type == "thermostat":
+                appl.location = self._home_location
 
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
@@ -652,7 +655,7 @@ class SmileHelper:
             appl.hw = None
             appl.mac = None
             appl.zigbee_mac = None
-            appl.v_name = None
+            appl.vendor_name = None
 
             # Determine class for this appliance
             appl = self._appliance_info_finder(appliance, appl)
@@ -685,7 +688,7 @@ class SmileHelper:
                 "model": appl.model,
                 "name": appl.name,
                 "zigbee_mac_address": appl.zigbee_mac,
-                "vendor": appl.v_name,
+                "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
                     temp_dict["appl_data"].update({key: value})  # type: ignore[misc]
