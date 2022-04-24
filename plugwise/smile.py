@@ -96,6 +96,7 @@ class SmileData(SmileHelper):
                     details["dev_class"] = "thermo_sensor"
 
         if group_data := self._group_switches():
+            LOGGER.debug("HOI %s", group_data)
             self._appl_data.append(group_data)
 
         # Collect data for each device via helper function
