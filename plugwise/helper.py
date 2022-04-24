@@ -25,7 +25,6 @@ import pytz
 from .constants import (
     APPLIANCES,
     ATTR_NAME,
-    ATTR_TYPE,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
     DAYS,
@@ -139,21 +138,6 @@ def schedules_schedule_temp(
             return schedule_list[i][2]
 
     return None
-
-
-def types_finder(data: etree) -> set[str | None]:
-    """Detect types within locations from logs."""
-    types = set()
-    for measure, attrs in HOME_MEASUREMENTS.items():
-        locator = f"./logs/point_log[type='{measure}']"
-        if (log := data.find(locator)) is None:
-            continue
-
-        p_locator = "./electricity_point_meter"
-        if (p_log := log.find(p_locator)) is not None and p_log.get("id"):
-            types.add(attrs.get(ATTR_TYPE))
-
-    return types
 
 
 def power_data_local_format(
@@ -361,8 +345,6 @@ class SmileHelper:
                     "loc_id": FAKE_LOC,
                     "data": {
                         "name": "Home",
-                        "types": {"temperature"},
-                        "members": appliances,
                     },
                 },
             )
@@ -372,8 +354,6 @@ class SmileHelper:
                     "loc_id": FAKE_LOC,
                     "data": {
                         "name": "Home",
-                        "types": {"power"},
-                        "members": appliances,
                     },
                 },
             )
@@ -384,17 +364,11 @@ class SmileHelper:
         """
         if loc.name == "Home":
             self._home_location = loc.id
-            loc.types.add("home")
-
-            for location_type in types_finder(location):
-                loc.types.add(location_type)
 
         # Replace location-name for P1 legacy, can contain privacy-related info
         if self._smile_legacy and self.smile_type == "power":
             loc.name = "Home"
             self._home_location = loc.id
-            loc.types.add("home")
-            loc.types.add("power")
 
         return loc
 
@@ -420,15 +394,6 @@ class SmileHelper:
             ):
                 continue
 
-            loc.types = set()
-            loc.members = set()
-
-            # Group of appliances
-            locator = "./appliances/appliance"
-            if (locs := location.findall(locator)) is not None:
-                for member in locs:
-                    loc.members.add(member.attrib["id"])
-
             # Specials
             loc = self._locations_specials(loc, location)
 
@@ -437,8 +402,6 @@ class SmileHelper:
                     "loc_id": loc.id,
                     "data": {
                         "name": loc.name,
-                        "types": loc.types,
-                        "members": loc.members,
                     },
                 },
             )
@@ -608,26 +571,10 @@ class SmileHelper:
         # Appliance with location (i.e. a device)
         if (appl_loc := appliance.find("location")) is not None:
             appl.location = appl_loc.attrib["id"]
-            for appl_type in types_finder(appliance):
-                appl.types.add(appl_type)
         else:
-            # Provide a home_location for legacy_anna, preset all types applicable to home
+            # Provide a home_location for legacy_anna
             if self._smile_legacy and self.smile_type == "thermostat":
                 appl.location = self._home_location
-            for item in self._loc_data:
-                if item["loc_id"] == self._home_location:
-                    appl.types = item["data"].get("types")
-
-        # Determine appliance_type from functionality
-        relay_func = appliance.find("./actuator_functionalities/relay_functionality")
-        relay_act = appliance.find("./actuators/relay")
-        thermo_func = appliance.find(
-            "./actuator_functionalities/thermostat_functionality"
-        )
-        if relay_func is not None or relay_act is not None:
-            appl.types.add("plug")
-        if thermo_func is not None:
-            appl.types.add("thermostat")
 
         return appl
 
@@ -707,8 +654,6 @@ class SmileHelper:
                 continue
 
             appl.location = None
-            appl.types = set()
-
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
@@ -717,9 +662,6 @@ class SmileHelper:
             appl.mac = None
             appl.zigbee_mac = None
             appl.v_name = None
-
-            # Determine types for this appliance
-            appl = self._appliance_types_finder(appliance, appl)
 
             # Determine class for this appliance
             appl = self._appliance_info_finder(appliance, appl)
@@ -761,7 +703,7 @@ class SmileHelper:
 
     def _match_locations(self) -> dict[str, Any]:
         """Helper-function for _scan_thermostats().
-        Update locations with present appliance-types.
+        Match appliances with locations.
         """
         matched_locations: dict[str, Any] = {}
 
