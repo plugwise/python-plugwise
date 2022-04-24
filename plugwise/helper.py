@@ -486,7 +486,7 @@ class SmileHelper:
         """Helper-function for _appliance_info_finder().
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
-        if self._stretch_v2 or self._stretch_v3:
+        if self.smile_type == "stretch":
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
@@ -505,7 +505,7 @@ class SmileHelper:
 
             return appl
 
-        if self.smile_type != "stretch" and "plug" in appl.types:
+        if self.smile_name == "Adam":
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
