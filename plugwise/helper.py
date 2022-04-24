@@ -566,8 +566,8 @@ class SmileHelper:
 
         return appl
 
-    def _appliance_types_finder(self, appliance: etree, appl: Munch) -> Munch:
-        """Helper-function for _all_appliances() - determine type(s) per appliance."""
+    def _appliance_location_finder(self, appliance: etree, appl: Munch) -> Munch:
+        """Helper-function for _all_appliances() - determine location per appliance."""
         # Appliance with location (i.e. a device)
         if (appl_loc := appliance.find("location")) is not None:
             appl.location = appl_loc.attrib["id"]
@@ -662,6 +662,9 @@ class SmileHelper:
             appl.mac = None
             appl.zigbee_mac = None
             appl.v_name = None
+
+            # Determine the appliance location
+            appl = self._appliance_location_finder(appliance, appl)
 
             # Determine class for this appliance
             appl = self._appliance_info_finder(appliance, appl)
