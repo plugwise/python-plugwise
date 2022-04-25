@@ -404,11 +404,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for gw_dict in testdata:
             testdevice = gw_dict["device_id"]
             measurements = gw_dict["device_data"]
-            tests += 1
             # if testdevice not in device_list:
             #    _LOGGER.info("Device {} to test against {} not found in device_list for {}".format(testdevice,measurements,self.smile_setup))
             # else:
             #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
+            tests += 1
             for gw_dict in device_list:
                 dev_id = gw_dict["device_id"]
                 details = gw_dict["device_data"]
@@ -446,7 +446,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     "Schedule temperature = %s", details[measure_key]
                                 )
                                 if measure_assert is not None:
-                                    assert isinstance(dev_data[measure_key], float)
+                                    assert isinstance(details[measure_key], float)
                                     asserts += 1
                                 else:  # edge-case: schedule_temperature = None
                                     assert (
