@@ -405,8 +405,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             testdevice = gw_dict["device_id"]
             measurements = gw_dict["device_data"]
             tests += 1
-            assert testdevice in device_list
-            asserts += 1
             # if testdevice not in device_list:
             #    _LOGGER.info("Device {} to test against {} not found in device_list for {}".format(testdevice,measurements,self.smile_setup))
             # else:
@@ -416,6 +414,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 details = gw_dict["device_data"]
                 if testdevice == dev_id:
                     assert testdevice == dev_id
+                    asserts += 1
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
@@ -455,7 +454,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     )  # pragma: no cover
                                     asserts += 1
                             else:
-                                assert dev_data[measure_key] == measure_assert
+                                assert details[measure_key] == measure_assert
                                 asserts += 1
 
         assert tests == asserts
