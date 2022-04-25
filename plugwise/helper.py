@@ -674,8 +674,6 @@ class SmileHelper:
 
             self._appl_data.append(temp_dict)
 
-        LOGGER.debug("HOI appl_data %s", self._appl_data)
-
     def _match_locations(self) -> dict[str, dict[str, Any]]:
         """Helper-function for _scan_thermostats().
         Match appliances with locations.
@@ -998,7 +996,6 @@ class SmileHelper:
                     },
                 )
 
-        LOGGER.debug("HOI 1 %s", switch_groups)
         return switch_groups
 
     def _heating_valves(self) -> int | None:
