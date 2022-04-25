@@ -406,15 +406,12 @@ STATUS: Final = "/system/status.xml"
 # P1 related measurements:
 HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "electricity_consumed": {
-        ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
     },
     "electricity_produced": {
-        ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
     },
     "gas_consumed": {
-        ATTR_TYPE: "gas",
         ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
     },
 }
