@@ -615,13 +615,13 @@ class ApplianceDetails(TypedDict, total=False):
 
     dev_class: str
     firmware: str | None
-    hardware: str | None
+    hardware: str
     location: str
     mac_address: str | None
     members: list[str]
     model: str
     name: str
-    vendor: str | None
+    vendor: str
     zigbee_mac_address: str | None
 
 
