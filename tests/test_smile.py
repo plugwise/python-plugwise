@@ -401,8 +401,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         asserts = 0
         for testdevice, measurements in testdata.items():
             tests += 1
-            asserts += 1
             assert testdevice in device_list
+            asserts += 1
             # if testdevice not in device_list:
             #    _LOGGER.info("Device {} to test against {} not found in device_list for {}".format(testdevice,measurements,self.smile_setup))
             # else:
@@ -431,8 +431,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     if key_1 != key_2:
                                         continue
 
-                                    asserts += 1
                                     assert val_1 == val_2
+                                    asserts += 1
                         else:
                             asserts += 1
                             # The schedule temperature changes accordung to the set schedule,
@@ -443,12 +443,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 )
                                 if measure_assert is not None:
                                     assert isinstance(dev_data[measure_key], float)
+                                    asserts += 1
                                 else:  # edge-case: schedule_temperature = None
                                     assert (
                                         dev_data[measure_key] == measure_assert
                                     )  # pragma: no cover
+                                    asserts += 1
                             else:
                                 assert dev_data[measure_key] == measure_assert
+                                asserts += 1
 
         assert tests == asserts
 
