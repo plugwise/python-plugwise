@@ -967,11 +967,11 @@ class SmileHelper:
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self) -> ApplianceData:
+    def _group_switches(self) -> list[ApplianceData]:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
-        switch_groups: ApplianceData = {}
+        switch_groups: list[ApplianceData] = []
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
@@ -986,7 +986,7 @@ class SmileHelper:
                 members.append(item.attrib["id"])
 
             if group_type in SWITCH_GROUP_TYPES:
-                switch_groups.update(
+                switch_groups.append(
                     {
                         "appl_id": group_id,
                         "appl_data": {

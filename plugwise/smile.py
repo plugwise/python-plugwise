@@ -97,7 +97,7 @@ class SmileData(SmileHelper):
 
         if group_data := self._group_switches():
             LOGGER.debug("HOI %s", group_data)
-            self._appl_data.append(group_data)
+            self._appl_data.extend(group_data)
 
         # Collect data for each device via helper function
         self._all_device_data()
