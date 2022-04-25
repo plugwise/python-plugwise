@@ -434,7 +434,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     assert val_1 == val_2
                                     asserts += 1
                         else:
-                            asserts += 1
                             # The schedule temperature changes accordung to the set schedule,
                             # so the value can differ when testing at different times during the day.
                             if measure_key == "schedule_temperature":
