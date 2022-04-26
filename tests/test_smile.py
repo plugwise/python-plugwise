@@ -2528,6 +2528,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "zigbee_mac_address": "ABCD012345670101",
             },
+            "e1c884e7dede431dadee09506ec4f859": {
+                "class": "refrigerator",
+                "fw": "2011-06-27T10:47:37+02:00",
+                "hw": "6539-0700-7330",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "mac_address": None,
+                "model": "Circle+ type F",
+                "name": "Koelkast (92C4A)",
+                "vendor": "Plugwise",
+                "zigbee_mac_address": "0123456789AB",
+                "sensors": {
+                    "electricity_consumed": 50.5,
+                    "electricity_consumed_interval": 0.08,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": False},
+            },
             "5871317346d045bc9f6b987ef25ee638": {
                 "class": "water_heater_vessel",
                 "fw": "2011-06-27T10:52:18+02:00",
@@ -2660,6 +2677,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Stretch",
                 "vendor": "Plugwise B.V.",
                 "zigbee_mac_address": "ABCD012345670101",
+            },
+            "24b2ed37c8964c73897db6340a39c129": {
+                "class": "router",
+                "fw": "2011-06-27T10:47:37+02:00",
+                "hw": "6539-0700-7325",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "mac_address": None,
+                "model": "Circle+ type F",
+                "name": "MK Netwerk 1A4455E",
+                "vendor": "Plugwise",
+                "zigbee_mac_address": "0123456789AB",
+                "sensors": {
+                    "electricity_consumed": 4.63,
+                    "electricity_consumed_interval": 0.65,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
             },
             "09c8ce93d7064fa6a233c0e4c2449bfe": {
                 "class": "lamp",
@@ -2970,6 +3005,25 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Test erroneous domain_objects file from user."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
+            # Circle+
+            "9b9bfdb3c7ad4ca5817ccaa235f1e094": {
+                "class": "zz_misc",
+                "fw": "2011-06-27T10:47:37+02:00",
+                "hw": "6539-0700-7326",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "mac_address": None,
+                "model": "Circle+ type F",
+                "name": "25881A2",
+                "vendor": "Plugwise",
+                "zigbee_mac_address": "ABCD012345670A04",
+                "sensors": {
+                    "electricity_consumed": 13.3,
+                    "electricity_consumed_interval": 7.77,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
+            },
             # 76BF93
             "8b8d14b242e24cd789743c828b9a2ea9": {
                 "sensors": {"electricity_consumed": 1.69},
