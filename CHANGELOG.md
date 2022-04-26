@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.17.8: Smile: Bugfix, improve testing
+- Fix https://github.com/plugwise/plugwise-beta/issues/277
+- Improve incorrect test-case validation
+
 # v0.17.7: Smile: Corrections, fixes, clean up
 - Move compressor_state into binary_sensors
 - Adam: add missing zigbee_mac to wireless thermostats
