@@ -446,6 +446,9 @@ class SmileHelper:
                 # Stretches
                 if found := module.find("./protocols/network_router"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
+                # Also look for the Circle+/Stealth M+
+                if found := module.find("./protocols/network_coordinator"):
+                    model_data["zigbee_mac_address"] = found.find("mac_address").text
 
         return model_data
 
