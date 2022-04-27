@@ -366,7 +366,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info(
                         "      + Device: %s",
                         "{} ({} - {})".format(
-                            dev_info["name"], dev_info["class"], dev_id
+                            dev_info["name"], dev_info["dev_class"], dev_id
                         ),
                     )
             if device_count == 0:  # pragma: no cover
