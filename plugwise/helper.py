@@ -44,7 +44,6 @@ from .constants import (
     SWITCHES,
     THERMOSTAT_CLASSES,
     ApplianceData,
-    ApplianceDetails,
     DetailsData,
     DeviceData,
     GatewayData,
@@ -293,7 +292,7 @@ class SmileHelper:
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._appl_data: list[ApplianceData] = []
+        self._appl_data: dict[str, ApplianceData] = {}
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._anna_cooling_present = False
@@ -555,18 +554,17 @@ class SmileHelper:
         if self._smile_legacy:
             self.gateway_id = self._home_location
             temp_dict: ApplianceData = {
-                "appl_id": self._home_location,
-                "appl_data": {
+                self._home_location: {
                     "dev_class": "gateway",
                     "firmware": self.smile_fw_version,
                     "location": self._home_location,
                 },
             }
             if self.smile_mac_address is not None:
-                temp_dict["appl_data"].update({"mac_address": self.smile_mac_address})
+                temp_dict.update({"mac_address": self.smile_mac_address})
 
             if self.smile_type == "power":
-                temp_dict["appl_data"].update(
+                temp_dict.update(
                     {
                         "model": "P1",
                         "name": "P1",
@@ -574,11 +572,11 @@ class SmileHelper:
                     }
                 )
                 # legacy p1 has no more devices
-                self._appl_data.append(temp_dict)
+                self._appl_data.update(temp_dict)
                 return
 
             if self.smile_type == "thermostat":
-                temp_dict["appl_data"].update(
+                temp_dict.update(
                     {
                         "model": "Anna",
                         "name": "Anna",
@@ -587,7 +585,7 @@ class SmileHelper:
                 )
 
             if self.smile_type == "stretch":
-                temp_dict["appl_data"].update(
+                temp_dict.update(
                     {
                         "model": "Stretch",
                         "name": "Stretch",
@@ -596,7 +594,7 @@ class SmileHelper:
                     }
                 )
 
-            self._appl_data.append(temp_dict)
+            self._appl_data.update(temp_dict)
 
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
         # Legacy Anna only:
@@ -654,10 +652,7 @@ class SmileHelper:
             ):
                 continue
 
-            temp_dict = {
-                "appl_id": appl.dev_id,
-                "appl_data": {"dev_class": appl.pwclass},
-            }
+            temp_dict = {appl.dev_id: {"dev_class": appl.pwclass}}
 
             for key, value in {
                 "firmware": appl.fw,
@@ -670,9 +665,10 @@ class SmileHelper:
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
-                    temp_dict["appl_data"].update({key: value})  # type: ignore[misc]
+                    temp_dict.update({key: value})  # type: ignore[misc]
 
-            self._appl_data.append(temp_dict)
+            self._appl_data.update(temp_dict)
+        LOGGER.debug("HOI %s", self._appl_data)
 
     def _match_locations(self) -> dict[str, dict[str, Any]]:
         """Helper-function for _scan_thermostats().
@@ -882,7 +878,7 @@ class SmileHelper:
         thermo_matching: dict[str, int],
         loc_id: str,
         appliance_id: str,
-        appliance_details: ApplianceDetails,
+        appliance_details: ApplianceData,
     ) -> Any:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
@@ -965,11 +961,11 @@ class SmileHelper:
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self) -> list[ApplianceData]:
+    def _group_switches(self) -> dict[str, ApplianceData]:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
-        switch_groups: list[ApplianceData] = []
+        switch_groups: dict[str, ApplianceData] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Anna":
             return switch_groups
@@ -984,10 +980,9 @@ class SmileHelper:
                 members.append(item.attrib["id"])
 
             if group_type in SWITCH_GROUP_TYPES:
-                switch_groups.append(
+                switch_groups.update(
                     {
-                        "appl_id": group_id,
-                        "appl_data": {
+                        group_id: {
                             "dev_class": group_type,
                             "model": "Switchgroup",
                             "name": group_name,
@@ -1265,7 +1260,7 @@ class SmileHelper:
         self,
         d_id: str,
         data: DeviceData,
-        device_in: ApplianceDetails,
+        device_in: ApplianceData,
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,

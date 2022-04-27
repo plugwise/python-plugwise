@@ -607,7 +607,7 @@ SWITCHES: Final[list[str]] = [
 ]
 
 
-class ApplianceDetails(TypedDict, total=False):
+class ApplianceData(TypedDict, total=False):
     """The Appliance Data class."""
 
     dev_class: str
@@ -620,13 +620,6 @@ class ApplianceDetails(TypedDict, total=False):
     name: str
     vendor: str
     zigbee_mac_address: str | None
-
-
-class ApplianceData(TypedDict, total=False):
-    """The Appliance Data class."""
-
-    appl_id: str
-    appl_data: ApplianceDetails
 
 
 class GatewayData(TypedDict, total=False):
