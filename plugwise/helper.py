@@ -676,12 +676,10 @@ class SmileHelper:
         matched_locations: dict[str, Any] = {}
 
         self._all_appliances()
-        for location in self._loc_data:
-            location_id = location["loc_id"]
-            for appliance in self._appl_data:
-                appliance_details = appliance["appl_data"]
+        for location_id, location_details in self._loc_data.items():
+            for _, appliance_details in self._appl_data.items():
                 if appliance_details["location"] == location_id:
-                    matched_locations[location_id] = {"name": location["name"]}
+                    matched_locations[location_id] = location_details
 
         return matched_locations
 
