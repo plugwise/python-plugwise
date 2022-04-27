@@ -552,18 +552,18 @@ class SmileHelper:
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
             self.gateway_id = self._home_location
-            temp_dict: ApplianceData = {
-                self._home_location: {
-                    "dev_class": "gateway",
-                    "firmware": self.smile_fw_version,
-                    "location": self._home_location,
-                },
+            self._appl_data[self._home_location] = {
+                "dev_class": "gateway",
+                "firmware": self.smile_fw_version,
+                "location": self._home_location,
             }
             if self.smile_mac_address is not None:
-                temp_dict.update({"mac_address": self.smile_mac_address})
+                self._appl_data[self._home_location].update(
+                    {"mac_address": self.smile_mac_address}
+                )
 
             if self.smile_type == "power":
-                temp_dict.update(
+                self._appl_data[self._home_location].update(
                     {
                         "model": "P1",
                         "name": "P1",
@@ -571,11 +571,10 @@ class SmileHelper:
                     }
                 )
                 # legacy p1 has no more devices
-                self._appl_data.update(temp_dict)
                 return
 
             if self.smile_type == "thermostat":
-                temp_dict.update(
+                self._appl_data[self._home_location].update(
                     {
                         "model": "Anna",
                         "name": "Anna",
@@ -584,7 +583,7 @@ class SmileHelper:
                 )
 
             if self.smile_type == "stretch":
-                temp_dict.update(
+                self._appl_data[self._home_location].update(
                     {
                         "model": "Stretch",
                         "name": "Stretch",
@@ -592,8 +591,6 @@ class SmileHelper:
                         "zigbee_mac_address": self.smile_zigbee_mac_address,
                     }
                 )
-
-            self._appl_data.update(temp_dict)
 
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
         # Legacy Anna only:
@@ -651,7 +648,7 @@ class SmileHelper:
             ):
                 continue
 
-            temp_dict = {appl.dev_id: {"dev_class": appl.pwclass}}
+            self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
 
             for key, value in {
                 "firmware": appl.fw,
@@ -664,9 +661,8 @@ class SmileHelper:
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
-                    temp_dict.update({key: value})  # type: ignore[misc]
+                    self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-            self._appl_data.update(temp_dict)
         LOGGER.debug("HOI %s", self._appl_data)
 
     def _match_locations(self) -> dict[str, dict[str, Any]]:
