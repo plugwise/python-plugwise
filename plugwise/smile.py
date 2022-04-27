@@ -28,7 +28,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
-    ApplianceDetails,
+    ApplianceData,
     DeviceData,
     SmileBinarySensors,
     SmileOutput,
@@ -51,9 +51,7 @@ class SmileData(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        for item in self._appl_data:
-            device_id = item["appl_id"]
-            device = item["appl_data"]
+        for device_id, device in self._appl_data.items():
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
@@ -79,9 +77,7 @@ class SmileData(SmileHelper):
         """Determine the devices present from the obtained XML-data."""
         self._scan_thermostats()
 
-        for item in self._appl_data:
-            appliance = item["appl_id"]
-            details = item["appl_data"]
+        for appliance, details in self._appl_data.items():
             # Don't assign the _home_location to thermostat-devices without a location, they are not active
             if (
                 details.get("location") is None
@@ -96,7 +92,7 @@ class SmileData(SmileHelper):
                     details["dev_class"] = "thermo_sensor"
 
         if group_data := self._group_switches():
-            self._appl_data.extend(group_data)
+            self._appl_data.update(group_data)
 
         # Collect data for each device via helper function
         self._all_device_data()
@@ -126,7 +122,7 @@ class SmileData(SmileHelper):
                 device["binary_sensors"].pop("cooling_state")
 
     def _device_data_switching_group(
-        self, details: ApplianceDetails, device_data: DeviceData
+        self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine switching group device data.
@@ -143,7 +139,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_adam(
-        self, details: ApplianceDetails, device_data: DeviceData
+        self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine Adam device data.
@@ -157,7 +153,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_climate(
-        self, details: ApplianceDetails, device_data: DeviceData
+        self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
@@ -201,11 +197,7 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        for item in self._appl_data:
-            if item["appl_id"] == dev_id:
-                details = item["appl_data"]
-                break
-
+        details = self._appl_data[dev_id]
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
