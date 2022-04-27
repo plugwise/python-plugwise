@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Final, NamedTuple, TypedDict
+from typing import Any, Final, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -732,10 +732,3 @@ class DeviceData(ApplianceData, DetailsData, TypedDict, total=False):
     binary_sensors: SmileBinarySensors
     sensors: SmileSensors
     switches: SmileSwitches
-
-
-class SmileOutput(NamedTuple, DeviceData, GatewayData):
-    """The Smile data provided from the backend."""
-
-    smile: GatewayData
-    data: dict[str, DeviceData]

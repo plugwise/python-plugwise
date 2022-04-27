@@ -3,6 +3,8 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
+from typing import Any
+
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -31,7 +33,6 @@ from .constants import (
     ApplianceData,
     DeviceData,
     SmileBinarySensors,
-    SmileOutput,
     SmileSensors,
     SmileSwitches,
 )
@@ -56,13 +57,8 @@ class SmileData(SmileHelper):
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
             data = self._get_device_data(device_id)
-            self.gw_devices.append(
-                {
-                    "device_id": device_id,
-                    "device_data": self._update_device_with_dicts(
-                        device_id, data, device, bs_dict, s_dict, sw_dict
-                    ),
-                }
+            self.gw_devices[device_id] = self._update_device_with_dicts(
+                device_id, data, device, bs_dict, s_dict, sw_dict
             )
 
         self.gw_data.update(
@@ -435,7 +431,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> SmileOutput:
+    async def async_update(self) -> list[dict[str, Any]]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -472,7 +468,7 @@ class Smile(SmileComm, SmileData):
                             notifs,
                         )
 
-        return {"smile": self.gw_data, "data": self.gw_devices}
+        return [self.gw_data, self.gw_devices]
 
     async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
         """Helper-function for set_schedule_state()."""
