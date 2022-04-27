@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Final, TypedDict
+from typing import Any, Final, NamedTuple, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -632,13 +632,6 @@ class GatewayData(TypedDict, total=False):
     notifications: dict[str, str]
 
 
-class GatewayDevice(TypedDict, total=False):
-    """The gateway devices class."""
-
-    device_id: str
-    device_data: DeviceData
-
-
 class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
@@ -741,8 +734,8 @@ class DeviceData(ApplianceData, DetailsData, TypedDict, total=False):
     switches: SmileSwitches
 
 
-class SmileOutput(GatewayData, GatewayDevice):
+class SmileOutput(NamedTuple, DeviceData, GatewayData):
     """The Smile data provided from the backend."""
 
     smile: GatewayData
-    data: list[GatewayDevice]
+    data: dict[str, DeviceData]
