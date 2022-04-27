@@ -108,8 +108,7 @@ class SmileData(SmileHelper):
                 self.cooling_active = False
 
         # Don't show cooling_state when no cooling present
-        for gw_dict in self.gw_devices:
-            device = gw_dict["device_data"]
+        for _, device in self.gw_devices.items():
             if (
                 not self._cooling_present
                 and "binary_sensors" in device
