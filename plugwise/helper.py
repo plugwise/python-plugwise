@@ -920,9 +920,7 @@ class SmileHelper:
                     {"master": None, "master_prio": 0, "slaves": set()}
                 )
 
-            for item in self._appl_data:
-                appliance_id = item["appl_id"]
-                appliance_details = item["appl_data"]
+            for appliance_id, appliance_details in self._appl_data.items():
                 appl_class = self._rank_thermostat(
                     thermo_matching, loc_id, appliance_id, appliance_details
                 )
