@@ -48,7 +48,6 @@ from .constants import (
     DeviceData,
     GatewayData,
     GatewayDevice,
-    LocationData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -304,7 +303,7 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
-        self._loc_data: list[LocationData] = []
+        self._loc_data: dict[str, dict[str, str]] = {}
         self._locations: etree
         self._modules: etree
         self._on_off_device = False
@@ -339,9 +338,9 @@ class SmileHelper:
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type == "thermostat":
-            self._loc_data.append({"loc_id": FAKE_LOC, "name": "Home"})
+            self._loc_data[FAKE_LOC] = {"name": "Home"}
         if self.smile_type == "stretch":
-            self._loc_data.append({"loc_id": FAKE_LOC, "name": "Home"})
+            self._loc_data[FAKE_LOC] = {"name": "Home"}
 
     def _locations_specials(self, loc: Munch, location: str) -> Munch:
         """Helper-function for _all_locations().
@@ -382,7 +381,7 @@ class SmileHelper:
             # Specials
             loc = self._locations_specials(loc, location)
 
-            self._loc_data.append({"loc_id": loc.id, "name": loc.name})
+            self._loc_data[loc.id] = {"name": loc.name}
 
         return
 
