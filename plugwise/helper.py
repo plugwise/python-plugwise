@@ -67,7 +67,7 @@ from .util import (
 
 def update_helper(
     data: DetailsData,
-    device_list: dict[str, DeviceData],
+    devices: dict[str, DeviceData],
     device_dict: DeviceData,
     device_id: str,
     bsssw_type: str,
@@ -78,18 +78,12 @@ def update_helper(
     for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
         # Update the PW_Notification binary_sensor state
         if bsssw_type == "binary_sensors" and item == "plugwise_notification":
-            for gw_dict in device_list:
-                if gw_dict["device_id"] == device_id:
-                    gw_dict["device_data"]["binary_sensors"][
-                        "plugwise_notification"
-                    ] = (notifs != {})
+            devices[device_id][bsssw_type]["plugwise_notification"] = notifs != {}
 
         if item == key:
-            for gw_dict in device_list:
-                if gw_dict["device_id"] == device_id:
-                    for bsssw_item in gw_dict["device_data"][bsssw_type]:  # type: ignore [literal-required]
-                        if bsssw_item == key:
-                            gw_dict["device_data"][bsssw_type][bsssw_item] = data[key]  # type: ignore [literal-required]
+            for device in devices[device_id][bsssw_type]:
+                if device == key:
+                    devices[device_id][bsssw_type][device] = data[key]  # type: ignore [literal-required]
 
 
 def check_model(name: str | None, vendor_name: str) -> str | None:
