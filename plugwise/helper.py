@@ -663,8 +663,6 @@ class SmileHelper:
                 if value is not None or key == "location":
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-        LOGGER.debug("HOI %s", self._appl_data)
-
     def _match_locations(self) -> dict[str, dict[str, Any]]:
         """Helper-function for _scan_thermostats().
         Match appliances with locations.
