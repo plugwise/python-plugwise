@@ -87,7 +87,7 @@ def update_helper(
                     devices[device_id][bsssw_type][device] = data[key]  # type: ignore [literal-required]
 
 
-def check_model(name: str | None, vendor_name: str) -> str | None:
+def check_model(name: str | None, vendor_name: str | None) -> str | None:
     """Model checking before using version_to_model."""
     if vendor_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
@@ -432,7 +432,7 @@ class SmileHelper:
 
             appl.vendor_name = module_data["vendor_name"]
             appl.hw = module_data["hardware_version"]
-            if appl.hw:
+            if appl.hw is not None:
                 hw_version = module_data["hardware_version"].replace("-", "")
                 appl.model = version_to_model(hw_version)
             appl.fw = module_data["firmware_version"]
