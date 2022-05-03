@@ -3,8 +3,6 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-from typing import Any
-
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -32,6 +30,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
     ApplianceData,
     DeviceData,
+    GatewayData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -430,7 +429,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> list[dict[str, Any]]:
+    async def async_update(self) -> list[GatewayData | dict[str, DeviceData]]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
