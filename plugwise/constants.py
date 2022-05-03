@@ -710,9 +710,9 @@ class ThermoLoc(TypedDict, total=False):
     """Thermo Location class."""
 
     name: str
-    master: str
+    master: str | None
     master_prio: int
-    slaves: set()
+    slaves: set[str]
 
 
 class DeviceDataPoints(
