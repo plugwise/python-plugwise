@@ -298,7 +298,7 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
-        self._loc_data: dict[str, dict[str, str]] = {}
+        self._loc_data: dict[str, ThermoLoc] = {}
         self._locations: etree
         self._modules: etree
         self._on_off_device = False
