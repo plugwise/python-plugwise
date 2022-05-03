@@ -47,6 +47,7 @@ from .constants import (
     DeviceData,
     DeviceDataPoints,
     GatewayData,
+    ModelData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -380,11 +381,11 @@ class SmileHelper:
 
     def _get_module_data(
         self, appliance: etree, locator: str, mod_type: str
-    ) -> dict[str, Any]:
+    ) -> ModelData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
         Collect requested info from MODULES.
         """
-        model_data: dict[str, Any] = {
+        model_data: ModelData = {
             "contents": False,
             "vendor_name": None,
             "vendor_model": None,
