@@ -51,6 +51,7 @@ from .constants import (
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
+    ThermoLoc,
 )
 from .exceptions import (
     DeviceTimeoutError,
@@ -306,7 +307,7 @@ class SmileHelper:
         self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
-        self._thermo_locs: dict[str, Any] = {}
+        self._thermo_locs: dict[str, ThermoLoc] = {}
 
         self.cooling_active = False
         self.gateway_id: str
@@ -657,11 +658,11 @@ class SmileHelper:
                 if value is not None or key == "location":
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-    def _match_locations(self) -> dict[str, dict[str, str]]:
+    def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
         Match appliances with locations.
         """
-        matched_locations: dict[str, dict[str, str]] = {}
+        matched_locations: dict[str, ThermoLoc] = {}
 
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
