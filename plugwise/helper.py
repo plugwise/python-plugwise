@@ -21,6 +21,7 @@ from munch import Munch
 
 # Time related
 import pytz
+from semver import VersionInfo
 
 from .constants import (
     APPLIANCES,
@@ -318,7 +319,7 @@ class SmileHelper:
         self.smile_mac_address: str | None = None
         self.smile_name: str
         self.smile_type: str
-        self.smile_version: tuple[str, Any]
+        self.smile_version: tuple[str, VersionInfo]
         self.smile_zigbee_mac_address: str | None = None
 
     def _locations_legacy(self) -> None:
