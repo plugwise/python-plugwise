@@ -864,7 +864,7 @@ class SmileHelper:
         loc_id: str,
         appliance_id: str,
         appliance_details: ApplianceData,
-    ) -> str:
+    ) -> None:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
         appl_class = appliance_details["dev_class"]
@@ -886,8 +886,6 @@ class SmileHelper:
             else:
                 self._thermo_locs[loc_id]["slaves"].add(appliance_id)
 
-        return appl_class
-
     def _scan_thermostats(self) -> None:
         """Helper-function for smile.py: get_all_devices().
         Update locations with thermostat ranking results.
@@ -901,7 +899,6 @@ class SmileHelper:
             "thermostatic_radiator_valve": 1,
         }
 
-        high_prio: int = 0
         for loc_id, location_details in self._thermo_locs.items():
             self._thermo_locs[loc_id] = location_details
 
@@ -915,14 +912,9 @@ class SmileHelper:
                 )
 
             for appliance_id, appliance_details in self._appl_data.items():
-                appl_class = self._rank_thermostat(
+                self._rank_thermostat(
                     thermo_matching, loc_id, appliance_id, appliance_details
                 )
-
-                # Find highest ranking thermostat
-                if appl_class in thermo_matching:
-                    if (tm_a_class := thermo_matching[appl_class]) > high_prio:
-                        high_prio = tm_a_class
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().
