@@ -863,7 +863,7 @@ class SmileHelper:
         loc_id: str,
         appliance_id: str,
         appliance_details: ApplianceData,
-    ) -> Any:
+    ) -> str:
         """Helper-function for _scan_thermostats().
         Rank the thermostat based on appliance_details: master or slave."""
         appl_class = appliance_details["dev_class"]
