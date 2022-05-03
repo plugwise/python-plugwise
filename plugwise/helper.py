@@ -44,8 +44,8 @@ from .constants import (
     SWITCHES,
     THERMOSTAT_CLASSES,
     ApplianceData,
-    DetailsData,
     DeviceData,
+    DeviceDataPoints,
     GatewayData,
     SmileBinarySensors,
     SmileSensors,
@@ -66,7 +66,7 @@ from .util import (
 
 
 def update_helper(
-    data: DetailsData,
+    data: DeviceDataPoints,
     devices: dict[str, DeviceData],
     device_dict: DeviceData,
     device_id: str,
