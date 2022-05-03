@@ -657,11 +657,11 @@ class SmileHelper:
                 if value is not None or key == "location":
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-    def _match_locations(self) -> dict[str, dict[str, Any]]:
+    def _match_locations(self) -> dict[str, dict[str, str]]:
         """Helper-function for _scan_thermostats().
         Match appliances with locations.
         """
-        matched_locations: dict[str, Any] = {}
+        matched_locations: dict[str, dict[str, str]] = {}
 
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
