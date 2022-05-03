@@ -706,6 +706,15 @@ class SmileSwitches(TypedDict, total=False):
     relay: bool
 
 
+class ThermoLoc(TypedDict, total=False):
+    """Thermo Location class."""
+
+    name: str
+    master: str
+    master_prio: int
+    slaves: set()
+
+
 class DeviceDataPoints(
     SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
 ):
