@@ -623,7 +623,7 @@ class ApplianceData(TypedDict, total=False):
 
 
 class GatewayData(TypedDict, total=False):
-    """The gateway data class."""
+    """The Gateway Data class."""
 
     smile_name: str
     gateway_id: str
@@ -695,39 +695,43 @@ class SmileSwitches(TypedDict, total=False):
     relay: bool
 
 
-class DetailsData(
+class DeviceDataPoints(
     SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
 ):
-    """The gateway devices class."""
+    """The class covering all possible collected data points."""
 
-    # gateway
+    # Gateway
     regulation_mode: str
     regulation_modes: list[str]
 
-    # heater_central
+    # Heater Central
     maximum_boiler_temperature: float
 
-    # master_thermostats
+    # Master Thermostats
     lower_bound: float
     upper_bound: float
     resolution: float
+
     preset_modes: list[str] | None
     active_preset: str | None
     presets: dict[str, list[float]]
+
     available_schedules: list[str]
     selected_schedule: str
     last_used: str | None
     schedule_temperature: float | None
+
     mode: str
-    # Adam master_thermostats
+
+    # Extra for Adam Master Thermostats
     control_state: str
 
-    # Temporary used
+    # For temporary use
     c_heating_state: str
 
 
-class DeviceData(ApplianceData, DetailsData, TypedDict, total=False):
-    """All device data per device_id."""
+class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
+    """The Device Data class, covering the collected and ordere output-data per device."""
 
     binary_sensors: SmileBinarySensors
     sensors: SmileSensors
