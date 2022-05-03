@@ -632,6 +632,17 @@ class GatewayData(TypedDict, total=False):
     notifications: dict[str, str]
 
 
+class ModelData(TypedDict):
+    """The ModelData class."""
+
+    contents: bool
+    vendor_name: str | None
+    vendor_model: str | None
+    hardware_version: str | None
+    firmware_version: str | None
+    zigbee_mac_address: str | None
+
+
 class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
