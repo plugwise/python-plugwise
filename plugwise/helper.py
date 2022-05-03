@@ -431,11 +431,11 @@ class SmileHelper:
                 return None
 
             appl.vendor_name = module_data["vendor_name"]
-            appl.hw = module_data["hardware_version"]
-            if appl.hw is not None:
-                hw_version = module_data["hardware_version"].replace("-", "")
+            appl.hardware = module_data["hardware_version"]
+            if appl.hardware is not None:
+                hw_version = appl.hardware.replace("-", "")
                 appl.model = version_to_model(hw_version)
-            appl.fw = module_data["firmware_version"]
+            appl.firmware = module_data["firmware_version"]
 
             return appl
 
@@ -450,8 +450,8 @@ class SmileHelper:
 
             appl.vendor_name = module_data["vendor_name"]
             appl.model = version_to_model(module_data["vendor_model"])
-            appl.hw = module_data["hardware_version"]
-            appl.fw = module_data["firmware_version"]
+            appl.hardware = module_data["hardware_version"]
+            appl.firmware = module_data["firmware_version"]
 
             return appl
 
@@ -493,8 +493,8 @@ class SmileHelper:
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.vendor_name = module_data["vendor_name"]
             appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
-            appl.hw = module_data["hardware_version"]
-            appl.fw = module_data["firmware_version"]
+            appl.hardware = module_data["hardware_version"]
+            appl.firmware = module_data["firmware_version"]
             appl.zigbee_mac = module_data["zigbee_mac_address"]
 
             return appl
@@ -522,7 +522,7 @@ class SmileHelper:
             if not module_data["contents"]:
                 module_data = self._get_module_data(appliance, locator2, mod_type)
             appl.vendor_name = module_data["vendor_name"]
-            appl.hw = module_data["hardware_version"]
+            appl.hardware = module_data["hardware_version"]
             appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
             if appl.model is None:
                 appl.model = (
@@ -618,8 +618,8 @@ class SmileHelper:
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
-            appl.fw = None
-            appl.hw = None
+            appl.firmware = None
+            appl.hardware = None
             appl.mac = None
             appl.zigbee_mac = None
             appl.vendor_name = None
@@ -631,8 +631,8 @@ class SmileHelper:
                 continue
 
             if appl.pwclass == "gateway":
-                appl.fw = self.smile_fw_version
-                appl.hw = self.smile_hw_version
+                appl.firmware = self.smile_fw_version
+                appl.hardware = self.smile_hw_version
 
             # Don't show orphaned non-legacy thermostat-types.
             if (
@@ -645,8 +645,8 @@ class SmileHelper:
             self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
 
             for key, value in {
-                "firmware": appl.fw,
-                "hardware": appl.hw,
+                "firmware": appl.firmware,
+                "hardware": appl.hardware,
                 "location": appl.location,
                 "mac_address": appl.mac,
                 "model": appl.model,
