@@ -78,10 +78,10 @@ def update_helper(
     for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
         # Update the PW_Notification binary_sensor state
         if bsssw_type == "binary_sensors" and item == "plugwise_notification":
-            devices[device_id][bsssw_type]["plugwise_notification"] = notifs != {}
+            devices[device_id][bsssw_type]["plugwise_notification"] = notifs != {}  # type: ignore [literal-required]
 
         if item == key:
-            for device in devices[device_id][bsssw_type]:
+            for device in devices[device_id][bsssw_type]:  # type: ignore [literal-required]
                 if device == key:
                     devices[device_id][bsssw_type][device] = data[key]  # type: ignore [literal-required]
 
