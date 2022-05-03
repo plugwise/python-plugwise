@@ -673,7 +673,7 @@ class SmileHelper:
 
         return matched_locations
 
-    def _control_state(self, loc_id: str) -> Any:
+    def _control_state(self, loc_id: str) -> str:
         """Helper-function for _device_data_adam().
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local master thermostat.
@@ -687,9 +687,9 @@ class SmileHelper:
 
         return
 
-    def _presets_legacy(self) -> dict[str, Any]:
+    def _presets_legacy(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
-        preset_dictionary: dict[str, Any] = {}
+        preset_dictionary: dict[str, list[float]] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
             if directive is not None and "icon" in directive.keys():
                 # Ensure list of heating_setpoint, cooling_setpoint
@@ -700,9 +700,9 @@ class SmileHelper:
 
         return preset_dictionary
 
-    def _presets(self, loc_id: str) -> dict[str, Any]:
+    def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
-        presets: dict[str, Any] = {}
+        presets: dict[str, list[float]] = {}
         tag_1 = "zone_setpoint_and_state_based_on_preset"
         tag_2 = "Thermostat presets"
 
@@ -734,7 +734,7 @@ class SmileHelper:
 
         return presets
 
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, Any]:
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str | None]:
         """Helper-function for _presets().
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
@@ -748,7 +748,7 @@ class SmileHelper:
 
         return schedule_ids
 
-    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, Any]:
+    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str | None]:
         """Helper-function for _presets(), _schedules() and _last_active_schedule().
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
@@ -1060,7 +1060,7 @@ class SmileHelper:
 
         return direct_data
 
-    def _preset(self, loc_id: str) -> Any:
+    def _preset(self, loc_id: str) -> str:
         """Helper-function for smile.py: device_data_climate().
         Collect the active preset based on Location ID.
         """
