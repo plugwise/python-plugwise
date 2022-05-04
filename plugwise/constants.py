@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Final, TypedDict
+from typing import Final, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -507,7 +507,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 }
 
 # Known types of Smiles and Stretches
-SMILES: Final[dict[str, dict[str, Any]]] = {
+SMILES: Final[dict[str, dict[str, str | bool]]] = {
     "smile_open_therm_v3": {
         "type": "thermostat",
         "friendly_name": "Adam",
