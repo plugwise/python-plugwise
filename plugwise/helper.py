@@ -1147,8 +1147,21 @@ class SmileHelper:
                         temp[directive.attrib["time"]] = float(
                             self._presets(loc_id)[entry["preset"]][0]
                         )
+                        if self.cooling_active:
+                            temp[directive.attrib["time"]] = float(
+                                self._presets(loc_id)[entry["preset"]][1]
+                            )
                 else:
-                    temp[directive.attrib["time"]] = float(entry["setpoint"])
+                    if "heating_setpoint" in entry:
+                        temp[directive.attrib["time"]] = float(
+                            entry["heating_setpoint"]
+                        )
+                        if self.cooling_active:
+                            temp[directive.attrib["time"]] = float(
+                                entry["cooling_setpoint"]
+                            )
+                    else:
+                        temp[directive.attrib["time"]] = float(entry["setpoint"])
                 count += 1
 
             if count > 1:
