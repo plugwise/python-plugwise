@@ -507,7 +507,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 }
 
 # Known types of Smiles and Stretches
-SMILES: Final[dict[str, dict[str, str | bool]]] = {
+SMILES: Final[dict[str, dict[str, str]]] = {
     "smile_open_therm_v3": {
         "type": "thermostat",
         "friendly_name": "Adam",
@@ -527,7 +527,7 @@ SMILES: Final[dict[str, dict[str, str | bool]]] = {
     "smile_thermo_v1": {
         "type": "thermostat",
         "friendly_name": "Anna",
-        "legacy": True,
+        "legacy": "true",
     },
     "smile_v4": {
         "type": "power",
@@ -540,10 +540,10 @@ SMILES: Final[dict[str, dict[str, str | bool]]] = {
     "smile_v2": {
         "type": "power",
         "friendly_name": "P1",
-        "legacy": True,
+        "legacy": "true",
     },
-    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
-    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
+    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
+    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
 }
 
 
