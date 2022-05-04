@@ -158,7 +158,6 @@ class SmileData(SmileHelper):
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
         if presets := self._presets(loc_id):
-            device_data["presets"] = presets
             device_data["preset_modes"] = list(presets)
             device_data["active_preset"] = self._preset(loc_id)
 
