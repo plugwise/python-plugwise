@@ -734,7 +734,6 @@ class DeviceDataPoints(
 
     preset_modes: list[str] | None
     active_preset: str | None
-    presets: dict[str, list[float]]
 
     available_schedules: list[str]
     selected_schedule: str
