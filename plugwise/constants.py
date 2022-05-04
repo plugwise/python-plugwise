@@ -744,7 +744,7 @@ class DeviceDataPoints(
     mode: str
 
     # Extra for Adam Master Thermostats
-    control_state: str
+    control_state: str | bool
 
     # For temporary use
     c_heating_state: str
