@@ -790,7 +790,7 @@ class SmileHelper:
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ["regulation_mode"]:
-                    if uom := attrs.get(ATTR_UNIT_OF_MEASUREMENT):
+                    if uom := attrs[ATTR_UNIT_OF_MEASUREMENT]:
                         data[measurement] = format_measure(appl_p_loc.text, uom)  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
@@ -818,7 +818,7 @@ class SmileHelper:
                 if measurement == "setpoint":
                     continue
 
-                if uom := attrs.get(ATTR_UNIT_OF_MEASUREMENT):
+                if uom := attrs[ATTR_UNIT_OF_MEASUREMENT]:
                     data[measurement] = format_measure(t_function.text, uom)  # type: ignore [literal-required]
 
         return data
