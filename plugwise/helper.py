@@ -784,15 +784,14 @@ class SmileHelper:
                 ):
                     continue
 
-                try:
-                    measurement = attrs[ATTR_NAME]
-                except KeyError:
-                    pass
+                if new_name := attrs.get(ATTR_NAME):
+                    measurement = new_name
 
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ["regulation_mode"]:
-                    data[measurement] = format_measure(appl_p_loc.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT))  # type: ignore [literal-required]
+                    if uom := attrs.get(ATTR_UNIT_OF_MEASUREMENT):
+                        data[measurement] = format_measure(appl_p_loc.text, uom)  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
@@ -812,16 +811,15 @@ class SmileHelper:
             # Thermostat actuator measurements
             t_locator = f'.//actuator_functionalities/thermostat_functionality[type="thermostat"]/{measurement}'
             if (t_function := appliance.find(t_locator)) is not None:
-                try:
-                    measurement = attrs[ATTR_NAME]
-                except KeyError:
-                    pass
+                if new_name := attrs.get(ATTR_NAME):
+                    measurement = new_name
 
                 # Avoid double processing
                 if measurement == "setpoint":
                     continue
 
-                data[measurement] = format_measure(t_function.text, attrs.get(ATTR_UNIT_OF_MEASUREMENT))  # type: ignore [literal-required]
+                if uom := attrs.get(ATTR_UNIT_OF_MEASUREMENT):
+                    data[measurement] = format_measure(t_function.text, uom)  # type: ignore [literal-required]
 
         return data
 
