@@ -673,7 +673,7 @@ class SmileHelper:
 
         return matched_locations
 
-    def _control_state(self, loc_id: str) -> str:
+    def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _device_data_adam().
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local master thermostat.
@@ -683,9 +683,9 @@ class SmileHelper:
         if (location := self._domain_objects.find(locator)) is not None:
             locator = './actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
             if (ctrl_state := location.find(locator)) is not None:
-                return ctrl_state.text
+                return str(ctrl_state.text)
 
-        return
+        return False
 
     def _presets_legacy(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
@@ -1060,21 +1060,22 @@ class SmileHelper:
 
         return direct_data
 
-    def _preset(self, loc_id: str) -> str:
+    def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().
         Collect the active preset based on Location ID.
         """
         if not self._smile_legacy:
             locator = f'./location[@id="{loc_id}"]/preset'
             if (preset := self._domain_objects.find(locator)) is not None:
-                return preset.text
+                return str(preset.text)
+            return None
 
         locator = "./rule[active='true']/directives/when/then"
         if (
             active_rule := self._domain_objects.find(locator)
         ) is None or "icon" not in active_rule.keys():
-            return
-        return active_rule.attrib["icon"]
+            return None
+        return str(active_rule.attrib["icon"])
 
     def _schedules_legacy(
         self, avail: list[str], sched_temp: float | None, sel: str
@@ -1142,9 +1143,12 @@ class SmileHelper:
                 entry = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
-                    temp[directive.attrib["time"]] = float(
-                        self._presets(loc_id)[entry["preset"]][0]
-                    )
+                    if loc_id is None:  # set to 0 when the schedule is not active
+                        temp[directive.attrib["time"]] = float(0)
+                    else:
+                        temp[directive.attrib["time"]] = float(
+                            self._presets(loc_id)[entry["preset"]][0]
+                        )
                 else:
                     temp[directive.attrib["time"]] = float(entry["setpoint"])
                 count += 1
@@ -1171,7 +1175,9 @@ class SmileHelper:
 
         return available, selected, schedule_temperature, last_used
 
-    def _last_used_schedule(self, loc_id: str, rule_ids: dict[str, str]) -> str | None:
+    def _last_used_schedule(
+        self, loc_id: str, rule_ids: dict[str, str | None]
+    ) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
         """
