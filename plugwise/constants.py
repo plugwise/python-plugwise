@@ -420,7 +420,7 @@ HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 # Excluded:
 # zone_thermosstat: 'temperature_offset'
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
-DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
+DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     # HA Core thermostat current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core thermostat setpoint
@@ -441,24 +441,24 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
     # Specific for a Plug
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "relay": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "relay": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     # Added measurements from actuator_functionalities/thermostat_functionality
     "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: None},
-    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
+    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: NONE},
 }
 
 # Heater Central related measurements
-HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
+HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "boiler_temperature": {
         ATTR_NAME: "water_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
     "domestic_hot_water_comfort_mode": {
         ATTR_NAME: "dhw_cm_switch",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },
     "domestic_hot_water_state": {
         ATTR_NAME: "dhw_state",
@@ -469,11 +469,11 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
     },  # Non-zero when heating, zero when dhw-heating
     "central_heating_state": {
         ATTR_NAME: "c_heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },  # For Elga (heatpump) use this instead of intended_central_heating_state
     "intended_central_heating_state": {
         ATTR_NAME: "heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
     "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "return_water_temperature": {
@@ -481,23 +481,23 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
     # Used with the Elga heatpump - marcelveldt
-    "compressor_state": {ATTR_UNIT_OF_MEASUREMENT: None},
-    "cooling_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "compressor_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
+    "cooling_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
-    "slave_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "slave_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     "flame_state": {
-        ATTR_UNIT_OF_MEASUREMENT: None
+        ATTR_UNIT_OF_MEASUREMENT: NONE
     },  # Also present when there is a single gas-heater
     "central_heater_water_pressure": {
         ATTR_NAME: "water_pressure",
         ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
     },
     # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: None},
+    "boiler_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: NONE},
     # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
     "intended_boiler_state": {
         ATTR_NAME: "heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },
     # Outdoor temperature from APPLIANCES - present for a heatpump
     "outdoor_temperature": {
