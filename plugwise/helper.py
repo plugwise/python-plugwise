@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
-from typing import Any
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import (
@@ -765,7 +764,10 @@ class SmileHelper:
         return schedule_ids
 
     def _appliance_measurements(
-        self, appliance: etree, data: DeviceData, measurements: dict[str, Any]
+        self,
+        appliance: etree,
+        data: DeviceData,
+        measurements: dict[str, dict[str, str | None]],
     ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
