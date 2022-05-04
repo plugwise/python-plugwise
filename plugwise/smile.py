@@ -387,7 +387,7 @@ class Smile(SmileComm, SmileData):
         self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
-            self._smile_legacy = SMILES[target_smile]["legacy"]
+            self._smile_legacy = True
 
         if self.smile_type == "stretch":
             self._stretch_v2 = self.smile_version[1].major == 2
