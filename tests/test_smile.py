@@ -601,15 +601,27 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
         testdata = {
-            # Anna
+            "0000aaaa0000aaaa0000aaaa0000aa00": {
+                "dev_class": "gateway",
+                "firmware": "1.8.0",
+                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise B.V.",
+                "binary_sensors": {"plugwise_notification": False},
+            },
             "0d266432d64443e283b5d708ae98b455": {
                 "dev_class": "thermostat",
                 "firmware": "2017-03-13T11:54:58+01:00",
+                "hardware": "6539-1301-500",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "schedule_temperature": 20.0,
+                "lower_bound": 4.0,
+                "upper_bound": 30.0,
+                "resolution": 0.1,
                 "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["Thermostat schedule"],
@@ -617,11 +629,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Thermostat schedule",
                 "mode": "auto",
                 "sensors": {"temperature": 20.4, "setpoint": 20.5, "illuminance": 151},
-                "lower_bound": 4,
-                "upper_bound": 30,
-                "resolution": 0.1,
             },
-            # Central
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
                 "dev_class": "heater_central",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -637,16 +645,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 21.7,
                     "water_pressure": 1.2,
                 },
-            },
-            # Gateway
-            "0000aaaa0000aaaa0000aaaa0000aa00": {
-                "dev_class": "gateway",
-                "firmware": "1.8.0",
-                "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise B.V.",
-                "binary_sensors": {"plugwise_notification": False},
             },
         }
 
@@ -691,39 +689,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_legacy_anna_2(self):
         """Test a legacy Anna device."""
         testdata = {
-            # Anna
-            "9e7377867dc24e51b8098a5ba02bd89d": {
-                "dev_class": "thermostat",
-                "firmware": "2017-03-13T11:54:58+01:00",
-                "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Anna",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "schedule_temperature": 15.0,
-                "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
-                "active_preset": None,
-                "available_schedules": ["Thermostat schedule"],
-                "selected_schedule": "None",
-                "last_used": "Thermostat schedule",
-                "mode": "heat",
-                "sensors": {"temperature": 21.4, "setpoint": 15.0, "illuminance": 19.5},
-            },
-            # Central
-            "ea5d8a7177e541b0a4b52da815166de4": {
-                "dev_class": "heater_central",
-                "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Generic heater",
-                "name": "OpenTherm",
-                "binary_sensors": {"flame_state": False, "heating_state": False},
-                "sensors": {
-                    "water_temperature": 54.0,
-                    "intended_boiler_temperature": 0.0,
-                    "modulation_level": 0.0,
-                    "return_temperature": 0.0,
-                    "water_pressure": 1.7,
-                },
-            },
-            # Gateway
             "be81e3f8275b4129852c4d8d550ae2eb": {
                 "dev_class": "gateway",
                 "firmware": "1.8.0",
@@ -733,6 +698,41 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 21.0},
+            },
+            "9e7377867dc24e51b8098a5ba02bd89d": {
+                "dev_class": "thermostat",
+                "firmware": "2017-03-13T11:54:58+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "schedule_temperature": 15.0,
+                "lower_bound": 4.0,
+                "upper_bound": 30.0,
+                "resolution": 0.1,
+                "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
+                "active_preset": None,
+                "available_schedules": ["Thermostat schedule"],
+                "selected_schedule": "None",
+                "last_used": "Thermostat schedule",
+                "mode": "heat",
+                "sensors": {"temperature": 21.4, "setpoint": 15.0, "illuminance": 19.5},
+            },
+            "ea5d8a7177e541b0a4b52da815166de4": {
+                "dev_class": "heater_central",
+                "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                "model": "Generic heater",
+                "name": "OpenTherm",
+                "maximum_boiler_temperature": 70.0,
+                "binary_sensors": {"flame_state": False, "heating_state": False},
+                "sensors": {
+                    "water_temperature": 54.0,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 0.0,
+                    "water_pressure": 1.7,
+                },
             },
         }
 
