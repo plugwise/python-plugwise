@@ -1,8 +1,8 @@
 # Changelog
 
-# v0.18.0: Smile: add proper handling of cooling-schedules
-- Improve typing hints: e.g. all collected measurements are now typed via TypedDicts
-- Implement correct handling of the schedule when cooling is active (needs testing)
+# v0.18.0: Smile: add generation of cooling-schedules
+- Further improve typing hints: e.g. all collected measurements are now typed via TypedDicts
+- Implement correct generation of schedules for both heating and cooling (needs testing)
 
 # v0.17.8: Smile: Bugfix, improve testing
 - Fix https://github.com/plugwise/plugwise-beta/issues/277
