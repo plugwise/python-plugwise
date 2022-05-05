@@ -687,7 +687,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_legacy_anna_2(self):
-        """Test a legacy Anna device."""
+        """Test another legacy Anna device."""
         testdata = {
             "be81e3f8275b4129852c4d8d550ae2eb": {
                 "dev_class": "gateway",
@@ -859,7 +859,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_v4(self):
-        """Test an Anna firmware 4 setup without a boiler."""
+        """Test an Anna firmware 4 setup."""
         testdata = {
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "dev_class": "heater_central",
@@ -953,7 +953,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_v4_dhw(self):
-        """Test an Anna firmware 4 setup without a boiler."""
+        """Test an Anna firmware 4 setup for domestic hot water."""
         testdata = {
             "cd0e6156b1f04d5f952349ffbe397481": {
                 "dev_class": "heater_central",
@@ -1047,7 +1047,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_v4_no_tag(self):
-        """Test an Anna firmware 4 setup without a boiler - no presets."""
+        """Test an Anna firmware 4 setup - missing tag (issue)."""
         testdata = {
             # Anna
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
@@ -1090,7 +1090,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw3(self):
-        """Test an Anna firmware 3 without a boiler."""
+        """Test an Anna with firmware 3, without a boiler."""
         testdata = {
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
                 "dev_class": "thermostat",
@@ -1166,7 +1166,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw4(self):
-        """Test an Anna firmware 4 without a boiler."""
+        """Test an Anna with firmware 4.0, without a boiler."""
         testdata = {
             "a270735e4ccd45239424badc0578a2b1": {
                 "dev_class": "gateway",
@@ -1242,7 +1242,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw42(self):
-        """Test an Anna firmware 4.2 setup without a boiler."""
+        """Test an Anna with firmware 4.2, without a boiler."""
         testdata = {
             "c46b4794d28149699eacf053deedd003": {
                 "dev_class": "heater_central",
@@ -1318,7 +1318,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna(self):
-        """Test outdated information for Adam with Anna setup."""
+        """Test Adam (firmware 3.0) with Anna setup."""
         testdata = {
             "2743216f626f43948deec1f7ab3b3d70": {
                 "dev_class": "heater_central",
@@ -1447,8 +1447,37 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_copy_with_error_domain_added(self):
+        """Test erroneous domain_objects file from user."""
+        testdata = {
+            # Central
+            "2743216f626f43948deec1f7ab3b3d70": {
+                "binary_sensors": {"heating_state": False},
+            },
+        }
+
+        self.smile_setup = "adam_plus_anna_copy_with_error_domain_added"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "3.0.23"
+        _LOGGER.info(" # Assert legacy")
+        assert not smile._smile_legacy
+
+        await self.device_test(smile, testdata)
+
+        assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
-        """Test Adam with Anna and a switch-group setup."""
+        """Test extended Adam (firmware 3.6) with Anna and a switch-group setup."""
         testdata = {
             "ad4838d7d35c4d6ea796ee12ae5aedf8": {
                 "dev_class": "thermostat",
@@ -1649,7 +1678,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
-        """Test a broad setup of Adam with a zone per device setup."""
+        """Test an extensive setup of Adam with a zone per device."""
         testdata = {
             "df4a4a8169904cdb9c03d61a21f42140": {
                 "dev_class": "zone_thermostat",
@@ -2069,7 +2098,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_adam_multiple_devices_per_zone(self):
-        """Test a broad setup of Adam with multiple devices per zone setup."""
+        """Test an extensive setup of Adam with multiple devices per zone."""
         testdata = {
             "df4a4a8169904cdb9c03d61a21f42140": {
                 "dev_class": "zone_thermostat",
@@ -2479,7 +2508,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_adam_plus_jip(self):
-        """Test Adam with Jip."""
+        """Test Adam with Jip setup."""
         testdata = {
             "e4684553153b44afbef2200885f379dc": {
                 "dev_class": "heater_central",
@@ -3024,7 +3053,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
-        """Test a Anna with Elga setup in cooling mode (with missing outdoor temperature - solved)."""
+        """
+        Test a 2nd Anna with Elga setup in idle mode
+        (with missing outdoor temperature - solved).
+        """
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
                 "dev_class": "thermostat",
@@ -3112,7 +3144,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
-        """Test a Anna with Elga setup in cooling mode (with missing outdoor temperature - solved)."""
+        """
+        Test a 2nd Anna with Elga setup in cooling mode. This testcase also covers
+        testing of the generation of a cooling-based schedule, opposite the generation
+        of a heating-based schedule.
+        """
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
                 "dev_class": "thermostat",
@@ -3199,37 +3235,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_adam_plus_anna_copy_with_error_domain_added(self):
-        """Test erroneous domain_objects file from user."""
-        testdata = {
-            # Central
-            "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"heating_state": False},
-            },
-        }
-
-        self.smile_setup = "adam_plus_anna_copy_with_error_domain_added"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.0.23"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
-
-        await self.device_test(smile, testdata)
-
-        assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
     async def test_connect_stretch_v31(self):
-        """Test erroneous domain_objects file from user."""
+        """Test a legacy Stretch with firmware 3.1 setup."""
         testdata = {
             "0000aaaa0000aaaa0000aaaa0000aa00": {
                 "dev_class": "gateway",
@@ -3372,7 +3379,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_stretch_v23(self):
-        """Test erroneous domain_objects file from user."""
+        """Test a legacy Stretch with firmware 2.3 setup."""
         testdata = {
             "0000aaaa0000aaaa0000aaaa0000aa00": {
                 "dev_class": "gateway",
@@ -3689,7 +3696,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_stretch_v27_no_domain(self):
-        """Test erroneous domain_objects file from user."""
+        """Test a legacy Stretch with firmware 2.7 setup, with no domain_objects."""
         # testdata dictionary with key ctrl_id_dev_id => keys:values
         testdata = {
             # Circle+
@@ -3806,7 +3813,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_fail_anna_connected_to_adam(self):
-        """Test erroneous legacy stretch system."""
+        """Test erroneous adam with anna system."""
         self.smile_setup = "anna_connected_to_adam"
         try:
             _server, _smile, _client = await self.connect_wrapper()
