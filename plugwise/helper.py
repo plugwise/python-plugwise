@@ -612,8 +612,11 @@ class SmileHelper:
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
-            # Provide a home_location for legacy_anna
-            elif self._smile_legacy and self.smile_type == "thermostat":
+            # Provide a home_location for legacy_anna, don't assign the _home_location
+            # to thermostat-devices without a location, they are not active
+            elif (
+                self._smile_legacy and self.smile_type == "thermostat"
+            ) or appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_location
 
             appl.dev_id = appliance.attrib["id"]
@@ -668,6 +671,9 @@ class SmileHelper:
         for location_id, location_details in self._loc_data.items():
             for _, appliance_details in self._appl_data.items():
                 if appliance_details["location"] == location_id:
+                    location_details.update(
+                        {"master": None, "master_prio": 0, "slaves": set()}
+                    )
                     matched_locations[location_id] = location_details
 
         return matched_locations
@@ -869,9 +875,7 @@ class SmileHelper:
         Rank the thermostat based on appliance_details: master or slave."""
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
-        if (
-            loc_id == appl_d_loc or (self._smile_legacy and not appl_d_loc)
-        ) and appl_class in thermo_matching:
+        if loc_id == appl_d_loc and appl_class in thermo_matching:
 
             # Pre-elect new master
             if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
@@ -888,7 +892,8 @@ class SmileHelper:
 
     def _scan_thermostats(self) -> None:
         """Helper-function for smile.py: get_all_devices().
-        Update locations with thermostat ranking results.
+        Update locations with thermostat ranking results and use
+        the result to update the device_class of slave thermostats.
         """
         if self.smile_type != "thermostat":
             pass
@@ -902,22 +907,16 @@ class SmileHelper:
             "thermostatic_radiator_valve": 1,
         }
 
-        for loc_id, location_details in self._thermo_locs.items():
-            self._thermo_locs[loc_id] = location_details
+        for loc_id in self._thermo_locs:
+            for appl_id, details in self._appl_data.items():
+                self._rank_thermostat(thermo_matching, loc_id, appl_id, details)
 
-            if loc_id != self._home_location:
-                self._thermo_locs[loc_id].update(
-                    {"master": None, "master_prio": 0, "slaves": set()}
-                )
-            elif self._smile_legacy:
-                self._thermo_locs[loc_id].update(
-                    {"master": None, "master_prio": 0, "slaves": set()}
-                )
-
-            for appliance_id, appliance_details in self._appl_data.items():
-                self._rank_thermostat(
-                    thermo_matching, loc_id, appliance_id, appliance_details
-                )
+        # Update slave thermostat class where needed
+        for appl_id, details in self._appl_data.items():
+            if (loc_id := details["location"]) in self._thermo_locs:
+                tl_loc_id = self._thermo_locs[loc_id]
+                if "slaves" in tl_loc_id and appl_id in tl_loc_id["slaves"]:
+                    details["dev_class"] = "thermo_sensor"
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().

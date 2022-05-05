@@ -72,20 +72,6 @@ class SmileData(SmileHelper):
         """Determine the devices present from the obtained XML-data."""
         self._scan_thermostats()
 
-        for appliance, details in self._appl_data.items():
-            # Don't assign the _home_location to thermostat-devices without a location, they are not active
-            if (
-                details.get("location") is None
-                and details["dev_class"] not in THERMOSTAT_CLASSES
-            ):
-                details["location"] = self._home_location
-
-            # Override slave thermostat class
-            if (loc_id := details["location"]) in self._thermo_locs:
-                tl_loc_id = self._thermo_locs[loc_id]
-                if "slaves" in tl_loc_id and appliance in tl_loc_id["slaves"]:
-                    details["dev_class"] = "thermo_sensor"
-
         if group_data := self._group_switches():
             self._appl_data.update(group_data)
 
