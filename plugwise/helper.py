@@ -890,6 +890,9 @@ class SmileHelper:
         """Helper-function for smile.py: get_all_devices().
         Update locations with thermostat ranking results.
         """
+        if self.smile_type != "thermostat":
+            pass
+
         self._thermo_locs = self._match_locations()
 
         thermo_matching: dict[str, int] = {
