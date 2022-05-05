@@ -3,8 +3,6 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-from typing import Any
-
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -30,6 +28,12 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
+    ApplianceData,
+    DeviceData,
+    GatewayData,
+    SmileBinarySensors,
+    SmileSensors,
+    SmileSwitches,
 )
 from .exceptions import (
     ConnectionFailedError,
@@ -47,46 +51,29 @@ class SmileData(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        for device_id, device in self._devices.items():
-            bs_dict: dict[str, bool] = {}
-            s_dict: dict[str, Any] = {}
-            sw_dict: dict[str, bool] = {}
+        for device_id, device in self._appl_data.items():
+            bs_dict: SmileBinarySensors = {}
+            s_dict: SmileSensors = {}
+            sw_dict: SmileSwitches = {}
             data = self._get_device_data(device_id)
             self.gw_devices[device_id] = self._update_device_with_dicts(
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
 
-        self.gw_data["smile_name"] = self.smile_name
-        self.gw_data["gateway_id"] = self.gateway_id
+        self.gw_data.update(
+            {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
+        )
         if self._is_thermostat:
-            self.gw_data["heater_id"] = self._heater_id
-            self.gw_data["cooling_present"] = self._cooling_present
+            self.gw_data.update(
+                {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
+            )
 
     def get_all_devices(self) -> None:
         """Determine the devices present from the obtained XML-data."""
-        self._devices = {}
         self._scan_thermostats()
 
-        for appliance, details in self._appl_data.items():
-            # Don't assign the _home_location to thermostat-devices without a location, they are not active
-            if (
-                details.get("location") is None
-                and details.get("class") not in THERMOSTAT_CLASSES
-            ):
-                details["location"] = self._home_location
-
-            # Override slave thermostat class
-            if (loc_id := details["location"]) in self._thermo_locs:
-                tl_loc_id = self._thermo_locs[loc_id]
-                if "slaves" in tl_loc_id and appliance in tl_loc_id["slaves"]:
-                    details["class"] = "thermo_sensor"
-
-            # Next, filter for thermostat-devices without a location
-            if details.get("location") is not None:
-                self._devices[appliance] = details
-
-        if (group_data := self._group_switches()) is not None:
-            self._devices.update(group_data)
+        if group_data := self._group_switches():
+            self._appl_data.update(group_data)
 
         # Collect data for each device via helper function
         self._all_device_data()
@@ -115,12 +102,12 @@ class SmileData(SmileHelper):
                 device["binary_sensors"].pop("cooling_state")
 
     def _device_data_switching_group(
-        self, details: dict[str, Any], device_data: dict[str, Any]
-    ) -> dict[str, bool]:
+        self, details: ApplianceData, device_data: DeviceData
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
-        if details["class"] in SWITCH_GROUP_TYPES:
+        if details["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
                 member_data = self._get_appliance_data(member)
@@ -132,22 +119,22 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_adam(
-        self, details: dict[str, Any], device_data: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, details: ApplianceData, device_data: DeviceData
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
         if self.smile_name == "Adam":
             # Indicate heating_state based on valves being open in case of city-provided heating
-            if details.get("class") == "heater_central":
+            if details.get("dev_class") == "heater_central":
                 if self._on_off_device and self._heating_valves() is not None:
                     device_data["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
     def _device_data_climate(
-        self, details: dict[str, Any], device_data: dict[str, Any]
-    ) -> dict[str, Any]:
+        self, details: ApplianceData, device_data: DeviceData
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
@@ -157,7 +144,6 @@ class SmileData(SmileHelper):
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
         if presets := self._presets(loc_id):
-            device_data["presets"] = presets
             device_data["preset_modes"] = list(presets)
             device_data["active_preset"] = self._preset(loc_id)
 
@@ -186,15 +172,15 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _get_device_data(self, dev_id: str) -> dict[str, Any]:
+    def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        details = self._devices[dev_id]
+        details = self._appl_data[dev_id]
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
-        if details["class"] == "gateway" or dev_id == self.gateway_id:
+        if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
             if self.smile_type == "thermostat":
                 # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
                 # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
@@ -218,7 +204,7 @@ class SmileData(SmileHelper):
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details["class"] not in THERMOSTAT_CLASSES:
+        if details["dev_class"] not in THERMOSTAT_CLASSES:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
@@ -386,7 +372,7 @@ class Smile(SmileComm, SmileData):
         self.smile_version = (self.smile_fw_version, ver)
 
         if "legacy" in SMILES[target_smile]:
-            self._smile_legacy = SMILES[target_smile]["legacy"]
+            self._smile_legacy = True
 
         if self.smile_type == "stretch":
             self._stretch_v2 = self.smile_version[1].major == 2
@@ -428,7 +414,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> list[dict[str, Any]]:
+    async def async_update(self) -> list[GatewayData | dict[str, DeviceData]]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -445,7 +431,7 @@ class Smile(SmileComm, SmileData):
             data = self._get_device_data(dev_id)
             for key, value in list(data.items()):
                 if key in dev_dict:
-                    dev_dict[key] = value
+                    dev_dict[key] = value  # type: ignore [literal-required]
 
             for item in ["binary_sensors", "sensors", "switches"]:
                 notifs: dict[str, str] = {}

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Final
+from typing import Final, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -406,15 +406,12 @@ STATUS: Final = "/system/status.xml"
 # P1 related measurements:
 HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "electricity_consumed": {
-        ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
     },
     "electricity_produced": {
-        ATTR_TYPE: "power",
         ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
     },
     "gas_consumed": {
-        ATTR_TYPE: "gas",
         ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
     },
 }
@@ -423,7 +420,7 @@ HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 # Excluded:
 # zone_thermosstat: 'temperature_offset'
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
-DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
+DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     # HA Core thermostat current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # HA Core thermostat setpoint
@@ -444,24 +441,24 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
     # Specific for a Plug
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "relay": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "relay": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     # Added measurements from actuator_functionalities/thermostat_functionality
     "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: None},
-    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
+    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: NONE},
 }
 
 # Heater Central related measurements
-HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
+HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "boiler_temperature": {
         ATTR_NAME: "water_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
     "domestic_hot_water_comfort_mode": {
         ATTR_NAME: "dhw_cm_switch",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },
     "domestic_hot_water_state": {
         ATTR_NAME: "dhw_state",
@@ -472,11 +469,11 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
     },  # Non-zero when heating, zero when dhw-heating
     "central_heating_state": {
         ATTR_NAME: "c_heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },  # For Elga (heatpump) use this instead of intended_central_heating_state
     "intended_central_heating_state": {
         ATTR_NAME: "heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
     "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "return_water_temperature": {
@@ -484,23 +481,23 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
     # Used with the Elga heatpump - marcelveldt
-    "compressor_state": {ATTR_UNIT_OF_MEASUREMENT: None},
-    "cooling_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "compressor_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
+    "cooling_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
-    "slave_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: None},
+    "slave_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     "flame_state": {
-        ATTR_UNIT_OF_MEASUREMENT: None
+        ATTR_UNIT_OF_MEASUREMENT: NONE
     },  # Also present when there is a single gas-heater
     "central_heater_water_pressure": {
         ATTR_NAME: "water_pressure",
         ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
     },
     # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: None},
+    "boiler_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: NONE},
     # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
     "intended_boiler_state": {
         ATTR_NAME: "heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: None,
+        ATTR_UNIT_OF_MEASUREMENT: NONE,
     },
     # Outdoor temperature from APPLIANCES - present for a heatpump
     "outdoor_temperature": {
@@ -510,7 +507,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str | None]]] = {
 }
 
 # Known types of Smiles and Stretches
-SMILES: Final[dict[str, dict[str, Any]]] = {
+SMILES: Final[dict[str, dict[str, str]]] = {
     "smile_open_therm_v3": {
         "type": "thermostat",
         "friendly_name": "Adam",
@@ -530,7 +527,7 @@ SMILES: Final[dict[str, dict[str, Any]]] = {
     "smile_thermo_v1": {
         "type": "thermostat",
         "friendly_name": "Anna",
-        "legacy": True,
+        "legacy": "true",
     },
     "smile_v4": {
         "type": "power",
@@ -543,10 +540,10 @@ SMILES: Final[dict[str, dict[str, Any]]] = {
     "smile_v2": {
         "type": "power",
         "friendly_name": "P1",
-        "legacy": True,
+        "legacy": "true",
     },
-    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
-    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": True},
+    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
+    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
 }
 
 
@@ -608,3 +605,153 @@ SWITCHES: Final[list[str]] = [
     "lock",
     "relay",
 ]
+
+
+class ApplianceData(TypedDict, total=False):
+    """The Appliance Data class."""
+
+    dev_class: str
+    firmware: str | None
+    hardware: str
+    location: str
+    mac_address: str | None
+    members: list[str]
+    model: str
+    name: str
+    vendor: str
+    zigbee_mac_address: str | None
+
+
+class GatewayData(TypedDict, total=False):
+    """The Gateway Data class."""
+
+    smile_name: str
+    gateway_id: str
+    heater_id: str | None
+    cooling_present: bool
+    notifications: dict[str, str]
+
+
+class ModelData(TypedDict):
+    """The ModelData class."""
+
+    contents: bool
+    vendor_name: str | None
+    vendor_model: str | None
+    hardware_version: str | None
+    firmware_version: str | None
+    zigbee_mac_address: str | None
+
+
+class SmileBinarySensors(TypedDict, total=False):
+    """Smile Binary Sensors class."""
+
+    compressor_state: bool
+    cooling_state: bool
+    dhw_state: bool
+    flame_state: bool
+    heating_state: bool
+    plugwise_notification: bool
+    slave_boiler_state: bool
+
+
+class SmileSensors(TypedDict, total=False):
+    """Smile Sensors class."""
+
+    battery: float
+    cooling_activation_outdoor_temperature: float
+    cooling_deactivation_threshold: float
+    temperature: float
+    electricity_consumed: float
+    electricity_consumed_interval: float
+    electricity_consumed_off_peak_cumulative: float
+    electricity_consumed_off_peak_interval: int
+    electricity_consumed_off_peak_point: int
+    electricity_consumed_peak_cumulative: float
+    electricity_consumed_peak_interval: int
+    electricity_consumed_peak_point: int
+    electricity_consumed_point: float
+    electricity_produced: float
+    electricity_produced_interval: float
+    electricity_produced_off_peak_cumulative: float
+    electricity_produced_off_peak_interval: int
+    electricity_produced_off_peak_point: int
+    electricity_produced_peak_cumulative: float
+    electricity_produced_peak_interval: int
+    electricity_produced_peak_point: int
+    electricity_produced_point: float
+    gas_consumed_cumulative: float
+    gas_consumed_interval: float
+    humidity: float
+    illuminance: float
+    intended_boiler_temperature: float
+    modulation_level: float
+    net_electricity_cumulative: float
+    net_electricity_point: int
+    outdoor_air_temperature: float
+    outdoor_temperature: float
+    return_temperature: float
+    setpoint: float
+    temperature_difference: float
+    valve_position: float
+    water_pressure: float
+    water_temperature: float
+
+
+class SmileSwitches(TypedDict, total=False):
+    """Smile Switches class."""
+
+    dhw_cm_switch: bool
+    lock: bool
+    relay: bool
+
+
+class ThermoLoc(TypedDict, total=False):
+    """Thermo Location class."""
+
+    name: str
+    master: str | None
+    master_prio: int
+    slaves: set[str]
+
+
+class DeviceDataPoints(
+    SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
+):
+    """The class covering all possible collected data points."""
+
+    # Gateway
+    regulation_mode: str
+    regulation_modes: list[str]
+
+    # Heater Central
+    maximum_boiler_temperature: float
+
+    # Master Thermostats
+    lower_bound: float
+    upper_bound: float
+    resolution: float
+
+    preset_modes: list[str] | None
+    active_preset: str | None
+
+    available_schedules: list[str]
+    selected_schedule: str
+    last_used: str | None
+    schedule_temperature: float | None
+
+    mode: str
+
+    # Extra for Adam Master Thermostats
+    control_state: str | bool
+
+    # For temporary use
+    c_heating_state: str
+
+
+class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
+    """The Device Data class, covering the collected and ordere output-data per device."""
+
+    binary_sensors: SmileBinarySensors
+    sensors: SmileSensors
+    switches: SmileSwitches
