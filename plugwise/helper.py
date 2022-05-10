@@ -262,7 +262,7 @@ class SmileComm:
                 )
         except ClientError as err:  # ClientError is an ancestor class of ServerTimeroutError
             if retry < 1:
-                LOGGER.error("failed sending %s %s to Plugwise", method, command)
+                LOGGER.error("Failed sending %s %s to Plugwise Smile", method, command)
                 raise PlugwiseException(
                     "Plugwise connection error, check log for more info."
                 ) from err
