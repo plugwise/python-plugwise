@@ -260,7 +260,7 @@ class SmileComm:
                     data=data,
                     auth=self._auth,
                 )
-        except ClientError as err:  # ClientError is an ancestor class of ServerTimeroutError
+        except ClientError as err:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
                 LOGGER.error("Failed sending %s %s to Plugwise Smile", method, command)
                 raise PlugwiseException(
