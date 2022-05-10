@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.18.1: Smile Adam: don't show vacation-preset, as in the Plugwise App or on the local Adam-website
+# v0.18.1: Smile Adam: don't show vacation-preset, as not shown in the Plugwise App or on the local Adam-website
 
 # v0.18.0: Smile: add generation of cooling-schedules
 - Further improve typing hints: e.g. all collected measurements are now typed via TypedDicts
