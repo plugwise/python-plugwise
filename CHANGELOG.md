@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.18.2: Smile: fix for https://github.com/home-assistant/core/pull/71642 = https://github.com/plugwise/python-plugwise/issues/187
+
 # v0.18.1: Smile Adam: don't show vacation-preset, as not shown in the Plugwise App or on the local Adam-website
 
 # v0.18.0: Smile: add generation of cooling-schedules
