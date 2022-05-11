@@ -3853,7 +3853,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 client,
             ) = await self.connect_wrapper()
             assert False  # pragma: no cover
-        except pw_exceptions.DeviceTimeoutError:
+        except pw_exceptions.PlugwiseException:
             assert True
 
     class PlugwiseTestError(Exception):

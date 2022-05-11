@@ -7,13 +7,7 @@ import asyncio
 import datetime as dt
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from aiohttp import (
-    BasicAuth,
-    ClientResponse,
-    ClientSession,
-    ClientTimeout,
-    ServerTimeoutError,
-)
+from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -54,9 +48,9 @@ from .constants import (
     ThermoLoc,
 )
 from .exceptions import (
-    DeviceTimeoutError,
     InvalidAuthentication,
     InvalidXMLError,
+    PlugwiseException,
     ResponseError,
 )
 from .util import (
@@ -266,12 +260,12 @@ class SmileComm:
                     data=data,
                     auth=self._auth,
                 )
-        except ServerTimeoutError:
+        except ClientError as err:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
-                LOGGER.error("Timed out sending %s command to Plugwise", command)
-                raise DeviceTimeoutError(
-                    "Plugwise timeout error, check log for more info."
-                )
+                LOGGER.error("Failed sending %s %s to Plugwise Smile", method, command)
+                raise PlugwiseException(
+                    "Plugwise connection error, check log for more info."
+                ) from err
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
