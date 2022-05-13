@@ -2114,7 +2114,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
-        assert result
+        assert not result
         result = await self.tinker_thermostat(
             smile,
             "82fa13f017d240daa0d0ea1775420f24",
@@ -2535,7 +2535,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
-        assert result
+        assert not result
 
         result = await self.tinker_thermostat(
             smile,
