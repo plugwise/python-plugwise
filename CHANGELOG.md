@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.18.3: Smile: move solution for https://github.com/plugwise/plugwise-beta/issues/280 into backend
+# v0.18.3: Smile: move solution for https://github.com/plugwise/plugwise-beta/issues/276 into backend
 
 # v0.18.2: Smile: fix for https://github.com/plugwise/python-plugwise/issues/187
 
