@@ -562,7 +562,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         _LOGGER.info("  - succeeded unexpectedly for some reason")
                         raise self.UnexpectedError
             return tinker_schedule_passed
-        _LOGGER.info("- Skipping schedule adjustments")
+        _LOGGER.info("- Skipping schedule adjustments")  # pragma: no cover
 
     @pytest.mark.asyncio
     async def tinker_thermostat(
