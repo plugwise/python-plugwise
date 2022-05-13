@@ -24,6 +24,7 @@ from .constants import (
 )
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
+ARBITRARY_DATE = datetime.datetime(1988, 3, 14)
 SPECIAL_FORMAT = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 
 
@@ -134,11 +135,26 @@ def format_measure(measure: str, unit: str) -> float | int | bool:
     return result
 
 
-def in_between(now: datetime.time, start: datetime.time, end: datetime.time) -> bool:
+def in_between(
+    today: int,
+    day_0: int,
+    day_1: int,
+    now: datetime.time,
+    time_0: datetime.time,
+    time_1: datetime.time,
+) -> bool:
     """Determine timing for schedules."""
-    if start <= end:
-        return start <= now < end
-    return start <= now or now < end
+    time_now = datetime.timedelta(days=today, hours=now.hour, minutes=now.minute)
+    time_start = datetime.timedelta(
+        days=day_0, hours=time_0.hour, minutes=time_0.minute
+    )
+    time_end = datetime.timedelta(days=day_1, hours=time_1.hour, minutes=time_1.minute)
+
+    now_point = ARBITRARY_DATE + time_now
+    start_point = ARBITRARY_DATE + time_start
+    end_point = ARBITRARY_DATE + time_end
+
+    return start_point <= now_point <= end_point
 
 
 class BaseType:
