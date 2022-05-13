@@ -525,8 +525,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_schedule(
         self, smile, loc_id, state, good_schedules=None, unhappy=False
     ):
-        if good_schedules != [] or good_schedules != [None]:
-            good_schedules.append("!VeryBogusScheduleNameThatNobodyEverUsesOrShouldUse")
+        _LOGGER.debug("HOI %s", good_schedules)
+        if good_schedules != []:
+            if good_schedules != [None]:
+                good_schedules.append(
+                    "!VeryBogusScheduleNameThatNobodyEverUsesOrShouldUse"
+                )
             for new_schedule in good_schedules:
                 warning = ""
                 if new_schedule is not None and new_schedule[0] == "!":
