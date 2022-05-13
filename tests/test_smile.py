@@ -697,7 +697,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ],
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -787,7 +787,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ],
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -967,7 +967,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1063,7 +1063,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             schedule_on=False,
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1108,7 +1108,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1186,7 +1186,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Test", "Normal"],
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1264,7 +1264,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Test", "Normal"],
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1342,7 +1342,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Normal"],
             unhappy=True,
         )
-        assert result
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1470,7 +1470,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Weekschema"],
             unhappy=True,
         )
-        assert result
+        assert not result
         switch_change = await self.tinker_switch(
             smile, "aa6b0002df0a46e1b1eb94beb61eddfe", unhappy=True
         )
@@ -2121,7 +2121,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["CV Jessie"],
             unhappy=True,
         )
-        assert result
+        assert not result
 
         try:
             await smile.delete_notification()
@@ -2543,7 +2543,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["CV Jessie"],
             unhappy=True,
         )
-        assert result
+        assert not result
 
         await smile.close_connection()
         await self.disconnect(server, client)
