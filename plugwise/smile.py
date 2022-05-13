@@ -482,10 +482,18 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> None:
-        """Set the Schedule, with the given name, on the relevant Thermostat.
+    async def set_schedule_state(
+        self, loc_id: str, name: str | None, state: str
+    ) -> None:
+        """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
+        In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
         """
+        # Do nothing when name == None, meaning no schedule to activate / deactivate
+        # Also, don't show an error, as doing nothing is the correct action in this scenario.
+        if name is None:
+            return
+
         if self._smile_legacy:
             await self._set_schedule_state_legacy(name, state)
             return
