@@ -482,7 +482,9 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_schedule_state(self, loc_id: str, name: str, state: str) -> None:
+    async def set_schedule_state(
+        self, loc_id: str, name: str | None, state: str
+    ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
