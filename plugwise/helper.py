@@ -114,14 +114,16 @@ def schedules_schedule_temp(
     length = len(schedule_list)
     schedule_list = sorted(schedule_list)
     for i in range(length):
-        j = (i + 1) % (length - 1)
+        j = (i + 1) % (length)
         now = dt.datetime.now().time()
         today = dt.datetime.now().weekday()
         day_0 = schedule_list[i][0]
         day_1 = schedule_list[j][0]
+        if j < i:
+            day_1 = schedule_list[j][0] + (length)
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
-        if today in [day_0, day_1] and in_between(now, time_0, time_1):
+        if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 
     return None
@@ -1137,16 +1139,13 @@ class SmileHelper:
                 entry = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
-                    if loc_id is None:  # set to 0 when the schedule is not active
-                        temp[directive.attrib["time"]] = float(0)
-                    else:
+                    temp[directive.attrib["time"]] = float(
+                        self._presets(loc_id)[entry["preset"]][0]
+                    )
+                    if self.cooling_active:
                         temp[directive.attrib["time"]] = float(
-                            self._presets(loc_id)[entry["preset"]][0]
+                            self._presets(loc_id)[entry["preset"]][1]
                         )
-                        if self.cooling_active:
-                            temp[directive.attrib["time"]] = float(
-                                self._presets(loc_id)[entry["preset"]][1]
-                            )
                 else:
                     if "heating_setpoint" in entry:
                         temp[directive.attrib["time"]] = float(
@@ -1175,7 +1174,7 @@ class SmileHelper:
 
         if schedules:
             available.remove(NONE)
-            tmp_last_used = self._last_used_schedule(location, rule_ids)
+            tmp_last_used = self._last_used_schedule(location, schedules)
             if tmp_last_used in schedules:
                 last_used = tmp_last_used
                 schedule_temperature = schedules_schedule_temp(schedules, last_used)
@@ -1183,7 +1182,7 @@ class SmileHelper:
         return available, selected, schedule_temperature, last_used
 
     def _last_used_schedule(
-        self, loc_id: str, rule_ids: dict[str, str | None]
+        self, loc_id: str, schedules: dict[str, dict[str, float]]
     ) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
@@ -1194,24 +1193,20 @@ class SmileHelper:
             return last_used
 
         # Alternatively, find last_used by finding the most recent modified_date
-        if not rule_ids:
+        if not schedules:
             return None  # pragma: no cover
 
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        schedules: dict[str, float] = {}
+        schedules_dates: dict[str, float] = {}
 
-        for rule_id in rule_ids:
-            schedule_name = self._domain_objects.find(
-                f'./rule[@id="{rule_id}"]/name'
-            ).text
-            schedule_date = self._domain_objects.find(
-                f'./rule[@id="{rule_id}"]/modified_date'
-            ).text
+        for name in schedules:
+            result = self._domain_objects.find(f'./rule[name="{name}"]')
+            schedule_date = result.find("modified_date").text
             schedule_time = parse(schedule_date)
-            schedules[schedule_name] = (schedule_time - epoch).total_seconds()
+            schedules_dates[name] = (schedule_time - epoch).total_seconds()
 
         if schedules:
-            last_used = sorted(schedules.items(), key=lambda kv: kv[1])[-1][0]
+            last_used = sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
 
         return last_used
 
