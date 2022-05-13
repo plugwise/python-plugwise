@@ -2720,7 +2720,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
 
         await self.tinker_thermostat(
-            smile, "d58fec52899f4f1c92e4f8fad6d8c48c", good_schedules=[None]
+            smile,
+            "d58fec52899f4f1c92e4f8fad6d8c48c",
+            schedule_on=False,
+            good_schedules=[None],
         )
 
         await smile.close_connection()
