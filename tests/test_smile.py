@@ -458,48 +458,53 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
-        switch_change = False
+        tinker_switch_passed = False
         for new_state in [False, True, False]:
             _LOGGER.info("- Switching %s", new_state)
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
-                switch_change = True
+                tinker_switch_passed = True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
-                switch_change = False
+                tinker_switch_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
-        return switch_change
+        return tinker_switch_passed
 
     @pytest.mark.asyncio
     async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
+        tinker_temp_passed = False
         for new_temp in [20.0, 22.9]:
             _LOGGER.info("- Adjusting temperature to %s", new_temp)
             try:
                 await smile.set_temperature(loc_id, new_temp)
+                tinker_temp_passed = True
                 _LOGGER.info("  + worked as intended")
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
+                tinker_temp_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
+        return tinker_temp_passed
 
     @pytest.mark.asyncio
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
+        tinker_preset_passed = False
         for new_preset in ["asleep", "home", "!bogus"]:
             warning = ""
             if new_preset[0] == "!":
@@ -508,6 +513,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("%s", f"- Adjusting preset to {new_preset}{warning}")
             try:
                 await smile.set_preset(loc_id, new_preset)
+                tinker_preset_passed = True
                 _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid preset, as expected")
@@ -515,17 +521,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
+                tinker_preset_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
+        return tinker_preset_passed
 
     @pytest.mark.asyncio
     async def tinker_thermostat_schedule(
         self, smile, loc_id, state, good_schedules=None, unhappy=False
     ):
-        _LOGGER.debug("HOI %s", good_schedules)
+        tinker_schedule_passed = False
         if good_schedules != []:
             if good_schedules != [None]:
                 good_schedules.append(
@@ -539,6 +547,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
                     await smile.set_schedule_state(loc_id, new_schedule, state)
+                    tinker_schedule_passed = True
                     _LOGGER.info("  + found invalid schedule, as intended")
                 except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
@@ -546,11 +555,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     pw_exceptions.ErrorSendingCommandError,
                     pw_exceptions.ResponseError,
                 ):
+                    tinker_schedule_passed = False
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
                     else:  # pragma: no cover
                         _LOGGER.info("  - succeeded unexpectedly for some reason")
                         raise self.UnexpectedError
+            return tinker_schedule_passed
         else:  # pragma: no cover
             _LOGGER.info("- Skipping schedule adjustments")
 
@@ -562,18 +573,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if good_schedules is None:  # pragma: no cover
             good_schedules = ["Weekschema"]
 
-        await self.tinker_thermostat_temp(smile, loc_id, unhappy)
-        await self.tinker_thermostat_preset(smile, loc_id, unhappy)
-        await self.tinker_thermostat_schedule(
+        result_1 = await self.tinker_thermostat_temp(smile, loc_id, unhappy)
+        result_2 = await self.tinker_thermostat_preset(smile, loc_id, unhappy)
+        result_3 = await self.tinker_thermostat_schedule(
             smile, loc_id, "on", good_schedules, unhappy
         )
         if schedule_on:
-            await self.tinker_thermostat_schedule(
+            result_4 = await self.tinker_thermostat_schedule(
                 smile, loc_id, "off", good_schedules, unhappy
             )
-            await self.tinker_thermostat_schedule(
+            result_5 = await self.tinker_thermostat_schedule(
                 smile, loc_id, "on", good_schedules, unhappy
             )
+            return result_1 and result_2 and result_3 and result_4 and result_5
+        return result_1 and result_2 and result_3
 
     @staticmethod
     async def tinker_regulation_mode(smile):
