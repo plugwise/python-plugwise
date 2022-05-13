@@ -488,7 +488,7 @@ class Smile(SmileComm, SmileData):
         In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Do nothing when name == None, meaning no schedule to activate / deactivate
-        # Also, don't through a error, as do nothing is the correct action in this scenario.
+        # Also, don't show an error, as doing nothing is the correct action in this scenario.
         if name is None:
             return
 
