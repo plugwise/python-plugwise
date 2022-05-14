@@ -120,7 +120,7 @@ def schedules_schedule_temp(
         day_0 = schedule_list[i][0]
         day_1 = schedule_list[j][0]
         if j < i:
-            day_1 = schedule_list[j][0] + (length)
+            day_1 = schedule_list[i][0] + 1
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
         LOGGER.debug(
