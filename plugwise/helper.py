@@ -126,7 +126,7 @@ def schedules_schedule_temp(
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 
-    return None
+    return None  # pragma: no cover
 
 
 def power_data_local_format(
