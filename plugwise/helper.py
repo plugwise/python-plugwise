@@ -1114,7 +1114,6 @@ class SmileHelper:
         rule_ids: dict[str, str] = {}
         schedule_temperature: float | None = None
         selected = NONE
-        tmp_last_used: str | None = None
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
@@ -1175,9 +1174,8 @@ class SmileHelper:
 
         if schedules:
             available.remove(NONE)
-            tmp_last_used = self._last_used_schedule(location, schedules)
-            if tmp_last_used in schedules:
-                last_used = tmp_last_used
+            last_used = self._last_used_schedule(location, schedules)
+            if last_used in schedules:
                 schedule_temperature = schedules_schedule_temp(schedules, last_used)
 
         return available, selected, schedule_temperature, last_used
@@ -1194,8 +1192,9 @@ class SmileHelper:
             return last_used
 
         # Alternatively, find last_used by finding the most recent modified_date
+        last_used = None
         if not schedules:
-            return None  # pragma: no cover
+            return last_used  # pragma: no cover
 
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
         schedules_dates: dict[str, float] = {}
