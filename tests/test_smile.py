@@ -1,7 +1,6 @@
 # pylint: disable=protected-access
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 import asyncio
-import datetime as dt
 import importlib
 import json
 
