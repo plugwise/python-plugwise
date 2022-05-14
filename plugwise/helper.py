@@ -123,6 +123,10 @@ def schedules_schedule_temp(
             day_1 = schedule_list[j][0] + (length)
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
+        LOGGER.debug(
+            "HOI 1 %s %s %s %s %s %s", today, day_0, day_1, now, time_0, time_1
+        )
+        LOGGER.debug("HOI 2 %s", in_between(today, day_0, day_1, now, time_0, time_1))
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 
