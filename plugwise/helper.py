@@ -126,6 +126,8 @@ def schedules_schedule_temp(
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 
+    return None
+
 
 def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
@@ -699,8 +701,9 @@ class SmileHelper:
 
         return preset_dictionary
 
-    def _presets(self, loc_id: str) -> dict[str, list[float]]:
+    def _presets(self) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
+        loc_id = NONE
         presets: dict[str, list[float]] = {}
         tag_1 = "zone_setpoint_and_state_based_on_preset"
         tag_2 = "Thermostat presets"
@@ -733,25 +736,25 @@ class SmileHelper:
 
         return presets
 
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str | None]:
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
         """Helper-function for _presets().
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
-        schedule_ids: dict[str, str | None] = {}
+        schedule_ids: dict[str, str] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schedule_ids[rule.attrib["id"]] = loc_id
             else:
-                schedule_ids[rule.attrib["id"]] = None
+                schedule_ids[rule.attrib["id"]] = NONE
 
         return schedule_ids
 
-    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str | None]:
+    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str]:
         """Helper-function for _presets(), _schedules() and _last_active_schedule().
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
-        schedule_ids: dict[str, str | None] = {}
+        schedule_ids: dict[str, str] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall("./rule"):
@@ -759,7 +762,7 @@ class SmileHelper:
                 if rule.find(locator2) is not None:
                     schedule_ids[rule.attrib["id"]] = loc_id
                 else:
-                    schedule_ids[rule.attrib["id"]] = None
+                    schedule_ids[rule.attrib["id"]] = NONE
 
         return schedule_ids
 
@@ -1105,9 +1108,10 @@ class SmileHelper:
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
+
         available: list[str] = [NONE]
         last_used: str | None = None
-        rule_ids: dict[str, str | None] = {}
+        rule_ids: dict[str, str] = {}
         schedule_temperature: float | None = None
         selected = NONE
         tmp_last_used: str | None = None
@@ -1126,6 +1130,7 @@ class SmileHelper:
             return available, selected, schedule_temperature, None
 
         schedules: dict[str, dict[str, float]] = {}
+        _presets = self._presets()
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, float] = {}
@@ -1137,12 +1142,10 @@ class SmileHelper:
                 entry = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
-                    temp[directive.attrib["time"]] = float(
-                        self._presets(loc_id)[entry["preset"]][0]
-                    )
+                    temp[directive.attrib["time"]] = float(_presets[entry["preset"]][0])
                     if self.cooling_active:
                         temp[directive.attrib["time"]] = float(
-                            self._presets(loc_id)[entry["preset"]][1]
+                            _presets[entry["preset"]][1]
                         )
                 else:
                     if "heating_setpoint" in entry:
