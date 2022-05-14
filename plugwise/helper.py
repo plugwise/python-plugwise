@@ -701,9 +701,8 @@ class SmileHelper:
 
         return preset_dictionary
 
-    def _presets(self) -> dict[str, list[float]]:
+    def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
-        loc_id = NONE
         presets: dict[str, list[float]] = {}
         tag_1 = "zone_setpoint_and_state_based_on_preset"
         tag_2 = "Thermostat presets"
@@ -1129,7 +1128,6 @@ class SmileHelper:
             return available, selected, schedule_temperature, None
 
         schedules: dict[str, dict[str, float]] = {}
-        _presets = self._presets()
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, float] = {}
@@ -1141,10 +1139,12 @@ class SmileHelper:
                 entry = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
-                    temp[directive.attrib["time"]] = float(_presets[entry["preset"]][0])
+                    temp[directive.attrib["time"]] = float(
+                        self._presets(loc_id)[entry["preset"]][0]
+                    )
                     if self.cooling_active:
                         temp[directive.attrib["time"]] = float(
-                            _presets[entry["preset"]][1]
+                            self._presets(loc_id)[entry["preset"]][1]
                         )
                 else:
                     if "heating_setpoint" in entry:

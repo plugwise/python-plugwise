@@ -143,7 +143,7 @@ class SmileData(SmileHelper):
         # Presets
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
-        if presets := self._presets():
+        if presets := self._presets(loc_id):
             presets_list = list(presets)
             # Adam does not show vacation preset anymore, issue #185
             if self.smile_name == "Adam":
@@ -556,7 +556,7 @@ class Smile(SmileComm, SmileData):
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
 
-        if preset not in self._presets():
+        if preset not in self._presets(loc_id):
             raise PlugwiseError("Plugwise: invalid preset.")
 
         uri = f"{LOCATIONS};id={loc_id}"
