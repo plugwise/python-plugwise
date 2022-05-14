@@ -13,19 +13,18 @@ import struct
 import crcmod
 
 from .constants import (
+    ARBITRARY_DATE,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
     LOGADDR_OFFSET,
     PERCENTAGE,
     PLUGWISE_EPOCH,
+    SPECIAL_FORMAT,
     TEMP_CELSIUS,
     UTF8_DECODE,
-    VOLUME_CUBIC_METERS,
 )
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
-ARBITRARY_DATE = datetime.datetime(1988, 3, 14)
-SPECIAL_FORMAT = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 
 
 def validate_mac(mac: str) -> bool:

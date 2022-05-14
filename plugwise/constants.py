@@ -1,12 +1,14 @@
 """Plugwise Stick and Smile constants."""
 from __future__ import annotations
 
+import datetime as dt
 import logging
 from typing import Final, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
+ARBITRARY_DATE: Final = dt.datetime(2022, 5, 14)
 ATTR_NAME: Final = "name"
 ATTR_STATE: Final = "state"
 ATTR_STATE_CLASS: Final = "state_class"
@@ -380,6 +382,7 @@ DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
 SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
+SPECIAL_FORMAT: Final[list[str]] = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]
 THERMOSTAT_CLASSES: Final[list[str]] = [
     "thermostat",
