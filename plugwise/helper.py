@@ -21,7 +21,6 @@ from .constants import (
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
-    DAYS,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -53,12 +52,7 @@ from .exceptions import (
     PlugwiseException,
     ResponseError,
 )
-from .util import (
-    escape_illegal_xml_characters,
-    format_measure,
-    in_between,
-    version_to_model,
-)
+from .util import escape_illegal_xml_characters, format_measure, version_to_model
 
 
 def update_helper(
@@ -91,42 +85,6 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
         if model != "Unknown":
             return model
     return name
-
-
-def schedules_schedule_temp(
-    schedules: dict[str, dict[str, float]], name: str
-) -> float | None:
-    """Helper-function for schedules().
-    Obtain the schedule temperature of the schedule.
-    """
-    if name == NONE:
-        return None  # pragma: no cover
-
-    schedule_list: list[tuple[int, dt.time, float]] = []
-    for period, temp in schedules[name].items():
-        moment, dummy = period.split(",")
-        moment_cleaned = moment.replace("[", "").split(" ")
-        day_nr = DAYS[moment_cleaned[0]]
-        start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
-        tmp_list: tuple[int, dt.time, float] = (day_nr, start_time, temp)
-        schedule_list.append(tmp_list)
-
-    length = len(schedule_list)
-    schedule_list = sorted(schedule_list)
-    for i in range(length):
-        j = (i + 1) % (length)
-        now = dt.datetime.now().time()
-        today = dt.datetime.now().weekday()
-        day_0 = schedule_list[i][0]
-        day_1 = schedule_list[j][0]
-        if j < i:
-            day_1 = schedule_list[i][0] + 2
-        time_0 = schedule_list[i][1]
-        time_1 = schedule_list[j][1]
-        if in_between(today, day_0, day_1, now, time_0, time_1):
-            return schedule_list[i][2]
-
-    return None  # pragma: no cover
 
 
 def power_data_local_format(
@@ -1074,8 +1032,8 @@ class SmileHelper:
         return str(active_rule.attrib["icon"])
 
     def _schedules_legacy(
-        self, avail: list[str], sched_temp: float | None, sel: str
-    ) -> tuple[list[str], str, float | None, None]:
+        self, avail: list[str], sel: str
+    ) -> tuple[list[str], str, None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
         """
@@ -1098,11 +1056,9 @@ class SmileHelper:
             if active:
                 sel = name
 
-        return avail, sel, sched_temp, None
+        return avail, sel, None
 
-    def _schedules(
-        self, location: str
-    ) -> tuple[list[str], str, float | None, str | None]:
+    def _schedules(self, location: str) -> tuple[list[str], str, str | None]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
@@ -1111,12 +1067,11 @@ class SmileHelper:
         available: list[str] = [NONE]
         last_used: str | None = None
         rule_ids: dict[str, str] = {}
-        schedule_temperature: float | None = None
         selected = NONE
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
-            return self._schedules_legacy(available, schedule_temperature, selected)
+            return self._schedules_legacy(available, selected)
 
         # Adam schedules, one schedule can be linked to various locations
         # self._last_active contains the locations and the active schedule name per location, or None
@@ -1125,7 +1080,7 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
-            return available, selected, schedule_temperature, None
+            return available, selected, None
 
         schedules: dict[str, dict[str, float]] = {}
         for rule_id, loc_id in rule_ids.items():
@@ -1175,10 +1130,8 @@ class SmileHelper:
         if schedules:
             available.remove(NONE)
             last_used = self._last_used_schedule(location, schedules)
-            if last_used in schedules:
-                schedule_temperature = schedules_schedule_temp(schedules, last_used)
 
-        return available, selected, schedule_temperature, last_used
+        return available, selected, last_used
 
     def _last_used_schedule(
         self, loc_id: str, schedules: dict[str, dict[str, float]]
