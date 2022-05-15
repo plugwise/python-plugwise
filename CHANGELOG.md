@@ -1,5 +1,10 @@
 # Changelog
 
+# v0.18.4: Smile: schedule-related bug-fixes and clean-up
+- Update `_last_used_schedule()`: provide the collected schedules as input in order to find the last-modified valid schedule.
+- `_rule_ids_by_x()`: replace None by NONE, allowing for simpler typing.
+- Remove `schedule_temperature` from output: for Adam the schedule temperature cannot be collected when a schedule is not active.
+
 # v0.18.3: Smile: move solution for https://github.com/plugwise/plugwise-beta/issues/276 into backend
 
 # v0.18.2: Smile: fix for https://github.com/plugwise/python-plugwise/issues/187
