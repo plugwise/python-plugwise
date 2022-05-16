@@ -494,7 +494,7 @@ class Smile(SmileComm, SmileData):
                 return
             # else:
             raise PlugwiseError(
-                "Cannot change schedule-state: no schedule name provided"
+                "Plugwise: cannot change schedule-state: no schedule name provided"
             )
 
         if self._smile_legacy:
@@ -503,7 +503,7 @@ class Smile(SmileComm, SmileData):
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         if not schedule_rule or schedule_rule is None:
-            raise PlugwiseError("No schedule with this name available.")
+            raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         schedule_rule_id: str = next(iter(schedule_rule))
 
@@ -571,8 +571,9 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temperature: str) -> None:
+    async def set_temperature(self, loc_id: str, temperature: float) -> None:
         """Set the given Temperature on the relevant Thermostat."""
+        temperature = str(temperature)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
@@ -581,8 +582,9 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_max_boiler_temperature(self, temperature: str) -> None:
+    async def set_max_boiler_temperature(self, temperature: float) -> None:
         """Set the max. Boiler Temperature on the Central heating boiler."""
+        temperature = str(temperature)
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
         th_func = self._appliances.find(locator)
         if th_func.find("type").text == "maximum_boiler_temperature":
