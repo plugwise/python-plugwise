@@ -488,10 +488,13 @@ class Smile(SmileComm, SmileData):
         """
         # Do nothing when name == None and the state does not change. No need to show
         # an error, as doing nothing is the correct action in this scenario.
+        oldstate = "off"
+        if self._last_active(loc_id) == name:
+            oldstate = "on"
         if name is None:
-            if newstate == self._schedule_state:
+            if newstate == oldstate:
                 return
-            # else
+            # else:
             raise PlugwiseError(
                 f"Cannot change schedule-state to {newstate}: no schedule name provided"
             )
@@ -536,7 +539,6 @@ class Smile(SmileComm, SmileData):
             f"{template}{contexts}</rule></rules>"
         )
         await self._request(uri, method="put", data=data)
-        self._schedule_state = newstate
 
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
