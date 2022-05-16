@@ -573,25 +573,25 @@ class Smile(SmileComm, SmileData):
 
     async def set_temperature(self, loc_id: str, temperature: float) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        temperature = str(temperature)
+        temp = str(temperature)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
+            f"{temp}</setpoint></thermostat_functionality>"
         )
 
         await self._request(uri, method="put", data=data)
 
     async def set_max_boiler_temperature(self, temperature: float) -> None:
         """Set the max. Boiler Temperature on the Central heating boiler."""
-        temperature = str(temperature)
+        temp = str(temperature)
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
         th_func = self._appliances.find(locator)
         if th_func.find("type").text == "maximum_boiler_temperature":
             thermostat_id = th_func.attrib["id"]
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
-        data = f"<thermostat_functionality><setpoint>{temperature}</setpoint></thermostat_functionality>"
+        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
 
         await self._request(uri, method="put", data=data)
 
