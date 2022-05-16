@@ -480,24 +480,29 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
 
     async def set_schedule_state(
-        self, loc_id: str, name: str | None, state: str
+        self, loc_id: str, name: str | None, newstate: str
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
         """
-        # Do nothing when name == None, meaning no schedule to activate / deactivate
-        # Also, don't show an error, as doing nothing is the correct action in this scenario.
+        # Do nothing when name == None and the state does not change. No need to show
+        # an error, as doing nothing is the correct action in this scenario.
         if name is None:
-            return
+            if newstate == self._schedule_state:
+                return
+            # else
+            raise PlugwiseError(
+                f"Cannot change schedule-state to {newstate}: no schedule name provided"
+            )
 
         if self._smile_legacy:
-            await self._set_schedule_state_legacy(name, state)
+            await self._set_schedule_state_legacy(name, newstate)
             return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
         if not schedule_rule or schedule_rule is None:
-            raise PlugwiseError("Plugwise: no schedule with this name available.")
+            raise PlugwiseError("No schedule with this name available.")
 
         schedule_rule_id: str = next(iter(schedule_rule))
 
@@ -517,10 +522,10 @@ class Smile(SmileComm, SmileData):
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
-        if state == "off":
+        if newstate == "off":
             self._last_active[loc_id] = name
             contexts.remove(subject)
-        if state == "on":
+        if newstate == "on":
             contexts.append(subject)
 
         contexts = etree.tostring(contexts, encoding="unicode").rstrip()
@@ -531,6 +536,7 @@ class Smile(SmileComm, SmileData):
             f"{template}{contexts}</rule></rules>"
         )
         await self._request(uri, method="put", data=data)
+        self._schedule_state = newstate
 
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
