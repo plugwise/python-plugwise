@@ -449,6 +449,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
                 tinker_switch_passed = True
+                _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
             except (
@@ -2726,11 +2727,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         result = await self.tinker_thermostat(
             smile,
-            "d58fec52899f4f1c92e4f8fad6d8c48c",
+            "13228dab8ce04617af318a2888b3c548",
             schedule_on=False,
             good_schedules=[None],
         )
         assert not result
+
+        result = await self.tinker_thermostat_schedule(
+            smile,
+            "13228dab8ce04617af318a2888b3c548",
+            "off",
+            good_schedules=[None],
+        )
+        assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
