@@ -488,15 +488,13 @@ class Smile(SmileComm, SmileData):
         """
         # Do nothing when name == None and the state does not change. No need to show
         # an error, as doing nothing is the correct action in this scenario.
-        oldstate = "off"
-        if self._last_active(loc_id) == name:
-            oldstate = "on"
         if name is None:
+            oldstate = "off"
             if newstate == oldstate:
                 return
             # else:
             raise PlugwiseError(
-                f"Cannot change schedule-state to {newstate}: no schedule name provided"
+                "Cannot change schedule-state: no schedule name provided"
             )
 
         if self._smile_legacy:
