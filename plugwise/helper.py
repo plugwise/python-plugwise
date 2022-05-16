@@ -1063,7 +1063,6 @@ class SmileHelper:
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
-
         available: list[str] = [NONE]
         last_used: str | None = None
         rule_ids: dict[str, str] = {}
