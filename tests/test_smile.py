@@ -2730,7 +2730,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             schedule_on=False,
             good_schedules=[None],
         )
-        assert result
+        assert not result
 
         await smile.close_connection()
         await self.disconnect(server, client)
