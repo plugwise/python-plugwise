@@ -144,7 +144,9 @@ class SmileData(SmileHelper):
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
         if presets := self._presets(loc_id):
+            LOGGER.debug("HOI 1 %s", presets)
             presets_list = list(presets)
+            LOGGER.debug("HOI 2 %s", presets_list)
             # Adam does not show vacation preset anymore, issue #185
             if self.smile_name == "Adam":
                 presets_list.remove("vacation")
