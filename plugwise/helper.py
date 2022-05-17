@@ -1081,40 +1081,18 @@ class SmileHelper:
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, None
 
-        schedules: dict[str, dict[str, float]] = {}
+        schedules: list[str] = []
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
-            schedule: dict[str, float] = {}
-            temp: dict[str, float] = {}
+            schedule = False
             locator = f'./rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
             count = 0
-            for directive in directives:
-                entry = directive.find("then").attrib
-                keys, dummy = zip(*entry.items())
-                if str(keys[0]) == "preset":
-                    temp[directive.attrib["time"]] = float(
-                        self._presets(loc_id)[entry["preset"]][0]
-                    )
-                    if self.cooling_active:
-                        temp[directive.attrib["time"]] = float(
-                            self._presets(loc_id)[entry["preset"]][1]
-                        )
-                else:
-                    if "heating_setpoint" in entry:
-                        temp[directive.attrib["time"]] = float(
-                            entry["heating_setpoint"]
-                        )
-                        if self.cooling_active:
-                            temp[directive.attrib["time"]] = float(
-                                entry["cooling_setpoint"]
-                            )
-                    else:
-                        temp[directive.attrib["time"]] = float(entry["setpoint"])
+            for _ in directives:
                 count += 1
 
             if count > 1:
-                schedule = temp
+                schedule = True
             else:
                 # Schedule with less than 2 items
                 LOGGER.debug("Invalid schedule, only one entry, ignoring.")
@@ -1124,7 +1102,7 @@ class SmileHelper:
                 if location == loc_id:
                     selected = name
                     self._last_active[location] = selected
-                schedules[name] = schedule
+                schedules.append(name)
 
         if schedules:
             available.remove(NONE)
@@ -1132,9 +1110,7 @@ class SmileHelper:
 
         return available, selected, last_used
 
-    def _last_used_schedule(
-        self, loc_id: str, schedules: dict[str, dict[str, float]]
-    ) -> str | None:
+    def _last_used_schedule(self, loc_id: str, schedules: list[str]) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
         """
