@@ -1084,25 +1084,11 @@ class SmileHelper:
         schedules: list[str] = []
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
-            schedule = False
-            locator = f'./rule[@id="{rule_id}"]/directives'
-            directives = self._domain_objects.find(locator)
-            count = 0
-            for _ in directives:
-                count += 1
-
-            if count > 1:
-                schedule = True
-            else:
-                # Schedule with less than 2 items
-                LOGGER.debug("Invalid schedule, only one entry, ignoring.")
-
-            if schedule:
-                available.append(name)
-                if location == loc_id:
-                    selected = name
-                    self._last_active[location] = selected
-                schedules.append(name)
+            available.append(name)
+            if location == loc_id:
+                selected = name
+                self._last_active[location] = selected
+            schedules.append(name)
 
         if schedules:
             available.remove(NONE)
