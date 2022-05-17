@@ -1658,6 +1658,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert result
 
+        # bad schedule-state test
+        result = await self.tinker_thermostat_schedule(
+            smile,
+            "f2bf9048bef64cc5b6d5110154e33c81",
+            "bad",
+            good_schedules=["Badkamer"],
+        )
+        assert not result
+
         switch_change = await self.tinker_switch(
             smile,
             "e8ef2a01ed3b4139a53bf749204fe6b4",
