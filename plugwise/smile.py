@@ -480,7 +480,7 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
 
     async def set_schedule_state(
-        self, loc_id: str, name: str | None, newstate: str
+        self, loc_id: str, name: str | None, state: str
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
@@ -489,8 +489,7 @@ class Smile(SmileComm, SmileData):
         # Do nothing when name == None and the state does not change. No need to show
         # an error, as doing nothing is the correct action in this scenario.
         if name is None:
-            oldstate = "off"
-            if newstate == oldstate:
+            if state == "off":
                 return
             # else:
             raise PlugwiseError(
@@ -498,7 +497,7 @@ class Smile(SmileComm, SmileData):
             )
 
         if self._smile_legacy:
-            await self._set_schedule_state_legacy(name, newstate)
+            await self._set_schedule_state_legacy(name, state)
             return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
@@ -523,10 +522,10 @@ class Smile(SmileComm, SmileData):
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
-        if newstate == "off":
+        if state == "off":
             self._last_active[loc_id] = name
             contexts.remove(subject)
-        if newstate == "on":
+        if state == "on":
             contexts.append(subject)
 
         contexts = etree.tostring(contexts, encoding="unicode").rstrip()
