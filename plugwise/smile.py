@@ -541,11 +541,9 @@ class Smile(SmileComm, SmileData):
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
         rule = self._domain_objects.find(locator)
-
-        uri = RULES
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
-        await self._request(uri, method="put", data=data)
+        await self._request(RULES, method="put", data=data)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
@@ -666,6 +664,4 @@ class Smile(SmileComm, SmileData):
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
-        uri = NOTIFICATIONS
-
-        await self._request(uri, method="delete")
+        await self._request(NOTIFICATIONS, method="delete")
