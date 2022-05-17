@@ -1,5 +1,13 @@
 # Changelog
 
+# v0.18.4: Smile: schedule-related bug-fixes and clean-up
+- Update `_last_used_schedule()`: provide the collected schedules as input in order to find the last-modified valid schedule.
+- `_rule_ids_by_x()`: replace None by NONE, allowing for simpler typing.
+- Remove `schedule_temperature` from output: for Adam the schedule temperature cannot be collected when a schedule is not active.
+- Simplify `_schedules()`, don't collect the schedule-details as no longer required.
+- Improve solution for plugwise-beta issue #276
+- Move HA Core input-checks into the backend library (into set_schedule_state() and set_preset())
+
 # v0.18.3: Smile: move solution for https://github.com/plugwise/plugwise-beta/issues/276 into backend
 
 # v0.18.2: Smile: fix for https://github.com/plugwise/python-plugwise/issues/187

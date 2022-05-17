@@ -21,7 +21,6 @@ from .constants import (
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
-    DAYS,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -53,12 +52,7 @@ from .exceptions import (
     PlugwiseException,
     ResponseError,
 )
-from .util import (
-    escape_illegal_xml_characters,
-    format_measure,
-    in_between,
-    version_to_model,
-)
+from .util import escape_illegal_xml_characters, format_measure, version_to_model
 
 
 def update_helper(
@@ -91,40 +85,6 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
         if model != "Unknown":
             return model
     return name
-
-
-def schedules_schedule_temp(
-    schedules: dict[str, dict[str, float]], name: str
-) -> float | None:
-    """Helper-function for schedules().
-    Obtain the schedule temperature of the schedule.
-    """
-    if name == NONE:
-        return None  # pragma: no cover
-
-    schedule_list: list[tuple[int, dt.time, float]] = []
-    for period, temp in schedules[name].items():
-        moment, dummy = period.split(",")
-        moment_cleaned = moment.replace("[", "").split(" ")
-        day_nr = DAYS[moment_cleaned[0]]
-        start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
-        tmp_list: tuple[int, dt.time, float] = (day_nr, start_time, temp)
-        schedule_list.append(tmp_list)
-
-    length = len(schedule_list)
-    schedule_list = sorted(schedule_list)
-    for i in range(length):
-        j = (i + 1) % (length - 1)
-        now = dt.datetime.now().time()
-        today = dt.datetime.now().weekday()
-        day_0 = schedule_list[i][0]
-        day_1 = schedule_list[j][0]
-        time_0 = schedule_list[i][1]
-        time_1 = schedule_list[j][1]
-        if today in [day_0, day_1] and in_between(now, time_0, time_1):
-            return schedule_list[i][2]
-
-    return None
 
 
 def power_data_local_format(
@@ -688,16 +648,16 @@ class SmileHelper:
 
     def _presets_legacy(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
-        preset_dictionary: dict[str, list[float]] = {}
+        presets: dict[str, list[float]] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
             if directive is not None and "icon" in directive.keys():
                 # Ensure list of heating_setpoint, cooling_setpoint
-                preset_dictionary[directive.attrib["icon"]] = [
+                presets[directive.attrib["icon"]] = [
                     float(directive.attrib["temperature"]),
                     0,
                 ]
 
-        return preset_dictionary
+        return presets
 
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
@@ -731,27 +691,31 @@ class SmileHelper:
                         float(preset.get("cooling_setpoint")),
                     ]
 
+        # Adam does not show vacation preset anymore, issue #185
+        if self.smile_name == "Adam":
+            presets.pop("vacation")
+
         return presets
 
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str | None]:
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
         """Helper-function for _presets().
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
-        schedule_ids: dict[str, str | None] = {}
+        schedule_ids: dict[str, str] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             if rule.find(locator) is not None:
                 schedule_ids[rule.attrib["id"]] = loc_id
             else:
-                schedule_ids[rule.attrib["id"]] = None
+                schedule_ids[rule.attrib["id"]] = NONE
 
         return schedule_ids
 
-    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str | None]:
+    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str]:
         """Helper-function for _presets(), _schedules() and _last_active_schedule().
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
-        schedule_ids: dict[str, str | None] = {}
+        schedule_ids: dict[str, str] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall("./rule"):
@@ -759,7 +723,7 @@ class SmileHelper:
                 if rule.find(locator2) is not None:
                     schedule_ids[rule.attrib["id"]] = loc_id
                 else:
-                    schedule_ids[rule.attrib["id"]] = None
+                    schedule_ids[rule.attrib["id"]] = NONE
 
         return schedule_ids
 
@@ -1072,8 +1036,8 @@ class SmileHelper:
         return str(active_rule.attrib["icon"])
 
     def _schedules_legacy(
-        self, avail: list[str], sched_temp: float | None, sel: str
-    ) -> tuple[list[str], str, float | None, None]:
+        self, avail: list[str], sel: str
+    ) -> tuple[list[str], str, None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
         """
@@ -1096,25 +1060,21 @@ class SmileHelper:
             if active:
                 sel = name
 
-        return avail, sel, sched_temp, None
+        return avail, sel, None
 
-    def _schedules(
-        self, location: str
-    ) -> tuple[list[str], str, float | None, str | None]:
+    def _schedules(self, location: str) -> tuple[list[str], str, str | None]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available: list[str] = [NONE]
         last_used: str | None = None
-        rule_ids: dict[str, str | None] = {}
-        schedule_temperature: float | None = None
+        rule_ids: dict[str, str] = {}
         selected = NONE
-        tmp_last_used: str | None = None
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
-            return self._schedules_legacy(available, schedule_temperature, selected)
+            return self._schedules_legacy(available, selected)
 
         # Adam schedules, one schedule can be linked to various locations
         # self._last_active contains the locations and the active schedule name per location, or None
@@ -1123,68 +1083,24 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
-            return available, selected, schedule_temperature, None
+            return available, selected, None
 
-        schedules: dict[str, dict[str, float]] = {}
+        schedules: list[str] = []
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
-            schedule: dict[str, float] = {}
-            temp: dict[str, float] = {}
-            locator = f'./rule[@id="{rule_id}"]/directives'
-            directives = self._domain_objects.find(locator)
-            count = 0
-            for directive in directives:
-                entry = directive.find("then").attrib
-                keys, dummy = zip(*entry.items())
-                if str(keys[0]) == "preset":
-                    if loc_id is None:  # set to 0 when the schedule is not active
-                        temp[directive.attrib["time"]] = float(0)
-                    else:
-                        temp[directive.attrib["time"]] = float(
-                            self._presets(loc_id)[entry["preset"]][0]
-                        )
-                        if self.cooling_active:
-                            temp[directive.attrib["time"]] = float(
-                                self._presets(loc_id)[entry["preset"]][1]
-                            )
-                else:
-                    if "heating_setpoint" in entry:
-                        temp[directive.attrib["time"]] = float(
-                            entry["heating_setpoint"]
-                        )
-                        if self.cooling_active:
-                            temp[directive.attrib["time"]] = float(
-                                entry["cooling_setpoint"]
-                            )
-                    else:
-                        temp[directive.attrib["time"]] = float(entry["setpoint"])
-                count += 1
-
-            if count > 1:
-                schedule = temp
-            else:
-                # Schedule with less than 2 items
-                LOGGER.debug("Invalid schedule, only one entry, ignoring.")
-
-            if schedule:
-                available.append(name)
-                if location == loc_id:
-                    selected = name
-                    self._last_active[location] = selected
-                schedules[name] = schedule
+            available.append(name)
+            if location == loc_id:
+                selected = name
+                self._last_active[location] = selected
+            schedules.append(name)
 
         if schedules:
             available.remove(NONE)
-            tmp_last_used = self._last_used_schedule(location, rule_ids)
-            if tmp_last_used in schedules:
-                last_used = tmp_last_used
-                schedule_temperature = schedules_schedule_temp(schedules, last_used)
+            last_used = self._last_used_schedule(location, schedules)
 
-        return available, selected, schedule_temperature, last_used
+        return available, selected, last_used
 
-    def _last_used_schedule(
-        self, loc_id: str, rule_ids: dict[str, str | None]
-    ) -> str | None:
+    def _last_used_schedule(self, loc_id: str, schedules: list[str]) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
         """
@@ -1194,24 +1110,21 @@ class SmileHelper:
             return last_used
 
         # Alternatively, find last_used by finding the most recent modified_date
-        if not rule_ids:
-            return None  # pragma: no cover
+        last_used = None
+        if not schedules:
+            return last_used  # pragma: no cover
 
         epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
-        schedules: dict[str, float] = {}
+        schedules_dates: dict[str, float] = {}
 
-        for rule_id in rule_ids:
-            schedule_name = self._domain_objects.find(
-                f'./rule[@id="{rule_id}"]/name'
-            ).text
-            schedule_date = self._domain_objects.find(
-                f'./rule[@id="{rule_id}"]/modified_date'
-            ).text
+        for name in schedules:
+            result = self._domain_objects.find(f'./rule[name="{name}"]')
+            schedule_date = result.find("modified_date").text
             schedule_time = parse(schedule_date)
-            schedules[schedule_name] = (schedule_time - epoch).total_seconds()
+            schedules_dates[name] = (schedule_time - epoch).total_seconds()
 
         if schedules:
-            last_used = sorted(schedules.items(), key=lambda kv: kv[1])[-1][0]
+            last_used = sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
 
         return last_used
 

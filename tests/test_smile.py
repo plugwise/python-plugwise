@@ -431,23 +431,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     assert val_1 == val_2
                                     asserts += 1
                         else:
-                            # The schedule temperature changes accordung to the set schedule,
-                            # so the value can differ when testing at different times during the day.
-                            if measure_key == "schedule_temperature":
-                                _LOGGER.debug(
-                                    "Schedule temperature = %s", dev_data[measure_key]
-                                )
-                                if measure_assert is not None:
-                                    assert isinstance(dev_data[measure_key], float)
-                                    asserts += 1
-                                else:  # edge-case: schedule_temperature = None
-                                    assert (
-                                        dev_data[measure_key] == measure_assert
-                                    )  # pragma: no cover
-                                    asserts += 1
-                            else:
-                                assert dev_data[measure_key] == measure_assert
-                                asserts += 1
+                            assert dev_data[measure_key] == measure_assert
+                            asserts += 1
 
         assert tests == asserts
 
@@ -464,6 +449,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
                 tinker_switch_passed = True
+                _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
             except (
@@ -631,7 +617,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "schedule_temperature": 20.0,
                 "lower_bound": 4.0,
                 "upper_bound": 30.0,
                 "resolution": 0.1,
@@ -722,7 +707,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "schedule_temperature": 15.0,
                 "lower_bound": 4.0,
                 "upper_bound": 30.0,
                 "resolution": 0.1,
@@ -915,7 +899,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Standaard", "Thuiswerken"],
                 "selected_schedule": "None",
                 "last_used": "Standaard",
-                "schedule_temperature": 0.0,
                 "mode": "heat",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
@@ -1011,7 +994,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Standaard", "Thuiswerken"],
                 "selected_schedule": "None",
                 "last_used": "Standaard",
-                "schedule_temperature": 0.0,
                 "mode": "heat",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
@@ -1123,13 +1105,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "schedule_temperature": 21.0,
                 "lower_bound": 4.0,
                 "upper_bound": 30.0,
                 "resolution": 0.1,
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "away",
-                "available_schedules": ["Normal"],
+                "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
@@ -1218,10 +1199,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "resolution": 0.1,
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "home",
-                "available_schedules": ["Normal"],
+                "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
-                "schedule_temperature": 21.0,
                 "mode": "auto",
                 "sensors": {"temperature": 20.4, "setpoint": 21.0, "illuminance": 44.8},
             },
@@ -1291,11 +1271,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "resolution": 0.1,
                 "preset_modes": ["no_frost", "asleep", "away", "home", "vacation"],
                 "active_preset": "home",
-                "available_schedules": ["Normal"],
-                "selected_schedule": "None",
-                "last_used": None,
-                "schedule_temperature": None,
-                "mode": "heat",
+                "available_schedules": ["Test", "Normal"],
+                "selected_schedule": "Test",
+                "last_used": "Test",
+                "mode": "auto",
                 "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
             },
             "a270735e4ccd45239424badc0578a2b1": {
@@ -1414,7 +1393,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Weekschema"],
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
-                "schedule_temperature": 20.5,
                 "mode": "auto",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5},
             },
@@ -1524,7 +1502,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
-                "schedule_temperature": 19.0,
                 "control_state": "heating",
                 "mode": "auto",
                 "sensors": {"temperature": 18.1, "setpoint": 18.5},
@@ -1614,7 +1591,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
                 "selected_schedule": "Badkamer",
                 "last_used": "Badkamer",
-                "schedule_temperature": 16.0,
                 "control_state": "off",
                 "mode": "auto",
                 "sensors": {"temperature": 17.9, "setpoint": 15.0, "battery": 56},
@@ -1682,6 +1658,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert result
 
+        # bad schedule-state test
+        result = await self.tinker_thermostat_schedule(
+            smile,
+            "f2bf9048bef64cc5b6d5110154e33c81",
+            "bad",
+            good_schedules=["Badkamer"],
+        )
+        assert not result
+
         switch_change = await self.tinker_switch(
             smile,
             "e8ef2a01ed3b4139a53bf749204fe6b4",
@@ -1735,7 +1720,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
-                "schedule_temperature": 0.0,
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
@@ -1801,7 +1785,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
-                "schedule_temperature": 20.0,
                 "mode": "auto",
                 "sensors": {"temperature": 21.1, "setpoint": 21.5, "battery": 34},
             },
@@ -1971,7 +1954,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
-                "schedule_temperature": 15.0,
                 "mode": "auto",
                 "sensors": {"temperature": 17.1, "setpoint": 16.0, "battery": 37},
             },
@@ -2018,7 +2000,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
-                "schedule_temperature": 20.0,
                 "mode": "auto",
                 "sensors": {"temperature": 18.8, "setpoint": 14.0, "battery": 92},
             },
@@ -2061,7 +2042,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
-                "schedule_temperature": 0.0,
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
@@ -2158,7 +2138,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
-                "schedule_temperature": 0.0,
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
@@ -2224,7 +2203,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
-                "schedule_temperature": 20.0,
                 "mode": "auto",
                 "sensors": {"temperature": 20.9, "setpoint": 21.5, "battery": 34},
             },
@@ -2394,7 +2372,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
-                "schedule_temperature": 15.0,
                 "mode": "auto",
                 "sensors": {"temperature": 17.2, "setpoint": 15.0, "battery": 37},
             },
@@ -2441,7 +2418,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
-                "schedule_temperature": 20.0,
                 "mode": "auto",
                 "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
             },
@@ -2484,7 +2460,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 ],
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
-                "schedule_temperature": 0.0,
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
@@ -2589,7 +2564,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "selected_schedule": "None",
                 "last_used": None,
-                "schedule_temperature": None,
                 "control_state": "off",
                 "mode": "heat",
                 "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 80},
@@ -2611,7 +2585,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "selected_schedule": "None",
                 "last_used": None,
-                "schedule_temperature": None,
                 "control_state": "off",
                 "mode": "heat",
                 "sensors": {"temperature": 24.2, "setpoint": 13.0, "battery": 92},
@@ -2652,7 +2625,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "selected_schedule": "None",
                 "last_used": None,
-                "schedule_temperature": None,
                 "control_state": "off",
                 "mode": "heat",
                 "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 79},
@@ -2674,7 +2646,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "selected_schedule": "None",
                 "last_used": None,
-                "schedule_temperature": None,
                 "control_state": "off",
                 "mode": "heat",
                 "sensors": {
@@ -2765,8 +2736,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         result = await self.tinker_thermostat(
             smile,
-            "d58fec52899f4f1c92e4f8fad6d8c48c",
+            "13228dab8ce04617af318a2888b3c548",
             schedule_on=False,
+            good_schedules=[None],
+        )
+        assert not result
+
+        result = await self.tinker_thermostat_schedule(
+            smile,
+            "13228dab8ce04617af318a2888b3c548",
+            "off",
             good_schedules=[None],
         )
         assert result
@@ -2961,11 +2940,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "resolution": 0.1,
                 "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
                 "active_preset": "home",
-                "available_schedules": ["None"],
-                "selected_schedule": "None",
-                "last_used": None,
-                "schedule_temperature": None,
-                "mode": "heat",
+                "available_schedules": ["standaard"],
+                "selected_schedule": "standaard",
+                "last_used": "standaard",
+                "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
                     "setpoint": 21.0,
@@ -3123,7 +3101,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
-                "schedule_temperature": 19.5,
                 "mode": "auto",
                 "sensors": {
                     "temperature": 20.9,
@@ -3215,7 +3192,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
-                "schedule_temperature": 23.0,
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,

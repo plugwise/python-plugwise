@@ -18,13 +18,12 @@ from .constants import (
     LOGADDR_OFFSET,
     PERCENTAGE,
     PLUGWISE_EPOCH,
+    SPECIAL_FORMAT,
     TEMP_CELSIUS,
     UTF8_DECODE,
-    VOLUME_CUBIC_METERS,
 )
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
-SPECIAL_FORMAT = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 
 
 def validate_mac(mac: str) -> bool:
@@ -132,13 +131,6 @@ def format_measure(measure: str, unit: str) -> float | int | bool:
             if measure in ["off", "false"]:
                 result = False
     return result
-
-
-def in_between(now: datetime.time, start: datetime.time, end: datetime.time) -> bool:
-    """Determine timing for schedules."""
-    if start <= end:
-        return start <= now < end
-    return start <= now or now < end
 
 
 class BaseType:

@@ -380,6 +380,7 @@ DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
 SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
+SPECIAL_FORMAT: Final[list[str]] = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]
 THERMOSTAT_CLASSES: Final[list[str]] = [
     "thermostat",
@@ -427,8 +428,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Specific for an Anna
     "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
-    # Schedule temperature - only present for a legacy Anna or an Anna v3
-    "schedule_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Specific for an Anna with heatpump extension installed
     "cooling_activation_outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "cooling_deactivation_threshold": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
@@ -738,7 +737,6 @@ class DeviceDataPoints(
     available_schedules: list[str]
     selected_schedule: str
     last_used: str | None
-    schedule_temperature: float | None
 
     mode: str
 

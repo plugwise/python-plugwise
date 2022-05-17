@@ -145,24 +145,18 @@ class SmileData(SmileHelper):
         device_data["active_preset"] = None
         if presets := self._presets(loc_id):
             presets_list = list(presets)
-            # Adam does not show vacation preset anymore, issue #185
-            if self.smile_name == "Adam":
-                presets_list.remove("vacation")
             device_data["preset_modes"] = presets_list
 
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        avail_schedules, sel_schedule, sched_setpoint, last_active = self._schedules(
-            loc_id
-        )
+        avail_schedules, sel_schedule, last_active = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["selected_schedule"] = sel_schedule
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
-            device_data["schedule_temperature"] = sched_setpoint
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
@@ -489,10 +483,18 @@ class Smile(SmileComm, SmileData):
         Determined from - DOMAIN_OBJECTS.
         In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
         """
-        # Do nothing when name == None, meaning no schedule to activate / deactivate
-        # Also, don't show an error, as doing nothing is the correct action in this scenario.
+        if state not in ["on", "off"]:
+            raise PlugwiseError("Plugwise: invalid schedule state.")
+
+        # Do nothing when name == None and the state does not change. No need to show
+        # an error, as doing nothing is the correct action in this scenario.
         if name is None:
-            return
+            if state == "off":
+                return
+            # else:
+            raise PlugwiseError(
+                "Plugwise: cannot change schedule-state: no schedule name provided"
+            )
 
         if self._smile_legacy:
             await self._set_schedule_state_legacy(name, state)
@@ -538,16 +540,18 @@ class Smile(SmileComm, SmileData):
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        if (rule := self._domain_objects.find(locator)) is None:
-            raise PlugwiseError("Plugwise: invalid preset.")
-
-        uri = RULES
+        rule = self._domain_objects.find(locator)
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
-        await self._request(uri, method="put", data=data)
+        await self._request(RULES, method="put", data=data)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
+        if (presets := self._presets(loc_id)) is None:
+            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
+        if preset not in list(presets):
+            raise PlugwiseError("Plugwise: invalid preset.")
+
         if self._smile_legacy:
             await self._set_preset_legacy(preset)
             return
@@ -555,9 +559,6 @@ class Smile(SmileComm, SmileData):
         current_location = self._locations.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
-
-        if preset not in self._presets(loc_id):
-            raise PlugwiseError("Plugwise: invalid preset.")
 
         uri = f"{LOCATIONS};id={loc_id}"
         data = (
@@ -568,25 +569,27 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temperature: str) -> None:
+    async def set_temperature(self, loc_id: str, temperature: float) -> None:
         """Set the given Temperature on the relevant Thermostat."""
+        temp = str(temperature)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
+            f"{temp}</setpoint></thermostat_functionality>"
         )
 
         await self._request(uri, method="put", data=data)
 
-    async def set_max_boiler_temperature(self, temperature: str) -> None:
+    async def set_max_boiler_temperature(self, temperature: float) -> None:
         """Set the max. Boiler Temperature on the Central heating boiler."""
+        temp = str(temperature)
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
         th_func = self._appliances.find(locator)
         if th_func.find("type").text == "maximum_boiler_temperature":
             thermostat_id = th_func.attrib["id"]
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
-        data = f"<thermostat_functionality><setpoint>{temperature}</setpoint></thermostat_functionality>"
+        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
 
         await self._request(uri, method="put", data=data)
 
@@ -663,6 +666,4 @@ class Smile(SmileComm, SmileData):
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
-        uri = NOTIFICATIONS
-
-        await self._request(uri, method="delete")
+        await self._request(NOTIFICATIONS, method="delete")
