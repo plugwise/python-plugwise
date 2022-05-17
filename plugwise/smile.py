@@ -547,7 +547,9 @@ class Smile(SmileComm, SmileData):
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
-        if preset not in self._presets(loc_id):
+        if presets := self._presets(loc_id) is None:
+            raise PlugwiseError("Plugwise: no presets available.")
+        if preset not in presets:
             raise PlugwiseError("Plugwise: invalid preset.")
 
         if self._smile_legacy:

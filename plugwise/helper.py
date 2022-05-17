@@ -648,16 +648,16 @@ class SmileHelper:
 
     def _presets_legacy(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
-        preset_dictionary: dict[str, list[float]] = {}
+        presets: dict[str, list[float]] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
             if directive is not None and "icon" in directive.keys():
                 # Ensure list of heating_setpoint, cooling_setpoint
-                preset_dictionary[directive.attrib["icon"]] = [
+                presets[directive.attrib["icon"]] = [
                     float(directive.attrib["temperature"]),
                     0,
                 ]
 
-        return preset_dictionary
+        return presets
 
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
