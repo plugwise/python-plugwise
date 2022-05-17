@@ -144,11 +144,11 @@ class SmileData(SmileHelper):
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
         if presets := self._presets(loc_id):
-            self._presets_list = list(presets)
+            presets_list = list(presets)
             # Adam does not show vacation preset anymore, issue #185
             if self.smile_name == "Adam":
-                self._presets_list.remove("vacation")
-            device_data["preset_modes"] = self._presets_list
+                presets_list.remove("vacation")
+            device_data["preset_modes"] = presets_list
 
             device_data["active_preset"] = self._preset(loc_id)
 
@@ -553,7 +553,7 @@ class Smile(SmileComm, SmileData):
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
-        if preset not in self._presets_list:
+        if preset not in self._presets(loc_id):
             raise PlugwiseError("Plugwise: invalid preset.")
 
         if self._smile_legacy:
@@ -563,9 +563,6 @@ class Smile(SmileComm, SmileData):
         current_location = self._locations.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
-
-        if preset not in self._presets(loc_id):
-            raise PlugwiseError("Plugwise: invalid preset.")
 
         uri = f"{LOCATIONS};id={loc_id}"
         data = (
