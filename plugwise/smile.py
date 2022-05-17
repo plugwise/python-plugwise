@@ -144,11 +144,11 @@ class SmileData(SmileHelper):
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
         if presets := self._presets(loc_id):
-            presets_list = list(presets)
+            self._presets_list = list(presets)
             # Adam does not show vacation preset anymore, issue #185
             if self.smile_name == "Adam":
-                presets_list.remove("vacation")
-            device_data["preset_modes"] = presets_list
+                self._presets_list.remove("vacation")
+            device_data["preset_modes"] = self._presets_list
 
             device_data["active_preset"] = self._preset(loc_id)
 
@@ -486,6 +486,9 @@ class Smile(SmileComm, SmileData):
         Determined from - DOMAIN_OBJECTS.
         In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
         """
+        if state not in ["on", "off"]:
+            raise PlugwiseError("Plugwise: invalid schedule state.")
+
         # Do nothing when name == None and the state does not change. No need to show
         # an error, as doing nothing is the correct action in this scenario.
         if name is None:
@@ -550,6 +553,9 @@ class Smile(SmileComm, SmileData):
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
+        if preset not in self._presets_list:
+            raise PlugwiseError("Plugwise: invalid preset.")
+
         if self._smile_legacy:
             await self._set_preset_legacy(preset)
             return
