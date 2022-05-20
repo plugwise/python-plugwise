@@ -2887,7 +2887,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_anna_heatpump(self):
+    async def test_connect_anna_heatpump_heating(self):
         """Test a Anna with Elga setup in idle mode."""
         testdata = {
             "1cbf783bb11e4a7c8a6843dee3a86927": {
@@ -2954,7 +2954,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
         }
 
-        self.smile_setup = "anna_heatpump"
+        self.smile_setup = "anna_heatpump_heating"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
