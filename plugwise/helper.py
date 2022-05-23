@@ -551,9 +551,10 @@ class SmileHelper:
         ot_fault_code = self._appliances.find(
             ".//logs/point_log[type='open_therm_oem_fault_code']"
         )
+        ot_gateway = self._appliances.find("./appliance[type='open_therm_gateway']")
         if boiler_state is not None or c_heating_state is not None:
-            self._opentherm_device = ot_fault_code is not None
-            self._on_off_device = ot_fault_code is None
+            self._opentherm_device = ot_fault_code is not None or ot_gateway is not None
+            self._on_off_device = ot_fault_code is None and ot_gateway is None
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
