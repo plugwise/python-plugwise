@@ -1858,8 +1858,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "90986d591dcd426cae3ec3e8111ff730": {
                 "dev_class": "heater_central",
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
-                "model": "Unknown",
-                "name": "OnOff",
+                "model": "Generic heater",
+                "name": "OpenTherm",
                 "binary_sensors": {"heating_state": False},
                 "sensors": {
                     "water_temperature": 70.0,
@@ -2276,8 +2276,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "90986d591dcd426cae3ec3e8111ff730": {
                 "dev_class": "heater_central",
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
-                "model": "Unknown",
-                "name": "OnOff",
+                "model": "Generic heater",
+                "name": "OpenTherm",
                 "binary_sensors": {"heating_state": True},
                 "sensors": {
                     "water_temperature": 70.0,
