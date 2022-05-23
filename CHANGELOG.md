@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.18.5: Smile bugfix for #192
+# v0.18.5: Smile bugfix for https://github.com/plugwise/python-plugwise/issues/192
 
 # v0.18.4: Smile: schedule-related bug-fixes and clean-up
 - Update `_last_used_schedule()`: provide the collected schedules as input in order to find the last-modified valid schedule.
