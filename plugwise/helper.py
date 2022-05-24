@@ -541,12 +541,6 @@ class SmileHelper:
                     }
                 )
 
-        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
-        onoff_boiler = self._modules.find("./module/protocols/onoff_boiler")
-        open_therm_boiler = self._modules.find("./module/protocols/open_therm_boiler")
-        self._on_off_device = onoff_boiler is not None
-        self._opentherm_device = open_therm_boiler is not None
-
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
 
