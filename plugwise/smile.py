@@ -276,6 +276,12 @@ class Smile(SmileComm, SmileData):
                 "Plugwise invalid setup error, check log for more info."
             )
 
+        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
+        onoff_boiler: etree = result.find("./module/protocols/onoff_boiler")
+        open_therm_boiler: etree = result.find("./module/protocols/open_therm_boiler")
+        self._on_off_device = onoff_boiler is not None
+        self._opentherm_device = open_therm_boiler is not None
+
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
