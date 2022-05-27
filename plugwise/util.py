@@ -13,6 +13,7 @@ import struct
 import crcmod
 
 from .constants import (
+    ARBITRARY_DATE,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
     LOGADDR_OFFSET,
@@ -131,6 +132,28 @@ def format_measure(measure: str, unit: str) -> float | int | bool:
             if measure in ["off", "false"]:
                 result = False
     return result
+
+
+def in_between(
+    today: int,
+    day_0: int,
+    day_1: int,
+    now: datetime.time,
+    time_0: datetime.time,
+    time_1: datetime.time,
+) -> bool:
+    """Determine timing for schedules."""
+    time_now = datetime.timedelta(days=today, hours=now.hour, minutes=now.minute)
+    time_start = datetime.timedelta(
+        days=day_0, hours=time_0.hour, minutes=time_0.minute
+    )
+    time_end = datetime.timedelta(days=day_1, hours=time_1.hour, minutes=time_1.minute)
+
+    now_point = ARBITRARY_DATE + time_now
+    start_point = ARBITRARY_DATE + time_start
+    end_point = ARBITRARY_DATE + time_end
+
+    return start_point <= now_point <= end_point
 
 
 class BaseType:
