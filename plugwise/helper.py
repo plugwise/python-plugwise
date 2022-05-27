@@ -93,7 +93,9 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def schedules_temps(schedules: dict[str, dict[str, float]], name: str) -> float | None:
+def schedules_temps(
+    schedules: dict[str, dict[str, list[float]]], name: str
+) -> tuple[float, float] | None:
     """Helper-function for schedules().
     Obtain the schedule temperature of the schedule.
     """
@@ -1069,7 +1071,7 @@ class SmileHelper:
 
     def _schedules_legacy(
         self, avail: list[str], sel: str
-    ) -> tuple[list[str], str, None]:
+    ) -> tuple[list[str], str, None, None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
         """
@@ -1096,15 +1098,15 @@ class SmileHelper:
 
     def _schedules(
         self, location: str
-    ) -> tuple[list[str], str, set[float] | None, str | None]:
+    ) -> tuple[list[str], str, list[float] | None, str | None]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available: list[str] = [NONE]
         last_used: str | None = None
-        rule_ids: dict[str, str | None] = {}
-        schedule_temperatures: set[float] | None = None
+        rule_ids: dict[str, str] = {}
+        schedule_temperatures: list[float] | None = None
         selected = NONE
         tmp_last_used: str | None = None
 
@@ -1121,34 +1123,34 @@ class SmileHelper:
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
             return available, selected, schedule_temperatures, None
 
-        schedules: dict[str, dict[str, set[float]]] = {}
+        schedules: dict[str, dict[str, list[float]]] = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
-            schedule: dict[str, set[float]] = {}
+            schedule: dict[str, list[float]] = {}
             locator = f'./rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
             for directive in directives:
                 entry = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
-                    if loc_id is None:  # set to 0 when the schedule is not active
-                        schedule[directive.attrib["time"]] = (float(0), float(0))
+                    if loc_id == NONE:  # set to 0 when the schedule is not active
+                        schedule[directive.attrib["time"]] = [float(0), float(0)]
                     else:
-                        schedule[directive.attrib["time"]] = (
+                        schedule[directive.attrib["time"]] = [
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
-                        )
+                        ]
                 else:
                     if "heating_setpoint" in entry:
-                        schedule[directive.attrib["time"]] = (
+                        schedule[directive.attrib["time"]] = [
                             float(entry["heating_setpoint"]),
                             float(entry["cooling_setpoint"]),
-                        )
+                        ]
                     else:
-                        schedule[directive.attrib["time"]] = (
+                        schedule[directive.attrib["time"]] = [
                             float(entry["setpoint"]),
                             float(0),
-                        )
+                        ]
 
             if schedule:
                 available.append(name)
