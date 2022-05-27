@@ -1125,39 +1125,30 @@ class SmileHelper:
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, set[float]] = {}
-            temp: dict[str, set[float]] = {}
             locator = f'./rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
-            count = 0
             for directive in directives:
                 entry = directive.find("then").attrib
                 keys, dummy = zip(*entry.items())
                 if str(keys[0]) == "preset":
                     if loc_id is None:  # set to 0 when the schedule is not active
-                        temp[directive.attrib["time"]] = (float(0), float(0))
+                        schedule[directive.attrib["time"]] = (float(0), float(0))
                     else:
-                        temp[directive.attrib["time"]] = (
+                        schedule[directive.attrib["time"]] = (
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
                         )
                 else:
                     if "heating_setpoint" in entry:
-                        temp[directive.attrib["time"]] = (
+                        schedule[directive.attrib["time"]] = (
                             float(entry["heating_setpoint"]),
                             float(entry["cooling_setpoint"]),
                         )
                     else:
-                        temp[directive.attrib["time"]] = (
+                        schedule[directive.attrib["time"]] = (
                             float(entry["setpoint"]),
                             float(0),
                         )
-                count += 1
-
-            if count > 1:
-                schedule = temp
-            else:
-                # Schedule with less than 2 items
-                LOGGER.debug("Invalid schedule, only one entry, ignoring.")
 
             if schedule:
                 available.append(name)
