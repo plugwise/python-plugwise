@@ -106,7 +106,12 @@ def schedules_temps(schedules: dict[str, dict[str, float]], name: str) -> float 
         moment_cleaned = moment.replace("[", "").split(" ")
         day_nr = DAYS[moment_cleaned[0]]
         start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
-        tmp_list: tuple[int, dt.time, float] = (day_nr, start_time, temp[0], temp[1])
+        tmp_list: tuple[int, dt.time, float, float] = (
+            day_nr,
+            start_time,
+            temp[0],
+            temp[1],
+        )
         schedule_list.append(tmp_list)
 
     length = len(schedule_list)
