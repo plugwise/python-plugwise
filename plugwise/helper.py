@@ -1156,6 +1156,9 @@ class SmileHelper:
                     selected = name
                     self._last_active[location] = selected
                 schedules[name] = schedule
+            else:
+                # Empty schedule
+                LOGGER.debug("Invalid schedule, no entries, ignoring.")
 
         if schedules:
             available.remove(NONE)
