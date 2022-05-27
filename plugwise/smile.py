@@ -150,13 +150,16 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        avail_schedules, sel_schedule, last_active = self._schedules(loc_id)
+        avail_schedules, sel_schedule, sched_setpoints, last_active = self._schedules(
+            loc_id
+        )
         device_data["available_schedules"] = avail_schedules
         device_data["selected_schedule"] = sel_schedule
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
+            device_data["schedule_temperatures"] = sched_setpoints
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
