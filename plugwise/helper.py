@@ -1125,6 +1125,8 @@ class SmileHelper:
             directives = self._domain_objects.find(locator)
             count = 0
             for directive in directives:
+                count += 1
+                # Only process the schedule in detail for Anna with cooling
                 if self._anna_cooling_present:
                     entry = directive.find("then").attrib
                     keys, dummy = zip(*entry.items())
@@ -1145,12 +1147,6 @@ class SmileHelper:
                                 float(entry["heating_setpoint"]),
                                 float(entry["cooling_setpoint"]),
                             ]
-                        else:
-                            schedule[directive.attrib["time"]] = [
-                                float(entry["setpoint"]),
-                                float(0),
-                            ]
-                count += 1
 
             if schedule or count > 0:
                 available.append(name)
