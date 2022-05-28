@@ -182,7 +182,7 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
-            device_data["schedule_temperatures"] = sched_setpoints
+            LOGGER.debug("HOI 2 %s", sched_setpoints)
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
@@ -202,7 +202,7 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         details = self._appl_data[dev_id]
-        LOGGER.debug("HOI %s", details)
+        LOGGER.debug("HOI 1 %s", details)
         device_data = self._get_appliance_data(dev_id)
 
         # Generic
