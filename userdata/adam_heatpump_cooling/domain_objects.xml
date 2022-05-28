@@ -2381,7 +2381,7 @@
 				<interval/>
 				<regulation_mode_control id='7f89172d5c36454093f43a13683e5820'/>
 				<period start_date="2021-12-16T13:35:09.030+01:00" end_date="2021-12-16T13:35:09.030+01:00">
-					<measurement log_date="2021-12-16T13:35:09.030+01:00">heating</measurement>
+					<measurement log_date="2021-12-16T13:35:09.030+01:00">cooling</measurement>
 				</period>
 			</point_log>
 			<point_log id='6582d32f34944fccb0a1910a20a884a1'>
@@ -2471,7 +2471,7 @@
 				<regulation_mode_control id='7f89172d5c36454093f43a13683e5820'/>
 				<updated_date>2021-12-16T13:35:09.030+01:00</updated_date>
 				<type>regulation_mode</type>
-				<mode>heating</mode>
+				<mode>cooling</mode>
 				<allowed_modes>
 					<mode>heating</mode>
 					<mode>off</mode>

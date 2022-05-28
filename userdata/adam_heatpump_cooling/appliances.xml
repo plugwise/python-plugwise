@@ -171,7 +171,7 @@
 				<interval/>
 				<boiler_state id='25a3ff8401a048b0ba7107517c79ba64'/>
 				<period start_date="2021-12-31T08:02:17.065+01:00" end_date="2021-12-31T08:02:17.065+01:00">
-					<measurement log_date="2021-12-31T08:02:17.065+01:00">on</measurement>
+					<measurement log_date="2021-12-31T08:02:17.065+01:00">off</measurement>
 				</period>
 			</point_log>
 			<point_log id='3f2f1347f2564e0da505896d94d68abe'>
@@ -380,7 +380,7 @@
 				<interval/>
 				<boiler_state id='51f831118abd45f88401d946227f0ae8'/>
 				<period start_date="2021-12-28T15:07:37.695+01:00" end_date="2021-12-28T15:07:37.695+01:00">
-					<measurement log_date="2021-12-28T15:07:37.695+01:00">off</measurement>
+					<measurement log_date="2021-12-28T15:07:37.695+01:00">on</measurement>
 				</period>
 			</point_log>
 			<point_log id='f268d60f0bdf41a681a4839a8ca8bf48'>
@@ -1424,7 +1424,7 @@
 				<interval/>
 				<regulation_mode_control id='7f89172d5c36454093f43a13683e5820'/>
 				<period start_date="2021-12-16T13:35:09.030+01:00" end_date="2021-12-16T13:35:09.030+01:00">
-					<measurement log_date="2021-12-16T13:35:09.030+01:00">heating</measurement>
+					<measurement log_date="2021-12-16T13:35:09.030+01:00">cooling</measurement>
 				</period>
 			</point_log>
 			<point_log id='6582d32f34944fccb0a1910a20a884a1'>
@@ -1514,7 +1514,7 @@
 				<regulation_mode_control id='7f89172d5c36454093f43a13683e5820'/>
 				<updated_date>2021-12-16T13:35:09.030+01:00</updated_date>
 				<type>regulation_mode</type>
-				<mode>heating</mode>
+				<mode>cooling</mode>
 				<allowed_modes>
 					<mode>heating</mode>
 					<mode>off</mode>
