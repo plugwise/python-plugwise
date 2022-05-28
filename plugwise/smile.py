@@ -70,11 +70,11 @@ class SmileData(SmileHelper):
 
     def get_all_devices(self) -> None:
         """
-        Determine the devices present from the obtained XML-data.
+        Determine the evices present from the obtained XML-data.
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
         """
-
+        # Start by determining the system capabilities:
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
         if self.smile_type == "thermostat":
             onoff_boiler: etree = self._domain_objects.find(
@@ -86,6 +86,13 @@ class SmileData(SmileHelper):
             self._on_off_device = onoff_boiler is not None
             self._opentherm_device = open_therm_boiler is not None
 
+        # Determine if the Anna had cooling capability
+        locator = './appliance/logs/point_log[type="cooling_activation_outdoor_temperature"]/period/measurement'
+        self._anna_cooling_present = self._cooling_present = (
+            self._appliances.find(locator) is not None
+        )
+
+        # Gather all the device and initial data
         self._scan_thermostats()
 
         if group_data := self._group_switches():
