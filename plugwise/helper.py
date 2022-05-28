@@ -50,7 +50,7 @@ from .constants import (
 from .exceptions import (
     InvalidAuthentication,
     InvalidXMLError,
-    PlugwiseException,
+    PlugwiseError,
     ResponseError,
 )
 from .util import (
@@ -271,7 +271,7 @@ class SmileComm:
         except ClientError as err:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
                 LOGGER.error("Failed sending %s %s to Plugwise Smile", method, command)
-                raise PlugwiseException(
+                raise PlugwiseError(
                     "Plugwise connection error, check log for more info."
                 ) from err
             return await self._request(command, retry - 1)
@@ -1107,7 +1107,6 @@ class SmileHelper:
         rule_ids: dict[str, str] = {}
         schedule_temperatures: list[float] | None = None
         selected = NONE
-        tmp_last_used: str | None = None
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
@@ -1128,30 +1127,33 @@ class SmileHelper:
             schedule: dict[str, list[float]] = {}
             locator = f'./rule[@id="{rule_id}"]/directives'
             directives = self._domain_objects.find(locator)
+            count = 0
             for directive in directives:
-                entry = directive.find("then").attrib
-                keys, dummy = zip(*entry.items())
-                if str(keys[0]) == "preset":
-                    if loc_id == NONE:  # set to 0 when the schedule is not active
-                        schedule[directive.attrib["time"]] = [float(0), float(0)]
+                if self._anna_cooling_present:
+                    entry = directive.find("then").attrib
+                    keys, dummy = zip(*entry.items())
+                    if str(keys[0]) == "preset":
+                        if loc_id == NONE:  # set to 0 when the schedule is not active
+                            schedule[directive.attrib["time"]] = [float(0), float(0)]
+                        else:
+                            schedule[directive.attrib["time"]] = [
+                                float(self._presets(loc_id)[entry["preset"]][0]),
+                                float(self._presets(loc_id)[entry["preset"]][1]),
+                            ]
                     else:
-                        schedule[directive.attrib["time"]] = [
-                            float(self._presets(loc_id)[entry["preset"]][0]),
-                            float(self._presets(loc_id)[entry["preset"]][1]),
-                        ]
-                else:
-                    if "heating_setpoint" in entry:
-                        schedule[directive.attrib["time"]] = [
-                            float(entry["heating_setpoint"]),
-                            float(entry["cooling_setpoint"]),
-                        ]
-                    else:
-                        schedule[directive.attrib["time"]] = [
-                            float(entry["setpoint"]),
-                            float(0),
-                        ]
+                        if "heating_setpoint" in entry:
+                            schedule[directive.attrib["time"]] = [
+                                float(entry["heating_setpoint"]),
+                                float(entry["cooling_setpoint"]),
+                            ]
+                        else:
+                            schedule[directive.attrib["time"]] = [
+                                float(entry["setpoint"]),
+                                float(0),
+                            ]
+                count += 1
 
-            if schedule:
+            if schedule or count > 0:
                 available.append(name)
                 if location == loc_id:
                     selected = name
@@ -1159,13 +1161,12 @@ class SmileHelper:
                 schedules[name] = schedule
             else:
                 # Empty schedule
-                LOGGER.debug("Invalid schedule, no entries, ignoring.")
+                raise PlugwiseError(f"Schedule {name} has no entries, ignoring.")
 
         if schedules:
             available.remove(NONE)
-            tmp_last_used = self._last_used_schedule(location, schedules)
-            if tmp_last_used in schedules:
-                last_used = tmp_last_used
+            last_used = self._last_used_schedule(location, schedules)
+            if last_used in schedules and self._anna_cooling_present:
                 schedule_temperatures = schedules_temps(schedules, last_used)
 
         return available, selected, schedule_temperatures, last_used
