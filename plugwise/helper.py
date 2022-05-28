@@ -1142,6 +1142,7 @@ class SmileHelper:
                             ]
                     else:
                         if "heating_setpoint" in entry:
+                            LOGGER.debug("HOI %s", entry)
                             schedule[directive.attrib["time"]] = [
                                 float(entry["heating_setpoint"]),
                                 float(entry["cooling_setpoint"]),
