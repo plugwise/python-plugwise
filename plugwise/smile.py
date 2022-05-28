@@ -183,9 +183,14 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = last_active
             if self._anna_cooling_present:
+                if sched_setpoints is None:
+                    device_data["setpoint_low"] = device_data["setpoint"]
+                    device_data["setpoint_high"] = float(30)
+                else:
+
+                    device_data["setpoint_low"] = sched_setpoints[0]
+                    device_data["setpoint_high"] = sched_setpoints[1]
                 device_data.pop("setpoint")
-                device_data["setpoint_low"] = sched_setpoints[0]
-                device_data["setpoint_high"] = sched_setpoints[1]
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
