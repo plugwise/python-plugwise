@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.19.0: Smile Anna with cooling: replace setpoint with setpoint_low and setpoint_high in output
+
 # v0.18.5: Smile bugfix for https://github.com/plugwise/python-plugwise/issues/192
 
 # v0.18.4: Smile: schedule-related bug-fixes and clean-up
