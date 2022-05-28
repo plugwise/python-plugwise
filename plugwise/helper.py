@@ -102,17 +102,16 @@ def schedules_temps(
     if name == NONE:
         return None  # pragma: no cover
 
-    schedule_list: list[tuple[int, dt.time, float, float]] = []
+    schedule_list: list[tuple[int, dt.time, list[float]]] = []
     for period, temp in schedules[name].items():
         moment, dummy = period.split(",")
         moment_cleaned = moment.replace("[", "").split(" ")
         day_nr = DAYS[moment_cleaned[0]]
         start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
-        tmp_list: tuple[int, dt.time, float, float] = (
+        tmp_list: tuple[int, dt.time, list[float]] = (
             day_nr,
             start_time,
-            temp[0],
-            temp[1],
+            [temp[0], temp[1]],
         )
         schedule_list.append(tmp_list)
 
@@ -130,7 +129,7 @@ def schedules_temps(
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
         if in_between(today, day_0, day_1, now, time_0, time_1):
-            return (schedule_list[i][2], schedule_list[i][3])
+            return schedule_list[i][2]
 
     return None
 
