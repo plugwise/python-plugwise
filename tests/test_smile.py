@@ -2894,7 +2894,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": 60.0,
@@ -3114,7 +3114,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "573c152e7d4f4720878222bd75638f5b": {
                 "dev_class": "heater_central",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": 60.0,
@@ -3205,7 +3205,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "573c152e7d4f4720878222bd75638f5b": {
                 "dev_class": "heater_central",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": 60.0,
