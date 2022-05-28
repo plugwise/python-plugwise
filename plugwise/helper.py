@@ -117,10 +117,8 @@ def schedules_temps(
 
     length = len(schedule_list)
     schedule_list = sorted(schedule_list)
-    LOGGER.debug("HOI %s %s", length, schedule_list)
     for i in range(length - 1):
         j = (i + 1) % (length - 1)
-        LOGGER.debug("HOI %s %s", i, j)
         now = dt.datetime.now().time()
         today = dt.datetime.now().weekday()
         day_0 = schedule_list[i][0]
