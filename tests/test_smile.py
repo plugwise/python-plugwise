@@ -2527,6 +2527,62 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_adam_heatpump_cooling(self):
+        """Test Adam with heatpump in coooling state."""
+        testdata = {
+            "0ca13e8176204ca7bf6f09de59f81c83": {
+                "dev_class": "heater_central",
+                "location": "9e4433a9d69f40b3aefd15e74395eaec",
+                "model": "10.20",
+                "name": "OpenTherm",
+                "vendor": "Remeha B.V.",
+                "maximum_boiler_temperature": 90.0,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 37.3,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 37.1,
+                    "water_pressure": 1.4,
+                },
+                "switches": {"dhw_cm_switch": False},
+            },
+            "1053c8bbf8be43c6921742b146a625f1": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-27T02:00:00+02:00",
+                "hardware": "255",
+                "location": "d58fec52899f4f1c92e4f8fad6d8c48c",
+                "model": "Lisa",
+                "name": "Thermostaat BK",
+                "zigbee_mac_address": "ABCD012345670A01",
+                "vendor": "Plugwise",
+                "lower_bound": 0.0,
+                "upper_bound": 99.9,
+                "resolution": 0.01,
+                "preset_modes": ["home", "asleep", "away", "no_frost"],
+                "active_preset": "home",
+                "available_schedules": ["None"],
+                "selected_schedule": "None",
+                "last_used": None,
+                "control_state": "off",
+                "mode": "heat",
+                "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 80},
+            },
+        }
+
+        self.smile_setup = "adam_heatpump_cooling"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_adam_plus_jip(self):
         """Test Adam with Jip setup."""
         testdata = {
