@@ -375,6 +375,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
+        smile.full_update_device()
         smile.get_all_devices()
         data = await smile.async_update()
         extra = data[0]

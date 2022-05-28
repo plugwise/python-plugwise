@@ -69,7 +69,23 @@ class SmileData(SmileHelper):
             )
 
     def get_all_devices(self) -> None:
-        """Determine the devices present from the obtained XML-data."""
+        """
+        Determine the devices present from the obtained XML-data.
+        Run this functions once to gather the initial device configuration,
+        then regularly run async_update() to refresh the device data.
+        """
+
+        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
+        if self.smile_type == "thermostat":
+            onoff_boiler: etree = self._domain_objects.find(
+                "./module/protocols/onoff_boiler"
+            )
+            open_therm_boiler: etree = self._domain_objects.find(
+                "./module/protocols/open_therm_boiler"
+            )
+            self._on_off_device = onoff_boiler is not None
+            self._opentherm_device = open_therm_boiler is not None
+
         self._scan_thermostats()
 
         if group_data := self._group_switches():
@@ -278,12 +294,6 @@ class Smile(SmileComm, SmileData):
             raise InvalidSetupError(
                 "Plugwise invalid setup error, check log for more info."
             )
-
-        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
-        onoff_boiler: etree = result.find("./module/protocols/onoff_boiler")
-        open_therm_boiler: etree = result.find("./module/protocols/open_therm_boiler")
-        self._on_off_device = onoff_boiler is not None
-        self._opentherm_device = open_therm_boiler is not None
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
