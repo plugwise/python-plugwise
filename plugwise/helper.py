@@ -1133,9 +1133,8 @@ class SmileHelper:
                     entry = directive.find("then").attrib
                     keys, dummy = zip(*entry.items())
                     if str(keys[0]) == "preset":
-                        if (
-                            loc_id == NONE
-                        ):  # set to 0/40 when the schedule is not active
+                        if loc_id == NONE:
+                            # set to 0/40 when the schedule is not active
                             schedule[directive.attrib["time"]] = [float(0), float(40)]
                         else:
                             schedule[directive.attrib["time"]] = [
@@ -1143,12 +1142,10 @@ class SmileHelper:
                                 float(self._presets(loc_id)[entry["preset"]][1]),
                             ]
                     else:
-                        if "heating_setpoint" in entry:
-                            LOGGER.debug("HOI %s", entry)
-                            schedule[directive.attrib["time"]] = [
-                                float(entry["heating_setpoint"]),
-                                float(entry["cooling_setpoint"]),
-                            ]
+                        schedule[directive.attrib["time"]] = [
+                            float(entry["heating_setpoint"]),
+                            float(entry["cooling_setpoint"]),
+                        ]
 
             if schedule or count > 0:
                 available.append(name)
@@ -1158,7 +1155,7 @@ class SmileHelper:
                 schedules[name] = schedule
             else:
                 # Empty schedule
-                LOGGER.error("Schedule %s has no entries, ignoring.", name)
+                LOGGER.debug("Schedule %s has no entries, ignoring.", name)
 
         if schedules:
             available.remove(NONE)
