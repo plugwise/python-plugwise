@@ -1133,14 +1133,13 @@ class SmileHelper:
                     entry = directive.find("then").attrib
                     keys, dummy = zip(*entry.items())
                     if str(keys[0]) == "preset":
+                        schedule[directive.attrib["time"]] = [
+                            float(self._presets(loc_id)[entry["preset"]][0]),
+                            float(self._presets(loc_id)[entry["preset"]][1]),
+                        ]
                         if loc_id == NONE:
                             # set to 0/40 when the schedule is not active
                             schedule[directive.attrib["time"]] = [float(0), float(40)]
-                        else:
-                            schedule[directive.attrib["time"]] = [
-                                float(self._presets(loc_id)[entry["preset"]][0]),
-                                float(self._presets(loc_id)[entry["preset"]][1]),
-                            ]
                     else:
                         schedule[directive.attrib["time"]] = [
                             float(entry["heating_setpoint"]),
