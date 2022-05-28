@@ -200,12 +200,15 @@ class SmileData(SmileHelper):
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
-        # Operation mode: auto, heat, cool
+        # Operation mode: auto, heat, heat_cool, cool
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self._heater_id is not None and self.cooling_active:
-                device_data["mode"] = "cool"
+            if self._heater_id is not None:
+                if self._anna_cooling_present:
+                    device_data["mode"] = "heat_cool"
+                if self.smile_name == "Adam" and self.cooling_active:
+                    device_data["mode"] = "cool"
 
         return device_data
 
