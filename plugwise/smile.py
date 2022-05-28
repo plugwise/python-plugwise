@@ -202,8 +202,8 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         details = self._appl_data[dev_id]
-        LOGGER.debug("HOI 1 %s", details)
         device_data = self._get_appliance_data(dev_id)
+        LOGGER.debug("HOI 1 %s", device_data)
 
         # Generic
         if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
