@@ -595,6 +595,8 @@ SENSORS: Final[list[str]] = [
     "outdoor_temperature",
     "return_temperature",
     "setpoint",
+    "setpoint_high",
+    "setpoint_low",
     "temperature_difference",
     "valve_position",
     "water_pressure",
@@ -693,6 +695,8 @@ class SmileSensors(TypedDict, total=False):
     outdoor_temperature: float
     return_temperature: float
     setpoint: float
+    setpoint_high: float
+    setpoint_low: float
     temperature_difference: float
     valve_position: float
     water_pressure: float
