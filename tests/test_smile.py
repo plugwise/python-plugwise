@@ -16,6 +16,7 @@ from unittest.mock import patch
 
 # Testing
 import aiohttp
+from freezegun import freeze_time
 import pytest
 
 pw_exceptions = importlib.import_module("plugwise.exceptions")
@@ -375,9 +376,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
-        await smile._full_update_device()
-        smile.get_all_devices()
-        data = await smile.async_update()
+        # Make sure to test on the last day of the week, needed for the proper testing of schedule
+        with freeze_time("2022-05-15"):
+            await smile._full_update_device()
+            smile.get_all_devices()
+            data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
 
