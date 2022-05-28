@@ -2947,7 +2947,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "selected_schedule": "None",
                 "last_used": None,
-                "mode": "heat",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 19.3,
                     "setpoint_low": 21.0,
@@ -2992,7 +2992,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "None",
                 "active_preset": "home",
-                "mode": "cool",
+                "mode": "heat_cool",
                 "sensors": {
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
@@ -3049,7 +3049,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "None",
                 "active_preset": "home",
-                "mode": "heat",
+                "mode": "heat_cool",
                 "sensors": {
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
@@ -3196,7 +3196,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "None",
                 "last_used": "Thermostat schedule",
-                "mode": "heat",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.9,
                     "setpoint_low": 19.5,
