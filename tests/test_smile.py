@@ -3175,6 +3175,49 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_elga_2_schedule_off(self):
+        """
+        Test Anna with Elga setup in idle mode, modified to schedule off.
+        """
+        testdata = {
+            "ebd90df1ab334565b5895f37590ccff4": {
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "d3ce834534114348be628b61b26d9220",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "lower_bound": 4.0,
+                "upper_bound": 30.0,
+                "resolution": 0.1,
+                "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
+                "active_preset": "home",
+                "available_schedules": ["Thermostat schedule"],
+                "selected_schedule": "None",
+                "last_used": "Thermostat schedule",
+                "mode": "heat",
+                "sensors": {
+                    "temperature": 20.9,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 23.0,
+                    "illuminance": 0.5,
+                    "cooling_activation_outdoor_temperature": 26.0,
+                    "cooling_deactivation_threshold": 3.0,
+                },
+            }
+        }
+
+        self.smile_setup = "anna_elga_2_schedule_off"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
         """
         Test a 2nd Anna with Elga setup in cooling mode. This testcase also covers
