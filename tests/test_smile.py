@@ -376,7 +376,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
-        # Make sure to test on the last day of the week, needed for the proper testing of schedule
+        # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
         with freeze_time("2022-05-15 12:00:01"):
             await smile._full_update_device()
             smile.get_all_devices()
