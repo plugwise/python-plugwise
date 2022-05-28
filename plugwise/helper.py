@@ -1161,7 +1161,7 @@ class SmileHelper:
                 schedules[name] = schedule
             else:
                 # Empty schedule
-                raise PlugwiseError(f"Schedule {name} has no entries, ignoring.")
+                LOGGER.error("Schedule %s has no entries, ignoring.", name)
 
         if schedules:
             available.remove(NONE)
