@@ -95,7 +95,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
 
 def schedules_temps(
     schedules: dict[str, dict[str, list[float]]], name: str
-) -> tuple[float, float]:
+) -> list[float] | None:
     """Helper-function for schedules().
     Obtain the schedule temperature of the schedule.
     """
@@ -129,6 +129,8 @@ def schedules_temps(
         time_1 = schedule_list[j][1]
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
+
+    return None  # pragma: no cover
 
 
 def power_data_local_format(
@@ -1166,7 +1168,9 @@ class SmileHelper:
 
         return available, selected, schedule_temperatures, last_used
 
-    def _last_used_schedule(self, loc_id: str, schedules: list[str]) -> str | None:
+    def _last_used_schedule(
+        self, loc_id: str, schedules: dict[str, dict[str, list[float]]]
+    ) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
         """
