@@ -117,8 +117,8 @@ def schedules_temps(
 
     length = len(schedule_list)
     schedule_list = sorted(schedule_list)
-    for i in range(length - 1):
-        j = (i + 1) % (length - 1)
+    for i in range(length):
+        j = (i + 1) % (length)
         now = dt.datetime.now().time()
         today = dt.datetime.now().weekday()
         day_0 = schedule_list[i][0]
