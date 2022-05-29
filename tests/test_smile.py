@@ -377,7 +377,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
-        with freeze_time("2022-05-15 12:00:01"):
+        with freeze_time("2022-05-15 23:59:59"):
             await smile._full_update_device()
             smile.get_all_devices()
             data = await smile.async_update()
@@ -3167,7 +3167,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint_low": 19.5,
+                    "setpoint_low": 19.0,
                     "setpoint_high": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
@@ -3257,7 +3257,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint_low": 19.5,
+                    "setpoint_low": 19.0,
                     "setpoint_high": 40.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
@@ -3302,7 +3302,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
-                    "setpoint_low": 19.5,
+                    "setpoint_low": 19.0,
                     "setpoint_high": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
