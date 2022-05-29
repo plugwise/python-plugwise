@@ -1148,16 +1148,12 @@ class SmileHelper:
             if location == loc_id:
                 selected = name
                 self._last_active[location] = selected
-
-            if schedule:
-                schedules[name] = schedule
-            else:
-                schedules[name] = None
+            schedules[name] = schedule
 
         if schedules:
             available.remove(NONE)
             last_used = self._last_used_schedule(location, schedules)
-            if last_used in schedules and self._anna_cooling_present:
+            if self._anna_cooling_present and last_used in schedules:
                 schedule_temperatures = schedules_temps(schedules, last_used)
 
         return available, selected, schedule_temperatures, last_used
