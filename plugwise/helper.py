@@ -1123,8 +1123,8 @@ class SmileHelper:
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
-            # Only process the schedule in detail for Anna with cooling
-            if self._anna_cooling_present:
+            # Only process the active schedule in detail for Anna with cooling
+            if self._anna_cooling_present and loc_id != NONE:
                 locator = f'./rule[@id="{rule_id}"]/directives'
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
@@ -1135,9 +1135,6 @@ class SmileHelper:
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
                         ]
-                        if loc_id == NONE:
-                            # set to 0/40 when the schedule is not active
-                            schedule[directive.attrib["time"]] = [float(0), float(40)]
                     else:
                         schedule[directive.attrib["time"]] = [
                             float(entry["heating_setpoint"]),
