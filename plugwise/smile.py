@@ -192,7 +192,7 @@ class SmileData(SmileHelper):
                 if sched_setpoints is None:
                     device_data["setpoint_low"] = device_data["setpoint"]
                     device_data["setpoint_high"] = float(40)
-                    if self._anna_cooling_active or self._cooling_active:
+                    if self._cooling_active or self._anna_cooling_active:
                         device_data["setpoint_low"] = float(0)
                         device_data["setpoint_high"] = device_data["setpoint"]
                 else:
