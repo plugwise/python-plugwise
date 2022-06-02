@@ -3029,7 +3029,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
@@ -3136,7 +3135,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "anna_heatpump_cooling_to_off"
         server, smile, client = await self.connect_wrapper()
 
-        smile.cooling_active = True
+        # Preset _cooling_active to True, will turn to False due to the lowered outdoor temp
+        smile._cooling_active = True
         await self.device_test(smile, testdata)
         await smile.close_connection()
         await self.disconnect(server, client)
