@@ -850,6 +850,11 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
+        # Use cooling_enabled to set self.cooling_active, then remove
+        if "cooling_enabled" in data:
+            self.cooling_active = data.get("cooling_enabled")
+            data.pop("cooling_enabled", None)
+
         return data
 
     def _rank_thermostat(

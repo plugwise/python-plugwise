@@ -457,6 +457,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "water_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
+    "cooling_enabled": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     "domestic_hot_water_comfort_mode": {
         ATTR_NAME: "dhw_cm_switch",
         ATTR_UNIT_OF_MEASUREMENT: NONE,
