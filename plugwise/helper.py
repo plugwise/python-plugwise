@@ -8,12 +8,12 @@ import datetime as dt
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
+
+# Time related
+from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
-
-# Time related
-import pytz
 from semver import VersionInfo
 
 from .constants import (
@@ -1107,7 +1107,7 @@ class SmileHelper:
         if not schedules:
             return last_used  # pragma: no cover
 
-        epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
+        epoch = dt.datetime(1970, 1, 1, tzinfo=tz.tzutc())
         schedules_dates: dict[str, float] = {}
 
         for name in schedules:
