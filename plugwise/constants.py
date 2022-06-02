@@ -665,6 +665,7 @@ class SmileSensors(TypedDict, total=False):
     battery: float
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
+    cooling_enabled: bool
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
