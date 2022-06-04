@@ -86,15 +86,16 @@ class SmileData(SmileHelper):
             self._on_off_device = onoff_boiler is not None
             self._opentherm_device = open_therm_boiler is not None
 
-            # Determine if the Adam or Anna had cooling capability
+            # Determine if the Adam or Anna has cooling capability
             locator = "./gateway/features/cooling"
-            self._anna_cooling_present = adam_cooling_present = (
+            anna_cooling_present_1 = adam_cooling_present = (
                 self._domain_objects.find(locator) is not None
             )
             # Alternative method for the Anna with Elga
             locator_2 = "./gateway/features/elga_support"
+            anna_cooling_present_2 = self._domain_objects.find(locator_2) is not None
             self._anna_cooling_present = (
-                self._domain_objects.find(locator_2) is not None
+                anna_cooling_present_1 or anna_cooling_present_2
             )
             self._cooling_present = self._anna_cooling_present or adam_cooling_present
 
