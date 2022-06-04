@@ -311,7 +311,8 @@ class SmileHelper:
         self._stretch_v3 = False
         self._thermo_locs: dict[str, ThermoLoc] = {}
 
-        self.anna_no_cooling_enabled: bool | None = None
+        self.anna_cooling_enabled = False
+        self.anna_cool_ena_indication: bool | None = None
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -854,9 +855,10 @@ class SmileHelper:
 
         # Use cooling_enabled to set self.anna_no_cooling_enabled to False, then remove
         if self._anna_cooling_present:
-            self.anna_no_cooling_enabled = True
+            self.anna_cool_ena_indication = False
             if "cooling_enabled" in data:
-                self.anna_no_cooling_enabled = False
+                self.anna_cool_ena_indication = True
+                self.anna_cooling_enabled = data["cooling_enabled"]
             data.pop("cooling_enabled", None)
 
         return data
