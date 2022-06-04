@@ -94,9 +94,10 @@ class SmileData(SmileHelper):
             # Alternative method for the Anna with Elga
             locator_2 = "./gateway/features/elga_support"
             anna_cooling_present_2 = self._domain_objects.find(locator_2) is not None
-            self._anna_cooling_present = (
-                anna_cooling_present_1 or anna_cooling_present_2
-            )
+            if self.smile_type == "Anna":
+                self._anna_cooling_present = (
+                    anna_cooling_present_1 or anna_cooling_present_2
+                )
             self._cooling_present = self._anna_cooling_present or adam_cooling_present
 
         # Gather all the device and initial data
