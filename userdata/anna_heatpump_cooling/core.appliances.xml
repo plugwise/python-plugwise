@@ -662,7 +662,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-16T17:29:40.424+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-16T17:29:40.424+02:00" end_date="2020-04-16T17:29:40.424+02:00">
-					<measurement log_date="2020-04-16T17:29:40.424+02:00">0.35</measurement>
+					<measurement log_date="2020-04-16T17:29:40.424+02:00">1.0</measurement>
 				</period>
 				<modulation_level id='0e4cec950a114073837ab83efd6cc5f6'/>
 			</point_log>

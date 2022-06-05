@@ -413,7 +413,7 @@
 				<interval/>
 				<modulation_level id='8862e6a7a98842928028e3f14493de8b'/>
 				<period start_date="2022-03-10T19:00:40.066+01:00" end_date="2022-03-10T19:00:40.066+01:00">
-					<measurement log_date="2022-03-10T19:00:40.066+01:00">0.00</measurement>
+					<measurement log_date="2022-03-10T19:00:40.066+01:00">1.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='1d03fff43bf640f998150fabc2aa7522'>
