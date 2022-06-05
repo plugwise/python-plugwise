@@ -113,15 +113,15 @@ class SmileData(SmileHelper):
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
         if self._anna_cooling_present and not self.anna_cool_ena_indication:
             if (
-                not self._cooling_enabled
+                not self._anna_cooling_derived
                 and self._outdoor_temp > self._cooling_activation_outdoor_temp
             ):
-                self._cooling_enabled = True
+                self._anna_cooling_derived = True
             if (
-                self._cooling_enabled
+                self._anna_cooling_derived
                 and self._outdoor_temp < self._cooling_deactivation_threshold
             ):
-                self._cooling_enabled = False
+                self._anna_cooling_derived = False
 
         # Don't show cooling_state when no cooling present
         for _, device in self.gw_devices.items():
@@ -194,7 +194,7 @@ class SmileData(SmileHelper):
                 if sched_setpoints is None:
                     device_data["setpoint_low"] = device_data["setpoint"]
                     device_data["setpoint_high"] = float(40)
-                    if self._cooling_enabled or self.anna_cool_ena_indication:
+                    if self._anna_cooling_derived or self.anna_cooling_enabled:
                         device_data["setpoint_low"] = float(0)
                         device_data["setpoint_high"] = device_data["setpoint"]
                 else:

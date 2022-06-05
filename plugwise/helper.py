@@ -290,8 +290,8 @@ class SmileHelper:
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._adam_cooling_enabled = False
+        self._anna_cooling_derived = False
         self._anna_cooling_present = False
-        self._cooling_enabled = False
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
@@ -853,7 +853,7 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        # Use cooling_enabled to set self.anna_no_cooling_enabled to False, then remove
+        # Use cooling_enabled point-log to set self.anna_cool_ena_indication to True, then remove
         if self._anna_cooling_present:
             self.anna_cool_ena_indication = False
             if "cooling_enabled" in data:
