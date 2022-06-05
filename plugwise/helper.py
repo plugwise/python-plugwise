@@ -863,9 +863,9 @@ class SmileHelper:
 
         # Create updated cooling_state based on cooling_state = on and modulation = 1.0
         if "cooling_state" in data:
-            data["cooling_state"] = data["cooling_state"] and data[
-                "modulation_level"
-            ] == float(1)
+            data["cooling_state"] = (
+                data["cooling_state"] and data["modulation_level"] == 100
+            )
 
         return data
 
