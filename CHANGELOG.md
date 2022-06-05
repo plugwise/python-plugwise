@@ -1,6 +1,11 @@
 # Changelog
 
-# v0.19.0: Smile Anna with cooling: replace setpoint with setpoint_low and setpoint_high in output
+# v0.19.0: Smile Adam & Anna: cooling-related updates
+- Anna: in output replace setpoint with setpoint_low and setpoint_high when cooling is active
+- Anna: update according to recent Anna-with-cooling firmware updates
+- Anna: handle cooling_state = on according to Plugwise specification
+- Move boiler-type detection and cooling-present detection into _all_device_data()
+- Update/extent testing and corresponding userdata
 
 # v0.18.5: Smile bugfix for https://github.com/plugwise/python-plugwise/issues/192
 
