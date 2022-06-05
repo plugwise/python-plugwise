@@ -3095,6 +3095,47 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_heatpump_cooling_fake_firmware(self):
+        """
+        Test an Anna with Elga setup in cooling mode.
+        This test also covers the situation that the operation-mode it switched
+        from heating to cooliing due to the outdoor temperature rising above the
+        cooling_activation_outdoor_temperature threshold.
+        """
+        testdata = {
+            # Heater central
+            "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "binary_sensors": {
+                    "cooling_state": True,
+                    "dhw_state": False,
+                    "heating_state": False,
+                },
+                "sensors": {
+                    "modulation_level": 100,
+                },
+            },
+            # Gateway
+            "015ae9ea3f964e668e490fa39da3870b": {
+                "firmware": "4.10.10",
+            },
+        }
+
+        self.smile_setup = "anna_heatpump_cooling_fake_firmware"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.10.10"
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling_to_off(self):
         """
         This test covers the situation that the operation-mode it switched back
