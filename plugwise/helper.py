@@ -861,6 +861,12 @@ class SmileHelper:
                 self.anna_cooling_enabled = data["cooling_enabled"]
             data.pop("cooling_enabled", None)
 
+        # Create updated cooling_state based on cooling_state = on and modulation = 1.0
+        if "cooling_state" in data:
+            data["cooling_state"] = data["cooling_state"] and data[
+                "modulation_level"
+            ] == float(1)
+
         return data
 
     def _rank_thermostat(
