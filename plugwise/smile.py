@@ -211,11 +211,10 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self._heater_id is not None:
-                if self._anna_cooling_present:
-                    device_data["mode"] = "heat_cool"
-                if self.smile_name == "Adam" and self._adam_cooling_enabled:
-                    device_data["mode"] = "cool"
+            if self._anna_cooling_present:
+                device_data["mode"] = "heat_cool"
+            if self.smile_name == "Adam" and self._adam_cooling_enabled:
+                device_data["mode"] = "cool"
 
         return device_data
 
