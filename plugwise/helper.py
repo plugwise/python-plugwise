@@ -853,19 +853,20 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        # Use cooling_enabled point-log to set self.anna_cool_ena_indication to True, then remove
-        if self._anna_cooling_present:
-            self.anna_cool_ena_indication = False
-            if "cooling_enabled" in data:
-                self.anna_cool_ena_indication = True
-                self.anna_cooling_enabled = data["cooling_enabled"]
-            data.pop("cooling_enabled", None)
+        if d_id == self._heater_id:
+            # Use cooling_enabled point-log to set self.anna_cool_ena_indication to True, then remove
+            if self._anna_cooling_present:
+                self.anna_cool_ena_indication = False
+                if "cooling_enabled" in data:
+                    self.anna_cool_ena_indication = True
+                    self.anna_cooling_enabled = data["cooling_enabled"]
+                    data.pop("cooling_enabled", None)
 
-        # Create updated cooling_state based on cooling_state = on and modulation = 1.0
-        if "cooling_state" in data:
-            data["cooling_state"] = (
-                data["cooling_state"] and data["modulation_level"] == 100
-            )
+            # Create updated cooling_state based on cooling_state = on and modulation = 1.0
+            if "cooling_state" in data:
+                data["cooling_state"] = (
+                    data["cooling_state"] and data["modulation_level"] == 100
+                )
 
         return data
 

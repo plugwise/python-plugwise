@@ -3041,7 +3041,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """
         Test an Anna with Elga setup in cooling mode.
         This test also covers the situation that the operation-mode it switched
-        from heating to cooliing due to the outdoor temperature rising above the
+        from heating to cooling due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
         """
         testdata = {
@@ -3099,7 +3099,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """
         Test an Anna with Elga setup in cooling mode.
         This test also covers the situation that the operation-mode it switched
-        from heating to cooliing due to the outdoor temperature rising above the
+        from heating to cooling due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
         """
         testdata = {
@@ -3131,6 +3131,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
+        assert smile._anna_cooling_present
+        assert smile.anna_cool_ena_indication
+        assert not smile._anna_cooling_derived
+        assert smile.anna_cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
