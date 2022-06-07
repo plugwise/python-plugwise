@@ -1997,6 +1997,17 @@
 		<modified_date>2020-04-08T20:12:15.715+02:00</modified_date>
 		<deleted_date></deleted_date>
 		<directives>
+			<when time="[su 22:30,mo 07:00)"><then preset="asleep"/></when>
+			<when time="[mo 22:30,tu 07:00)"><then preset="asleep"/></when>
+			<when time="[tu 07:00,tu 22:30)"><then preset="home"/></when>
+			<when time="[tu 22:30,we 07:00)"><then preset="asleep"/></when>
+			<when time="[we 07:00,we 22:30)"><then preset="home"/></when>
+			<when time="[we 22:30,th 07:00)"><then preset="asleep"/></when>
+			<when time="[th 07:00,th 22:30)"><then preset="home"/></when>
+			<when time="[th 22:30,fr 07:00)"><then preset="asleep"/></when>
+			<when time="[fr 07:00,su 22:30)"><then preset="home"/></when>
+			<when time="[mo 07:00,mo 10:15)"><then preset="home"/></when>
+			<when time="[mo 10:15,mo 22:30)"><then preset="away"/></when>
 		</directives>
 		<contexts>
 			<context>

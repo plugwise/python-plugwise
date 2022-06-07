@@ -8,12 +8,12 @@ import datetime as dt
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
+
+# Time related
+from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
-
-# Time related
-import pytz
 from semver import VersionInfo
 
 from .constants import (
@@ -21,6 +21,7 @@ from .constants import (
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
+    DAYS,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -49,10 +50,15 @@ from .constants import (
 from .exceptions import (
     InvalidAuthentication,
     InvalidXMLError,
-    PlugwiseException,
+    PlugwiseError,
     ResponseError,
 )
-from .util import escape_illegal_xml_characters, format_measure, version_to_model
+from .util import (
+    escape_illegal_xml_characters,
+    format_measure,
+    in_between,
+    version_to_model,
+)
 
 
 def update_helper(
@@ -85,6 +91,46 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
         if model != "Unknown":
             return model
     return name
+
+
+def schedules_temps(
+    schedules: dict[str, dict[str, list[float]]], name: str
+) -> list[float] | None:
+    """Helper-function for schedules().
+    Obtain the schedule temperature of the schedule.
+    """
+    if name == NONE:
+        return None  # pragma: no cover
+
+    schedule_list: list[tuple[int, dt.time, list[float]]] = []
+    for period, temp in schedules[name].items():
+        moment, dummy = period.split(",")
+        moment_cleaned = moment.replace("[", "").split(" ")
+        day_nr = DAYS[moment_cleaned[0]]
+        start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
+        tmp_list: tuple[int, dt.time, list[float]] = (
+            day_nr,
+            start_time,
+            [temp[0], temp[1]],
+        )
+        schedule_list.append(tmp_list)
+
+    length = len(schedule_list)
+    schedule_list = sorted(schedule_list)
+    for i in range(length):
+        j = (i + 1) % (length)
+        now = dt.datetime.now().time()
+        today = dt.datetime.now().weekday()
+        day_0 = schedule_list[i][0]
+        day_1 = schedule_list[j][0]
+        if j < i:
+            day_1 = schedule_list[i][0] + 2
+        time_0 = schedule_list[i][1]
+        time_1 = schedule_list[j][1]
+        if in_between(today, day_0, day_1, now, time_0, time_1):
+            return schedule_list[i][2]
+
+    return None  # pragma: no cover
 
 
 def power_data_local_format(
@@ -223,7 +269,7 @@ class SmileComm:
         except ClientError as err:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
                 LOGGER.error("Failed sending %s %s to Plugwise Smile", method, command)
-                raise PlugwiseException(
+                raise PlugwiseError(
                     "Plugwise connection error, check log for more info."
                 ) from err
             return await self._request(command, retry - 1)
@@ -243,6 +289,8 @@ class SmileHelper:
         self._appl_data: dict[str, ApplianceData] = {}
         self._appliances: etree
         self._allowed_modes: list[str] = []
+        self._adam_cooling_enabled = False
+        self._anna_cooling_derived = False
         self._anna_cooling_present = False
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
@@ -263,7 +311,8 @@ class SmileHelper:
         self._stretch_v3 = False
         self._thermo_locs: dict[str, ThermoLoc] = {}
 
-        self.cooling_active = False
+        self.anna_cooling_enabled = False
+        self.anna_cool_ena_indication: bool | None = None
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -428,15 +477,14 @@ class SmileHelper:
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
-            # Adam: check for cooling capability and active heating/cooling operation-mode
+            # Adam: check for active heating/cooling operation-mode
             mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
-                self.cooling_active = search.find("mode").text == "cooling"
+                self._adam_cooling_enabled = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
                     for mode in search.find("allowed_modes"):
                         mode_list.append(mode.text)
-                    self._cooling_present = "cooling" in mode_list
                     self._allowed_modes = mode_list
 
             return appl
@@ -745,7 +793,6 @@ class SmileHelper:
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
-                    self._anna_cooling_present = self._cooling_present = True
                     self._cooling_activation_outdoor_temp = data[measurement]  # type: ignore [literal-required]
                 if measurement == "cooling_deactivation_threshold":
                     self._cooling_deactivation_threshold = data[measurement]  # type: ignore [literal-required]
@@ -805,6 +852,21 @@ class SmileHelper:
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
+
+        if d_id == self._heater_id:
+            # Use cooling_enabled point-log to set self.anna_cool_ena_indication to True, then remove
+            if self._anna_cooling_present:
+                self.anna_cool_ena_indication = False
+                if "cooling_enabled" in data:
+                    self.anna_cool_ena_indication = True
+                    self.anna_cooling_enabled = data["cooling_enabled"]
+                    data.pop("cooling_enabled", None)
+
+            # Create updated cooling_state based on cooling_state = on and modulation = 1.0
+            if "cooling_state" in data:
+                data["cooling_state"] = (
+                    data["cooling_state"] and data["modulation_level"] == 100
+                )
 
         return data
 
@@ -1023,7 +1085,7 @@ class SmileHelper:
 
     def _schedules_legacy(
         self, avail: list[str], sel: str
-    ) -> tuple[list[str], str, None]:
+    ) -> tuple[list[str], str, None, None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
         """
@@ -1046,9 +1108,11 @@ class SmileHelper:
             if active:
                 sel = name
 
-        return avail, sel, None
+        return avail, sel, None, None
 
-    def _schedules(self, location: str) -> tuple[list[str], str, str | None]:
+    def _schedules(
+        self, location: str
+    ) -> tuple[list[str], str, list[float] | None, str | None]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
@@ -1056,6 +1120,7 @@ class SmileHelper:
         available: list[str] = [NONE]
         last_used: str | None = None
         rule_ids: dict[str, str] = {}
+        schedule_temperatures: list[float] | None = None
         selected = NONE
 
         # Legacy Anna schedule, only one schedule allowed
@@ -1069,24 +1134,47 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
-            return available, selected, None
+            return available, selected, schedule_temperatures, None
 
-        schedules: list[str] = []
+        schedules: dict[str, dict[str, list[float]]] = {}
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
+            schedule: dict[str, list[float]] = {}
+            # Only process the active schedule in detail for Anna with cooling
+            if self._anna_cooling_present and loc_id != NONE:
+                locator = f'./rule[@id="{rule_id}"]/directives'
+                directives = self._domain_objects.find(locator)
+                for directive in directives:
+                    entry = directive.find("then").attrib
+                    keys, dummy = zip(*entry.items())
+                    if str(keys[0]) == "preset":
+                        schedule[directive.attrib["time"]] = [
+                            float(self._presets(loc_id)[entry["preset"]][0]),
+                            float(self._presets(loc_id)[entry["preset"]][1]),
+                        ]
+                    else:
+                        schedule[directive.attrib["time"]] = [
+                            float(entry["heating_setpoint"]),
+                            float(entry["cooling_setpoint"]),
+                        ]
+
             available.append(name)
             if location == loc_id:
                 selected = name
                 self._last_active[location] = selected
-            schedules.append(name)
+            schedules[name] = schedule
 
         if schedules:
             available.remove(NONE)
             last_used = self._last_used_schedule(location, schedules)
+            if self._anna_cooling_present and last_used in schedules:
+                schedule_temperatures = schedules_temps(schedules, last_used)
 
-        return available, selected, last_used
+        return available, selected, schedule_temperatures, last_used
 
-    def _last_used_schedule(self, loc_id: str, schedules: list[str]) -> str | None:
+    def _last_used_schedule(
+        self, loc_id: str, schedules: dict[str, dict[str, list[float]]]
+    ) -> str | None:
         """Helper-function for smile.py: _device_data_climate().
         Determine the last-used schedule based on the location or the modified date.
         """
@@ -1100,7 +1188,7 @@ class SmileHelper:
         if not schedules:
             return last_used  # pragma: no cover
 
-        epoch = dt.datetime(1970, 1, 1, tzinfo=pytz.utc)
+        epoch = dt.datetime(1970, 1, 1, tzinfo=tz.tzutc())
         schedules_dates: dict[str, float] = {}
 
         for name in schedules:

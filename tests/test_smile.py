@@ -16,6 +16,7 @@ from unittest.mock import patch
 
 # Testing
 import aiohttp
+from freezegun import freeze_time
 import pytest
 
 pw_exceptions = importlib.import_module("plugwise.exceptions")
@@ -375,8 +376,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
-        smile.get_all_devices()
-        data = await smile.async_update()
+        # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
+        with freeze_time("2022-05-15 23:59:59"):
+            await smile._full_update_device()
+            smile.get_all_devices()
+            data = await smile.async_update()
         extra = data[0]
         device_list = data[1]
 
@@ -930,6 +934,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert not self.notifications
+
+        assert not smile._anna_cooling_present
+        assert smile.anna_cool_ena_indication is None
+        assert not smile._anna_cooling_derived
+        assert not smile.anna_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -2523,6 +2532,64 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_adam_heatpump_cooling(self):
+        """Test Adam with heatpump in coooling state."""
+        testdata = {
+            "0ca13e8176204ca7bf6f09de59f81c83": {
+                "dev_class": "heater_central",
+                "location": "eedadcb297564f1483faa509179aebed",
+                "model": "17.1",
+                "name": "OpenTherm",
+                "vendor": "Remeha B.V.",
+                "maximum_boiler_temperature": 35.0,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "cooling_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 24.5,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 24.9,
+                    "water_pressure": 2.0,
+                    "outdoor_air_temperature": 13.5,
+                },
+                "switches": {"dhw_cm_switch": True},
+            },
+            "1053c8bbf8be43c6921742b146a625f1": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "b52908550469425b812c87f766fe5303",
+                "model": "Lisa",
+                "name": "Thermostaat BK",
+                "zigbee_mac_address": "ABCD012345670A17",
+                "vendor": "Plugwise",
+                "lower_bound": 0.0,
+                "upper_bound": 99.9,
+                "resolution": 0.01,
+                "preset_modes": ["no_frost", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "None",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "cool",
+                "sensors": {"temperature": 18.8, "setpoint": 18.0, "battery": 55},
+            },
+        }
+
+        self.smile_setup = "adam_heatpump_cooling"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_adam_plus_jip(self):
         """Test Adam with Jip setup."""
         testdata = {
@@ -2893,7 +2960,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": 60.0,
@@ -2946,7 +3013,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
-                    "setpoint": 21.0,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 24.0,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
@@ -2966,10 +3034,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        # Preset cooling_active to True, will turn to False due to the lowered outdoor temp
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
+
+        assert smile._anna_cooling_present
+        assert not smile.anna_cool_ena_indication
+        assert not smile._anna_cooling_derived
+        assert not smile.anna_cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2979,7 +3051,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """
         Test an Anna with Elga setup in cooling mode.
         This test also covers the situation that the operation-mode it switched
-        from heating to cooliing due to the outdoor temperature rising above the
+        from heating to cooling due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
         """
         testdata = {
@@ -2987,7 +3059,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "None",
                 "active_preset": "home",
-                "mode": "cool",
+                "mode": "heat_cool",
                 "sensors": {
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
@@ -3029,6 +3101,56 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.cooling_present
         assert not self.notifications
 
+        assert smile._anna_cooling_present
+        assert not smile.anna_cool_ena_indication
+        assert smile._anna_cooling_derived
+        assert not smile.anna_cooling_enabled
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_anna_heatpump_cooling_fake_firmware(self):
+        """
+        Test an Anna with Elga setup in cooling mode.
+        This test also covers the situation that the operation-mode it switched
+        from heating to cooling due to the outdoor temperature rising above the
+        cooling_activation_outdoor_temperature threshold.
+        """
+        testdata = {
+            # Heater central
+            "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "binary_sensors": {
+                    "cooling_state": True,
+                    "dhw_state": False,
+                    "heating_state": False,
+                },
+                "sensors": {
+                    "modulation_level": 100,
+                },
+            },
+            # Gateway
+            "015ae9ea3f964e668e490fa39da3870b": {
+                "firmware": "4.10.10",
+            },
+        }
+
+        self.smile_setup = "anna_heatpump_cooling_fake_firmware"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.10.10"
+
+        await self.device_test(smile, testdata)
+        assert smile._anna_cooling_present
+        assert smile.anna_cool_ena_indication
+        assert not smile._anna_cooling_derived
+        assert smile.anna_cooling_enabled
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -3044,7 +3166,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "selected_schedule": "None",
                 "active_preset": "home",
-                "mode": "heat",
+                "mode": "heat_cool",
                 "sensors": {
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
@@ -3073,7 +3195,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "anna_heatpump_cooling_to_off"
         server, smile, client = await self.connect_wrapper()
 
-        smile.cooling_active = True
+        # Preset _anna_cooling_derived to True, will turn to False due to the lowered outdoor temp
+        smile._anna_cooling_derived = True
         await self.device_test(smile, testdata)
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3104,7 +3227,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint": 19.5,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
@@ -3113,7 +3237,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "573c152e7d4f4720878222bd75638f5b": {
                 "dev_class": "heater_central",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": 60.0,
@@ -3169,6 +3293,49 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_elga_2_schedule_off(self):
+        """
+        Test Anna with Elga setup in idle mode, modified to schedule off.
+        """
+        testdata = {
+            "ebd90df1ab334565b5895f37590ccff4": {
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "d3ce834534114348be628b61b26d9220",
+                "model": "Anna",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "lower_bound": 4.0,
+                "upper_bound": 30.0,
+                "resolution": 0.1,
+                "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
+                "active_preset": "home",
+                "available_schedules": ["Thermostat schedule"],
+                "selected_schedule": "None",
+                "last_used": "Thermostat schedule",
+                "mode": "heat_cool",
+                "sensors": {
+                    "temperature": 20.9,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 40.0,
+                    "illuminance": 0.5,
+                    "cooling_activation_outdoor_temperature": 26.0,
+                    "cooling_deactivation_threshold": 3.0,
+                },
+            }
+        }
+
+        self.smile_setup = "anna_elga_2_schedule_off"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
         """
         Test a 2nd Anna with Elga setup in cooling mode. This testcase also covers
@@ -3195,7 +3362,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
-                    "setpoint": 23.0,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
@@ -3204,7 +3372,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "573c152e7d4f4720878222bd75638f5b": {
                 "dev_class": "heater_central",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": 60.0,
@@ -3219,7 +3387,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "water_temperature": 22.8,
                     "intended_boiler_temperature": 0.0,
-                    "modulation_level": 0.0,
+                    "modulation_level": 100,
                     "return_temperature": 23.4,
                     "water_pressure": 0.5,
                     "outdoor_air_temperature": 30.0,

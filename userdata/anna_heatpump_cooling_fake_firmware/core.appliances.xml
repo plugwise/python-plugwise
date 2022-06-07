@@ -308,6 +308,16 @@
 				</period>
 				<boiler_state id='9c2394fe50c7473aac67597e57076589'/>
 			</point_log>
+            <point_log id="778358968e9f4386b7a40d4bc5f4c1e5">
+                <unit/>
+                <type>cooling_enabled</type>
+                <interval/>
+                <last_consecutive_log_date>2022-05-19T08:54:06.913+02:00</last_consecutive_log_date>
+                <updated_date>2022-05-20T14:39:43.261+02:00</updated_date>
+                <period start_date="2022-05-04T13:53:01.169+02:00" end_date="2022-05-20T14:39:43.261+02:00">
+                    <measurement log_date="2022-05-20T14:39:43.261+02:00">on</measurement>
+                </period>
+            </point_log>
 			<point_log id='53b1f05b9fd540048516ab1db2ab7c18'>
 				<updated_date>2020-04-16T17:29:52.077+02:00</updated_date>
 				<type>outdoor_temperature</type>

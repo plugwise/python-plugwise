@@ -128,7 +128,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='00426b5ea5584f91a1705c1baffde511'/>
 				<period start_date="2022-03-10T19:01:01.330+01:00" end_date="2022-03-10T19:01:01.330+01:00">
-					<measurement log_date="2022-03-10T19:01:01.330+01:00">24.93</measurement>
+					<measurement log_date="2022-03-10T19:01:01.330+01:00">20.93</measurement>
 				</period>
 			</point_log>
 			<point_log id='a1041c7b4a0544ce84870460f4f7624a'>
@@ -183,7 +183,7 @@
 				<interval/>
 				<thermostat id='52b5a053e83446e6a11fde60a6c9ed11'/>
 				<period start_date="2022-03-10T06:45:00.389+01:00" end_date="2022-03-10T06:45:00.389+01:00">
-					<measurement log_date="2022-03-10T06:45:00.389+01:00">23.00</measurement>
+					<measurement log_date="2022-03-10T06:45:00.389+01:00">19.50</measurement>
 				</period>
 			</point_log>
 			<point_log id='cecd3059ab6d4ece9b419b7bf820b7f4'>
@@ -260,7 +260,7 @@
 			<thermostat_functionality id='9d718e17024446f296adecf2a1da9e18'>
 				<updated_date>2022-03-10T06:45:00.390+01:00</updated_date>
 				<type>thermostat</type>
-				<setpoint>23</setpoint>
+				<setpoint>19.5</setpoint>
 				<lower_bound>4</lower_bound>
 				<upper_bound>30</upper_bound>
 				<resolution>0.1</resolution>
@@ -413,7 +413,7 @@
 				<interval/>
 				<modulation_level id='8862e6a7a98842928028e3f14493de8b'/>
 				<period start_date="2022-03-10T19:00:40.066+01:00" end_date="2022-03-10T19:00:40.066+01:00">
-					<measurement log_date="2022-03-10T19:00:40.066+01:00">1.00</measurement>
+					<measurement log_date="2022-03-10T19:00:40.066+01:00">0.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='1d03fff43bf640f998150fabc2aa7522'>
@@ -534,7 +534,7 @@
 				<interval/>
 				<boiler_state id='1efb6c04052e4defbe429d6440c285c6'/>
 				<period start_date="2022-03-10T19:02:48.821+01:00" end_date="2022-03-10T19:02:48.821+01:00">
-					<measurement log_date="2022-03-10T19:02:48.821+01:00">on</measurement>
+					<measurement log_date="2022-03-10T19:02:48.821+01:00">off</measurement>
 				</period>
 			</point_log>
 			<point_log id='48f202225fb94f0b96540d97e65397c7'>
@@ -773,7 +773,7 @@
 				<interval/>
 				<boiler_state id='f613e055261943f4987856badb3fb0ae'/>
 				<period start_date="2022-03-02T17:48:17.865+01:00" end_date="2022-03-02T17:48:17.865+01:00">
-					<measurement log_date="2022-03-02T17:48:17.865+01:00">on</measurement>
+					<measurement log_date="2022-03-02T17:48:17.865+01:00">off</measurement>
 				</period>
 			</point_log>
 			<point_log id='bf9870695c254ead9edc22f9abe52260'>
@@ -982,7 +982,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='8609fbdcab4b46e387953184f9878c28'/>
 				<period start_date="2022-03-10T19:00:42.322+01:00" end_date="2022-03-10T19:00:42.322+01:00">
-					<measurement log_date="2022-03-10T19:00:42.322+01:00">30.00</measurement>
+					<measurement log_date="2022-03-10T19:00:42.322+01:00">14.00</measurement>
 				</period>
 			</point_log>
 		</logs>

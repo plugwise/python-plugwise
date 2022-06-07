@@ -69,7 +69,38 @@ class SmileData(SmileHelper):
             )
 
     def get_all_devices(self) -> None:
-        """Determine the devices present from the obtained XML-data."""
+        """
+        Determine the evices present from the obtained XML-data.
+        Run this functions once to gather the initial device configuration,
+        then regularly run async_update() to refresh the device data.
+        """
+        # Start by determining the system capabilities:
+        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
+        if self.smile_type == "thermostat":
+            onoff_boiler: etree = self._domain_objects.find(
+                "./module/protocols/onoff_boiler"
+            )
+            open_therm_boiler: etree = self._domain_objects.find(
+                "./module/protocols/open_therm_boiler"
+            )
+            self._on_off_device = onoff_boiler is not None
+            self._opentherm_device = open_therm_boiler is not None
+
+            # Determine if the Adam or Anna has cooling capability
+            locator = "./gateway/features/cooling"
+            anna_cooling_present_1 = adam_cooling_present = (
+                self._domain_objects.find(locator) is not None
+            )
+            # Alternative method for the Anna with Elga
+            locator_2 = "./gateway/features/elga_support"
+            anna_cooling_present_2 = self._domain_objects.find(locator_2) is not None
+            if self.smile_name == "Anna":
+                self._anna_cooling_present = (
+                    anna_cooling_present_1 or anna_cooling_present_2
+                )
+            self._cooling_present = self._anna_cooling_present or adam_cooling_present
+
+        # Gather all the device and initial data
         self._scan_thermostats()
 
         if group_data := self._group_switches():
@@ -80,17 +111,17 @@ class SmileData(SmileHelper):
 
         # Anna: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._anna_cooling_present:
+        if self._anna_cooling_present and not self.anna_cool_ena_indication:
             if (
-                not self.cooling_active
+                not self._anna_cooling_derived
                 and self._outdoor_temp > self._cooling_activation_outdoor_temp
             ):
-                self.cooling_active = True
+                self._anna_cooling_derived = True
             if (
-                self.cooling_active
+                self._anna_cooling_derived
                 and self._outdoor_temp < self._cooling_deactivation_threshold
             ):
-                self.cooling_active = False
+                self._anna_cooling_derived = False
 
         # Don't show cooling_state when no cooling present
         for _, device in self.gw_devices.items():
@@ -150,23 +181,39 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        avail_schedules, sel_schedule, last_active = self._schedules(loc_id)
+        avail_schedules, sel_schedule, sched_setpoints, last_active = self._schedules(
+            loc_id
+        )
         device_data["available_schedules"] = avail_schedules
         device_data["selected_schedule"] = sel_schedule
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
+            if self._anna_cooling_present:
+                if sched_setpoints is None:
+                    device_data["setpoint_low"] = device_data["setpoint"]
+                    device_data["setpoint_high"] = float(40)
+                    if self._anna_cooling_derived or self.anna_cooling_enabled:
+                        device_data["setpoint_low"] = float(0)
+                        device_data["setpoint_high"] = device_data["setpoint"]
+                else:
+                    device_data["setpoint_low"] = sched_setpoints[0]
+                    device_data["setpoint_high"] = sched_setpoints[1]
+
+                device_data.pop("setpoint")
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
-        # Operation mode: auto, heat, cool
+        # Operation mode: auto, heat, heat_cool, cool
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self._heater_id is not None and self.cooling_active:
+            if self._anna_cooling_present:
+                device_data["mode"] = "heat_cool"
+            if self.smile_name == "Adam" and self._adam_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
@@ -275,12 +322,6 @@ class Smile(SmileComm, SmileData):
             raise InvalidSetupError(
                 "Plugwise invalid setup error, check log for more info."
             )
-
-        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
-        onoff_boiler: etree = result.find("./module/protocols/onoff_boiler")
-        open_therm_boiler: etree = result.find("./module/protocols/open_therm_boiler")
-        self._on_off_device = onoff_boiler is not None
-        self._opentherm_device = open_therm_boiler is not None
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)

@@ -1,12 +1,14 @@
 """Plugwise Stick and Smile constants."""
 from __future__ import annotations
 
+import datetime as dt
 import logging
 from typing import Final, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
+ARBITRARY_DATE: Final = dt.datetime(2022, 5, 14)
 ATTR_NAME: Final = "name"
 ATTR_STATE: Final = "state"
 ATTR_STATE_CLASS: Final = "state_class"
@@ -455,6 +457,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "water_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
+    "cooling_enabled": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     "domestic_hot_water_comfort_mode": {
         ATTR_NAME: "dhw_cm_switch",
         ATTR_UNIT_OF_MEASUREMENT: NONE,
@@ -593,6 +596,8 @@ SENSORS: Final[list[str]] = [
     "outdoor_temperature",
     "return_temperature",
     "setpoint",
+    "setpoint_high",
+    "setpoint_low",
     "temperature_difference",
     "valve_position",
     "water_pressure",
@@ -660,6 +665,7 @@ class SmileSensors(TypedDict, total=False):
     battery: float
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
+    cooling_enabled: bool
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
@@ -691,6 +697,8 @@ class SmileSensors(TypedDict, total=False):
     outdoor_temperature: float
     return_temperature: float
     setpoint: float
+    setpoint_high: float
+    setpoint_low: float
     temperature_difference: float
     valve_position: float
     water_pressure: float
