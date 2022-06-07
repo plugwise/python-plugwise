@@ -5,7 +5,7 @@
 - Anna: update according to recent Anna-with-cooling firmware updates (info provided by Plugwise)
 - Anna: handle `cooling_state = on` according to Plugwise specification (`cooling_state = on` and `modulation_level = 100`)
 - Move boiler-type detection and cooling-present detection into `_all_device_data()`
-- Update/extent testing and corresponding userdata
+- Update/extend testing and corresponding userdata
 
 # v0.18.5: Smile bugfix for https://github.com/plugwise/python-plugwise/issues/192
 
