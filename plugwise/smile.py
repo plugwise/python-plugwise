@@ -36,9 +36,9 @@ from .constants import (
     SmileSwitches,
 )
 from .exceptions import (
-    ConnectionFailedError,
     InvalidSetupError,
     PlugwiseError,
+    ResponseError,
     UnsupportedDeviceError,
 )
 from .helper import SmileComm, SmileHelper, update_helper
@@ -312,7 +312,7 @@ class Smile(SmileComm, SmileData):
                     an issue on http://github.com/plugwise/python-plugwise",
                     result,
                 )
-                raise ConnectionFailedError("Plugwise error, check log for more info.")
+                raise ResponseError("Plugwise error, check log for more info.")
 
         # Check if Anna is connected to an Adam
         if "159.2" in models:
@@ -376,7 +376,7 @@ class Smile(SmileComm, SmileData):
                     "Connected but no gateway device information found, please create \
                      an issue on http://github.com/plugwise/python-plugwise"
                 )
-                raise ConnectionFailedError("Plugwise error, check log for more info.")
+                raise ResponseError("Plugwise error, check log for more info.")
 
         return model
 
