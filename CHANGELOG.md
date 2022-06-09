@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.19.1: Smile & Stretch: line up error handling with Plugwise-beta
+
 # v0.19.0: Smile Adam & Anna: cooling-related updates
 - Anna: replace `setpoint` with `setpoint_low` and `setpoint_high` when cooling is active
 - Anna: update according to recent Anna-with-cooling firmware updates (info provided by Plugwise)
