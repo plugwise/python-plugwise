@@ -48,9 +48,9 @@ from .constants import (
     ThermoLoc,
 )
 from .exceptions import (
+    ConnectionFailedError,
     InvalidAuthentication,
     InvalidXMLError,
-    PlugwiseError,
     ResponseError,
 )
 from .util import (
@@ -268,8 +268,13 @@ class SmileComm:
                 )
         except ClientError as err:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
-                LOGGER.error("Failed sending %s %s to Plugwise Smile", method, command)
-                raise PlugwiseError(
+                LOGGER.error(
+                    "Failed sending %s %s to Plugwise Smile, error: %s",
+                    method,
+                    command,
+                    err,
+                )
+                raise ConnectionFailedError(
                     "Plugwise connection error, check log for more info."
                 ) from err
             return await self._request(command, retry - 1)
