@@ -1497,6 +1497,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_adam_plus_anna_new(self):
         """Test extended Adam (firmware 3.6) with Anna and a switch-group setup."""
         testdata = {
+            "67d73d0bd469422db25a618a5fb8eeb0": {
+                "dev_class": "zz_misc",
+                "location": "b4f211175e124df59603412bafa77a34",
+                "model": "lumi.plug.maeu01",
+                "name": "SmartPlug Floor 0",
+                "zigbee_mac_address": "54EF4410002C97F2",
+                "vendor": "LUMI",
+                "sensors": {"electricity_consumed_interval": 0.0},
+                "switches": {"relay": True, "lock": False},
+            },
             "ad4838d7d35c4d6ea796ee12ae5aedf8": {
                 "dev_class": "thermostat",
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
