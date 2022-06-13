@@ -1,5 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <appliances>
+	<appliance id='67d73d0bd469422db25a618a5fb8eeb0'>
+		<name>SmartPlug Floor 0</name>
+		<description>A device that communicates through the ZigBee protocol.</description>
+		<type>zz_misc</type>
+		<created_date>2022-03-11T11:21:58.858+01:00</created_date>
+		<modified_date>2022-06-13T15:15:12.921+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='b4f211175e124df59603412bafa77a34'/>
+		<groups/>
+		<logs>
+			<interval_log id='3c32af0fb9744d8baf9f68ba7f9143f3'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2022-06-13T15:00:00+02:00</updated_date>
+				<last_consecutive_log_date>2022-06-13T14:45:00+02:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='0d52d0e144b443f185ff0103962ab6ad'/>
+				<period start_date="2022-06-13T15:00:00+02:00" end_date="2022-06-13T15:00:00+02:00" interval="PT15M">
+					<measurement log_date="2022-06-13T15:00:00+02:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='56a14efb191c4e35890939aa65bd42fe'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='0d52d0e144b443f185ff0103962ab6ad'/>
+			</interval_log>
+			<point_log id='c62e9097eb324f539f62cb22d275533f'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2022-06-13T15:15:12.918+02:00</updated_date>
+				<last_consecutive_log_date>2022-06-11T15:25:12.796+02:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='36368e4365e248f2a3afc21d5afb1693'/>
+				<period start_date="2022-06-13T15:15:12.918+02:00" end_date="2022-06-13T15:15:12.918+02:00">
+					<measurement log_date="2022-06-13T15:15:12.918+02:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='76c3a214120b42e790641aff891a5f82'>
+				<updated_date>2022-06-13T15:15:12.918+02:00</updated_date>
+				<lock>false</lock>
+				<state>on</state>
+				<relay id='36368e4365e248f2a3afc21d5afb1693'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
 	<appliance id='ad4838d7d35c4d6ea796ee12ae5aedf8'>
 		<name>Anna</name>
 		<description>A Thermostat</description>
