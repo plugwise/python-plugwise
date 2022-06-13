@@ -458,7 +458,7 @@ class SmileHelper:
                 return None
 
             appl.vendor_name = module_data["vendor_name"]
-            appl.model = version_to_model(module_data["vendor_model"])
+            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
             appl.hardware = module_data["hardware_version"]
             appl.firmware = module_data["firmware_version"]
 
