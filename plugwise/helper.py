@@ -449,8 +449,8 @@ class SmileHelper:
             return appl
 
         if self.smile_name == "Adam":
-            locator = "./logs/point_log/electricity_point_meter"
-            mod_type = "electricity_point_meter"
+            locator = "./logs/point_log/electricity_interval_meter"
+            mod_type = "electricity_interval_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
