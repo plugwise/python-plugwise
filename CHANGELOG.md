@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.20.0: Adam: add support for the Aqara Plug
+
 # v0.19.1: Smile & Stretch: line up error handling with Plugwise-beta
 
 # v0.19.0: Smile Adam & Anna: cooling-related updates
