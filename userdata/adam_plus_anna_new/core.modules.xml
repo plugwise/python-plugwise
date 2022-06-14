@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
+	<module id='6fe74ec044bd44d88ac0412df67f188f'>
+		<vendor_name>LUMI</vendor_name>
+		<vendor_model>lumi.plug.maeu01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<upgrade/>
+		<created_date>2022-03-11T11:21:37.406+01:00</created_date>
+		<modified_date>2022-03-11T18:44:23.929+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='0d52d0e144b443f185ff0103962ab6ad' log_type='electricity' endpoint='1'>
+				<functionalities><interval_log id='3c32af0fb9744d8baf9f68ba7f9143f3'/><interval_log id='56a14efb191c4e35890939aa65bd42fe'/></functionalities>
+			</electricity_interval_meter>
+			<relay id='36368e4365e248f2a3afc21d5afb1693' log_type='relay' endpoint='1'>
+				<functionalities><relay_functionality id='76c3a214120b42e790641aff891a5f82'/><point_log id='c62e9097eb324f539f62cb22d275533f'/></functionalities>
+			</relay>
+		</services>
+		<protocols>
+			<zig_bee_node id='8e0dc5319eb0424eb6dc63943e9d0d3a'>
+				<mac_address>54EF4410002C97F2</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='accec35dd04241ecb4ff68d2c35f2e36'/>
+				<neighbors>
+					<neighbor mac_address='000D6F0017DAA2B7'>
+						<lqi>63</lqi>
+						<depth>1</depth>
+						<relationship>sibling</relationship>
+					</neighbor>
+					<neighbor mac_address='000D6F000C85F701'>
+						<lqi>75</lqi>
+						<depth>1</depth>
+						<relationship>sibling</relationship>
+					</neighbor>
+					<neighbor mac_address='000D6F000D5A29BD'>
+						<lqi>67</lqi>
+						<depth>0</depth>
+						<relationship>parent</relationship>
+					</neighbor>
+				</neighbors>
+				<last_neighbor_table_received>2022-06-13T15:11:23+02:00</last_neighbor_table_received>
+				<neighbor_table_support>true</neighbor_table_support>
+			</zig_bee_node>
+		</protocols>
+	</module>
 	<module id='c50c2a4470f24206bd745ead65783c46'>
 		<vendor_name>Plugwise</vendor_name>
 		<vendor_model>Adam</vendor_model>
