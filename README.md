@@ -48,6 +48,7 @@ Module providing interfacing with the Plugwise devices:
   - [x] Tom
   - [x] Koen (a Koen always comes with a Plug, the Plug is the active part)
   - [x] Plug
+  - [x] Aqara Plug
 - [x] Anna
 - [x] Smile P1
 - [x] Stick
