@@ -616,13 +616,20 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temperature: float) -> None:
+    async def set_temperature(self, loc_id: str, data: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        temp = str(temperature)
+        setpoint = data["setpoint"]
+        if self._anna_cooling_present:
+            if self._anna_cooling_derived or self.anna_cooling_enabled:
+                setpoint = data["setpoint_high"]
+            else:
+                setpoint = data["setpoint_low"]
+
+        setpoint = str(setpoint)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
-            f"{temp}</setpoint></thermostat_functionality>"
+            f"{setpoint}</setpoint></thermostat_functionality>"
         )
 
         await self._request(uri, method="put", data=data)
