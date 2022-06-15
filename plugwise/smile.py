@@ -622,11 +622,10 @@ class Smile(SmileComm, SmileData):
         """Set the given Temperature on the relevant Thermostat."""
         if "setpoint" in temps:
             setpoint = temps["setpoint"]
-        elif self._anna_cooling_present:
-            if self._anna_cooling_derived or self.anna_cooling_enabled:
-                setpoint = temps["setpoint_high"]
-            else:
-                setpoint = temps["setpoint_low"]
+        elif self._anna_cooling_derived or self.anna_cooling_enabled:
+            setpoint = temps["setpoint_high"]
+        else:
+            setpoint = temps["setpoint_low"]
 
         temp = str(setpoint)
         uri = self._thermostat_uri(loc_id)
