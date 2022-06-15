@@ -620,8 +620,9 @@ class Smile(SmileComm, SmileData):
 
     async def set_temperature(self, loc_id: str, temps: dict[str, Any]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        setpoint = temps["setpoint"]
-        if self._anna_cooling_present:
+        if "setpoint" in temps:
+            setpoint = temps["setpoint"]
+        elif self._anna_cooling_present:
             if self._anna_cooling_derived or self.anna_cooling_enabled:
                 setpoint = temps["setpoint_high"]
             else:
