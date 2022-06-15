@@ -3,6 +3,8 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
+from typing import Any
+
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -616,7 +618,7 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temps: dict[str, float]) -> None:
+    async def set_temperature(self, loc_id: str, temps: dict[str, Any]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         setpoint = temps["setpoint"]
         if self._anna_cooling_present:
