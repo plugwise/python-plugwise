@@ -473,7 +473,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         tinker_temp_passed = False
-        for new_temp in [{"setpoint": 20.0}, {"setpoint": 22.9}]:
+        test_temps = [{"setpoint": 20.0}, {"setpoint": 22.9}]
+        if smile.anna_cooling_enabled or smile._anna_cooling_derived:
+            test_temps = [
+                {"setpoint_low": 19.5, "setpoint_high": 23.5},
+                {"setpoint_low": 20.0, "setpoint_high": 25.0},
+            ]
+        for new_temp in test_temps:
             _LOGGER.info("- Adjusting temperature to %s", new_temp)
             try:
                 await smile.set_temperature(loc_id, new_temp)
