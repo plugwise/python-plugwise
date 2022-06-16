@@ -3059,6 +3059,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._anna_cooling_derived
         assert not smile.anna_cooling_enabled
 
+        result = await self.tinker_thermostat(
+            smile,
+            "c784ee9fdab44e1395b8dee7d7a497d5",
+            good_schedules=[
+                "standaard",
+            ],
+        )
+        assert result
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -3121,6 +3130,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile.anna_cool_ena_indication
         assert smile._anna_cooling_derived
         assert not smile.anna_cooling_enabled
+
+        result = await self.tinker_thermostat(
+            smile,
+            "c784ee9fdab44e1395b8dee7d7a497d5",
+            good_schedules=[
+                "standaard",
+            ],
+        )
+        assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
