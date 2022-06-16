@@ -474,7 +474,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         tinker_temp_passed = False
         test_temps = [{"setpoint": 20.0}, {"setpoint": 22.9}]
-        if smile.anna_cooling_enabled or smile._anna_cooling_derived:
+        if smile._anna_cooling_present:
             test_temps = [
                 {"setpoint_low": 19.5, "setpoint_high": 23.5},
                 {"setpoint_low": 20.0, "setpoint_high": 25.0},
