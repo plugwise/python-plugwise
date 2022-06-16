@@ -473,28 +473,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         tinker_temp_passed = False
-        test_temps = [{"setpoint": 20.0}, {"setpoint": 22.9}]
+        test_temp = {"setpoint": 22.9}
         if smile._anna_cooling_present:
-            test_temps = [
-                {"setpoint_low": 19.5, "setpoint_high": 23.5},
-                {"setpoint_low": 20.0, "setpoint_high": 25.0},
-            ]
-        for new_temp in test_temps:
-            _LOGGER.info("- Adjusting temperature to %s", new_temp)
-            try:
-                await smile.set_temperature(loc_id, new_temp)
-                tinker_temp_passed = True
-                _LOGGER.info("  + worked as intended")
-            except (
-                pw_exceptions.ErrorSendingCommandError,
-                pw_exceptions.ResponseError,
-            ):
-                tinker_temp_passed = False
-                if unhappy:
-                    _LOGGER.info("  + failed as expected")
-                else:  # pragma: no cover
-                    _LOGGER.info("  - failed unexpectedly")
-                    raise self.UnexpectedError
+            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
+        _LOGGER.info("- Adjusting temperature to %s", test_temp)
+        try:
+            await smile.set_temperature(loc_id, test_temp)
+            tinker_temp_passed = True
+            _LOGGER.info("  + worked as intended")
+        except (
+            pw_exceptions.ErrorSendingCommandError,
+            pw_exceptions.ResponseError,
+        ):
+            tinker_temp_passed = False
+            if unhappy:
+                _LOGGER.info("  + failed as expected")
+            else:  # pragma: no cover
+                _LOGGER.info("  - failed unexpectedly")
+                raise self.UnexpectedError
         return tinker_temp_passed
 
     @pytest.mark.asyncio
