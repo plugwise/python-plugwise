@@ -456,7 +456,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
-                raise self.UnexpectedError
+                return False
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
@@ -465,7 +465,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
-                    raise self.UnexpectedError
+                    return False
 
         return tinker_switch_passed
 
