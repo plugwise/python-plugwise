@@ -447,8 +447,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
-        tinker_switch_passed = False
         for new_state in [False, True, False]:
+            tinker_switch_passed = False
             _LOGGER.info("- Switching %s", new_state)
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
@@ -456,16 +456,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
+                raise self.UnexpectedError
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
-                tinker_switch_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     raise self.UnexpectedError
+
         return tinker_switch_passed
 
     @pytest.mark.asyncio
