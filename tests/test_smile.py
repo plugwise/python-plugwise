@@ -472,26 +472,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
-        tinker_temp_passed = False
         test_temp = {"setpoint": 22.9}
         if smile._anna_cooling_present:
             test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
-            tinker_temp_passed = True
             _LOGGER.info("  + worked as intended")
+            return True
         except (
             pw_exceptions.ErrorSendingCommandError,
             pw_exceptions.ResponseError,
         ):
-            tinker_temp_passed = False
             if unhappy:
                 _LOGGER.info("  + failed as expected")
             else:  # pragma: no cover
                 _LOGGER.info("  - failed unexpectedly")
                 raise self.UnexpectedError
-        return tinker_temp_passed
+            return False
 
     @pytest.mark.asyncio
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
