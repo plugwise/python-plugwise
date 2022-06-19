@@ -693,7 +693,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -782,7 +782,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -966,7 +966,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1061,7 +1061,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             schedule_on=False,
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1106,7 +1106,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1183,7 +1183,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Test", "Normal"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1260,7 +1260,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Test", "Normal"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1337,7 +1337,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Normal"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1464,11 +1464,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Weekschema"],
             unhappy=True,
         )
-        assert not result
+        assert result
         switch_change = await self.tinker_switch(
             smile, "aa6b0002df0a46e1b1eb94beb61eddfe", unhappy=True
         )
-        assert not switch_change
+        assert switch_change
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -2120,14 +2120,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
-        assert not result
+        assert result
         result = await self.tinker_thermostat(
             smile,
             "82fa13f017d240daa0d0ea1775420f24",
             good_schedules=["CV Jessie"],
             unhappy=True,
         )
-        assert not result
+        assert result
 
         try:
             await smile.delete_notification()
@@ -2536,7 +2536,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
-        assert not result
+        assert result
 
         result = await self.tinker_thermostat(
             smile,
@@ -2544,7 +2544,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["CV Jessie"],
             unhappy=True,
         )
-        assert not result
+        assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
