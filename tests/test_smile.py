@@ -1692,7 +1692,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "bad",
             good_schedules=["Badkamer"],
         )
-        assert not result
+        assert result
 
         switch_change = await self.tinker_switch(
             smile,
@@ -2819,13 +2819,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
 
+        # Negative test
         result = await self.tinker_thermostat(
             smile,
             "13228dab8ce04617af318a2888b3c548",
             schedule_on=False,
             good_schedules=[None],
         )
-        assert not result
+        assert result
 
         result = await self.tinker_thermostat_schedule(
             smile,
