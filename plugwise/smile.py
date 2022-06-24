@@ -203,8 +203,6 @@ class SmileData(SmileHelper):
                     device_data["setpoint_low"] = sched_setpoints[0]
                     device_data["setpoint_high"] = sched_setpoints[1]
 
-                device_data.pop("setpoint")
-
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
