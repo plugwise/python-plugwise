@@ -295,7 +295,7 @@ class SmileHelper:
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._adam_cooling_enabled = False
-        self._anna_cooling_derived = False
+        self._anna_cooling_active = False
         self._anna_cooling_present = False
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
@@ -316,7 +316,19 @@ class SmileHelper:
         self._stretch_v3 = False
         self._thermo_locs: dict[str, ThermoLoc] = {}
 
+        #########################################################################
+        # anna_cooling_enabled refers to the state of the cooling_enabled key
+        # for the Loria/Thermastage. Cooling_enabled = on means hvac_mode = cool,
+        # Cooling_enabled = off means hvac_mode = heat,
+        #########################################################################
         self.anna_cooling_enabled = False
+        #########################################################################
+        # anna_cooling_enabled_by_user refers to the state of the cooling_on
+        # configuration item set by the user in the Plugwise(-beta) integration
+        # for the Elga. Cooling_on = on means hvac_mode = heat_cool,
+        # cooling_on = off means hvac_mode = heat.
+        #########################################################################
+        self.anna_cooling_enabled_by_user = False
         self.anna_cool_ena_indication: bool | None = None
         self.gateway_id: str
         self.gw_data: GatewayData = {}
