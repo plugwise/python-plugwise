@@ -329,7 +329,6 @@ class SmileHelper:
         # cooling_on = off means hvac_mode = heat.
         #########################################################################
         self.anna_cooling_enabled_by_user = False
-        self.anna_cool_ena_indication: bool | None = None
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -871,11 +870,9 @@ class SmileHelper:
             data.pop("heating_state", None)
 
         if d_id == self._heater_id:
-            # Use cooling_enabled point-log to set self.anna_cool_ena_indication to True, then remove
+            # Use cooling_enabled point-log to set self.anna_cool_enabled to True, then remove
             if self._anna_cooling_present:
-                self.anna_cool_ena_indication = False
                 if "cooling_enabled" in data:
-                    self.anna_cool_ena_indication = True
                     self.anna_cooling_enabled = data["cooling_enabled"]
                     data.pop("cooling_enabled", None)
 

@@ -113,11 +113,7 @@ class SmileData(SmileHelper):
 
         # Anna: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if (
-            self._anna_cooling_present
-            and not self.anna_cool_ena_indication
-            and self.anna_cooling_enabled_by_user
-        ):
+        if self._anna_cooling_present and self.anna_cooling_enabled_by_user:
             if (
                 not self._anna_cooling_active
                 and self._outdoor_temp > self._cooling_activation_outdoor_temp
