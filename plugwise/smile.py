@@ -113,7 +113,7 @@ class SmileData(SmileHelper):
 
         # Anna: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._anna_cooling_present and self.anna_cooling_enabled_by_user:
+        if self._anna_cooling_present and self._anna_cooling_enabled_by_user:
             if (
                 not self._anna_cooling_active
                 and self._outdoor_temp > self._cooling_activation_outdoor_temp
@@ -192,7 +192,7 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
-            if self.anna_cooling_enabled_by_user:
+            if self._anna_cooling_enabled_by_user:
                 if sched_setpoints is None:
                     device_data["setpoint_low"] = device_data["setpoint"]
                     device_data["setpoint_high"] = float(40)
@@ -211,9 +211,9 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self.anna_cooling_enabled_by_user:
+            if self._anna_cooling_enabled_by_user:
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self.anna_cooling_enabled:
+            if self._adam_cooling_enabled or self._anna_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
@@ -260,7 +260,7 @@ class SmileData(SmileHelper):
 
     def send_cooling_on(self, state: bool) -> None:
         "Collect the cooling_on state set by the user, Anna + Elga only."
-        self.anna_cooling_enabled_by_user = state
+        self._anna_cooling_enabled_by_user = state
         LOGGER.debug("HOI cooling_on is %s", state)
 
 
