@@ -944,9 +944,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert not smile._anna_cooling_present
-        assert smile.anna_cool_ena_indication is None
-        assert not smile._anna_cooling_derived
-        assert not smile.anna_cooling_enabled
+        assert not smile._anna_cooling_active
+        assert not smile._anna_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -3058,9 +3057,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile.anna_cool_ena_indication
-        assert not smile._anna_cooling_derived
-        assert not smile.anna_cooling_enabled
+        assert not smile._anna_cooling_active
+        assert not smile._anna_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -3130,9 +3128,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile.anna_cool_ena_indication
-        assert smile._anna_cooling_derived
-        assert not smile.anna_cooling_enabled
+        assert smile._anna_cooling_active
+        assert not smile._anna_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -3184,9 +3181,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile._anna_cooling_present
-        assert smile.anna_cool_ena_indication
-        assert not smile._anna_cooling_derived
-        assert smile.anna_cooling_enabled
+        assert not smile._anna_cooling_arrived
+        assert smile._anna_cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3232,8 +3228,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "anna_heatpump_cooling_to_off"
         server, smile, client = await self.connect_wrapper()
 
-        # Preset _anna_cooling_derived to True, will turn to False due to the lowered outdoor temp
-        smile._anna_cooling_derived = True
+        # Preset _anna_cooling_active to True, will turn to False due to the lowered outdoor temp
+        smile._anna_cooling_active = True
         await self.device_test(smile, testdata)
         await smile.close_connection()
         await self.disconnect(server, client)
