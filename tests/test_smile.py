@@ -2973,7 +2973,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_heating(self):
-        """Test a Anna with Elga setup in idle mode."""
+        """Test a Anna with Elga setup in heating mode."""
         testdata = {
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
@@ -3052,13 +3052,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
+        # Preset cooling_on is True
+        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile._anna_cooling_active
         assert not smile._anna_cooling_enabled
+        assert not smile._anna_cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3123,13 +3125,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
+        # Preset cooling_on is True
+        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert smile._anna_cooling_active
         assert not smile._anna_cooling_enabled
+        assert smile._anna_cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3146,7 +3150,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling_fake_firmware(self):
         """
-        Test an Anna with Elga setup in cooling mode.
+        Test an Anna with a fake Loria/Thermastate setup in cooling mode. The
+        Anna + Elga firmware has been amended with the point_log cooling_enabled and
+        gateway/features/cooling keys.
         This test also covers the situation that the operation-mode it switched
         from heating to cooling due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
@@ -3179,10 +3185,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.10.10"
 
+        # Preset cooling_on is True
+        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
         assert smile._anna_cooling_present
-        assert not smile._anna_cooling_arrived
         assert smile._anna_cooling_enabled
+        assert smile._anna_cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3228,8 +3236,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "anna_heatpump_cooling_to_off"
         server, smile, client = await self.connect_wrapper()
 
-        # Preset _anna_cooling_active to True, will turn to False due to the lowered outdoor temp
-        smile._anna_cooling_active = True
+        # Preset cooling_on is True
+        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3318,6 +3326,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
+        # Preset cooling_on is True
+        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
@@ -3363,6 +3373,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
+        # Preset cooling_on is True
+        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
 
         await smile.close_connection()
@@ -3453,6 +3465,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
+        # Preset cooling_on is True
+        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
