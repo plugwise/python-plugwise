@@ -3271,6 +3271,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 20.9,
+                    "setpoint": 19.0,
                     "setpoint_low": 19.0,
                     "setpoint_high": 23.0,
                     "illuminance": 0.5,
@@ -3363,6 +3364,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.9,
+                    "setpoint": 19.5,
                     "setpoint_low": 19.5,
                     "setpoint_high": 40.0,
                     "illuminance": 0.5,
@@ -3410,6 +3412,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
+                    "setpoint": 23.0,
                     "setpoint_low": 19.0,
                     "setpoint_high": 23.0,
                     "illuminance": 0.5,
