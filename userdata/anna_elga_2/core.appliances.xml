@@ -183,7 +183,7 @@
 				<interval/>
 				<thermostat id='52b5a053e83446e6a11fde60a6c9ed11'/>
 				<period start_date="2022-03-10T06:45:00.389+01:00" end_date="2022-03-10T06:45:00.389+01:00">
-					<measurement log_date="2022-03-10T06:45:00.389+01:00">19.50</measurement>
+					<measurement log_date="2022-03-10T06:45:00.389+01:00">19.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='cecd3059ab6d4ece9b419b7bf820b7f4'>
@@ -205,7 +205,7 @@
 				<interval/>
 				<thermo_meter id='261d7f5dd4494c139cf30bcc20a87ebe'/>
 				<period start_date="2022-03-10T07:21:30.916+01:00" end_date="2022-03-10T07:21:30.916+01:00">
-					<measurement log_date="2022-03-10T07:21:30.916+01:00">19.00</measurement>
+					<measurement log_date="2022-03-10T07:21:30.916+01:00">19.50</measurement>
 				</period>
 			</point_log>
 			<point_log id='e2e178a233174a1fa9268c5d90a43bfe'>
