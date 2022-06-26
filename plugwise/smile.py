@@ -258,10 +258,11 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def send_cooling_on(self, state: bool) -> None:
+    def send_cooling_on(self, state: bool) -> bool:
         "Collect the cooling_on state set by the user, Anna + Elga only."
         self._anna_cooling_enabled_by_user = state
         LOGGER.debug("HOI cooling_on is %s", state)
+        return True
 
 
 class Smile(SmileComm, SmileData):
