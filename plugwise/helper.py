@@ -296,13 +296,6 @@ class SmileHelper:
         self._allowed_modes: list[str] = []
         self._adam_cooling_enabled = False
         self._anna_cooling_active = False
-        #########################################################################
-        # _anna_cooling_enabled_by_user refers to the state of the cooling_on
-        # configuration item set by the user in the Plugwise(-beta) integration
-        # for the Elga. Cooling_on = on means hvac_mode = heat_cool,
-        # cooling_on = off means hvac_mode = heat.
-        #########################################################################
-        self._anna_cooling_enabled_by_user = False
         self._anna_cooling_present = False
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
@@ -323,11 +316,16 @@ class SmileHelper:
         self._stretch_v3 = False
         self._thermo_locs: dict[str, ThermoLoc] = {}
 
-        #########################################################################
-        # anna_cooling_enabled refers to the state of the cooling_enabled key
-        # for the Loria/Thermastage. Cooling_enabled = on means hvac_mode = cool,
-        # Cooling_enabled = off means hvac_mode = heat,
-        #########################################################################
+        ###################################################################
+        # 'anna_cooling_enabled' refers to the state of the Elga, Loria or
+        # Thermastage heatpump connected to an Anna.
+        # For Elga, 'elga_status_code' = 8 or 9 means cooling mode is
+        # available, next to heating mode: 'anna_cooling_enabled' == True.
+        # 8 means cooling is active, 9 means idle.
+        # For Loria/Thermastage 'cooling_state' = on means set to cooling
+        # mode, instead of to heating mode: 'anna_cooling_enabled' == True.
+        # 'modulation_level' = 100 means active, 0.0 means idle.
+        ###################################################################
         self.anna_cooling_enabled = False
         self.gateway_id: str
         self.gw_data: GatewayData = {}
@@ -870,11 +868,14 @@ class SmileHelper:
             data.pop("heating_state", None)
 
         if d_id == self._heater_id:
-            # Use cooling_enabled point-log to set self.anna_cool_enabled to True, then remove
+            # Use elga_status_code or cooling_state to set self.anna_cooling_enabled to True, then remove
             if self._anna_cooling_present:
-                if "cooling_enabled" in data:
-                    self.anna_cooling_enabled = data["cooling_enabled"]
-                    data.pop("cooling_enabled", None)
+                # Elga:
+                if "elga_status_code" in data:
+                    self.anna_cooling_enabled = "elga_status_code" in [8, 9]
+                # Loria/Thermastate:
+                if "cooling_state" in data:
+                    self.anna_cooling_enabled = "cooling_state" == "on"
 
         return data
 
