@@ -3066,6 +3066,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Set cooling_on to True
         await self.tinker_send_cooling_on(smile)
+        assert smile._anna_cooling_enabled_by_user
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
