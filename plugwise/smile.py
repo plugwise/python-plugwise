@@ -260,9 +260,11 @@ class SmileData(SmileHelper):
 
     def send_cooling_on(self, state: bool) -> bool:
         "Collect the cooling_on state set by the user, Anna + Elga only."
-        self._anna_cooling_enabled_by_user = state
-        LOGGER.debug("Received cooling_on state is %s", state)
-        return True
+        if isinstance(state, bool):
+            self._anna_cooling_enabled_by_user = state
+            return True
+
+        return False
 
 
 class Smile(SmileComm, SmileData):
