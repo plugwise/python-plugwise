@@ -466,6 +466,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "dhw_state",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
+    "elga_status_code": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     "intended_boiler_temperature": {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
     },  # Non-zero when heating, zero when dhw-heating
