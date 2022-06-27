@@ -956,7 +956,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         assert not smile._anna_cooling_present
         assert not smile._anna_cooling_active
-        assert not smile._anna_cooling_enabled
+        assert not smile.anna_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -3072,7 +3072,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile._anna_cooling_enabled
+        assert not smile.anna_cooling_enabled
         assert not smile._anna_cooling_active
 
         result = await self.tinker_thermostat(
@@ -3145,7 +3145,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile._anna_cooling_enabled
+        assert not smile.anna_cooling_enabled
         assert smile._anna_cooling_active
 
         result = await self.tinker_thermostat(
@@ -3202,7 +3202,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_send_cooling_on(smile)
         await self.device_test(smile, testdata)
         assert smile._anna_cooling_present
-        assert smile._anna_cooling_enabled
+        assert smile.anna_cooling_enabled
         assert smile._anna_cooling_active
 
         await smile.close_connection()
