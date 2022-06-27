@@ -213,7 +213,7 @@ class SmileData(SmileHelper):
             device_data["mode"] = "heat"
             if self._anna_cooling_enabled_by_user:
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self._anna_cooling_enabled:
+            if self._adam_cooling_enabled or self.anna_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
