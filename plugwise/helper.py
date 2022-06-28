@@ -882,6 +882,7 @@ class SmileHelper:
                 # Loria/Thermastate:
                 if "cooling_state" in data:
                     self.anna_cooling_enabled = data["cooling_state"] == "on"
+                    LOGGER.debug("HOI modulation_level: %s", data["modulation_level"])
                     if data["modulation_level"] == 100:
                         self._anna_cooling_active = True
                     if data["modulation_level"] == 0.0:
