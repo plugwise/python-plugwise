@@ -241,9 +241,6 @@
 			<thermostat id='3e69deb907724adc92461827bff4e33a' log_type='maximum_cooling_supply_temperature'>
 				<functionalities><thermostat_functionality id='561164f66eac497ab9de99a8c9d836da'/><point_log id='ed19951ad58b41e29b68e05b932fa247'/></functionalities>
 			</thermostat>
-			<status_code id='3e8f2ecf95e34aa7a8ce4427bc57561e' log_type='elga_status_code'>
-				<functionalities><point_log id='e17e8f8e64ca40289b3570f9678ebc67'/></functionalities>
-			</status_code>
 			<timer id='3ee79f555fa645beafcc072ae37f08a9' log_type='indoor_temperature_transition_time'>
 				<functionalities><timer_functionality id='4212b615caee48b786b61ba19bee64a9'/><point_log id='d210b6fa01d84830b48f9eca28e927bd'/></functionalities>
 			</timer>
@@ -1478,16 +1475,6 @@
 				</period>
 				<interval_chrono_meter id='cdb8e82b11cb4c3982e93ac5316734d9'/>
 			</interval_log>
-			<point_log id='e17e8f8e64ca40289b3570f9678ebc67'>
-				<updated_date>2020-04-16T17:24:28.862+02:00</updated_date>
-				<type>elga_status_code</type>
-				<unit></unit>
-				<last_consecutive_log_date>2020-04-16T16:15:13.794+02:00</last_consecutive_log_date>
-				<period start_date="2020-04-16T17:24:28.862+02:00" end_date="2020-04-16T17:24:28.862+02:00">
-					<measurement log_date="2020-04-16T17:24:28.862+02:00">8</measurement>
-				</period>
-				<status_code id='3e8f2ecf95e34aa7a8ce4427bc57561e'/>
-			</point_log>
 			<point_log id='e18c1238dd8a439b83a3283cd61a70ce'>
 				<updated_date>2020-04-12T12:09:02.538+02:00</updated_date>
 				<type>domestic_hot_water_setpoint</type>

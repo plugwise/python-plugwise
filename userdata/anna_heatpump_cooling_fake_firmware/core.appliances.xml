@@ -697,16 +697,6 @@
 				</period>
 				<interval_chrono_meter id='cdb8e82b11cb4c3982e93ac5316734d9'/>
 			</interval_log>
-			<point_log id='e17e8f8e64ca40289b3570f9678ebc67'>
-				<updated_date>2020-04-16T17:30:33.297+02:00</updated_date>
-				<type>elga_status_code</type>
-				<unit></unit>
-				<last_consecutive_log_date>2020-04-16T16:15:13.794+02:00</last_consecutive_log_date>
-				<period start_date="2020-04-16T17:30:33.297+02:00" end_date="2020-04-16T17:30:33.297+02:00">
-					<measurement log_date="2020-04-16T17:30:33.297+02:00">8</measurement>
-				</period>
-				<status_code id='3e8f2ecf95e34aa7a8ce4427bc57561e'/>
-			</point_log>
 			<point_log id='e18c1238dd8a439b83a3283cd61a70ce'>
 				<updated_date>2020-04-12T12:09:02.538+02:00</updated_date>
 				<type>domestic_hot_water_setpoint</type>
