@@ -3069,7 +3069,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile.elga_cooling_enabled
+        assert smile.elga_cooling_enabled
         assert not smile._elga_cooling_active
 
         result = await self.tinker_thermostat(
