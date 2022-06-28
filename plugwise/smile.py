@@ -111,29 +111,6 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-        # Anna + Elga: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._anna_cooling_present and self.elga_cooling_enabled:
-            if (
-                not self._elga_cooling_active
-                and self._outdoor_temp > self._cooling_activation_outdoor_temp
-            ):
-                self._elga_cooling_active = True
-            if (
-                self._elga_cooling_active
-                and self._outdoor_temp < self._cooling_deactivation_threshold
-            ):
-                self._elga_cooling_active = False
-
-        # Don't show cooling_state when no cooling present
-        for _, device in self.gw_devices.items():
-            if (
-                not self._cooling_present
-                and "binary_sensors" in device
-                and "cooling_state" in device["binary_sensors"]
-            ):
-                device["binary_sensors"].pop("cooling_state")
-
     def _device_data_switching_group(
         self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
@@ -245,13 +222,36 @@ class SmileData(SmileHelper):
             if power_data is not None:
                 device_data.update(power_data)
 
+        # Anna + Elga: indicate possible active heating/cooling operation-mode
+        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
+        if self._anna_cooling_present and self.elga_cooling_enabled:
+            if (
+                not self._elga_cooling_active
+                and self._outdoor_temp > self._cooling_activation_outdoor_temp
+            ):
+                self._elga_cooling_active = True
+            if (
+                self._elga_cooling_active
+                and self._outdoor_temp < self._cooling_deactivation_threshold
+            ):
+                self._elga_cooling_active = False
+
         # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-        if details["dev_class"] == "heater_central" and self.smile_name == "Anna":
+        if self.smile_name == "Anna" and details["dev_class"] == "heater_central":
             device_data["cooling_state"] = False
             if self._elga_cooling_active:
                 device_data["cooling_state"] = True
             if self._anna_cooling_active:
                 device_data["cooling_state"] = True
+
+        # Don't show cooling_state when no cooling present
+        for _, device in self.gw_devices.items():
+            if (
+                not self._cooling_present
+                and "binary_sensors" in device
+                and "cooling_state" in device["binary_sensors"]
+            ):
+                device["binary_sensors"].pop("cooling_state")
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
