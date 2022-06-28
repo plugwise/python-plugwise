@@ -871,7 +871,7 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        if d_id == self._heater_id:
+        if self.smile_name == "Anna" and d_id == self._heater_id:
             # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
             if self._anna_cooling_present:
                 # Elga:
@@ -880,7 +880,7 @@ class SmileHelper:
                     self._elga_cooling_active = data["elga_status_code"] == 8
                     data.pop("elga_status_code", None)
                 # Loria/Thermastate:
-                if "cooling_state" in data:
+                elif "cooling_state" in data:
                     LOGGER.debug("HOI cooling_state: %s", data["cooling_state"])
                     self.anna_cooling_enabled = data["cooling_state"]
                     LOGGER.debug("HOI modulation_level: %s", data["modulation_level"])
