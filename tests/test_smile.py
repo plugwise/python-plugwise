@@ -3099,9 +3099,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "mode": "heat_cool",
                 "sensors": {
+                    "temperature": 19.3,
+                    "setpoint": 20.5,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 24.0,
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 6,
+                    "cooling_deactivation_threshold": 6.0,
                 },
             },
             # Heater central
