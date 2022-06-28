@@ -881,6 +881,7 @@ class SmileHelper:
                     data.pop("elga_status_code", None)
                 # Loria/Thermastate:
                 if "cooling_state" in data:
+                    LOGGER.debug("HOI cooling_state: %s", data["cooling_state"])
                     self.anna_cooling_enabled = data["cooling_state"] == "on"
                     LOGGER.debug("HOI modulation_level: %s", data["modulation_level"])
                     if data["modulation_level"] == 100:
