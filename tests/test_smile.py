@@ -3064,16 +3064,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        # Set cooling_on to True
-        await self.tinker_send_cooling_on(smile)
-        assert smile._anna_cooling_enabled_by_user
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile.anna_cooling_enabled
-        assert not smile._anna_cooling_active
+        assert not smile.elga_cooling_enabled
+        assert not smile._elga_cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3138,15 +3135,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        # Set cooling_on to True
-        await self.tinker_send_cooling_on(smile)
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile.anna_cooling_enabled
-        assert smile._anna_cooling_active
+        assert smile.elga_cooling_enabled
+        assert smile._elga_cooling_active
 
         result = await self.tinker_thermostat(
             smile,
