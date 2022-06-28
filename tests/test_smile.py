@@ -3246,12 +3246,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "anna_heatpump_cooling_to_off"
         server, smile, client = await self.connect_wrapper()
 
-        # Set cooling_on to True
-        await self.tinker_send_cooling_on(smile)
-        # Preset _anna_cooling_active is True
-        smile._anna_cooling_active = True
+        # Preset _elga_cooling_active is True
+        smile._elga_cooling_active = True
         await self.device_test(smile, testdata)
-        assert not smile._anna_cooling_active
+        assert not smile._elga_cooling_active
         await smile.close_connection()
         await self.disconnect(server, client)
 
