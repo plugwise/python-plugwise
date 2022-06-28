@@ -245,6 +245,14 @@ class SmileData(SmileHelper):
             if power_data is not None:
                 device_data.update(power_data)
 
+        # For Anna + cooling, modify cooling_state based on provided info by Plugwise
+        if details["dev_class"] == "heater_central" and self.smile_name == "Anna":
+            device_data["cooling_state"] = False
+            if self._elga_cooling_active:
+                device_data["cooling_state"] = True
+            if self._anna_cooling_active:
+                device_data["cooling_state"] = True
+
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
         # Specific, not generic Adam data
