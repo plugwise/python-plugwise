@@ -876,15 +876,15 @@ class SmileHelper:
             if self._anna_cooling_present:
                 # Elga:
                 if "elga_status_code" in data:
-                    self.elga_cooling_enabled = "elga_status_code" in [8, 9]
-                    self._elga_cooling_active = "elga_status_code" == 8
+                    self.elga_cooling_enabled = data["elga_status_code"] in [8, 9]
+                    self._elga_cooling_active = data["elga_status_code"] == 8
                     data.pop("elga_status_code", None)
                 # Loria/Thermastate:
                 if "cooling_state" in data:
-                    self.anna_cooling_enabled = "cooling_state" == "on"
-                    if "modulation_level" == 100:
+                    self.anna_cooling_enabled = data["cooling_state"] == "on"
+                    if data["modulation_level"] == 100:
                         self._anna_cooling_active = True
-                    if "modulation_level" == 0.0:
+                    if data["modulation_level"] == 0.0:
                         self._anna_cooling_active = False
         return data
 
