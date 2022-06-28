@@ -3197,8 +3197,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.10.10"
 
-        # Set cooling_on to True
-        await self.tinker_send_cooling_on(smile)
         await self.device_test(smile, testdata)
         assert smile._anna_cooling_present
         assert smile.anna_cooling_enabled
