@@ -111,19 +111,19 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-        # Anna: indicate possible active heating/cooling operation-mode
+        # Anna + Elga: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._anna_cooling_present and self._anna_cooling_enabled_by_user:
+        if self._anna_cooling_present and self.elga_cooling_enabled:
             if (
-                not self._anna_cooling_active
+                not self._elga_cooling_active
                 and self._outdoor_temp > self._cooling_activation_outdoor_temp
             ):
-                self._anna_cooling_active = True
+                self._elga_cooling_active = True
             if (
-                self._anna_cooling_active
+                self._elga_cooling_active
                 and self._outdoor_temp < self._cooling_deactivation_threshold
             ):
-                self._anna_cooling_active = False
+                self._elga_cooling_active = False
 
         # Don't show cooling_state when no cooling present
         for _, device in self.gw_devices.items():
@@ -192,7 +192,7 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
-            if self._anna_cooling_enabled_by_user:
+            if self.elga_cooling_enabled:
                 if sched_setpoints is None:
                     device_data["setpoint_low"] = device_data["setpoint"]
                     device_data["setpoint_high"] = float(40)
@@ -211,7 +211,7 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self._anna_cooling_enabled_by_user:
+            if self.elga_cooling_enabled:
                 device_data["mode"] = "heat_cool"
             if self._adam_cooling_enabled or self.anna_cooling_enabled:
                 device_data["mode"] = "cool"
@@ -261,7 +261,7 @@ class SmileData(SmileHelper):
     def send_cooling_on(self, state: bool | None) -> bool:
         "Collect the cooling_on state set by the user, Anna + Elga only."
         if isinstance(state, bool):
-            self._anna_cooling_enabled_by_user = state
+            self.elga_cooling_enabled = state
             return True
 
         return False
