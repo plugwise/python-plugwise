@@ -490,6 +490,17 @@ class Smile(SmileComm, SmileData):
                             notifs,
                         )
 
+            # For Anna + cooling, modify cooling_state based on provided info by Plugwise
+            if (
+                self.smile_name == "Anna"
+                and self.gw_devices[dev_id]["dev_class"] == "heater_central"
+            ):
+                self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = False
+                if self._elga_cooling_active:
+                    self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = True
+                if self._anna_cooling_active:
+                    self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = True
+
         return [self.gw_data, self.gw_devices]
 
     async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
