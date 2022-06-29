@@ -888,6 +888,11 @@ class SmileHelper:
                         self._anna_cooling_active = True
                     if data["modulation_level"] == 0.0:
                         self._anna_cooling_active = False
+
+        # Don't show cooling_state when no cooling present
+        if not self._cooling_present and "cooling_state" in data:
+            data.pop("cooling_state")
+
         return data
 
     def _rank_thermostat(
