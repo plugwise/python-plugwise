@@ -224,7 +224,11 @@ class SmileData(SmileHelper):
 
         # Anna + Elga: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._anna_cooling_present and self.elga_cooling_enabled:
+        if (
+            dev_id == self._heater_id
+            and self._anna_cooling_present
+            and self.elga_cooling_enabled
+        ):
             LOGGER.debug("HOI1 _anna_cooling_present: %s", self._anna_cooling_present)
             LOGGER.debug("HOI2 elga_cooling_enabled: %s", self.elga_cooling_enabled)
             LOGGER.debug("HOI3 _elga_cooling_active: %s", self._elga_cooling_active)
