@@ -61,6 +61,24 @@ class SmileData(SmileHelper):
             self.gw_devices[device_id] = self._update_device_with_dicts(
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
+            # For Anna + cooling, modify cooling_state based on provided info by Plugwise
+            if (
+                self.smile_name == "Anna"
+                and self.gw_devices[device_id]["dev_class"] == "heater_central"
+            ):
+                self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = False
+                if self._elga_cooling_active:
+                    self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
+                if self._anna_cooling_active:
+                    self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
+
+            # Don't show cooling_state when no cooling present
+            if (
+                not self._cooling_present
+                and "binary_sensors" in self.gw_devices[device_id]
+                and "cooling_state" in self.gw_devices[device_id]["binary_sensors"]
+            ):
+                self.gw_devices[device_id]["binary_sensors"].pop("cooling_state")
 
         # Anna + Elga: indicate possible active heating/cooling operation-mode
         # Actual ongoing heating/cooling is shown via heating_state/cooling_state
@@ -86,23 +104,6 @@ class SmileData(SmileHelper):
                 and self._outdoor_temp < self._cooling_deactivation_threshold
             ):
                 self._elga_cooling_active = False
-
-        # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-        # if self.smile_name == "Anna" and details["dev_class"] == "heater_central":
-        #     device_data["cooling_state"] = False
-        #     if self._elga_cooling_active:
-        #         device_data["cooling_state"] = True
-        #     if self._anna_cooling_active:
-        #         device_data["cooling_state"] = True
-
-        # Don't show cooling_state when no cooling present
-        for _, device in self.gw_devices.items():
-            if (
-                not self._cooling_present
-                and "binary_sensors" in device
-                and "cooling_state" in device["binary_sensors"]
-            ):
-                device["binary_sensors"].pop("cooling_state")
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
