@@ -72,39 +72,6 @@ class SmileData(SmileHelper):
                 if self._anna_cooling_active:
                     self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
 
-            # Don't show cooling_state when no cooling present
-            if (
-                not self._cooling_present
-                and "binary_sensors" in self.gw_devices[device_id]
-                and "cooling_state" in self.gw_devices[device_id]["binary_sensors"]
-            ):
-                self.gw_devices[device_id]["binary_sensors"].pop("cooling_state")
-
-        # Anna + Elga: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._anna_cooling_present and self.elga_cooling_enabled:
-            LOGGER.debug("HOI1 _anna_cooling_present: %s", self._anna_cooling_present)
-            LOGGER.debug("HOI2 elga_cooling_enabled: %s", self.elga_cooling_enabled)
-            LOGGER.debug("HOI3 _elga_cooling_active: %s", self._elga_cooling_active)
-            LOGGER.debug(
-                "HOI4 _cooling_activation_outdoor_temp: %s",
-                self._cooling_activation_outdoor_temp,
-            )
-            LOGGER.debug(
-                "HOI5 _cooling_deactivation_threshold: %s",
-                self._cooling_deactivation_threshold,
-            )
-            if (
-                not self._elga_cooling_active
-                and self._outdoor_temp > self._cooling_activation_outdoor_temp
-            ):
-                self._elga_cooling_active = True
-            if (
-                self._elga_cooling_active
-                and self._outdoor_temp < self._cooling_deactivation_threshold
-            ):
-                self._elga_cooling_active = False
-
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
         )
