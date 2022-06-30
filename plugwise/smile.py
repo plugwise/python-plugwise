@@ -495,6 +495,7 @@ class Smile(SmileComm, SmileData):
             if (
                 self.smile_name == "Anna"
                 and self.gw_devices[dev_id]["dev_class"] == "heater_central"
+                and self._cooling_present
             ):
                 self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = False
                 if self._elga_cooling_active:
