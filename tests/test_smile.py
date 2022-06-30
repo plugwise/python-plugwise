@@ -3369,7 +3369,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "None",
                 "last_used": "Thermostat schedule",
-                "mode": "heat_cool",
+                "mode": "heat",
                 "sensors": {
                     "temperature": 20.9,
                     "setpoint": 19.5,
