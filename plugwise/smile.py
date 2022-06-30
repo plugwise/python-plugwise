@@ -68,7 +68,7 @@ class SmileData(SmileHelper):
                 and self._cooling_present
             ):
                 self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = False
-                if self._elga_cooling_active or self._anna_cooling_active:
+                if self._elga_cooling_active or self._lortherm_cooling_active:
                     self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
 
         self.gw_data.update(
@@ -199,7 +199,7 @@ class SmileData(SmileHelper):
             device_data["mode"] = "heat"
             if self.elga_cooling_enabled:
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self.anna_cooling_enabled:
+            if self._adam_cooling_enabled or self.lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
@@ -496,7 +496,7 @@ class Smile(SmileComm, SmileData):
                 and self._cooling_present
             ):
                 self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = False
-                if self._elga_cooling_active or self._anna_cooling_active:
+                if self._elga_cooling_active or self._lortherm_cooling_active:
                     self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = True
 
         return [self.gw_data, self.gw_devices]

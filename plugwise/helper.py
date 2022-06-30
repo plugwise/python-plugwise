@@ -295,13 +295,11 @@ class SmileHelper:
         self._appliances: etree
         self._allowed_modes: list[str] = []
         self._adam_cooling_enabled = False
-        self._anna_cooling_active = False
         self._anna_cooling_present = False
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
         self._domain_objects: etree
-        self._elga_cooling_active = False
         self._heater_id: str | None = None
         self._home_location: str
         self._is_thermostat = False
@@ -323,14 +321,17 @@ class SmileHelper:
         # means cooling mode is available, next to heating mode.
         # 'elga_status_code' = 8 means cooling is active, 9 means idle.
         #
-        # 'anna_cooling_enabled' refers to the state of the Loria or
+        # 'lortherm_cooling_enabled' refers to the state of the Loria or
         # Thermastage heatpump connected to an Anna. For these,
         # 'cooling_state' = on means set to cooling mode, instead of to
         # heating mode.
         # 'modulation_level' = 100 means cooling is active, 0.0 means idle.
         ###################################################################
-        self.anna_cooling_enabled = False
+        self._elga_cooling_active = False
         self.elga_cooling_enabled = False
+        self._lortherm_cooling_active = False
+        self.lortherm_cooling_enabled = False
+
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -882,12 +883,12 @@ class SmileHelper:
                 # Loria/Thermastate:
                 elif "cooling_state" in data:
                     LOGGER.debug("HOI cooling_state: %s", data["cooling_state"])
-                    self.anna_cooling_enabled = data["cooling_state"]
+                    self.lortherm_cooling_enabled = data["cooling_state"]
                     LOGGER.debug("HOI modulation_level: %s", data["modulation_level"])
                     if data["modulation_level"] == 100:
-                        self._anna_cooling_active = True
+                        self._lortherm_cooling_active = True
                     if data["modulation_level"] == 0.0:
-                        self._anna_cooling_active = False
+                        self._lortherm_cooling_active = False
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
