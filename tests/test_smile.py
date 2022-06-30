@@ -2561,7 +2561,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_adam_heatpump_cooling(self):
-        """Test Adam with heatpump in coooling state."""
+        """Test Adam with heatpump in cooling mode and idle."""
         testdata = {
             "0ca13e8176204ca7bf6f09de59f81c83": {
                 "dev_class": "heater_central",
