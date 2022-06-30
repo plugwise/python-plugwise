@@ -3386,8 +3386,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        # Preset cooling_on is True
-        smile._anna_cooling_enabled_by_user = True
         await self.device_test(smile, testdata)
 
         await smile.close_connection()
