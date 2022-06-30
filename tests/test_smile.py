@@ -3206,54 +3206,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_anna_heatpump_cooling_to_off(self):
-        """
-        This test covers the situation that the operation-mode it switched back
-        from cooling to heating due to the outdoor temperature dropping below the
-        cooling_deactivation_threshold.
-        """
-        testdata = {
-            # Anna
-            "3cb70739631c4d17a86b8b12e8a5161b": {
-                "selected_schedule": "None",
-                "active_preset": "home",
-                "mode": "heat_cool",
-                "sensors": {
-                    "illuminance": 25.5,
-                    "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 6,
-                },
-            },
-            # Heater central
-            "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "binary_sensors": {
-                    "cooling_state": False,
-                    "dhw_state": False,
-                    "heating_state": False,
-                },
-                "sensors": {
-                    "outdoor_air_temperature": 3.0,
-                    "water_temperature": 24.7,
-                    "water_pressure": 1.61,
-                },
-            },
-            # Gateway
-            "015ae9ea3f964e668e490fa39da3870b": {
-                "sensors": {"outdoor_temperature": 22.0}
-            },
-        }
-
-        self.smile_setup = "anna_heatpump_cooling_to_off"
-        server, smile, client = await self.connect_wrapper()
-
-        # Preset _elga_cooling_active is True
-        smile._elga_cooling_active = True
-        await self.device_test(smile, testdata)
-        assert not smile._elga_cooling_active
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
         """
         Test a 2nd Anna with Elga setup in idle mode
