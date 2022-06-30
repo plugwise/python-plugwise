@@ -68,9 +68,7 @@ class SmileData(SmileHelper):
                 and self._cooling_present
             ):
                 self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = False
-                if self._elga_cooling_active:
-                    self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
-                if self._anna_cooling_active:
+                if self._elga_cooling_active or self._anna_cooling_active:
                     self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
 
         self.gw_data.update(
@@ -498,9 +496,7 @@ class Smile(SmileComm, SmileData):
                 and self._cooling_present
             ):
                 self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = False
-                if self._elga_cooling_active:
-                    self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = True
-                if self._anna_cooling_active:
+                if self._elga_cooling_active or self._anna_cooling_active:
                     self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = True
 
         return [self.gw_data, self.gw_devices]
