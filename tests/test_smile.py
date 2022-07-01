@@ -3197,7 +3197,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
         """
-        Test a 2nd Anna with Elga setup in idle mode
+        Test a 2nd Anna with Elga setup, cooling off, in idle mode
         (with missing outdoor temperature - solved).
         """
         testdata = {
@@ -3221,8 +3221,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 20.9,
                     "setpoint": 19.0,
-                    "setpoint_low": 19.0,
-                    "setpoint_high": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
