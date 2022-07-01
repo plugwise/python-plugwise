@@ -608,17 +608,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.set_max_boiler_temperature(new_temp)
         _LOGGER.info("  + worked as intended")
 
-    @staticmethod
-    async def tinker_send_cooling_on(smile):
-        """Send cooling_on state to test functionality."""
-        for state in [None, True]:
-            _LOGGER.info("- Testing cooling_on state: %s", state)
-            result = smile.send_cooling_on(state)
-            if result:
-                _LOGGER.info("  + worked as intended")
-            else:
-                _LOGGER.info("  + failed as intended")
-
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
@@ -3290,8 +3279,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        # Set cooling_on to True
-        await self.tinker_send_cooling_on(smile)
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
@@ -3427,8 +3414,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        # Set cooling_on to True
-        await self.tinker_send_cooling_on(smile)
         await self.device_test(smile, testdata)
         assert self.cooling_present
         assert not self.notifications
