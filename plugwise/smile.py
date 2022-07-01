@@ -263,14 +263,6 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def send_cooling_on(self, state: bool | None) -> bool:
-        "Collect the cooling_on state set by the user, Anna + Elga only."
-        if isinstance(state, bool):
-            self.elga_cooling_enabled = state
-            return True
-
-        return False
-
 
 class Smile(SmileComm, SmileData):
     """The Plugwise SmileConnect class."""
