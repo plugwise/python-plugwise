@@ -510,6 +510,19 @@ class Smile(SmileComm, SmileData):
                 if self._elga_cooling_active or self._lortherm_cooling_active:
                     self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = True
 
+            # For Adam + on/off cooling, modify heating_state and cooling_state
+            # based on provided info by Plugwise
+            if (
+                self.smile_name == "Adam"
+                and self.gw_devices[dev_id]["dev_class"] == "heater_central"
+                and self.gw_devices[dev_id]["model"] == "OnOff"
+                and self._cooling_present
+                and self._adam_cooling_enabled
+                and self.gw_devices[dev_id]["binary_sensors"]["heating_state"]
+            ):
+                self.gw_devices[dev_id]["binary_sensors"]["cooling_state"] = True
+                self.gw_devices[dev_id]["binary_sensors"]["heating_state"] = False
+
         return [self.gw_data, self.gw_devices]
 
     async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
