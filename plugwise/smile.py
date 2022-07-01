@@ -66,9 +66,10 @@ class SmileData(SmileHelper):
                 self.smile_name == "Anna"
                 and self.gw_devices[device_id]["dev_class"] == "heater_central"
                 and self._cooling_present
-                and (self._elga_cooling_active or self._lortherm_cooling_active)
             ):
-                self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
+                self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = False
+                if self._elga_cooling_active or self._lortherm_cooling_active:
+                    self.gw_devices[device_id]["binary_sensors"]["cooling_state"] = True
 
             # For Adam + on/off cooling, modify central_heating_state and cooling_state
             # based on provided info by Plugwise
