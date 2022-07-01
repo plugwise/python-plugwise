@@ -686,6 +686,7 @@ class SmileSensors(TypedDict, total=False):
     electricity_produced_peak_interval: int
     electricity_produced_peak_point: int
     electricity_produced_point: float
+    elga_status_code: int
     gas_consumed_cumulative: float
     gas_consumed_interval: float
     humidity: float
