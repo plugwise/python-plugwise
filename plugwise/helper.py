@@ -323,7 +323,7 @@ class SmileHelper:
         #
         # 'lortherm_cooling_enabled' refers to the state of the Loria or
         # Thermastage heatpump connected to an Anna. For these,
-        # 'cooling_state' = on means set to cooling mode, instead of to
+        # 'cooling_state' = on means set to cooling mode, next of to
         # heating mode.
         # 'modulation_level' = 100 means cooling is active, 0.0 means idle.
         ###################################################################

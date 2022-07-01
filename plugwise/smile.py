@@ -197,11 +197,11 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
-            if self.elga_cooling_enabled:
+            if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
                 if sched_setpoints is None:
                     device_data["setpoint_low"] = device_data["setpoint"]
                     device_data["setpoint_high"] = float(40)
-                    if self._elga_cooling_active:
+                    if self._elga_cooling_active or self._lortherm_cooling_active:
                         device_data["setpoint_low"] = float(0)
                         device_data["setpoint_high"] = device_data["setpoint"]
                 else:
@@ -216,9 +216,9 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self.elga_cooling_enabled:
+            if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self.lortherm_cooling_enabled:
+            if self._adam_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
