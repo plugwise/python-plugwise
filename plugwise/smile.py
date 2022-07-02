@@ -65,14 +65,27 @@ class SmileData(SmileHelper):
         # After all device data has been determined, loop again to update for cooling
         for _, device in self.gw_devices.items():
             # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-            if (
-                self.smile_name == "Anna"
-                and device["dev_class"] == "heater_central"
-                and self._cooling_present
-            ):
-                device["binary_sensors"]["cooling_state"] = False
-                if self._elga_cooling_active or self._lortherm_cooling_active:
-                    device["binary_sensors"]["cooling_state"] = True
+            if self.smile_name == "Anna":
+                if device["dev_class"] == "heater_central" and self._cooling_present:
+                    device["binary_sensors"]["cooling_state"] = False
+                    if self._elga_cooling_active or self._lortherm_cooling_active:
+                        device["binary_sensors"]["cooling_state"] = True
+
+                # Add setpoint_low and setpoint_high when cooling is enabled
+                if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
+                    if self._sched_setpoints is None:
+                        device["sensors"]["setpoint_low"] = device["sensors"][
+                            "setpoint"
+                        ]
+                        device["sensors"]["setpoint_high"] = float(40)
+                        if self._elga_cooling_active or self._lortherm_cooling_active:
+                            device["sensors"]["setpoint_low"] = float(0)
+                            device["sensors"]["setpoint_high"] = device["sensors"][
+                                "setpoint"
+                            ]
+                    else:
+                        device["sensors"]["setpoint_low"] = self._sched_setpoints[0]
+                        device["sensors"]["setpoint_high"] = self._sched_setpoints[1]
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
@@ -191,25 +204,18 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        avail_schedules, sel_schedule, sched_setpoints, last_active = self._schedules(
-            loc_id
-        )
+        (
+            avail_schedules,
+            sel_schedule,
+            self._sched_setpoints,
+            last_active,
+        ) = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["selected_schedule"] = sel_schedule
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
-            if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
-                if sched_setpoints is None:
-                    device_data["setpoint_low"] = device_data["setpoint"]
-                    device_data["setpoint_high"] = float(40)
-                    if self._elga_cooling_active or self._lortherm_cooling_active:
-                        device_data["setpoint_low"] = float(0)
-                        device_data["setpoint_high"] = device_data["setpoint"]
-                else:
-                    device_data["setpoint_low"] = sched_setpoints[0]
-                    device_data["setpoint_high"] = sched_setpoints[1]
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
@@ -506,14 +512,27 @@ class Smile(SmileComm, SmileData):
         # After all device data has been updated, loop again to update for cooling
         for _, device in self.gw_devices.items():
             # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-            if (
-                self.smile_name == "Anna"
-                and device["dev_class"] == "heater_central"
-                and self._cooling_present
-            ):
-                device["binary_sensors"]["cooling_state"] = False
-                if self._elga_cooling_active or self._lortherm_cooling_active:
-                    device["binary_sensors"]["cooling_state"] = True
+            if self.smile_name == "Anna":
+                if device["dev_class"] == "heater_central" and self._cooling_present:
+                    device["binary_sensors"]["cooling_state"] = False
+                    if self._elga_cooling_active or self._lortherm_cooling_active:
+                        device["binary_sensors"]["cooling_state"] = True
+
+                # Add setpoint_low and setpoint_high when cooling is enabled
+                if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
+                    if self._sched_setpoints is None:
+                        device["sensors"]["setpoint_low"] = device["sensors"][
+                            "setpoint"
+                        ]
+                        device["sensors"]["setpoint_high"] = float(40)
+                        if self._elga_cooling_active or self._lortherm_cooling_active:
+                            device["sensors"]["setpoint_low"] = float(0)
+                            device["sensors"]["setpoint_high"] = device["sensors"][
+                                "setpoint"
+                            ]
+                    else:
+                        device["sensors"]["setpoint_low"] = self._sched_setpoints[0]
+                        device["sensors"]["setpoint_high"] = self._sched_setpoints[1]
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
