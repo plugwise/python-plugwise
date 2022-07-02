@@ -30,6 +30,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
+    ZONE_THERMOSTATS,
     ApplianceData,
     DeviceData,
     GatewayData,
@@ -72,11 +73,7 @@ class SmileData(SmileHelper):
                         device["binary_sensors"]["cooling_state"] = True
 
                 # Add setpoint_low and setpoint_high when cooling is enabled
-                if device["dev_class"] not in [
-                    "thermostat",
-                    "zone_thermometer",
-                    "zone_thermostat",
-                ]:
+                if device["dev_class"] not in ZONE_THERMOSTATS:
                     continue
 
                 if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
@@ -526,11 +523,7 @@ class Smile(SmileComm, SmileData):
                         device["binary_sensors"]["cooling_state"] = True
 
                 # Add setpoint_low and setpoint_high when cooling is enabled
-                if device["dev_class"] not in [
-                    "thermostat",
-                    "zone_thermometer",
-                    "zone_thermostat",
-                ]:
+                if device["dev_class"] not in ZONE_THERMOSTATS:
                     continue
 
                 if self.elga_cooling_enabled or self.lortherm_cooling_enabled:

@@ -384,6 +384,11 @@ FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
 SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
 SPECIAL_FORMAT: Final[list[str]] = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]
+ZONE_THERMOSTATS: Final[list[str]] = [
+    "thermostat",
+    "zone_thermometer",
+    "zone_thermostat",
+]
 THERMOSTAT_CLASSES: Final[list[str]] = [
     "thermostat",
     "zone_thermometer",
