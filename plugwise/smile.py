@@ -72,6 +72,13 @@ class SmileData(SmileHelper):
                         device["binary_sensors"]["cooling_state"] = True
 
                 # Add setpoint_low and setpoint_high when cooling is enabled
+                if device["dev_class"] not in [
+                    "thermostat",
+                    "zone_thermometer",
+                    "zone_thermostat",
+                ]:
+                    continue
+
                 if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
                     if self._sched_setpoints is None:
                         device["sensors"]["setpoint_low"] = device["sensors"][
@@ -519,6 +526,13 @@ class Smile(SmileComm, SmileData):
                         device["binary_sensors"]["cooling_state"] = True
 
                 # Add setpoint_low and setpoint_high when cooling is enabled
+                if device["dev_class"] not in [
+                    "thermostat",
+                    "zone_thermometer",
+                    "zone_thermostat",
+                ]:
+                    continue
+
                 if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
                     if self._sched_setpoints is None:
                         device["sensors"]["setpoint_low"] = device["sensors"][
