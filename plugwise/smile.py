@@ -645,7 +645,7 @@ class Smile(SmileComm, SmileData):
         """Set the given Temperature on the relevant Thermostat."""
         if "setpoint" in temps:
             setpoint = temps["setpoint"]
-        elif self._elga_cooling_active:
+        elif self._elga_cooling_active or self._lortherm_cooling_active:
             setpoint = temps["setpoint_high"]
         else:
             setpoint = temps["setpoint_low"]
