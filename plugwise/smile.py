@@ -50,21 +50,9 @@ from .helper import SmileComm, SmileHelper, update_helper
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
-        Collect initial data for each device and add to self.gw_data and self.gw_devices.
-        """
-        for device_id, device in self._appl_data.items():
-            bs_dict: SmileBinarySensors = {}
-            s_dict: SmileSensors = {}
-            sw_dict: SmileSwitches = {}
-            data = self._get_device_data(device_id)
-            self.gw_devices[device_id] = self._update_device_with_dicts(
-                device_id, data, device, bs_dict, s_dict, sw_dict
-            )
-
-        # After all device data has been determined, loop again to update for cooling
-        for _, device in self.gw_devices.items():
+    def update_for_cooling(self, devices: dict[str, DeviceData]) -> None:
+        """Helper-function for adding/updating various cooling-related values)."""
+        for _, device in devices.items():
             # For Anna + cooling, modify cooling_state based on provided info by Plugwise
             if self.smile_name == "Anna":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
@@ -103,6 +91,22 @@ class SmileData(SmileHelper):
             ):
                 device["binary_sensors"]["cooling_state"] = True
                 device["binary_sensors"]["heating_state"] = False
+
+    def _all_device_data(self) -> None:
+        """Helper-function for get_all_devices().
+        Collect initial data for each device and add to self.gw_data and self.gw_devices.
+        """
+        for device_id, device in self._appl_data.items():
+            bs_dict: SmileBinarySensors = {}
+            s_dict: SmileSensors = {}
+            sw_dict: SmileSwitches = {}
+            data = self._get_device_data(device_id)
+            self.gw_devices[device_id] = self._update_device_with_dicts(
+                device_id, data, device, bs_dict, s_dict, sw_dict
+            )
+
+        # After all device data has been determined, add/update for cooling
+        self.update_for_cooling(self.gw_devices)
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -513,46 +517,8 @@ class Smile(SmileComm, SmileData):
                             notifs,
                         )
 
-        # After all device data has been updated, loop again to update for cooling
-        for _, device in self.gw_devices.items():
-            # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-            if self.smile_name == "Anna":
-                if device["dev_class"] == "heater_central" and self._cooling_present:
-                    device["binary_sensors"]["cooling_state"] = False
-                    if self._elga_cooling_active or self._lortherm_cooling_active:
-                        device["binary_sensors"]["cooling_state"] = True
-
-                # Add setpoint_low and setpoint_high when cooling is enabled
-                if device["dev_class"] not in ZONE_THERMOSTATS:
-                    continue
-
-                if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
-                    if self._sched_setpoints is None:
-                        device["sensors"]["setpoint_low"] = device["sensors"][
-                            "setpoint"
-                        ]
-                        device["sensors"]["setpoint_high"] = float(40)
-                        if self._elga_cooling_active or self._lortherm_cooling_active:
-                            device["sensors"]["setpoint_low"] = float(0)
-                            device["sensors"]["setpoint_high"] = device["sensors"][
-                                "setpoint"
-                            ]
-                    else:
-                        device["sensors"]["setpoint_low"] = self._sched_setpoints[0]
-                        device["sensors"]["setpoint_high"] = self._sched_setpoints[1]
-
-            # For Adam + on/off cooling, modify heating_state and cooling_state
-            # based on provided info by Plugwise
-            if (
-                self.smile_name == "Adam"
-                and device["dev_class"] == "heater_central"
-                and device["model"] == "OnOff"
-                and self._cooling_present
-                and self._adam_cooling_enabled
-                and device["binary_sensors"]["heating_state"]
-            ):
-                device["binary_sensors"]["cooling_state"] = True
-                device["binary_sensors"]["heating_state"] = False
+        # After all device data has been determined, add/update for cooling
+        self.update_for_cooling(self.gw_devices)
 
         return [self.gw_data, self.gw_devices]
 
