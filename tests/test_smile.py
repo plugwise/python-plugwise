@@ -3414,10 +3414,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert self.cooling_present
-        assert self.elga_cooling_enabled
-        assert self._elga_cooling_active
-
         assert not self.notifications
+
+        assert smile._anna_cooling_present
+        assert smile.elga_cooling_enabled
+        assert smile._elga_cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
