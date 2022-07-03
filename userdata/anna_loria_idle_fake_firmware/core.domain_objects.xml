@@ -176,8 +176,8 @@
 		<integral_coefficient_reduction_factor_during_preheating>7</integral_coefficient_reduction_factor_during_preheating>
 	</ame_regulation>
 	<module id='1d1f157265a74d2886af70eeac1a2da2'>
-		<vendor_name>Techneco</vendor_name>
-		<vendor_model></vendor_model>
+		<vendor_name>Atlantic</vendor_name>
+		<vendor_model>Loria</vendor_model>
 		<hardware_version></hardware_version>
 		<firmware_version></firmware_version>
 		<created_date>2019-08-29T20:18:23.942+02:00</created_date>
