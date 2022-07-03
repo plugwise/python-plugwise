@@ -138,7 +138,10 @@ class SmileData(SmileHelper):
             search = self._domain_objects
             self._anna_cooling_present = adam_cooling_present = False
             if search.find(locator_1) is not None:
-                self._anna_cooling_present = adam_cooling_present = True
+                if self.smile_name == "Anna":
+                    self._anna_cooling_present = True
+                else:
+                    adam_cooling_present = True
             # Alternative method for the Anna with Elga
             elif search.find(locator_2) is not None:
                 self._anna_cooling_present = True
