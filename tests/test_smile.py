@@ -3195,6 +3195,45 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_loria_idle_fake_firmware(self):
+        """Test an Anna with a fake specific Loria setup in idle mode."""
+        testdata = {
+            # Heater central
+            "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "binary_sensors": {
+                    "cooling_state": False,
+                    "dhw_state": False,
+                    "heating_state": False,
+                },
+                "sensors": {
+                    "modulation_level": 0,
+                },
+            },
+            # Gateway
+            "015ae9ea3f964e668e490fa39da3870b": {
+                "firmware": "4.10.10",
+            },
+        }
+
+        self.smile_setup = "anna_heatpump_cooling_fake_firmware"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.10.10"
+
+        await self.device_test(smile, testdata)
+        assert smile._anna_cooling_present
+        assert smile.anna_cooling_enabled
+        assert not smile._anna_cooling_active
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
         """
         Test a 2nd Anna with Elga setup, cooling off, in idle mode
