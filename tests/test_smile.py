@@ -3240,17 +3240,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Heater central
             "0ca13e8176204ca7bf6f09de59f81c83": {
                 "binary_sensors": {
-                    "cooling_state": False,
+                    "cooling_state": True,
                     "dhw_state": False,
                     "heating_state": False,
                 },
                 "sensors": {
                     "modulation_level": 0,
                 },
-            },
-            # Gateway
-            "015ae9ea3f964e668e490fa39da3870b": {
-                "firmware": "4.10.10",
             },
         }
 
@@ -3261,8 +3257,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert type = thermostat")
         assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
         assert smile._anna_cooling_present
