@@ -453,7 +453,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: NONE},
 }
 
 # Heater Central related measurements
@@ -483,6 +482,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "heating_state",
         ATTR_UNIT_OF_MEASUREMENT: NONE,
     },  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
+    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "return_water_temperature": {
         ATTR_NAME: "return_temperature",
