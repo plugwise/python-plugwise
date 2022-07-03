@@ -844,15 +844,9 @@ class SmileHelper:
         if self._smile_legacy and self.smile_type == "power":
             return data
 
+        measurements = DEVICE_MEASUREMENTS
         if d_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
-        else:
-            measurements = DEVICE_MEASUREMENTS
-        # if self._opentherm_device or self._on_off_device:
-        #    measurements = {
-        #        **DEVICE_MEASUREMENTS,
-        #        **HEATER_CENTRAL_MEASUREMENTS,
-        #    }
 
         if (
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
