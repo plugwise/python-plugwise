@@ -3215,7 +3215,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
         }
 
-        self.smile_setup = "anna_heatpump_cooling_fake_firmware"
+        self.smile_setup = "anna_loria_idle_fake_firmware"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
