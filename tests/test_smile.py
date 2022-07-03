@@ -3259,9 +3259,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert smile._anna_cooling_present
-        assert smile.anna_cooling_enabled
-        assert not smile._anna_cooling_active
+        assert smile._cooling_present
+        assert smile.adam_cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
