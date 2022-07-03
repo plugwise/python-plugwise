@@ -856,17 +856,13 @@ class SmileHelper:
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:
-            # Anna + Elga doesn't use intended_cental_heating_state to show the generic heating state
-            if self._anna_cooling_present and "heating_state" in data:
+            # Anna + Elga and Adam + OnOff heater/cooler don't use intended_cental_heating_state
+            # to show the generic heating state
+            if (self._anna_cooling_present and "heating_state" in data) or (
+                self.smile_name == "Adam" and self._on_off_device
+            ):
                 if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
-            # Adam + OnOff heater/cooler doesn't use intended_cental_heating_state to show the generic
-            # heating or cooling state
-            if self.smile_name == "Adam" and self._on_off_device:
-                if data.get("c_heating_state") and not data.get("heating_state"):
-                    data["heating_state"] = True
-                    if self._cooling_present:
-                        data["cooling_state"] = False
 
             data.pop("c_heating_state")
 
