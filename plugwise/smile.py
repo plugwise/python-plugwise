@@ -57,20 +57,20 @@ class SmileData(SmileHelper):
             if self.smile_name == "Anna":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
                     device["binary_sensors"]["cooling_state"] = False
-                    if self._elga_cooling_active or self._lortherm_cooling_active:
+                    if self._anna_cooling_active:
                         device["binary_sensors"]["cooling_state"] = True
 
                 # Add setpoint_low and setpoint_high when cooling is enabled
                 if device["dev_class"] not in ZONE_THERMOSTATS:
                     continue
 
-                if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
+                if self.anna_cooling_enabled:
                     if self._sched_setpoints is None:
                         device["sensors"]["setpoint_low"] = device["sensors"][
                             "setpoint"
                         ]
                         device["sensors"]["setpoint_high"] = float(40)
-                        if self._elga_cooling_active or self._lortherm_cooling_active:
+                        if self._anna_cooling_active:
                             device["sensors"]["setpoint_low"] = float(0)
                             device["sensors"]["setpoint_high"] = device["sensors"][
                                 "setpoint"
@@ -233,7 +233,7 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self.elga_cooling_enabled or self.lortherm_cooling_enabled:
+            if self.anna_cooling_enabled:
                 device_data["mode"] = "heat_cool"
             if self._adam_cooling_enabled:
                 device_data["mode"] = "cool"
@@ -645,7 +645,7 @@ class Smile(SmileComm, SmileData):
         """Set the given Temperature on the relevant Thermostat."""
         if "setpoint" in temps:
             setpoint = temps["setpoint"]
-        elif self._elga_cooling_active or self._lortherm_cooling_active:
+        elif self._anna_cooling_active:
             setpoint = temps["setpoint_high"]
         else:
             setpoint = temps["setpoint_low"]

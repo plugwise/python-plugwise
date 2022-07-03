@@ -944,8 +944,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert not smile._anna_cooling_present
-        assert not smile._lortherm_cooling_active
-        assert not smile.lortherm_cooling_enabled
+        assert not smile._anna_cooling_active
+        assert not smile.anna_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -3058,8 +3058,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert smile.elga_cooling_enabled
-        assert not smile._elga_cooling_active
+        assert smile.anna_cooling_enabled
+        assert not smile._anna_cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3133,8 +3133,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert smile.elga_cooling_enabled
-        assert smile._elga_cooling_active
+        assert smile.anna_cooling_enabled
+        assert smile._anna_cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3188,8 +3188,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile._anna_cooling_present
-        assert smile.lortherm_cooling_enabled
-        assert smile._lortherm_cooling_active
+        assert smile.anna_cooling_enabled
+        assert smile._anna_cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3417,8 +3417,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert smile.elga_cooling_enabled
-        assert smile._elga_cooling_active
+        assert smile.anna_cooling_enabled
+        assert smile._anna_cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
