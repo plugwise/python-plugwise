@@ -65,27 +65,23 @@ class SmileData(SmileHelper):
                     continue
 
                 if self.anna_cooling_enabled:
+                    sensors = device["sensors"]
                     if self._sched_setpoints is None:
-                        device["sensors"]["setpoint_low"] = device["sensors"][
-                            "setpoint"
-                        ]
-                        device["sensors"]["setpoint_high"] = float(40)
+                        sensors["setpoint_low"] = sensors["setpoint"]
+                        sensors["setpoint_high"] = float(40)
                         if self._anna_cooling_active:
-                            device["sensors"]["setpoint_low"] = float(0)
-                            device["sensors"]["setpoint_high"] = device["sensors"][
-                                "setpoint"
-                            ]
+                            sensors["setpoint_low"] = float(0)
+                            sensors["setpoint_high"] = sensors["setpoint"]
                     else:
-                        device["sensors"]["setpoint_low"] = self._sched_setpoints[0]
-                        device["sensors"]["setpoint_high"] = self._sched_setpoints[1]
+                        sensors["setpoint_low"] = self._sched_setpoints[0]
+                        sensors["setpoint_high"] = self._sched_setpoints[1]
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
             if (
                 self.smile_name == "Adam"
                 and device["dev_class"] == "heater_central"
-                and device["model"] == "OnOff"
-                and self._cooling_present
+                and self._on_off_device
                 and self._adam_cooling_enabled
                 and device["binary_sensors"]["heating_state"]
             ):
