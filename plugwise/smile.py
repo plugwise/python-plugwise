@@ -143,10 +143,9 @@ class SmileData(SmileHelper):
             elif search.find(locator_2) is not None:
                 self._anna_cooling_present = True
             # Alternative method for the Anna with Loria/Thermastage
-            elif search.find(locator_3).text == "Atlantic" and search.find(
-                locator_4
-            ).text in ["Loria", "173"]:
-                self._anna_cooling_present = True
+            elif search.find(locator_3).text == "Atlantic":
+                if search.find(locator_4).text in ["Loria", "173"]:
+                    self._anna_cooling_present = True
 
             self._cooling_present = self._anna_cooling_present or adam_cooling_present
 
