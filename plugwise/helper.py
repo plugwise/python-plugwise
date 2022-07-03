@@ -867,9 +867,6 @@ class SmileHelper:
                     data["heating_state"] = True
                     if self._cooling_present:
                         data["cooling_state"] = False
-                    if self._adam_cooling_enabled:
-                        data["cooling_state"] = True
-                        data["heating_state"] = False
 
             data.pop("c_heating_state")
 
