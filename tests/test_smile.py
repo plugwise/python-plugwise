@@ -1349,9 +1349,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "location": "07d618f0bb80412687f065b8698ce3e7",
                 "model": "Generic heater",
                 "name": "OpenTherm",
-                "lower_bound": 0.0,
-                "upper_bound": 30.0,
-                "resolution": 1.0,
                 "maximum_boiler_temperature": 80.0,
                 "binary_sensors": {
                     "dhw_state": False,
