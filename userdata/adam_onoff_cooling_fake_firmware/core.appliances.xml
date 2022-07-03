@@ -722,40 +722,6 @@
 			</offset_functionality>
 		</actuator_functionalities>
 	</appliance>
-	<appliance id='ef79b83266b041a58b0b2031fb0ff457'>
-		<name>OpenThermGateway</name>
-		<description>An OpenTherm Gateway</description>
-		<type>open_therm_gateway</type>
-		<created_date>2020-10-26T19:30:36.637+01:00</created_date>
-		<modified_date>2020-10-26T19:37:47.912+01:00</modified_date>
-		<deleted_date></deleted_date>
-		<groups/>
-		<logs>
-			<point_log id='257df2c4882f4963b5dc961b2f3ca955'>
-				<type>override_mode</type>
-				<unit></unit>
-				<updated_date>2021-04-07T08:30:15.980+02:00</updated_date>
-				<last_consecutive_log_date>2020-10-26T19:30:36.855+01:00</last_consecutive_log_date>
-				<interval/>
-				<override_mode id='d120581b860f4657bd4e4fa20f449b50'/>
-				<period start_date="2021-04-07T08:30:15.980+02:00" end_date="2021-04-07T08:30:15.980+02:00">
-					<measurement log_date="2021-04-07T08:30:15.980+02:00">on</measurement>
-				</period>
-			</point_log>
-			<point_log id='dc924b73dfa34ba0bab5dfd0a986e9b5'>
-				<type>open_therm_power_mode</type>
-				<unit></unit>
-				<updated_date>2021-04-07T08:30:16.294+02:00</updated_date>
-				<last_consecutive_log_date>2020-10-26T19:37:47.899+01:00</last_consecutive_log_date>
-				<interval/>
-				<power_mode id='7768e53bced24e8990bd40f5c7990762'/>
-				<period start_date="2021-04-07T08:30:16.294+02:00" end_date="2021-04-07T08:30:16.294+02:00">
-					<measurement log_date="2021-04-07T08:30:16.294+02:00">0</measurement>
-				</period>
-			</point_log>
-		</logs>
-		<actuator_functionalities/>
-	</appliance>
 	<appliance id='2e0fc4db2a6d4cbeb7cf786143543961'>
 		<name>Smart Plug KK</name>
 		<description>A smart plug that can be switched on/off and measure power usage.</description>
