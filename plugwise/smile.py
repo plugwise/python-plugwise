@@ -22,6 +22,8 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
+    MAX_SETPOINT,
+    MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
     RULES,
@@ -67,9 +69,9 @@ class SmileData(SmileHelper):
                 if self.anna_cooling_enabled:
                     sensors = device["sensors"]
                     sensors["setpoint_low"] = sensors["setpoint"]
-                    sensors["setpoint_high"] = float(40)
+                    sensors["setpoint_high"] = MAX_SETPOINT
                     if self._anna_cooling_active:
-                        sensors["setpoint_low"] = float(0)
+                        sensors["setpoint_low"] = MIN_SETPOINT
                         sensors["setpoint_high"] = sensors["setpoint"]
                     if self._sched_setpoints is not None:
                         sensors["setpoint_low"] = self._sched_setpoints[0]
