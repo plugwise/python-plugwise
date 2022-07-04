@@ -59,18 +59,18 @@ class SmileData(SmileHelper):
             if self.smile_name == "Anna":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
                     device["binary_sensors"]["cooling_state"] = False
-                    if self._anna_cooling_active:
+                    if self._elga_cooling_active:
                         device["binary_sensors"]["cooling_state"] = True
 
                 # Add setpoint_low and setpoint_high when cooling is enabled
                 if device["dev_class"] not in ZONE_THERMOSTATS:
                     continue
 
-                if self.anna_cooling_enabled:
+                if self.elga_cooling_enabled:
                     sensors = device["sensors"]
                     sensors["setpoint_low"] = sensors["setpoint"]
                     sensors["setpoint_high"] = MAX_SETPOINT
-                    if self._anna_cooling_active:
+                    if self._elga_cooling_active:
                         sensors["setpoint_low"] = MIN_SETPOINT
                         sensors["setpoint_high"] = sensors["setpoint"]
                     if self._sched_setpoints is not None:
@@ -231,9 +231,9 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self.anna_cooling_enabled:
+            if self.elga_cooling_enabled:
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled:
+            if self._adam_cooling_enabled or self.lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
@@ -643,7 +643,7 @@ class Smile(SmileComm, SmileData):
         """Set the given Temperature on the relevant Thermostat."""
         if "setpoint" in temps:
             setpoint = temps["setpoint"]
-        elif self._anna_cooling_active:
+        elif self._elga_cooling_active:
             setpoint = temps["setpoint_high"]
         else:
             setpoint = temps["setpoint_low"]

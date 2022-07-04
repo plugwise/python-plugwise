@@ -316,18 +316,22 @@ class SmileHelper:
         self._stretch_v3 = False
         self._thermo_locs: dict[str, ThermoLoc] = {}
 
-        #####################################################################
-        # 'anna_cooling_enabled' refers 1) to the state of the Elga heatpump
+        ###################################################################
+        # 'elga_cooling_enabled' refers to the state of the Elga heatpump
         # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
         # means cooling mode is available, next to heating mode.
         # 'elga_status_code' = 8 means cooling is active, 9 means idle.
-        # 2) it also refers to the state of the Loria or Thermastage heatpump
-        # connected to an Anna. For these, 'cooling_state' = on means set
-        # to cooling mode, next of to heating mode.
+        #
+        # 'lortherm_cooling_enabled' refers to the state of the Loria or
+        # Thermastage heatpump connected to an Anna. For these,
+        # 'cooling_state' = on means set to cooling mode, instead of to
+        # heating mode.
         # 'modulation_level' = 100 means cooling is active, 0.0 means idle.
-        #####################################################################
-        self._anna_cooling_active = False
-        self.anna_cooling_enabled = False
+        ###################################################################
+        self._elga_cooling_active = False
+        self.elga_cooling_enabled = False
+        self._lortherm_cooling_active = False
+        self.lortherm_cooling_enabled = False
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
@@ -875,16 +879,15 @@ class SmileHelper:
             if self._anna_cooling_present:
                 # Elga:
                 if "elga_status_code" in data:
-                    self.anna_cooling_enabled = data["elga_status_code"] in [8, 9]
-                    self._anna_cooling_active = data["elga_status_code"] == 8
+                    self.elga_cooling_enabled = data["elga_status_code"] in [8, 9]
+                    self._elga_cooling_active = data["elga_status_code"] == 8
                     data.pop("elga_status_code", None)
                 # Loria/Thermastate:
                 elif "cooling_state" in data:
-                    self.anna_cooling_enabled = data["cooling_state"]
+                    self.lortherm_cooling_enabled = data["cooling_state"]
+                    self._lortherm_cooling_active = False
                     if data["modulation_level"] == 100:
-                        self._anna_cooling_active = True
-                    if data["modulation_level"] == 0.0:
-                        self._anna_cooling_active = False
+                        self._lortherm_cooling_active = True
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
