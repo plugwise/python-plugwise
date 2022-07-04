@@ -51,7 +51,7 @@ class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
     def update_for_cooling(self, devices: dict[str, DeviceData]) -> None:
-        """Helper-function for adding/updating various cooling-related values)."""
+        """Helper-function for adding/updating various cooling-related values."""
         for _, device in devices.items():
             # For Anna + cooling, modify cooling_state based on provided info by Plugwise
             if self.smile_name == "Anna":
@@ -66,13 +66,12 @@ class SmileData(SmileHelper):
 
                 if self.anna_cooling_enabled:
                     sensors = device["sensors"]
-                    if self._sched_setpoints is None:
-                        sensors["setpoint_low"] = sensors["setpoint"]
-                        sensors["setpoint_high"] = float(40)
-                        if self._anna_cooling_active:
-                            sensors["setpoint_low"] = float(0)
-                            sensors["setpoint_high"] = sensors["setpoint"]
-                    else:
+                    sensors["setpoint_low"] = sensors["setpoint"]
+                    sensors["setpoint_high"] = float(40)
+                    if self._anna_cooling_active:
+                        sensors["setpoint_low"] = float(0)
+                        sensors["setpoint_high"] = sensors["setpoint"]
+                    if self._sched_setpoints is not None:
                         sensors["setpoint_low"] = self._sched_setpoints[0]
                         sensors["setpoint_high"] = self._sched_setpoints[1]
 
@@ -142,13 +141,12 @@ class SmileData(SmileHelper):
                     self._anna_cooling_present = True
                 else:
                     adam_cooling_present = True
-            # Alternative method for the Anna with Elga
-            elif search.find(locator_2) is not None:
+            # Alternative method for the Anna with Elga, or alternative method for the Anna with Loria/Thermastage
+            elif search.find(locator_2) is not None or (
+                search.find(locator_3) is not None
+                and search.find(locator_4) is not None
+            ):
                 self._anna_cooling_present = True
-            # Alternative method for the Anna with Loria/Thermastage
-            elif search.find(locator_3) is not None:
-                if search.find(locator_4) is not None:
-                    self._anna_cooling_present = True
 
             self._cooling_present = self._anna_cooling_present or adam_cooling_present
 
