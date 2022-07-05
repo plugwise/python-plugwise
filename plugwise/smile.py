@@ -59,7 +59,7 @@ class SmileData(SmileHelper):
             if self.smile_name == "Anna":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
                     device["binary_sensors"]["cooling_state"] = False
-                    if self._elga_cooling_active:
+                    if self._elga_cooling_active or self._lortherm_cooling_active:
                         device["binary_sensors"]["cooling_state"] = True
 
                 # Add setpoint_low and setpoint_high when cooling is enabled
