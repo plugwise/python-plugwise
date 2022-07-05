@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.20.1: Smile: fix/improve cooling support (Elga/Loria/Thermastage) based on input from Plugwise
+
 # v0.20.0: Adam: add support for the Aqara Plug
 
 # v0.19.1: Smile & Stretch: line up error handling with Plugwise-beta
