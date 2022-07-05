@@ -701,7 +701,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-09T12:44:36.599+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-09T14:10:15.513+02:00" end_date="2020-04-09T14:10:15.513+02:00">
-					<measurement log_date="2020-04-09T14:10:15.513+02:00">14</measurement>
+					<measurement log_date="2020-04-09T14:10:15.513+02:00">9</measurement>
 				</period>
 				<status_code id='3e8f2ecf95e34aa7a8ce4427bc57561e'/>
 			</point_log>

@@ -381,9 +381,16 @@ DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
+MAX_SETPOINT: Final = 40
+MIN_SETPOINT: Final = 0
 SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
 SPECIAL_FORMAT: Final[list[str]] = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]
+ZONE_THERMOSTATS: Final[list[str]] = [
+    "thermostat",
+    "zone_thermometer",
+    "zone_thermostat",
+]
 THERMOSTAT_CLASSES: Final[list[str]] = [
     "thermostat",
     "zone_thermometer",
@@ -448,7 +455,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: NONE},
 }
 
 # Heater Central related measurements
@@ -466,6 +472,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "dhw_state",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
+    "elga_status_code": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     "intended_boiler_temperature": {
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
     },  # Non-zero when heating, zero when dhw-heating
@@ -477,6 +484,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "heating_state",
         ATTR_UNIT_OF_MEASUREMENT: NONE,
     },  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
+    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
     "return_water_temperature": {
         ATTR_NAME: "return_temperature",
@@ -685,6 +693,7 @@ class SmileSensors(TypedDict, total=False):
     electricity_produced_peak_interval: int
     electricity_produced_peak_point: int
     electricity_produced_point: float
+    elga_status_code: int
     gas_consumed_cumulative: float
     gas_consumed_interval: float
     humidity: float

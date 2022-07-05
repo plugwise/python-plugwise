@@ -183,7 +183,7 @@
 				<interval/>
 				<thermostat id='52b5a053e83446e6a11fde60a6c9ed11'/>
 				<period start_date="2022-03-10T06:45:00.389+01:00" end_date="2022-03-10T06:45:00.389+01:00">
-					<measurement log_date="2022-03-10T06:45:00.389+01:00">19.50</measurement>
+					<measurement log_date="2022-03-10T06:45:00.389+01:00">19.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='cecd3059ab6d4ece9b419b7bf820b7f4'>

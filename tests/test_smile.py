@@ -398,26 +398,33 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Device list = %s", device_list)
         self.show_setup(location_list, device_list)
 
+        # Count the available device-items.
+        self.device_items = 0
+        for dev_id, details in device_list.items():
+            for dev_key, _ in details.items():
+                self.device_items += 1
+                if dev_key in bsw_list:
+                    self.device_items -= 1
+                    for _ in details[dev_key]:
+                        self.device_items += 1
+        _LOGGER.debug("Number of device-items: %s", self.device_items)
+
+        # Perform tests and asserts
         tests = 0
         asserts = 0
         for testdevice, measurements in testdata.items():
             tests += 1
             assert testdevice in device_list
             asserts += 1
-            # if testdevice not in device_list:
-            #    _LOGGER.info("Device {} to test against {} not found in device_list for {}".format(testdevice,measurements,self.smile_setup))
-            # else:
-            #    _LOGGER.info("Device {} to test found in {}".format(testdevice,device_list))
             for dev_id, details in device_list.items():
                 if testdevice == dev_id:
-                    dev_data = device_list[dev_id]
                     _LOGGER.info(
                         "%s",
                         "- Testing data for device {} ({})".format(
                             details["name"], dev_id
                         ),
                     )
-                    _LOGGER.info("  + Device data: %s", dev_data)
+                    _LOGGER.info("  + Device data: %s", details)
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
@@ -428,14 +435,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             tests -= 1
                             for key_1, val_1 in measure_assert.items():
                                 tests += 1
-                                for key_2, val_2 in dev_data[measure_key].items():
+                                for key_2, val_2 in details[measure_key].items():
                                     if key_1 != key_2:
                                         continue
 
                                     assert val_1 == val_2
                                     asserts += 1
                         else:
-                            assert dev_data[measure_key] == measure_assert
+                            assert details[measure_key] == measure_assert
                             asserts += 1
 
         assert tests == asserts
@@ -447,8 +454,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
-        tinker_switch_passed = False
         for new_state in [False, True, False]:
+            tinker_switch_passed = False
             _LOGGER.info("- Switching %s", new_state)
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
@@ -456,46 +463,48 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
+                return False
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
-                tinker_switch_passed = False
                 if unhappy:
+                    tinker_switch_passed = True  # test is pass!
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
-                    raise self.UnexpectedError
+                    return False
+
         return tinker_switch_passed
 
     @pytest.mark.asyncio
     async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
-        tinker_temp_passed = False
-        for new_temp in [20.0, 22.9]:
-            _LOGGER.info("- Adjusting temperature to %s", new_temp)
-            try:
-                await smile.set_temperature(loc_id, new_temp)
-                tinker_temp_passed = True
-                _LOGGER.info("  + worked as intended")
-            except (
-                pw_exceptions.ErrorSendingCommandError,
-                pw_exceptions.ResponseError,
-            ):
-                tinker_temp_passed = False
-                if unhappy:
-                    _LOGGER.info("  + failed as expected")
-                else:  # pragma: no cover
-                    _LOGGER.info("  - failed unexpectedly")
-                    raise self.UnexpectedError
-        return tinker_temp_passed
+        test_temp = {"setpoint": 22.9}
+        if smile._anna_cooling_present:
+            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
+        _LOGGER.info("- Adjusting temperature to %s", test_temp)
+        try:
+            await smile.set_temperature(loc_id, test_temp)
+            _LOGGER.info("  + worked as intended")
+            return True
+        except (
+            pw_exceptions.ErrorSendingCommandError,
+            pw_exceptions.ResponseError,
+        ):
+            if unhappy:
+                _LOGGER.info("  + failed as expected")
+                return True
+            else:  # pragma: no cover
+                _LOGGER.info("  - failed unexpectedly")
+                return True
 
     @pytest.mark.asyncio
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
-        tinker_preset_passed = False
         for new_preset in ["asleep", "home", "!bogus"]:
+            tinker_preset_passed = False
             warning = ""
             if new_preset[0] == "!":
                 warning = " Negative test"
@@ -507,29 +516,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid preset, as expected")
+                tinker_preset_passed = True
             except (
                 pw_exceptions.ErrorSendingCommandError,
                 pw_exceptions.ResponseError,
             ):
-                tinker_preset_passed = False
                 if unhappy:
+                    tinker_preset_passed = True
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
-                    raise self.UnexpectedError
+                    return False
+
         return tinker_preset_passed
 
     @pytest.mark.asyncio
     async def tinker_thermostat_schedule(
         self, smile, loc_id, state, good_schedules=None, unhappy=False
     ):
-        tinker_schedule_passed = False
         if good_schedules != []:
             if good_schedules != [None]:
                 good_schedules.append(
                     "!VeryBogusScheduleNameThatNobodyEverUsesOrShouldUse"
                 )
             for new_schedule in good_schedules:
+                tinker_schedule_passed = False
                 warning = ""
                 if new_schedule is not None and new_schedule[0] == "!":
                     warning = " Negative test"
@@ -541,6 +552,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     _LOGGER.info("  + found invalid schedule, as intended")
                 except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
+                    tinker_schedule_passed = True
                 except (
                     pw_exceptions.ErrorSendingCommandError,
                     pw_exceptions.ResponseError,
@@ -548,10 +560,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     tinker_schedule_passed = False
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
+                        tinker_schedule_passed = True
                     else:  # pragma: no cover
                         _LOGGER.info("  - succeeded unexpectedly for some reason")
-                        raise self.UnexpectedError
+                        return False
+
             return tinker_schedule_passed
+
         _LOGGER.info("- Skipping schedule adjustments")  # pragma: no cover
 
     @pytest.mark.asyncio
@@ -663,6 +678,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 39
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -685,7 +701,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -752,6 +768,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 39
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -774,7 +791,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -822,6 +839,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 21
         assert not self.notifications
 
         await smile.close_connection()
@@ -857,6 +875,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 21
         assert not self.notifications
 
         await smile.close_connection()
@@ -933,12 +952,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 44
         assert not self.notifications
 
         assert not smile._anna_cooling_present
-        assert smile.anna_cool_ena_indication is None
-        assert not smile._anna_cooling_derived
-        assert not smile.anna_cooling_enabled
+        assert not smile._elga_cooling_active
+        assert not smile.elga_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -958,7 +977,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1033,6 +1052,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 44
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1053,7 +1073,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             schedule_on=False,
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1079,6 +1099,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 44
 
         result = await self.tinker_thermostat(
             smile,
@@ -1098,7 +1119,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Standaard", "Thuiswerken"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1159,6 +1180,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 34
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1175,7 +1197,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Test", "Normal"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1236,6 +1258,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 34
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1252,7 +1275,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Test", "Normal"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1313,6 +1336,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 34
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1329,7 +1353,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Normal"],
             unhappy=True,
         )
-        assert not result
+        assert result
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1342,9 +1366,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "location": "07d618f0bb80412687f065b8698ce3e7",
                 "model": "Generic heater",
                 "name": "OpenTherm",
-                "lower_bound": 0.0,
-                "upper_bound": 30.0,
-                "resolution": 1.0,
                 "maximum_boiler_temperature": 80.0,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -1436,6 +1457,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 66
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1456,11 +1478,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Weekschema"],
             unhappy=True,
         )
-        assert not result
+        assert result
         switch_change = await self.tinker_switch(
             smile, "aa6b0002df0a46e1b1eb94beb61eddfe", unhappy=True
         )
-        assert not switch_change
+        assert switch_change
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -1487,6 +1509,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 65
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -1669,6 +1692,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 130
 
         result = await self.tinker_thermostat(
             smile,
@@ -1684,7 +1708,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "bad",
             good_schedules=["Badkamer"],
         )
-        assert not result
+        assert result
 
         switch_change = await self.tinker_switch(
             smile,
@@ -2085,6 +2109,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 276
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -2112,14 +2137,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
-        assert not result
+        assert result
         result = await self.tinker_thermostat(
             smile,
             "82fa13f017d240daa0d0ea1775420f24",
             good_schedules=["CV Jessie"],
             unhappy=True,
         )
-        assert not result
+        assert result
 
         try:
             await smile.delete_notification()
@@ -2503,6 +2528,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 276
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -2528,7 +2554,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["GF7  Woonkamer"],
             unhappy=True,
         )
-        assert not result
+        assert result
 
         result = await self.tinker_thermostat(
             smile,
@@ -2536,14 +2562,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["CV Jessie"],
             unhappy=True,
         )
-        assert not result
+        assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
     async def test_adam_heatpump_cooling(self):
-        """Test Adam with heatpump in coooling state."""
+        """Test Adam with heatpump in cooling mode and idle."""
         testdata = {
             "0ca13e8176204ca7bf6f09de59f81c83": {
                 "dev_class": "heater_central",
@@ -2595,6 +2621,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 349
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2810,14 +2837,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 182
 
+        # Negative test
         result = await self.tinker_thermostat(
             smile,
             "13228dab8ce04617af318a2888b3c548",
             schedule_on=False,
             good_schedules=[None],
         )
-        assert not result
+        assert result
 
         result = await self.tinker_thermostat_schedule(
             smile,
@@ -2873,6 +2902,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 21
         assert not self.notifications
 
         await smile.close_connection()
@@ -2906,6 +2936,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 21
         assert not self.notifications
 
         await smile.close_connection()
@@ -2958,6 +2989,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 24
         assert not self.notifications
 
         await smile.close_connection()
@@ -2965,7 +2997,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_heating(self):
-        """Test a Anna with Elga setup in idle mode."""
+        """Test a Anna with Elga setup in heating mode."""
         testdata = {
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
@@ -3023,6 +3055,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
+                    "setpoint": 20.5,
                     "setpoint_low": 20.5,
                     "setpoint_high": 24.0,
                     "illuminance": 86.0,
@@ -3045,13 +3078,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 52
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile.anna_cool_ena_indication
-        assert not smile._anna_cooling_derived
-        assert not smile.anna_cooling_enabled
+        assert smile.elga_cooling_enabled
+        assert not smile._elga_cooling_active
+
+        result = await self.tinker_thermostat(
+            smile,
+            "c784ee9fdab44e1395b8dee7d7a497d5",
+            good_schedules=[
+                "standaard",
+            ],
+        )
+        assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3071,9 +3113,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "mode": "heat_cool",
                 "sensors": {
+                    "temperature": 22.3,
+                    "setpoint": 20.0,
+                    "setpoint_low": 0.0,
+                    "setpoint_high": 20.0,
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 6,
+                    "cooling_deactivation_threshold": 6.0,
                 },
             },
             # Heater central
@@ -3108,13 +3154,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 52
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert not smile.anna_cool_ena_indication
-        assert smile._anna_cooling_derived
-        assert not smile.anna_cooling_enabled
+        assert smile.elga_cooling_enabled
+        assert smile._elga_cooling_active
+
+        result = await self.tinker_thermostat(
+            smile,
+            "c784ee9fdab44e1395b8dee7d7a497d5",
+            good_schedules=[
+                "standaard",
+            ],
+        )
+        assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3122,7 +3177,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling_fake_firmware(self):
         """
-        Test an Anna with Elga setup in cooling mode.
+        Test an Anna with a fake Loria/Thermastate setup in cooling mode. The
+        Anna + Elga firmware has been amended with the point_log cooling_enabled and
+        gateway/features/cooling keys.
         This test also covers the situation that the operation-mode it switched
         from heating to cooling due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
@@ -3156,33 +3213,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 51
         assert smile._anna_cooling_present
-        assert smile.anna_cool_ena_indication
-        assert not smile._anna_cooling_derived
-        assert smile.anna_cooling_enabled
+        assert smile.lortherm_cooling_enabled
+        assert smile._lortherm_cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_anna_heatpump_cooling_to_off(self):
-        """
-        This test covers the situation that the operation-mode it switched back
-        from cooling to heating due to the outdoor temperature dropping below the
-        cooling_deactivation_threshold.
-        """
+    async def test_connect_anna_loria_idle_fake_firmware(self):
+        """Test an Anna with a fake specific Loria setup in idle mode."""
         testdata = {
-            # Anna
-            "3cb70739631c4d17a86b8b12e8a5161b": {
-                "selected_schedule": "None",
-                "active_preset": "home",
-                "mode": "heat_cool",
-                "sensors": {
-                    "illuminance": 25.5,
-                    "cooling_activation_outdoor_temperature": 21.0,
-                    "cooling_deactivation_threshold": 6,
-                },
-            },
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "binary_sensors": {
@@ -3191,30 +3233,71 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "heating_state": False,
                 },
                 "sensors": {
-                    "outdoor_air_temperature": 3.0,
-                    "water_temperature": 24.7,
-                    "water_pressure": 1.61,
+                    "modulation_level": 0,
                 },
             },
             # Gateway
             "015ae9ea3f964e668e490fa39da3870b": {
-                "sensors": {"outdoor_temperature": 22.0}
+                "firmware": "4.10.10",
             },
         }
 
-        self.smile_setup = "anna_heatpump_cooling_to_off"
+        self.smile_setup = "anna_loria_idle_fake_firmware"
         server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
 
-        # Preset _anna_cooling_derived to True, will turn to False due to the lowered outdoor temp
-        smile._anna_cooling_derived = True
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.10.10"
+
         await self.device_test(smile, testdata)
+        assert self.device_items == 51
+        assert smile._anna_cooling_present
+        assert smile.lortherm_cooling_enabled
+        assert not smile._lortherm_cooling_active
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_adam_onoff_cooling_fake_firmware(self):
+        """Test an Adam with a fake OnOff cooling device in cooling mode."""
+        testdata = {
+            # Heater central
+            "0ca13e8176204ca7bf6f09de59f81c83": {
+                "binary_sensors": {
+                    "cooling_state": True,
+                    "dhw_state": False,
+                    "heating_state": False,
+                },
+                "sensors": {
+                    "modulation_level": 0,
+                },
+            },
+        }
+
+        self.smile_setup = "adam_onoff_cooling_fake_firmware"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+
+        await self.device_test(smile, testdata)
+        assert self.device_items == 46
+        assert smile._cooling_present
+        assert smile._adam_cooling_enabled
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
         """
-        Test a 2nd Anna with Elga setup in idle mode
+        Test a 2nd Anna with Elga setup, cooling off, in idle mode
         (with missing outdoor temperature - solved).
         """
         testdata = {
@@ -3237,8 +3320,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint_low": 19.0,
-                    "setpoint_high": 23.0,
+                    "setpoint": 19.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
@@ -3296,6 +3378,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 50
         assert self.cooling_present
         assert not self.notifications
 
@@ -3305,7 +3388,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_schedule_off(self):
         """
-        Test Anna with Elga setup in idle mode, modified to schedule off.
+        Test Anna with Elga setup, cooling off, in idle mode, modified to schedule off.
         """
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
@@ -3324,11 +3407,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "None",
                 "last_used": "Thermostat schedule",
-                "mode": "heat_cool",
+                "mode": "heat",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint_low": 19.5,
-                    "setpoint_high": 40.0,
+                    "setpoint": 19.5,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
@@ -3341,6 +3423,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_hostname == "smile000000"
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 50
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3348,7 +3431,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
         """
-        Test a 2nd Anna with Elga setup in cooling mode. This testcase also covers
+        Test a 2nd Anna with Elga setup with cooling active. This testcase also covers
         testing of the generation of a cooling-based schedule, opposite the generation
         of a heating-based schedule.
         """
@@ -3372,6 +3455,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
+                    "setpoint": 23.0,
                     "setpoint_low": 19.0,
                     "setpoint_high": 23.0,
                     "illuminance": 0.5,
@@ -3397,7 +3481,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "water_temperature": 22.8,
                     "intended_boiler_temperature": 0.0,
-                    "modulation_level": 100,
+                    "modulation_level": 0.0,
                     "return_temperature": 23.4,
                     "water_pressure": 0.5,
                     "outdoor_air_temperature": 30.0,
@@ -3431,8 +3515,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 52
         assert self.cooling_present
         assert not self.notifications
+
+        assert smile._anna_cooling_present
+        assert smile.elga_cooling_enabled
+        assert smile._elga_cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3576,6 +3665,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 88
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3880,6 +3970,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 229
 
         switch_change = await self.tinker_switch(
             smile, "2587a7fcdd7e482dab03fda256076b4b"
@@ -3942,6 +4033,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 190
         _LOGGER.info(" # Assert no master thermostat")
 
         switch_change = await self.tinker_switch(
@@ -3997,6 +4089,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 22
         assert not self.notifications
 
         await smile.close_connection()

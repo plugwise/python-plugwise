@@ -3,6 +3,8 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
+from typing import Any
+
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -20,6 +22,8 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
+    MAX_SETPOINT,
+    MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
     RULES,
@@ -28,6 +32,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     THERMOSTAT_CLASSES,
+    ZONE_THERMOSTATS,
     ApplianceData,
     DeviceData,
     GatewayData,
@@ -47,6 +52,43 @@ from .helper import SmileComm, SmileHelper, update_helper
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
+    def update_for_cooling(self, devices: dict[str, DeviceData]) -> None:
+        """Helper-function for adding/updating various cooling-related values."""
+        for _, device in devices.items():
+            # For Anna + cooling, modify cooling_state based on provided info by Plugwise
+            if self.smile_name == "Anna":
+                if device["dev_class"] == "heater_central" and self._cooling_present:
+                    device["binary_sensors"]["cooling_state"] = False
+                    if self._elga_cooling_active or self._lortherm_cooling_active:
+                        device["binary_sensors"]["cooling_state"] = True
+
+                # Add setpoint_low and setpoint_high when cooling is enabled
+                if device["dev_class"] not in ZONE_THERMOSTATS:
+                    continue
+
+                if self.elga_cooling_enabled:
+                    sensors = device["sensors"]
+                    sensors["setpoint_low"] = sensors["setpoint"]
+                    sensors["setpoint_high"] = MAX_SETPOINT
+                    if self._elga_cooling_active:
+                        sensors["setpoint_low"] = MIN_SETPOINT
+                        sensors["setpoint_high"] = sensors["setpoint"]
+                    if self._sched_setpoints is not None:
+                        sensors["setpoint_low"] = self._sched_setpoints[0]
+                        sensors["setpoint_high"] = self._sched_setpoints[1]
+
+            # For Adam + on/off cooling, modify heating_state and cooling_state
+            # based on provided info by Plugwise
+            if (
+                self.smile_name == "Adam"
+                and device["dev_class"] == "heater_central"
+                and self._on_off_device
+                and self._adam_cooling_enabled
+                and device["binary_sensors"]["heating_state"]
+            ):
+                device["binary_sensors"]["cooling_state"] = True
+                device["binary_sensors"]["heating_state"] = False
+
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
@@ -59,6 +101,9 @@ class SmileData(SmileHelper):
             self.gw_devices[device_id] = self._update_device_with_dicts(
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
+
+        # After all device data has been determined, add/update for cooling
+        self.update_for_cooling(self.gw_devices)
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -87,17 +132,24 @@ class SmileData(SmileHelper):
             self._opentherm_device = open_therm_boiler is not None
 
             # Determine if the Adam or Anna has cooling capability
-            locator = "./gateway/features/cooling"
-            anna_cooling_present_1 = adam_cooling_present = (
-                self._domain_objects.find(locator) is not None
-            )
-            # Alternative method for the Anna with Elga
+            locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
-            anna_cooling_present_2 = self._domain_objects.find(locator_2) is not None
-            if self.smile_name == "Anna":
-                self._anna_cooling_present = (
-                    anna_cooling_present_1 or anna_cooling_present_2
-                )
+            locator_3 = "./module[vendor_name='Atlantic']"
+            locator_4 = "./module[vendor_model='Loria']"
+            search = self._domain_objects
+            self._anna_cooling_present = adam_cooling_present = False
+            if search.find(locator_1) is not None:
+                if self.smile_name == "Anna":
+                    self._anna_cooling_present = True
+                else:
+                    adam_cooling_present = True
+            # Alternative method for the Anna with Elga, or alternative method for the Anna with Loria/Thermastage
+            elif search.find(locator_2) is not None or (
+                search.find(locator_3) is not None
+                and search.find(locator_4) is not None
+            ):
+                self._anna_cooling_present = True
+
             self._cooling_present = self._anna_cooling_present or adam_cooling_present
 
         # Gather all the device and initial data
@@ -108,29 +160,6 @@ class SmileData(SmileHelper):
 
         # Collect data for each device via helper function
         self._all_device_data()
-
-        # Anna: indicate possible active heating/cooling operation-mode
-        # Actual ongoing heating/cooling is shown via heating_state/cooling_state
-        if self._anna_cooling_present and not self.anna_cool_ena_indication:
-            if (
-                not self._anna_cooling_derived
-                and self._outdoor_temp > self._cooling_activation_outdoor_temp
-            ):
-                self._anna_cooling_derived = True
-            if (
-                self._anna_cooling_derived
-                and self._outdoor_temp < self._cooling_deactivation_threshold
-            ):
-                self._anna_cooling_derived = False
-
-        # Don't show cooling_state when no cooling present
-        for _, device in self.gw_devices.items():
-            if (
-                not self._cooling_present
-                and "binary_sensors" in device
-                and "cooling_state" in device["binary_sensors"]
-            ):
-                device["binary_sensors"].pop("cooling_state")
 
     def _device_data_switching_group(
         self, details: ApplianceData, device_data: DeviceData
@@ -181,27 +210,18 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        avail_schedules, sel_schedule, sched_setpoints, last_active = self._schedules(
-            loc_id
-        )
+        (
+            avail_schedules,
+            sel_schedule,
+            self._sched_setpoints,
+            last_active,
+        ) = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["selected_schedule"] = sel_schedule
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
-            if self._anna_cooling_present:
-                if sched_setpoints is None:
-                    device_data["setpoint_low"] = device_data["setpoint"]
-                    device_data["setpoint_high"] = float(40)
-                    if self._anna_cooling_derived or self.anna_cooling_enabled:
-                        device_data["setpoint_low"] = float(0)
-                        device_data["setpoint_high"] = device_data["setpoint"]
-                else:
-                    device_data["setpoint_low"] = sched_setpoints[0]
-                    device_data["setpoint_high"] = sched_setpoints[1]
-
-                device_data.pop("setpoint")
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
@@ -211,9 +231,9 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self._anna_cooling_present:
+            if self.elga_cooling_enabled:
                 device_data["mode"] = "heat_cool"
-            if self.smile_name == "Adam" and self._adam_cooling_enabled:
+            if self._adam_cooling_enabled or self.lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
@@ -495,6 +515,9 @@ class Smile(SmileComm, SmileData):
                             notifs,
                         )
 
+        # After all device data has been determined, add/update for cooling
+        self.update_for_cooling(self.gw_devices)
+
         return [self.gw_data, self.gw_devices]
 
     async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
@@ -616,9 +639,16 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temperature: float) -> None:
+    async def set_temperature(self, loc_id: str, temps: dict[str, Any]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        temp = str(temperature)
+        if "setpoint" in temps:
+            setpoint = temps["setpoint"]
+        elif self._elga_cooling_active:
+            setpoint = temps["setpoint_high"]
+        else:
+            setpoint = temps["setpoint_low"]
+
+        temp = str(setpoint)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
