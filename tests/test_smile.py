@@ -3388,7 +3388,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_schedule_off(self):
         """
-        Test Anna with Elga setup in idle mode, modified to schedule off.
+        Test Anna with Elga setup, cooling off, in idle mode, modified to schedule off.
         """
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
@@ -3431,7 +3431,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
         """
-        Test a 2nd Anna with Elga setup in cooling mode. This testcase also covers
+        Test a 2nd Anna with Elga setup with cooling active. This testcase also covers
         testing of the generation of a cooling-based schedule, opposite the generation
         of a heating-based schedule.
         """
