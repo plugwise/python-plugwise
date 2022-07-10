@@ -641,6 +641,11 @@ class Smile(SmileComm, SmileData):
 
     async def set_temperature(self, loc_id: str, temps: dict[str, Any]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
+        if "hvac_mode" in temps:
+            raise PlugwiseError(
+                "Plugwise: setting hvac_mode with temperature not supported."
+            )  # pragma: no cover
+
         if "setpoint" in temps:
             setpoint = temps["setpoint"]
         elif self._elga_cooling_active:
