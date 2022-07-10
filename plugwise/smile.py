@@ -646,12 +646,12 @@ class Smile(SmileComm, SmileData):
                 "Plugwise: setting hvac_mode with temperature not supported."
             )  # pragma: no cover
 
-        if "setpoint" in temps:
-            setpoint = temps["setpoint"]
+        if "temperature" in temps:
+            setpoint = temps["temperature"]
         elif self._elga_cooling_active:
-            setpoint = temps["setpoint_high"]
+            setpoint = temps["target_temp_high"]
         else:
-            setpoint = temps["setpoint_low"]
+            setpoint = temps["target_temp_low"]
 
         temp = str(setpoint)
         uri = self._thermostat_uri(loc_id)
