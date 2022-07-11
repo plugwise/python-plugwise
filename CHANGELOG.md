@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.18.6: Smile: add lower/upper_bound and resolution for maximum_boiler_temperature
+
 # v0.18.5: Smile bugfix for #192
 
 # v0.18.4: Smile: schedule-related bug-fixes and clean-up
