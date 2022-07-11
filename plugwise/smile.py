@@ -646,6 +646,7 @@ class Smile(SmileComm, SmileData):
                 "Plugwise: setting hvac_mode with temperature not supported."
             )  # pragma: no cover
 
+        setpoint: float | None = None
         if "temperature" in data:
             setpoint = data["temperature"]
         if self.elga_cooling_enabled:
@@ -656,7 +657,9 @@ class Smile(SmileComm, SmileData):
                 if "target_temp_low" in data:
                     setpoint = data["target_temp_low"]
 
-        temp = str(setpoint)
+        if setpoint is None:
+            raise PlugwiseError("Plugwise: failed setting temperature: no valid input provided")  # pragma: no cover
+        temp = str(setpoint
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
@@ -669,14 +672,17 @@ class Smile(SmileComm, SmileData):
         """Set the max. Boiler Temperature on the Central heating boiler."""
         temp = str(temperature)
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
-        th_func = self._appliances.find(locator)
-        if th_func.find("type").text == "maximum_boiler_temperature":
+        if (th_func := self._appliances.find(locator)) is None:
+            raise("Plugwise: failed changing max_boiler_temperature - required xml-key not found")  # pragma: no cover
+        if (th_type := th_func.find("type")) is None:
+            raise("Plugwise: failed changing maximum_boiler_temperature - required type not found")  # pragma: no cover
+        if th_type.text == "maximum_boiler_temperature":
             thermostat_id = th_func.attrib["id"]
 
-        uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
-        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
+            uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
+            data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
 
-        await self._request(uri, method="put", data=data)
+            await self._request(uri, method="put", data=data)
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
