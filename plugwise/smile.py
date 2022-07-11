@@ -639,23 +639,23 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, data: dict[str, Any]) -> None:
+    async def set_temperature(self, loc_id: str, items: dict[str, Any]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        if "hvac_mode" in data:
+        if "hvac_mode" in items:
             raise PlugwiseError(
                 "Plugwise: setting hvac_mode with temperature not supported."
             )  # pragma: no cover
 
         setpoint: float | None = None
-        if "temperature" in data:
-            setpoint = data["temperature"]
+        if "temperature" in items:
+            setpoint = items["temperature"]
         if self.elga_cooling_enabled:
             if self._elga_cooling_active:
-                if "target_temp_high" in data:
-                    setpoint = data["target_temp_high"]
+                if "target_temp_high" in items:
+                    setpoint = items["target_temp_high"]
             else:
-                if "target_temp_low" in data:
-                    setpoint = data["target_temp_low"]
+                if "target_temp_low" in items:
+                    setpoint = items["target_temp_low"]
 
         if setpoint is None:
             raise PlugwiseError(
