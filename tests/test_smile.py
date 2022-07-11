@@ -654,6 +654,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
                 "maximum_boiler_temperature": 50.0,
+                "lower_bound": 50.0,
+                "upper_bound": 90.0,
+                "resolution": 1.0,
                 "binary_sensors": {"flame_state": True, "heating_state": True},
                 "sensors": {
                     "water_temperature": 23.6,
@@ -678,7 +681,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 39
+        assert self.device_items == 42
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -744,6 +747,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "maximum_boiler_temperature": 70.0,
+                "lower_bound": 50.0,
+                "upper_bound": 90.0,
+                "resolution": 1.0,
                 "binary_sensors": {"flame_state": False, "heating_state": False},
                 "sensors": {
                     "water_temperature": 54.0,
@@ -768,7 +774,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 39
+        assert self.device_items == 42
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -892,6 +898,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
                 "maximum_boiler_temperature": 70.0,
+                "lower_bound": 0.0,
+                "upper_bound": 100.0,
+                "resolution": 1.0,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -952,7 +961,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 44
+        assert self.device_items == 47
         assert not self.notifications
 
         assert not smile._anna_cooling_present
@@ -992,6 +1001,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
                 "maximum_boiler_temperature": 70.0,
+                "lower_bound": 0.0,
+                "upper_bound": 100.0,
+                "resolution": 1.0,
                 "binary_sensors": {
                     "dhw_state": True,
                     "heating_state": False,
@@ -1052,7 +1064,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 44
+        assert self.device_items == 47
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1099,7 +1111,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 44
+        assert self.device_items == 47
 
         result = await self.tinker_thermostat(
             smile,
@@ -1367,6 +1379,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "maximum_boiler_temperature": 80.0,
+                "lower_bound": 0.0,
+                "upper_bound": 100.0,
+                "resolution": 1.0,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -1457,7 +1472,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 66
+        assert self.device_items == 69
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1509,7 +1524,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 65
+        assert self.device_items == 68
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -1658,6 +1673,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater",
                 "name": "OpenTherm",
                 "maximum_boiler_temperature": 60.0,
+                "lower_bound": 25.0,
+                "upper_bound": 95.0,
+                "resolution": 0.01,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -1692,7 +1710,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 130
+        assert self.device_items == 133
 
         result = await self.tinker_thermostat(
             smile,
@@ -2578,6 +2596,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "OpenTherm",
                 "vendor": "Remeha B.V.",
                 "maximum_boiler_temperature": 35.0,
+                "lower_bound": 7.0,
+                "upper_bound": 50.0,
+                "resolution": 0.01,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -2621,7 +2642,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 349
+        assert self.device_items == 352
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2637,6 +2658,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "OpenTherm",
                 "vendor": "Remeha B.V.",
                 "maximum_boiler_temperature": 90.0,
+                "lower_bound": 20.0,
+                "upper_bound": 90.0,
+                "resolution": 0.01,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -2837,7 +2861,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 182
+        assert self.device_items == 185
 
         # Negative test
         result = await self.tinker_thermostat(
@@ -3078,7 +3102,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 52
+        assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
 
@@ -3154,7 +3178,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 52
+        assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
 
@@ -3213,7 +3237,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 51
+        assert self.device_items == 54
         assert smile._anna_cooling_present
         assert smile.lortherm_cooling_enabled
         assert smile._lortherm_cooling_active
@@ -3253,7 +3277,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 51
+        assert self.device_items == 54
         assert smile._anna_cooling_present
         assert smile.lortherm_cooling_enabled
         assert not smile._lortherm_cooling_active
@@ -3378,7 +3402,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 50
+        assert self.device_items == 53
         assert self.cooling_present
         assert not self.notifications
 
@@ -3423,7 +3447,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_hostname == "smile000000"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 50
+        assert self.device_items == 53
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3515,7 +3539,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 52
+        assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
 
