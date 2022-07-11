@@ -764,16 +764,17 @@ class SmileHelper:
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
 
             # Thermostat actuator measurements
-            t_locator = f'.//actuator_functionalities/thermostat_functionality[type="thermostat"]/{measurement}'
-            if (t_function := appliance.find(t_locator)) is not None:
-                if new_name := attrs.get(ATTR_NAME):
-                    measurement = new_name
+            for item in ["thermostat", "maximum_boiler_temperature"]:
+                t_locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{measurement}'
+                if (t_function := appliance.find(t_locator)) is not None:
+                    if new_name := attrs.get(ATTR_NAME):
+                        measurement = new_name
 
-                # Avoid double processing
-                if measurement == "setpoint":
-                    continue
+                    # Avoid double processing
+                    if measurement == "setpoint":
+                        continue
 
-                data[measurement] = format_measure(t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT])  # type: ignore [literal-required]
+                    data[measurement] = format_measure(t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT])  # type: ignore [literal-required]
 
         return data
 
