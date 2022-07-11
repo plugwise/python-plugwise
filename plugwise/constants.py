@@ -503,6 +503,9 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "outdoor_air_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
+    "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
 }
 
 # Known types of Smiles and Stretches
