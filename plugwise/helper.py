@@ -826,7 +826,7 @@ class SmileHelper:
 
             # Thermostat actuator measurements
             for item in ["thermostat", "maximum_boiler_temperature"]:
-                t_locator = f".//actuator_functionalities/thermostat_functionality[type={item}]/{measurement}"
+                t_locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{measurement}'
                 if (t_function := appliance.find(t_locator)) is not None:
                     if new_name := attrs.get(ATTR_NAME):
                         measurement = new_name
