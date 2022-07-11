@@ -658,8 +658,10 @@ class Smile(SmileComm, SmileData):
                     setpoint = data["target_temp_low"]
 
         if setpoint is None:
-            raise PlugwiseError("Plugwise: failed setting temperature: no valid input provided")  # pragma: no cover
-        temp = str(setpoint
+            raise PlugwiseError(
+                "Plugwise: failed setting temperature: no valid input provided"
+            )  # pragma: no cover
+        temp = str(setpoint)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
@@ -673,9 +675,13 @@ class Smile(SmileComm, SmileData):
         temp = str(temperature)
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
         if (th_func := self._appliances.find(locator)) is None:
-            raise("Plugwise: failed changing max_boiler_temperature - required xml-key not found")  # pragma: no cover
+            raise PlugwiseError(
+                "Plugwise: failed changing max_boiler_temperature - required xml-key not found"
+            )  # pragma: no cover
         if (th_type := th_func.find("type")) is None:
-            raise("Plugwise: failed changing maximum_boiler_temperature - required type not found")  # pragma: no cover
+            raise PlugwiseError(
+                "Plugwise: failed changing maximum_boiler_temperature - required type not found"
+            )  # pragma: no cover
         if th_type.text == "maximum_boiler_temperature":
             thermostat_id = th_func.attrib["id"]
 
