@@ -36,6 +36,7 @@ from .constants import (
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     SWITCHES,
+    TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     ApplianceData,
     DeviceData,
@@ -91,6 +92,22 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
         if model != "Unknown":
             return model
     return name
+
+
+def _get_actuator_functionalities(xml: etree) -> DeviceData:
+    """Helper-function for _get_appliance_data()."""
+    data: DeviceData = {}
+    for item in ["thermostat", "maximum_boiler_temperature"]:
+        temp_dict: dict[str, str] = {}
+        for key in ["setpoint", "lower_bound", "upper_bound", "resolution"]:
+            locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
+            if (function := xml.find(locator)) is not None:
+                temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})
+
+        if temp_dict:
+            data[item] = temp_dict
+
+    return data
 
 
 def schedules_temps(
@@ -824,19 +841,6 @@ class SmileHelper:
                 name = f"{measurement}_interval"
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
 
-            # Thermostat actuator measurements
-            for item in ["thermostat", "maximum_boiler_temperature"]:
-                t_locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{measurement}'
-                if (t_function := appliance.find(t_locator)) is not None:
-                    if new_name := attrs.get(ATTR_NAME):
-                        measurement = new_name
-
-                    # Avoid double processing
-                    if measurement == "setpoint":
-                        continue
-
-                    data[measurement] = format_measure(t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT])  # type: ignore [literal-required]
-
         return data
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
@@ -857,6 +861,7 @@ class SmileHelper:
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
+            data.update(_get_actuator_functionalities(appliance))
             data.update(self._get_lock_state(appliance))
 
         # Remove c_heating_state from the output
