@@ -42,7 +42,6 @@ setup(
         "defusedxml",
         "munch",
         "pyserial",
-        "pytz",
         "python-dateutil",
         "semver",
     ],
