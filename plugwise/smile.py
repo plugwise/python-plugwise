@@ -677,7 +677,7 @@ class Smile(SmileComm, SmileData):
         if th_func_list := self._appliances.findall(locator):
             for th_func in th_func_list:
                 if th_func.find("type").text != "maximum_boiler_temperature":
-                    continue
+                    continue  # pragma: no cover
 
                 thermostat_id = th_func.attrib["id"]
                 uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
