@@ -425,16 +425,6 @@
 				<type>domestic_hot_water_comfort_mode</type>
 				<state>off</state>
 			</toggle_functionality>
-			<thermostat_functionality id='543d7de46dc44fd49fb45f63ad3d6696'>
-				<updated_date>2021-01-15T15:05:55.668+01:00</updated_date>
-				<type>maximum_boiler_temperature</type>
-				<setpoint>90</setpoint>
-				<lower_bound>20</lower_bound>
-				<upper_bound>90</upper_bound>
-				<resolution>0.01</resolution>
-				<regulations/>
-				<thermostat id='522f5746986f4f4b86307e82278f5d15'/>
-			</thermostat_functionality>
 			<thermostat_functionality id='7fd75eb3275d4502b97b81780cff5b31'>
 				<updated_date>2021-01-15T15:05:43.778+01:00</updated_date>
 				<type>domestic_hot_water_setpoint</type>
@@ -444,6 +434,16 @@
 				<resolution>0.01</resolution>
 				<regulations/>
 				<thermostat id='029dce4abaeb499d9f254ac38b4dc72f'/>
+			</thermostat_functionality>
+			<thermostat_functionality id='543d7de46dc44fd49fb45f63ad3d6696'>
+				<updated_date>2021-01-15T15:05:55.668+01:00</updated_date>
+				<type>maximum_boiler_temperature</type>
+				<setpoint>90</setpoint>
+				<lower_bound>20</lower_bound>
+				<upper_bound>90</upper_bound>
+				<resolution>0.01</resolution>
+				<regulations/>
+				<thermostat id='522f5746986f4f4b86307e82278f5d15'/>
 			</thermostat_functionality>
 		</actuator_functionalities>
 	</appliance>
