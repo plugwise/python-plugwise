@@ -419,12 +419,6 @@
 			</point_log>
 		</logs>
 		<actuator_functionalities>
-			<toggle_functionality id='4c95a2a0ae4e41da8333bd60b48f1af2'>
-				<domestic_hot_water_toggle id='d90cc53830864417b94b2bd08064c77a'/>
-				<updated_date>2021-06-04T15:37:30.430+02:00</updated_date>
-				<type>domestic_hot_water_comfort_mode</type>
-				<state>off</state>
-			</toggle_functionality>
 			<thermostat_functionality id='7fd75eb3275d4502b97b81780cff5b31'>
 				<updated_date>2021-01-15T15:05:43.778+01:00</updated_date>
 				<type>domestic_hot_water_setpoint</type>
@@ -435,6 +429,12 @@
 				<regulations/>
 				<thermostat id='029dce4abaeb499d9f254ac38b4dc72f'/>
 			</thermostat_functionality>
+			<toggle_functionality id='4c95a2a0ae4e41da8333bd60b48f1af2'>
+				<domestic_hot_water_toggle id='d90cc53830864417b94b2bd08064c77a'/>
+				<updated_date>2021-06-04T15:37:30.430+02:00</updated_date>
+				<type>domestic_hot_water_comfort_mode</type>
+				<state>off</state>
+			</toggle_functionality>
 			<thermostat_functionality id='543d7de46dc44fd49fb45f63ad3d6696'>
 				<updated_date>2021-01-15T15:05:55.668+01:00</updated_date>
 				<type>maximum_boiler_temperature</type>
