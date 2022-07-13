@@ -989,7 +989,7 @@ class SmileHelper:
         """
         switch_groups: dict[str, ApplianceData] = {}
         # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile_name == "Anna":
+        if self.smile_type == "power" or self.smile_name == "Smile":
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
