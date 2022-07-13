@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.18.7: Smile Anna: change Anna-gateway name to Smile
+- Related to https://developers.home-assistant.io/blog/2022/07/10/entity_naming/ and changes in the Core Plugwise(-beta) code.
+
 # v0.18.6: Smile: Maximum_boiler_temperature related improvements
 - Improve set_max_boiler_temperature() function
 - Add lower/upper_bound and resolution for maximum_boiler_temperature
