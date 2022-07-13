@@ -525,8 +525,8 @@ class SmileHelper:
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
                     {
-                        "model": "Anna",
-                        "name": "Anna",
+                        "model": "Smile",
+                        "name": "Smile",
                         "vendor": "Plugwise B.V.",
                     }
                 )
