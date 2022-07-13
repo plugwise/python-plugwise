@@ -520,15 +520,15 @@ SMILES: Final[dict[str, dict[str, str]]] = {
     },
     "smile_thermo_v4": {
         "type": "thermostat",
-        "friendly_name": "Anna",
+        "friendly_name": "Smile",
     },
     "smile_thermo_v3": {
         "type": "thermostat",
-        "friendly_name": "Anna",
+        "friendly_name": "Smile",
     },
     "smile_thermo_v1": {
         "type": "thermostat",
-        "friendly_name": "Anna",
+        "friendly_name": "Smile",
         "legacy": "true",
     },
     "smile_v4": {
