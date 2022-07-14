@@ -3113,7 +3113,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 20.5,
+                    "setpoint_low": 21.0,
+                    "setpoint_high": 24.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
