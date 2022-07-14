@@ -69,19 +69,20 @@ class SmileData(SmileHelper):
                 if self.elga_cooling_enabled:
                     # Replace setpoint with setpoint_high/_low
                     thermostat = device["thermostat"]
+                    max_setpoint = MAX_SETPOINT
+                    min_setpoint = MIN_SETPOINT
+                    if self._sched_setpoints is not None:
+                        max_setpoint = self._sched_setpoints[1]
+                        min_setpoint = self._sched_setpoints[0]
+
                     temp_dict = {
                         "setpoint_low": thermostat["setpoint"],
-                        "setpoint_high": MAX_SETPOINT,
+                        "setpoint_high": max_setpoint,
                     }
                     if self._elga_cooling_active:
                         temp_dict = {
-                            "setpoint_low": MIN_SETPOINT,
+                            "setpoint_low": min_setpoint,
                             "setpoint_high": thermostat["setpoint"],
-                        }
-                    if self._sched_setpoints is not None:
-                        temp_dict = {
-                            "setpoint_low": self._sched_setpoints[0],
-                            "setpoint_high": self._sched_setpoints[1],
                         }
                     thermostat.pop("setpoint")
                     temp_dict.update(thermostat)
