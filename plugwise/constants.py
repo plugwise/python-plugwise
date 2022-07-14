@@ -363,6 +363,12 @@ FEATURE_RSSI_OUT: Final[dict[str, str]] = {
 
 ### Smile constants ###
 
+ACTUATOR_CLASSES: Final[list[str]] = [
+    "heater_central",
+    "thermostat",
+    "zone_thermometer",
+    "zone_thermostat",
+]
 ATTR_ENABLED: Final = "enabled_default"
 ATTR_ID: Final = "id"
 ATTR_ICON: Final = "icon"
