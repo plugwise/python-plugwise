@@ -369,6 +369,11 @@ ACTUATOR_CLASSES: Final[list[str]] = [
     "zone_thermometer",
     "zone_thermostat",
 ]
+ACTIVE_ACTUATORS: Final[list[str]] = [
+    "domestic_hot_water_setpoint",
+    "maximum_boiler_temperature",
+    "thermostat",
+]
 ATTR_ENABLED: Final = "enabled_default"
 ATTR_ID: Final = "id"
 ATTR_ICON: Final = "icon"
