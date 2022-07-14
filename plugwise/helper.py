@@ -28,6 +28,7 @@ from .constants import (
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     HOME_MEASUREMENTS,
+    LIMITS,
     LOCATIONS,
     LOGGER,
     NONE,
@@ -99,7 +100,7 @@ def _get_actuator_functionalities(xml: etree) -> DeviceData:
     data: DeviceData = {}
     for item in ["thermostat", "maximum_boiler_temperature"]:
         temp_dict: dict[str, str] = {}
-        for key in ["setpoint", "lower_bound", "upper_bound", "resolution"]:
+        for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
             if (function := xml.find(locator)) is not None:
                 temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})

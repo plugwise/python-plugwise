@@ -381,6 +381,7 @@ DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
+LIMITS: Final[list[str]] = ["setpoint", "lower_bound", "upper_bound", "resolution"]
 MAX_SETPOINT: Final = 40
 MIN_SETPOINT: Final = 0
 SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
