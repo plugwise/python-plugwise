@@ -648,7 +648,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
                 "mode": "auto",
-                "sensors": {"temperature": 20.4, "setpoint": 20.5, "illuminance": 151},
+                "sensors": {"temperature": 20.4, "illuminance": 151},
             },
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
                 "dev_class": "heater_central",
