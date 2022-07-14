@@ -366,6 +366,7 @@ FEATURE_RSSI_OUT: Final[dict[str, str]] = {
 ACTUATOR_CLASSES: Final[list[str]] = [
     "heater_central",
     "thermostat",
+    "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
 ]
