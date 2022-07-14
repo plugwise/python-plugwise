@@ -403,7 +403,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for dev_id, details in device_list.items():
             for dev_key, _ in details.items():
                 self.device_items += 1
-                if dev_key in bsw_list or dev_key in pw_constants.ACTUATOR_CLASSES:
+                if dev_key in bsw_list or dev_key in pw_constants.ACTIVE_ACTUATORS:
                     self.device_items -= 1
                     for _ in details[dev_key]:
                         self.device_items += 1
