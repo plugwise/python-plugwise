@@ -440,8 +440,6 @@ HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     # HA Core thermostat current_temperature
     "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    # HA Core thermostat setpoint
-    "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     # Specific for an Anna
     "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
     # Specific for an Anna with heatpump extension installed
