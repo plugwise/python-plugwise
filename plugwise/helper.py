@@ -17,6 +17,7 @@ from munch import Munch
 from semver import VersionInfo
 
 from .constants import (
+    ACTUATOR_CLASSES,
     APPLIANCES,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -866,8 +867,10 @@ class SmileHelper:
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
-            data.update(_get_actuator_functionalities(appliance))
             data.update(self._get_lock_state(appliance))
+            if (appl_type := appliance.find("type")) is not None:
+                if appl_type.text in ACTUATOR_CLASSES:
+                    data.update(_get_actuator_functionalities(appliance))
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:
