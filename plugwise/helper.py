@@ -108,7 +108,8 @@ def _get_actuator_functionalities(xml: etree) -> DeviceData:
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
             if (function := xml.find(locator)) is not None:
-                temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})
+                if function.text != "nil":
+                    temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})
 
         if temp_dict:
             data[item] = temp_dict
