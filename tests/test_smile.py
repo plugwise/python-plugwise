@@ -2166,7 +2166,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 276
+        assert self.device_items == 260
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -2583,7 +2583,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 276
+        assert self.device_items == 260
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -2684,7 +2684,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 352
+        assert self.device_items == 356
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2900,7 +2900,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 185
+        assert self.device_items == 173
 
         # Negative test
         result = await self.tinker_thermostat(
@@ -3070,9 +3070,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
                     "setpoint": 60.0,
-                    "lower_bound": 50.0,
-                    "upper_bound": 80.0,
-                    "resolution": 0.1,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
                 },
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3184,7 +3184,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "thermostat": {
                     "setpoint_low": 0.0,
-                    "setpoint_high": 20.0,
+                    "setpoint_high": 22.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3361,7 +3361,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 49
+        assert self.device_items == 53
         assert smile._cooling_present
         assert smile._adam_cooling_enabled
 
@@ -3384,7 +3384,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 19.0,
+                    "setpoint": 19.5,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3555,9 +3555,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
                     "setpoint": 60.0,
-                    "lower_bound": 50.0,
-                    "upper_bound": 80.0,
-                    "resolution": 0.1,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
                 },
                 "binary_sensors": {
                     "dhw_state": False,
