@@ -979,7 +979,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 47
+        assert self.device_items == 51
         assert not self.notifications
 
         assert not smile._anna_cooling_present
@@ -1087,7 +1087,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 47
+        assert self.device_items == 51
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1134,7 +1134,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 47
+        assert self.device_items == 51
 
         result = await self.tinker_thermostat(
             smile,
@@ -1509,7 +1509,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 69
+        assert self.device_items == 72
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1561,7 +1561,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 68
+        assert self.device_items == 71
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -1662,7 +1662,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "sensors": {
                     "temperature": 21.6,
-                    "setpoint": 15.0,
                     "battery": 99,
                     "temperature_difference": 2.3,
                     "valve_position": 0.0,
