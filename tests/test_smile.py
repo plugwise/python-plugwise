@@ -612,7 +612,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Change max boiler temp setpoint to test functionality."""
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
-        await smile.set_max_boiler_temperature(new_temp)
+        await smile.set_number_temperature("maximum_boiler_temperature", new_temp)
         _LOGGER.info("  + worked as intended")
 
     @pytest.mark.asyncio
