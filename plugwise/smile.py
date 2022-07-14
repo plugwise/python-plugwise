@@ -31,7 +31,6 @@ from .constants import (
     STATUS,
     SWITCH_GROUP_TYPES,
     SYSTEM,
-    THERMOSTAT_CLASSES,
     ZONE_THERMOSTATS,
     ApplianceData,
     DeviceData,
@@ -281,7 +280,7 @@ class SmileData(SmileHelper):
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details["dev_class"] not in THERMOSTAT_CLASSES:
+        if details["dev_class"] not in ZONE_THERMOSTATS:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
