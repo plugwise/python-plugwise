@@ -431,7 +431,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             f"  + Testing {measure_key} (should be {measure_assert})",
                         )
                         tests += 1
-                        if measure_key in bsw_list:
+                        if (
+                            measure_key in bsw_list
+                            or measure_key in pw_constants.ACTUATOR_CLASSES
+                        ):
                             tests -= 1
                             for key_1, val_1 in measure_assert.items():
                                 tests += 1
