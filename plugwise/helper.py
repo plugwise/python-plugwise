@@ -17,6 +17,7 @@ from munch import Munch
 from semver import VersionInfo
 
 from .constants import (
+    ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
     APPLIANCES,
     ATTR_NAME,
@@ -99,11 +100,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
 def _get_actuator_functionalities(xml: etree) -> DeviceData:
     """Helper-function for _get_appliance_data()."""
     data: DeviceData = {}
-    for item in [
-        "domestic_hot_water_setpoint",
-        "maximum_boiler_temperature",
-        "thermostat",
-    ]:
+    for item in ACTIVE_ACTUATORS:
         temp_dict: dict[str, str] = {}
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
