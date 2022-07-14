@@ -3126,8 +3126,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 24.0,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
@@ -3228,7 +3226,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 55
+        assert self.device_items == 54
         assert self.cooling_present
         assert not self.notifications
 
@@ -3410,9 +3408,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
                     "setpoint": 60.0,
-                    "lower_bound": 50.0,
-                    "upper_bound": 80.0,
-                    "resolution": 0.1,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
                 },
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3604,7 +3602,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 55
+        assert self.device_items == 54
         assert self.cooling_present
         assert not self.notifications
 
