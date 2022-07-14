@@ -254,6 +254,9 @@ class SmileData(SmileHelper):
         """
         details = self._appl_data[dev_id]
         device_data = self._get_appliance_data(dev_id)
+        # Remove thermostat-dict for thermo_sensors
+        if details["dev_class"] == "thermo_sensor":
+            device_data.pop("thermostat")
 
         # Generic
         if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
