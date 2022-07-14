@@ -67,15 +67,18 @@ class SmileData(SmileHelper):
                     continue
 
                 if self.elga_cooling_enabled:
-                    sensors = device["sensors"]
-                    sensors["setpoint_low"] = sensors["setpoint"]
-                    sensors["setpoint_high"] = MAX_SETPOINT
+                    # Replace setpoint with setpoint_high/_low
+                    thermostat = device["thermostat"]
+                    thermostat["setpoint_low"] = thermostat["setpoint"]
+                    thermostat["setpoint_high"] = MAX_SETPOINT
                     if self._elga_cooling_active:
-                        sensors["setpoint_low"] = MIN_SETPOINT
-                        sensors["setpoint_high"] = sensors["setpoint"]
+                        thermostat["setpoint_low"] = MIN_SETPOINT
+                        thermostat["setpoint_high"] = thermostat["setpoint"]
                     if self._sched_setpoints is not None:
-                        sensors["setpoint_low"] = self._sched_setpoints[0]
-                        sensors["setpoint_high"] = self._sched_setpoints[1]
+                        thermostat["setpoint_low"] = self._sched_setpoints[0]
+                        thermostat["setpoint_high"] = self._sched_setpoints[1]
+
+                    thermostat.pop("setpoint")
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
