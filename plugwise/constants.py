@@ -747,6 +747,15 @@ class ThermoLoc(TypedDict, total=False):
     slaves: set[str]
 
 
+class ActuatorData(TypedDict):
+    """Actuator data for thermostat types."""
+
+    setpoint: float
+    lower_bound: float
+    upper_bound: float
+    resolution: float
+
+
 class DeviceDataPoints(
     SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
 ):
@@ -756,14 +765,7 @@ class DeviceDataPoints(
     regulation_mode: str
     regulation_modes: list[str]
 
-    # Heater Central
-    maximum_boiler_temperature: float
-
     # Master Thermostats
-    lower_bound: float
-    upper_bound: float
-    resolution: float
-
     preset_modes: list[str] | None
     active_preset: str | None
 
@@ -784,5 +786,7 @@ class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
     binary_sensors: SmileBinarySensors
+    domestic_hot_water_setpoint: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
+    thermostat: ActuatorData

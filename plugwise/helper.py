@@ -101,7 +101,7 @@ def _get_actuator_functionalities(xml: etree) -> DeviceData:
     """Helper-function for _get_appliance_data()."""
     data: DeviceData = {}
     for item in ACTIVE_ACTUATORS:
-        temp_dict: dict[str, str] = {}
+        temp_dict: dict[str, float] = {}
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
             if (function := xml.find(locator)) is not None:
@@ -109,7 +109,7 @@ def _get_actuator_functionalities(xml: etree) -> DeviceData:
                     temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})
 
         if temp_dict:
-            data[item] = temp_dict
+            data[item] = temp_dict  # type: ignore [literal-required]
 
     return data
 
