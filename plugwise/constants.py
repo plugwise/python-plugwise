@@ -464,9 +464,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "relay": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     # Added measurements from actuator_functionalities/thermostat_functionality
-    "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
 }
 
