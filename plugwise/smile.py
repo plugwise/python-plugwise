@@ -32,6 +32,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     ZONE_THERMOSTATS,
+    ActuatorData,
     ApplianceData,
     DeviceData,
     GatewayData,
@@ -74,7 +75,7 @@ class SmileData(SmileHelper):
                         max_setpoint = self._sched_setpoints[1]
                         min_setpoint = self._sched_setpoints[0]
 
-                    temp_dict = {
+                    temp_dict: ActuatorData = {
                         "setpoint_low": thermostat["setpoint"],
                         "setpoint_high": max_setpoint,
                     }
