@@ -484,9 +484,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
-        test_temp = {"temperature": 22.9}
+        test_temp = {"setpoint": 22.9}
         if smile._anna_cooling_present:
-            test_temp = {"target_temp_low": 19.5, "target_temp_high": 23.5}
+            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
