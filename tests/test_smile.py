@@ -615,8 +615,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Change max boiler temp setpoint to test functionality."""
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
-        await smile.set_number_setpoint("maximum_boiler_temperature", new_temp)
-        _LOGGER.info("  + worked as intended")
+        for test in ["maximum_boiler_temperature", "bogus_temperature"]:
+            try:
+                await smile.set_number_setpoint(test, new_temp)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + failed as intended")
 
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
