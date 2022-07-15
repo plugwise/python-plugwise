@@ -463,7 +463,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "relay": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    # Added measurements from actuator_functionalities/thermostat_functionality
     "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
 }
 
@@ -524,9 +523,6 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "outdoor_air_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
-    "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
 }
 
 # Known types of Smiles and Stretches
