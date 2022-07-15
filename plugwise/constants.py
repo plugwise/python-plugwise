@@ -747,13 +747,15 @@ class ThermoLoc(TypedDict, total=False):
     slaves: set[str]
 
 
-class ActuatorData(TypedDict):
+class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
-    setpoint: float
     lower_bound: float
-    upper_bound: float
+    setpoint: float
+    setpoint_high: float
+    setpoint_low: float
     resolution: float
+    upper_bound: float
 
 
 class DeviceDataPoints(
