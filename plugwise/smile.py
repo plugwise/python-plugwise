@@ -3,8 +3,6 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-from typing import Any
-
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -85,11 +83,11 @@ class SmileData(SmileHelper):
                             "setpoint_low": min_setpoint,
                             "setpoint_high": thermostat["setpoint"],
                         }
+                    sensors.pop("setpoint")
+                    sensors.update(temp_dict)
                     thermostat.pop("setpoint")
                     temp_dict.update(thermostat)
                     device["thermostat"] = temp_dict
-                    sensors.pop("setpoint")
-                    sensors.update(temp_dict)
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
