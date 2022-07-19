@@ -655,7 +655,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
                 "mode": "auto",
-                "sensors": {"temperature": 20.4, "illuminance": 151},
+                "sensors": {"temperature": 20.4, "illuminance": 151, "setpoint": 20.5},
             },
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
                 "dev_class": "heater_central",
@@ -754,7 +754,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Thermostat schedule",
                 "mode": "heat",
-                "sensors": {"temperature": 21.4, "illuminance": 19.5},
+                "sensors": {"temperature": 21.4, "illuminance": 19.5, "setpoint": 15.0},
             },
             "ea5d8a7177e541b0a4b52da815166de4": {
                 "dev_class": "heater_central",
@@ -960,7 +960,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Standaard",
                 "mode": "heat",
-                "sensors": {"temperature": 20.5, "illuminance": 40.5},
+                "sensors": {"temperature": 20.5, "illuminance": 40.5, "setpoint": 20.5},
             },
             "0466eae8520144c78afb29628384edeb": {
                 "dev_class": "gateway",
@@ -1074,7 +1074,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Standaard",
                 "mode": "heat",
-                "sensors": {"temperature": 20.5, "illuminance": 40.5},
+                "sensors": {"temperature": 20.5, "illuminance": 40.5, "setpoint": 20.5},
             },
             "0466eae8520144c78afb29628384edeb": {
                 "dev_class": "gateway",
@@ -1198,7 +1198,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
-                "sensors": {"temperature": 20.6, "illuminance": 35.0},
+                "sensors": {"temperature": 20.6, "illuminance": 35.0, "setpoint": 16.0},
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "dev_class": "gateway",
@@ -1291,7 +1291,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
-                "sensors": {"temperature": 20.4, "illuminance": 44.8},
+                "sensors": {"temperature": 20.4, "illuminance": 44.8, "setpoint": 21.0},
             },
             "c46b4794d28149699eacf053deedd003": {
                 "dev_class": "heater_central",
@@ -1367,7 +1367,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Test",
                 "last_used": "Test",
                 "mode": "auto",
-                "sensors": {"temperature": 20.6, "illuminance": 0.25},
+                "sensors": {"temperature": 20.6, "illuminance": 0.25, "setpoint": 21.0},
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "dev_class": "gateway",
@@ -1492,7 +1492,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Weekschema",
                 "last_used": "Weekschema",
                 "mode": "auto",
-                "sensors": {"temperature": 20.5},
+                "sensors": {"temperature": 20.5, "setpoint": 20.5},
             },
             "f2be121e4a9345ac83c6e99ed89a98be": {
                 "dev_class": "computer_desktop",
@@ -1617,7 +1617,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Weekschema",
                 "control_state": "heating",
                 "mode": "auto",
-                "sensors": {"temperature": 18.1},
+                "sensors": {"temperature": 18.1, "setpoint": 18.5},
             },
             "29542b2b6a6a4169acecc15c72a599b8": {
                 "dev_class": "hometheater",
@@ -1705,7 +1705,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Badkamer",
                 "control_state": "off",
                 "mode": "auto",
-                "sensors": {"temperature": 17.9, "battery": 56},
+                "sensors": {"temperature": 17.9, "battery": 56, "setpoint": 15.0},
             },
             "da224107914542988a88561b4452b0f6": {
                 "dev_class": "gateway",
@@ -1842,7 +1842,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
                 "mode": "heat",
-                "sensors": {"temperature": 16.5, "battery": 67},
+                "sensors": {"temperature": 16.5, "battery": 67, "setpoint": 13.0},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
                 "dev_class": "thermo_sensor",
@@ -1902,7 +1902,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
                 "mode": "auto",
-                "sensors": {"temperature": 21.1, "battery": 34},
+                "sensors": {"temperature": 21.1, "battery": 34, "setpoint": 21.5},
             },
             "fe799307f1624099878210aa0b9f1475": {
                 "dev_class": "gateway",
@@ -2070,7 +2070,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
                 "mode": "auto",
-                "sensors": {"temperature": 17.1, "battery": 37},
+                "sensors": {"temperature": 17.1, "battery": 37, "setpoint": 16.0},
             },
             "680423ff840043738f42cc7f1ff97a36": {
                 "dev_class": "thermo_sensor",
@@ -2115,7 +2115,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
                 "mode": "auto",
-                "sensors": {"temperature": 18.8, "battery": 92},
+                "sensors": {"temperature": 18.8, "battery": 92, "setpoint": 14.0},
             },
             "675416a629f343c495449970e2ca37b5": {
                 "dev_class": "router",
@@ -2165,6 +2165,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "battery": 68,
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
+                    "setpoint": 5.5,
                 },
             },
         }
@@ -2259,7 +2260,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
                 "mode": "heat",
-                "sensors": {"temperature": 16.5, "battery": 67},
+                "sensors": {"temperature": 16.5, "battery": 67, "setpoint": 13.0},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
                 "dev_class": "thermo_sensor",
@@ -2319,7 +2320,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
                 "mode": "auto",
-                "sensors": {"temperature": 20.9, "battery": 34},
+                "sensors": {"temperature": 20.9, "battery": 34, "setpoint": 21.5},
             },
             "fe799307f1624099878210aa0b9f1475": {
                 "dev_class": "gateway",
@@ -2487,7 +2488,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
                 "mode": "auto",
-                "sensors": {"temperature": 17.2, "battery": 37},
+                "sensors": {"temperature": 17.2, "battery": 37, "setpoint": 15.0},
             },
             "680423ff840043738f42cc7f1ff97a36": {
                 "dev_class": "thermo_sensor",
@@ -2532,7 +2533,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
                 "mode": "auto",
-                "sensors": {"temperature": 18.9, "battery": 92},
+                "sensors": {"temperature": 18.9, "battery": 92, "setpoint": 14.0},
             },
             "675416a629f343c495449970e2ca37b5": {
                 "dev_class": "router",
@@ -2582,6 +2583,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "battery": 68,
                     "temperature_difference": 0.0,
                     "valve_position": 0.0,
+                    "setpoint": 5.5,
                 },
             },
         }
@@ -2699,6 +2701,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "control_state": "off",
                 "mode": "cool",
                 "sensors": {"temperature": 18.8, "battery": 55},
+                "setpoint": 18.0,
             },
         }
 
@@ -2769,7 +2772,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": None,
                 "control_state": "off",
                 "mode": "heat",
-                "sensors": {"temperature": 30.0, "battery": 80},
+                "sensors": {"temperature": 30.0, "battery": 80, "setpoint": 13.0},
             },
             "1346fbd8498d4dbcab7e18d51b771f3d": {
                 "dev_class": "zone_thermostat",
@@ -2793,7 +2796,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": None,
                 "control_state": "off",
                 "mode": "heat",
-                "sensors": {"temperature": 24.2, "battery": 92},
+                "sensors": {"temperature": 24.2, "battery": 92, "setpoint": 13.0},
             },
             "833de10f269c4deab58fb9df69901b4e": {
                 "dev_class": "thermo_sensor",
@@ -2832,7 +2835,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": None,
                 "control_state": "off",
                 "mode": "heat",
-                "sensors": {"temperature": 30.0, "battery": 79},
+                "sensors": {"temperature": 30.0, "battery": 79, "setpoint": 13.0},
             },
             "f61f1a2535f54f52ad006a3d18e459ca": {
                 "dev_class": "zone_thermometer",
@@ -2860,6 +2863,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 27.4,
                     "battery": 100,
                     "humidity": 56.2,
+                    "setpoint": 9.0,
                 },
             },
             "d4496250d0e942cfa7aea3476e9070d5": {
@@ -3158,6 +3162,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
+                    "setpoint_low": 21.0,
+                    "setpoint_high": 24.0,
                 },
             },
         }
@@ -3221,6 +3227,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 6.0,
+                    "setpoint_low": 0.0,
+                    "setpoint_high": 22.0,
                 },
             },
             # Heater central
@@ -3427,6 +3435,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint": 19.5,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
@@ -3524,6 +3533,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint": 19.5,
                 },
             }
         }
@@ -3572,6 +3582,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
