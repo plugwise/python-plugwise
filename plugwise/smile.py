@@ -69,6 +69,7 @@ class SmileData(SmileHelper):
                 if self.elga_cooling_enabled:
                     # Replace setpoint with setpoint_high/_low
                     thermostat = device["thermostat"]
+                    sensors = device["sensors"]
                     max_setpoint = MAX_SETPOINT
                     min_setpoint = MIN_SETPOINT
                     if self._sched_setpoints is not None:
@@ -87,6 +88,8 @@ class SmileData(SmileHelper):
                     thermostat.pop("setpoint")
                     temp_dict.update(thermostat)
                     device["thermostat"] = temp_dict
+                    sensors.pop("setpoint")
+                    sensors.update(temp_dict)
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
