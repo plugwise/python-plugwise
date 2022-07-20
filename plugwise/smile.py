@@ -83,10 +83,10 @@ class SmileData(SmileHelper):
                             "setpoint_low": min_setpoint,
                             "setpoint_high": thermostat["setpoint"],
                         }
-                    if "setpoint_low" not in sensors:
+                    if "setpoint" in sensors:
                         sensors.pop("setpoint")
-                        sensors["setpoint_low"] = temp_dict["setpoint_low"]
-                        sensors["setpoint_high"] = temp_dict["setpoint_high"]
+                    sensors["setpoint_low"] = temp_dict["setpoint_low"]
+                    sensors["setpoint_high"] = temp_dict["setpoint_high"]
                     thermostat.pop("setpoint")
                     temp_dict.update(thermostat)
                     device["thermostat"] = temp_dict
