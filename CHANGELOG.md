@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.21.0: Smile: improve output, fix cooling-bug
+# v0.21.0: Smile: improve and add to output, fix cooling-bug
 - Add `domestic_hot_water_setpoint` to the output. Will become an additional Number in Plugwise(-beta).
 - Create separate dicts for `domestic_hot_water_setpoint`, `maximum_boiler_temperature`, and `thermostat` in the output.
 - Change `set_max_boiler_temperature()` to `set_number_setpoint()` and make it more general so that more than one Number setpoint can be changed.
