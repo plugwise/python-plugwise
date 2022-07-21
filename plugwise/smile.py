@@ -3,8 +3,6 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-from typing import Any
-
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -31,8 +29,8 @@ from .constants import (
     STATUS,
     SWITCH_GROUP_TYPES,
     SYSTEM,
-    THERMOSTAT_CLASSES,
     ZONE_THERMOSTATS,
+    ActuatorData,
     ApplianceData,
     DeviceData,
     GatewayData,
@@ -67,15 +65,31 @@ class SmileData(SmileHelper):
                     continue
 
                 if self.elga_cooling_enabled:
+                    # Replace setpoint with setpoint_high/_low
+                    thermostat = device["thermostat"]
                     sensors = device["sensors"]
-                    sensors["setpoint_low"] = sensors["setpoint"]
-                    sensors["setpoint_high"] = MAX_SETPOINT
-                    if self._elga_cooling_active:
-                        sensors["setpoint_low"] = MIN_SETPOINT
-                        sensors["setpoint_high"] = sensors["setpoint"]
+                    max_setpoint = MAX_SETPOINT
+                    min_setpoint = MIN_SETPOINT
                     if self._sched_setpoints is not None:
-                        sensors["setpoint_low"] = self._sched_setpoints[0]
-                        sensors["setpoint_high"] = self._sched_setpoints[1]
+                        max_setpoint = self._sched_setpoints[1]
+                        min_setpoint = self._sched_setpoints[0]
+
+                    temp_dict: ActuatorData = {
+                        "setpoint_low": thermostat["setpoint"],
+                        "setpoint_high": max_setpoint,
+                    }
+                    if self._elga_cooling_active:
+                        temp_dict = {
+                            "setpoint_low": min_setpoint,
+                            "setpoint_high": thermostat["setpoint"],
+                        }
+                    if "setpoint" in sensors:
+                        sensors.pop("setpoint")
+                    sensors["setpoint_low"] = temp_dict["setpoint_low"]
+                    sensors["setpoint_high"] = temp_dict["setpoint_high"]
+                    thermostat.pop("setpoint")
+                    temp_dict.update(thermostat)
+                    device["thermostat"] = temp_dict
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
@@ -244,6 +258,9 @@ class SmileData(SmileHelper):
         """
         details = self._appl_data[dev_id]
         device_data = self._get_appliance_data(dev_id)
+        # Remove thermostat-dict for thermo_sensors
+        if details["dev_class"] == "thermo_sensor":
+            device_data.pop("thermostat")
 
         # Generic
         if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
@@ -270,7 +287,7 @@ class SmileData(SmileHelper):
         # Specific, not generic Adam data
         device_data = self._device_data_adam(details, device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details["dev_class"] not in THERMOSTAT_CLASSES:
+        if details["dev_class"] not in ZONE_THERMOSTATS:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
@@ -639,35 +656,46 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temps: dict[str, Any]) -> None:
+    async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        if "setpoint" in temps:
-            setpoint = temps["setpoint"]
-        elif self._elga_cooling_active:
-            setpoint = temps["setpoint_high"]
-        else:
-            setpoint = temps["setpoint_low"]
+        setpoint: float | None = None
+        if "setpoint" in items:
+            setpoint = items["setpoint"]
+        if self.elga_cooling_enabled:
+            if "setpoint_low" in items:
+                setpoint = items["setpoint_low"]
+            if self._elga_cooling_active:
+                if "setpoint_high" in items:
+                    setpoint = items["setpoint_high"]
 
-        temp = str(setpoint)
+        if setpoint is None:
+            raise PlugwiseError(
+                "Plugwise: failed setting temperature: no valid input provided"
+            )  # pragma: no cover
+        temperature = str(setpoint)
         uri = self._thermostat_uri(loc_id)
         data = (
             "<thermostat_functionality><setpoint>"
-            f"{temp}</setpoint></thermostat_functionality>"
+            f"{temperature}</setpoint></thermostat_functionality>"
         )
 
         await self._request(uri, method="put", data=data)
 
-    async def set_max_boiler_temperature(self, temperature: float) -> None:
-        """Set the max. Boiler Temperature on the Central heating boiler."""
+    async def set_number_setpoint(self, key: str, temperature: float) -> None:
+        """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
         temp = str(temperature)
+        thermostat_id: str | None = None
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
-        th_func = self._appliances.find(locator)
-        if th_func.find("type").text == "maximum_boiler_temperature":
-            thermostat_id = th_func.attrib["id"]
+        if th_func_list := self._appliances.findall(locator):
+            for th_func in th_func_list:
+                if th_func.find("type").text == key:
+                    thermostat_id = th_func.attrib["id"]
+
+        if thermostat_id is None:
+            raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
-
         await self._request(uri, method="put", data=data)
 
     async def _set_groupswitch_member_state(

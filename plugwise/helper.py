@@ -17,6 +17,8 @@ from munch import Munch
 from semver import VersionInfo
 
 from .constants import (
+    ACTIVE_ACTUATORS,
+    ACTUATOR_CLASSES,
     APPLIANCES,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -28,6 +30,7 @@ from .constants import (
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     HOME_MEASUREMENTS,
+    LIMITS,
     LOCATIONS,
     LOGGER,
     NONE,
@@ -36,6 +39,7 @@ from .constants import (
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     SWITCHES,
+    TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     ApplianceData,
     DeviceData,
@@ -91,6 +95,25 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
         if model != "Unknown":
             return model
     return name
+
+
+def _get_actuator_functionalities(xml: etree) -> DeviceData:
+    """Helper-function for _get_appliance_data()."""
+    data: DeviceData = {}
+    for item in ACTIVE_ACTUATORS:
+        temp_dict: dict[str, float] = {}
+        for key in LIMITS:
+            locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
+            if (function := xml.find(locator)) is not None:
+                if function.text == "nil":
+                    break
+
+                temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})
+
+        if temp_dict:
+            data[item] = temp_dict  # type: ignore [literal-required]
+
+    return data
 
 
 def schedules_temps(
@@ -824,18 +847,6 @@ class SmileHelper:
                 name = f"{measurement}_interval"
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
 
-            # Thermostat actuator measurements
-            t_locator = f'.//actuator_functionalities/thermostat_functionality[type="thermostat"]/{measurement}'
-            if (t_function := appliance.find(t_locator)) is not None:
-                if new_name := attrs.get(ATTR_NAME):
-                    measurement = new_name
-
-                # Avoid double processing
-                if measurement == "setpoint":
-                    continue
-
-                data[measurement] = format_measure(t_function.text, attrs[ATTR_UNIT_OF_MEASUREMENT])  # type: ignore [literal-required]
-
         return data
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
@@ -857,6 +868,9 @@ class SmileHelper:
         ) is not None:
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
+            if (appl_type := appliance.find("type")) is not None:
+                if appl_type.text in ACTUATOR_CLASSES:
+                    data.update(_get_actuator_functionalities(appliance))
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:

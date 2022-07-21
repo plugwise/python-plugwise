@@ -363,6 +363,18 @@ FEATURE_RSSI_OUT: Final[dict[str, str]] = {
 
 ### Smile constants ###
 
+ACTUATOR_CLASSES: Final[list[str]] = [
+    "heater_central",
+    "thermostat",
+    "thermostatic_radiator_valve",
+    "zone_thermometer",
+    "zone_thermostat",
+]
+ACTIVE_ACTUATORS: Final[list[str]] = [
+    "domestic_hot_water_setpoint",
+    "maximum_boiler_temperature",
+    "thermostat",
+]
 ATTR_ENABLED: Final = "enabled_default"
 ATTR_ID: Final = "id"
 ATTR_ICON: Final = "icon"
@@ -381,18 +393,21 @@ DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
-MAX_SETPOINT: Final = 40
-MIN_SETPOINT: Final = 0
+LIMITS: Final[list[str]] = ["setpoint", "lower_bound", "upper_bound", "resolution"]
+MAX_SETPOINT: Final[float] = 40.0
+MIN_SETPOINT: Final[float] = 0.0
 SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
 SPECIAL_FORMAT: Final[list[str]] = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
 SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]
 ZONE_THERMOSTATS: Final[list[str]] = [
     "thermostat",
+    "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
 ]
 THERMOSTAT_CLASSES: Final[list[str]] = [
     "thermostat",
+    "thermo_sensor",
     "zone_thermometer",
     "zone_thermostat",
     "thermostatic_radiator_valve",
@@ -450,10 +465,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
     "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
     "relay": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    # Added measurements from actuator_functionalities/thermostat_functionality
-    "lower_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "upper_bound": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "resolution": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
     "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
 }
 
@@ -731,6 +742,17 @@ class ThermoLoc(TypedDict, total=False):
     slaves: set[str]
 
 
+class ActuatorData(TypedDict, total=False):
+    """Actuator data for thermostat types."""
+
+    lower_bound: float
+    setpoint: float
+    setpoint_high: float
+    setpoint_low: float
+    resolution: float
+    upper_bound: float
+
+
 class DeviceDataPoints(
     SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
 ):
@@ -740,14 +762,7 @@ class DeviceDataPoints(
     regulation_mode: str
     regulation_modes: list[str]
 
-    # Heater Central
-    maximum_boiler_temperature: float
-
     # Master Thermostats
-    lower_bound: float
-    upper_bound: float
-    resolution: float
-
     preset_modes: list[str] | None
     active_preset: str | None
 
@@ -768,5 +783,7 @@ class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
     binary_sensors: SmileBinarySensors
+    domestic_hot_water_setpoint: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
+    thermostat: ActuatorData

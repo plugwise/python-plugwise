@@ -403,7 +403,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for dev_id, details in device_list.items():
             for dev_key, _ in details.items():
                 self.device_items += 1
-                if dev_key in bsw_list:
+                if dev_key in bsw_list or dev_key in pw_constants.ACTIVE_ACTUATORS:
                     self.device_items -= 1
                     for _ in details[dev_key]:
                         self.device_items += 1
@@ -431,7 +431,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             f"  + Testing {measure_key} (should be {measure_assert})",
                         )
                         tests += 1
-                        if measure_key in bsw_list:
+                        if (
+                            measure_key in bsw_list
+                            or measure_key in pw_constants.ACTUATOR_CLASSES
+                        ):
                             tests -= 1
                             for key_1, val_1 in measure_assert.items():
                                 tests += 1
@@ -612,8 +615,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Change max boiler temp setpoint to test functionality."""
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
-        await smile.set_max_boiler_temperature(new_temp)
-        _LOGGER.info("  + worked as intended")
+        for test in ["maximum_boiler_temperature", "bogus_temperature"]:
+            try:
+                await smile.set_number_setpoint(test, new_temp)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + failed as intended")
 
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
@@ -636,16 +643,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 20.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "Thermostat schedule",
                 "last_used": "Thermostat schedule",
                 "mode": "auto",
-                "sensors": {"temperature": 20.4, "setpoint": 20.5, "illuminance": 151},
+                "sensors": {"temperature": 20.4, "illuminance": 151, "setpoint": 20.5},
             },
             "04e4cbfe7f4340f090f85ec3b9e6a950": {
                 "dev_class": "heater_central",
@@ -653,7 +663,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "4.21",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
-                "maximum_boiler_temperature": 50.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 50.0,
+                    "lower_bound": 50.0,
+                    "upper_bound": 90.0,
+                    "resolution": 1.0,
+                },
                 "binary_sensors": {"flame_state": True, "heating_state": True},
                 "sensors": {
                     "water_temperature": 23.6,
@@ -678,7 +693,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 39
+        assert self.device_items == 43
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -727,23 +742,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 15.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
                 "active_preset": None,
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "None",
                 "last_used": "Thermostat schedule",
                 "mode": "heat",
-                "sensors": {"temperature": 21.4, "setpoint": 15.0, "illuminance": 19.5},
+                "sensors": {"temperature": 21.4, "illuminance": 19.5, "setpoint": 15.0},
             },
             "ea5d8a7177e541b0a4b52da815166de4": {
                 "dev_class": "heater_central",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
                 "model": "Generic heater",
                 "name": "OpenTherm",
-                "maximum_boiler_temperature": 70.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 70.0,
+                    "lower_bound": 50.0,
+                    "upper_bound": 90.0,
+                    "resolution": 1.0,
+                },
                 "binary_sensors": {"flame_state": False, "heating_state": False},
                 "sensors": {
                     "water_temperature": 54.0,
@@ -768,7 +791,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 39
+        assert self.device_items == 43
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -891,7 +914,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "2.32",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
-                "maximum_boiler_temperature": 70.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 70.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
+                "domestic_hot_water_setpoint": {
+                    "setpoint": 60.0,
+                    "lower_bound": 30.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -914,16 +948,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 20.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
                 "active_preset": "home",
                 "available_schedules": ["Standaard", "Thuiswerken"],
                 "selected_schedule": "None",
                 "last_used": "Standaard",
                 "mode": "heat",
-                "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
+                "sensors": {"temperature": 20.5, "illuminance": 40.5, "setpoint": 20.5},
             },
             "0466eae8520144c78afb29628384edeb": {
                 "dev_class": "gateway",
@@ -952,7 +989,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 44
+        assert self.device_items == 52
         assert not self.notifications
 
         assert not smile._anna_cooling_present
@@ -991,7 +1028,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "2.32",
                 "name": "OpenTherm",
                 "vendor": "Bosch Thermotechniek B.V.",
-                "maximum_boiler_temperature": 70.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 70.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
+                "domestic_hot_water_setpoint": {
+                    "setpoint": 60.0,
+                    "lower_bound": 30.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
                 "binary_sensors": {
                     "dhw_state": True,
                     "heating_state": False,
@@ -1014,16 +1062,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 20.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
                 "active_preset": "home",
                 "available_schedules": ["Standaard", "Thuiswerken"],
                 "selected_schedule": "None",
                 "last_used": "Standaard",
                 "mode": "heat",
-                "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
+                "sensors": {"temperature": 20.5, "illuminance": 40.5, "setpoint": 20.5},
             },
             "0466eae8520144c78afb29628384edeb": {
                 "dev_class": "gateway",
@@ -1052,7 +1103,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 44
+        assert self.device_items == 52
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1099,7 +1150,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 44
+        assert self.device_items == 52
 
         result = await self.tinker_thermostat(
             smile,
@@ -1135,16 +1186,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 16.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "away",
                 "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
-                "sensors": {"temperature": 20.6, "setpoint": 16.0, "illuminance": 35.0},
+                "sensors": {"temperature": 20.6, "illuminance": 35.0, "setpoint": 16.0},
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "dev_class": "gateway",
@@ -1180,7 +1234,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 34
+        assert self.device_items == 35
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1225,16 +1279,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 21.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "home",
                 "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
-                "sensors": {"temperature": 20.4, "setpoint": 21.0, "illuminance": 44.8},
+                "sensors": {"temperature": 20.4, "illuminance": 44.8, "setpoint": 21.0},
             },
             "c46b4794d28149699eacf053deedd003": {
                 "dev_class": "heater_central",
@@ -1258,7 +1315,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 34
+        assert self.device_items == 35
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1298,16 +1355,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 21.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["no_frost", "asleep", "away", "home", "vacation"],
                 "active_preset": "home",
                 "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Test",
                 "last_used": "Test",
                 "mode": "auto",
-                "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
+                "sensors": {"temperature": 20.6, "illuminance": 0.25, "setpoint": 21.0},
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "dev_class": "gateway",
@@ -1336,7 +1396,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 34
+        assert self.device_items == 35
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1366,7 +1426,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "location": "07d618f0bb80412687f065b8698ce3e7",
                 "model": "Generic heater",
                 "name": "OpenTherm",
-                "maximum_boiler_temperature": 80.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 80.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -1415,9 +1480,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise B.V.",
-                "lower_bound": 1.0,
-                "upper_bound": 35.0,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 20.5,
+                    "lower_bound": 1.0,
+                    "upper_bound": 35.0,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["Weekschema"],
@@ -1457,7 +1525,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 66
+        assert self.device_items == 70
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1509,7 +1577,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 65
+        assert self.device_items == 69
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -1536,9 +1604,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise B.V.",
-                "lower_bound": 1.0,
-                "upper_bound": 35.0,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 18.5,
+                    "lower_bound": 1.0,
+                    "upper_bound": 35.0,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "asleep",
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
@@ -1605,12 +1676,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Tom Badkamer",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
-                "lower_bound": 7.0,
-                "upper_bound": 30.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 21.6,
-                    "setpoint": 15.0,
                     "battery": 99,
                     "temperature_difference": 2.3,
                     "valve_position": 0.0,
@@ -1625,9 +1692,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Lisa Badkamer",
                 "zigbee_mac_address": "ABCD012345670A04",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 15.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
@@ -1635,7 +1705,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Badkamer",
                 "control_state": "off",
                 "mode": "auto",
-                "sensors": {"temperature": 17.9, "setpoint": 15.0, "battery": 56},
+                "sensors": {"temperature": 17.9, "battery": 56, "setpoint": 15.0},
             },
             "da224107914542988a88561b4452b0f6": {
                 "dev_class": "gateway",
@@ -1657,7 +1727,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "location": "bc93488efab249e5bc54fd7e175a6f91",
                 "model": "Generic heater",
                 "name": "OpenTherm",
-                "maximum_boiler_temperature": 60.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 60.0,
+                    "lower_bound": 25.0,
+                    "upper_bound": 95.0,
+                    "resolution": 0.01,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -1692,7 +1767,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 130
+        assert self.device_items == 132
 
         result = await self.tinker_thermostat(
             smile,
@@ -1749,9 +1824,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Lisa Bios",
                 "zigbee_mac_address": "ABCD012345670A06",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -1764,7 +1842,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
                 "mode": "heat",
-                "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
+                "sensors": {"temperature": 16.5, "battery": 67, "setpoint": 13.0},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
                 "dev_class": "thermo_sensor",
@@ -1775,12 +1853,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Floor kraan",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 26.2,
-                    "setpoint": 21.5,
                     "temperature_difference": 3.7,
                     "valve_position": 0.0,
                 },
@@ -1794,12 +1868,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Bios Cv Thermostatic Radiator ",
                 "zigbee_mac_address": "ABCD012345670A09",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 17.1,
-                    "setpoint": 13.0,
                     "battery": 62,
                     "temperature_difference": -0.1,
                     "valve_position": 0.0,
@@ -1814,9 +1884,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Lisa WK",
                 "zigbee_mac_address": "ABCD012345670A07",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 21.5,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": [
@@ -1829,7 +1902,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
                 "mode": "auto",
-                "sensors": {"temperature": 21.1, "setpoint": 21.5, "battery": 34},
+                "sensors": {"temperature": 21.1, "battery": 34, "setpoint": 21.5},
             },
             "fe799307f1624099878210aa0b9f1475": {
                 "dev_class": "gateway",
@@ -1855,12 +1928,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Jessie",
                 "zigbee_mac_address": "ABCD012345670A10",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 16.9,
-                    "setpoint": 16.0,
                     "battery": 62,
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
@@ -1983,9 +2052,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Thermostat Jessie",
                 "zigbee_mac_address": "ABCD012345670A03",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 16.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "asleep",
                 "available_schedules": [
@@ -1998,7 +2070,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
                 "mode": "auto",
-                "sensors": {"temperature": 17.1, "setpoint": 16.0, "battery": 37},
+                "sensors": {"temperature": 17.1, "battery": 37, "setpoint": 16.0},
             },
             "680423ff840043738f42cc7f1ff97a36": {
                 "dev_class": "thermo_sensor",
@@ -2009,12 +2081,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Badkamer",
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 19.1,
-                    "setpoint": 14.0,
                     "battery": 51,
                     "temperature_difference": -0.3,
                     "valve_position": 0.0,
@@ -2029,9 +2097,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Thermostat Badkamer",
                 "zigbee_mac_address": "ABCD012345670A08",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 14.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -2044,7 +2115,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
                 "mode": "auto",
-                "sensors": {"temperature": 18.8, "setpoint": 14.0, "battery": 92},
+                "sensors": {"temperature": 18.8, "battery": 92, "setpoint": 14.0},
             },
             "675416a629f343c495449970e2ca37b5": {
                 "dev_class": "router",
@@ -2071,9 +2142,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "CV Kraan Garage",
                 "zigbee_mac_address": "ABCD012345670A11",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 5.5,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "no_frost",
                 "available_schedules": [
@@ -2088,10 +2162,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
-                    "setpoint": 5.5,
                     "battery": 68,
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
+                    "setpoint": 5.5,
                 },
             },
         }
@@ -2109,7 +2183,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 276
+        assert self.device_items == 269
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -2168,9 +2242,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Lisa Bios",
                 "zigbee_mac_address": "ABCD012345670A06",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -2183,7 +2260,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
                 "mode": "heat",
-                "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
+                "sensors": {"temperature": 16.5, "battery": 67, "setpoint": 13.0},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
                 "dev_class": "thermo_sensor",
@@ -2194,12 +2271,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Floor kraan",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 26.0,
-                    "setpoint": 21.5,
                     "temperature_difference": 3.5,
                     "valve_position": 100,
                 },
@@ -2213,12 +2286,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Bios Cv Thermostatic Radiator ",
                 "zigbee_mac_address": "ABCD012345670A09",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 17.2,
-                    "setpoint": 13.0,
                     "battery": 62,
                     "temperature_difference": -0.2,
                     "valve_position": 0.0,
@@ -2233,9 +2302,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Lisa WK",
                 "zigbee_mac_address": "ABCD012345670A07",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 21.5,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": [
@@ -2248,7 +2320,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
                 "mode": "auto",
-                "sensors": {"temperature": 20.9, "setpoint": 21.5, "battery": 34},
+                "sensors": {"temperature": 20.9, "battery": 34, "setpoint": 21.5},
             },
             "fe799307f1624099878210aa0b9f1475": {
                 "dev_class": "gateway",
@@ -2274,12 +2346,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Jessie",
                 "zigbee_mac_address": "ABCD012345670A10",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 17.1,
-                    "setpoint": 15.0,
                     "battery": 62,
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
@@ -2402,9 +2470,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Thermostat Jessie",
                 "zigbee_mac_address": "ABCD012345670A03",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 15.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "asleep",
                 "available_schedules": [
@@ -2417,7 +2488,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
                 "mode": "auto",
-                "sensors": {"temperature": 17.2, "setpoint": 15.0, "battery": 37},
+                "sensors": {"temperature": 17.2, "battery": 37, "setpoint": 15.0},
             },
             "680423ff840043738f42cc7f1ff97a36": {
                 "dev_class": "thermo_sensor",
@@ -2428,12 +2499,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Badkamer",
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 19.1,
-                    "setpoint": 14.0,
                     "battery": 51,
                     "temperature_difference": -0.4,
                     "valve_position": 0.0,
@@ -2448,9 +2515,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Zone Thermostat Badkamer",
                 "zigbee_mac_address": "ABCD012345670A08",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 14.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -2463,7 +2533,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
                 "mode": "auto",
-                "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
+                "sensors": {"temperature": 18.9, "battery": 92, "setpoint": 14.0},
             },
             "675416a629f343c495449970e2ca37b5": {
                 "dev_class": "router",
@@ -2490,9 +2560,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "CV Kraan Garage",
                 "zigbee_mac_address": "ABCD012345670A11",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 100.0,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 5.5,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "no_frost",
                 "available_schedules": [
@@ -2507,10 +2580,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
-                    "setpoint": 5.5,
                     "battery": 68,
                     "temperature_difference": 0.0,
                     "valve_position": 0.0,
+                    "setpoint": 5.5,
                 },
             },
         }
@@ -2528,7 +2601,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 276
+        assert self.device_items == 269
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -2577,7 +2650,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "17.1",
                 "name": "OpenTherm",
                 "vendor": "Remeha B.V.",
-                "maximum_boiler_temperature": 35.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 35.0,
+                    "lower_bound": 7.0,
+                    "upper_bound": 50.0,
+                    "resolution": 0.01,
+                },
+                "domestic_hot_water_setpoint": {
+                    "setpoint": 60.0,
+                    "lower_bound": 40.0,
+                    "upper_bound": 65.0,
+                    "resolution": 0.01,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -2603,9 +2687,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat BK",
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 18.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["no_frost", "away", "home", "asleep"],
                 "active_preset": "away",
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
@@ -2613,7 +2700,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Werkdag schema",
                 "control_state": "off",
                 "mode": "cool",
-                "sensors": {"temperature": 18.8, "setpoint": 18.0, "battery": 55},
+                "sensors": {
+                    "temperature": 18.8,
+                    "battery": 55,
+                    "setpoint": 18.0,
+                },
             },
         }
 
@@ -2621,7 +2712,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 349
+        assert self.device_items == 366
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2636,7 +2727,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "10.20",
                 "name": "OpenTherm",
                 "vendor": "Remeha B.V.",
-                "maximum_boiler_temperature": 90.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 90.0,
+                    "lower_bound": 20.0,
+                    "upper_bound": 90.0,
+                    "resolution": 0.01,
+                },
+                "domestic_hot_water_setpoint": {
+                    "setpoint": 60.0,
+                    "lower_bound": 40.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -2660,9 +2762,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Logeerkamer",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["None"],
@@ -2670,7 +2775,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": None,
                 "control_state": "off",
                 "mode": "heat",
-                "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 80},
+                "sensors": {"temperature": 30.0, "battery": 80, "setpoint": 13.0},
             },
             "1346fbd8498d4dbcab7e18d51b771f3d": {
                 "dev_class": "zone_thermostat",
@@ -2681,9 +2786,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Slaapkamer",
                 "zigbee_mac_address": "ABCD012345670A03",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "no_frost",
                 "available_schedules": ["None"],
@@ -2691,7 +2799,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": None,
                 "control_state": "off",
                 "mode": "heat",
-                "sensors": {"temperature": 24.2, "setpoint": 13.0, "battery": 92},
+                "sensors": {"temperature": 24.2, "battery": 92, "setpoint": 13.0},
             },
             "833de10f269c4deab58fb9df69901b4e": {
                 "dev_class": "thermo_sensor",
@@ -2702,12 +2810,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Woonkamer",
                 "zigbee_mac_address": "ABCD012345670A09",
                 "vendor": "Plugwise",
-                "lower_bound": 7.0,
-                "upper_bound": 30.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 24.0,
-                    "setpoint": 9.0,
                     "temperature_difference": 1.8,
                     "valve_position": 100,
                 },
@@ -2721,9 +2825,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Kinderkamer",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
-                "lower_bound": 0.0,
-                "upper_bound": 99.9,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["None"],
@@ -2731,7 +2838,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": None,
                 "control_state": "off",
                 "mode": "heat",
-                "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 79},
+                "sensors": {"temperature": 30.0, "battery": 79, "setpoint": 13.0},
             },
             "f61f1a2535f54f52ad006a3d18e459ca": {
                 "dev_class": "zone_thermometer",
@@ -2742,9 +2849,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Woonkamer",
                 "zigbee_mac_address": "ABCD012345670A08",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.01,
+                "thermostat": {
+                    "setpoint": 9.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.01,
+                },
                 "preset_modes": ["home", "asleep", "away", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["None"],
@@ -2754,9 +2864,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat",
                 "sensors": {
                     "temperature": 27.4,
-                    "setpoint": 9.0,
                     "battery": 100,
                     "humidity": 56.2,
+                    "setpoint": 9.0,
                 },
             },
             "d4496250d0e942cfa7aea3476e9070d5": {
@@ -2768,12 +2878,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Kinderkamer",
                 "zigbee_mac_address": "ABCD012345670A04",
                 "vendor": "Plugwise",
-                "lower_bound": 7.0,
-                "upper_bound": 30.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 28.7,
-                    "setpoint": 13.0,
                     "temperature_difference": 1.9,
                     "valve_position": 0.0,
                 },
@@ -2787,12 +2893,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Slaapkamer",
                 "zigbee_mac_address": "ABCD012345670A05",
                 "vendor": "Plugwise",
-                "lower_bound": 7.0,
-                "upper_bound": 30.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 24.3,
-                    "setpoint": 13.0,
                     "temperature_difference": 1.7,
                     "valve_position": 0.0,
                 },
@@ -2821,12 +2923,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Logeerkamer",
                 "zigbee_mac_address": "ABCD012345670A07",
                 "vendor": "Plugwise",
-                "lower_bound": 7.0,
-                "upper_bound": 30.0,
-                "resolution": 0.01,
                 "sensors": {
                     "temperature": 28.8,
-                    "setpoint": 13.0,
                     "temperature_difference": 2.0,
                     "valve_position": 0.0,
                 },
@@ -2837,7 +2935,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 182
+        assert self.device_items == 181
 
         # Negative test
         result = await self.tinker_thermostat(
@@ -3005,7 +3103,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
-                "maximum_boiler_temperature": 60.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 60.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -3044,9 +3147,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint_low": 21.0,
+                    "setpoint_high": 24.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
                 "active_preset": "home",
                 "available_schedules": ["standaard"],
@@ -3055,12 +3162,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
-                    "setpoint": 20.5,
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 24.0,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
+                    "setpoint_low": 21.0,
+                    "setpoint_high": 24.0,
                 },
             },
         }
@@ -3078,7 +3184,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 52
+        assert self.device_items == 56
         assert self.cooling_present
         assert not self.notifications
 
@@ -3112,14 +3218,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "active_preset": "home",
                 "mode": "heat_cool",
+                "thermostat": {
+                    "setpoint_low": 0.0,
+                    "setpoint_high": 22.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "sensors": {
                     "temperature": 22.3,
-                    "setpoint": 20.0,
-                    "setpoint_low": 0.0,
-                    "setpoint_high": 20.0,
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 6.0,
+                    "setpoint_low": 0.0,
+                    "setpoint_high": 22.0,
                 },
             },
             # Heater central
@@ -3154,7 +3266,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 52
+        assert self.device_items == 56
         assert self.cooling_present
         assert not self.notifications
 
@@ -3213,7 +3325,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 51
+        assert self.device_items == 55
         assert smile._anna_cooling_present
         assert smile.lortherm_cooling_enabled
         assert smile._lortherm_cooling_active
@@ -3253,7 +3365,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 51
+        assert self.device_items == 55
         assert smile._anna_cooling_present
         assert smile.lortherm_cooling_enabled
         assert not smile._lortherm_cooling_active
@@ -3287,7 +3399,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 46
+        assert self.device_items == 54
         assert smile._cooling_present
         assert smile._adam_cooling_enabled
 
@@ -3309,9 +3421,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 19.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
                 "active_preset": "home",
                 "available_schedules": ["Thermostat schedule"],
@@ -3320,10 +3435,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint": 19.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint": 19.5,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
@@ -3332,7 +3447,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
-                "maximum_boiler_temperature": 60.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 60.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -3378,7 +3498,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 50
+        assert self.device_items == 54
         assert self.cooling_present
         assert not self.notifications
 
@@ -3399,9 +3519,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint": 19.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
                 "active_preset": "home",
                 "available_schedules": ["Thermostat schedule"],
@@ -3410,10 +3533,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint": 19.5,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint": 19.5,
                 },
             }
         }
@@ -3423,7 +3546,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_hostname == "smile000000"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 50
+        assert self.device_items == 54
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3444,9 +3567,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Anna",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "lower_bound": 4.0,
-                "upper_bound": 30.0,
-                "resolution": 0.1,
+                "thermostat": {
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
                 "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
                 "active_preset": "home",
                 "available_schedules": ["Thermostat schedule"],
@@ -3455,12 +3582,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
-                    "setpoint": 23.0,
-                    "setpoint_low": 19.0,
-                    "setpoint_high": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
@@ -3469,7 +3595,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
-                "maximum_boiler_temperature": 60.0,
+                "maximum_boiler_temperature": {
+                    "setpoint": 60.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -3515,7 +3646,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 52
+        assert self.device_items == 56
         assert self.cooling_present
         assert not self.notifications
 
