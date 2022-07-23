@@ -4,11 +4,11 @@
 name: Latest release
 
 env:
-  CACHE_VERSION: 6
-  DEFAULT_PYTHON: 3.9
+  CACHE_VERSION: 1
+  DEFAULT_PYTHON: 3.10
 
 # Only run on merges
-on: 
+on:
   pull_request:
     types: closed
     branches:
