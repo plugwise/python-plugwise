@@ -28,7 +28,7 @@ jobs = 2
 # Disabled pylint_strict_informational for codefactor
 #load-plugins = [
 #    "pylint_strict_informational",
-$]
+#$]
 persistent = false
 extension-pkg-whitelist = [
     "ciso8601",
