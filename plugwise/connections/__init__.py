@@ -59,7 +59,6 @@ class StickConnection:
         _LOGGER.debug("Reader daemon stopped")
 
     #  TODO: 20220125 function instead of self
-    #  pylint: disable=no-self-use
     def _read_data(self):
         """placeholder."""
         return b"0000"
