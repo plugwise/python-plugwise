@@ -616,8 +616,8 @@ class SmileHelper:
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
                     {
-                        "model": "Anna",
-                        "name": "Anna",
+                        "model": "Smile",
+                        "name": "Smile",
                         "vendor": "Plugwise B.V.",
                     }
                 )
@@ -888,7 +888,7 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        if self.smile_name == "Anna" and d_id == self._heater_id:
+        if self.smile_name == "Smile" and d_id == self._heater_id:
             # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
             if self._anna_cooling_present:
                 # Elga:
