@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.21.1: Smile Anna: change Anna-gateway name to Smile
+- Related to https://developers.home-assistant.io/blog/2022/07/10/entity_naming/ and changes in the Core Plugwise(-beta) code.
+
 # v0.21.0: Smile: improve and add to output, fix cooling-bug
 - Add `domestic_hot_water_setpoint` to the output. Will become an additional Number in Plugwise(-beta).
 - Create separate dicts for `domestic_hot_water_setpoint`, `maximum_boiler_temperature`, and `thermostat` in the output.
