@@ -912,7 +912,6 @@ class SmileHelper:
                         self._lortherm_cooling_active = False
                         if data["modulation_level"] == 100:
                             self._lortherm_cooling_active = True
-                        data.pop("cooling_enabled", None)
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
