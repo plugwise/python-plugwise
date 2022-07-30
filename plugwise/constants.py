@@ -783,6 +783,7 @@ class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
 
     adam_cooling_enabled: bool
     binary_sensors: SmileBinarySensors
+    cooling_enabled: bool
     domestic_hot_water_setpoint: ActuatorData
     elga_cooling_enabled: bool
     lortherm_cooling_enabled: bool
