@@ -315,10 +315,10 @@ class SmileHelper:
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._adam_cooling_enabled = False
-        self._appl_data: dict[str, ApplianceData] = {}
-        self._appliances: etree
         self._allowed_modes: list[str] = []
         self._anna_cooling_present = False
+        self._appliances: etree
+        self._appl_data: dict[str, ApplianceData] = {}
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
@@ -327,8 +327,8 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
-        self._loc_data: dict[str, ThermoLoc] = {}
         self._locations: etree
+        self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
         self._on_off_device = False
         self._opentherm_device = False
@@ -338,7 +338,6 @@ class SmileHelper:
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._thermo_locs: dict[str, ThermoLoc] = {}
-
         ###################################################################
         # '_elga_cooling_enabled' refers to the state of the Elga heatpump
         # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
