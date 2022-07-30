@@ -317,7 +317,6 @@ class SmileHelper:
         self._appl_data: dict[str, ApplianceData] = {}
         self._appliances: etree
         self._allowed_modes: list[str] = []
-        self._adam_cooling_enabled = False
         self._anna_cooling_present = False
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
@@ -356,6 +355,7 @@ class SmileHelper:
         self._lortherm_cooling_active = False
         self.lortherm_cooling_enabled = False
 
+        self.adam_cooling_enabled = False
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -524,7 +524,7 @@ class SmileHelper:
             mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
-                self._adam_cooling_enabled = search.find("mode").text == "cooling"
+                self.adam_cooling_enabled = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
                     for mode in search.find("allowed_modes"):
                         mode_list.append(mode.text)

@@ -97,7 +97,7 @@ class SmileData(SmileHelper):
                 self.smile_name == "Adam"
                 and device["dev_class"] == "heater_central"
                 and self._on_off_device
-                and self._adam_cooling_enabled
+                and self.adam_cooling_enabled
                 and device["binary_sensors"]["heating_state"]
             ):
                 device["binary_sensors"]["cooling_state"] = True
@@ -247,7 +247,7 @@ class SmileData(SmileHelper):
             device_data["mode"] = "heat"
             if self.elga_cooling_enabled:
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self.lortherm_cooling_enabled:
+            if self.adam_cooling_enabled or self.lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data

@@ -3401,7 +3401,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert self.device_items == 54
         assert smile._cooling_present
-        assert smile._adam_cooling_enabled
+        assert smile.adam_cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
