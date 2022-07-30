@@ -684,7 +684,6 @@ class SmileSensors(TypedDict, total=False):
     battery: float
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
-    cooling_enabled: bool
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
@@ -782,8 +781,11 @@ class DeviceDataPoints(
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
+    adam_cooling_enabled: bool
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData
+    elga_cooling_enabled: bool
+    lortherm_cooling_enabled: bool
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData
