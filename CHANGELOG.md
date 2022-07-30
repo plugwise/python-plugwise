@@ -2,8 +2,8 @@
 
 # v0.21.1: Smile: various updates % fixes
 - Change Anna-gateway name to Smile - related to https://developers.home-assistant.io/blog/2022/07/10/entity_naming/ and changes in the Core Plugwise(-beta) code.
-- Output elga_cooling_enabled, lortherm_cooling_enabled or adam_cooling_enabled when applicable.
-- Protect self-vars that will no longer be used in Core Plugwise(-beta).
+- Output elga_cooling_enabled, lortherm_cooling_enabled or adam_cooling_enabled when applicable. To be used in Core Plugwise(-beta) instead of calling api-variables.
+- Protect the self-variables that will no longer be used in Core Plugwise(-beta).
 - pyproject.toml updates.
 - Adapt test-code where needed.
 
