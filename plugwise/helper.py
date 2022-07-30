@@ -888,20 +888,27 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        if self.smile_name == "Smile" and d_id == self._heater_id:
-            # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
-            if self._anna_cooling_present:
-                # Elga:
-                if "elga_status_code" in data:
-                    self.elga_cooling_enabled = data["elga_status_code"] in [8, 9]
-                    self._elga_cooling_active = data["elga_status_code"] == 8
-                    data.pop("elga_status_code", None)
-                # Loria/Thermastate:
-                elif "cooling_state" in data:
-                    self.lortherm_cooling_enabled = data["cooling_state"]
-                    self._lortherm_cooling_active = False
-                    if data["modulation_level"] == 100:
-                        self._lortherm_cooling_active = True
+        if d_id == self._heater_id:
+            if self.adam_cooling_enabled:
+                data["adam_cooling_enabled"] = self.adam_cooling_enabled
+            if self.smile_name == "Smile":
+                # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
+                if self._anna_cooling_present:
+                    # Elga:
+                    if "elga_status_code" in data:
+                        data["elga_cooling_enabled"] = self.elga_cooling_enabled = data[
+                            "elga_status_code"
+                        ] in [8, 9]
+                        self._elga_cooling_active = data["elga_status_code"] == 8
+                        data.pop("elga_status_code", None)
+                    # Loria/Thermastate:
+                    elif "cooling_state" in data:
+                        data[
+                            "lortherm_cooling_enabled"
+                        ] = self.lortherm_cooling_enabled = data["cooling_state"]
+                        self._lortherm_cooling_active = False
+                        if data["modulation_level"] == 100:
+                            self._lortherm_cooling_active = True
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
