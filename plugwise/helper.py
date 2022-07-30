@@ -314,6 +314,7 @@ class SmileHelper:
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
+        self._adam_cooling_enabled = False
         self._appl_data: dict[str, ApplianceData] = {}
         self._appliances: etree
         self._allowed_modes: list[str] = []
@@ -339,23 +340,22 @@ class SmileHelper:
         self._thermo_locs: dict[str, ThermoLoc] = {}
 
         ###################################################################
-        # 'elga_cooling_enabled' refers to the state of the Elga heatpump
+        # '_elga_cooling_enabled' refers to the state of the Elga heatpump
         # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
         # means cooling mode is available, next to heating mode.
         # 'elga_status_code' = 8 means cooling is active, 9 means idle.
         #
-        # 'lortherm_cooling_enabled' refers to the state of the Loria or
+        # '_lortherm_cooling_enabled' refers to the state of the Loria or
         # Thermastage heatpump connected to an Anna. For these,
         # 'cooling_state' = on means set to cooling mode, instead of to
         # heating mode.
         # 'modulation_level' = 100 means cooling is active, 0.0 means idle.
         ###################################################################
         self._elga_cooling_active = False
-        self.elga_cooling_enabled = False
+        self._elga_cooling_enabled = False
         self._lortherm_cooling_active = False
-        self.lortherm_cooling_enabled = False
+        self._lortherm_cooling_enabled = False
 
-        self.adam_cooling_enabled = False
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -524,7 +524,7 @@ class SmileHelper:
             mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
-                self.adam_cooling_enabled = search.find("mode").text == "cooling"
+                self._adam_cooling_enabled = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
                     for mode in search.find("allowed_modes"):
                         mode_list.append(mode.text)
@@ -889,23 +889,26 @@ class SmileHelper:
             data.pop("heating_state", None)
 
         if d_id == self._heater_id:
-            if self.adam_cooling_enabled:
-                data["adam_cooling_enabled"] = self.adam_cooling_enabled
+            if self._adam_cooling_enabled:
+                data["adam_cooling_enabled"] = self._adam_cooling_enabled
             if self.smile_name == "Smile":
                 # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
                 if self._anna_cooling_present:
                     # Elga:
                     if "elga_status_code" in data:
-                        data["elga_cooling_enabled"] = self.elga_cooling_enabled = data[
-                            "elga_status_code"
-                        ] in [8, 9]
+                        data[
+                            "elga_cooling_enabled"
+                        ] = self._elga_cooling_enabled = data["elga_status_code"] in [
+                            8,
+                            9,
+                        ]
                         self._elga_cooling_active = data["elga_status_code"] == 8
                         data.pop("elga_status_code", None)
-                    # Loria/Thermastate:
-                    elif "cooling_enabled" in data:
+                    # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+                    elif "cooling_state" in data:
                         data[
                             "lortherm_cooling_enabled"
-                        ] = self.lortherm_cooling_enabled = data["cooling_enabled"]
+                        ] = self._lortherm_cooling_enabled = data["cooling_state"]
                         self._lortherm_cooling_active = False
                         if data["modulation_level"] == 100:
                             self._lortherm_cooling_active = True

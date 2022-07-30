@@ -64,7 +64,7 @@ class SmileData(SmileHelper):
                 if device["dev_class"] not in ZONE_THERMOSTATS:
                     continue
 
-                if self.elga_cooling_enabled:
+                if self._elga_cooling_enabled:
                     # Replace setpoint with setpoint_high/_low
                     thermostat = device["thermostat"]
                     sensors = device["sensors"]
@@ -97,7 +97,7 @@ class SmileData(SmileHelper):
                 self.smile_name == "Adam"
                 and device["dev_class"] == "heater_central"
                 and self._on_off_device
-                and self.adam_cooling_enabled
+                and self._adam_cooling_enabled
                 and device["binary_sensors"]["heating_state"]
             ):
                 device["binary_sensors"]["cooling_state"] = True
@@ -245,9 +245,9 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self.elga_cooling_enabled:
+            if self._elga_cooling_enabled:
                 device_data["mode"] = "heat_cool"
-            if self.adam_cooling_enabled or self.lortherm_cooling_enabled:
+            if self._adam_cooling_enabled or self._lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
@@ -661,7 +661,7 @@ class Smile(SmileComm, SmileData):
         setpoint: float | None = None
         if "setpoint" in items:
             setpoint = items["setpoint"]
-        if self.elga_cooling_enabled:
+        if self._elga_cooling_enabled:
             if "setpoint_low" in items:
                 setpoint = items["setpoint_low"]
             if self._elga_cooling_active:
