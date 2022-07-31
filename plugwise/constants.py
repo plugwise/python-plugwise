@@ -528,42 +528,17 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 
 # Known types of Smiles and Stretches
 SMILES: Final[dict[str, dict[str, str]]] = {
-    "smile_open_therm_v3": {
-        "type": "thermostat",
-        "name": "Adam",
-    },
-    "smile_open_therm_v2": {
-        "type": "thermostat",
-        "name": "Adam",
-    },
-    "smile_thermo_v4": {
-        "type": "thermostat",
-        "name": "Smile",
-    },
-    "smile_thermo_v3": {
-        "type": "thermostat",
-        "name": "Smile",
-    },
-    "smile_thermo_v1": {
-        "type": "thermostat",
-        "name": "Smile",
-    },
-    "smile_v4": {
-        "type": "power",
-        "name": "P1",
-    },
-    "smile_v3": {
-        "type": "power",
-        "name": "P1",
-    },
-    "smile_v2": {
-        "type": "power",
-        "name": "P1",
-    },
-    "stretch_v3": {"type": "stretch", "name": "Stretch"},
+    "smile_v2": {"type": "power", "name": "P1"},
+    "smile_v3": {"type": "power", "name": "P1"},
+    "smile_v4": {"type": "power", "name": "P1"},
+    "smile_open_therm_v2": {"type": "thermostat", "name": "Adam"},
+    "smile_open_therm_v3": {"type": "thermostat", "name": "Adam"},
+    "smile_thermo_v1": {"type": "thermostat", "name": "Smile"},
+    "smile_thermo_v3": {"type": "thermostat", "name": "Smile"},
+    "smile_thermo_v4": {"type": "thermostat", "name": "Smile"},
     "stretch_v2": {"type": "stretch", "name": "Stretch"},
+    "stretch_v3": {"type": "stretch", "name": "Stretch"},
 }
-
 
 # All available Binary Sensor, Sensor, and Switch Types
 
