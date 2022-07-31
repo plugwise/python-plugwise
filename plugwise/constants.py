@@ -530,40 +530,38 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 SMILES: Final[dict[str, dict[str, str]]] = {
     "smile_open_therm_v3": {
         "type": "thermostat",
-        "friendly_name": "Adam",
+        "name": "Adam",
     },
     "smile_open_therm_v2": {
         "type": "thermostat",
-        "friendly_name": "Adam",
+        "name": "Adam",
     },
     "smile_thermo_v4": {
         "type": "thermostat",
-        "friendly_name": "Smile",
+        "name": "Smile",
     },
     "smile_thermo_v3": {
         "type": "thermostat",
-        "friendly_name": "Smile",
+        "name": "Smile",
     },
     "smile_thermo_v1": {
         "type": "thermostat",
-        "friendly_name": "Smile",
-        "legacy": "true",
+        "name": "Smile",
     },
     "smile_v4": {
         "type": "power",
-        "friendly_name": "P1",
+        "name": "P1",
     },
     "smile_v3": {
         "type": "power",
-        "friendly_name": "P1",
+        "name": "P1",
     },
     "smile_v2": {
         "type": "power",
-        "friendly_name": "P1",
-        "legacy": "true",
+        "name": "P1",
     },
-    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
-    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
+    "stretch_v3": {"type": "stretch", "name": "Stretch"},
+    "stretch_v2": {"type": "stretch", "name": "Stretch"},
 }
 
 
