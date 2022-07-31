@@ -474,7 +474,6 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
         ATTR_NAME: "water_temperature",
         ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
     },
-    "cooling_enabled": {ATTR_UNIT_OF_MEASUREMENT: NONE},
     "domestic_hot_water_comfort_mode": {
         ATTR_NAME: "dhw_cm_switch",
         ATTR_UNIT_OF_MEASUREMENT: NONE,
@@ -529,44 +528,17 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 
 # Known types of Smiles and Stretches
 SMILES: Final[dict[str, dict[str, str]]] = {
-    "smile_open_therm_v3": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_open_therm_v2": {
-        "type": "thermostat",
-        "friendly_name": "Adam",
-    },
-    "smile_thermo_v4": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v3": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-    },
-    "smile_thermo_v1": {
-        "type": "thermostat",
-        "friendly_name": "Anna",
-        "legacy": "true",
-    },
-    "smile_v4": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v3": {
-        "type": "power",
-        "friendly_name": "P1",
-    },
-    "smile_v2": {
-        "type": "power",
-        "friendly_name": "P1",
-        "legacy": "true",
-    },
-    "stretch_v3": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
-    "stretch_v2": {"type": "stretch", "friendly_name": "Stretch", "legacy": "true"},
+    "smile_v2": {"type": "power", "name": "P1"},
+    "smile_v3": {"type": "power", "name": "P1"},
+    "smile_v4": {"type": "power", "name": "P1"},
+    "smile_open_therm_v2": {"type": "thermostat", "name": "Adam"},
+    "smile_open_therm_v3": {"type": "thermostat", "name": "Adam"},
+    "smile_thermo_v1": {"type": "thermostat", "name": "Smile"},
+    "smile_thermo_v3": {"type": "thermostat", "name": "Smile"},
+    "smile_thermo_v4": {"type": "thermostat", "name": "Smile"},
+    "stretch_v2": {"type": "stretch", "name": "Stretch"},
+    "stretch_v3": {"type": "stretch", "name": "Stretch"},
 }
-
 
 # All available Binary Sensor, Sensor, and Switch Types
 
@@ -684,7 +656,6 @@ class SmileSensors(TypedDict, total=False):
     battery: float
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
-    cooling_enabled: bool
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
@@ -782,8 +753,11 @@ class DeviceDataPoints(
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
+    adam_cooling_enabled: bool
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData
+    elga_cooling_enabled: bool
+    lortherm_cooling_enabled: bool
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData

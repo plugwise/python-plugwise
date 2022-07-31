@@ -26,9 +26,9 @@ ignore = [
 # Disabled for now: https://github.com/PyCQA/pylint/issues/3584
 jobs = 2
 # Disabled pylint_strict_informational for codefactor
-load-plugins = [
-    "pylint_strict_informational",
-]
+#load-plugins = [
+#    "pylint_strict_informational",
+#]
 persistent = false
 extension-pkg-whitelist = [
     "ciso8601",
@@ -65,7 +65,6 @@ good-names = [
 # wrong-import-order - isort guards this
 disable = [
     "format",
-    "abstract-class-little-used",
     "abstract-method",
     "consider-using-f-string",
     "cyclic-import",

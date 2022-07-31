@@ -630,8 +630,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "dev_class": "gateway",
                 "firmware": "1.8.0",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
             },
@@ -728,8 +728,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "dev_class": "gateway",
                 "firmware": "1.8.0",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 21.0},
@@ -968,8 +968,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "mac_address": "012345670001",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 7.44},
@@ -994,7 +994,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         assert not smile._anna_cooling_present
         assert not smile._elga_cooling_active
-        assert not smile.elga_cooling_enabled
+        assert not smile._elga_cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -1082,8 +1082,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "mac_address": "012345670001",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 7.44},
@@ -1206,8 +1206,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "mac_address": "012345670001",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 10.8},
@@ -1265,8 +1265,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "mac_address": "012345670001",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 16.6},
@@ -1375,8 +1375,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "mac_address": "012345670001",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 3.56},
@@ -2662,6 +2662,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 65.0,
                     "resolution": 0.01,
                 },
+                "adam_cooling_enabled": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -2712,7 +2713,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 366
+        assert self.device_items == 367
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3109,6 +3110,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
+                "elga_cooling_enabled": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -3133,8 +3135,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
                 "mac_address": "012345670001",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 20.2},
@@ -3184,12 +3186,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 56
+        assert self.device_items == 57
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert smile.elga_cooling_enabled
+        assert smile._elga_cooling_enabled
         assert not smile._elga_cooling_active
 
         result = await self.tinker_thermostat(
@@ -3236,6 +3238,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "elga_cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3266,12 +3269,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 56
+        assert self.device_items == 57
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert smile.elga_cooling_enabled
+        assert smile._elga_cooling_enabled
         assert smile._elga_cooling_active
 
         result = await self.tinker_thermostat(
@@ -3299,6 +3302,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "lortherm_cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3327,7 +3331,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert self.device_items == 55
         assert smile._anna_cooling_present
-        assert smile.lortherm_cooling_enabled
+        assert smile._lortherm_cooling_enabled
         assert smile._lortherm_cooling_active
 
         await smile.close_connection()
@@ -3339,6 +3343,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "lortherm_cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": False,
                     "dhw_state": False,
@@ -3367,7 +3372,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert self.device_items == 55
         assert smile._anna_cooling_present
-        assert smile.lortherm_cooling_enabled
+        assert smile._lortherm_cooling_enabled
         assert not smile._lortherm_cooling_active
 
         await smile.close_connection()
@@ -3379,6 +3384,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "0ca13e8176204ca7bf6f09de59f81c83": {
+                "adam_cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3399,7 +3405,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 54
+        assert self.device_items == 55
         assert smile._cooling_present
         assert smile._adam_cooling_enabled
 
@@ -3453,6 +3459,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
+                "elga_cooling_enabled": False,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -3477,8 +3484,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
                 "mac_address": "C4930002FE76",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 13.0},
@@ -3498,7 +3505,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 54
+        assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
 
@@ -3546,7 +3553,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_hostname == "smile000000"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 54
+        assert self.device_items == 55
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3601,6 +3608,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
+                "elga_cooling_enabled": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -3625,8 +3633,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
                 "mac_address": "C4930002FE76",
-                "model": "Anna",
-                "name": "Anna",
+                "model": "Smile",
+                "name": "Smile",
                 "vendor": "Plugwise B.V.",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 31.0},
@@ -3646,12 +3654,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 56
+        assert self.device_items == 57
         assert self.cooling_present
         assert not self.notifications
 
         assert smile._anna_cooling_present
-        assert smile.elga_cooling_enabled
+        assert smile._elga_cooling_enabled
         assert smile._elga_cooling_active
 
         await smile.close_connection()

@@ -54,7 +54,7 @@ class SmileData(SmileHelper):
         """Helper-function for adding/updating various cooling-related values."""
         for _, device in devices.items():
             # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-            if self.smile_name == "Anna":
+            if self.smile_name == "Smile":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
                     device["binary_sensors"]["cooling_state"] = False
                     if self._elga_cooling_active or self._lortherm_cooling_active:
@@ -64,7 +64,7 @@ class SmileData(SmileHelper):
                 if device["dev_class"] not in ZONE_THERMOSTATS:
                     continue
 
-                if self.elga_cooling_enabled:
+                if self._elga_cooling_enabled:
                     # Replace setpoint with setpoint_high/_low
                     thermostat = device["thermostat"]
                     sensors = device["sensors"]
@@ -153,7 +153,7 @@ class SmileData(SmileHelper):
             search = self._domain_objects
             self._anna_cooling_present = adam_cooling_present = False
             if search.find(locator_1) is not None:
-                if self.smile_name == "Anna":
+                if self.smile_name == "Smile":
                     self._anna_cooling_present = True
                 else:
                     adam_cooling_present = True
@@ -245,9 +245,9 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self.elga_cooling_enabled:
+            if self._elga_cooling_enabled:
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self.lortherm_cooling_enabled:
+            if self._adam_cooling_enabled or self._lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
         return device_data
@@ -450,11 +450,11 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError("Plugwise error, check log for more info.")
 
-        self.smile_name = SMILES[target_smile]["friendly_name"]
+        self.smile_name = SMILES[target_smile]["name"]
         self.smile_type = SMILES[target_smile]["type"]
         self.smile_version = (self.smile_fw_version, ver)
 
-        if "legacy" in SMILES[target_smile]:
+        if target_smile in ["smile_thermo_v1", "smile_v2", "stretch_v3", "stretch_v2"]:
             self._smile_legacy = True
 
         if self.smile_type == "stretch":
@@ -661,7 +661,7 @@ class Smile(SmileComm, SmileData):
         setpoint: float | None = None
         if "setpoint" in items:
             setpoint = items["setpoint"]
-        if self.elga_cooling_enabled:
+        if self._elga_cooling_enabled:
             if "setpoint_low" in items:
                 setpoint = items["setpoint_low"]
             if self._elga_cooling_active:

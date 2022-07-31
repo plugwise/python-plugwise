@@ -314,11 +314,11 @@ class SmileHelper:
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._appl_data: dict[str, ApplianceData] = {}
-        self._appliances: etree
-        self._allowed_modes: list[str] = []
         self._adam_cooling_enabled = False
+        self._allowed_modes: list[str] = []
         self._anna_cooling_present = False
+        self._appliances: etree
+        self._appl_data: dict[str, ApplianceData] = {}
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
@@ -327,8 +327,8 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
-        self._loc_data: dict[str, ThermoLoc] = {}
         self._locations: etree
+        self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
         self._on_off_device = False
         self._opentherm_device = False
@@ -338,23 +338,22 @@ class SmileHelper:
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._thermo_locs: dict[str, ThermoLoc] = {}
-
         ###################################################################
-        # 'elga_cooling_enabled' refers to the state of the Elga heatpump
+        # '_elga_cooling_enabled' refers to the state of the Elga heatpump
         # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
         # means cooling mode is available, next to heating mode.
         # 'elga_status_code' = 8 means cooling is active, 9 means idle.
         #
-        # 'lortherm_cooling_enabled' refers to the state of the Loria or
+        # '_lortherm_cooling_enabled' refers to the state of the Loria or
         # Thermastage heatpump connected to an Anna. For these,
         # 'cooling_state' = on means set to cooling mode, instead of to
         # heating mode.
         # 'modulation_level' = 100 means cooling is active, 0.0 means idle.
         ###################################################################
         self._elga_cooling_active = False
-        self.elga_cooling_enabled = False
+        self._elga_cooling_enabled = False
         self._lortherm_cooling_active = False
-        self.lortherm_cooling_enabled = False
+        self._lortherm_cooling_enabled = False
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
@@ -616,8 +615,8 @@ class SmileHelper:
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
                     {
-                        "model": "Anna",
-                        "name": "Anna",
+                        "model": "Smile",
+                        "name": "Smile",
                         "vendor": "Plugwise B.V.",
                     }
                 )
@@ -888,20 +887,25 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        if self.smile_name == "Anna" and d_id == self._heater_id:
-            # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
-            if self._anna_cooling_present:
+        if d_id == self._heater_id:
+            if self._adam_cooling_enabled:
+                data["adam_cooling_enabled"] = self._adam_cooling_enabled
+            if self.smile_name == "Smile":
+                # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
+                if not self._anna_cooling_present:
+                    pass
+
                 # Elga:
                 if "elga_status_code" in data:
-                    self.elga_cooling_enabled = data["elga_status_code"] in [8, 9]
+                    self._elga_cooling_enabled = data["elga_status_code"] in [8, 9]
+                    data["elga_cooling_enabled"] = self._elga_cooling_enabled
                     self._elga_cooling_active = data["elga_status_code"] == 8
                     data.pop("elga_status_code", None)
-                # Loria/Thermastate:
+                # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
                 elif "cooling_state" in data:
-                    self.lortherm_cooling_enabled = data["cooling_state"]
-                    self._lortherm_cooling_active = False
-                    if data["modulation_level"] == 100:
-                        self._lortherm_cooling_active = True
+                    self._lortherm_cooling_enabled = data["cooling_state"]
+                    data["lortherm_cooling_enabled"] = self._lortherm_cooling_enabled
+                    self._lortherm_cooling_active = data["modulation_level"] == 100
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
@@ -989,7 +993,7 @@ class SmileHelper:
         """
         switch_groups: dict[str, ApplianceData] = {}
         # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile_name == "Anna":
+        if self.smile_type == "power" or self.smile_name == "Smile":
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
