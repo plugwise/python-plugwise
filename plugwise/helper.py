@@ -30,11 +30,11 @@ from .constants import (
     ENERGY_WATT_HOUR,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
-    HOME_MEASUREMENTS,
     LIMITS,
     LOCATIONS,
     LOGGER,
     NONE,
+    P1_MEASUREMENTS,
     POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
@@ -163,7 +163,7 @@ def power_data_local_format(
     """Format power data."""
     attrs_uom = getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
     f_val = format_measure(val, attrs_uom)
-    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
+    # Format only P1_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
     if attrs_uom == POWER_WATT:
         f_val = int(round(float(val)))
     if all(item in key_string for item in ("electricity", "cumulative")):
@@ -1091,7 +1091,7 @@ class SmileHelper:
 
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
-        for loc.measurement, loc.attrs in HOME_MEASUREMENTS.items():
+        for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 for loc.peak_select in peak_list:
                     loc.locator = (
