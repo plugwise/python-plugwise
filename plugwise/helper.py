@@ -159,7 +159,7 @@ def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
 ) -> float | int | bool:
     """Format power data."""
-    attrs_uom = attrs[ATTR_UNIT_OF_MEASUREMENT]
+    attrs_uom = getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
     f_val = format_measure(val, attrs_uom)
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
     if attrs_uom == POWER_WATT:
@@ -822,13 +822,13 @@ class SmileHelper:
                 ):
                     continue
 
-                if new_name := attrs.get(ATTR_NAME):
+                if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ["regulation_mode"]:
-                    data[measurement] = format_measure(appl_p_loc.text, attrs[ATTR_UNIT_OF_MEASUREMENT])  # type: ignore [literal-required]
+                    data[measurement] = format_measure(appl_p_loc.text, attrs.unit_of_measurement)  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
