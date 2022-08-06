@@ -451,8 +451,8 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError("Plugwise error, check log for more info.")
 
-        self.smile_name = SMILES[target_smile]["name"]
-        self.smile_type = SMILES[target_smile]["type"]
+        self.smile_name = SMILES[target_smile].smile_name
+        self.smile_type = SMILES[target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
 
         if target_smile in ["smile_thermo_v1", "smile_v2", "stretch_v3", "stretch_v2"]:
