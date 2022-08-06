@@ -52,8 +52,7 @@ class StickConnection:
     def _reader_deamon(self):
         """Thread to collect available data from connection."""
         while self.run_reader_thread:
-            data = self._read_data()
-            if data:
+            if data := self._read_data():
                 self.parser(data)
             time.sleep(0.01)
         _LOGGER.debug("Reader daemon stopped")

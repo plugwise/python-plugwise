@@ -91,8 +91,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     if vendor_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
             return "Anna"
-        model = version_to_model(name)
-        if model != "Unknown":
+        if (model := version_to_model(name)) != "Unknown":
             return model
     return name
 
@@ -165,7 +164,7 @@ def power_data_local_format(
     # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
     if attrs_uom == POWER_WATT:
         f_val = int(round(float(val)))
-    if all(item in key_string for item in ["electricity", "cumulative"]):
+    if all(item in key_string for item in ("electricity", "cumulative")):
         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
 
     return f_val
@@ -441,10 +440,10 @@ class SmileHelper:
         }
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
-            locator = f".//{mod_type}[@id='{link_id}']...."
-            # Not possible to walrus...
-            module = self._modules.find(locator)
-            if module is not None:
+            loc = f".//{mod_type}[@id='{link_id}']...."
+            # Not possible to walrus for some reason...
+            module = self._modules.find(loc)
+            if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
                 model_data["vendor_name"] = module.find("vendor_name").text
                 model_data["vendor_model"] = module.find("vendor_model").text
@@ -659,9 +658,8 @@ class SmileHelper:
             appl.vendor_name = None
 
             # Determine class for this appliance
-            appl = self._appliance_info_finder(appliance, appl)
             # Skip on heater_central when no active device present or on orphaned stretch devices
-            if appl is None:
+            if (appl := self._appliance_info_finder(appliance, appl)) is None:
                 continue
 
             if appl.pwclass == "gateway":
@@ -1268,8 +1266,7 @@ class SmileHelper:
         if self._stretch_v2:
             actuator = "actuators"
             func_type = "relay"
-        appl_class = xml.find("type").text
-        if appl_class not in SPECIAL_PLUG_TYPES:
+        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
                 data["lock"] = found.text == "true"

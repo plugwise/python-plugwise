@@ -278,8 +278,9 @@ class SmileData(SmileHelper):
                     device_data["regulation_modes"] = self._allowed_modes
 
             # Get P1 data from LOCATIONS
-            power_data = self._power_data_from_location(details["location"])
-            if power_data is not None:
+            if (
+                power_data := self._power_data_from_location(details["location"])
+            ) is not None:
                 device_data.update(power_data)
 
         # Switching groups data
@@ -402,7 +403,7 @@ class Smile(SmileComm, SmileData):
                 model = system.find("./gateway/product").text
                 self.smile_hostname = system.find("./gateway/hostname").text
                 # If wlan0 contains data it's active, so eth0 should be checked last
-                for network in ["wlan0", "eth0"]:
+                for network in ("wlan0", "eth0"):
                     locator = f"./{network}/mac"
                     if (net_locator := system.find(locator)) is not None:
                         self.smile_mac_address = net_locator.text
@@ -516,7 +517,7 @@ class Smile(SmileComm, SmileData):
                 if key in dev_dict:
                     dev_dict[key] = value  # type: ignore [literal-required]
 
-            for item in ["binary_sensors", "sensors", "switches"]:
+            for item in ("binary_sensors", "sensors", "switches"):
                 notifs: dict[str, str] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
@@ -604,8 +605,7 @@ class Smile(SmileComm, SmileData):
         locator = f'.//*[@id="{schedule_rule_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
         locator = f'.//*[@id="{loc_id}"].../...'
-        subject = contexts.find(locator)
-        if subject is None:
+        if (subject := contexts.find(locator)) is None:
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
@@ -749,9 +749,8 @@ class Smile(SmileComm, SmileData):
             locator = (
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
-            lock_state: str = self._appliances.find(locator).text
             # Don't bother switching a relay when the corresponding lock-state is true
-            if lock_state == "true":
+            if self._appliances.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
