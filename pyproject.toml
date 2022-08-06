@@ -25,10 +25,10 @@ ignore = [
 # any too bad. Override on command line as appropriate.
 # Disabled for now: https://github.com/PyCQA/pylint/issues/3584
 jobs = 2
-# Disabled pylint_strict_informational for codefactor
-#load-plugins = [
-#    "pylint_strict_informational",
-#]
+load-plugins = [
+    "pylint.extensions.code_style",
+    "pylint.extensions.typing",
+]
 persistent = false
 extension-pkg-whitelist = [
     "ciso8601",
