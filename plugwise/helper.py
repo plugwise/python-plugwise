@@ -23,6 +23,7 @@ from .constants import (
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
+    DATA,
     DAYS,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
@@ -41,6 +42,7 @@ from .constants import (
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
+    UOM,
     ApplianceData,
     DeviceData,
     DeviceDataPoints,
@@ -805,7 +807,7 @@ class SmileHelper:
         self,
         appliance: etree,
         data: DeviceData,
-        measurements: dict[str, dict[str, str]],
+        measurements: dict[str, DATA | UOM],
     ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
@@ -828,7 +830,7 @@ class SmileHelper:
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ["regulation_mode"]:
-                    data[measurement] = format_measure(appl_p_loc.text, attrs.unit_of_measurement)  # type: ignore [literal-required]
+                    data[measurement] = format_measure(appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
