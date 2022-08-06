@@ -429,8 +429,8 @@ RULES: Final = "/core/rules"
 SYSTEM: Final = "/system"
 STATUS: Final = "/system/status.xml"
 
-UOM = namedtuple("Uom", ATTR_UNIT_OF_MEASUREMENT)
-DATA = namedtuple("Data", "name unit_of_measurement")
+UOM = namedtuple("UOM", "unit_of_measurement")
+DATA = namedtuple("DATA", "name unit_of_measurement")
 # P1 related measurements:
 HOME_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
@@ -442,7 +442,7 @@ HOME_MEASUREMENTS: Final[dict[str, UOM]] = {
 # zone_thermosstat: 'temperature_offset'
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
-DEVICE_MEASUREMENTS: Final[dict[str, UOM | DATA]] = {
+DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # HA Core thermostat current_temperature
     "temperature": UOM(TEMP_CELSIUS),
     # HA Core thermostat setpoint
@@ -466,7 +466,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, UOM | DATA]] = {
 }
 
 # Heater Central related measurements
-HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
+HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
     "domestic_hot_water_comfort_mode": DATA("dhw_cm_switch", NONE),
     "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
@@ -499,7 +499,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
 }
 
 # Known types of Smiles and Stretches
-SMILE = namedtuple("Smile", "smile_type smile_name")
+SMILE = namedtuple("SMILE", "smile_type smile_name")
 SMILES: Final[dict[str, SMILE]] = {
     "smile_v2": SMILE("power", "P1"),
     "smile_v3": SMILE("power", "P1"),
