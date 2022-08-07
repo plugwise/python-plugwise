@@ -376,10 +376,6 @@ ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
     "maximum_boiler_temperature",
     "thermostat",
 )
-ATTR_ENABLED: Final = "enabled_default"
-ATTR_ID: Final = "id"
-ATTR_ICON: Final = "icon"
-ATTR_TYPE: Final = "type"
 DAYS: Final[dict[str, int]] = {
     "mo": 0,
     "tu": 1,
@@ -402,7 +398,6 @@ LIMITS: Final[tuple[str, ...]] = (
 )
 MAX_SETPOINT: Final[float] = 40.0
 MIN_SETPOINT: Final[float] = 0.0
-SEVERITIES: Final[tuple[str, ...]] = ("other", "info", "message", "warning", "error")
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
 SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
