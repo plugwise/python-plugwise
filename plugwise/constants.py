@@ -364,14 +364,14 @@ FEATURE_RSSI_OUT: Final[dict[str, str]] = {
 
 ### Smile constants ###
 
-ACTUATOR_CLASSES: Final[tuple[str]] = (
+ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "heater_central",
     "thermostat",
     "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
 )
-ACTIVE_ACTUATORS: Final[tuple[str]] = (
+ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
     "domestic_hot_water_setpoint",
     "maximum_boiler_temperature",
     "thermostat",
@@ -394,26 +394,31 @@ DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
-LIMITS: Final[tuple[str]] = ("setpoint", "lower_bound", "upper_bound", "resolution")
+LIMITS: Final[tuple[str, ...]] = (
+    "setpoint",
+    "lower_bound",
+    "upper_bound",
+    "resolution",
+)
 MAX_SETPOINT: Final[float] = 40.0
 MIN_SETPOINT: Final[float] = 0.0
-SEVERITIES: Final[tuple[str]] = ("other", "info", "warning", "error")
-SPECIAL_FORMAT: Final[tuple[str]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
-SWITCH_GROUP_TYPES: Final[tuple[str]] = ("switching", "report")
-ZONE_THERMOSTATS: Final[tuple[str]] = (
+SEVERITIES: Final[tuple[str, ...]] = ("other", "info", "message", "warning", "error")
+SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
+SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
+ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
     "thermostat",
     "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
 )
-THERMOSTAT_CLASSES: Final[tuple[str]] = (
+THERMOSTAT_CLASSES: Final[tuple[str, ...]] = (
     "thermostat",
     "thermo_sensor",
     "zone_thermometer",
     "zone_thermostat",
     "thermostatic_radiator_valve",
 )
-SPECIAL_PLUG_TYPES: Final[tuple[str]] = (
+SPECIAL_PLUG_TYPES: Final[tuple[str, ...]] = (
     "central_heating_pump",
     "valve_actuator",
     "heater_electric",
@@ -515,7 +520,7 @@ SMILES: Final[dict[str, SMILE]] = {
 
 # All available Binary Sensor, Sensor, and Switch Types
 
-BINARY_SENSORS: Final[tuple[str]] = (
+BINARY_SENSORS: Final[tuple[str, ...]] = (
     "compressor_state",
     "cooling_state",
     "dhw_state",
@@ -525,7 +530,7 @@ BINARY_SENSORS: Final[tuple[str]] = (
     "slave_boiler_state",
 )
 
-SENSORS: Final[tuple[str]] = (
+SENSORS: Final[tuple[str, ...]] = (
     "battery",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
@@ -568,7 +573,7 @@ SENSORS: Final[tuple[str]] = (
     "water_temperature",
 )
 
-SWITCHES: Final[tuple[str]] = (
+SWITCHES: Final[tuple[str, ...]] = (
     "dhw_cm_switch",
     "lock",
     "relay",
