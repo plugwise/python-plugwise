@@ -23,17 +23,18 @@ from .constants import (
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
+    DATA,
     DAYS,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
-    HOME_MEASUREMENTS,
     LIMITS,
     LOCATIONS,
     LOGGER,
     NONE,
+    P1_MEASUREMENTS,
     POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
@@ -41,6 +42,7 @@ from .constants import (
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
+    UOM,
     ApplianceData,
     DeviceData,
     DeviceDataPoints,
@@ -91,8 +93,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     if vendor_name in ["Plugwise", "Plugwise B.V."]:
         if name == "ThermoTouch":
             return "Anna"
-        model = version_to_model(name)
-        if model != "Unknown":
+        if (model := version_to_model(name)) != "Unknown":
             return model
     return name
 
@@ -160,12 +161,12 @@ def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
 ) -> float | int | bool:
     """Format power data."""
-    attrs_uom = attrs[ATTR_UNIT_OF_MEASUREMENT]
+    attrs_uom = getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
     f_val = format_measure(val, attrs_uom)
-    # Format only HOME_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
+    # Format only P1_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
     if attrs_uom == POWER_WATT:
         f_val = int(round(float(val)))
-    if all(item in key_string for item in ["electricity", "cumulative"]):
+    if all(item in key_string for item in ("electricity", "cumulative")):
         f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
 
     return f_val
@@ -441,10 +442,10 @@ class SmileHelper:
         }
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
-            locator = f".//{mod_type}[@id='{link_id}']...."
-            # Not possible to walrus...
-            module = self._modules.find(locator)
-            if module is not None:
+            loc = f".//{mod_type}[@id='{link_id}']...."
+            # Not possible to walrus for some reason...
+            module = self._modules.find(loc)
+            if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
                 model_data["vendor_name"] = module.find("vendor_name").text
                 model_data["vendor_model"] = module.find("vendor_model").text
@@ -659,9 +660,8 @@ class SmileHelper:
             appl.vendor_name = None
 
             # Determine class for this appliance
-            appl = self._appliance_info_finder(appliance, appl)
             # Skip on heater_central when no active device present or on orphaned stretch devices
-            if appl is None:
+            if (appl := self._appliance_info_finder(appliance, appl)) is None:
                 continue
 
             if appl.pwclass == "gateway":
@@ -807,7 +807,7 @@ class SmileHelper:
         self,
         appliance: etree,
         data: DeviceData,
-        measurements: dict[str, dict[str, str]],
+        measurements: dict[str, DATA | UOM],
     ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
@@ -824,13 +824,13 @@ class SmileHelper:
                 ):
                     continue
 
-                if new_name := attrs.get(ATTR_NAME):
+                if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ["regulation_mode"]:
-                    data[measurement] = format_measure(appl_p_loc.text, attrs[ATTR_UNIT_OF_MEASUREMENT])  # type: ignore [literal-required]
+                    data[measurement] = format_measure(appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
@@ -1091,7 +1091,7 @@ class SmileHelper:
 
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
-        for loc.measurement, loc.attrs in HOME_MEASUREMENTS.items():
+        for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 for loc.peak_select in peak_list:
                     loc.locator = (
@@ -1268,8 +1268,7 @@ class SmileHelper:
         if self._stretch_v2:
             actuator = "actuators"
             func_type = "relay"
-        appl_class = xml.find("type").text
-        if appl_class not in SPECIAL_PLUG_TYPES:
+        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
                 data["lock"] = found.text == "true"

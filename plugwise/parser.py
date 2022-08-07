@@ -74,8 +74,7 @@ class PlugwiseParser:
                 str(MESSAGE_HEADER),
                 str(self._buffer),
             )
-            header_index = self._buffer.find(MESSAGE_HEADER)
-            if header_index == -1:
+            if (header_index := self._buffer.find(MESSAGE_HEADER)) == -1:
                 _LOGGER.debug("No valid message header found yet")
             else:
                 _LOGGER.debug(
@@ -89,8 +88,7 @@ class PlugwiseParser:
                     str(MESSAGE_FOOTER),
                     str(self._buffer),
                 )
-                footer_index = self._buffer.find(MESSAGE_FOOTER)
-                if footer_index == -1:
+                if (footer_index := self._buffer.find(MESSAGE_FOOTER)) == -1:
                     _LOGGER.debug("No valid message footer found yet")
                 else:
                     _LOGGER.debug(

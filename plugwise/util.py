@@ -60,13 +60,12 @@ def inc_seq_id(seq_id: str | None, value: int = 1) -> bytearray | bytes:
     """
     if seq_id is None:
         return b"0000"
-    temp_int = int(seq_id, 16) + value
     # Max seq_id = b'FFFB'
     # b'FFFC' reserved for <unknown> message
     # b'FFFD' reserved for 'NodeJoinAckResponse' message
     # b'FFFE' reserved for 'NodeSwitchGroupResponse' message
     # b'FFFF' reserved for 'NodeAwakeResponse' message
-    if temp_int >= 65532:
+    if (temp_int := int(seq_id, 16) + value) >= 65532:
         temp_int = 0
     temp_str = str(hex(temp_int)).lstrip("0x").upper()
     while len(temp_str) < 4:

@@ -1,6 +1,7 @@
 """Plugwise Stick and Smile constants."""
 from __future__ import annotations
 
+from collections import namedtuple
 import datetime as dt
 import logging
 from typing import Final, TypedDict
@@ -363,22 +364,18 @@ FEATURE_RSSI_OUT: Final[dict[str, str]] = {
 
 ### Smile constants ###
 
-ACTUATOR_CLASSES: Final[list[str]] = [
+ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "heater_central",
     "thermostat",
     "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
-]
-ACTIVE_ACTUATORS: Final[list[str]] = [
+)
+ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
     "domestic_hot_water_setpoint",
     "maximum_boiler_temperature",
     "thermostat",
-]
-ATTR_ENABLED: Final = "enabled_default"
-ATTR_ID: Final = "id"
-ATTR_ICON: Final = "icon"
-ATTR_TYPE: Final = "type"
+)
 DAYS: Final[dict[str, int]] = {
     "mo": 0,
     "tu": 1,
@@ -393,30 +390,34 @@ DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
-LIMITS: Final[list[str]] = ["setpoint", "lower_bound", "upper_bound", "resolution"]
+LIMITS: Final[tuple[str, ...]] = (
+    "setpoint",
+    "lower_bound",
+    "upper_bound",
+    "resolution",
+)
 MAX_SETPOINT: Final[float] = 40.0
 MIN_SETPOINT: Final[float] = 0.0
-SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
-SPECIAL_FORMAT: Final[list[str]] = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
-SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]
-ZONE_THERMOSTATS: Final[list[str]] = [
+SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
+SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
+ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
     "thermostat",
     "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
-]
-THERMOSTAT_CLASSES: Final[list[str]] = [
+)
+THERMOSTAT_CLASSES: Final[tuple[str, ...]] = (
     "thermostat",
     "thermo_sensor",
     "zone_thermometer",
     "zone_thermostat",
     "thermostatic_radiator_valve",
-]
-SPECIAL_PLUG_TYPES: Final[list[str]] = [
+)
+SPECIAL_PLUG_TYPES: Final[tuple[str, ...]] = (
     "central_heating_pump",
     "valve_actuator",
     "heater_electric",
-]
+)
 
 # XML data paths
 APPLIANCES: Final = "/core/appliances"
@@ -428,121 +429,93 @@ RULES: Final = "/core/rules"
 SYSTEM: Final = "/system"
 STATUS: Final = "/system/status.xml"
 
+UOM = namedtuple("UOM", "unit_of_measurement")
+DATA = namedtuple("DATA", "name unit_of_measurement")
 # P1 related measurements:
-HOME_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
-    "electricity_consumed": {
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    },
-    "electricity_produced": {
-        ATTR_UNIT_OF_MEASUREMENT: POWER_WATT,
-    },
-    "gas_consumed": {
-        ATTR_UNIT_OF_MEASUREMENT: VOLUME_CUBIC_METERS,
-    },
+P1_MEASUREMENTS: Final[dict[str, UOM]] = {
+    "electricity_consumed": UOM(POWER_WATT),
+    "electricity_produced": UOM(POWER_WATT),
+    "gas_consumed": UOM(VOLUME_CUBIC_METERS),
 }
-
 # Thermostat and Plug/Stretch related measurements
 # Excluded:
 # zone_thermosstat: 'temperature_offset'
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
-DEVICE_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
+
+DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # HA Core thermostat current_temperature
-    "temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "temperature": UOM(TEMP_CELSIUS),
     # HA Core thermostat setpoint
-    "thermostat": {ATTR_NAME: "setpoint", ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "thermostat": DATA("setpoint", TEMP_CELSIUS),
     # Specific for an Anna
-    "illuminance": {ATTR_UNIT_OF_MEASUREMENT: UNIT_LUMEN},
+    "illuminance": UOM(UNIT_LUMEN),
     # Specific for an Anna with heatpump extension installed
-    "cooling_activation_outdoor_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "cooling_deactivation_threshold": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
+    "cooling_activation_outdoor_temperature": UOM(TEMP_CELSIUS),
+    "cooling_deactivation_threshold": UOM(TEMP_CELSIUS),
     # Specific for a Lisa a Tom/Floor
-    "battery": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    "temperature_difference": {ATTR_UNIT_OF_MEASUREMENT: DEGREE},
-    "valve_position": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    "battery": UOM(PERCENTAGE),
+    "temperature_difference": UOM(DEGREE),
+    "valve_position": UOM(PERCENTAGE),
     # Specific for a Jip
-    "humidity": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
+    "humidity": UOM(PERCENTAGE),
     # Specific for a Plug
-    "electricity_consumed": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "electricity_produced": {ATTR_UNIT_OF_MEASUREMENT: POWER_WATT},
-    "relay": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    "regulation_mode": {ATTR_UNIT_OF_MEASUREMENT: NONE},
+    "electricity_consumed": UOM(POWER_WATT),
+    "electricity_produced": UOM(POWER_WATT),
+    "relay": UOM(NONE),
+    "regulation_mode": UOM(NONE),
 }
 
 # Heater Central related measurements
-HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, dict[str, str]]] = {
-    "boiler_temperature": {
-        ATTR_NAME: "water_temperature",
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
-    },
-    "domestic_hot_water_comfort_mode": {
-        ATTR_NAME: "dhw_cm_switch",
-        ATTR_UNIT_OF_MEASUREMENT: NONE,
-    },
-    "domestic_hot_water_state": {
-        ATTR_NAME: "dhw_state",
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
-    },
-    "elga_status_code": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    "intended_boiler_temperature": {
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS
-    },  # Non-zero when heating, zero when dhw-heating
-    "central_heating_state": {
-        ATTR_NAME: "c_heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: NONE,
-    },  # For Elga (heatpump) use this instead of intended_central_heating_state
-    "intended_central_heating_state": {
-        ATTR_NAME: "heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: NONE,
-    },  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
-    "maximum_boiler_temperature": {ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS},
-    "modulation_level": {ATTR_UNIT_OF_MEASUREMENT: PERCENTAGE},
-    "return_water_temperature": {
-        ATTR_NAME: "return_temperature",
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
-    },
+HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
+    "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
+    "domestic_hot_water_comfort_mode": DATA("dhw_cm_switch", NONE),
+    "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
+    "elga_status_code": UOM(NONE),
+    "intended_boiler_temperature": UOM(
+        TEMP_CELSIUS
+    ),  # Non-zero when heating, zero when dhw-heating
+    "central_heating_state": DATA(
+        "c_heating_state", NONE
+    ),  # For Elga (heatpump) use this instead of intended_central_heating_state
+    "intended_central_heating_state": DATA(
+        "heating_state", NONE
+    ),  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
+    "maximum_boiler_temperature": UOM(TEMP_CELSIUS),
+    "modulation_level": UOM(PERCENTAGE),
+    "return_water_temperature": DATA("return_temperature", TEMP_CELSIUS),
     # Used with the Elga heatpump - marcelveldt
-    "compressor_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    "cooling_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
+    "compressor_state": UOM(NONE),
+    "cooling_state": UOM(NONE),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
-    "slave_boiler_state": {ATTR_UNIT_OF_MEASUREMENT: NONE},
-    "flame_state": {
-        ATTR_UNIT_OF_MEASUREMENT: NONE
-    },  # Also present when there is a single gas-heater
-    "central_heater_water_pressure": {
-        ATTR_NAME: "water_pressure",
-        ATTR_UNIT_OF_MEASUREMENT: PRESSURE_BAR,
-    },
+    "slave_boiler_state": UOM(NONE),
+    "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
+    "central_heater_water_pressure": DATA("water_pressure", PRESSURE_BAR),
     # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": {ATTR_NAME: "flame_state", ATTR_UNIT_OF_MEASUREMENT: NONE},
+    "boiler_state": DATA("flame_state", NONE),
     # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
-    "intended_boiler_state": {
-        ATTR_NAME: "heating_state",
-        ATTR_UNIT_OF_MEASUREMENT: NONE,
-    },
+    "intended_boiler_state": DATA("heating_state", NONE),
     # Outdoor temperature from APPLIANCES - present for a heatpump
-    "outdoor_temperature": {
-        ATTR_NAME: "outdoor_air_temperature",
-        ATTR_UNIT_OF_MEASUREMENT: TEMP_CELSIUS,
-    },
+    "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
 }
 
 # Known types of Smiles and Stretches
-SMILES: Final[dict[str, dict[str, str]]] = {
-    "smile_v2": {"type": "power", "name": "P1"},
-    "smile_v3": {"type": "power", "name": "P1"},
-    "smile_v4": {"type": "power", "name": "P1"},
-    "smile_open_therm_v2": {"type": "thermostat", "name": "Adam"},
-    "smile_open_therm_v3": {"type": "thermostat", "name": "Adam"},
-    "smile_thermo_v1": {"type": "thermostat", "name": "Smile"},
-    "smile_thermo_v3": {"type": "thermostat", "name": "Smile"},
-    "smile_thermo_v4": {"type": "thermostat", "name": "Smile"},
-    "stretch_v2": {"type": "stretch", "name": "Stretch"},
-    "stretch_v3": {"type": "stretch", "name": "Stretch"},
+SMILE = namedtuple("SMILE", "smile_type smile_name")
+SMILES: Final[dict[str, SMILE]] = {
+    "smile_v2": SMILE("power", "P1"),
+    "smile_v3": SMILE("power", "P1"),
+    "smile_v4": SMILE("power", "P1"),
+    "smile_open_therm_v2": SMILE("thermostat", "Adam"),
+    "smile_open_therm_v3": SMILE("thermostat", "Adam"),
+    "smile_thermo_v1": SMILE("thermostat", "Smile"),
+    "smile_thermo_v3": SMILE("thermostat", "Smile"),
+    "smile_thermo_v4": SMILE("thermostat", "Smile"),
+    "stretch_v2": SMILE("stretch", "Stretch"),
+    "stretch_v3": SMILE("stretch", "Stretch"),
 }
 
 # All available Binary Sensor, Sensor, and Switch Types
 
-BINARY_SENSORS: Final[list[str]] = [
+BINARY_SENSORS: Final[tuple[str, ...]] = (
     "compressor_state",
     "cooling_state",
     "dhw_state",
@@ -550,9 +523,9 @@ BINARY_SENSORS: Final[list[str]] = [
     "heating_state",
     "plugwise_notification",
     "slave_boiler_state",
-]
+)
 
-SENSORS: Final[list[str]] = [
+SENSORS: Final[tuple[str, ...]] = (
     "battery",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
@@ -593,13 +566,13 @@ SENSORS: Final[list[str]] = [
     "valve_position",
     "water_pressure",
     "water_temperature",
-]
+)
 
-SWITCHES: Final[list[str]] = [
+SWITCHES: Final[tuple[str, ...]] = (
     "dhw_cm_switch",
     "lock",
     "relay",
-]
+)
 
 
 class ApplianceData(TypedDict, total=False):

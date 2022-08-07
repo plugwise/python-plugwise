@@ -673,8 +673,9 @@ class PlugwiseCircle(PlugwiseNode):
         _history_rollover = False
 
         for _slot in range(1, 5):
-            _log_timestamp = getattr(message, "logdate%d" % (_slot,)).value
-            if _log_timestamp is None:
+            if (
+                _log_timestamp := getattr(message, "logdate%d" % (_slot,)).value
+            ) is None:
                 break
             self._energy_history[_log_timestamp] = getattr(
                 message, "pulses%d" % (_slot,)
@@ -823,8 +824,7 @@ class PlugwiseCircle(PlugwiseNode):
         _seconds_offset = (_utc_now_timestamp - utc_timestamp).seconds
         _hours_offset = _seconds_offset / 3600
 
-        _slot = self._energy_last_populated_slot
-        if _slot == 0:
+        if (_slot := self._energy_last_populated_slot) == 0:
             _slot = 4
         _address = self._last_log_address
 
