@@ -364,18 +364,18 @@ FEATURE_RSSI_OUT: Final[dict[str, str]] = {
 
 ### Smile constants ###
 
-ACTUATOR_CLASSES: Final[list[str]] = [
+ACTUATOR_CLASSES: Final[tuple[str]] = (
     "heater_central",
     "thermostat",
     "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
-]
-ACTIVE_ACTUATORS: Final[list[str]] = [
+)
+ACTIVE_ACTUATORS: Final[tuple[str]] = (
     "domestic_hot_water_setpoint",
     "maximum_boiler_temperature",
     "thermostat",
-]
+)
 ATTR_ENABLED: Final = "enabled_default"
 ATTR_ID: Final = "id"
 ATTR_ICON: Final = "icon"
@@ -394,30 +394,30 @@ DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
-LIMITS: Final[list[str]] = ["setpoint", "lower_bound", "upper_bound", "resolution"]
+LIMITS: Final[tuple[str]] = ("setpoint", "lower_bound", "upper_bound", "resolution")
 MAX_SETPOINT: Final[float] = 40.0
 MIN_SETPOINT: Final[float] = 0.0
-SEVERITIES: Final[list[str]] = ["other", "info", "warning", "error"]
-SPECIAL_FORMAT: Final[list[str]] = [ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS]
-SWITCH_GROUP_TYPES: Final[list[str]] = ["switching", "report"]
-ZONE_THERMOSTATS: Final[list[str]] = [
+SEVERITIES: Final[tuple[str]] = ("other", "info", "warning", "error")
+SPECIAL_FORMAT: Final[tuple[str]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
+SWITCH_GROUP_TYPES: Final[tuple[str]] = ("switching", "report")
+ZONE_THERMOSTATS: Final[tuple[str]] = (
     "thermostat",
     "thermostatic_radiator_valve",
     "zone_thermometer",
     "zone_thermostat",
-]
-THERMOSTAT_CLASSES: Final[list[str]] = [
+)
+THERMOSTAT_CLASSES: Final[tuple[str]] = (
     "thermostat",
     "thermo_sensor",
     "zone_thermometer",
     "zone_thermostat",
     "thermostatic_radiator_valve",
-]
-SPECIAL_PLUG_TYPES: Final[list[str]] = [
+)
+SPECIAL_PLUG_TYPES: Final[tuple[str]] = (
     "central_heating_pump",
     "valve_actuator",
     "heater_electric",
-]
+)
 
 # XML data paths
 APPLIANCES: Final = "/core/appliances"
@@ -515,7 +515,7 @@ SMILES: Final[dict[str, SMILE]] = {
 
 # All available Binary Sensor, Sensor, and Switch Types
 
-BINARY_SENSORS: Final[list[str]] = [
+BINARY_SENSORS: Final[tuple[str]] = (
     "compressor_state",
     "cooling_state",
     "dhw_state",
@@ -523,9 +523,9 @@ BINARY_SENSORS: Final[list[str]] = [
     "heating_state",
     "plugwise_notification",
     "slave_boiler_state",
-]
+)
 
-SENSORS: Final[list[str]] = [
+SENSORS: Final[tuple[str]] = (
     "battery",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
@@ -566,13 +566,13 @@ SENSORS: Final[list[str]] = [
     "valve_position",
     "water_pressure",
     "water_temperature",
-]
+)
 
-SWITCHES: Final[list[str]] = [
+SWITCHES: Final[tuple[str]] = (
     "dhw_cm_switch",
     "lock",
     "relay",
-]
+)
 
 
 class ApplianceData(TypedDict, total=False):
