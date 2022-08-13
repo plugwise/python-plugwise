@@ -20,8 +20,6 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
-    MAX_SETPOINT,
-    MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
     RULES,
@@ -30,7 +28,6 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     ZONE_THERMOSTATS,
-    ActuatorData,
     ApplianceData,
     DeviceData,
     GatewayData,
@@ -59,37 +56,6 @@ class SmileData(SmileHelper):
                     device["binary_sensors"]["cooling_state"] = False
                     if self._elga_cooling_active or self._lortherm_cooling_active:
                         device["binary_sensors"]["cooling_state"] = True
-
-                # Add setpoint_low and setpoint_high when cooling is enabled
-                if device["dev_class"] not in ZONE_THERMOSTATS:
-                    continue
-
-                if self._elga_cooling_enabled:
-                    # Replace setpoint with setpoint_high/_low
-                    thermostat = device["thermostat"]
-                    sensors = device["sensors"]
-                    max_setpoint = MAX_SETPOINT
-                    min_setpoint = MIN_SETPOINT
-                    if self._sched_setpoints is not None:
-                        max_setpoint = self._sched_setpoints[1]
-                        min_setpoint = self._sched_setpoints[0]
-
-                    temp_dict: ActuatorData = {
-                        "setpoint_low": thermostat["setpoint"],
-                        "setpoint_high": max_setpoint,
-                    }
-                    if self._elga_cooling_active:
-                        temp_dict = {
-                            "setpoint_low": min_setpoint,
-                            "setpoint_high": thermostat["setpoint"],
-                        }
-                    if "setpoint" in sensors:
-                        sensors.pop("setpoint")
-                    sensors["setpoint_low"] = temp_dict["setpoint_low"]
-                    sensors["setpoint_high"] = temp_dict["setpoint_high"]
-                    thermostat.pop("setpoint")
-                    temp_dict.update(thermostat)
-                    device["thermostat"] = temp_dict
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
@@ -656,28 +622,11 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
+    async def set_temperature(self, loc_id: str, temperature: float) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        setpoint: float | None = None
-        if "setpoint" in items:
-            setpoint = items["setpoint"]
-        if self._elga_cooling_enabled:
-            if "setpoint_low" in items:
-                setpoint = items["setpoint_low"]
-            if self._elga_cooling_active:
-                if "setpoint_high" in items:
-                    setpoint = items["setpoint_high"]
-
-        if setpoint is None:
-            raise PlugwiseError(
-                "Plugwise: failed setting temperature: no valid input provided"
-            )  # pragma: no cover
-        temperature = str(setpoint)
+        temp = str(temperature)
         uri = self._thermostat_uri(loc_id)
-        data = (
-            "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
-        )
+        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
 
         await self._request(uri, method="put", data=data)
 

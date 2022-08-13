@@ -484,9 +484,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
-        test_temp = {"setpoint": 22.9}
-        if smile._anna_cooling_present:
-            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
+        test_temp = 22.9
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
@@ -3150,8 +3148,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 21.0,
-                    "setpoint_high": 24.0,
+                    "setpoint": 20.5,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3164,11 +3161,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
+                    "setpoint": 20.5,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
-                    "setpoint_low": 21.0,
-                    "setpoint_high": 24.0,
                 },
             },
         }
@@ -3186,7 +3182,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
 
@@ -3221,19 +3217,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "mode": "heat_cool",
                 "thermostat": {
-                    "setpoint_low": 0.0,
-                    "setpoint_high": 22.0,
+                    "setpoint": 22.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
                 },
                 "sensors": {
                     "temperature": 22.3,
+                    "setpoint": 22.0,
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 6.0,
-                    "setpoint_low": 0.0,
-                    "setpoint_high": 22.0,
                 },
             },
             # Heater central
@@ -3269,7 +3263,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
 
@@ -3575,8 +3569,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 19.0,
-                    "setpoint_high": 23.0,
+                    "setpoint": 23.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3589,11 +3582,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
+                    "setpoint": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
-                    "setpoint_low": 19.0,
-                    "setpoint_high": 23.0,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
@@ -3654,7 +3646,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
 

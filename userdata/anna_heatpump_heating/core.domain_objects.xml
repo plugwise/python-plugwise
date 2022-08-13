@@ -1160,7 +1160,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-08T10:27:27.777+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-08T22:20:25.799+02:00" end_date="2020-04-08T22:20:25.799+02:00">
-					<measurement log_date="2020-04-08T22:20:25.799+02:00">21.00</measurement>
+					<measurement log_date="2020-04-08T22:20:25.799+02:00">20.50</measurement>
 				</period>
 			</point_log>
 		</logs>
@@ -1177,7 +1177,7 @@
 			<thermostat_functionality id='dbe0ce59091f4753a0a31b81c1e8cb2b'>
 				<updated_date>2020-04-08T22:20:25.800+02:00</updated_date>
 				<type>thermostat</type>
-				<setpoint>21</setpoint>
+				<setpoint>20.5</setpoint>
 				<lower_bound>4</lower_bound>
 				<upper_bound>30</upper_bound>
 				<resolution>0.1</resolution>
@@ -1533,7 +1533,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-08T22:20:25.799+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-08T22:20:25.799+02:00" end_date="2020-04-08T22:20:25.799+02:00">
-					<measurement log_date="2020-04-08T22:20:25.799+02:00">21.00</measurement>
+					<measurement log_date="2020-04-08T22:20:25.799+02:00">20.50</measurement>
 				</period>
 				<thermostat id='c796d632de2e452e80eebb079067b60a'/>
 			</point_log>
@@ -1567,7 +1567,7 @@
 			<thermostat_functionality id='8fc0a6e427eb4274b90f5c66ce75d161'>
 				<updated_date>2020-04-08T22:20:25.800+02:00</updated_date>
 				<type>thermostat</type>
-				<setpoint>21</setpoint>
+				<setpoint>20.5</setpoint>
 				<lower_bound>4</lower_bound>
 				<upper_bound>30</upper_bound>
 				<resolution>0.1</resolution>
