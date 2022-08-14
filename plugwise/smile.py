@@ -316,16 +316,14 @@ class Smile(SmileComm, SmileData):
                     an issue on http://github.com/plugwise/python-plugwise",
                     result,
                 )
-                raise ResponseError("Plugwise error, check log for more info.")
+                raise ResponseError
 
         # Check if Anna is connected to an Adam
         if "159.2" in models:
             LOGGER.error(
                 "Your Anna is connected to an Adam, make sure to only add the Adam as integration."
             )
-            raise InvalidSetupError(
-                "Plugwise invalid setup error, check log for more info."
-            )
+            raise InvalidSetupError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
@@ -380,7 +378,7 @@ class Smile(SmileComm, SmileData):
                     "Connected but no gateway device information found, please create \
                      an issue on http://github.com/plugwise/python-plugwise"
                 )
-                raise ResponseError("Plugwise error, check log for more info.")
+                raise ResponseError
 
         return model
 
@@ -404,7 +402,7 @@ class Smile(SmileComm, SmileData):
                 "Unable to find model or version information, please create \
                  an issue on http://github.com/plugwise/python-plugwise"
             )
-            raise UnsupportedDeviceError("Plugwise error, check log for more info.")
+            raise UnsupportedDeviceError
 
         ver = semver.VersionInfo.parse(self.smile_fw_version)
         target_smile = f"{model}_v{ver.major}"
@@ -415,7 +413,7 @@ class Smile(SmileComm, SmileData):
                 create an issue on http://github.com/plugwise/python-plugwise',
                 target_smile,
             )
-            raise UnsupportedDeviceError("Plugwise error, check log for more info.")
+            raise UnsupportedDeviceError
 
         self.smile_name = SMILES[target_smile].smile_name
         self.smile_type = SMILES[target_smile].smile_type

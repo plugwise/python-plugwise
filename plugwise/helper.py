@@ -246,20 +246,18 @@ class SmileComm:
         if resp.status == 401:
             msg = "Invalid Plugwise login, please retry with the correct credentials."
             LOGGER.error("%s", msg)
-            raise InvalidAuthentication(f"{msg}")
+            raise InvalidAuthentication
 
         if not (result := await resp.text()) or "<error>" in result:
-            LOGGER.error("Smile response empty or error in %s", result)
-            raise ResponseError("Plugwise response error, check log for more info.")
+            LOGGER.warning("Smile response empty or error in %s", result)
+            raise ResponseError
 
         try:
             # Encode to ensure utf8 parsing
             xml = etree.XML(escape_illegal_xml_characters(result).encode())
         except etree.ParseError:
-            LOGGER.error("Smile returns invalid XML for %s", self._endpoint)
-            raise InvalidXMLError(
-                "Plugwise invalid XML error, check log for more info."
-            )
+            LOGGER.warning("Smile returns invalid XML for %s", self._endpoint)
+            raise InvalidXMLError
 
         return xml
 
@@ -292,15 +290,13 @@ class SmileComm:
                 )
         except ClientError as err:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
-                LOGGER.error(
+                LOGGER.warning(
                     "Failed sending %s %s to Plugwise Smile, error: %s",
                     method,
                     command,
                     err,
                 )
-                raise ConnectionFailedError(
-                    "Plugwise connection error, check log for more info."
-                ) from err
+                raise ConnectionFailedError
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
