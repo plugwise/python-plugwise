@@ -677,6 +677,7 @@ class SmileHelper:
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
+            appl.modified = parse(appliance.find("modified_date").text)
             appl.firmware = None
             appl.hardware = None
             appl.mac = None
@@ -708,6 +709,7 @@ class SmileHelper:
                 "location": appl.location,
                 "mac_address": appl.mac,
                 "model": appl.model,
+                "modified": appl.modified,
                 "name": appl.name,
                 "zigbee_mac_address": appl.zigbee_mac,
                 "vendor": appl.vendor_name,
