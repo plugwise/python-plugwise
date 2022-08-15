@@ -677,7 +677,6 @@ class SmileHelper:
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
-            appl.modified = appliance.find("modified_date").text
             appl.firmware = None
             appl.hardware = None
             appl.mac = None
@@ -709,7 +708,6 @@ class SmileHelper:
                 "location": appl.location,
                 "mac_address": appl.mac,
                 "model": appl.model,
-                "modified": appl.modified,
                 "name": appl.name,
                 "zigbee_mac_address": appl.zigbee_mac,
                 "vendor": appl.vendor_name,
@@ -846,6 +844,8 @@ class SmileHelper:
         measurements: dict[str, DATA | UOM],
     ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
+        modified = appliance.find("modified_date").text
+        data["modified"] = modified
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
@@ -901,6 +901,7 @@ class SmileHelper:
         if (
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
+
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
             if (appl_type := appliance.find("type")) is not None:
@@ -1122,6 +1123,8 @@ class SmileHelper:
         if self._smile_legacy:
             t_string = "tariff_indicator"
 
+        modified = search.find(f'./location[@id="{loc_id}"]/modified_date').text
+        direct_data["modified"] = modified
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
