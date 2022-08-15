@@ -677,7 +677,7 @@ class SmileHelper:
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
-            appl.modified = parse(appliance.find("modified_date").text)
+            appl.modified = appliance.find("modified_date").text
             appl.firmware = None
             appl.hardware = None
             appl.mac = None
