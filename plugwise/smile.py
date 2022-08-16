@@ -262,13 +262,13 @@ class SmileData(SmileHelper):
 
         # Check if data is being refreshed
         LOGGER.debug("HOI %s", device_data)
-        if "modified_date" in device_data:
-            if device_data["modified_date"] != self._last_modified:
+        if "modified" in device_data:
+            if device_data["modified"] != self._last_modified:
                 update_interval = (
-                    parse(device_data["modified_date"]) - parse(self._last_modified)
+                    parse(device_data["modified"]) - parse(self._last_modified)
                 ).total_seconds()
                 device_data["available"] = True
-            device_data.pop("modified_date")
+            device_data.pop("modified")
             if update_interval > 300:
                 device_data["available"] = False
 
