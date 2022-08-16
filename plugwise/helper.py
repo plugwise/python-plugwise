@@ -323,7 +323,7 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
-        self._last_modified: str = "1970-12-02T21:48:35.292+01:00"
+        self._last_modified: dict[str, str] = {}
         self._locations: etree
         self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
