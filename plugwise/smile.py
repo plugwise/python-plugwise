@@ -261,19 +261,17 @@ class SmileData(SmileHelper):
                 device_data.update(power_data)
 
         # Check if data is being refreshed
-        LOGGER.debug("HOI 1 %s", device_data)
         if "modified" in device_data:
             if device_data["modified"] != self._last_modified:
-                LOGGER.debug("HOI 2 %s", parse(device_data["modified"]))
-                LOGGER.debug("HOI 3 %s", parse(self._last_modified))
                 update_interval = (
                     parse(device_data["modified"]) - parse(self._last_modified)
                 ).total_seconds()
-                LOGGER.debug("HOI 4 %s", update_interval)
+                device_data["interval"] = update_interval
                 device_data["available"] = True
             device_data.pop("modified")
-            if update_interval > 300:
-                device_data["available"] = False
+            # TODO:
+            # Compare time_now to time of last received modified
+            # if time > 300? set available to False
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
