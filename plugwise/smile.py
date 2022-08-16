@@ -4,6 +4,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import aiohttp
+from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -258,6 +259,17 @@ class SmileData(SmileHelper):
                 power_data := self._power_data_from_location(details["location"])
             ) is not None:
                 device_data.update(power_data)
+
+        # Check if data is being refreshed
+        if "modified_date" in device_data:
+            if device_data["modified_date"] != self._last_modified:
+                update_interval = (
+                    parse(device_data["modified_date"]) - parse(self._last_modified)
+                ).total_seconds()
+                device_data["available"] = True
+            device_data.pop("modified_date")
+            if update_interval > 300:
+                device_data["available"] = False
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
