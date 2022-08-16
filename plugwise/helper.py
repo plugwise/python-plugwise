@@ -845,8 +845,7 @@ class SmileHelper:
         measurements: dict[str, DATA | UOM],
     ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
-        modified = appliance.find("modified_date").text
-        data["modified"] = modified
+        data["modified"] = appliance.find("modified_date").text
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
