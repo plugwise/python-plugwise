@@ -714,6 +714,11 @@ class DeviceDataPoints(
 
     # For temporary use
     c_heating_state: str
+    modified: str
+
+    # Device availability
+    available: bool
+    interval: float
 
 
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
