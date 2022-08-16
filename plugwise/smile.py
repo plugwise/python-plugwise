@@ -261,6 +261,7 @@ class SmileData(SmileHelper):
                 device_data.update(power_data)
 
         # Check if data is being refreshed
+        LOGGER.debug("HOI %s", device_data)
         if "modified_date" in device_data:
             if device_data["modified_date"] != self._last_modified:
                 update_interval = (
