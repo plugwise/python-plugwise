@@ -266,6 +266,7 @@ class SmileData(SmileHelper):
                 update_interval = (
                     parse(device_data["modified"]) - parse(self._last_modified)
                 ).total_seconds()
+                self._last_modified = device_data["modified"]
                 device_data["interval"] = update_interval
                 device_data["available"] = True
             device_data.pop("modified")
