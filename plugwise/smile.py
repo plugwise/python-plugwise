@@ -267,16 +267,17 @@ class SmileData(SmileHelper):
                 self._last_modified[dev_id] = device_data["modified"]
             else:
                 LOGGER.debug("HOI Comparing updated modified_date to previous one")
-                LOGGER.debug("HOI %s", device_data["modified"])
-            if device_data["modified"] != self._last_modified[dev_id]:
-                update_interval = (
-                    parse(device_data["modified"]) - parse(self._last_modified[dev_id])
-                ).total_seconds()
-                self._last_modified[dev_id] = device_data["modified"]
-                device_data["interval"] = update_interval
-                device_data["available"] = True
+                LOGGER.debug("HOI new %s", device_data["modified"])
+                LOGGER.debug("HOI old %s", self._last_modified[dev_id])
+                if device_data["modified"] != self._last_modified[dev_id]:
+                    update_interval = (
+                        parse(device_data["modified"])
+                        - parse(self._last_modified[dev_id])
+                    ).total_seconds()
+                    self._last_modified[dev_id] = device_data["modified"]
+                    device_data["interval"] = update_interval
+                    device_data["available"] = True
             device_data.pop("modified")
-        LOGGER.debug("HOI %s", self._last_modified)
         # TODO:
         # Compare time_now to time of last received modified
         # if time > 300? set available to False
