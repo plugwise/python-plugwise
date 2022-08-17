@@ -1072,7 +1072,7 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
-    def _power_data_peak_value(self, loc: Munch) -> Munch:
+    def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
         no_tariffs = False
@@ -1107,6 +1107,11 @@ class SmileHelper:
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
+        # Collect modified_date for P1v2
+        if self._smile_legacy and loc.measurement == "electricity_consumed":
+            direct_data["modified"] = loc.logs.find(loc.locator).attrib["log_date"]
+            LOGGER.debug("HOI %s", direct_data["modified"])
+
         return loc
 
     def _power_data_from_location(self, loc_id: str) -> DeviceData:
@@ -1134,7 +1139,7 @@ class SmileHelper:
                         f'./{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
-                    loc = self._power_data_peak_value(loc)
+                    loc = self._power_data_peak_value(direct_data, loc)
                     if not loc.found:
                         continue
 
