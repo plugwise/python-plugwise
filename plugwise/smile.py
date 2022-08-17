@@ -261,22 +261,23 @@ class SmileData(SmileHelper):
                 device_data.update(power_data)
 
         # Check if data is being refreshed
+        interval = 0.0
         if "modified" in device_data:
             if self._last_modified.get(dev_id) is None:
                 LOGGER.debug("HOI Updating _last_modified...")
                 self._last_modified[dev_id] = device_data["modified"]
             else:
                 LOGGER.debug("HOI Comparing updated modified_date to previous one")
+                LOGGER.debug("HOI %s", dev_id)
                 LOGGER.debug("HOI new %s", device_data["modified"])
                 LOGGER.debug("HOI old %s", self._last_modified[dev_id])
                 if device_data["modified"] != self._last_modified[dev_id]:
-                    update_interval = (
+                    interval = (
                         parse(device_data["modified"])
                         - parse(self._last_modified[dev_id])
                     ).total_seconds()
                     self._last_modified[dev_id] = device_data["modified"]
-                    device_data["interval"] = update_interval
-                    device_data["available"] = True
+            device_data["interval"] = interval
             device_data.pop("modified")
         # TODO:
         # Compare time_now to time of last received modified
