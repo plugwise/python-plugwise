@@ -1108,13 +1108,12 @@ class SmileHelper:
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         # Collect modified_date for P1v2
-        if self._smile_legacy:
-            if (
-                loc.measurement == "electricity_consumed"
-                and loc.log_type == "point_log"
-            ):
-                direct_data["modified"] = loc.logs.find(loc.locator).attrib["log_date"]
-                LOGGER.debug("HOI %s", direct_data["modified"])
+        if (
+            self._smile_legacy
+            and loc.measurement == "electricity_consumed"
+            and loc.log_type == "point_log"
+        ):
+            direct_data["modified"] = loc.logs.find(loc.locator).attrib["log_date"]
 
         return loc
 
