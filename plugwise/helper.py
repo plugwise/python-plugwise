@@ -690,7 +690,8 @@ class SmileHelper:
 
         # For P1 process locations for the connected SmartMeter
         if self.smile_type == "power":
-            LOGGER.debug("HOI %s", self._loc_data)
+            for location in self._loc_data:
+                LOGGER.debug("HOI %s", location)
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
