@@ -688,6 +688,10 @@ class SmileHelper:
                 if value is not None or key == "location":
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
+        # For P1 process locations for the connected SmartMeter
+        if self.smile_type == "power":
+            LOGGER.debug("HOI %s", self._loc_data)
+
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
         Match appliances with locations.
