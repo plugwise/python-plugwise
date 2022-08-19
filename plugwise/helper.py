@@ -627,6 +627,12 @@ class SmileHelper:
                     }
                 )
 
+        # Legacy P1 has no Appliances
+        if self._appliances is None:
+            for location in self._loc_data:
+                LOGGER.debug("HOI %s", location)
+            return
+
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
 
