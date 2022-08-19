@@ -607,8 +607,6 @@ class SmileHelper:
                         "vendor": "Plugwise B.V.",
                     }
                 )
-                # legacy p1 has no more devices
-                return
 
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
