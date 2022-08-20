@@ -589,6 +589,7 @@ class SmileHelper:
             appl.dev_id = FAKE_APPL
             appl.location = loc_id
             appl.mac = None
+            appl.name = "DSMR Smartmeter"
             appl.pwclass = "smartmeter"
             appl.zigbee_mac = None
             location = self._locations.find(f'./location[@id="{loc_id}"]')
