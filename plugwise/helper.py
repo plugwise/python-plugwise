@@ -628,7 +628,9 @@ class SmileHelper:
                 )
 
         # Legacy P1 has no Appliances
-        if self._appliances is None:
+        try:
+            _ = self._appliances
+        except AttributeError:
             for location in self._loc_data:
                 LOGGER.debug("HOI %s", location)
             return
