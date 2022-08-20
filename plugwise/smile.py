@@ -247,6 +247,7 @@ class SmileData(SmileHelper):
                     # Show the allowed regulation modes
                     device_data["regulation_modes"] = self._allowed_modes
 
+        if details["dev_class"] == "smartmeter":
             # Get P1 data from LOCATIONS
             if (
                 power_data := self._power_data_from_location(details["location"])
