@@ -473,7 +473,7 @@ class SmileHelper:
             LOGGER.debug("HOI %s", module_data)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            if appl.zigbee_mac is None:
+            if appl.zigbee_mac is None and self.smile_type != "power":
                 return None
 
             appl.vendor_name = module_data["vendor_name"]
