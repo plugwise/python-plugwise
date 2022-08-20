@@ -833,6 +833,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "P1",
                 "name": "P1",
                 "vendor": "Plugwise B.V.",
+            },
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+                "dev_class": "smartmeter",
+                "location": "938696c4bcdb4b8a9a595cb38ed43913",
+                "model": "Ene5\\T210-DESMR5.0",
+                "name": "DSMR Smartmeter",
+                "vendor": "Ene5\\T210-DESMR5.0",
                 "sensors": {
                     "net_electricity_point": 456,
                     "electricity_consumed_point": 456,
@@ -849,7 +856,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "gas_consumed_cumulative": 584.431,
                     "gas_consumed_interval": 0.014,
                 },
-            }
+            },
         }
 
         self.smile_setup = "smile_p1_v2"
@@ -877,15 +884,38 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_smile_p1_v2_2(self):
         """Test another legacy P1 device."""
         testdata = {
-            # Gateway / P1 itself
             "199aa40f126840f392983d171374ab0b": {
+                "dev_class": "gateway",
+                "firmware": "2.5.9",
+                "location": "199aa40f126840f392983d171374ab0b",
+                "mac_address": "012345670001",
+                "model": "P1",
+                "name": "P1",
+                "vendor": "Plugwise B.V.",
+            },
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+                "dev_class": "smartmeter",
+                "location": "199aa40f126840f392983d171374ab0b",
+                "model": "Ene5\\T210-DESMR5.0",
+                "name": "DSMR Smartmeter",
+                "vendor": "Ene5\\T210-DESMR5.0",
                 "sensors": {
-                    "electricity_consumed_point": 456.0,
-                    "net_electricity_point": 456.0,
-                    "gas_consumed_cumulative": 584.431,
+                    "net_electricity_point": 456,
+                    "electricity_consumed_point": 456,
+                    "net_electricity_cumulative": 1019.161,
+                    "electricity_consumed_peak_cumulative": 1155.155,
+                    "electricity_consumed_off_peak_cumulative": 1642.74,
+                    "electricity_consumed_peak_interval": 210,
+                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_produced_point": 0,
                     "electricity_produced_peak_cumulative": 1296.136,
-                }
-            }
+                    "electricity_produced_off_peak_cumulative": 482.598,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                    "gas_consumed_cumulative": 584.431,
+                    "gas_consumed_interval": 0.014,
+                },
+            },
         }
 
         self.smile_setup = "smile_p1_v2_2"
@@ -2992,6 +3022,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "P1",
                 "name": "P1",
                 "vendor": "Plugwise B.V.",
+            },
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "name": "DSMR Smartmeter",
                 "sensors": {
                     "net_electricity_point": 636,
                     "electricity_consumed_peak_point": 636,
@@ -3007,7 +3042,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
                 },
-            }
+            },
         }
 
         self.smile_setup = "p1v3"
@@ -3032,15 +3067,36 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v3solarfake(self):
         """Test a P1 firmware 3 with manually added solar setup."""
         testdata = {
-            # Gateway / P1 itself
             "ba4de7613517478da82dd9b6abea36af": {
+                "dev_class": "gateway",
+                "firmware": "3.3.6",
+                "hardware": "AME Smile 2.0 board",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "mac_address": "012345670001",
+                "model": "P1",
+                "name": "P1",
+                "vendor": "Plugwise B.V.",
+            },
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "name": "DSMR Smartmeter",
                 "sensors": {
-                    "electricity_consumed_peak_point": 636.0,
-                    "electricity_produced_peak_cumulative": 20.0,
-                    "electricity_consumed_off_peak_cumulative": 10263.159,
                     "net_electricity_point": 636,
-                }
-            }
+                    "electricity_consumed_peak_point": 636,
+                    "electricity_consumed_off_peak_point": 0,
+                    "net_electricity_cumulative": 17942.326,
+                    "electricity_consumed_peak_cumulative": 7702.167,
+                    "electricity_consumed_off_peak_cumulative": 10263.159,
+                    "electricity_consumed_peak_interval": 179,
+                    "electricity_produced_point": 0,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_peak_cumulative": 20.0,
+                    "electricity_produced_off_peak_cumulative": 3.0,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 20,
+                },
+            },
         }
 
         self.smile_setup = "p1v3solarfake"
@@ -3075,6 +3131,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "P1",
                 "name": "P1",
                 "vendor": "Plugwise B.V.",
+            },
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+                "dev_class": "smartmeter",
+                "location": "cd3e822288064775a7c4afcdd70bdda2",
+                "name": "DSMR Smartmeter",
                 "sensors": {
                     "net_electricity_point": -2816,
                     "electricity_consumed_peak_point": 0,
@@ -3093,7 +3154,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "gas_consumed_cumulative": 584.85,
                     "gas_consumed_interval": 0.0,
                 },
-            }
+            },
         }
 
         self.smile_setup = "p1v3_full_option"
@@ -4211,6 +4272,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "P1",
                 "name": "P1",
                 "vendor": "Plugwise B.V.",
+            },
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "name": "DSMR Smartmeter",
                 "sensors": {
                     "net_electricity_point": 548,
                     "electricity_consumed_peak_point": 548,
@@ -4227,7 +4293,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
                 },
-            }
+            },
         }
 
         self.smile_setup = "p1v4"
