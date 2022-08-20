@@ -467,6 +467,8 @@ class SmileHelper:
         """
         if self.smile_type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
+            if not self._smile_legacy:
+                locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
             module_data = self._get_module_data(appliance, locator, mod_type)
