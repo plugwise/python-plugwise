@@ -633,9 +633,10 @@ class SmileHelper:
         try:
             _ = self._appliances
         except AttributeError:
-            for location in self._loc_data:
-                LOGGER.debug("HOI %s", location)
+            for loc_id in self._loc_data:
+                LOGGER.debug("HOI %s", loc_id)
                 appl.dev_id = FAKE_APPL
+                location = self._locations.find(f'./location[@id="{loc_id}"]')
                 appl = self._energy_device_info_finder(location, appl)
                 LOGGER.debug("HOI %s", appl)
             return
