@@ -583,6 +583,32 @@ class SmileHelper:
 
         return appl
 
+    def _legacy_p1_smartmeter(self, appl: Munch) -> None:
+        """Helper function."""
+        for loc_id in self._loc_data:
+            appl.dev_id = FAKE_APPL
+            appl.location = loc_id
+            appl.mac = None
+            appl.pwclass = "smartmeter"
+            appl.zigbee_mac = None
+            location = self._locations.find(f'./location[@id="{loc_id}"]')
+            appl = self._energy_device_info_finder(location, appl)
+
+            self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
+
+            for key, value in {
+                "firmware": appl.firmware,
+                "hardware": appl.hardware,
+                "location": appl.location,
+                "mac_address": appl.mac,
+                "model": appl.model,
+                "name": appl.name,
+                "zigbee_mac_address": appl.zigbee_mac,
+                "vendor": appl.vendor_name,
+            }.items():
+                if value is not None or key == "location":
+                    self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
@@ -635,12 +661,7 @@ class SmileHelper:
         try:
             _ = self._appliances
         except AttributeError:
-            for loc_id in self._loc_data:
-                LOGGER.debug("HOI %s", loc_id)
-                appl.dev_id = FAKE_APPL
-                location = self._locations.find(f'./location[@id="{loc_id}"]')
-                appl = self._energy_device_info_finder(location, appl)
-                LOGGER.debug("HOI %s", appl)
+            self._legacy_p1_smartmeter(appl)
             return
 
         for appliance in self._appliances.findall("./appliance"):
