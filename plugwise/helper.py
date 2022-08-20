@@ -583,8 +583,8 @@ class SmileHelper:
 
         return appl
 
-    def _legacy_p1_smartmeter(self, appl: Munch) -> None:
-        """Helper function."""
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
+        """Collect P1 DSMR Smartmeter info."""
         for loc_id in self._loc_data:
             appl.dev_id = FAKE_APPL
             appl.location = loc_id
@@ -637,6 +637,11 @@ class SmileHelper:
                         "vendor": "Plugwise B.V.",
                     }
                 )
+                # For legacy P1 collect the connected SmartMeter info
+                appl = Munch()
+                self._p1_smartmeter_info_finder(appl)
+                # Legacy P1 has no more devices
+                return
 
             if self.smile_type == "thermostat":
                 self._appl_data[self._home_location].update(
@@ -656,14 +661,6 @@ class SmileHelper:
                         "zigbee_mac_address": self.smile_zigbee_mac_address,
                     }
                 )
-
-        # Legacy P1 has no Appliances
-        appl = Munch()
-        try:
-            _ = self._appliances
-        except AttributeError:
-            self._legacy_p1_smartmeter(appl)
-            return
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -724,9 +721,9 @@ class SmileHelper:
                 if value is not None or key == "location":
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-        # For P1 process locations for the connected SmartMeter
+        # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
-            self._legacy_p1_smartmeter(appl)
+            self._p1_smartmeter_info_finder(appl)
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
