@@ -389,6 +389,7 @@ DEFAULT_TIMEOUT: Final = 30
 DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
+FAKE_APPL: Final = "aaaa0000aaaa0000aaaa0000aaaa00aa"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
 LIMITS: Final[tuple[str, ...]] = (
     "setpoint",
