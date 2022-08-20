@@ -28,6 +28,7 @@ from .constants import (
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
+    FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
@@ -464,7 +465,7 @@ class SmileHelper:
         """Helper-function for _appliance_info_finder().
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
-        if self.smile_type == "stretch":
+        if self.smile_type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
@@ -628,11 +629,15 @@ class SmileHelper:
                 )
 
         # Legacy P1 has no Appliances
+        appl = Munch()
         try:
             _ = self._appliances
         except AttributeError:
             for location in self._loc_data:
                 LOGGER.debug("HOI %s", location)
+                appl.dev_id = FAKE_APPL
+                appl = self._energy_device_info_finder(location, appl)
+                LOGGER.debug("HOI %s", appl)
             return
 
         for appliance in self._appliances.findall("./appliance"):
