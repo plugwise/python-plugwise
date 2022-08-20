@@ -3026,7 +3026,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "aaaa0000aaaa0000aaaa0000aaaa00aa": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
                 "name": "P1",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
                 "sensors": {
                     "net_electricity_point": 636,
                     "electricity_consumed_peak_point": 636,
@@ -3057,7 +3059,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 24
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -3080,7 +3082,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "aaaa0000aaaa0000aaaa0000aaaa00aa": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
                 "name": "P1",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
                 "sensors": {
                     "net_electricity_point": 636,
                     "electricity_consumed_peak_point": 636,
@@ -3112,7 +3116,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 24
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -3135,7 +3139,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "aaaa0000aaaa0000aaaa0000aaaa00aa": {
                 "dev_class": "smartmeter",
                 "location": "cd3e822288064775a7c4afcdd70bdda2",
+                "model": "2M550E-1012",
                 "name": "P1",
+                "vendor": "ISKRAEMECO",
                 "sensors": {
                     "net_electricity_point": -2816,
                     "electricity_consumed_peak_point": 0,
@@ -3170,13 +3176,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 27
+        assert self.device_items == 29
         assert not self.notifications
 
         await smile.close_connection()
         await self.disconnect(server, client)
 
-    @pytest.mark.asyncio
+    @pytest.mark
     async def test_connect_anna_heatpump_heating(self):
         """Test a Anna with Elga setup in heating mode."""
         testdata = {
@@ -4276,7 +4282,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "aaaa0000aaaa0000aaaa0000aaaa00aa": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
                 "name": "P1",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
                 "sensors": {
                     "net_electricity_point": 548,
                     "electricity_consumed_peak_point": 548,
@@ -4309,7 +4317,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 25
+        assert self.device_items == 27
         assert not self.notifications
 
         await smile.close_connection()

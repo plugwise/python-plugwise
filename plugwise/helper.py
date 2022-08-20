@@ -472,7 +472,6 @@ class SmileHelper:
             mod_type = "electricity_point_meter"
 
             module_data = self._get_module_data(appliance, locator, mod_type)
-            LOGGER.debug("HOI %s", module_data)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             if appl.zigbee_mac is None and self.smile_type != "power":
