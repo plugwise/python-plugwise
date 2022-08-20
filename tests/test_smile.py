@@ -872,7 +872,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -931,7 +931,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -3057,7 +3057,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert self.device_items == 24
         assert not self.notifications
 
         await smile.close_connection()
@@ -3112,7 +3112,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert self.device_items == 24
         assert not self.notifications
 
         await smile.close_connection()
@@ -3170,7 +3170,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 24
+        assert self.device_items == 27
         assert not self.notifications
 
         await smile.close_connection()
@@ -4309,7 +4309,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 22
+        assert self.device_items == 25
         assert not self.notifications
 
         await smile.close_connection()
