@@ -3182,7 +3182,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.close_connection()
         await self.disconnect(server, client)
 
-    @pytest.mark
+    @pytest.mark.asyncio
     async def test_connect_anna_heatpump_heating(self):
         """Test a Anna with Elga setup in heating mode."""
         testdata = {
