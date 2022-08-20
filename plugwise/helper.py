@@ -588,7 +588,7 @@ class SmileHelper:
             appl.dev_id = FAKE_APPL
             appl.location = loc_id
             appl.mac = None
-            appl.name = "DSMR Smartmeter"
+            appl.name = "P1"
             appl.pwclass = "smartmeter"
             appl.zigbee_mac = None
             location = self._locations.find(f'./location[@id="{loc_id}"]')
@@ -631,8 +631,8 @@ class SmileHelper:
             if self.smile_type == "power":
                 self._appl_data[self._home_location].update(
                     {
-                        "model": "P1",
-                        "name": "P1",
+                        "model": "Smile",
+                        "name": "Smile",
                         "vendor": "Plugwise B.V.",
                     }
                 )
