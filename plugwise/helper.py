@@ -726,8 +726,7 @@ class SmileHelper:
 
         # For P1 process locations for the connected SmartMeter
         if self.smile_type == "power":
-            for location in self._loc_data:
-                LOGGER.debug("HOI %s", location)
+            self._legacy_p1_smartmeter(appl)
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
