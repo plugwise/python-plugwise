@@ -476,8 +476,9 @@ class SmileHelper:
             if appl.zigbee_mac is None and self.smile_type != "power":
                 return None
 
-            appl.vendor_name = module_data["vendor_name"]
             appl.hardware = module_data["hardware_version"]
+            appl.model = module_data["vendor_model"]
+            appl.vendor_name = module_data["vendor_name"]
             if appl.hardware is not None:
                 hw_version = appl.hardware.replace("-", "")
                 appl.model = version_to_model(hw_version)
