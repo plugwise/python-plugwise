@@ -28,7 +28,6 @@ from .constants import (
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
-    FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
@@ -354,7 +353,7 @@ class SmileHelper:
         self._lortherm_cooling_active = False
         self._lortherm_cooling_enabled = False
 
-        self.gateway_id: str
+        self.gateway_id: str | None = None
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.smile_fw_version: str | None = None
@@ -510,6 +509,9 @@ class SmileHelper:
         # Collect gateway device info
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
+            if self.smile_type == "power":
+                for loc_id in self._loc_data:
+                    self.gateway_id = loc_id
             appl.fw = self.smile_fw_version
             appl.mac = self.smile_mac_address
             appl.model = appl.name = self.smile_name
@@ -587,7 +589,9 @@ class SmileHelper:
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
         for loc_id in self._loc_data:
-            appl.dev_id = FAKE_APPL
+            appl.dev_id = self.gateway_id
+            if self.gateway_id is None:
+                appl.dev_id = loc_id
             appl.location = loc_id
             appl.mac = None
             appl.name = "P1"
