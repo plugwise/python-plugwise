@@ -592,7 +592,7 @@ class SmileHelper:
         for loc_id in self._loc_data:
             appl.dev_id = self.gateway_id
             if self.gateway_id is None:
-                appl.dev_id = loc_id
+                appl.dev_id = FAKE_APPL
             appl.location = loc_id
             appl.mac = None
             appl.name = "P1"
@@ -625,18 +625,20 @@ class SmileHelper:
         # appl_data can use the location id as device id, where needed.
         if self._smile_legacy:
             self.gateway_id = self._home_location
-            self._appl_data[self._home_location] = {
+            if self.smile_type == "power":
+                self.gateway_id = FAKE_APPL
+            self._appl_data[self.gateway_id] = {
                 "dev_class": "gateway",
                 "firmware": self.smile_fw_version,
                 "location": self._home_location,
             }
             if self.smile_mac_address is not None:
-                self._appl_data[self._home_location].update(
+                self._appl_data[self.gateway_id].update(
                     {"mac_address": self.smile_mac_address}
                 )
 
             if self.smile_type == "power":
-                self._appl_data[FAKE_APPL].update(
+                self._appl_data[self.gateway_id].update(
                     {
                         "model": "Smile",
                         "name": "Smile",
@@ -650,7 +652,7 @@ class SmileHelper:
                 return
 
             if self.smile_type == "thermostat":
-                self._appl_data[self._home_location].update(
+                self._appl_data[self.gateway_id].update(
                     {
                         "model": "Smile",
                         "name": "Smile",
@@ -659,7 +661,7 @@ class SmileHelper:
                 )
 
             if self.smile_type == "stretch":
-                self._appl_data[self._home_location].update(
+                self._appl_data[self.gateway_id].update(
                     {
                         "model": "Stretch",
                         "name": "Stretch",
