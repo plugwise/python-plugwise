@@ -28,6 +28,7 @@ from .constants import (
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
+    FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
@@ -635,7 +636,7 @@ class SmileHelper:
                 )
 
             if self.smile_type == "power":
-                self._appl_data[self._home_location].update(
+                self._appl_data[FAKE_APPL].update(
                     {
                         "model": "Smile",
                         "name": "Smile",
