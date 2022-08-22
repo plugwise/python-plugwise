@@ -3136,7 +3136,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile",
                 "vendor": "Plugwise B.V.",
             },
-            "a455b61e52394b2db5081ce025a430f3": {
+            "cd3e822288064775a7c4afcdd70bdda2": {
                 "dev_class": "smartmeter",
                 "location": "cd3e822288064775a7c4afcdd70bdda2",
                 "model": "2M550E-1012",
