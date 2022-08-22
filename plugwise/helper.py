@@ -1119,9 +1119,6 @@ class SmileHelper:
         direct_data: DeviceData = {}
         loc = Munch()
 
-        if self.smile_type != "power":
-            return {}
-
         search = self._locations
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
