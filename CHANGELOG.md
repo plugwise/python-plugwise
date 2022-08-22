@@ -1,12 +1,15 @@
 # Changelog
 
+# v0.22.0: Smile P1 - create an additional P1 device, representing the smartmeter
+- Change P1 gateway model to Smile
+
 # v0.21.3: Revert all hvac_mode HEAT_COOL related
 -  The Anna-Elga usecase, providing a heating and a cooling setpoint, was reverted back to providing a single setpoint.
 
 # v0.21.2: Code improvements, cleanup
 
 # v0.21.1: Smile: various updates % fixes
-- Change Anna-gateway name to Smile - related to https://developers.home-assistant.io/blog/2022/07/10/entity_naming/ and changes in the Core Plugwise(-beta) code.
+- Change Anna-gateway model to Smile - related to https://developers.home-assistant.io/blog/2022/07/10/entity_naming/ and changes in the Core Plugwise(-beta) code.
 - Output elga_cooling_enabled, lortherm_cooling_enabled or adam_cooling_enabled when applicable. To be used in Core Plugwise(-beta) instead of calling api-variables.
 - Protect the self-variables that will no longer be used in Core Plugwise(-beta).
 - pyproject.toml updates.
