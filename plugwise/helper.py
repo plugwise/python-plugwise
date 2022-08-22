@@ -590,9 +590,7 @@ class SmileHelper:
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
         for loc_id in self._loc_data:
-            appl.dev_id = self.gateway_id
-            if self.gateway_id is None:
-                appl.dev_id = FAKE_APPL
+            appl.dev_id = loc_id
             appl.location = loc_id
             appl.mac = None
             appl.name = "P1"
