@@ -511,8 +511,7 @@ class SmileHelper:
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
             if self.smile_type == "power":
-                for loc_id in self._loc_data:
-                    self.gateway_id = loc_id
+                self.gateway_id = next(iter(self._loc_data.keys()))
             appl.fw = self.smile_fw_version
             appl.mac = self.smile_mac_address
             appl.model = appl.name = self.smile_name
