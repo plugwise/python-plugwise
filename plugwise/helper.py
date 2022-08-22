@@ -588,30 +588,29 @@ class SmileHelper:
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
-        for loc_id in self._loc_data:
-            appl.dev_id = loc_id
-            appl.location = loc_id
-            appl.mac = None
-            appl.name = "P1"
-            appl.pwclass = "smartmeter"
-            appl.zigbee_mac = None
-            location = self._locations.find(f'./location[@id="{loc_id}"]')
-            appl = self._energy_device_info_finder(location, appl)
+        loc_id = next(iter(self._loc_data.keys()))
+        appl.dev_id = appl.location = loc_id
+        appl.mac = None
+        appl.name = "P1"
+        appl.pwclass = "smartmeter"
+        appl.zigbee_mac = None
+        location = self._locations.find(f'./location[@id="{loc_id}"]')
+        appl = self._energy_device_info_finder(location, appl)
 
-            self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
+        self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
 
-            for key, value in {
-                "firmware": appl.firmware,
-                "hardware": appl.hardware,
-                "location": appl.location,
-                "mac_address": appl.mac,
-                "model": appl.model,
-                "name": appl.name,
-                "zigbee_mac_address": appl.zigbee_mac,
-                "vendor": appl.vendor_name,
-            }.items():
-                if value is not None or key == "location":
-                    self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+        for key, value in {
+            "firmware": appl.firmware,
+            "hardware": appl.hardware,
+            "location": appl.location,
+            "mac_address": appl.mac,
+            "model": appl.model,
+            "name": appl.name,
+            "zigbee_mac_address": appl.zigbee_mac,
+            "vendor": appl.vendor_name,
+        }.items():
+            if value is not None or key == "location":
+                self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
