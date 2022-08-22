@@ -825,7 +825,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_smile_p1_v2(self):
         """Test a legacy P1 device."""
         testdata = {
-            "938696c4bcdb4b8a9a595cb38ed43913": {
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
                 "dev_class": "gateway",
                 "firmware": "2.5.9",
                 "location": "938696c4bcdb4b8a9a595cb38ed43913",
@@ -834,7 +834,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile",
                 "vendor": "Plugwise B.V.",
             },
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+            "938696c4bcdb4b8a9a595cb38ed43913": {
                 "dev_class": "smartmeter",
                 "location": "938696c4bcdb4b8a9a595cb38ed43913",
                 "model": "Ene5\\T210-DESMR5.0",
@@ -884,7 +884,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_smile_p1_v2_2(self):
         """Test another legacy P1 device."""
         testdata = {
-            "199aa40f126840f392983d171374ab0b": {
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
                 "dev_class": "gateway",
                 "firmware": "2.5.9",
                 "location": "199aa40f126840f392983d171374ab0b",
@@ -893,7 +893,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile",
                 "vendor": "Plugwise B.V.",
             },
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+            "199aa40f126840f392983d171374ab0b": {
                 "dev_class": "smartmeter",
                 "location": "199aa40f126840f392983d171374ab0b",
                 "model": "Ene5\\T210-DESMR5.0",
@@ -3023,7 +3023,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile",
                 "vendor": "Plugwise B.V.",
             },
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "model": "KFM5KAIFA-METER",
@@ -3079,7 +3079,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile",
                 "vendor": "Plugwise B.V.",
             },
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "model": "KFM5KAIFA-METER",
@@ -3136,7 +3136,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile",
                 "vendor": "Plugwise B.V.",
             },
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "smartmeter",
                 "location": "cd3e822288064775a7c4afcdd70bdda2",
                 "model": "2M550E-1012",
@@ -4279,7 +4279,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile",
                 "vendor": "Plugwise B.V.",
             },
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "model": "KFM5KAIFA-METER",
