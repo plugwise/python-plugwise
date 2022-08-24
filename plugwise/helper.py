@@ -612,6 +612,8 @@ class SmileHelper:
             if value is not None or key == "location":
                 self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
+        return appl
+
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
@@ -643,7 +645,7 @@ class SmileHelper:
                 )
                 # For legacy P1 collect the connected SmartMeter info
                 appl = Munch()
-                self._p1_smartmeter_info_finder(appl)
+                appl = self._p1_smartmeter_info_finder(appl)
                 # Legacy P1 has no more devices
                 return
 
@@ -727,7 +729,8 @@ class SmileHelper:
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
-            self._p1_smartmeter_info_finder(appl)
+            appl = self._p1_smartmeter_info_finder(appl)
+            self.gateway_id = appl.dev_id
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
