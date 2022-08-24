@@ -586,7 +586,7 @@ class SmileHelper:
 
         return appl
 
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> Munch:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self._loc_data.keys()))
         appl.dev_id = appl.location = loc_id
