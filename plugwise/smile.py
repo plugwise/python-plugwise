@@ -51,7 +51,7 @@ class SmileData(SmileHelper):
         """Helper-function for adding/updating various cooling-related values."""
         for _, device in devices.items():
             # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-            if self.smile_name == "Smile":
+            if self.smile_name == "Smile Anna":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
                     device["binary_sensors"]["cooling_state"] = False
                     if self._elga_cooling_active or self._lortherm_cooling_active:
@@ -119,7 +119,7 @@ class SmileData(SmileHelper):
             search = self._domain_objects
             self._anna_cooling_present = adam_cooling_present = False
             if search.find(locator_1) is not None:
-                if self.smile_name == "Smile":
+                if self.smile_name == "Smile Anna":
                     self._anna_cooling_present = True
                 else:
                     adam_cooling_present = True
@@ -424,7 +424,7 @@ class Smile(SmileComm, SmileData):
         self.smile_type = SMILES[target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
 
-        if target_smile in ["smile_thermo_v1", "smile_v2", "stretch_v3", "stretch_v2"]:
+        if target_smile in ("smile_thermo_v1", "smile_v2", "stretch_v3", "stretch_v2"):
             self._smile_legacy = True
 
         if self.smile_type == "stretch":

@@ -500,14 +500,14 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 # Known types of Smiles and Stretches
 SMILE = namedtuple("SMILE", "smile_type smile_name")
 SMILES: Final[dict[str, SMILE]] = {
-    "smile_v2": SMILE("power", "Smile"),
-    "smile_v3": SMILE("power", "Smile"),
-    "smile_v4": SMILE("power", "Smile"),
+    "smile_v2": SMILE("power", "Smile P1"),
+    "smile_v3": SMILE("power", "Smile P1"),
+    "smile_v4": SMILE("power", "Smile P1"),
     "smile_open_therm_v2": SMILE("thermostat", "Adam"),
     "smile_open_therm_v3": SMILE("thermostat", "Adam"),
-    "smile_thermo_v1": SMILE("thermostat", "Smile"),
-    "smile_thermo_v3": SMILE("thermostat", "Smile"),
-    "smile_thermo_v4": SMILE("thermostat", "Smile"),
+    "smile_thermo_v1": SMILE("thermostat", "Smile Anna"),
+    "smile_thermo_v3": SMILE("thermostat", "Smile Anna"),
+    "smile_thermo_v4": SMILE("thermostat", "Smile Anna"),
     "stretch_v2": SMILE("stretch", "Stretch"),
     "stretch_v3": SMILE("stretch", "Stretch"),
 }

@@ -636,8 +636,8 @@ class SmileHelper:
             if self.smile_type == "power":
                 self._appl_data[self.gateway_id].update(
                     {
-                        "model": "Smile",
-                        "name": "Smile",
+                        "model": "Smile P1",
+                        "name": "Smile P1",
                         "vendor": "Plugwise B.V.",
                     }
                 )
@@ -650,8 +650,8 @@ class SmileHelper:
             if self.smile_type == "thermostat":
                 self._appl_data[self.gateway_id].update(
                     {
-                        "model": "Smile",
-                        "name": "Smile",
+                        "model": "Smile Anna",
+                        "name": "Smile Anna",
                         "vendor": "Plugwise B.V.",
                     }
                 )
@@ -928,7 +928,7 @@ class SmileHelper:
         if d_id == self._heater_id:
             if self._adam_cooling_enabled:
                 data["adam_cooling_enabled"] = self._adam_cooling_enabled
-            if self.smile_name == "Smile":
+            if self.smile_name == "Smile Anna":
                 # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
                 if not self._anna_cooling_present:
                     pass
@@ -1031,7 +1031,7 @@ class SmileHelper:
         """
         switch_groups: dict[str, ApplianceData] = {}
         # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile_name == "Smile":
+        if self.smile_type == "power" or self.smile_name == "Smile Anna":
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
