@@ -704,7 +704,7 @@ class SmileHelper:
             if appl.pwclass == "gateway":
                 appl.firmware = self.smile_fw_version
                 appl.hardware = self.smile_hw_version
-                # P1: switch device_id - part 1
+                # P1: for gateway and smartmeter switch device_id - part 1
                 # This is done to avoid breakage in HA Core
                 if self.smile_type == "power":
                     appl.dev_id = appl.location
@@ -734,10 +734,11 @@ class SmileHelper:
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             appl = self._p1_smartmeter_info_finder(appl)
-            # P1: switch device_id - part 2
+            # P1: for gateway and smartmeter switch device_id - part 2
             for item in self._appl_data:
                 if item != self.gateway_id:
                     self.gateway_id = item
+                    # Leave for loop to avoid a 2nd switch
                     break
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
