@@ -510,8 +510,6 @@ class SmileHelper:
         # Collect gateway device info
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
-            if self.smile_type == "power":
-                self.gateway_id = next(iter(self._loc_data.keys()))
             appl.fw = self.smile_fw_version
             appl.mac = self.smile_mac_address
             appl.model = appl.name = self.smile_name
@@ -589,7 +587,10 @@ class SmileHelper:
     def _p1_smartmeter_info_finder(self, appl: Munch) -> Munch:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self._loc_data.keys()))
-        appl.dev_id = appl.location = loc_id
+        appl.dev_id = self.gateway_id
+        appl.location = loc_id
+        if self._smile_legacy:
+            appl.dev_id = loc_id
         appl.mac = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
@@ -703,6 +704,10 @@ class SmileHelper:
             if appl.pwclass == "gateway":
                 appl.firmware = self.smile_fw_version
                 appl.hardware = self.smile_hw_version
+                # P1: switch device_id - part 1
+                # This is done to avoid breakage in HA Core
+                if self.smile_type == "power":
+                    appl.dev_id = appl.location
 
             # Don't show orphaned non-legacy thermostat-types.
             if (
@@ -713,7 +718,6 @@ class SmileHelper:
                 continue
 
             self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
-
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
@@ -730,7 +734,11 @@ class SmileHelper:
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             appl = self._p1_smartmeter_info_finder(appl)
-            self.gateway_id = appl.dev_id
+            # P1: switch device_id - part 2
+            for item in self._appl_data:
+                if item != self.gateway_id:
+                    self.gateway_id = item
+                    break
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
