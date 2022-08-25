@@ -3013,7 +3013,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v3(self):
         """Test a P1 firmware 3 with only electricity setup."""
         testdata = {
-            "ba4de7613517478da82dd9b6abea36af": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "gateway",
                 "firmware": "3.3.6",
                 "hardware": "AME Smile 2.0 board",
@@ -3023,7 +3023,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile P1",
                 "vendor": "Plugwise B.V.",
             },
-            "a455b61e52394b2db5081ce025a430f3": {
+            "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "model": "KFM5KAIFA-METER",
@@ -3069,7 +3069,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v3solarfake(self):
         """Test a P1 firmware 3 with manually added solar setup."""
         testdata = {
-            "ba4de7613517478da82dd9b6abea36af": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "gateway",
                 "firmware": "3.3.6",
                 "hardware": "AME Smile 2.0 board",
@@ -3079,7 +3079,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile P1",
                 "vendor": "Plugwise B.V.",
             },
-            "a455b61e52394b2db5081ce025a430f3": {
+            "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "model": "KFM5KAIFA-METER",
@@ -3126,7 +3126,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v3_full_option(self):
         """Test a P1 firmware 3 full option (gas and solar) setup."""
         testdata = {
-            "e950c7d5e1ee407a858e2a8b5016c8b3": {
+            "cd3e822288064775a7c4afcdd70bdda2": {
                 "dev_class": "gateway",
                 "firmware": "3.3.9",
                 "hardware": "AME Smile 2.0 board",
@@ -3136,7 +3136,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Smile P1",
                 "vendor": "Plugwise B.V.",
             },
-            "cd3e822288064775a7c4afcdd70bdda2": {
+            "e950c7d5e1ee407a858e2a8b5016c8b3": {
                 "dev_class": "smartmeter",
                 "location": "cd3e822288064775a7c4afcdd70bdda2",
                 "model": "2M550E-1012",
