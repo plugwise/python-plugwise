@@ -360,6 +360,7 @@ class SmileHelper:
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
+        self.smile_model: str
         self.smile_name: str
         self.smile_type: str
         self.smile_version: tuple[str, VersionInfo]
@@ -512,7 +513,8 @@ class SmileHelper:
             self.gateway_id = appliance.attrib["id"]
             appl.fw = self.smile_fw_version
             appl.mac = self.smile_mac_address
-            appl.model = appl.name = self.smile_name
+            appl.model = self.smile_model
+            appl.name = self.smile_name
             appl.vendor_name = "Plugwise B.V."
 
             # Adam: look for the ZigBee MAC address of the Smile
@@ -592,6 +594,7 @@ class SmileHelper:
         if self._smile_legacy:
             appl.dev_id = loc_id
         appl.mac = None
+        appl.model = self.smile_model
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
@@ -635,12 +638,16 @@ class SmileHelper:
                 self._appl_data[self.gateway_id].update(
                     {"mac_address": self.smile_mac_address}
                 )
+            if self.smile_zigbee_mac_address is not None:
+                self._appl_data[self.gateway_id].update(
+                    {"zigbee_mac_address": self.smile_zigbee_mac_address}
+                )
 
             if self.smile_type == "power":
                 self._appl_data[self.gateway_id].update(
                     {
-                        "model": "Smile P1",
-                        "name": "Smile P1",
+                        "model": self.smile_model,
+                        "name": self.smile_name,
                         "vendor": "Plugwise B.V.",
                     }
                 )
@@ -650,22 +657,12 @@ class SmileHelper:
                 # Legacy P1 has no more devices
                 return
 
-            if self.smile_type == "thermostat":
+            if self.smile_type in ("stretch", "thermostat"):
                 self._appl_data[self.gateway_id].update(
                     {
-                        "model": "Smile Anna",
-                        "name": "Smile Anna",
+                        "model": self.smile_model,
+                        "name": self.smile_name,
                         "vendor": "Plugwise B.V.",
-                    }
-                )
-
-            if self.smile_type == "stretch":
-                self._appl_data[self.gateway_id].update(
-                    {
-                        "model": "Stretch",
-                        "name": "Stretch",
-                        "vendor": "Plugwise B.V.",
-                        "zigbee_mac_address": self.smile_zigbee_mac_address,
                     }
                 )
 
@@ -701,13 +698,10 @@ class SmileHelper:
             if (appl := self._appliance_info_finder(appliance, appl)) is None:
                 continue
 
-            if appl.pwclass == "gateway":
-                appl.firmware = self.smile_fw_version
-                appl.hardware = self.smile_hw_version
-                # P1: for gateway and smartmeter switch device_id - part 1
-                # This is done to avoid breakage in HA Core
-                if self.smile_type == "power":
-                    appl.dev_id = appl.location
+            # P1: for gateway and smartmeter switch device_id - part 1
+            # This is done to avoid breakage in HA Core
+            if appl.pwclass == "gateway" and self.smile_type == "power":
+                appl.dev_id = appl.location
 
             # Don't show orphaned non-legacy thermostat-types.
             if (
@@ -738,7 +732,7 @@ class SmileHelper:
             for item in self._appl_data:
                 if item != self.gateway_id:
                     self.gateway_id = item
-                    # Leave for loop to avoid a 2nd switch
+                    # Leave for-loop to avoid a 2nd switch
                     break
 
     def _match_locations(self) -> dict[str, ThermoLoc]:

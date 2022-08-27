@@ -420,6 +420,7 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
+        self.smile_model = "Gateway"
         self.smile_name = SMILES[target_smile].smile_name
         self.smile_type = SMILES[target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
