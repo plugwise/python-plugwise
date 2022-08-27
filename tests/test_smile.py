@@ -643,7 +643,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2017-03-13T11:54:58+01:00",
                 "hardware": "6539-1301-500",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -743,7 +743,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2017-03-13T11:54:58+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -982,7 +982,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "eb5309212bf5407bb143e5bfa3b18aee",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1097,7 +1097,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "eb5309212bf5407bb143e5bfa3b18aee",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1221,7 +1221,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c34c6864216446528e95d88985e714cc",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1315,7 +1315,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c34c6864216446528e95d88985e714cc",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1391,7 +1391,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c34c6864216446528e95d88985e714cc",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1516,7 +1516,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ee62cad889f94e8ca3d09021f03a660b": {
                 "dev_class": "thermostat",
                 "location": "009490cc2f674ce6b576863fbb64f867",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1641,7 +1641,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ad4838d7d35c4d6ea796ee12ae5aedf8": {
                 "dev_class": "thermostat",
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3246,7 +3246,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c784ee9fdab44e1395b8dee7d7a497d5",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3521,7 +3521,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3621,7 +3621,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3669,7 +3669,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
