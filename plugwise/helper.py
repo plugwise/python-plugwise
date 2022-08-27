@@ -619,39 +619,30 @@ class SmileHelper:
 
         return appl
 
-    def _all_appliances(self) -> None:
-        """Collect all appliances with relevant info."""
-        self._all_locations()
+    def _create_legacy_gateway(self) -> None:
+        """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
 
-        # Create a gateway for legacy Anna, P1 and Stretches
-        # and inject a home_location as device id for legacy so
-        # appl_data can use the location id as device id, where needed.
+        Use the home_location or FAKE_APPL as device id.
+        """
         if self._smile_legacy:
             self.gateway_id = self._home_location
             if self.smile_type == "power":
                 self.gateway_id = FAKE_APPL
-            self._appl_data[self.gateway_id] = {
-                "dev_class": "gateway",
-                "firmware": self.smile_fw_version,
-                "location": self._home_location,
-            }
-            if self.smile_mac_address is not None:
-                self._appl_data[self.gateway_id].update(
-                    {"mac_address": self.smile_mac_address}
-                )
-            if self.smile_zigbee_mac_address is not None:
-                self._appl_data[self.gateway_id].update(
-                    {"zigbee_mac_address": self.smile_zigbee_mac_address}
-                )
+
+            self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
 
             if self.smile_type == "power":
-                self._appl_data[self.gateway_id].update(
-                    {
-                        "model": self.smile_model,
-                        "name": self.smile_name,
-                        "vendor": "Plugwise B.V.",
-                    }
-                )
+                for key, value in {
+                    "firmware": self.smile_fw_version,
+                    "location": self._home_location,
+                    "mac_address": self.smile_mac_address,
+                    "model": self.smile_model,
+                    "name": self.smile_name,
+                    "zigbee_mac_address": self.smile_zigbee_mac_address,
+                    "vendor": "Plugwise B.V.",
+                }.items():
+                    if value is not None:
+                        self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
                 # For legacy P1 collect the connected SmartMeter info
                 appl = Munch()
                 appl = self._p1_smartmeter_info_finder(appl)
@@ -659,13 +650,22 @@ class SmileHelper:
                 return
 
             if self.smile_type in ("stretch", "thermostat"):
-                self._appl_data[self.gateway_id].update(
-                    {
-                        "model": self.smile_model,
-                        "name": self.smile_name,
-                        "vendor": "Plugwise B.V.",
-                    }
-                )
+                for key, value in {
+                    "firmware": self.smile_fw_version,
+                    "location": self._home_location,
+                    "mac_address": self.smile_mac_address,
+                    "model": self.smile_model,
+                    "name": self.smile_name,
+                    "zigbee_mac_address": self.smile_zigbee_mac_address,
+                    "vendor": "Plugwise B.V.",
+                }.items():
+                    if value is not None:
+                        self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
+
+    def _all_appliances(self) -> None:
+        """Collect all appliances with relevant info."""
+        self._all_locations()
+        self._create_legacy_gateway()
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
