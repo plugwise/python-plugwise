@@ -447,6 +447,8 @@ class SmileHelper:
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
                 model_data["vendor_name"] = module.find("vendor_name").text
+                if model_data["vendor_name"] == "Plugwise B.V.":
+                    model_data["vendor_name"] = "Plugwise"
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
@@ -516,7 +518,7 @@ class SmileHelper:
             appl.mac = self.smile_mac_address
             appl.model = self.smile_model
             appl.name = self.smile_name
-            appl.vendor_name = "Plugwise B.V."
+            appl.vendor_name = "Plugwise"
 
             # Adam: look for the ZigBee MAC address of the Smile
             if self.smile_name == "Adam" and (
@@ -637,7 +639,7 @@ class SmileHelper:
                 "model": self.smile_model,
                 "name": self.smile_name,
                 "zigbee_mac_address": self.smile_zigbee_mac_address,
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
             }.items():
                 if value is not None:
                     self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
