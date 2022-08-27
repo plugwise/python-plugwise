@@ -91,9 +91,7 @@ def update_helper(
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
     """Model checking before using version_to_model."""
-    if vendor_name in ["Plugwise", "Plugwise B.V."]:
-        if name == "ThermoTouch":
-            return "Anna"
+    if vendor_name == "Plugwise":
         if (model := version_to_model(name)) != "Unknown":
             return model
     return name
