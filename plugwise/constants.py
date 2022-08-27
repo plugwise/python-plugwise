@@ -211,7 +211,7 @@ HW_MODELS: Final[dict[str, str]] = {
     "120006": "Sense Legrand",
     "070051": "Switch",
     "080029": "Switch",
-    "143.1": "Anna",
+    "143.1": "ThermoTouch",
     "159.2": "Adam",
     "106-03": "Tom/Floor",
     "158-01": "Lisa",
