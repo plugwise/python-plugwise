@@ -511,7 +511,7 @@ class SmileHelper:
         # Collect gateway device info
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
-            appl.fw = self.smile_fw_version
+            appl.firmware = self.smile_fw_version
             appl.mac = self.smile_mac_address
             appl.model = self.smile_model
             appl.name = self.smile_name
