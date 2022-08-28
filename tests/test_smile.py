@@ -533,13 +533,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_thermostat_schedule(
-        self, smile, loc_id, state, good_schedules=None, unhappy=False
+        self, smile, loc_id, state, good_schedules=None, single=False, unhappy=False
     ):
         if good_schedules != []:
-            if good_schedules != [None]:
-                good_schedules.append(
-                    "!VeryBogusScheduleNameThatNobodyEverUsesOrShouldUse"
-                )
+            if not single and not ("!VeryBogusSchedule" in good_schedules):
+                good_schedules.append("!VeryBogusSchedule")
             for new_schedule in good_schedules:
                 tinker_schedule_passed = False
                 warning = ""
@@ -550,7 +548,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 try:
                     await smile.set_schedule_state(loc_id, new_schedule, state)
                     tinker_schedule_passed = True
-                    _LOGGER.info("  + found invalid schedule, as intended")
+                    _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
                     tinker_schedule_passed = True
@@ -572,7 +570,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_thermostat(
-        self, smile, loc_id, schedule_on=True, good_schedules=None, unhappy=False
+        self,
+        smile,
+        loc_id,
+        schedule_on=True,
+        good_schedules=None,
+        single=False,
+        unhappy=False,
     ):
         """Toggle various climate settings to test functionality."""
         if good_schedules is None:  # pragma: no cover
@@ -580,15 +584,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         result_1 = await self.tinker_thermostat_temp(smile, loc_id, unhappy)
         result_2 = await self.tinker_thermostat_preset(smile, loc_id, unhappy)
+        smile._schedule_present_state = "off"
         result_3 = await self.tinker_thermostat_schedule(
-            smile, loc_id, "on", good_schedules, unhappy
+            smile, loc_id, "on", good_schedules, single, unhappy
         )
         if schedule_on:
             result_4 = await self.tinker_thermostat_schedule(
-                smile, loc_id, "off", good_schedules, unhappy
+                smile, loc_id, "off", good_schedules, single, unhappy
             )
             result_5 = await self.tinker_thermostat_schedule(
-                smile, loc_id, "on", good_schedules, unhappy
+                smile, loc_id, "on", good_schedules, single, unhappy
             )
             return result_1 and result_2 and result_3 and result_4 and result_5
         return result_1 and result_2 and result_3
@@ -1780,8 +1785,26 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "f2bf9048bef64cc5b6d5110154e33c81",
             "bad",
             good_schedules=["Badkamer"],
+            single=True,
         )
         assert result
+
+        smile._schedule_present_state = "off"
+        result_1 = await self.tinker_thermostat_schedule(
+            smile,
+            "f2bf9048bef64cc5b6d5110154e33c81",
+            "on",
+            good_schedules=["Badkamer"],
+            single=True,
+        )
+        result_2 = await self.tinker_thermostat_schedule(
+            smile,
+            "f2bf9048bef64cc5b6d5110154e33c81",
+            "on",
+            good_schedules=["Badkamer"],
+            single=True,
+        )
+        assert result_1 and result_2
 
         switch_change = await self.tinker_switch(
             smile,

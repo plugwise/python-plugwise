@@ -216,6 +216,10 @@ class SmileData(SmileHelper):
             if self._adam_cooling_enabled or self._lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
+        self._schedule_present_state = "off"
+        if device_data["mode"] == "auto":
+            self._schedule_present_state = "on"
+
         return device_data
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
@@ -512,7 +516,7 @@ class Smile(SmileComm, SmileData):
                 schedule_rule_id = rule.attrib["id"]
 
         if schedule_rule_id is None:
-            raise PlugwiseError("Plugwise: no schedule available.")
+            raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         state = "false"
         if status == "on":
@@ -543,9 +547,9 @@ class Smile(SmileComm, SmileData):
         # Do nothing when name == None and the state does not change. No need to show
         # an error, as doing nothing is the correct action in this scenario.
         if name is None:
-            if state == "off":
+            if state == self._schedule_present_state:
                 return
-            # else:
+            # else, raise an error:
             raise PlugwiseError(
                 "Plugwise: cannot change schedule-state: no schedule name provided"
             )
@@ -555,8 +559,13 @@ class Smile(SmileComm, SmileData):
             return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
+        # Raise an error when the schedule name does not exist
         if not schedule_rule or schedule_rule is None:
             raise PlugwiseError("Plugwise: no schedule with this name available.")
+
+        # If schedule name is valid but no state change is requested, do nothing
+        if state == self._schedule_present_state:
+            return
 
         schedule_rule_id: str = next(iter(schedule_rule))
 
@@ -589,6 +598,8 @@ class Smile(SmileComm, SmileData):
             f"{template}{contexts}</rule></rules>"
         )
         await self._request(uri, method="put", data=data)
+
+        self._schedule_present_state = state
 
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
