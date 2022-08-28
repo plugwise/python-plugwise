@@ -334,6 +334,7 @@ class SmileHelper:
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float
+        self._schedule_present_state: str
         self._sched_setpoints: list[float] | None = None
         self._smile_legacy = False
         self._stretch_v2 = False
