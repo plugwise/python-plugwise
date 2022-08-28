@@ -1,7 +1,9 @@
 # Changelog
 
 # v0.22.0: Smile P1 - create an additional P1 device, representing the smartmeter
-- Change P1 gateway model to Smile
+- Change all gateway model names to Gateway
+- Change Anna Smile name to Smile Anna, Anna model name to ThermoTouch
+- Change P1 Smile name to Smile P1
 
 # v0.21.3: Revert all hvac_mode HEAT_COOL related
 -  The Anna-Elga usecase, providing a heating and a cooling setpoint, was reverted back to providing a single setpoint.
