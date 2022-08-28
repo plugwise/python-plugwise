@@ -211,7 +211,7 @@ HW_MODELS: Final[dict[str, str]] = {
     "120006": "Sense Legrand",
     "070051": "Switch",
     "080029": "Switch",
-    "143.1": "Anna",
+    "143.1": "ThermoTouch",
     "159.2": "Adam",
     "106-03": "Tom/Floor",
     "158-01": "Lisa",
@@ -389,6 +389,7 @@ DEFAULT_TIMEOUT: Final = 30
 DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 NONE: Final = "None"
+FAKE_APPL: Final = "aaaa0000aaaa0000aaaa0000aaaa00aa"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
 LIMITS: Final[tuple[str, ...]] = (
     "setpoint",
@@ -499,14 +500,14 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 # Known types of Smiles and Stretches
 SMILE = namedtuple("SMILE", "smile_type smile_name")
 SMILES: Final[dict[str, SMILE]] = {
-    "smile_v2": SMILE("power", "P1"),
-    "smile_v3": SMILE("power", "P1"),
-    "smile_v4": SMILE("power", "P1"),
+    "smile_v2": SMILE("power", "Smile P1"),
+    "smile_v3": SMILE("power", "Smile P1"),
+    "smile_v4": SMILE("power", "Smile P1"),
     "smile_open_therm_v2": SMILE("thermostat", "Adam"),
     "smile_open_therm_v3": SMILE("thermostat", "Adam"),
-    "smile_thermo_v1": SMILE("thermostat", "Smile"),
-    "smile_thermo_v3": SMILE("thermostat", "Smile"),
-    "smile_thermo_v4": SMILE("thermostat", "Smile"),
+    "smile_thermo_v1": SMILE("thermostat", "Smile Anna"),
+    "smile_thermo_v3": SMILE("thermostat", "Smile Anna"),
+    "smile_thermo_v4": SMILE("thermostat", "Smile Anna"),
     "stretch_v2": SMILE("stretch", "Stretch"),
     "stretch_v3": SMILE("stretch", "Stretch"),
 }
@@ -590,7 +591,7 @@ class GatewayData(TypedDict, total=False):
     """The Gateway Data class."""
 
     smile_name: str
-    gateway_id: str
+    gateway_id: str | None
     heater_id: str | None
     cooling_present: bool
     notifications: dict[str, str]

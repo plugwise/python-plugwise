@@ -28,6 +28,7 @@ from .constants import (
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
+    FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
@@ -90,9 +91,7 @@ def update_helper(
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
     """Model checking before using version_to_model."""
-    if vendor_name in ["Plugwise", "Plugwise B.V."]:
-        if name == "ThermoTouch":
-            return "Anna"
+    if vendor_name == "Plugwise":
         if (model := version_to_model(name)) != "Unknown":
             return model
     return name
@@ -353,12 +352,13 @@ class SmileHelper:
         self._lortherm_cooling_active = False
         self._lortherm_cooling_enabled = False
 
-        self.gateway_id: str
+        self.gateway_id: str | None = None
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
+        self.smile_model: str
         self.smile_name: str
         self.smile_type: str
         self.smile_version: tuple[str, VersionInfo]
@@ -445,6 +445,8 @@ class SmileHelper:
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
                 model_data["vendor_name"] = module.find("vendor_name").text
+                if model_data["vendor_name"] == "Plugwise B.V.":
+                    model_data["vendor_name"] = "Plugwise"
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
@@ -464,18 +466,21 @@ class SmileHelper:
         """Helper-function for _appliance_info_finder().
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
-        if self.smile_type == "stretch":
+        if self.smile_type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
+            if not self._smile_legacy:
+                locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
             module_data = self._get_module_data(appliance, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            if appl.zigbee_mac is None:
+            if appl.zigbee_mac is None and self.smile_type != "power":
                 return None
 
-            appl.vendor_name = module_data["vendor_name"]
             appl.hardware = module_data["hardware_version"]
+            appl.model = module_data["vendor_model"]
+            appl.vendor_name = module_data["vendor_name"]
             if appl.hardware is not None:
                 hw_version = appl.hardware.replace("-", "")
                 appl.model = version_to_model(hw_version)
@@ -506,10 +511,12 @@ class SmileHelper:
         # Collect gateway device info
         if appl.pwclass == "gateway":
             self.gateway_id = appliance.attrib["id"]
-            appl.fw = self.smile_fw_version
+            appl.firmware = self.smile_fw_version
+            appl.hardware = self.smile_hw_version
             appl.mac = self.smile_mac_address
-            appl.model = appl.name = self.smile_name
-            appl.vendor_name = "Plugwise B.V."
+            appl.model = self.smile_model
+            appl.name = self.smile_name
+            appl.vendor_name = "Plugwise"
 
             # Adam: look for the ZigBee MAC address of the Smile
             if self.smile_name == "Adam" and (
@@ -580,54 +587,74 @@ class SmileHelper:
 
         return appl
 
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> Munch:
+        """Collect P1 DSMR Smartmeter info."""
+        loc_id = next(iter(self._loc_data.keys()))
+        appl.dev_id = self.gateway_id
+        appl.location = loc_id
+        if self._smile_legacy:
+            appl.dev_id = loc_id
+        appl.mac = None
+        appl.model = self.smile_model
+        appl.name = "P1"
+        appl.pwclass = "smartmeter"
+        appl.zigbee_mac = None
+        location = self._locations.find(f'./location[@id="{loc_id}"]')
+        appl = self._energy_device_info_finder(location, appl)
+
+        self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
+
+        for key, value in {
+            "firmware": appl.firmware,
+            "hardware": appl.hardware,
+            "location": appl.location,
+            "mac_address": appl.mac,
+            "model": appl.model,
+            "name": appl.name,
+            "zigbee_mac_address": appl.zigbee_mac,
+            "vendor": appl.vendor_name,
+        }.items():
+            if value is not None or key == "location":
+                self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+
+        return appl
+
+    def _create_legacy_gateway(self) -> None:
+        """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
+
+        Use the home_location or FAKE_APPL as device id.
+        """
+        if self._smile_legacy:
+            self.gateway_id = self._home_location
+            if self.smile_type == "power":
+                self.gateway_id = FAKE_APPL
+
+            self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
+            for key, value in {
+                "firmware": self.smile_fw_version,
+                "location": self._home_location,
+                "mac_address": self.smile_mac_address,
+                "model": self.smile_model,
+                "name": self.smile_name,
+                "zigbee_mac_address": self.smile_zigbee_mac_address,
+                "vendor": "Plugwise",
+            }.items():
+                if value is not None:
+                    self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
+
+            if self.smile_type == "power":
+                # For legacy P1 collect the connected SmartMeter info
+                appl = Munch()
+                appl = self._p1_smartmeter_info_finder(appl)
+
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
 
-        # Create a gateway for legacy Anna, P1 and Stretches
-        # and inject a home_location as device id for legacy so
-        # appl_data can use the location id as device id, where needed.
-        if self._smile_legacy:
-            self.gateway_id = self._home_location
-            self._appl_data[self._home_location] = {
-                "dev_class": "gateway",
-                "firmware": self.smile_fw_version,
-                "location": self._home_location,
-            }
-            if self.smile_mac_address is not None:
-                self._appl_data[self._home_location].update(
-                    {"mac_address": self.smile_mac_address}
-                )
-
-            if self.smile_type == "power":
-                self._appl_data[self._home_location].update(
-                    {
-                        "model": "P1",
-                        "name": "P1",
-                        "vendor": "Plugwise B.V.",
-                    }
-                )
-                # legacy p1 has no more devices
-                return
-
-            if self.smile_type == "thermostat":
-                self._appl_data[self._home_location].update(
-                    {
-                        "model": "Smile",
-                        "name": "Smile",
-                        "vendor": "Plugwise B.V.",
-                    }
-                )
-
-            if self.smile_type == "stretch":
-                self._appl_data[self._home_location].update(
-                    {
-                        "model": "Stretch",
-                        "name": "Stretch",
-                        "vendor": "Plugwise B.V.",
-                        "zigbee_mac_address": self.smile_zigbee_mac_address,
-                    }
-                )
+        self._create_legacy_gateway()
+        # Legacy P1 has no more devices
+        if self._smile_legacy and self.smile_type == "power":
+            return
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -661,9 +688,10 @@ class SmileHelper:
             if (appl := self._appliance_info_finder(appliance, appl)) is None:
                 continue
 
-            if appl.pwclass == "gateway":
-                appl.firmware = self.smile_fw_version
-                appl.hardware = self.smile_hw_version
+            # P1: for gateway and smartmeter switch device_id - part 1
+            # This is done to avoid breakage in HA Core
+            if appl.pwclass == "gateway" and self.smile_type == "power":
+                appl.dev_id = appl.location
 
             # Don't show orphaned non-legacy thermostat-types.
             if (
@@ -674,7 +702,6 @@ class SmileHelper:
                 continue
 
             self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
-
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
@@ -687,6 +714,16 @@ class SmileHelper:
             }.items():
                 if value is not None or key == "location":
                     self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+
+        # For non-legacy P1 collect the connected SmartMeter info
+        if self.smile_type == "power":
+            appl = self._p1_smartmeter_info_finder(appl)
+            # P1: for gateway and smartmeter switch device_id - part 2
+            for item in self._appl_data:
+                if item != self.gateway_id:
+                    self.gateway_id = item
+                    # Leave for-loop to avoid a 2nd switch
+                    break
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
@@ -887,7 +924,7 @@ class SmileHelper:
         if d_id == self._heater_id:
             if self._adam_cooling_enabled:
                 data["adam_cooling_enabled"] = self._adam_cooling_enabled
-            if self.smile_name == "Smile":
+            if self.smile_name == "Smile Anna":
                 # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
                 if not self._anna_cooling_present:
                     pass
@@ -990,7 +1027,7 @@ class SmileHelper:
         """
         switch_groups: dict[str, ApplianceData] = {}
         # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile_name == "Smile":
+        if self.smile_type == "power" or self.smile_name == "Smile Anna":
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
@@ -1075,9 +1112,6 @@ class SmileHelper:
         """
         direct_data: DeviceData = {}
         loc = Munch()
-
-        if self.smile_type != "power":
-            return {}
 
         search = self._locations
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]

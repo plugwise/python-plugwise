@@ -633,9 +633,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "dev_class": "gateway",
                 "firmware": "1.8.0",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
             },
             "0d266432d64443e283b5d708ae98b455": {
@@ -643,7 +643,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2017-03-13T11:54:58+01:00",
                 "hardware": "6539-1301-500",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -696,6 +696,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 43
         assert not self.notifications
 
@@ -731,9 +732,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "dev_class": "gateway",
                 "firmware": "1.8.0",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 21.0},
             },
@@ -742,7 +743,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2017-03-13T11:54:58+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -794,6 +795,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+
+        assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
         assert self.device_items == 43
         assert not self.notifications
 
@@ -825,14 +828,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_smile_p1_v2(self):
         """Test a legacy P1 device."""
         testdata = {
-            "938696c4bcdb4b8a9a595cb38ed43913": {
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
                 "dev_class": "gateway",
                 "firmware": "2.5.9",
                 "location": "938696c4bcdb4b8a9a595cb38ed43913",
                 "mac_address": "012345670001",
-                "model": "P1",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+            },
+            "938696c4bcdb4b8a9a595cb38ed43913": {
+                "dev_class": "smartmeter",
+                "location": "938696c4bcdb4b8a9a595cb38ed43913",
+                "model": "Ene5\\T210-DESMR5.0",
                 "name": "P1",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Ene5\\T210-DESMR5.0",
                 "sensors": {
                     "net_electricity_point": 456,
                     "electricity_consumed_point": 456,
@@ -849,7 +859,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "gas_consumed_cumulative": 584.431,
                     "gas_consumed_interval": 0.014,
                 },
-            }
+            },
         }
 
         self.smile_setup = "smile_p1_v2"
@@ -865,7 +875,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -877,15 +888,38 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_smile_p1_v2_2(self):
         """Test another legacy P1 device."""
         testdata = {
-            # Gateway / P1 itself
+            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+                "dev_class": "gateway",
+                "firmware": "2.5.9",
+                "location": "199aa40f126840f392983d171374ab0b",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+            },
             "199aa40f126840f392983d171374ab0b": {
+                "dev_class": "smartmeter",
+                "location": "199aa40f126840f392983d171374ab0b",
+                "model": "Ene5\\T210-DESMR5.0",
+                "name": "P1",
+                "vendor": "Ene5\\T210-DESMR5.0",
                 "sensors": {
-                    "electricity_consumed_point": 456.0,
-                    "net_electricity_point": 456.0,
-                    "gas_consumed_cumulative": 584.431,
+                    "net_electricity_point": 456,
+                    "electricity_consumed_point": 456,
+                    "net_electricity_cumulative": 1019.161,
+                    "electricity_consumed_peak_cumulative": 1155.155,
+                    "electricity_consumed_off_peak_cumulative": 1642.74,
+                    "electricity_consumed_peak_interval": 210,
+                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_produced_point": 0,
                     "electricity_produced_peak_cumulative": 1296.136,
-                }
-            }
+                    "electricity_produced_off_peak_cumulative": 482.598,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                    "gas_consumed_cumulative": 584.431,
+                    "gas_consumed_interval": 0.014,
+                },
+            },
         }
 
         self.smile_setup = "smile_p1_v2_2"
@@ -901,7 +935,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -948,7 +982,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "eb5309212bf5407bb143e5bfa3b18aee",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -971,9 +1005,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "mac_address": "012345670001",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 7.44},
             },
@@ -992,6 +1026,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
         assert self.device_items == 52
         assert not self.notifications
 
@@ -1062,7 +1097,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "eb5309212bf5407bb143e5bfa3b18aee",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1085,9 +1120,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
                 "mac_address": "012345670001",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 7.44},
             },
@@ -1186,7 +1221,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c34c6864216446528e95d88985e714cc",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1209,9 +1244,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "mac_address": "012345670001",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 10.8},
             },
@@ -1237,6 +1272,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "a270735e4ccd45239424badc0578a2b1"
         assert self.device_items == 35
         assert not self.notifications
 
@@ -1268,9 +1304,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "mac_address": "012345670001",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 16.6},
             },
@@ -1279,7 +1315,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c34c6864216446528e95d88985e714cc",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1355,7 +1391,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c34c6864216446528e95d88985e714cc",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -1378,9 +1414,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "0f4f2ada20734a339fe353348fe87b96",
                 "mac_address": "012345670001",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 3.56},
             },
@@ -1468,10 +1504,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "07d618f0bb80412687f065b8698ce3e7",
                 "mac_address": "012345670001",
-                "model": "Adam",
+                "model": "Gateway",
                 "name": "Adam",
                 "zigbee_mac_address": "ABCD012345670101",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "regulation_mode": "heating",
                 "regulation_modes": [],
                 "binary_sensors": {"plugwise_notification": False},
@@ -1480,9 +1516,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ee62cad889f94e8ca3d09021f03a660b": {
                 "dev_class": "thermostat",
                 "location": "009490cc2f674ce6b576863fbb64f867",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint": 20.5,
                     "lower_bound": 1.0,
@@ -1528,6 +1564,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert self.device_items == 70
         assert not self.notifications
 
@@ -1604,9 +1641,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ad4838d7d35c4d6ea796ee12ae5aedf8": {
                 "dev_class": "thermostat",
                 "location": "f2bf9048bef64cc5b6d5110154e33c81",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint": 18.5,
                     "lower_bound": 1.0,
@@ -1716,10 +1753,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "bc93488efab249e5bc54fd7e175a6f91",
                 "mac_address": "012345670001",
-                "model": "Adam",
+                "model": "Gateway",
                 "name": "Adam",
                 "zigbee_mac_address": "ABCD012345670101",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "regulation_mode": "heating",
                 "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
                 "binary_sensors": {"plugwise_notification": False},
@@ -1770,6 +1807,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
         assert self.device_items == 132
 
         result = await self.tinker_thermostat(
@@ -1931,10 +1969,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
                 "mac_address": "012345670001",
-                "model": "Adam",
+                "model": "Gateway",
                 "name": "Adam",
                 "zigbee_mac_address": "ABCD012345670101",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "regulation_mode": "heating",
                 "regulation_modes": [],
                 "binary_sensors": {"plugwise_notification": True},
@@ -2204,6 +2242,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "fe799307f1624099878210aa0b9f1475"
         assert self.device_items == 269
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -2349,10 +2388,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
                 "mac_address": "012345670001",
-                "model": "Adam",
+                "model": "Gateway",
                 "name": "Adam",
                 "zigbee_mac_address": "ABCD012345670101",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "regulation_mode": "heating",
                 "regulation_modes": [],
                 "binary_sensors": {"plugwise_notification": True},
@@ -2927,10 +2966,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "9e4433a9d69f40b3aefd15e74395eaec",
                 "mac_address": "012345670001",
-                "model": "Adam",
+                "model": "Gateway",
                 "name": "Adam",
                 "zigbee_mac_address": "ABCD012345670101",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "regulation_mode": "heating",
                 "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
                 "binary_sensors": {"plugwise_notification": False},
@@ -2957,6 +2996,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
         assert self.device_items == 181
 
         # Negative test
@@ -2983,15 +3023,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v3(self):
         """Test a P1 firmware 3 with only electricity setup."""
         testdata = {
-            "ba4de7613517478da82dd9b6abea36af": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "gateway",
                 "firmware": "3.3.6",
                 "hardware": "AME Smile 2.0 board",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "mac_address": "012345670001",
-                "model": "P1",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+            },
+            "ba4de7613517478da82dd9b6abea36af": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
                 "name": "P1",
-                "vendor": "Plugwise B.V.",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
                 "sensors": {
                     "net_electricity_point": 636,
                     "electricity_consumed_peak_point": 636,
@@ -3007,7 +3054,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
                 },
-            }
+            },
         }
 
         self.smile_setup = "p1v3"
@@ -3022,7 +3069,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -3032,15 +3080,38 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v3solarfake(self):
         """Test a P1 firmware 3 with manually added solar setup."""
         testdata = {
-            # Gateway / P1 itself
+            "a455b61e52394b2db5081ce025a430f3": {
+                "dev_class": "gateway",
+                "firmware": "3.3.6",
+                "hardware": "AME Smile 2.0 board",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+            },
             "ba4de7613517478da82dd9b6abea36af": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
+                "name": "P1",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
                 "sensors": {
-                    "electricity_consumed_peak_point": 636.0,
-                    "electricity_produced_peak_cumulative": 20.0,
-                    "electricity_consumed_off_peak_cumulative": 10263.159,
                     "net_electricity_point": 636,
-                }
-            }
+                    "electricity_consumed_peak_point": 636,
+                    "electricity_consumed_off_peak_point": 0,
+                    "net_electricity_cumulative": 17942.326,
+                    "electricity_consumed_peak_cumulative": 7702.167,
+                    "electricity_consumed_off_peak_cumulative": 10263.159,
+                    "electricity_consumed_peak_interval": 179,
+                    "electricity_produced_point": 0,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_peak_cumulative": 20.0,
+                    "electricity_produced_off_peak_cumulative": 3.0,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 20,
+                },
+            },
         }
 
         self.smile_setup = "p1v3solarfake"
@@ -3056,7 +3127,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 21
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -3066,15 +3137,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v3_full_option(self):
         """Test a P1 firmware 3 full option (gas and solar) setup."""
         testdata = {
-            "e950c7d5e1ee407a858e2a8b5016c8b3": {
+            "cd3e822288064775a7c4afcdd70bdda2": {
                 "dev_class": "gateway",
                 "firmware": "3.3.9",
                 "hardware": "AME Smile 2.0 board",
                 "location": "cd3e822288064775a7c4afcdd70bdda2",
                 "mac_address": "012345670001",
-                "model": "P1",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+            },
+            "e950c7d5e1ee407a858e2a8b5016c8b3": {
+                "dev_class": "smartmeter",
+                "location": "cd3e822288064775a7c4afcdd70bdda2",
+                "model": "2M550E-1012",
                 "name": "P1",
-                "vendor": "Plugwise B.V.",
+                "vendor": "ISKRAEMECO",
                 "sensors": {
                     "net_electricity_point": -2816,
                     "electricity_consumed_peak_point": 0,
@@ -3093,7 +3171,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "gas_consumed_cumulative": 584.85,
                     "gas_consumed_interval": 0.0,
                 },
-            }
+            },
         }
 
         self.smile_setup = "p1v3_full_option"
@@ -3109,7 +3187,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 24
+        assert smile.gateway_id == "cd3e822288064775a7c4afcdd70bdda2"
+        assert self.device_items == 29
         assert not self.notifications
 
         await smile.close_connection()
@@ -3156,9 +3235,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
                 "mac_address": "012345670001",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 20.2},
             },
@@ -3167,7 +3246,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "c784ee9fdab44e1395b8dee7d7a497d5",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3205,6 +3284,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
@@ -3441,7 +3521,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3501,9 +3581,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
                 "mac_address": "C4930002FE76",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 13.0},
             },
@@ -3522,6 +3602,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.device_items == 55
         assert self.cooling_present
         assert not self.notifications
@@ -3540,7 +3621,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3588,7 +3669,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
                 "location": "d3ce834534114348be628b61b26d9220",
-                "model": "Anna",
+                "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
@@ -3648,9 +3729,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "hardware": "AME Smile 2.0 board",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
                 "mac_address": "C4930002FE76",
-                "model": "Smile",
-                "name": "Smile",
-                "vendor": "Plugwise B.V.",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
                 "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 31.0},
             },
@@ -3689,9 +3770,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "3.1.11",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "mac_address": "01:23:45:67:89:AB",
-                "model": "Stretch",
+                "model": "Gateway",
                 "name": "Stretch",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "zigbee_mac_address": "ABCD012345670101",
             },
             "5871317346d045bc9f6b987ef25ee638": {
@@ -3819,6 +3900,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 88
 
         await smile.close_connection()
@@ -3833,9 +3915,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2.3.12",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
                 "mac_address": "01:23:45:67:89:AB",
-                "model": "Stretch",
+                "model": "Gateway",
                 "name": "Stretch",
-                "vendor": "Plugwise B.V.",
+                "vendor": "Plugwise",
                 "zigbee_mac_address": "ABCD012345670101",
             },
             "09c8ce93d7064fa6a233c0e4c2449bfe": {
@@ -4202,15 +4284,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_p1v4(self):
         """Test a P1 firmware 4 setup."""
         testdata = {
-            "ba4de7613517478da82dd9b6abea36af": {
+            "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "gateway",
                 "firmware": "4.1.1",
                 "hardware": "AME Smile 2.0 board",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "mac_address": "012345670001",
-                "model": "P1",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+            },
+            "ba4de7613517478da82dd9b6abea36af": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
                 "name": "P1",
-                "vendor": "Plugwise B.V.",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
                 "sensors": {
                     "net_electricity_point": 548,
                     "electricity_consumed_peak_point": 548,
@@ -4227,7 +4316,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
                 },
-            }
+            },
         }
 
         self.smile_setup = "p1v4"
@@ -4243,7 +4332,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 22
+        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
+        assert self.device_items == 27
         assert not self.notifications
 
         await smile.close_connection()
