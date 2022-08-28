@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.22.0: Smile P1 - create an additional P1 device, representing the smartmeter
+# v0.22.0: Smile P1 - add a P1 smartmeter device
 - Change all gateway model names to Gateway
 - Change Anna Smile name to Smile Anna, Anna model name to ThermoTouch
 - Change P1 Smile name to Smile P1
