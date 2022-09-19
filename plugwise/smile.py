@@ -216,9 +216,14 @@ class SmileData(SmileHelper):
             if self._adam_cooling_enabled or self._lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
-        self._schedule_present_state = "off"
-        if device_data["mode"] == "auto":
-            self._schedule_present_state = "on"
+        if "None" not in avail_schedules:
+            loc_schedule_states = {}
+            for schedule in avail_schedules:
+                loc_schedule_states[schedule] = "off"
+                if device_data["mode"] == "auto":
+                    loc_schedule_states[sel_schedule] = "on"
+
+            self._schedule_old_states[loc_id] = loc_schedule_states
 
         return device_data
 
@@ -508,7 +513,9 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
+    async def _set_schedule_state_legacy(
+        self, loc_id: str, name: str, status: str
+    ) -> None:
         """Helper-function for set_schedule_state()."""
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
@@ -533,6 +540,7 @@ class Smile(SmileComm, SmileData):
         )
 
         await self._request(uri, method="put", data=data)
+        self._schedule_old_states[loc_id][name] = state
 
     async def set_schedule_state(
         self, loc_id: str, name: str | None, state: str
@@ -544,18 +552,13 @@ class Smile(SmileComm, SmileData):
         if state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
-        # Do nothing when name == None and the state does not change. No need to show
-        # an error, as doing nothing is the correct action in this scenario.
         if name is None:
-            if state == self._schedule_present_state:
-                return
-            # else, raise an error:
             raise PlugwiseError(
                 "Plugwise: cannot change schedule-state: no schedule name provided"
             )
 
         if self._smile_legacy:
-            await self._set_schedule_state_legacy(name, state)
+            await self._set_schedule_state_legacy(loc_id, name, state)
             return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
@@ -564,7 +567,7 @@ class Smile(SmileComm, SmileData):
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         # If schedule name is valid but no state change is requested, do nothing
-        if state == self._schedule_present_state:
+        if state == self._schedule_old_states[loc_id][name]:
             return
 
         schedule_rule_id: str = next(iter(schedule_rule))
@@ -598,8 +601,7 @@ class Smile(SmileComm, SmileData):
             f"{template}{contexts}</rule></rules>"
         )
         await self._request(uri, method="put", data=data)
-
-        self._schedule_present_state = state
+        self._schedule_old_states[loc_id][name] = state
 
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
