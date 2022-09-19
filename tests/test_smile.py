@@ -3035,7 +3035,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile,
             "13228dab8ce04617af318a2888b3c548",
             schedule_on=False,
-            good_schedules=[None],
+            good_schedules=[],
         )
         assert result
 
@@ -3043,7 +3043,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile,
             "13228dab8ce04617af318a2888b3c548",
             "off",
-            good_schedules=[None],
+            good_schedules=[],
         )
         assert result
 
