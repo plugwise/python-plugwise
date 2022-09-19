@@ -545,24 +545,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     warning = " Negative test"
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
-                try:
-                    await smile.set_schedule_state(loc_id, new_schedule, state)
-                    tinker_schedule_passed = True
-                    _LOGGER.info("  + working as intended")
-                except pw_exceptions.PlugwiseError:
-                    _LOGGER.info("  + failed as expected")
-                    tinker_schedule_passed = True
-                except (
-                    pw_exceptions.ErrorSendingCommandError,
-                    pw_exceptions.ResponseError,
-                ):
-                    tinker_schedule_passed = False
-                    if unhappy:
-                        _LOGGER.info("  + failed as expected before intended failure")
+                if not unhappy:
+                    try:
+                        await smile.set_schedule_state(loc_id, new_schedule, state)
                         tinker_schedule_passed = True
-                    else:  # pragma: no cover
-                        _LOGGER.info("  - succeeded unexpectedly for some reason")
-                        return False
+                        _LOGGER.info("  + working as intended")
+                    except pw_exceptions.PlugwiseError:
+                        _LOGGER.info("  + failed as expected")
+                        tinker_schedule_passed = True
+                    except (
+                        pw_exceptions.ErrorSendingCommandError,
+                        pw_exceptions.ResponseError,
+                    ):
+                        tinker_schedule_passed = False
+                else:
+                    _LOGGER.info("  + failed as expected before intended failure")
+                    tinker_schedule_passed = True
 
             return tinker_schedule_passed
 
