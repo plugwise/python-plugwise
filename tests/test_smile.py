@@ -584,7 +584,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         result_1 = await self.tinker_thermostat_temp(smile, loc_id, unhappy)
         result_2 = await self.tinker_thermostat_preset(smile, loc_id, unhappy)
-        smile._schedule_present_state = "off"
+        if smile._schedule_old_states != {}:
+            for item in smile._schedule_old_states[loc_id]:
+                smile._schedule_old_states[loc_id][item] = "off"
         result_3 = await self.tinker_thermostat_schedule(
             smile, loc_id, "on", good_schedules, single, unhappy
         )
@@ -702,7 +704,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         result = await self.tinker_thermostat(
             smile,
-            "c34c6864216446528e95d88985e714cc",
+            "0000aaaa0000aaaa0000aaaa0000aa00",
             good_schedules=[
                 "Thermostat schedule",
             ],
@@ -712,9 +714,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
-            "c34c6864216446528e95d88985e714cc",
+            "0000aaaa0000aaaa0000aaaa0000aa00",
             good_schedules=[
                 "Thermostat schedule",
             ],
@@ -797,24 +800,45 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
 
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
-        assert self.device_items == 43
+        # assert self.device_items = 47
         assert not self.notifications
 
         result = await self.tinker_thermostat(
             smile,
-            "c34c6864216446528e95d88985e714cc",
+            "be81e3f8275b4129852c4d8d550ae2eb",
             good_schedules=[
                 "Thermostat schedule",
             ],
         )
         assert result
+
+        smile._schedule_old_states["be81e3f8275b4129852c4d8d550ae2eb"][
+            "Thermostat schedule"
+        ] = "off"
+        result_1 = await self.tinker_thermostat_schedule(
+            smile,
+            "be81e3f8275b4129852c4d8d550ae2eb",
+            "on",
+            good_schedules=["Thermostat schedule"],
+            single=True,
+        )
+        result_2 = await self.tinker_thermostat_schedule(
+            smile,
+            "be81e3f8275b4129852c4d8d550ae2eb",
+            "on",
+            good_schedules=["Thermostat schedule"],
+            single=True,
+        )
+        assert result_1 and result_2
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
-            "c34c6864216446528e95d88985e714cc",
+            "be81e3f8275b4129852c4d8d550ae2eb",
             good_schedules=[
                 "Thermostat schedule",
             ],
@@ -881,8 +905,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await smile.close_connection()
         await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
 
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2_2(self):
@@ -1045,6 +1067,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -1155,6 +1178,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -1201,6 +1225,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -1284,6 +1309,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -1365,6 +1391,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -1446,6 +1473,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "c34c6864216446528e95d88985e714cc",
@@ -1580,6 +1608,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
@@ -1827,7 +1856,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert result
 
-        smile._schedule_present_state = "off"
+        smile._schedule_old_states["f2bf9048bef64cc5b6d5110154e33c81"][
+            "Badkamer"
+        ] = "off"
         result_1 = await self.tinker_thermostat_schedule(
             smile,
             "f2bf9048bef64cc5b6d5110154e33c81",
@@ -2264,6 +2295,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
 
         result = await self.tinker_thermostat(
             smile,
@@ -2681,6 +2713,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",

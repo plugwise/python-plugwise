@@ -216,9 +216,14 @@ class SmileData(SmileHelper):
             if self._adam_cooling_enabled or self._lortherm_cooling_enabled:
                 device_data["mode"] = "cool"
 
-        self._schedule_present_state = "off"
-        if device_data["mode"] == "auto":
-            self._schedule_present_state = "on"
+        if "None" not in avail_schedules:
+            loc_schedule_states = {}
+            for schedule in avail_schedules:
+                loc_schedule_states[schedule] = "off"
+                if device_data["mode"] == "auto":
+                    loc_schedule_states[sel_schedule] = "on"
+
+            self._schedule_old_states[loc_id] = loc_schedule_states
 
         return device_data
 
@@ -508,7 +513,9 @@ class Smile(SmileComm, SmileData):
 
         return [self.gw_data, self.gw_devices]
 
-    async def _set_schedule_state_legacy(self, name: str, status: str) -> None:
+    async def _set_schedule_state_legacy(
+        self, loc_id: str, name: str, status: str
+    ) -> None:
         """Helper-function for set_schedule_state()."""
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
@@ -518,9 +525,13 @@ class Smile(SmileComm, SmileData):
         if schedule_rule_id is None:
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
-        state = "false"
+        new_state = "false"
         if status == "on":
-            state = "true"
+            new_state = "true"
+        # If no state change is requested, do nothing
+        if new_state == self._schedule_old_states[loc_id][name]:
+            return
+
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
         for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
@@ -529,33 +540,29 @@ class Smile(SmileComm, SmileData):
         data = (
             "<rules><rule"
             f' id="{schedule_rule_id}"><name><![CDATA[{name}]]></name><template'
-            f' id="{template_id}" /><active>{state}</active></rule></rules>'
+            f' id="{template_id}" /><active>{new_state}</active></rule></rules>'
         )
 
         await self._request(uri, method="put", data=data)
+        self._schedule_old_states[loc_id][name] = new_state
 
     async def set_schedule_state(
-        self, loc_id: str, name: str | None, state: str
+        self, loc_id: str, name: str | None, new_state: str
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
         Determined from - DOMAIN_OBJECTS.
         In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
         """
-        if state not in ["on", "off"]:
+        # Input checking
+        if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
-
-        # Do nothing when name == None and the state does not change. No need to show
-        # an error, as doing nothing is the correct action in this scenario.
         if name is None:
-            if state == self._schedule_present_state:
-                return
-            # else, raise an error:
             raise PlugwiseError(
                 "Plugwise: cannot change schedule-state: no schedule name provided"
             )
 
         if self._smile_legacy:
-            await self._set_schedule_state_legacy(name, state)
+            await self._set_schedule_state_legacy(loc_id, name, new_state)
             return
 
         schedule_rule = self._rule_ids_by_name(name, loc_id)
@@ -563,8 +570,8 @@ class Smile(SmileComm, SmileData):
         if not schedule_rule or schedule_rule is None:
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
-        # If schedule name is valid but no state change is requested, do nothing
-        if state == self._schedule_present_state:
+        # If no state change is requested, do nothing
+        if new_state == self._schedule_old_states[loc_id][name]:
             return
 
         schedule_rule_id: str = next(iter(schedule_rule))
@@ -584,10 +591,10 @@ class Smile(SmileComm, SmileData):
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
-        if state == "off":
+        if new_state == "off":
             self._last_active[loc_id] = name
             contexts.remove(subject)
-        if state == "on":
+        if new_state == "on":
             contexts.append(subject)
 
         contexts = etree.tostring(contexts, encoding="unicode").rstrip()
@@ -598,8 +605,7 @@ class Smile(SmileComm, SmileData):
             f"{template}{contexts}</rule></rules>"
         )
         await self._request(uri, method="put", data=data)
-
-        self._schedule_present_state = state
+        self._schedule_old_states[loc_id][name] = new_state
 
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
