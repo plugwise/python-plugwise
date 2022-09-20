@@ -437,6 +437,7 @@ class SmileHelper:
             "hardware_version": None,
             "firmware_version": None,
             "zigbee_mac_address": None,
+            "reachable": None,
         }
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
@@ -454,6 +455,7 @@ class SmileHelper:
                 # Adam
                 if found := module.find("./protocols/zig_bee_node"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
+                    model_data["reachable"] = found.find("reachable").text == "true"
                 # Stretches
                 if found := module.find("./protocols/network_router"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
@@ -495,6 +497,7 @@ class SmileHelper:
             module_data = self._get_module_data(appliance, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
+            appl.reachable = module_data["reachable"]
             if appl.zigbee_mac is None:
                 return None
 
@@ -547,6 +550,7 @@ class SmileHelper:
             appl.hardware = module_data["hardware_version"]
             appl.firmware = module_data["firmware_version"]
             appl.zigbee_mac = module_data["zigbee_mac_address"]
+            appl.reachable = module_data["reachable"]
 
             return appl
 
@@ -682,6 +686,7 @@ class SmileHelper:
             appl.hardware = None
             appl.mac = None
             appl.zigbee_mac = None
+            appl.reachable = None
             appl.vendor_name = None
 
             # Determine class for this appliance
@@ -711,6 +716,7 @@ class SmileHelper:
                 "model": appl.model,
                 "name": appl.name,
                 "zigbee_mac_address": appl.zigbee_mac,
+                "reachable": appl.reachable,
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
