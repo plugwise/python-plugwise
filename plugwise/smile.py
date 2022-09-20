@@ -517,14 +517,6 @@ class Smile(SmileComm, SmileData):
         self, loc_id: str, name: str, status: str
     ) -> None:
         """Helper-function for set_schedule_state()."""
-
-        new_state = "false"
-        if status == "on":
-            new_state = "true"
-        # If no state change is requested, do nothing
-        if new_state == self._schedule_old_states[loc_id][name]:
-            return
-
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
@@ -532,6 +524,13 @@ class Smile(SmileComm, SmileData):
 
         if schedule_rule_id is None:
             raise PlugwiseError("Plugwise: no schedule with this name available.")
+
+        new_state = "false"
+        if status == "on":
+            new_state = "true"
+        # If no state change is requested, do nothing
+        if new_state == self._schedule_old_states[loc_id][name]:
+            return
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
         for rule in self._domain_objects.findall(locator):
