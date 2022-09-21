@@ -266,7 +266,7 @@ class SmileData(SmileHelper):
                             device_data["available"] = True
                     if details["dev_class"] == "smartmeter":
                         device_data["available"] = False
-                        if interval < 15:
+                        if interval < 60:
                             device_data["available"] = True
 
             device_data.pop("modified")
