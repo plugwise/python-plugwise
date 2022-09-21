@@ -236,7 +236,7 @@ class SmileData(SmileHelper):
         """
         if "modified" in device_data:
             time_now: str | None = None
-            if "available" not in details:
+            if "available" not in device_data:
                 if self._smile_legacy:
                     # P1 legacy
                     if self.smile_type == "power":
