@@ -528,6 +528,8 @@ class Smile(SmileComm, SmileData):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
+        self._modules = await self._request(MODULES)
+
         self.gw_data["notifications"] = self._notifications
 
         for dev_id, dev_dict in self.gw_devices.items():
