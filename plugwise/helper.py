@@ -499,7 +499,6 @@ class SmileHelper:
             module_data = self._get_module_data(appliance, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            appl.available = module_data["available"]
             if appl.zigbee_mac is None:
                 return None
 
@@ -552,7 +551,6 @@ class SmileHelper:
             appl.hardware = module_data["hardware_version"]
             appl.firmware = module_data["firmware_version"]
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            appl.available = module_data["available"]
 
             return appl
 
@@ -718,7 +716,6 @@ class SmileHelper:
                 "model": appl.model,
                 "name": appl.name,
                 "zigbee_mac_address": appl.zigbee_mac,
-                "available": appl.available,
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
@@ -916,6 +913,13 @@ class SmileHelper:
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     data.update(_get_actuator_functionalities(appliance))
+
+            # Adam: collect wireless device availability
+            if self.smile_name == "Adam":
+                locator = "./logs/interval_log/electricity_interval_meter"
+                mod_type = "electricity_interval_meter"
+                module_data = self._get_module_data(appliance, locator, mod_type)
+                data["available"] = module_data["available"]
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:
