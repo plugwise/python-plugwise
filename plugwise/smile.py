@@ -228,7 +228,9 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _check_availability(self, details, device_data) -> None:
+    def _check_availability(
+        self, details: ApplianceData, device_data: DeviceData
+    ) -> None:
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
         """
