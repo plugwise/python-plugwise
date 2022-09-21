@@ -718,8 +718,7 @@ class DeviceDataPoints(
     modified: str
 
     # Device availability
-    available: bool
-    interval: float
+    available: bool | None
 
 
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
