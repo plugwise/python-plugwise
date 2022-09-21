@@ -887,6 +887,24 @@ class SmileHelper:
 
         return data
 
+    def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
+        """Helper-function for _get_appliance_data().
+        Collect the availablity-status for wireless connected devices.
+        """
+        if self.smile_name == "Adam":
+            # Collect for Plugs
+            locator = "./logs/interval_log/electricity_interval_meter"
+            mod_type = "electricity_interval_meter"
+            module_data = self._get_module_data(appliance, locator, mod_type)
+            if module_data["available"] is None:
+                # Collect for wireless thermostats
+                locator = "./logs/point_log[type='thermostat']/thermostat"
+                mod_type = "thermostat"
+                module_data = self._get_module_data(appliance, locator, mod_type)
+
+            if module_data["available"] is not None:
+                data["available"] = module_data["available"]
+
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
         Collect the appliance-data based on device id.
@@ -913,13 +931,8 @@ class SmileHelper:
                 if appl_type.text in ACTUATOR_CLASSES:
                     data.update(_get_actuator_functionalities(appliance))
 
-            # Adam: collect wireless device availability
-            if self.smile_name == "Adam":
-                locator = "./logs/interval_log/electricity_interval_meter"
-                mod_type = "electricity_interval_meter"
-                module_data = self._get_module_data(appliance, locator, mod_type)
-                if module_data["available"] is not None:
-                    data["available"] = module_data["available"]
+            # Collect availability-status for wireless connecteed devices
+            self._wireless_availablity(appliance, data)
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:
