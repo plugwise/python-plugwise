@@ -918,7 +918,8 @@ class SmileHelper:
                 locator = "./logs/interval_log/electricity_interval_meter"
                 mod_type = "electricity_interval_meter"
                 module_data = self._get_module_data(appliance, locator, mod_type)
-                data["available"] = module_data["available"]
+                if module_data["available"] is not None:
+                    data["available"] = module_data["available"]
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:
