@@ -333,8 +333,10 @@ class SmileHelper:
         self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._sched_setpoints: list[float] | None = None
         self._smile_legacy = False
+        self._status: etree
         self._stretch_v2 = False
         self._stretch_v3 = False
+        self._system: etree
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
         # '_elga_cooling_enabled' refers to the state of the Elga heatpump
@@ -437,7 +439,7 @@ class SmileHelper:
             "hardware_version": None,
             "firmware_version": None,
             "zigbee_mac_address": None,
-            "reachable": None,
+            "available": None,
         }
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
@@ -455,7 +457,7 @@ class SmileHelper:
                 # Adam
                 if found := module.find("./protocols/zig_bee_node"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
-                    model_data["reachable"] = found.find("reachable").text == "true"
+                    model_data["available"] = found.find("reachable").text == "true"
                 # Stretches
                 if found := module.find("./protocols/network_router"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
@@ -497,7 +499,7 @@ class SmileHelper:
             module_data = self._get_module_data(appliance, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            appl.reachable = module_data["reachable"]
+            appl.available = module_data["available"]
             if appl.zigbee_mac is None:
                 return None
 
@@ -550,7 +552,7 @@ class SmileHelper:
             appl.hardware = module_data["hardware_version"]
             appl.firmware = module_data["firmware_version"]
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            appl.reachable = module_data["reachable"]
+            appl.available = module_data["available"]
 
             return appl
 
@@ -686,7 +688,7 @@ class SmileHelper:
             appl.hardware = None
             appl.mac = None
             appl.zigbee_mac = None
-            appl.reachable = None
+            appl.available = None
             appl.vendor_name = None
 
             # Determine class for this appliance
@@ -716,7 +718,7 @@ class SmileHelper:
                 "model": appl.model,
                 "name": appl.name,
                 "zigbee_mac_address": appl.zigbee_mac,
-                "reachable": appl.reachable,
+                "available": appl.available,
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
@@ -851,7 +853,6 @@ class SmileHelper:
         measurements: dict[str, DATA | UOM],
     ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
-        data["modified"] = appliance.find("modified_date").text
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
@@ -910,6 +911,8 @@ class SmileHelper:
 
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
+            if d_id != self.gateway_id:
+                data["modified"] = appliance.find("modified_date").text
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     data.update(_get_actuator_functionalities(appliance))

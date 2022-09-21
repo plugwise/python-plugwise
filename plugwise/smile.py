@@ -228,6 +228,47 @@ class SmileData(SmileHelper):
 
         return device_data
 
+    def _check_availability(self, details, device_data) -> None:
+        """Helper-function for _get_device_data().
+        Provide availability status for the wired-commected devices.
+        """
+        if "modified" in device_data:
+            time_now: str | None = None
+            if "available" not in details:
+                if self._smile_legacy:
+                    # P1 legacy
+                    if self.smile_type == "power":
+                        time_now = self._status.find("./system/date").text
+                    # Stretch
+                    elif self.smile_type == "stretch":
+                        time_now = self._system.find("./time").text
+                    # Legacy Anna
+                    elif self.smile_type == "thermostat":
+                        pass
+                # Other
+                else:
+                    time_now = self._domain_objects.find("./gateway/time").text
+
+            if time_now is not None:
+                interval = (
+                    parse(time_now) - parse(device_data["modified"])
+                ).total_seconds()
+                if interval > 0:
+                    if details["dev_class"] == "heater_central":
+                        device_data["available"] = False
+                        if interval < 450:
+                            device_data["available"] = True
+                    if details["dev_class"] == "thermostat":
+                        device_data["available"] = False
+                        if interval < 90:
+                            device_data["available"] = True
+                    if details["dev_class"] == "smartmeter":
+                        device_data["available"] = False
+                        if interval < 15:
+                            device_data["available"] = True
+
+            device_data.pop("modified")
+
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
@@ -260,21 +301,8 @@ class SmileData(SmileHelper):
             ) is not None:
                 device_data.update(power_data)
 
-        # Check if data is being refreshed
-        interval = 0.0
-        if "modified" in device_data:
-            if self._last_modified.get(dev_id) is None:
-                self._last_modified[dev_id] = device_data["modified"]
-            if device_data["modified"] != self._last_modified[dev_id]:
-                interval = (
-                    parse(device_data["modified"]) - parse(self._last_modified[dev_id])
-                ).total_seconds()
-                self._last_modified[dev_id] = device_data["modified"]
-            device_data.pop("modified")
-        device_data["interval"] = interval
-        # TODO:
-        # Compare time_now to time of last received modified
-        # if time > 300? set available to False
+        # Check availability of wired-connected devices
+        self._check_availability(details, device_data)
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
@@ -381,22 +409,22 @@ class Smile(SmileComm, SmileData):
         if result.find('./appliance[type="thermostat"]') is None:
             # It's a P1 legacy:
             if dsmrmain is not None:
-                status = await self._request(STATUS)
-                self.smile_fw_version = status.find("./system/version").text
-                model = status.find("./system/product").text
-                self.smile_hostname = status.find("./network/hostname").text
-                self.smile_mac_address = status.find("./network/mac_address").text
+                self._status = await self._request(STATUS)
+                self.smile_fw_version = self._status.find("./system/version").text
+                model = self._status.find("./system/product").text
+                self.smile_hostname = self._status.find("./network/hostname").text
+                self.smile_mac_address = self._status.find("./network/mac_address").text
 
             # Or a legacy Stretch:
             elif network is not None:
-                system = await self._request(SYSTEM)
-                self.smile_fw_version = system.find("./gateway/firmware").text
-                model = system.find("./gateway/product").text
-                self.smile_hostname = system.find("./gateway/hostname").text
+                self._system = await self._request(SYSTEM)
+                self.smile_fw_version = self._system.find("./gateway/firmware").text
+                model = self._system.find("./gateway/product").text
+                self.smile_hostname = self._system.find("./gateway/hostname").text
                 # If wlan0 contains data it's active, so eth0 should be checked last
                 for network in ("wlan0", "eth0"):
                     locator = f"./{network}/mac"
-                    if (net_locator := system.find(locator)) is not None:
+                    if (net_locator := self._system.find(locator)) is not None:
                         self.smile_mac_address = net_locator.text
 
             else:  # pragma: no cover
@@ -461,12 +489,9 @@ class Smile(SmileComm, SmileData):
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
 
-        # P1 legacy has no appliances
+        # P1 legacy has no appliances and nothing of interest in domain_objects
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
-
-        # No need to import domain_objects for P1, no useful info
-        if self.smile_type != "power":
             await self._update_domain_objects()
 
     async def _update_domain_objects(self) -> None:
