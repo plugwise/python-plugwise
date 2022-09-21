@@ -606,7 +606,7 @@ class ModelData(TypedDict):
     hardware_version: str | None
     firmware_version: str | None
     zigbee_mac_address: str | None
-    reachable: bool | None
+    available: bool | None
 
 
 class SmileBinarySensors(TypedDict, total=False):
