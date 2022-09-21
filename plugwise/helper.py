@@ -686,7 +686,6 @@ class SmileHelper:
             appl.hardware = None
             appl.mac = None
             appl.zigbee_mac = None
-            appl.available = None
             appl.vendor_name = None
 
             # Determine class for this appliance
