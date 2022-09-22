@@ -525,7 +525,7 @@ class Smile(SmileComm, SmileData):
                     dev_dict[key] = value  # type: ignore [literal-required]
 
             for item in ("binary_sensors", "sensors", "switches"):
-                notifs: dict[str, str] = {}
+                notifs: dict[str, dict[str, str]] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
                 if item in dev_dict:
