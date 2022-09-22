@@ -75,7 +75,7 @@ def update_helper(
     device_id: str,
     bsssw_type: str,
     key: str,
-    notifs: dict[str, str],
+    notifs: dict[str, dict[str, str]],
 ) -> None:
     """Helper-function for async_update()."""
     for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
