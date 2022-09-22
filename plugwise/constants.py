@@ -594,7 +594,7 @@ class GatewayData(TypedDict, total=False):
     gateway_id: str | None
     heater_id: str | None
     cooling_present: bool
-    notifications: dict[str, str]
+    notifications: dict[str, dict[str, str]]
 
 
 class ModelData(TypedDict):
