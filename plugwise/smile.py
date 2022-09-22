@@ -236,8 +236,8 @@ class SmileData(SmileHelper):
         """
         if details["dev_class"] == "heater_central":
             device_data["available"] = True
-            for item in self._notifications:
-                for msg in item.keys():
+            for _, data in self._notifications.items():
+                for _, msg in data.items():
                     if "no OpenTherm communication" in msg:
                         device_data["available"] = False
 
