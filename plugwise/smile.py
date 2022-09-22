@@ -243,7 +243,7 @@ class SmileData(SmileHelper):
 
         if "modified" in device_data:
             time_now: str | None = None
-            if "available" not in device_data:
+            if not self._smile_legacy and "available" not in device_data:
                 time_now = self._domain_objects.find("./gateway/time").text
 
             if time_now is not None:
