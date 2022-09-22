@@ -1134,14 +1134,6 @@ class SmileHelper:
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
-        # Collect modified_date for P1v2
-        if (
-            self._smile_legacy
-            and loc.measurement == "electricity_consumed"
-            and loc.log_type == "point_log"
-        ):
-            direct_data["modified"] = loc.logs.find(loc.locator).attrib["log_date"]
-
         return loc
 
     def _power_data_from_location(self, loc_id: str) -> DeviceData:
@@ -1158,8 +1150,6 @@ class SmileHelper:
         if self._smile_legacy:
             t_string = "tariff_indicator"
 
-        modified = search.find(f'./location[@id="{loc_id}"]/modified_date').text
-        direct_data["modified"] = modified
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
