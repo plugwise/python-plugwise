@@ -327,6 +327,7 @@ class SmileHelper:
         self._locations: etree
         self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
+        self._notifications: dict[str, str] = {}
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float

@@ -234,39 +234,26 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
         """
+        if details["dev_class"] == "heater_central":
+            device_data["available"] = True
+            for item in self._notifications:
+                for msg in item.keys():
+                    if "no OpenTherm communication" in msg:
+                        device_data["available"] = False
+
         if "modified" in device_data:
             time_now: str | None = None
             if "available" not in device_data:
-                if self._smile_legacy:
-                    # P1 legacy
-                    if self.smile_type == "power":
-                        time_now = self._status.find("./system/date").text
-                    # Stretch
-                    elif self.smile_type == "stretch":
-                        time_now = self._system.find("./time").text
-                    # Legacy Anna
-                    elif self.smile_type == "thermostat":
-                        pass
-                # Other
-                else:
-                    time_now = self._domain_objects.find("./gateway/time").text
+                time_now = self._domain_objects.find("./gateway/time").text
 
             if time_now is not None:
                 interval = (
                     parse(time_now) - parse(device_data["modified"])
                 ).total_seconds()
                 if interval > 0:
-                    if details["dev_class"] == "heater_central":
-                        device_data["available"] = False
-                        if interval < 450:
-                            device_data["available"] = True
                     if details["dev_class"] == "thermostat":
                         device_data["available"] = False
                         if interval < 90:
-                            device_data["available"] = True
-                    if details["dev_class"] == "smartmeter":
-                        device_data["available"] = False
-                        if interval < 60:
                             device_data["available"] = True
 
             device_data.pop("modified")
@@ -345,7 +332,6 @@ class Smile(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
-        self._notifications: dict[str, str] = {}
         self.smile_hostname: str | None = None
 
     async def connect(self) -> bool:
