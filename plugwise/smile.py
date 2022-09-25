@@ -234,7 +234,7 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
         """
-        if details["dev_class"] == "heater_central":
+        if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
             device_data["available"] = True
             for _, data in self._notifications.items():
                 for _, msg in data.items():
