@@ -379,9 +379,7 @@ class SmileHelper:
         for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
-        if self.smile_type == "thermostat":
-            self._loc_data[FAKE_LOC] = {"name": "Home"}
-        if self.smile_type == "stretch":
+        if self.smile_type in ("stretch", "thermostat"):
             self._loc_data[FAKE_LOC] = {"name": "Home"}
 
     def _locations_specials(self, loc: Munch, location: str) -> Munch:
