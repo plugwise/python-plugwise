@@ -243,7 +243,7 @@ class SmileData(SmileHelper):
 
         if "modified" in device_data:
             time_now: str | None = None
-            if not self._smile_legacy and "available" not in device_data:
+            if "available" not in device_data:
                 time_now = self._domain_objects.find("./gateway/time").text
 
             if time_now is not None:
@@ -290,8 +290,9 @@ class SmileData(SmileHelper):
             ) is not None:
                 device_data.update(power_data)
 
-        # Check availability of wired-connected devices
-        self._check_availability(details, device_data)
+        # Check availability of non-legacy wired-connected devices
+        if not self._smile_legacy:
+            self._check_availability(details, device_data)
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
