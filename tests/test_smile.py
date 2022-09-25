@@ -565,7 +565,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return tinker_schedule_passed
 
         _LOGGER.info("- Skipping schedule adjustments")  # pragma: no cover
-        return False
 
     @pytest.mark.asyncio
     async def tinker_thermostat(
