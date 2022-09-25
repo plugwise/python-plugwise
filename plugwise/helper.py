@@ -932,7 +932,7 @@ class SmileHelper:
             self._wireless_availablity(appliance, data)
 
             # Collect modified_date for devices without available-status
-            if d_id != self.gateway_id or not data["available"]:
+            if d_id != self.gateway_id or "available" not in data:
                 data["modified"] = appliance.find("modified_date").text
 
         # Remove c_heating_state from the output

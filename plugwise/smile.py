@@ -245,10 +245,9 @@ class SmileData(SmileHelper):
         # Anna thermostat
         if "modified" in device_data:
             time_now: str | None = None
-            if "available" not in device_data:
-                time_now = self._domain_objects.find("./gateway/time").text
-
-            if time_now is not None:
+            if (
+                time_now := self._domain_objects.find("./gateway/time").text
+            ) is not None:
                 interval = (
                     parse(time_now) - parse(device_data["modified"])
                 ).total_seconds()
