@@ -3038,7 +3038,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             schedule_on=False,
             good_schedules=[None],
         )
-        assert not result
+        assert result
 
         result = await self.tinker_thermostat_schedule(
             smile,
@@ -3046,7 +3046,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "off",
             good_schedules=[None],
         )
-        assert not result
+        assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
