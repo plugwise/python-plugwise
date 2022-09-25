@@ -924,14 +924,16 @@ class SmileHelper:
 
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
-            if d_id != self.gateway_id:
-                data["modified"] = appliance.find("modified_date").text
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     data.update(_get_actuator_functionalities(appliance))
 
-            # Collect availability-status for wireless connecteed devices
+            # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
+
+            # Collect modified_date for devices without available-status
+            if d_id != self.gateway_id or not data["available"]:
+                data["modified"] = appliance.find("modified_date").text
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:
