@@ -234,6 +234,7 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
         """
+        # OpenTherm device
         if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
             device_data["available"] = True
             for _, data in self._notifications.items():
@@ -241,6 +242,7 @@ class SmileData(SmileHelper):
                     if "no OpenTherm communication" in msg:
                         device_data["available"] = False
 
+        # Anna thermostat
         if "modified" in device_data:
             time_now: str | None = None
             if "available" not in device_data:
