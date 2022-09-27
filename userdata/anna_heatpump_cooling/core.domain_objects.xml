@@ -773,7 +773,7 @@
 		<lan_ip>127.0.0.1</lan_ip>
 		<wifi_ip></wifi_ip>
 		<hostname>smile000000</hostname>
-		<time>2020-04-16T17:24:43+02:00</time>
+		<time>2020-04-16T17:20:02+02:00</time>
 		<timezone>Europe/Amsterdam</timezone>
 		<ssh_relay>disabled</ssh_relay>
 		<project id='f4a9bc577bcf428fb4f422d99c7d025f'>
