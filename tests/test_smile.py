@@ -1497,6 +1497,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
+                "available": False,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
