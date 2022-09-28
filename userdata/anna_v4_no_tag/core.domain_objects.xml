@@ -455,7 +455,7 @@
 		<lan_ip></lan_ip>
 		<wifi_ip>127.0.0.1</wifi_ip>
 		<hostname>smile000000</hostname>
-		<time>2020-04-02T10:41:24+02:00</time>
+		<time>2020-04-02T09:49:30+02:00</time>
 		<timezone>Europe/Amsterdam</timezone>
 		<ssh_relay>disabled</ssh_relay>
 		<project id='f4a9bc577bcf428fb4f422d99c7d025f'>
