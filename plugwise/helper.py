@@ -805,10 +805,6 @@ class SmileHelper:
                         float(preset.get("cooling_setpoint")),
                     ]
 
-        # Adam does not show vacation preset anymore, issue #185
-        if self.smile_name == "Adam":
-            presets.pop("vacation")
-
         return presets
 
     def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
