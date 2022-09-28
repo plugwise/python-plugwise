@@ -1537,7 +1537,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "regulation_mode": "heating",
                 "regulation_modes": [],
-                "binary_sensors": {"plugwise_notification": False},
+                "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 11.9},
             },
             "ee62cad889f94e8ca3d09021f03a660b": {
