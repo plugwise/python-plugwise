@@ -3070,6 +3070,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "KFM5KAIFA-METER",
                 "name": "P1",
                 "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
+                "available": True,
                 "sensors": {
                     "net_electricity_point": 636,
                     "electricity_consumed_peak_point": 636,
@@ -3127,6 +3128,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "KFM5KAIFA-METER",
                 "name": "P1",
                 "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
+                "available": True,
                 "sensors": {
                     "net_electricity_point": 636,
                     "electricity_consumed_peak_point": 636,
@@ -3184,6 +3186,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "2M550E-1012",
                 "name": "P1",
                 "vendor": "ISKRAEMECO",
+                "available": True,
                 "sensors": {
                     "net_electricity_point": -2816,
                     "electricity_consumed_peak_point": 0,
@@ -4330,6 +4333,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "KFM5KAIFA-METER",
                 "name": "P1",
                 "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
+                "available": False,
                 "sensors": {
                     "net_electricity_point": 548,
                     "electricity_consumed_peak_point": 548,
