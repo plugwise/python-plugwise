@@ -1592,7 +1592,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         # assert self.device_items = 80
-        assert not self.notifications
+        assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(
             smile, "009490cc2f674ce6b576863fbb64f867", good_schedules=["Weekschema"]
