@@ -1257,13 +1257,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 30.0,
                     "resolution": 0.1,
                 },
+                "available": True,
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "away",
                 "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
-                "sensors": {"temperature": 20.6, "illuminance": 35.0, "setpoint": 16.0},
+                "sensors": {"temperature": 20.6, "setpoint": 16.0, "illuminance": 35.0},
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "dev_class": "gateway",
@@ -1352,13 +1353,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 30.0,
                     "resolution": 0.1,
                 },
+                "available": True,
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "home",
                 "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
-                "sensors": {"temperature": 20.4, "illuminance": 44.8, "setpoint": 21.0},
+                "sensors": {"temperature": 20.4, "setpoint": 21.0, "illuminance": 44.8},
             },
             "c46b4794d28149699eacf053deedd003": {
                 "dev_class": "heater_central",
@@ -1429,13 +1431,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 30.0,
                     "resolution": 0.1,
                 },
+                "available": False,
                 "preset_modes": ["no_frost", "asleep", "away", "home", "vacation"],
                 "active_preset": "home",
                 "available_schedules": ["Test", "Normal"],
                 "selected_schedule": "Test",
                 "last_used": "Test",
                 "mode": "auto",
-                "sensors": {"temperature": 20.6, "illuminance": 0.25, "setpoint": 21.0},
+                "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
             },
             "a270735e4ccd45239424badc0578a2b1": {
                 "dev_class": "gateway",
@@ -1521,6 +1524,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "MediaCenter",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 10.3,
                     "electricity_consumed_interval": 0.0,
@@ -1556,6 +1560,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 35.0,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["Weekschema"],
@@ -1572,6 +1577,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Work-PC",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 79.8,
                     "electricity_consumed_interval": 7.03,
@@ -1667,6 +1673,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "SmartPlug Floor 0",
                 "zigbee_mac_address": "54EF4410002C97F2",
                 "vendor": "LUMI",
+                "available": True,
                 "sensors": {"electricity_consumed_interval": 0.0},
                 "switches": {"relay": True, "lock": False},
             },
@@ -1682,6 +1689,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 35.0,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "asleep",
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
@@ -1699,6 +1707,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Plug Mediacenter",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 12.2,
                     "electricity_consumed_interval": 3.0,
@@ -1715,6 +1724,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Plug Werkplek",
                 "zigbee_mac_address": "ABCD012345670A03",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 98.0,
                     "electricity_consumed_interval": 24.0,
@@ -1731,6 +1741,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Plug Vloerverwarming",
                 "zigbee_mac_address": "ABCD012345670A05",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 46.8,
                     "electricity_consumed_interval": 0.0,
@@ -1748,8 +1759,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Tom Badkamer",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 21.6,
+                    "setpoint": 15.0,
                     "battery": 99,
                     "temperature_difference": 2.3,
                     "valve_position": 0.0,
@@ -1770,6 +1783,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
@@ -1777,7 +1791,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "last_used": "Badkamer",
                 "control_state": "off",
                 "mode": "auto",
-                "sensors": {"temperature": 17.9, "battery": 56, "setpoint": 15.0},
+                "sensors": {"temperature": 17.9, "setpoint": 15.0, "battery": 56},
             },
             "da224107914542988a88561b4452b0f6": {
                 "dev_class": "gateway",
@@ -1805,6 +1819,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 95.0,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -1923,6 +1938,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -1935,7 +1951,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
                 "mode": "heat",
-                "sensors": {"temperature": 16.5, "battery": 67, "setpoint": 13.0},
+                "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
                 "dev_class": "thermo_sensor",
@@ -1946,8 +1962,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Floor kraan",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 26.2,
+                    "setpoint": 21.5,
                     "temperature_difference": 3.7,
                     "valve_position": 0.0,
                 },
@@ -1961,8 +1979,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Bios Cv Thermostatic Radiator ",
                 "zigbee_mac_address": "ABCD012345670A09",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 17.1,
+                    "setpoint": 13.0,
                     "battery": 62,
                     "temperature_difference": -0.1,
                     "valve_position": 0.0,
@@ -1983,6 +2003,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": [
@@ -1995,7 +2016,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
                 "mode": "auto",
-                "sensors": {"temperature": 21.1, "battery": 34, "setpoint": 21.5},
+                "sensors": {"temperature": 21.1, "setpoint": 21.5, "battery": 34},
             },
             "fe799307f1624099878210aa0b9f1475": {
                 "dev_class": "gateway",
@@ -2021,8 +2042,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Jessie",
                 "zigbee_mac_address": "ABCD012345670A10",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 16.9,
+                    "setpoint": 16.0,
                     "battery": 62,
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
@@ -2036,6 +2059,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Playstation Smart Plug",
                 "zigbee_mac_address": "ABCD012345670A12",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 81.2,
                     "electricity_consumed_interval": 12.7,
@@ -2052,6 +2076,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "CV Pomp",
                 "zigbee_mac_address": "ABCD012345670A05",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 35.8,
                     "electricity_consumed_interval": 5.85,
@@ -2080,6 +2105,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "NAS",
                 "zigbee_mac_address": "ABCD012345670A14",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 16.5,
                     "electricity_consumed_interval": 0.29,
@@ -2096,6 +2122,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "USG Smart Plug",
                 "zigbee_mac_address": "ABCD012345670A16",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 8.5,
                     "electricity_consumed_interval": 0.0,
@@ -2112,6 +2139,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "NVR",
                 "zigbee_mac_address": "ABCD012345670A15",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 34.0,
                     "electricity_consumed_interval": 8.65,
@@ -2128,6 +2156,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Fibaro HC2",
                 "zigbee_mac_address": "ABCD012345670A13",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 12.5,
                     "electricity_consumed_interval": 0.0,
@@ -2151,6 +2180,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "asleep",
                 "available_schedules": [
@@ -2163,7 +2193,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
                 "mode": "auto",
-                "sensors": {"temperature": 17.1, "battery": 37, "setpoint": 16.0},
+                "sensors": {"temperature": 17.1, "setpoint": 16.0, "battery": 37},
             },
             "680423ff840043738f42cc7f1ff97a36": {
                 "dev_class": "thermo_sensor",
@@ -2174,8 +2204,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Badkamer",
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 19.1,
+                    "setpoint": 14.0,
                     "battery": 51,
                     "temperature_difference": -0.3,
                     "valve_position": 0.0,
@@ -2196,6 +2228,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -2208,7 +2241,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
                 "mode": "auto",
-                "sensors": {"temperature": 18.8, "battery": 92, "setpoint": 14.0},
+                "sensors": {"temperature": 18.8, "setpoint": 14.0, "battery": 92},
             },
             "675416a629f343c495449970e2ca37b5": {
                 "dev_class": "router",
@@ -2218,6 +2251,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Ziggo Modem",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 12.2,
                     "electricity_consumed_interval": 2.8,
@@ -2241,6 +2275,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "no_frost",
                 "available_schedules": [
@@ -2255,10 +2290,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
+                    "setpoint": 5.5,
                     "battery": 68,
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
-                    "setpoint": 5.5,
                 },
             },
         }
@@ -2343,6 +2378,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -2355,7 +2391,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Badkamer Schema",
                 "mode": "heat",
-                "sensors": {"temperature": 16.5, "battery": 67, "setpoint": 13.0},
+                "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
             "b310b72a0e354bfab43089919b9a88bf": {
                 "dev_class": "thermo_sensor",
@@ -2366,8 +2402,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Floor kraan",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 26.0,
+                    "setpoint": 21.5,
                     "temperature_difference": 3.5,
                     "valve_position": 100,
                 },
@@ -2381,8 +2419,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Bios Cv Thermostatic Radiator ",
                 "zigbee_mac_address": "ABCD012345670A09",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 17.2,
+                    "setpoint": 13.0,
                     "battery": 62,
                     "temperature_difference": -0.2,
                     "valve_position": 0.0,
@@ -2403,6 +2443,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "home",
                 "available_schedules": [
@@ -2415,7 +2456,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "GF7  Woonkamer",
                 "last_used": "GF7  Woonkamer",
                 "mode": "auto",
-                "sensors": {"temperature": 20.9, "battery": 34, "setpoint": 21.5},
+                "sensors": {"temperature": 20.9, "setpoint": 21.5, "battery": 34},
             },
             "fe799307f1624099878210aa0b9f1475": {
                 "dev_class": "gateway",
@@ -2441,8 +2482,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Jessie",
                 "zigbee_mac_address": "ABCD012345670A10",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 17.1,
+                    "setpoint": 15.0,
                     "battery": 62,
                     "temperature_difference": 0.1,
                     "valve_position": 0.0,
@@ -2456,6 +2499,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Playstation Smart Plug",
                 "zigbee_mac_address": "ABCD012345670A12",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 82.6,
                     "electricity_consumed_interval": 8.6,
@@ -2472,6 +2516,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "CV Pomp",
                 "zigbee_mac_address": "ABCD012345670A05",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 35.6,
                     "electricity_consumed_interval": 7.37,
@@ -2500,6 +2545,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "NAS",
                 "zigbee_mac_address": "ABCD012345670A14",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 16.5,
                     "electricity_consumed_interval": 0.5,
@@ -2516,6 +2562,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "USG Smart Plug",
                 "zigbee_mac_address": "ABCD012345670A16",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 8.5,
                     "electricity_consumed_interval": 0.0,
@@ -2532,6 +2579,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "NVR",
                 "zigbee_mac_address": "ABCD012345670A15",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 34.0,
                     "electricity_consumed_interval": 9.15,
@@ -2548,6 +2596,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Fibaro HC2",
                 "zigbee_mac_address": "ABCD012345670A13",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 12.5,
                     "electricity_consumed_interval": 3.8,
@@ -2571,6 +2620,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "asleep",
                 "available_schedules": [
@@ -2583,7 +2633,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "CV Jessie",
                 "last_used": "CV Jessie",
                 "mode": "auto",
-                "sensors": {"temperature": 17.2, "battery": 37, "setpoint": 15.0},
+                "sensors": {"temperature": 17.2, "setpoint": 15.0, "battery": 37},
             },
             "680423ff840043738f42cc7f1ff97a36": {
                 "dev_class": "thermo_sensor",
@@ -2594,8 +2644,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostatic Radiator Badkamer",
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "temperature": 19.1,
+                    "setpoint": 14.0,
                     "battery": 51,
                     "temperature_difference": -0.4,
                     "valve_position": 0.0,
@@ -2616,6 +2668,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 99.9,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "away",
                 "available_schedules": [
@@ -2628,7 +2681,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Badkamer Schema",
                 "last_used": "Badkamer Schema",
                 "mode": "auto",
-                "sensors": {"temperature": 18.9, "battery": 92, "setpoint": 14.0},
+                "sensors": {"temperature": 18.9, "setpoint": 14.0, "battery": 92},
             },
             "675416a629f343c495449970e2ca37b5": {
                 "dev_class": "router",
@@ -2638,6 +2691,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Ziggo Modem",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
+                "available": True,
                 "sensors": {
                     "electricity_consumed": 12.2,
                     "electricity_consumed_interval": 2.97,
@@ -2661,6 +2715,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "no_frost",
                 "available_schedules": [
@@ -2675,10 +2730,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
+                    "setpoint": 5.5,
                     "battery": 68,
                     "temperature_difference": 0.0,
                     "valve_position": 0.0,
-                    "setpoint": 5.5,
                 },
             },
         }
