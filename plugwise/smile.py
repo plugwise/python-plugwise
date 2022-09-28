@@ -242,6 +242,14 @@ class SmileData(SmileHelper):
                     if "no OpenTherm communication" in msg:
                         device_data["available"] = False
 
+        # Smartmeter
+        if details["dev_class"] == "smartmeter":
+            device_data["available"] = True
+            for _, data in self._notifications.items():
+                for _, msg in data.items():
+                    if "P1 does not seem to be connected to a smart meter" in msg:
+                        device_data["available"] = False
+
         # Anna thermostat
         if "modified" in device_data:
             time_now: str | None = None
