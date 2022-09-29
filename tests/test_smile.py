@@ -553,11 +553,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     except pw_exceptions.PlugwiseError:
                         _LOGGER.info("  + failed as expected")
                         tinker_schedule_passed = True
-                    except (
-                        pw_exceptions.ErrorSendingCommandError,
-                        pw_exceptions.ResponseError,
-                    ):
-                        tinker_schedule_passed = False
                 else:
                     _LOGGER.info("  + failed as expected before intended failure")
                     tinker_schedule_passed = True
