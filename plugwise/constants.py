@@ -467,6 +467,8 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 # Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
+    "cooling_enabled": UOM(NONE),
+    "domestic_hot_water_mode": DATA("dhw_mode", NONE),
     "domestic_hot_water_comfort_mode": DATA("dhw_cm_switch", NONE),
     "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
     "elga_status_code": UOM(NONE),
@@ -668,6 +670,7 @@ class SmileSensors(TypedDict, total=False):
 class SmileSwitches(TypedDict, total=False):
     """Smile Switches class."""
 
+    cooling_enabled: bool
     dhw_cm_switch: bool
     lock: bool
     relay: bool
@@ -695,6 +698,10 @@ class DeviceDataPoints(
     SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
 ):
     """The class covering all possible collected data points."""
+
+    # Loria
+    dhw_mode: str
+    dhw_modes: list[str]
 
     # Gateway
     regulation_mode: str
