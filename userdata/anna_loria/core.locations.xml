@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='15da035090b847e7a21f93e08c015ebc'>
+		<name>Living room</name>
+		<description>The room containing the (central) home thermostat.</description>
+		<type>livingroom</type>
+		<created_date>2022-05-13T22:01:40.838+02:00</created_date>
+		<modified_date>2022-09-29T16:32:53.062+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances>
+			<appliance id='582dfbdace4d4aeb832923ce7d1ddda0'/>
+		</appliances>
+		<logs>
+			<point_log id='36abfd0d42de4a02a2b19a36c873648e'>
+				<type>temperature</type>
+				<unit></unit>
+				<updated_date>2022-09-29T16:32:53.047+02:00</updated_date>
+				<last_consecutive_log_date>2022-09-18T18:40:50.188+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<period start_date="2022-09-29T16:32:53.047+02:00" end_date="2022-09-29T16:32:53.047+02:00">
+					<measurement log_date="2022-09-29T16:32:53.047+02:00">22.08</measurement>
+				</period>
+			</point_log>
+			<point_log id='ec90c92a48b044cdaae24a5ebf0d042e'>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<updated_date>2022-09-29T06:49:36.557+02:00</updated_date>
+				<last_consecutive_log_date>2022-09-18T16:55:37.964+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2022-09-29T06:49:36.557+02:00" end_date="2022-09-29T06:49:36.557+02:00">
+					<measurement log_date="2022-09-29T06:49:36.557+02:00">20.50</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='cfc647f182b646fe92a268d81a5577cc'>
+				<updated_date>2022-09-29T06:49:36.558+02:00</updated_date>
+				<type>thermostat</type>
+				<lower_bound>4</lower_bound>
+				<upper_bound>30</upper_bound>
+				<resolution>0.1</resolution>
+				<setpoint>20.5</setpoint>
+				<regulations><ame_regulation id='bd061ebfd52441b88da79938b8516f6e'/></regulations>
+				<cooling_allowed>true</cooling_allowed>
+				<preheating_allowed>true</preheating_allowed>
+				<regulation_control>active</regulation_control>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='674b657c138a41a291d315d7471deb06'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2022-01-10T12:48:48.575+01:00</created_date>
+		<modified_date>2022-09-29T16:23:13.369+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='14fcd7ece2874ea193235bc68e6c13af'>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<updated_date>2022-09-29T16:21:02+02:00</updated_date>
+				<last_consecutive_log_date>2022-09-29T16:21:02+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<thermo_meter id='7b656fbb933e44f486dc4403dccfae74'/>
+				<period start_date="2022-09-29T16:21:02+02:00" end_date="2022-09-29T16:21:02+02:00">
+					<measurement log_date="2022-09-29T16:21:02+02:00">15.50</measurement>
+				</period>
+			</point_log>
+			<point_log id='41a3c96b575b4e0fabe6e3adff789730'>
+				<type>solar_irradiance</type>
+				<unit>W_m2</unit>
+				<updated_date>2022-09-29T16:21:02+02:00</updated_date>
+				<last_consecutive_log_date>2022-09-29T16:21:02+02:00</last_consecutive_log_date>
+				<interval/>
+				<irradiance_meter id='a315ac95e35b47c1b1e39a6cddbe5b37'/>
+				<period start_date="2022-09-29T16:21:02+02:00" end_date="2022-09-29T16:21:02+02:00">
+					<measurement log_date="2022-09-29T16:21:02+02:00">84.69</measurement>
+				</period>
+			</point_log>
+			<point_log id='482233a6ce71465d9502a0c5078fa990'>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<updated_date>2022-09-29T16:21:02+02:00</updated_date>
+				<last_consecutive_log_date>2022-09-29T16:21:02+02:00</last_consecutive_log_date>
+				<interval>PT3H</interval>
+				<hygro_meter id='c53650e50c6142008414f67b32f45f91'/>
+				<period start_date="2022-09-29T16:21:02+02:00" end_date="2022-09-29T16:21:02+02:00">
+					<measurement log_date="2022-09-29T16:21:02+02:00">65.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='a3c6d0d3ae1b486dbe1afa8c0bd4e813'>
+				<type>wind_vector</type>
+				<unit>m_s</unit>
+				<updated_date>2022-09-29T16:21:02+02:00</updated_date>
+				<last_consecutive_log_date>2022-09-29T16:21:02+02:00</last_consecutive_log_date>
+				<interval/>
+				<wind_vector id='fb6141edf7cb4f818ff2d74b6e5966bd'/>
+				<period start_date="2022-09-29T16:21:02+02:00" end_date="2022-09-29T16:21:02+02:00">
+					<measurement log_date="2022-09-29T16:21:02+02:00">(2.20,289.00)</measurement>
+				</period>
+			</point_log>
+			<point_log id='c7397bee2d1743e0bfd4ee44da1f18ff'>
+				<type>weather_description</type>
+				<unit></unit>
+				<updated_date>2022-09-29T16:21:02+02:00</updated_date>
+				<last_consecutive_log_date>2022-09-29T16:21:02+02:00</last_consecutive_log_date>
+				<interval/>
+				<weather_descriptor id='f41414f00b184f97a684567c031f3b53'/>
+				<period start_date="2022-09-29T16:21:02+02:00" end_date="2022-09-29T16:21:02+02:00">
+					<measurement log_date="2022-09-29T16:21:02+02:00">overcast</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+</locations>
