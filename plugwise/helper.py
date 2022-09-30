@@ -863,7 +863,7 @@ class SmileHelper:
 
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
-                if measurement not in ["regulation_mode"]:
+                if measurement not in ["dhw_mode", "regulation_mode"]:
                     data[measurement] = format_measure(appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
