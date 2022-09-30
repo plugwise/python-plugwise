@@ -288,8 +288,8 @@ class SmileData(SmileHelper):
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
-                if self.smile_name == "Adam":
-                    # Show the allowed regulation modes
+                # Show the allowed regulation modes
+                if self._reg_allowed_modes:
                     device_data["regulation_modes"] = self._reg_allowed_modes
 
         # Show the allowed dhw_modes
