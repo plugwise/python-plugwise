@@ -290,7 +290,12 @@ class SmileData(SmileHelper):
 
                 if self.smile_name == "Adam":
                     # Show the allowed regulation modes
-                    device_data["regulation_modes"] = self._allowed_modes
+                    device_data["regulation_modes"] = self._reg_allowed_modes
+
+        # Show the allowed dhw_modes
+        if details["dev_class"] == "heater_central":
+            if self._dhw_allowed_modes:
+                device_data["dhw_modes"] = self._dhw_allowed_modes
 
         if details["dev_class"] == "smartmeter":
             # Get P1 data from LOCATIONS
@@ -765,7 +770,7 @@ class Smile(SmileComm, SmileData):
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        if mode not in self._allowed_modes:
+        if mode not in self._reg_allowed_modes:
             raise PlugwiseError("Plugwise: invalid regulation mode.")
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"

@@ -311,7 +311,8 @@ class SmileHelper:
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._adam_cooling_enabled = False
-        self._allowed_modes: list[str] = []
+        self._dhw_allowed_modes: list[str] = []
+        self._reg_allowed_modes: list[str] = []
         self._anna_cooling_present = False
         self._appliances: etree
         self._appl_data: dict[str, ApplianceData] = {}
@@ -528,15 +529,15 @@ class SmileHelper:
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
-            # Adam: check for active heating/cooling operation-mode
-            mode_list: list[str] = []
+            # Adam: check for active heating/cooling operation-mode and collect modes
+            reg_mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
                 self._adam_cooling_enabled = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
                     for mode in search.find("allowed_modes"):
-                        mode_list.append(mode.text)
-                    self._allowed_modes = mode_list
+                        reg_mode_list.append(mode.text)
+                    self._reg_allowed_modes = reg_mode_list
 
             return appl
 
@@ -584,6 +585,16 @@ class SmileHelper:
                     if self._cooling_present
                     else "Generic heater"
                 )
+
+            # Anna + Loria: collect dhw control operation modes
+            dhw_mode_list: list[str] = []
+            locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
+            if (search := appliance.find(locator)) is not None:
+                if search.find("allowed_modes") is not None:
+                    for mode in search.find("allowed_modes"):
+                        dhw_mode_list.append(mode.text)
+                    self._dhw_allowed_modes = dhw_mode_list
+
             return appl
 
         # Collect info from Stretches
