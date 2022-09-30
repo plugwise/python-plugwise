@@ -219,6 +219,18 @@
 			</context>
 		</contexts>
 	</rule>
+	<notification id="6fb89e35caeb4b1cb275184895202d84">
+		<type>error</type>
+		<origin>local</origin>
+		<title>No communication</title>
+		<message>There is no OpenTherm communication with the boiler.</message>
+		<valid_from/>
+		<valid_to/>
+		<read_date/>
+		<created_date>2020-09-28T19:12:44.138+02:00</created_date>
+		<modified_date>2020-09-28T19:12:44.188+02:00</modified_date>
+		<deleted_date/>
+	</notification>
 	<location id='5ccb6c41a7d9403988d261ceee04239f'>
 		<name>Werkplek</name>
 		<description></description>
@@ -703,7 +715,7 @@
 		<lan_ip></lan_ip>
 		<wifi_ip>127.0.0.1</wifi_ip>
 		<hostname>smile000000</hostname>
-		<time>2020-03-15T17:13:13+01:00</time>
+		<time>2020-03-15T17:14:20+01:00</time>
 		<timezone>Europe/Amsterdam</timezone>
 		<ssh_relay>disabled</ssh_relay>
 		<project id='123306def5eb4172ae74435aea21e753'>

@@ -1,5 +1,8 @@
 # Changelog
 
+# v0.23.0: Add device availability for non-legacy Smiles
+- Add back Adam vacation preset, fixing reopened issue #185
+
 # v0.22.1: Improve solution for issue #213
 
 # v0.22.0: Smile P1 - add a P1 smartmeter device

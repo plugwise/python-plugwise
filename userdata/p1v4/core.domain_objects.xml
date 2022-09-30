@@ -197,6 +197,18 @@
 			</dsmr_main>
 		</protocols>
 	</module>
+	<notification id='97a04c0c263049b29350a660b4cdd01e'>
+		<type>warning</type>
+		<origin>local</origin>
+		<title>Smart meter not found.</title>
+		<message>The Smile P1 does not seem to be connected to a smart meter.</message>
+		<valid_from></valid_from>
+		<valid_to></valid_to>
+		<read_date>2020-01-23T10:54:59.710+01:00</read_date>
+		<created_date>2020-01-18T23:03:43.689+01:00</created_date>
+		<modified_date>2020-01-18T23:03:43.749+01:00</modified_date>
+		<deleted_date></deleted_date>
+	</notification>
 	<module id='84cbd085b6b74c3d8fe8881f22d23693'>
 		<vendor_name>Plugwise</vendor_name>
 		<vendor_model>Gateway</vendor_model>

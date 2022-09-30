@@ -661,7 +661,7 @@
 		<lan_ip></lan_ip>
 		<wifi_ip>127.0.0.2</wifi_ip>
 		<hostname>smile000000</hostname>
-		<time>2022-03-10T19:03:34+01:00</time>
+		<time>2022-03-10T19:01:14+01:00</time>
 		<timezone>Europe/Amsterdam</timezone>
 		<ssh_relay>disabled</ssh_relay>
 		<project id='68e91423192a4093b6aaf3af0babe94f'>

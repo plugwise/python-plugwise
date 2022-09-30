@@ -156,7 +156,7 @@
 	</location>
 	<gateway id='5acdc33a17584250b68fdb9d9d11fdc8'>
 		<created_date>2019-02-12T11:19:54.867+01:00</created_date>
-		<modified_date>2020-06-21T14:41:06.738+02:00</modified_date>
+		<modified_date>2020-06-21T14:41:06.738+02:00</modified_date>eway 
 		<deleted_date/>
 		<name></name>
 		<description></description>
@@ -176,7 +176,7 @@
 		<lan_ip></lan_ip>
 		<wifi_ip>127.0.0.1</wifi_ip>
 		<hostname>smile000000</hostname>
-		<time>2020-06-21T14:41:07+02:00</time>
+		<time>2020-06-21T17:14:24+02:00</time>
 		<timezone>Europe/Amsterdam</timezone>
 		<ssh_relay>disabled</ssh_relay>
 		<project id='56a945eb26384e3884dfc83999291948'>

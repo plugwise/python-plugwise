@@ -594,7 +594,7 @@ class GatewayData(TypedDict, total=False):
     gateway_id: str | None
     heater_id: str | None
     cooling_present: bool
-    notifications: dict[str, str]
+    notifications: dict[str, dict[str, str]]
 
 
 class ModelData(TypedDict):
@@ -606,6 +606,7 @@ class ModelData(TypedDict):
     hardware_version: str | None
     firmware_version: str | None
     zigbee_mac_address: str | None
+    available: bool | None
 
 
 class SmileBinarySensors(TypedDict, total=False):
@@ -714,6 +715,10 @@ class DeviceDataPoints(
 
     # For temporary use
     c_heating_state: str
+    modified: str
+
+    # Device availability
+    available: bool | None
 
 
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):

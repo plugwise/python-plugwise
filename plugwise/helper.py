@@ -75,7 +75,7 @@ def update_helper(
     device_id: str,
     bsssw_type: str,
     key: str,
-    notifs: dict[str, str],
+    notifs: dict[str, dict[str, str]],
 ) -> None:
     """Helper-function for async_update()."""
     for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
@@ -323,17 +323,21 @@ class SmileHelper:
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
+        self._last_modified: dict[str, str] = {}
         self._locations: etree
         self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
+        self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float
         self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._sched_setpoints: list[float] | None = None
         self._smile_legacy = False
+        self._status: etree
         self._stretch_v2 = False
         self._stretch_v3 = False
+        self._system: etree
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
         # '_elga_cooling_enabled' refers to the state of the Elga heatpump
@@ -375,9 +379,7 @@ class SmileHelper:
         for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
-        if self.smile_type == "thermostat":
-            self._loc_data[FAKE_LOC] = {"name": "Home"}
-        if self.smile_type == "stretch":
+        if self.smile_type in ("stretch", "thermostat"):
             self._loc_data[FAKE_LOC] = {"name": "Home"}
 
     def _locations_specials(self, loc: Munch, location: str) -> Munch:
@@ -436,6 +438,7 @@ class SmileHelper:
             "hardware_version": None,
             "firmware_version": None,
             "zigbee_mac_address": None,
+            "available": None,
         }
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
@@ -453,6 +456,7 @@ class SmileHelper:
                 # Adam
                 if found := module.find("./protocols/zig_bee_node"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
+                    model_data["available"] = found.find("reachable").text == "true"
                 # Stretches
                 if found := module.find("./protocols/network_router"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
@@ -801,10 +805,6 @@ class SmileHelper:
                         float(preset.get("cooling_setpoint")),
                     ]
 
-        # Adam does not show vacation preset anymore, issue #185
-        if self.smile_name == "Adam":
-            presets.pop("vacation")
-
         return presets
 
     def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
@@ -882,6 +882,24 @@ class SmileHelper:
 
         return data
 
+    def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
+        """Helper-function for _get_appliance_data().
+        Collect the availablity-status for wireless connected devices.
+        """
+        if self.smile_name == "Adam":
+            # Collect for Plugs
+            locator = "./logs/interval_log/electricity_interval_meter"
+            mod_type = "electricity_interval_meter"
+            module_data = self._get_module_data(appliance, locator, mod_type)
+            if module_data["available"] is None:
+                # Collect for wireless thermostats
+                locator = "./logs/point_log[type='thermostat']/thermostat"
+                mod_type = "thermostat"
+                module_data = self._get_module_data(appliance, locator, mod_type)
+
+            if module_data["available"] is not None:
+                data["available"] = module_data["available"]
+
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
         Collect the appliance-data based on device id.
@@ -899,11 +917,21 @@ class SmileHelper:
         if (
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
+
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     data.update(_get_actuator_functionalities(appliance))
+
+            # Collect availability-status for wireless connected devices to Adam
+            self._wireless_availablity(appliance, data)
+
+            # Collect modified_date for devices without available-status
+            if not self._smile_legacy and (
+                d_id != self.gateway_id or "available" not in data
+            ):
+                data["modified"] = appliance.find("modified_date").text
 
         # Remove c_heating_state from the output
         if "c_heating_state" in data:
@@ -1069,7 +1097,7 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
-    def _power_data_peak_value(self, loc: Munch) -> Munch:
+    def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
         no_tariffs = False
@@ -1129,7 +1157,7 @@ class SmileHelper:
                         f'./{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
-                    loc = self._power_data_peak_value(loc)
+                    loc = self._power_data_peak_value(direct_data, loc)
                     if not loc.found:
                         continue
 

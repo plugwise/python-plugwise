@@ -4,6 +4,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import aiohttp
+from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -227,6 +228,45 @@ class SmileData(SmileHelper):
 
         return device_data
 
+    def _check_availability(
+        self, details: ApplianceData, device_data: DeviceData
+    ) -> None:
+        """Helper-function for _get_device_data().
+        Provide availability status for the wired-commected devices.
+        """
+        # OpenTherm device
+        if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
+            device_data["available"] = True
+            for _, data in self._notifications.items():
+                for _, msg in data.items():
+                    if "no OpenTherm communication" in msg:
+                        device_data["available"] = False
+
+        # Smartmeter
+        if details["dev_class"] == "smartmeter":
+            device_data["available"] = True
+            for _, data in self._notifications.items():
+                for _, msg in data.items():
+                    if "P1 does not seem to be connected to a smart meter" in msg:
+                        device_data["available"] = False
+
+        # Anna thermostat
+        if "modified" in device_data:
+            time_now: str | None = None
+            if (
+                time_now := self._domain_objects.find("./gateway/time").text
+            ) is not None:
+                interval = (
+                    parse(time_now) - parse(device_data["modified"])
+                ).total_seconds()
+                if interval > 0:
+                    if details["dev_class"] == "thermostat":
+                        device_data["available"] = False
+                        if interval < 90:
+                            device_data["available"] = True
+
+            device_data.pop("modified")
+
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
@@ -258,6 +298,10 @@ class SmileData(SmileHelper):
                 power_data := self._power_data_from_location(details["location"])
             ) is not None:
                 device_data.update(power_data)
+
+        # Check availability of non-legacy wired-connected devices
+        if not self._smile_legacy:
+            self._check_availability(details, device_data)
 
         # Switching groups data
         device_data = self._device_data_switching_group(details, device_data)
@@ -298,7 +342,6 @@ class Smile(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
-        self._notifications: dict[str, str] = {}
         self.smile_hostname: str | None = None
 
     async def connect(self) -> bool:
@@ -364,22 +407,22 @@ class Smile(SmileComm, SmileData):
         if result.find('./appliance[type="thermostat"]') is None:
             # It's a P1 legacy:
             if dsmrmain is not None:
-                status = await self._request(STATUS)
-                self.smile_fw_version = status.find("./system/version").text
-                model = status.find("./system/product").text
-                self.smile_hostname = status.find("./network/hostname").text
-                self.smile_mac_address = status.find("./network/mac_address").text
+                self._status = await self._request(STATUS)
+                self.smile_fw_version = self._status.find("./system/version").text
+                model = self._status.find("./system/product").text
+                self.smile_hostname = self._status.find("./network/hostname").text
+                self.smile_mac_address = self._status.find("./network/mac_address").text
 
             # Or a legacy Stretch:
             elif network is not None:
-                system = await self._request(SYSTEM)
-                self.smile_fw_version = system.find("./gateway/firmware").text
-                model = system.find("./gateway/product").text
-                self.smile_hostname = system.find("./gateway/hostname").text
+                self._system = await self._request(SYSTEM)
+                self.smile_fw_version = self._system.find("./gateway/firmware").text
+                model = self._system.find("./gateway/product").text
+                self.smile_hostname = self._system.find("./gateway/hostname").text
                 # If wlan0 contains data it's active, so eth0 should be checked last
                 for network in ("wlan0", "eth0"):
                     locator = f"./{network}/mac"
-                    if (net_locator := system.find(locator)) is not None:
+                    if (net_locator := self._system.find(locator)) is not None:
                         self.smile_mac_address = net_locator.text
 
             else:  # pragma: no cover
@@ -444,12 +487,9 @@ class Smile(SmileComm, SmileData):
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
 
-        # P1 legacy has no appliances
+        # P1 legacy has no appliances and nothing of interest in domain_objects
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
-
-        # No need to import domain_objects for P1, no useful info
-        if self.smile_type != "power":
             await self._update_domain_objects()
 
     async def _update_domain_objects(self) -> None:
@@ -484,6 +524,8 @@ class Smile(SmileComm, SmileData):
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
+        self._modules = await self._request(MODULES)
+
         self.gw_data["notifications"] = self._notifications
 
         for dev_id, dev_dict in self.gw_devices.items():
@@ -493,7 +535,7 @@ class Smile(SmileComm, SmileData):
                     dev_dict[key] = value  # type: ignore [literal-required]
 
             for item in ("binary_sensors", "sensors", "switches"):
-                notifs: dict[str, str] = {}
+                notifs: dict[str, dict[str, str]] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
                 if item in dev_dict:
