@@ -1369,7 +1369,7 @@ class SmileHelper:
                     data.pop(key)  # type: ignore [misc]
                     s_dict[key] = value  # type: ignore[literal-required]
             for item in SWITCHES:
-                if item == key:
+                if item == key and key != "cooling_enabled":
                     data.pop(key)  # type: ignore [misc]
                     sw_dict[key] = value  # type: ignore[literal-required]
 
