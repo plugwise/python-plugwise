@@ -1500,6 +1500,7 @@
 			<object name="client" type="Client"/>
 			<object name="point_log" type="PointLogFunctionality"/>
 		</objects>
+		<parameters>
 			<parameter name="point_log_recently_used" source="point_log.wasRecentlyOn(null, 1800)" type="Boolean"/>
 		</parameters>
 		<results>
