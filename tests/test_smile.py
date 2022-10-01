@@ -3920,7 +3920,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 26.3,
                     "outdoor_air_temperature": 17.3,
                 },
-                "switches": {"dhw_cm_switch": True, "cooling_enabled": False},
+                "switches": {"dhw_cm_switch": True, "cooling_ena_switch": False},
             },
             "9ff0569b4984459fb243af64c0901894": {
                 "dev_class": "gateway",
@@ -4014,7 +4014,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 26.3,
                     "outdoor_air_temperature": 17.3,
                 },
-                "switches": {"dhw_cm_switch": True, "cooling_enabled": True},
+                "switches": {"dhw_cm_switch": True, "cooling_ena_switch": True},
             },
             "9ff0569b4984459fb243af64c0901894": {
                 "dev_class": "gateway",
