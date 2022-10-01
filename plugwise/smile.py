@@ -207,10 +207,12 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self._elga_cooling_enabled:
+            if (
+                self._elga_cooling_enabled
+                or self._lortherm_cooling_enabled
+                or self._adam_cooling_enabled
+            ):
                 device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self._lortherm_cooling_enabled:
-                device_data["mode"] = "cool"
 
         if "None" not in avail_schedules:
             loc_schedule_states = {}
