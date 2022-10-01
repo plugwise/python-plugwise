@@ -1046,7 +1046,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # assert self.device_items = 58
         assert not self.notifications
 
-        assert not smile._anna_cooling_present
+        assert not smile._cooling_present
         assert not smile._elga_cooling_active
         assert not smile._elga_cooling_enabled
 
@@ -3391,7 +3391,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._anna_cooling_present
+        assert smile._cooling_present
         assert smile._elga_cooling_enabled
         assert not smile._elga_cooling_active
 
@@ -3507,7 +3507,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._anna_cooling_present
+        assert smile._cooling_present
         assert smile._elga_cooling_enabled
         assert smile._elga_cooling_active
 
@@ -3564,7 +3564,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         # # assert self.device_items = 55
-        assert smile._anna_cooling_present
+        assert smile._cooling_present
         assert smile._lortherm_cooling_enabled
         assert smile._lortherm_cooling_active
 
@@ -3854,7 +3854,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._anna_cooling_present
+        assert smile._cooling_present
         assert smile._elga_cooling_enabled
         assert smile._elga_cooling_active
 
