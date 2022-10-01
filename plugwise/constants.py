@@ -467,7 +467,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 # Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
-    "cooling_enabled": UOM(NONE),
     "domestic_hot_water_mode": DATA("dhw_mode", NONE),
     "domestic_hot_water_comfort_mode": DATA("dhw_cm_switch", NONE),
     "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
@@ -487,6 +486,8 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # Used with the Elga heatpump - marcelveldt
     "compressor_state": UOM(NONE),
     "cooling_state": UOM(NONE),
+    # Available with the Loria and Elga (newer Anna firmware) heatpumps
+    "cooling_enabled": UOM(NONE),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
     "slave_boiler_state": UOM(NONE),
     "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
