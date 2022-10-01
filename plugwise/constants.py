@@ -569,6 +569,7 @@ SENSORS: Final[tuple[str, ...]] = (
 )
 
 SWITCHES: Final[tuple[str, ...]] = (
+    "cooling_enabled",
     "dhw_cm_switch",
     "lock",
     "relay",
