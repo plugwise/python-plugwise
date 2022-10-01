@@ -55,7 +55,7 @@ class SmileData(SmileHelper):
             if self.smile_name == "Smile Anna":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
                     device["binary_sensors"]["cooling_state"] = False
-                    if self._elga_cooling_active or self._lortherm_cooling_active:
+                    if self._cooling_active:
                         device["binary_sensors"]["cooling_state"] = True
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
@@ -64,7 +64,7 @@ class SmileData(SmileHelper):
                 self.smile_name == "Adam"
                 and device["dev_class"] == "heater_central"
                 and self._on_off_device
-                and self._adam_cooling_enabled
+                and self._cooling_enabled
                 and device["binary_sensors"]["heating_state"]
             ):
                 device["binary_sensors"]["cooling_state"] = True
@@ -202,11 +202,7 @@ class SmileData(SmileHelper):
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if (
-                self._elga_cooling_enabled
-                or self._lortherm_cooling_enabled
-                or self._adam_cooling_enabled
-            ):
+            if self._cooling_enabled:
                 device_data["mode"] = "heat_cool"
 
         if "None" not in avail_schedules:

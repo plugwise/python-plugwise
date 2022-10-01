@@ -733,11 +733,9 @@ class DeviceDataPoints(
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
-    adam_cooling_enabled: bool
+    cooling_enabled: bool
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData
-    elga_cooling_enabled: bool
-    lortherm_cooling_enabled: bool
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData

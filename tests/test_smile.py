@@ -1047,8 +1047,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         assert not smile._cooling_present
-        assert not smile._elga_cooling_active
-        assert not smile._elga_cooling_enabled
+        assert not smile._cooling_active
+        assert not smile._cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -2794,7 +2794,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 65.0,
                     "resolution": 0.01,
                 },
-                "adam_cooling_enabled": True,
+                "cooling_enabled": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -3310,7 +3310,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": True,
+                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3391,9 +3391,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._cooling_present
-        assert smile._elga_cooling_enabled
-        assert not smile._elga_cooling_active
+        assert smile._cooling_enabled
+        assert not smile._cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3440,7 +3439,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": True,
+                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3507,9 +3506,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._cooling_present
-        assert smile._elga_cooling_enabled
-        assert smile._elga_cooling_active
+        assert smile._cooling_enabled
+        assert smile._cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3536,7 +3534,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "lortherm_cooling_enabled": True,
+                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3565,8 +3563,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         # # assert self.device_items = 55
         assert smile._cooling_present
-        assert smile._lortherm_cooling_enabled
-        assert smile._lortherm_cooling_active
+        assert smile._cooling_enabled
+        assert smile._cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3577,7 +3575,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "0ca13e8176204ca7bf6f09de59f81c83": {
-                "adam_cooling_enabled": True,
+                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3600,7 +3598,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         # # assert self.device_items = 55
         assert smile._cooling_present
-        assert smile._adam_cooling_enabled
+        assert smile._cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3653,7 +3651,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": False,
+                "cooling_enabled": False,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3803,7 +3801,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": True,
+                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3854,9 +3852,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._cooling_present
-        assert smile._elga_cooling_enabled
-        assert smile._elga_cooling_active
+        assert smile._cooling_enabled
+        assert smile._cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3907,7 +3904,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 60.0,
                     "resolution": 0.01,
                 },
-                "lortherm_cooling_enabled": False,
+                "cooling_enabled": False,
                 "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
                 "available": True,
                 "binary_sensors": {
@@ -3950,7 +3947,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         # # assert self.device_items = 55
         assert smile._cooling_present
-        assert not smile._lortherm_cooling_enabled
+        assert not smile._cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
