@@ -3864,7 +3864,80 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_loria_off(self):
         """Test an Anna with a Loria in heating mode - state idle."""
-        testdata = {}
+        testdata = {
+            "582dfbdace4d4aeb832923ce7d1ddda0": {
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "15da035090b847e7a21f93e08c015ebc",
+                "model": "ThermoTouch",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 20.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
+                "available": True,
+                "preset_modes": ["away", "vacation", "no_frost", "home", "asleep"],
+                "active_preset": "home",
+                "available_schedules": ["Winter", "Test "],
+                "selected_schedule": "Winter",
+                "last_used": "Winter",
+                "mode": "auto",
+                "sensors": {"temperature": 22.1, "setpoint": 20.5, "illuminance": 45.0},
+            },
+            "bfb5ee0a88e14e5f97bfa725a760cc49": {
+                "dev_class": "heater_central",
+                "location": "674b657c138a41a291d315d7471deb06",
+                "model": "173",
+                "name": "OpenTherm",
+                "vendor": "Atlantic",
+                "dhw_mode": "auto",
+                "maximum_boiler_temperature": {
+                    "setpoint": 40.0,
+                    "lower_bound": 25.0,
+                    "upper_bound": 45.0,
+                    "resolution": 0.01,
+                },
+                "domestic_hot_water_setpoint": {
+                    "setpoint": 53.0,
+                    "lower_bound": 35.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
+                "lortherm_cooling_enabled": False,
+                "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
+                "available": True,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "cooling_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 25.3,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 26.3,
+                    "outdoor_air_temperature": 17.3,
+                },
+                "switches": {"dhw_cm_switch": True, "cooling_enabled": False},
+            },
+            "9ff0569b4984459fb243af64c0901894": {
+                "dev_class": "gateway",
+                "firmware": "4.3.8",
+                "hardware": "AME Smile 2.0 board",
+                "location": "674b657c138a41a291d315d7471deb06",
+                "mac_address": "C493000278E2",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 15.5},
+            },
+        }
 
         self.smile_setup = "anna_loria"
         server, smile, client = await self.connect_wrapper()
