@@ -487,7 +487,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "compressor_state": UOM(NONE),
     "cooling_state": UOM(NONE),
     # Available with the Loria and Elga (newer Anna firmware) heatpumps
-    "cooling_enabled": UOM(NONE),
+    "cooling_enabled": DATA("cooling_ena_switch", TEMP_CELSIUS),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
     "slave_boiler_state": UOM(NONE),
     "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
@@ -569,7 +569,7 @@ SENSORS: Final[tuple[str, ...]] = (
 )
 
 SWITCHES: Final[tuple[str, ...]] = (
-    "cooling_enabled",
+    "cooling_ena_switch",
     "dhw_cm_switch",
     "lock",
     "relay",
@@ -672,7 +672,7 @@ class SmileSensors(TypedDict, total=False):
 class SmileSwitches(TypedDict, total=False):
     """Smile Switches class."""
 
-    cooling_enabled: bool
+    cooling_ena_switch: bool
     dhw_cm_switch: bool
     lock: bool
     relay: bool

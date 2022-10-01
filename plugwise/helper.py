@@ -1370,8 +1370,7 @@ class SmileHelper:
                     s_dict[key] = value  # type: ignore[literal-required]
             for item in SWITCHES:
                 if item == key:
-                    if key != "cooling_enabled":
-                        data.pop(key)  # type: ignore [misc]
+                    data.pop(key)  # type: ignore [misc]
                     sw_dict[key] = value  # type: ignore[literal-required]
 
         # Add plugwise notification binary_sensor to the relevant gateway
