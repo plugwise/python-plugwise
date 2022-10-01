@@ -313,7 +313,6 @@ class SmileHelper:
         self._adam_cooling_enabled = False
         self._dhw_allowed_modes: list[str] = []
         self._reg_allowed_modes: list[str] = []
-        self._anna_cooling_present = False
         self._appliances: etree
         self._appl_data: dict[str, ApplianceData] = {}
         self._cooling_activation_outdoor_temp: float
@@ -948,7 +947,7 @@ class SmileHelper:
         if "c_heating_state" in data:
             # Anna + Elga and Adam + OnOff heater/cooler don't use intended_cental_heating_state
             # to show the generic heating state
-            if (self._anna_cooling_present and "heating_state" in data) or (
+            if (self._cooling_present and "heating_state" in data) or (
                 self.smile_name == "Adam" and self._on_off_device
             ):
                 if data.get("c_heating_state") and not data.get("heating_state"):
@@ -965,7 +964,7 @@ class SmileHelper:
                 data["adam_cooling_enabled"] = self._adam_cooling_enabled
             if self.smile_name == "Smile Anna":
                 # Use elga_status_code or cooling_enabled to set the relevant *_cooling_enabled to True
-                if not self._anna_cooling_present:
+                if not self._cooling_present:
                     pass
 
                 # Elga:
@@ -1254,7 +1253,7 @@ class SmileHelper:
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
             # Only process the active schedule in detail for Anna with cooling
-            if self._anna_cooling_present and loc_id != NONE:
+            if self._cooling_present and loc_id != NONE:
                 locator = f'./rule[@id="{rule_id}"]/directives'
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
@@ -1280,7 +1279,7 @@ class SmileHelper:
         if schedules:
             available.remove(NONE)
             last_used = self._last_used_schedule(location, schedules)
-            if self._anna_cooling_present and last_used in schedules:
+            if self._cooling_present and last_used in schedules:
                 schedule_temperatures = schedules_temps(schedules, last_used)
 
         return available, selected, schedule_temperatures, last_used

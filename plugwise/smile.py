@@ -116,17 +116,12 @@ class SmileData(SmileHelper):
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
             search = self._domain_objects
-            self._anna_cooling_present = adam_cooling_present = False
+            self._cooling_present = False
             if search.find(locator_1) is not None:
-                if self.smile_name == "Smile Anna":
-                    self._anna_cooling_present = True
-                else:
-                    adam_cooling_present = True
+                self._cooling_present = True
             # Alternative method for the Anna with Elga, or alternative method for the Anna with Loria/Thermastage
             elif search.find(locator_2) is not None:
-                self._anna_cooling_present = True
-
-            self._cooling_present = self._anna_cooling_present or adam_cooling_present
+                self._cooling_present = True
 
         # Gather all the device and initial data
         self._scan_thermostats()
