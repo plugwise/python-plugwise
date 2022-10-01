@@ -348,9 +348,9 @@ class SmileHelper:
         #
         # '_lortherm_cooling_enabled' refers to the state of the Loria or
         # Thermastage heatpump connected to an Anna. For these,
-        # 'cooling_state' = on means set to cooling mode, instead of to
+        # 'cooling_enabled' = on means set to cooling mode, instead of to
         # heating mode.
-        # 'modulation_level' = 100 means cooling is active, 0.0 means idle.
+        # 'cooling_state' = on means cooling is active.
         ###################################################################
         self._elga_cooling_active = False
         self._elga_cooling_enabled = False
@@ -964,7 +964,7 @@ class SmileHelper:
             if self._adam_cooling_enabled:
                 data["adam_cooling_enabled"] = self._adam_cooling_enabled
             if self.smile_name == "Smile Anna":
-                # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
+                # Use elga_status_code or cooling_enabled to set the relevant *_cooling_enabled to True
                 if not self._anna_cooling_present:
                     pass
 
@@ -975,10 +975,10 @@ class SmileHelper:
                     self._elga_cooling_active = data["elga_status_code"] == 8
                     data.pop("elga_status_code", None)
                 # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                elif "cooling_state" in data:
-                    self._lortherm_cooling_enabled = data["cooling_state"]
+                elif "cooling_enabled" in data:
+                    self._lortherm_cooling_enabled = data["cooling_enabled"]
                     data["lortherm_cooling_enabled"] = self._lortherm_cooling_enabled
-                    self._lortherm_cooling_active = data["modulation_level"] == 100
+                    self._lortherm_cooling_active = data["cooling_state"]
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
