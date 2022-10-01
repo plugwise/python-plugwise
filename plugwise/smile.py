@@ -115,8 +115,6 @@ class SmileData(SmileHelper):
             # Determine if the Adam or Anna has cooling capability
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
-            locator_3 = "./module[vendor_name='Atlantic']"
-            locator_4 = "./module[vendor_model='Loria']"
             search = self._domain_objects
             self._anna_cooling_present = adam_cooling_present = False
             if search.find(locator_1) is not None:
@@ -125,10 +123,7 @@ class SmileData(SmileHelper):
                 else:
                     adam_cooling_present = True
             # Alternative method for the Anna with Elga, or alternative method for the Anna with Loria/Thermastage
-            elif search.find(locator_2) is not None or (
-                search.find(locator_3) is not None
-                and search.find(locator_4) is not None
-            ):
+            elif search.find(locator_2) is not None:
                 self._anna_cooling_present = True
 
             self._cooling_present = self._anna_cooling_present or adam_cooling_present
