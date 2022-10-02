@@ -742,9 +742,13 @@ class Smile(SmileComm, SmileData):
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found: list[etree] = self._appliances.findall(locator)
         for item in found:
-            if item.find("type").text == "domestic_hot_water_comfort_mode":
+            if (sw_type := item.find("type")) is not None:
+                if sw_type.text == "domestic_hot_water_comfort_mode":
+                    switch_id = item.attrib["id"]
+            else:
                 switch_id = item.attrib["id"]
-                LOGGER.debug("HOI %s", switch_id)
+                break
+        LOGGER.debug("HOI %s", switch_id)
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self._stretch_v2:
