@@ -3949,6 +3949,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._cooling_present
         assert not smile._cooling_enabled
 
+        switch_change = await self.tinker_switch(
+            smile, "bfb5ee0a88e14e5f97bfa725a760cc49"
+        )
+        assert switch_change
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
