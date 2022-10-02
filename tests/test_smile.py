@@ -3950,7 +3950,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._cooling_enabled
 
         switch_change = await self.tinker_switch(
-            smile, "bfb5ee0a88e14e5f97bfa725a760cc49"
+            smile,
+            "bfb5ee0a88e14e5f97bfa725a760cc49",
+            model="dhw_cm_switch",
         )
         assert switch_change
 
