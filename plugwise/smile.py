@@ -727,6 +727,7 @@ class Smile(SmileComm, SmileData):
         if model == "dhw_cm_switch":
             switch.device = "toggle"
             switch.func_type = "toggle_functionality"
+            switch.name = "domestic_hot_water_comfort_mode"
 
         if model == "lock":
             switch.func = "lock"
@@ -743,7 +744,7 @@ class Smile(SmileComm, SmileData):
         found: list[etree] = self._appliances.findall(locator)
         for item in found:
             if (sw_type := item.find("type")) is not None:
-                if sw_type.text == "domestic_hot_water_comfort_mode":
+                if sw_type.text == switch.name:
                     switch_id = item.attrib["id"]
             else:
                 switch_id = item.attrib["id"]
