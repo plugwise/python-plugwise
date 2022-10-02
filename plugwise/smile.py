@@ -742,6 +742,7 @@ class Smile(SmileComm, SmileData):
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found: list[etree] = self._appliances.findall(locator)
+        switch_id = "None"
         for item in found:
             if (sw_type := item.find("type")) is not None:
                 LOGGER.debug("HOI 1 %s", sw_type.text)
