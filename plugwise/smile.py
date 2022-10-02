@@ -744,12 +744,13 @@ class Smile(SmileComm, SmileData):
         found: list[etree] = self._appliances.findall(locator)
         for item in found:
             if (sw_type := item.find("type")) is not None:
+                LOGGER.debug("HOI 1 %s", sw_type.text)
                 if sw_type.text == switch.name:
                     switch_id = item.attrib["id"]
             else:
                 switch_id = item.attrib["id"]
                 break
-        LOGGER.debug("HOI %s", switch_id)
+        LOGGER.debug("HOI 2 %s", switch_id)
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self._stretch_v2:
