@@ -727,12 +727,12 @@ class Smile(SmileComm, SmileData):
         if model == "dhw_cm_switch":
             switch.device = "toggle"
             switch.func_type = "toggle_functionality"
-            switch.name = "domestic_hot_water_comfort_mode"
+            switch.act_type = "domestic_hot_water_comfort_mode"
 
         if model == "cooling_ena_switch":
             switch.device = "toggle"
             switch.func_type = "toggle_functionality"
-            switch.name = "cooling_enabled"
+            switch.act_type = "cooling_enabled"
 
         if model == "lock":
             switch.func = "lock"
@@ -747,16 +747,13 @@ class Smile(SmileComm, SmileData):
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
         found: list[etree] = self._appliances.findall(locator)
-        switch_id = "None"
         for item in found:
             if (sw_type := item.find("type")) is not None:
-                LOGGER.debug("HOI 1 %s", sw_type.text)
-                if sw_type.text == switch.name:
+                if sw_type.text == switch.act_type:
                     switch_id = item.attrib["id"]
             else:
                 switch_id = item.attrib["id"]
                 break
-        LOGGER.debug("HOI 2 %s", switch_id)
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self._stretch_v2:
@@ -791,7 +788,7 @@ class Smile(SmileComm, SmileData):
         if mode not in self._dhw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
 
-        uri = f"{APPLIANCES};id={self._heater_id}/actuator_functionalities/domestic_hot_water_mode_control_functionality"
+        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
         data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)
