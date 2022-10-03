@@ -470,6 +470,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "domestic_hot_water_mode": DATA("dhw_mode", NONE),
     "domestic_hot_water_comfort_mode": DATA("dhw_cm_switch", NONE),
     "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
+    "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
     "elga_status_code": UOM(NONE),
     "intended_boiler_temperature": UOM(
         TEMP_CELSIUS
@@ -531,6 +532,7 @@ SENSORS: Final[tuple[str, ...]] = (
     "battery",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
+    "dhw_temperature",
     "temperature",
     "electricity_consumed",
     "electricity_consumed_interval",
@@ -631,6 +633,7 @@ class SmileSensors(TypedDict, total=False):
     battery: float
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
+    dhw_temperature: float
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
