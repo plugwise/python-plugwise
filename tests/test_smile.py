@@ -3915,6 +3915,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 25.3,
+                    "dhw_temperature": 52.9,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 0.0,
                     "return_temperature": 26.3,
@@ -4016,6 +4017,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 25.3,
+                    "dhw_temperature": 52.9,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 100,
                     "return_temperature": 26.3,
