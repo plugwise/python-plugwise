@@ -3129,6 +3129,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
@@ -3168,7 +3169,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        assert self.device_items == 27
+        assert self.device_items == 28
         assert not self.notifications
 
         await smile.close_connection()
@@ -3187,6 +3188,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
@@ -3226,7 +3228,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 27
+        assert self.device_items == 28
         assert not self.notifications
 
         await smile.close_connection()
@@ -3245,6 +3247,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
                 "dev_class": "smartmeter",
@@ -3288,7 +3291,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "cd3e822288064775a7c4afcdd70bdda2"
-        assert self.device_items == 30
+        assert self.device_items == 31
         assert not self.notifications
 
         await smile.close_connection()
@@ -4588,6 +4591,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
@@ -4629,7 +4633,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        assert self.device_items == 28
+        assert self.device_items == 29
         assert "97a04c0c263049b29350a660b4cdd01e" in self.notifications
 
         await smile.close_connection()
