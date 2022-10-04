@@ -594,6 +594,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return result_1 and result_2 and result_3
 
     @staticmethod
+    async def tinker_dhw_mode(smile):
+        """Toggle dhw to test functionality."""
+        for mode in ["auto", "boost", "!bogus"]:
+            warning = ""
+            if mode[0] == "!":
+                warning = " Negative test"
+                mode = mode[1:]
+            _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
+            try:
+                await smile.set_dhw_mode(mode)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + found invalid mode, as expected")
+
+    @staticmethod
     async def tinker_regulation_mode(smile):
         """Toggle regulation_mode to test functionality."""
         for mode in ["off", "heating", "bleeding_cold", "!bogus"]:
@@ -3960,6 +3975,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             model="cooling_ena_switch",
         )
         assert switch_change
+
+        await self.tinker_dhw_mode(smile)
 
         await smile.close_connection()
         await self.disconnect(server, client)
