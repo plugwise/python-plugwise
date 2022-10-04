@@ -594,6 +594,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return result_1 and result_2 and result_3
 
     @staticmethod
+    async def tinker_dhw_mode(smile):
+        """Toggle dhw to test functionality."""
+        for mode in ["auto", "boost", "!bogus"]:
+            warning = ""
+            if mode[0] == "!":
+                warning = " Negative test"
+                mode = mode[1:]
+            _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
+            try:
+                await smile.set_dhw_mode(mode)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + found invalid mode, as expected")
+
+    @staticmethod
     async def tinker_regulation_mode(smile):
         """Toggle regulation_mode to test functionality."""
         for mode in ["off", "heating", "bleeding_cold", "!bogus"]:
@@ -692,7 +707,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        # assert self.device_items = 47
+        assert self.device_items == 44
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -793,7 +808,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
 
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
-        # assert self.device_items = 47
+        assert self.device_items == 44
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -892,7 +907,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
-        # assert self.device_items = 23
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -949,7 +964,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # assert self.device_items = 26
+        assert self.device_items == 26
         assert not self.notifications
 
         await smile.close_connection()
@@ -1043,12 +1058,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
-        # assert self.device_items = 58
+        assert self.device_items == 54
         assert not self.notifications
 
-        assert not smile._anna_cooling_present
-        assert not smile._elga_cooling_active
-        assert not smile._elga_cooling_enabled
+        assert not smile._cooling_present
+        assert not smile._cooling_active
+        assert not smile._cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -1159,7 +1174,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 52
+        assert self.device_items == 54
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1206,7 +1221,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 52
+        assert self.device_items == 54
 
         result = await self.tinker_thermostat(
             smile,
@@ -1292,7 +1307,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a270735e4ccd45239424badc0578a2b1"
-        # assert self.device_items = 41
+        assert self.device_items == 36
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1374,7 +1389,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 35
+        assert self.device_items == 36
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1456,7 +1471,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 35
+        assert self.device_items == 36
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1532,7 +1547,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670101",
                 "vendor": "Plugwise",
                 "regulation_mode": "heating",
-                "regulation_modes": [],
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 11.9},
             },
@@ -1590,7 +1604,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        # assert self.device_items = 80
+        assert self.device_items == 73
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(
@@ -1642,7 +1656,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 69
+        assert self.device_items == 72
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -1842,7 +1856,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
-        # assert self.device_items = 150
+        assert self.device_items == 140
 
         result = await self.tinker_thermostat(
             smile,
@@ -2016,7 +2030,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670101",
                 "vendor": "Plugwise",
                 "regulation_mode": "heating",
-                "regulation_modes": [],
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.69},
             },
@@ -2299,7 +2312,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        # assert self.device_items = 305
+        assert self.device_items == 284
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -2454,7 +2467,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670101",
                 "vendor": "Plugwise",
                 "regulation_mode": "heating",
-                "regulation_modes": [],
                 "binary_sensors": {"plugwise_notification": True},
                 "sensors": {"outdoor_temperature": 7.81},
             },
@@ -2736,7 +2748,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 269
+        assert self.device_items == 284
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -2797,7 +2809,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 65.0,
                     "resolution": 0.01,
                 },
-                "adam_cooling_enabled": True,
+                "cooling_enabled": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -2849,7 +2861,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 367
+        assert self.device_items == 389
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3097,7 +3109,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        # assert self.device_items = 203
+        assert self.device_items == 191
 
         # Negative test
         result = await self.tinker_thermostat(
@@ -3132,6 +3144,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
@@ -3171,7 +3184,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        # assert self.device_items = 26
+        assert self.device_items == 28
         assert not self.notifications
 
         await smile.close_connection()
@@ -3190,6 +3203,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
@@ -3229,7 +3243,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # assert self.device_items = 26
+        assert self.device_items == 28
         assert not self.notifications
 
         await smile.close_connection()
@@ -3248,6 +3262,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "e950c7d5e1ee407a858e2a8b5016c8b3": {
                 "dev_class": "smartmeter",
@@ -3291,7 +3306,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "cd3e822288064775a7c4afcdd70bdda2"
-        # assert self.device_items = 29
+        assert self.device_items == 31
         assert not self.notifications
 
         await smile.close_connection()
@@ -3313,7 +3328,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": True,
+                "cooling_enabled": False,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3390,13 +3405,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        # assert self.device_items = 61
+        assert self.device_items == 58
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._anna_cooling_present
-        assert smile._elga_cooling_enabled
-        assert not smile._elga_cooling_active
+        assert not smile._cooling_enabled
+        assert not smile._cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3443,7 +3457,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": True,
+                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3482,7 +3496,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["standaard"],
                 "selected_schedule": "None",
                 "last_used": "standaard",
-                "mode": "heat_cool",
+                "mode": "cool",
                 "sensors": {
                     "temperature": 22.3,
                     "setpoint": 22.0,
@@ -3506,13 +3520,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 55
+        assert self.device_items == 57
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._anna_cooling_present
-        assert smile._elga_cooling_enabled
-        assert smile._elga_cooling_active
+        assert smile._cooling_enabled
+        assert smile._cooling_active
 
         result = await self.tinker_thermostat(
             smile,
@@ -3539,7 +3552,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "lortherm_cooling_enabled": True,
+                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3566,51 +3579,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 55
-        assert smile._anna_cooling_present
-        assert smile._lortherm_cooling_enabled
-        assert smile._lortherm_cooling_active
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_anna_loria_idle_fake_firmware(self):
-        """Test an Anna with a fake specific Loria setup in idle mode."""
-        testdata = {
-            # Heater central
-            "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "lortherm_cooling_enabled": True,
-                "binary_sensors": {
-                    "cooling_state": False,
-                    "dhw_state": False,
-                    "heating_state": False,
-                },
-                "sensors": {
-                    "modulation_level": 0,
-                },
-            },
-            # Gateway
-            "015ae9ea3f964e668e490fa39da3870b": {
-                "firmware": "4.10.10",
-            },
-        }
-
-        self.smile_setup = "anna_loria_idle_fake_firmware"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.10.10"
-
-        await self.device_test(smile, testdata)
-        # # assert self.device_items = 55
-        assert smile._anna_cooling_present
-        assert smile._lortherm_cooling_enabled
-        assert not smile._lortherm_cooling_active
+        assert self.device_items == 59
+        assert smile._cooling_present
+        assert smile._cooling_enabled
+        assert smile._cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3621,7 +3593,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "0ca13e8176204ca7bf6f09de59f81c83": {
-                "adam_cooling_enabled": True,
+                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3642,9 +3614,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 55
+        assert self.device_items == 57
         assert smile._cooling_present
-        assert smile._adam_cooling_enabled
+        assert smile._cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3697,7 +3669,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": False,
+                "cooling_enabled": False,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3744,6 +3716,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
+        assert self.device_items == 57
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self.notifications
@@ -3793,7 +3766,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_hostname == "smile000000"
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 55
+        assert self.device_items == 57
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3847,7 +3820,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "elga_cooling_enabled": True,
+                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3894,13 +3867,211 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 55
+        assert self.device_items == 57
         assert self.cooling_present
         assert not self.notifications
 
-        assert smile._anna_cooling_present
-        assert smile._elga_cooling_enabled
-        assert smile._elga_cooling_active
+        assert smile._cooling_enabled
+        assert smile._cooling_active
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_anna_loria_heating_idle(self):
+        """Test an Anna with a Loria in heating mode - state idle."""
+        testdata = {
+            "582dfbdace4d4aeb832923ce7d1ddda0": {
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "15da035090b847e7a21f93e08c015ebc",
+                "model": "ThermoTouch",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 20.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
+                "available": True,
+                "preset_modes": ["away", "vacation", "no_frost", "home", "asleep"],
+                "active_preset": "home",
+                "available_schedules": ["Winter", "Test "],
+                "selected_schedule": "Winter",
+                "last_used": "Winter",
+                "mode": "auto",
+                "sensors": {"temperature": 22.1, "setpoint": 20.5, "illuminance": 45.0},
+            },
+            "bfb5ee0a88e14e5f97bfa725a760cc49": {
+                "dev_class": "heater_central",
+                "location": "674b657c138a41a291d315d7471deb06",
+                "model": "173",
+                "name": "OpenTherm",
+                "vendor": "Atlantic",
+                "dhw_mode": "auto",
+                "maximum_boiler_temperature": {
+                    "setpoint": 40.0,
+                    "lower_bound": 25.0,
+                    "upper_bound": 45.0,
+                    "resolution": 0.01,
+                },
+                "domestic_hot_water_setpoint": {
+                    "setpoint": 53.0,
+                    "lower_bound": 35.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
+                "cooling_enabled": False,
+                "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
+                "available": True,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "cooling_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 25.3,
+                    "dhw_temperature": 52.9,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 26.3,
+                    "outdoor_air_temperature": 17.3,
+                },
+                "switches": {"dhw_cm_switch": True, "cooling_ena_switch": False},
+            },
+            "9ff0569b4984459fb243af64c0901894": {
+                "dev_class": "gateway",
+                "firmware": "4.3.8",
+                "hardware": "AME Smile 2.0 board",
+                "location": "674b657c138a41a291d315d7471deb06",
+                "mac_address": "C493000278E2",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 15.5},
+            },
+        }
+
+        self.smile_setup = "anna_loria_heating_idle"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+
+        await self.device_test(smile, testdata)
+        assert self.device_items == 60
+        assert smile._cooling_present
+        assert not smile._cooling_enabled
+
+        switch_change = await self.tinker_switch(
+            smile,
+            "bfb5ee0a88e14e5f97bfa725a760cc49",
+            model="cooling_ena_switch",
+        )
+        assert switch_change
+
+        await self.tinker_dhw_mode(smile)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_anna_loria_cooling_active(self):
+        """Test an Anna with a Loria in heating mode - state idle."""
+        testdata = {
+            "582dfbdace4d4aeb832923ce7d1ddda0": {
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "15da035090b847e7a21f93e08c015ebc",
+                "model": "ThermoTouch",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 23.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
+                "available": True,
+                "preset_modes": ["away", "vacation", "no_frost", "home", "asleep"],
+                "active_preset": "home",
+                "available_schedules": ["Winter", "Test "],
+                "selected_schedule": "Winter",
+                "last_used": "Winter",
+                "mode": "auto",
+                "sensors": {"temperature": 24.1, "setpoint": 23.5, "illuminance": 45.0},
+            },
+            "bfb5ee0a88e14e5f97bfa725a760cc49": {
+                "dev_class": "heater_central",
+                "location": "674b657c138a41a291d315d7471deb06",
+                "model": "173",
+                "name": "OpenTherm",
+                "vendor": "Atlantic",
+                "dhw_mode": "auto",
+                "maximum_boiler_temperature": {
+                    "setpoint": 40.0,
+                    "lower_bound": 25.0,
+                    "upper_bound": 45.0,
+                    "resolution": 0.01,
+                },
+                "cooling_enabled": True,
+                "domestic_hot_water_setpoint": {
+                    "setpoint": 53.0,
+                    "lower_bound": 35.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
+                "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
+                "available": True,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "cooling_state": True,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 25.3,
+                    "dhw_temperature": 52.9,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 100,
+                    "return_temperature": 26.3,
+                    "outdoor_air_temperature": 17.3,
+                },
+                "switches": {"dhw_cm_switch": True, "cooling_ena_switch": True},
+            },
+            "9ff0569b4984459fb243af64c0901894": {
+                "dev_class": "gateway",
+                "firmware": "4.3.8",
+                "hardware": "AME Smile 2.0 board",
+                "location": "674b657c138a41a291d315d7471deb06",
+                "mac_address": "C493000278E2",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 15.5},
+            },
+        }
+
+        self.smile_setup = "anna_loria_cooling_active"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+
+        await self.device_test(smile, testdata)
+        assert self.device_items == 60
+        assert smile._cooling_present
+        assert smile._cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4045,7 +4216,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        # assert self.device_items = 98
+        assert self.device_items == 88
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4350,7 +4521,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 229
+        assert self.device_items == 229
 
         switch_change = await self.tinker_switch(
             smile, "2587a7fcdd7e482dab03fda256076b4b"
@@ -4413,7 +4584,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        # # assert self.device_items = 190
+        assert self.device_items == 190
         _LOGGER.info(" # Assert no master thermostat")
 
         switch_change = await self.tinker_switch(
@@ -4437,6 +4608,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
             },
             "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
@@ -4478,7 +4650,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        # assert self.device_items = 24
+        assert self.device_items == 29
         assert "97a04c0c263049b29350a660b4cdd01e" in self.notifications
 
         await smile.close_connection()

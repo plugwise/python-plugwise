@@ -256,7 +256,7 @@
 				<last_consecutive_log_date>2020-01-11T15:02:14.904+01:00</last_consecutive_log_date>
 				<thermo_meter id='d01c40a6d9cf4b1581d2f252fede206c'/>
 				<period start_date="2020-01-11T15:02:14.904+01:00" end_date="2020-01-11T15:02:14.904+01:00">
-					<measurement log_date="2020-01-11T15:02:14.904+01:00">-51.20</measurement>
+					<measurement log_date="2020-01-11T15:02:14.904+01:00">51.20</measurement>
 				</period>
 			</point_log>
 			<point_log id='c30d51163d584aba9f003acc948b08f4'>

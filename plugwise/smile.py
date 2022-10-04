@@ -55,7 +55,7 @@ class SmileData(SmileHelper):
             if self.smile_name == "Smile Anna":
                 if device["dev_class"] == "heater_central" and self._cooling_present:
                     device["binary_sensors"]["cooling_state"] = False
-                    if self._elga_cooling_active or self._lortherm_cooling_active:
+                    if self._cooling_active:
                         device["binary_sensors"]["cooling_state"] = True
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
@@ -64,7 +64,7 @@ class SmileData(SmileHelper):
                 self.smile_name == "Adam"
                 and device["dev_class"] == "heater_central"
                 and self._on_off_device
-                and self._adam_cooling_enabled
+                and self._cooling_enabled
                 and device["binary_sensors"]["heating_state"]
             ):
                 device["binary_sensors"]["cooling_state"] = True
@@ -115,23 +115,13 @@ class SmileData(SmileHelper):
             # Determine if the Adam or Anna has cooling capability
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
-            locator_3 = "./module[vendor_name='Atlantic']"
-            locator_4 = "./module[vendor_model='Loria']"
             search = self._domain_objects
-            self._anna_cooling_present = adam_cooling_present = False
+            self._cooling_present = False
             if search.find(locator_1) is not None:
-                if self.smile_name == "Smile Anna":
-                    self._anna_cooling_present = True
-                else:
-                    adam_cooling_present = True
+                self._cooling_present = True
             # Alternative method for the Anna with Elga, or alternative method for the Anna with Loria/Thermastage
-            elif search.find(locator_2) is not None or (
-                search.find(locator_3) is not None
-                and search.find(locator_4) is not None
-            ):
-                self._anna_cooling_present = True
-
-            self._cooling_present = self._anna_cooling_present or adam_cooling_present
+            elif search.find(locator_2) is not None:
+                self._cooling_present = True
 
         # Gather all the device and initial data
         self._scan_thermostats()
@@ -208,13 +198,11 @@ class SmileData(SmileHelper):
         if ctrl_state := self._control_state(loc_id):
             device_data["control_state"] = ctrl_state
 
-        # Operation mode: auto, heat, heat_cool, cool
+        # Operation mode: auto, heat, cool
         device_data["mode"] = "auto"
         if sel_schedule == "None":
             device_data["mode"] = "heat"
-            if self._elga_cooling_enabled:
-                device_data["mode"] = "heat_cool"
-            if self._adam_cooling_enabled or self._lortherm_cooling_enabled:
+            if self._cooling_enabled:
                 device_data["mode"] = "cool"
 
         if "None" not in avail_schedules:
@@ -288,9 +276,14 @@ class SmileData(SmileHelper):
                 if outdoor_temperature is not None:
                     device_data["outdoor_temperature"] = outdoor_temperature
 
-                if self.smile_name == "Adam":
-                    # Show the allowed regulation modes
-                    device_data["regulation_modes"] = self._allowed_modes
+                # Show the allowed regulation modes
+                if self._reg_allowed_modes:
+                    device_data["regulation_modes"] = self._reg_allowed_modes
+
+        # Show the allowed dhw_modes
+        if details["dev_class"] == "heater_central":
+            if self._dhw_allowed_modes:
+                device_data["dhw_modes"] = self._dhw_allowed_modes
 
         if details["dev_class"] == "smartmeter":
             # Get P1 data from LOCATIONS
@@ -734,6 +727,12 @@ class Smile(SmileComm, SmileData):
         if model == "dhw_cm_switch":
             switch.device = "toggle"
             switch.func_type = "toggle_functionality"
+            switch.act_type = "domestic_hot_water_comfort_mode"
+
+        if model == "cooling_ena_switch":
+            switch.device = "toggle"
+            switch.func_type = "toggle_functionality"
+            switch.act_type = "cooling_enabled"
 
         if model == "lock":
             switch.func = "lock"
@@ -747,7 +746,15 @@ class Smile(SmileComm, SmileData):
             return await self._set_groupswitch_member_state(members, state, switch)
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        switch_id = self._appliances.find(locator).attrib["id"]
+        found: list[etree] = self._appliances.findall(locator)
+        for item in found:
+            if (sw_type := item.find("type")) is not None:
+                if sw_type.text == switch.act_type:
+                    switch_id = item.attrib["id"]
+            else:
+                switch_id = item.attrib["id"]
+                break
+
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self._stretch_v2:
             uri = f"{APPLIANCES};id={appl_id}/{switch.device}"
@@ -765,7 +772,7 @@ class Smile(SmileComm, SmileData):
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        if mode not in self._allowed_modes:
+        if mode not in self._reg_allowed_modes:
             raise PlugwiseError("Plugwise: invalid regulation mode.")
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
@@ -773,6 +780,16 @@ class Smile(SmileComm, SmileData):
         if "bleeding" in mode:
             duration = "<duration>300</duration>"
         data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
+    async def set_dhw_mode(self, mode: str) -> None:
+        """Set the domestic hot water heating regulation mode."""
+        if mode not in self._dhw_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid dhw mode.")
+
+        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
+        data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)
 

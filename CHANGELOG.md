@@ -1,5 +1,12 @@
 # Changelog
 
+# v0.24.0: Improve support for Anna-Loria combination
+- Replace mode heat_cool by cool (available modes are: auto, heat, cool)
+- Add cooling_enabled switch
+- Add dhw_mode/dhw_modes (for selector in HA)
+- Add dhw_temperature sensor
+- Show Plugwise notifications for non-legacy Smile P1
+
 # v0.23.0: Add device availability for non-legacy Smiles
 - Add back Adam vacation preset, fixing reopened issue #185
 

@@ -467,8 +467,10 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 # Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
+    "domestic_hot_water_mode": DATA("dhw_mode", NONE),
     "domestic_hot_water_comfort_mode": DATA("dhw_cm_switch", NONE),
     "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
+    "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
     "elga_status_code": UOM(NONE),
     "intended_boiler_temperature": UOM(
         TEMP_CELSIUS
@@ -485,6 +487,8 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # Used with the Elga heatpump - marcelveldt
     "compressor_state": UOM(NONE),
     "cooling_state": UOM(NONE),
+    # Available with the Loria and Elga (newer Anna firmware) heatpumps
+    "cooling_enabled": DATA("cooling_ena_switch", TEMP_CELSIUS),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
     "slave_boiler_state": UOM(NONE),
     "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
@@ -528,6 +532,7 @@ SENSORS: Final[tuple[str, ...]] = (
     "battery",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
+    "dhw_temperature",
     "temperature",
     "electricity_consumed",
     "electricity_consumed_interval",
@@ -566,6 +571,7 @@ SENSORS: Final[tuple[str, ...]] = (
 )
 
 SWITCHES: Final[tuple[str, ...]] = (
+    "cooling_ena_switch",
     "dhw_cm_switch",
     "lock",
     "relay",
@@ -627,6 +633,7 @@ class SmileSensors(TypedDict, total=False):
     battery: float
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
+    dhw_temperature: float
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
@@ -668,6 +675,7 @@ class SmileSensors(TypedDict, total=False):
 class SmileSwitches(TypedDict, total=False):
     """Smile Switches class."""
 
+    cooling_ena_switch: bool
     dhw_cm_switch: bool
     lock: bool
     relay: bool
@@ -695,6 +703,10 @@ class DeviceDataPoints(
     SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
 ):
     """The class covering all possible collected data points."""
+
+    # Loria
+    dhw_mode: str
+    dhw_modes: list[str]
 
     # Gateway
     regulation_mode: str
@@ -724,11 +736,9 @@ class DeviceDataPoints(
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
-    adam_cooling_enabled: bool
+    cooling_enabled: bool
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData
-    elga_cooling_enabled: bool
-    lortherm_cooling_enabled: bool
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData

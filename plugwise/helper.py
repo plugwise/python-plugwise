@@ -310,14 +310,12 @@ class SmileHelper:
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._adam_cooling_enabled = False
-        self._allowed_modes: list[str] = []
-        self._anna_cooling_present = False
         self._appliances: etree
         self._appl_data: dict[str, ApplianceData] = {}
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
+        self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._heater_id: str | None = None
         self._home_location: str
@@ -331,6 +329,7 @@ class SmileHelper:
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float
+        self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._sched_setpoints: list[float] | None = None
         self._smile_legacy = False
@@ -340,21 +339,19 @@ class SmileHelper:
         self._system: etree
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
-        # '_elga_cooling_enabled' refers to the state of the Elga heatpump
+        # '_cooling_enabled' can refer to the state of the Elga heatpump
         # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
         # means cooling mode is available, next to heating mode.
         # 'elga_status_code' = 8 means cooling is active, 9 means idle.
         #
-        # '_lortherm_cooling_enabled' refers to the state of the Loria or
+        # '_cooling_enabled' cam refer to the state of the Loria or
         # Thermastage heatpump connected to an Anna. For these,
-        # 'cooling_state' = on means set to cooling mode, instead of to
+        # 'cooling_enabled' = on means set to cooling mode, instead of to
         # heating mode.
-        # 'modulation_level' = 100 means cooling is active, 0.0 means idle.
+        # 'cooling_state' = on means cooling is active.
         ###################################################################
-        self._elga_cooling_active = False
-        self._elga_cooling_enabled = False
-        self._lortherm_cooling_active = False
-        self._lortherm_cooling_enabled = False
+        self._cooling_active = False
+        self._cooling_enabled = False
 
         self.gateway_id: str | None = None
         self.gw_data: GatewayData = {}
@@ -528,15 +525,15 @@ class SmileHelper:
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
-            # Adam: check for active heating/cooling operation-mode
-            mode_list: list[str] = []
+            # Adam: check for active heating/cooling operation-mode and collect modes
+            reg_mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
-                self._adam_cooling_enabled = search.find("mode").text == "cooling"
+                self._cooling_enabled = search.find("mode").text == "cooling"
                 if search.find("allowed_modes") is not None:
                     for mode in search.find("allowed_modes"):
-                        mode_list.append(mode.text)
-                    self._allowed_modes = mode_list
+                        reg_mode_list.append(mode.text)
+                    self._reg_allowed_modes = reg_mode_list
 
             return appl
 
@@ -584,6 +581,16 @@ class SmileHelper:
                     if self._cooling_present
                     else "Generic heater"
                 )
+
+            # Anna + Loria: collect dhw control operation modes
+            dhw_mode_list: list[str] = []
+            locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
+            if (search := appliance.find(locator)) is not None:
+                if search.find("allowed_modes") is not None:
+                    for mode in search.find("allowed_modes"):
+                        dhw_mode_list.append(mode.text)
+                    self._dhw_allowed_modes = dhw_mode_list
+
             return appl
 
         # Collect info from Stretches
@@ -863,7 +870,7 @@ class SmileHelper:
 
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
-                if measurement not in ["regulation_mode"]:
+                if measurement not in ["dhw_mode", "regulation_mode"]:
                     data[measurement] = format_measure(appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))  # type: ignore [literal-required]
 
                 # Anna: save cooling-related measurements for later use
@@ -937,7 +944,7 @@ class SmileHelper:
         if "c_heating_state" in data:
             # Anna + Elga and Adam + OnOff heater/cooler don't use intended_cental_heating_state
             # to show the generic heating state
-            if (self._anna_cooling_present and "heating_state" in data) or (
+            if (self._cooling_present and "heating_state" in data) or (
                 self.smile_name == "Adam" and self._on_off_device
             ):
                 if data.get("c_heating_state") and not data.get("heating_state"):
@@ -950,24 +957,25 @@ class SmileHelper:
             data.pop("heating_state", None)
 
         if d_id == self._heater_id:
-            if self._adam_cooling_enabled:
-                data["adam_cooling_enabled"] = self._adam_cooling_enabled
+            # Adam
+            if self._cooling_enabled:
+                data["cooling_enabled"] = self._cooling_enabled
             if self.smile_name == "Smile Anna":
-                # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
-                if not self._anna_cooling_present:
+                # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
+                if not self._cooling_present:
                     pass
 
                 # Elga:
                 if "elga_status_code" in data:
-                    self._elga_cooling_enabled = data["elga_status_code"] in [8, 9]
-                    data["elga_cooling_enabled"] = self._elga_cooling_enabled
-                    self._elga_cooling_active = data["elga_status_code"] == 8
+                    self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                    data["cooling_enabled"] = self._cooling_enabled
+                    self._cooling_active = data["elga_status_code"] == 8
                     data.pop("elga_status_code", None)
                 # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                elif "cooling_state" in data:
-                    self._lortherm_cooling_enabled = data["cooling_state"]
-                    data["lortherm_cooling_enabled"] = self._lortherm_cooling_enabled
-                    self._lortherm_cooling_active = data["modulation_level"] == 100
+                elif "cooling_ena_switch" in data:
+                    self._cooling_enabled = data["cooling_ena_switch"]
+                    data["cooling_enabled"] = self._cooling_enabled
+                    self._cooling_active = data["cooling_state"]
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
@@ -1243,7 +1251,7 @@ class SmileHelper:
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
             # Only process the active schedule in detail for Anna with cooling
-            if self._anna_cooling_present and loc_id != NONE:
+            if self._cooling_present and loc_id != NONE:
                 locator = f'./rule[@id="{rule_id}"]/directives'
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
@@ -1269,7 +1277,7 @@ class SmileHelper:
         if schedules:
             available.remove(NONE)
             last_used = self._last_used_schedule(location, schedules)
-            if self._anna_cooling_present and last_used in schedules:
+            if self._cooling_present and last_used in schedules:
                 schedule_temperatures = schedules_temps(schedules, last_used)
 
         return available, selected, schedule_temperatures, last_used
@@ -1367,7 +1375,9 @@ class SmileHelper:
 
         # Add plugwise notification binary_sensor to the relevant gateway
         if d_id == self.gateway_id:
-            if self._is_thermostat:
+            if self._is_thermostat or (
+                not self._smile_legacy and self.smile_type == "power"
+            ):
                 bs_dict["plugwise_notification"] = False
 
         device_out.update(data)
