@@ -1375,7 +1375,9 @@ class SmileHelper:
 
         # Add plugwise notification binary_sensor to the relevant gateway
         if d_id == self.gateway_id:
-            if self._is_thermostat:
+            if self._is_thermostat or (
+                not self._smile_legacy and self.smile_type == "power"
+            ):
                 bs_dict["plugwise_notification"] = False
 
         device_out.update(data)
