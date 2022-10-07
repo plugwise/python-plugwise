@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.24.1: Bugfix: fix root-cause of https://github.com/home-assistant/core/issues/79708
+
 # v0.24.0: Improve support for Anna-Loria combination
 - Replace mode heat_cool by cool (available modes are: auto, heat, cool)
 - Add cooling_enabled switch
