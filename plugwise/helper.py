@@ -962,20 +962,18 @@ class SmileHelper:
                 data["cooling_enabled"] = self._cooling_enabled
             if self.smile_name == "Smile Anna":
                 # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
-                if not self._cooling_present:
-                    pass
-
-                # Elga:
-                if "elga_status_code" in data:
-                    self._cooling_enabled = data["elga_status_code"] in [8, 9]
-                    data["cooling_enabled"] = self._cooling_enabled
-                    self._cooling_active = data["elga_status_code"] == 8
-                    data.pop("elga_status_code", None)
-                # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                elif "cooling_ena_switch" in data:
-                    self._cooling_enabled = data["cooling_ena_switch"]
-                    data["cooling_enabled"] = self._cooling_enabled
-                    self._cooling_active = data["cooling_state"]
+                if self._cooling_present:
+                    # Elga:
+                    if "elga_status_code" in data:
+                        self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                        data["cooling_enabled"] = self._cooling_enabled
+                        self._cooling_active = data["elga_status_code"] == 8
+                        data.pop("elga_status_code", None)
+                    # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+                    elif "cooling_ena_switch" in data:
+                        self._cooling_enabled = data["cooling_ena_switch"]
+                        data["cooling_enabled"] = self._cooling_enabled
+                        self._cooling_active = data["cooling_state"]
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
