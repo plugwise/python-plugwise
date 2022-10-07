@@ -892,20 +892,20 @@ class SmileHelper:
                 data["adam_cooling_enabled"] = self._adam_cooling_enabled
             if self.smile_name == "Smile":
                 # Use elga_status_code or cooling_state to set the relevant *_cooling_enabled to True
-                if not self._anna_cooling_present:
-                    pass
-
-                # Elga:
-                if "elga_status_code" in data:
-                    self._elga_cooling_enabled = data["elga_status_code"] in [8, 9]
-                    data["elga_cooling_enabled"] = self._elga_cooling_enabled
-                    self._elga_cooling_active = data["elga_status_code"] == 8
-                    data.pop("elga_status_code", None)
-                # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                elif "cooling_state" in data:
-                    self._lortherm_cooling_enabled = data["cooling_state"]
-                    data["lortherm_cooling_enabled"] = self._lortherm_cooling_enabled
-                    self._lortherm_cooling_active = data["modulation_level"] == 100
+                if self._anna_cooling_present:
+                    # Elga:
+                    if "elga_status_code" in data:
+                        self._elga_cooling_enabled = data["elga_status_code"] in [8, 9]
+                        data["elga_cooling_enabled"] = self._elga_cooling_enabled
+                        self._elga_cooling_active = data["elga_status_code"] == 8
+                        data.pop("elga_status_code", None)
+                    # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+                    elif "cooling_state" in data:
+                        self._lortherm_cooling_enabled = data["cooling_state"]
+                        data[
+                            "lortherm_cooling_enabled"
+                        ] = self._lortherm_cooling_enabled
+                        self._lortherm_cooling_active = data["modulation_level"] == 100
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
