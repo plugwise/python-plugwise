@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.21.4 Bugfix for https://github.com/home-assistant/core/issues/79708
+
 # v0.21.3: Revert all hvac_mode HEAT_COOL related
 -  The Anna-Elga usecase, providing a heating and a cooling setpoint, was reverted back to providing a single setpoint.
 
