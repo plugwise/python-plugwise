@@ -707,11 +707,29 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, loc_id: str, temperature: float) -> None:
+    async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        temp = str(temperature)
+        setpoint: float | None = None
+        if "setpoint" in items:
+            setpoint = items["setpoint"]
+        if self._cooling_present:
+            if "setpoint_low" in items:
+                setpoint = items["setpoint_low"]
+            if self._cooling_active:
+                if "setpoint_high" in items:
+                    setpoint = items["setpoint_high"]
+
+        if setpoint is None:
+            raise PlugwiseError(
+                "Plugwise: failed setting temperature: no valid input provided"
+            )  # pragma: no cover"
+
+        temperature = str(setpoint)
         uri = self._thermostat_uri(loc_id)
-        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
+        data = (
+            "<thermostat_functionality><setpoint>"
+            f"{temperature}</setpoint></thermostat_functionality>"
+        )
 
         await self._request(uri, method="put", data=data)
 
