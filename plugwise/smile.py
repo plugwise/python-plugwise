@@ -21,6 +21,8 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
+    MAX_SETPOINT,
+    MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
     RULES,
@@ -29,6 +31,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     ZONE_THERMOSTATS,
+    ActuatorData,
     ApplianceData,
     DeviceData,
     GatewayData,
@@ -51,12 +54,42 @@ class SmileData(SmileHelper):
     def update_for_cooling(self, devices: dict[str, DeviceData]) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         for _, device in devices.items():
-            # For Anna + cooling, modify cooling_state based on provided info by Plugwise
-            if self.smile_name == "Smile Anna":
-                if device["dev_class"] == "heater_central" and self._cooling_present:
-                    device["binary_sensors"]["cooling_state"] = False
-                    if self._cooling_active:
-                        device["binary_sensors"]["cooling_state"] = True
+            # For Anna or Adama + cooling, modify cooling_state based on provided info by Plugwise
+            if device["dev_class"] == "heater_central" and self._cooling_present:
+                device["binary_sensors"]["cooling_state"] = False
+                if self._cooling_active:
+                    device["binary_sensors"]["cooling_state"] = True
+
+            # Add setpoint_low and setpoint_high when cooling is enabled
+            if device["dev_class"] not in ZONE_THERMOSTATS:
+                continue
+
+            if self._cooling_present:
+                # Replace setpoint with setpoint_high/_low
+                thermostat = device["thermostat"]
+                sensors = device["sensors"]
+                max_setpoint = MAX_SETPOINT
+                min_setpoint = MIN_SETPOINT
+                if self._sched_setpoints is not None:
+                    max_setpoint = self._sched_setpoints[1]
+                    min_setpoint = self._sched_setpoints[0]
+
+                temp_dict: ActuatorData = {
+                    "setpoint_low": thermostat["setpoint"],
+                    "setpoint_high": max_setpoint,
+                }
+                if self._elga_cooling_active:
+                    temp_dict = {
+                        "setpoint_low": min_setpoint,
+                        "setpoint_high": thermostat["setpoint"],
+                    }
+                if "setpoint" in sensors:
+                    sensors.pop("setpoint")
+                sensors["setpoint_low"] = temp_dict["setpoint_low"]
+                sensors["setpoint_high"] = temp_dict["setpoint_high"]
+                thermostat.pop("setpoint")
+                temp_dict.update(thermostat)
+                device["thermostat"] = temp_dict
 
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise

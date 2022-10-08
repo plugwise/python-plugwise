@@ -397,6 +397,8 @@ LIMITS: Final[tuple[str, ...]] = (
     "upper_bound",
     "resolution",
 )
+MAX_SETPOINT: Final[float] = 40.0
+MIN_SETPOINT: Final[float] = 0.0
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
 SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
