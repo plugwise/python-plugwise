@@ -2780,7 +2780,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Werkdag schema",
                 "control_state": "off",
-                "mode": "cool",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 18.8,
                     "battery": 55,
@@ -3428,7 +3428,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["standaard"],
                 "selected_schedule": "None",
                 "last_used": "standaard",
-                "mode": "cool",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 22.3,
                     "setpoint": 22.0,
@@ -3682,7 +3682,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Thermostat schedule"],
                 "selected_schedule": "None",
                 "last_used": "Thermostat schedule",
-                "mode": "heat",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.9,
                     "illuminance": 0.5,
@@ -3698,6 +3698,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_hostname == "smile000000"
 
         await self.device_test(smile, testdata)
+        assert smile._cooling_present
         assert self.device_items == 57
 
         await smile.close_connection()
