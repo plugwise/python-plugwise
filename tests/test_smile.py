@@ -849,20 +849,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, testdata)
-        result = await self.tinker_thermostat(
-            smile,
-            "be81e3f8275b4129852c4d8d550ae2eb",
-            good_schedules=[
-                "Thermostat schedule",
-            ],
-            unhappy=True,
-        )
-        assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
     @pytest.mark.asyncio
     async def test_connect_smile_p1_v2(self):
         """Test a legacy P1 device."""
@@ -1196,19 +1182,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, testdata)
-        result = await self.tinker_thermostat(
-            smile,
-            "eb5309212bf5407bb143e5bfa3b18aee",
-            good_schedules=["Standaard", "Thuiswerken"],
-            schedule_on=False,
-            unhappy=True,
-        )
-        assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
     @pytest.mark.asyncio
     async def test_connect_anna_v4_no_tag(self):
         """Test an Anna firmware 4 setup - missing tag (issue)."""
@@ -1238,19 +1211,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "eb5309212bf5407bb143e5bfa3b18aee",
             schedule_on=False,
             good_schedules=["Standaard", "Thuiswerken"],
-        )
-        assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, testdata)
-        result = await self.tinker_thermostat(
-            smile,
-            "eb5309212bf5407bb143e5bfa3b18aee",
-            schedule_on=False,
-            good_schedules=["Standaard", "Thuiswerken"],
-            unhappy=True,
         )
         assert result
         await smile.close_connection()
@@ -1328,18 +1288,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, testdata)
-        result = await self.tinker_thermostat(
-            smile,
-            "c34c6864216446528e95d88985e714cc",
-            good_schedules=["Test", "Normal"],
-            unhappy=True,
-        )
-        assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
     @pytest.mark.asyncio
     async def test_connect_anna_without_boiler_fw4(self):
         """Test an Anna with firmware 4.0, without a boiler."""
@@ -1406,18 +1354,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         result = await self.tinker_thermostat(
             smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Test", "Normal"]
-        )
-        assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, testdata)
-        result = await self.tinker_thermostat(
-            smile,
-            "c34c6864216446528e95d88985e714cc",
-            good_schedules=["Test", "Normal"],
-            unhappy=True,
         )
         assert result
         await smile.close_connection()
@@ -2780,27 +2716,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile, "675416a629f343c495449970e2ca37b5"
         )
         assert not switch_change
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, testdata)
-        result = await self.tinker_thermostat(
-            smile,
-            "c50f167537524366a5af7aa3942feb1e",
-            good_schedules=["GF7  Woonkamer"],
-            unhappy=True,
-        )
-        assert result
-
-        result = await self.tinker_thermostat(
-            smile,
-            "82fa13f017d240daa0d0ea1775420f24",
-            good_schedules=["CV Jessie"],
-            unhappy=True,
-        )
-        assert result
-
         await smile.close_connection()
         await self.disconnect(server, client)
 
