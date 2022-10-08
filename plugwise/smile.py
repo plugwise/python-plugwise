@@ -78,7 +78,7 @@ class SmileData(SmileHelper):
                     "setpoint_low": thermostat["setpoint"],
                     "setpoint_high": max_setpoint,
                 }
-                if self._elga_cooling_active:
+                if self._cooling_active:
                     temp_dict = {
                         "setpoint_low": min_setpoint,
                         "setpoint_high": thermostat["setpoint"],
