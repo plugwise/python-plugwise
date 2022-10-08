@@ -2780,7 +2780,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "None",
                 "last_used": "Werkdag schema",
                 "control_state": "off",
-                "mode": "cool",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 18.8,
                     "battery": 55,
@@ -3428,7 +3428,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["standaard"],
                 "selected_schedule": "None",
                 "last_used": "standaard",
-                "mode": "cool",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 22.3,
                     "setpoint": 22.0,
