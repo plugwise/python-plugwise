@@ -4142,7 +4142,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 19.5,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 40.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -4159,7 +4160,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
-                    "setpoint": 19.5,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 40.0,
                 },
             }
         }
@@ -4192,7 +4194,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 23.0,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -4206,10 +4209,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
-                    "setpoint": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
@@ -4271,7 +4275,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 59
         assert self.cooling_present
         assert not self.notifications
 
