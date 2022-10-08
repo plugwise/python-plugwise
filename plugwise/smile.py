@@ -97,7 +97,7 @@ class SmileData(SmileHelper):
                 self.smile_name == "Adam"
                 and device["dev_class"] == "heater_central"
                 and self._on_off_device
-                and self._cooling_enabled
+                and self._cooling_active
                 and device["binary_sensors"]["heating_state"]
             ):
                 device["binary_sensors"]["cooling_state"] = True

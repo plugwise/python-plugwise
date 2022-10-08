@@ -949,6 +949,8 @@ class SmileHelper:
             ):
                 if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
+                    if self._cooling_present:
+                        self._cooling_active = True
 
             data.pop("c_heating_state")
 
