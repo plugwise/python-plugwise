@@ -77,7 +77,6 @@ class SmileData(SmileHelper):
                 continue
 
             if self._cooling_present:
-                LOGGER.debug("HOI 1 Cooling present")
                 # Replace setpoint with setpoint_high/_low
                 thermostat = device["thermostat"]
                 sensors = device["sensors"]
