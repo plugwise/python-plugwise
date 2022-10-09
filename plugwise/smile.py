@@ -60,11 +60,24 @@ class SmileData(SmileHelper):
                 if self._cooling_active:
                     device["binary_sensors"]["cooling_state"] = True
 
+            # For Adam + on/off cooling, modify heating_state and cooling_state
+            # based on provided info by Plugwise
+            if (
+                self.smile_name == "Adam"
+                and device["dev_class"] == "heater_central"
+                and self._on_off_device
+                and self._cooling_active
+                and device["binary_sensors"]["heating_state"]
+            ):
+                device["binary_sensors"]["cooling_state"] = True
+                device["binary_sensors"]["heating_state"] = False
+
             # Add setpoint_low and setpoint_high when cooling is enabled
             if device["dev_class"] not in ZONE_THERMOSTATS:
                 continue
 
             if self._cooling_present:
+                LOGGER.debug("HOI 1 Cooling present")
                 # Replace setpoint with setpoint_high/_low
                 thermostat = device["thermostat"]
                 sensors = device["sensors"]
@@ -90,18 +103,6 @@ class SmileData(SmileHelper):
                 thermostat.pop("setpoint")
                 temp_dict.update(thermostat)
                 device["thermostat"] = temp_dict
-
-            # For Adam + on/off cooling, modify heating_state and cooling_state
-            # based on provided info by Plugwise
-            if (
-                self.smile_name == "Adam"
-                and device["dev_class"] == "heater_central"
-                and self._on_off_device
-                and self._cooling_active
-                and device["binary_sensors"]["heating_state"]
-            ):
-                device["binary_sensors"]["cooling_state"] = True
-                device["binary_sensors"]["heating_state"] = False
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
