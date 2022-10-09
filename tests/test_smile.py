@@ -2743,7 +2743,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 65.0,
                     "resolution": 0.01,
                 },
-                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3258,7 +3257,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 419
+        assert self.device_items == 418
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3725,7 +3724,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": False,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3804,7 +3802,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.device_items == 61
+        assert self.device_items == 60
         assert self.cooling_present
         assert not self.notifications
 
@@ -3856,7 +3854,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3921,7 +3918,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 60
+        assert self.device_items == 59
         assert self.cooling_present
         assert not self.notifications
 
@@ -3953,7 +3950,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3980,7 +3976,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 62
+        assert self.device_items == 61
         assert smile._cooling_present
         assert smile._cooling_enabled
         assert smile._cooling_active
@@ -3994,7 +3990,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "0ca13e8176204ca7bf6f09de59f81c83": {
-                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -4015,7 +4010,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 60
+        assert self.device_items == 59
         assert smile._cooling_present
         assert smile._cooling_enabled
 
@@ -4072,7 +4067,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": False,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -4119,7 +4113,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 60
+        assert self.device_items == 59
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self.notifications
@@ -4228,7 +4222,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -4275,7 +4268,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 60
+        assert self.device_items == 59
         assert self.cooling_present
         assert not self.notifications
 
@@ -4337,7 +4330,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 60.0,
                     "resolution": 0.01,
                 },
-                "cooling_enabled": False,
                 "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
                 "available": True,
                 "binary_sensors": {
@@ -4379,7 +4371,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 63
+        assert self.device_items == 62
         assert smile._cooling_present
         assert not smile._cooling_enabled
 
@@ -4441,7 +4433,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 45.0,
                     "resolution": 0.01,
                 },
-                "cooling_enabled": True,
                 "domestic_hot_water_setpoint": {
                     "setpoint": 53.0,
                     "lower_bound": 35.0,
@@ -4489,7 +4480,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 63
+        assert self.device_items == 62
         assert smile._cooling_present
         assert smile._cooling_enabled
 
