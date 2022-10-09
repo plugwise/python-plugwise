@@ -1,6 +1,8 @@
 # Changelog
 
-# v0.24.2: Better Core compatibility (change mode cool to heat_cool)
+# v0.25.0: Improve compatibility with HA Core climate platform
+- Change mode cool to heat_cool
+- Add setpoint_high/setpoint_low to output
 
 # v0.24.1: Bugfix: fix root-cause of https://github.com/home-assistant/core/issues/79708
 
