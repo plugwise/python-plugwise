@@ -484,7 +484,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
-        test_temp = 22.9
+        test_temp = {"setpoint": 22.9}
+        if smile._cooling_present:
+            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
@@ -2741,7 +2743,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 65.0,
                     "resolution": 0.01,
                 },
-                "cooling_enabled": True,
+                "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -2750,6 +2752,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 24.5,
+                    "dhw_temperature": 63.5,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 0.0,
                     "return_temperature": 24.9,
@@ -2768,7 +2771,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 18.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 40.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -2784,7 +2788,467 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 18.8,
                     "battery": 55,
-                    "setpoint": 18.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "a03b6e8e76dd4646af1a77c31dd9370c": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
+                "model": "Plug",
+                "name": "Smart Plug RB",
+                "zigbee_mac_address": "ABCD012345670A08",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 3.13,
+                    "electricity_consumed_interval": 0.77,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "bbcffa48019f4b09b8368bbaf9559e68": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "8cf650a4c10c44819e426bed406aec34",
+                "model": "Plug",
+                "name": "Smart Plug BK1",
+                "zigbee_mac_address": "ABCD012345670A16",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "f04c985c11ad4848b8fcd710343f9dcf": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "5cc21042f87f4b4c94ccb5537c47a53f",
+                "model": "Lisa",
+                "name": "Thermostaat  BK2",
+                "zigbee_mac_address": "ABCD012345670A11",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "Werkdag schema",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "auto",
+                "sensors": {
+                    "temperature": 21.9,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "2e0fc4db2a6d4cbeb7cf786143543961": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
+                "model": "Plug",
+                "name": "Smart Plug KK",
+                "zigbee_mac_address": "ABCD012345670A06",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 2.13,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": True},
+            },
+            "3f0afa71f16c45ab964050002560e43c": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "fa5fa6b34f6b40a0972988b20e888ed4",
+                "model": "Plug",
+                "name": "Smart Plug WK",
+                "zigbee_mac_address": "ABCD012345670A18",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "ca79d23ae0094120b877558734cff85c": {
+                "dev_class": "thermostat",
+                "location": "fa5fa6b34f6b40a0972988b20e888ed4",
+                "model": "ThermoTouch",
+                "name": "Thermostaat WK",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 21.5,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 1.0,
+                    "upper_bound": 35.0,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "Werkdag schema",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "auto",
+                "sensors": {
+                    "temperature": 22.5,
+                    "setpoint_low": 21.5,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "838c2f48195242709b87217cf8d8a71f": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "b52908550469425b812c87f766fe5303",
+                "model": "Plug",
+                "name": "Smart Plug BK",
+                "zigbee_mac_address": "ABCD012345670A12",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "c4ed311d54e341f58b4cdd201d1fde7e": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
+                "model": "Lisa",
+                "name": "Thermostaat RB",
+                "zigbee_mac_address": "ABCD012345670A04",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 17.0,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "None",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "heat_cool",
+                "sensors": {
+                    "temperature": 20.7,
+                    "setpoint_low": 17.0,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "eac5db95d97241f6b17790897847ccf5": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "8cf650a4c10c44819e426bed406aec34",
+                "model": "Lisa",
+                "name": "Thermostaat BK1",
+                "zigbee_mac_address": "ABCD012345670A09",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "Werkdag schema",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "auto",
+                "sensors": {
+                    "temperature": 21.5,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "beb32da072274e698146db8b022f3c36": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "9a27714b970547ee9a6bdadc2b815ad5",
+                "model": "Lisa",
+                "name": "Thermostaat SQ",
+                "zigbee_mac_address": "ABCD012345670A07",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 18.5,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "None",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "heat_cool",
+                "sensors": {
+                    "temperature": 21.4,
+                    "setpoint_low": 18.5,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "96714ad90fc948bcbcb5021c4b9f5ae9": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "e39529c79ab54fda9bed26cfc0447546",
+                "model": "Plug",
+                "name": "Smart Plug JM",
+                "zigbee_mac_address": "ABCD012345670A03",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "3b4d2574e2c9443a832b48d19a1c4f06": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "04b15f6e884448288f811d29fb7b1b30",
+                "model": "Plug",
+                "name": "Smart Plug SJ",
+                "zigbee_mac_address": "ABCD012345670A14",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "7d97fc3117784cfdafe347bcedcbbbcb": {
+                "dev_class": "gateway",
+                "firmware": "3.2.8",
+                "hardware": "AME Smile 2.0 board",
+                "location": "eedadcb297564f1483faa509179aebed",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Adam",
+                "zigbee_mac_address": "ABCD012345670101",
+                "vendor": "Plugwise",
+                "regulation_mode": "cooling",
+                "regulation_modes": [
+                    "heating",
+                    "off",
+                    "bleeding_cold",
+                    "bleeding_hot",
+                    "cooling",
+                ],
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 13.4},
+            },
+            "5ead63c65e5f44e7870ba2bd680ceb9e": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "9a27714b970547ee9a6bdadc2b815ad5",
+                "model": "Plug",
+                "name": "Smart Plug SQ",
+                "zigbee_mac_address": "ABCD012345670A15",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "1a27dd03b5454c4e8b9e75c8d1afc7af": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "20e735858f8146cead98b873177a4f99",
+                "model": "Plug",
+                "name": "Smart Plug DB",
+                "zigbee_mac_address": "ABCD012345670A05",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "8a482fa9dddb43acb765d019d8c9838b": {
+                "dev_class": "valve_actuator",
+                "firmware": "2020-05-13T02:00:00+02:00",
+                "location": "5cc21042f87f4b4c94ccb5537c47a53f",
+                "model": "Plug",
+                "name": "Smart Plug BK2",
+                "zigbee_mac_address": "ABCD012345670A10",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                    "electricity_produced_interval": 0.0,
+                },
+                "switches": {"relay": False},
+            },
+            "ea8372c0e3ad4622ad45a041d02425f5": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
+                "model": "Lisa",
+                "name": "Thermostaat KK",
+                "zigbee_mac_address": "ABCD012345670A02",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 21.5,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "Werkdag schema",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "auto",
+                "sensors": {
+                    "temperature": 22.5,
+                    "battery": 53,
+                    "setpoint_low": 21.5,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "d3a276aeb3114a509bab1e4bf8c40348": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "04b15f6e884448288f811d29fb7b1b30",
+                "model": "Lisa",
+                "name": "Thermostaat SJ",
+                "zigbee_mac_address": "ABCD012345670A13",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "None",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "heat_cool",
+                "sensors": {
+                    "temperature": 22.6,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "47e2c550a33846b680725aa3fb229473": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "20e735858f8146cead98b873177a4f99",
+                "model": "Lisa",
+                "name": "Thermostaat DB",
+                "zigbee_mac_address": "ABCD012345670A20",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "None",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "heat_cool",
+                "sensors": {
+                    "temperature": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 40.0,
+                },
+            },
+            "7fda9f84f01342f8afe9ebbbbff30c0f": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-10T02:00:00+02:00",
+                "hardware": "255",
+                "location": "e39529c79ab54fda9bed26cfc0447546",
+                "model": "Lisa",
+                "name": "Thermostaat JM",
+                "zigbee_mac_address": "ABCD012345670A01",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 40.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+                "active_preset": "away",
+                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "selected_schedule": "None",
+                "last_used": "Werkdag schema",
+                "control_state": "off",
+                "mode": "heat_cool",
+                "sensors": {
+                    "temperature": 20.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 40.0,
                 },
             },
         }
@@ -2793,7 +3257,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 389
+        assert self.device_items == 428
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3260,7 +3724,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": False,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3301,7 +3764,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 20.5,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 24.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3315,10 +3779,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
-                    "setpoint": 20.5,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 24.0,
                 },
             },
         }
@@ -3337,7 +3802,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.device_items == 58
+        assert self.device_items == 61
         assert self.cooling_present
         assert not self.notifications
 
@@ -3389,7 +3854,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3418,7 +3882,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 22.0,
+                    "setpoint_low": 0.0,
+                    "setpoint_high": 22.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3431,10 +3896,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 22.3,
-                    "setpoint": 22.0,
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 6.0,
+                    "setpoint_low": 0.0,
+                    "setpoint_high": 22.0,
                 },
             },
         }
@@ -3452,7 +3918,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 60
         assert self.cooling_present
         assert not self.notifications
 
@@ -3484,7 +3950,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
-                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3511,7 +3976,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 59
+        assert self.device_items == 62
         assert smile._cooling_present
         assert smile._cooling_enabled
         assert smile._cooling_active
@@ -3525,7 +3990,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             # Heater central
             "0ca13e8176204ca7bf6f09de59f81c83": {
-                "cooling_enabled": True,
                 "binary_sensors": {
                     "cooling_state": True,
                     "dhw_state": False,
@@ -3546,7 +4010,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 60
         assert smile._cooling_present
         assert smile._cooling_enabled
 
@@ -3569,7 +4033,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 19.5,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 23.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3583,10 +4048,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint": 19.5,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 23.0,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
@@ -3601,7 +4067,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": False,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3648,7 +4113,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 60
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self.notifications
@@ -3671,7 +4136,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 19.5,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 40.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3688,7 +4154,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
-                    "setpoint": 19.5,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 40.0,
                 },
             }
         }
@@ -3699,7 +4166,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile._cooling_present
-        assert self.device_items == 57
+        assert self.device_items == 60
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3721,7 +4188,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 23.0,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3735,10 +4203,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 24.9,
-                    "setpoint": 23.0,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint_low": 19.0,
+                    "setpoint_high": 23.0,
                 },
             },
             "573c152e7d4f4720878222bd75638f5b": {
@@ -3753,7 +4222,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "cooling_enabled": True,
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3800,7 +4268,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 60
         assert self.cooling_present
         assert not self.notifications
 
@@ -3823,7 +4291,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 20.5,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 25.5,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3835,7 +4304,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Winter",
                 "last_used": "Winter",
                 "mode": "auto",
-                "sensors": {"temperature": 22.1, "setpoint": 20.5, "illuminance": 45.0},
+                "sensors": {
+                    "temperature": 22.1,
+                    "illuminance": 45.0,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 25.5,
+                },
             },
             "bfb5ee0a88e14e5f97bfa725a760cc49": {
                 "dev_class": "heater_central",
@@ -3856,7 +4330,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 60.0,
                     "resolution": 0.01,
                 },
-                "cooling_enabled": False,
                 "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
                 "available": True,
                 "binary_sensors": {
@@ -3898,7 +4371,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 60
+        assert self.device_items == 63
         assert smile._cooling_present
         assert not smile._cooling_enabled
 
@@ -3927,7 +4400,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 23.5,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 23.5,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3939,7 +4413,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "selected_schedule": "Winter",
                 "last_used": "Winter",
                 "mode": "auto",
-                "sensors": {"temperature": 24.1, "setpoint": 23.5, "illuminance": 45.0},
+                "sensors": {
+                    "temperature": 24.1,
+                    "illuminance": 45.0,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 23.5,
+                },
             },
             "bfb5ee0a88e14e5f97bfa725a760cc49": {
                 "dev_class": "heater_central",
@@ -3954,7 +4433,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 45.0,
                     "resolution": 0.01,
                 },
-                "cooling_enabled": True,
                 "domestic_hot_water_setpoint": {
                     "setpoint": 53.0,
                     "lower_bound": 35.0,
@@ -4002,7 +4480,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 60
+        assert self.device_items == 63
         assert smile._cooling_present
         assert smile._cooling_enabled
 
