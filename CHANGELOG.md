@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.25.1: Remove sensor-keys from output when cooling is present
+
 # v0.25.0: Improve compatibility with HA Core climate platform
 - Change mode cool to heat_cool
 - Add setpoint_high/setpoint_low to output
