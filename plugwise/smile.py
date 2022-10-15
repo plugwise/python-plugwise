@@ -70,8 +70,8 @@ class SmileData(SmileHelper):
             if device["dev_class"] not in ZONE_THERMOSTATS:
                 continue
 
+            # For heating + cooling, replace setpoint with setpoint_high/_low
             if self._cooling_present:
-                # Replace setpoint with setpoint_high/_low
                 thermostat = device["thermostat"]
                 sensors = device["sensors"]
                 max_setpoint = MAX_SETPOINT
