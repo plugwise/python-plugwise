@@ -146,7 +146,7 @@ class SmileData(SmileHelper):
             self._cooling_present = False
             if search.find(locator_1) is not None:
                 self._cooling_present = True
-            # Alternative method for the Anna with Elga, or alternative method for the Anna with Loria/Thermastage
+            # Alternative method for the Anna with Elga
             elif search.find(locator_2) is not None:
                 self._cooling_present = True
 
@@ -182,11 +182,10 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
-        if self.smile_name == "Adam":
-            # Indicate heating_state based on valves being open in case of city-provided heating
-            if details.get("dev_class") == "heater_central":
-                if self._on_off_device and self._heating_valves() is not None:
-                    device_data["heating_state"] = self._heating_valves() != 0
+        # Indicate heating_state based on valves being open in case of city-provided heating
+        if self.smile_name == "Adam" and details.get("dev_class") == "heater_central":
+            if self._on_off_device and self._heating_valves() is not None:
+                device_data["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
