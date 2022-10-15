@@ -391,6 +391,12 @@ DEFAULT_PORT: Final = 80
 NONE: Final = "None"
 FAKE_APPL: Final = "aaaa0000aaaa0000aaaa0000aaaa00aa"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
+LEGACY_SMILES: Final[tuple[str, ...]] = (
+    "smile_thermo_v1",
+    "smile_v2",
+    "stretch_v2",
+    "stretch_v3",
+)
 LIMITS: Final[tuple[str, ...]] = (
     "setpoint",
     "lower_bound",

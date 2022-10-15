@@ -19,6 +19,7 @@ from .constants import (
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
+    LEGACY_SMILES,
     LOCATIONS,
     LOGGER,
     MAX_SETPOINT,
@@ -493,7 +494,7 @@ class Smile(SmileComm, SmileData):
         self.smile_type = SMILES[target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
 
-        if target_smile in ("smile_thermo_v1", "smile_v2", "stretch_v3", "stretch_v2"):
+        if target_smile in LEGACY_SMILES:
             self._smile_legacy = True
 
         if self.smile_type == "stretch":
