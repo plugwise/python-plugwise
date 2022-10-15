@@ -183,9 +183,13 @@ class SmileData(SmileHelper):
         Determine Adam device data.
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
-        if self.smile_name == "Adam" and details.get("dev_class") == "heater_central":
-            if self._on_off_device and self._heating_valves() is not None:
-                device_data["heating_state"] = self._heating_valves() != 0
+        if (
+            self.smile_name == "Adam"
+            and details.get("dev_class") == "heater_central"
+            and self._on_off_device
+            and self._heating_valves() is not None
+        ):
+            device_data["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
