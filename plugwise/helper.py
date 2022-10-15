@@ -648,19 +648,17 @@ class SmileHelper:
             if value is not None:
                 self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
 
-        # For legacy P1 collect the connected SmartMeter info
-        if self.smile_type == "power":
-            appl = Munch()
-            self._p1_smartmeter_info_finder(appl)
-
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
 
         if self._smile_legacy:
             self._create_legacy_gateway()
-            # Legacy P1 has no more devices
+            # For legacy P1 collect the connected SmartMeter info
             if self.smile_type == "power":
+                appl = Munch()
+                self._p1_smartmeter_info_finder(appl)
+                # Legacy P1 has no more devices
                 return
 
         for appliance in self._appliances.findall("./appliance"):
@@ -729,7 +727,7 @@ class SmileHelper:
             for item in self._appl_data:
                 if item != self.gateway_id:
                     self.gateway_id = item
-                    # Leave for-loop to avoid a 2nd switch
+                    # Leave for-loop to avoid a 2nd device_id switch
                     break
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
