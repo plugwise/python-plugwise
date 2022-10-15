@@ -949,6 +949,7 @@ class SmileHelper:
             ):
                 if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
+                    # For Adam + OnOff cooling heating_state = True means cooling is active
                     if self._cooling_present:
                         self._cooling_active = True
 
