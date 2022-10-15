@@ -207,7 +207,6 @@ class SmileData(SmileHelper):
         if presets := self._presets(loc_id):
             presets_list = list(presets)
             device_data["preset_modes"] = presets_list
-
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
@@ -296,31 +295,30 @@ class SmileData(SmileHelper):
             device_data.pop("thermostat")
 
         # Generic
-        if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
-            if self.smile_type == "thermostat":
-                # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-                # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-                outdoor_temperature = self._object_value(
-                    self._home_location, "outdoor_temperature"
-                )
-                if outdoor_temperature is not None:
-                    device_data["outdoor_temperature"] = outdoor_temperature
+        if self.smile_type == "thermostat" and details["dev_class"] == "gateway":
+            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                device_data["outdoor_temperature"] = outdoor_temperature
 
-                # Show the allowed regulation modes
-                if self._reg_allowed_modes:
-                    device_data["regulation_modes"] = self._reg_allowed_modes
+            # Show the allowed regulation modes
+            if self._reg_allowed_modes:
+                device_data["regulation_modes"] = self._reg_allowed_modes
 
         # Show the allowed dhw_modes
-        if details["dev_class"] == "heater_central":
-            if self._dhw_allowed_modes:
-                device_data["dhw_modes"] = self._dhw_allowed_modes
+        if details["dev_class"] == "heater_central" and self._dhw_allowed_modes:
+            device_data["dhw_modes"] = self._dhw_allowed_modes
 
-        if details["dev_class"] == "smartmeter":
-            # Get P1 data from LOCATIONS
-            if (
-                power_data := self._power_data_from_location(details["location"])
-            ) is not None:
-                device_data.update(power_data)
+        # Get P1 data from LOCATIONS
+        if (
+            details["dev_class"] == "smartmeter"
+            and (power_data := self._power_data_from_location(details["location"]))
+            is not None
+        ):
+            device_data.update(power_data)
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
