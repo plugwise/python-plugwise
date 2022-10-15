@@ -383,14 +383,13 @@ class Smile(SmileComm, SmileData):
             models.append(model.text)
 
         dsmrmain = result.find("./module/protocols/dsmrmain")
-        if "Plugwise" not in names:
-            if dsmrmain is None:  # pragma: no cover
-                LOGGER.error(
-                    "Connected but expected text not returned, we got %s. Please create \
-                    an issue on http://github.com/plugwise/python-plugwise",
-                    result,
-                )
-                raise ResponseError
+        if "Plugwise" not in names and dsmrmain is None:  # pragma: no cover
+            LOGGER.error(
+                "Connected but expected text not returned, we got %s. Please create \
+                an issue on http://github.com/plugwise/python-plugwise",
+                result,
+            )
+            raise ResponseError
 
         # Check if Anna is connected to an Adam
         if "159.2" in models:
