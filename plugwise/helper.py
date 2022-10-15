@@ -631,37 +631,37 @@ class SmileHelper:
 
         Use the home_location or FAKE_APPL as device id.
         """
-        if self._smile_legacy:
-            self.gateway_id = self._home_location
-            if self.smile_type == "power":
-                self.gateway_id = FAKE_APPL
+        self.gateway_id = self._home_location
+        if self.smile_type == "power":
+            self.gateway_id = FAKE_APPL
 
-            self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
-            for key, value in {
-                "firmware": self.smile_fw_version,
-                "location": self._home_location,
-                "mac_address": self.smile_mac_address,
-                "model": self.smile_model,
-                "name": self.smile_name,
-                "zigbee_mac_address": self.smile_zigbee_mac_address,
-                "vendor": "Plugwise",
-            }.items():
-                if value is not None:
-                    self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
+        self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
+        for key, value in {
+            "firmware": self.smile_fw_version,
+            "location": self._home_location,
+            "mac_address": self.smile_mac_address,
+            "model": self.smile_model,
+            "name": self.smile_name,
+            "zigbee_mac_address": self.smile_zigbee_mac_address,
+            "vendor": "Plugwise",
+        }.items():
+            if value is not None:
+                self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
 
-            if self.smile_type == "power":
-                # For legacy P1 collect the connected SmartMeter info
-                appl = Munch()
-                self._p1_smartmeter_info_finder(appl)
+        # For legacy P1 collect the connected SmartMeter info
+        if self.smile_type == "power":
+            appl = Munch()
+            self._p1_smartmeter_info_finder(appl)
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
 
-        self._create_legacy_gateway()
-        # Legacy P1 has no more devices
-        if self._smile_legacy and self.smile_type == "power":
-            return
+        if self._smile_legacy:
+            self._create_legacy_gateway()
+            # Legacy P1 has no more devices
+            if self.smile_type == "power":
+                return
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
