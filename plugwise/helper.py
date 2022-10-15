@@ -596,7 +596,7 @@ class SmileHelper:
 
         return appl
 
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> Munch:
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self._loc_data.keys()))
         appl.dev_id = self.gateway_id
@@ -626,8 +626,6 @@ class SmileHelper:
             if value is not None or key == "location":
                 self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-        return appl
-
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
 
@@ -654,7 +652,7 @@ class SmileHelper:
             if self.smile_type == "power":
                 # For legacy P1 collect the connected SmartMeter info
                 appl = Munch()
-                appl = self._p1_smartmeter_info_finder(appl)
+                self._p1_smartmeter_info_finder(appl)
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -726,7 +724,7 @@ class SmileHelper:
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
-            appl = self._p1_smartmeter_info_finder(appl)
+            self._p1_smartmeter_info_finder(appl)
             # P1: for gateway and smartmeter switch device_id - part 2
             for item in self._appl_data:
                 if item != self.gateway_id:
