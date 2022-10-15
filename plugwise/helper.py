@@ -744,7 +744,7 @@ class SmileHelper:
 
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
-            for _, appliance_details in self._appl_data.items():
+            for appliance_details in list(self._appl_data.values()):
                 if appliance_details["location"] == location_id:
                     location_details.update(
                         {"master": None, "master_prio": 0, "slaves": set()}

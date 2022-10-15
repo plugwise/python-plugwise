@@ -53,7 +53,7 @@ class SmileData(SmileHelper):
 
     def update_for_cooling(self, devices: dict[str, DeviceData]) -> None:
         """Helper-function for adding/updating various cooling-related values."""
-        for _, device in devices.items():
+        for device in list(devices.values()):
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
             if (
@@ -252,16 +252,16 @@ class SmileData(SmileHelper):
         # OpenTherm device
         if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
             device_data["available"] = True
-            for _, data in self._notifications.items():
-                for _, msg in data.items():
+            for data in list(self._notifications.values()):
+                for msg in list(data.values()):
                     if "no OpenTherm communication" in msg:
                         device_data["available"] = False
 
         # Smartmeter
         if details["dev_class"] == "smartmeter":
             device_data["available"] = True
-            for _, data in self._notifications.items():
-                for _, msg in data.items():
+            for data in list(self._notifications.values()):
+                for msg in list(data.values()):
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
 
