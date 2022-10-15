@@ -382,12 +382,12 @@ class SmileHelper:
         Correct location info in special cases.
         """
         if loc.name == "Home":
-            self._home_location = loc.id
+            self._home_location = loc.loc_id
 
         # Replace location-name for P1 legacy, can contain privacy-related info
         if self._smile_legacy and self.smile_type == "power":
             loc.name = "Home"
-            self._home_location = loc.id
+            self._home_location = loc.loc_id
 
         return loc
 
@@ -403,7 +403,7 @@ class SmileHelper:
 
         for location in locations:
             loc.name = location.find("name").text
-            loc.id = location.attrib["id"]
+            loc.loc_id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if (
@@ -416,7 +416,7 @@ class SmileHelper:
             # Specials
             loc = self._locations_specials(loc, location)
 
-            self._loc_data[loc.id] = {"name": loc.name}
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
         return
 
