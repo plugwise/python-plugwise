@@ -2772,7 +2772,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 18.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -2789,7 +2789,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 18.8,
                     "battery": 55,
                     "setpoint_low": 18.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "a03b6e8e76dd4646af1a77c31dd9370c": {
@@ -2837,7 +2837,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 20.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -2853,7 +2853,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 21.9,
                     "setpoint_low": 20.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "2e0fc4db2a6d4cbeb7cf786143543961": {
@@ -2898,7 +2898,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 21.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 1.0,
                     "upper_bound": 35.0,
                     "resolution": 0.01,
@@ -2914,7 +2914,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 22.5,
                     "setpoint_low": 21.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "838c2f48195242709b87217cf8d8a71f": {
@@ -2945,7 +2945,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 17.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -2961,7 +2961,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 20.7,
                     "setpoint_low": 17.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "eac5db95d97241f6b17790897847ccf5": {
@@ -2975,7 +2975,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 20.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -2991,7 +2991,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 21.5,
                     "setpoint_low": 20.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "beb32da072274e698146db8b022f3c36": {
@@ -3005,7 +3005,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 18.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -3021,7 +3021,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 21.4,
                     "setpoint_low": 18.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "96714ad90fc948bcbcb5021c4b9f5ae9": {
@@ -3141,7 +3141,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 21.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -3158,7 +3158,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 22.5,
                     "battery": 53,
                     "setpoint_low": 21.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "d3a276aeb3114a509bab1e4bf8c40348": {
@@ -3172,7 +3172,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 20.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -3188,7 +3188,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 22.6,
                     "setpoint_low": 20.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "47e2c550a33846b680725aa3fb229473": {
@@ -3202,7 +3202,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 18.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -3218,7 +3218,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 22.0,
                     "setpoint_low": 18.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
             "7fda9f84f01342f8afe9ebbbbff30c0f": {
@@ -3232,7 +3232,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 18.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -3248,7 +3248,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 20.0,
                     "setpoint_low": 18.0,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             },
         }
@@ -3899,7 +3899,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "illuminance": 25.5,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 6.0,
-                    "setpoint_low": 0.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 22.0,
                 },
             },
@@ -4155,7 +4155,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
                     "setpoint_low": 19.5,
-                    "setpoint_high": 40.0,
+                    "setpoint_high": 30.0,
                 },
             }
         }
