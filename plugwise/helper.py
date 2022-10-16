@@ -91,9 +91,9 @@ def update_helper(
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
     """Model checking before using version_to_model."""
-    if vendor_name == "Plugwise":
-        if (model := version_to_model(name)) != "Unknown":
-            return model
+    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
+        return model
+
     return name
 
 
@@ -160,15 +160,13 @@ def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
 ) -> float | int | bool:
     """Format power data."""
-    attrs_uom = getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-    f_val = format_measure(val, attrs_uom)
-    # Format only P1_MEASUREMENT POWER_WATT values, do not move to util-format_meaure function!
-    if attrs_uom == POWER_WATT:
-        f_val = int(round(float(val)))
+    # Special formatting of P1_MEASUREMENT POWER_WATT values, do not move to util-format_measure() function!
     if all(item in key_string for item in ("electricity", "cumulative")):
-        f_val = format_measure(val, ENERGY_KILO_WATT_HOUR)
+        return format_measure(val, ENERGY_KILO_WATT_HOUR)
+    if (attrs_uom := getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)) == POWER_WATT:
+        return int(round(float(val)))
 
-    return f_val
+    return format_measure(val, attrs_uom)
 
 
 def power_data_energy_diff(
@@ -384,12 +382,12 @@ class SmileHelper:
         Correct location info in special cases.
         """
         if loc.name == "Home":
-            self._home_location = loc.id
+            self._home_location = loc.loc_id
 
         # Replace location-name for P1 legacy, can contain privacy-related info
         if self._smile_legacy and self.smile_type == "power":
             loc.name = "Home"
-            self._home_location = loc.id
+            self._home_location = loc.loc_id
 
         return loc
 
@@ -405,7 +403,7 @@ class SmileHelper:
 
         for location in locations:
             loc.name = location.find("name").text
-            loc.id = location.attrib["id"]
+            loc.loc_id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if (
@@ -418,7 +416,7 @@ class SmileHelper:
             # Specials
             loc = self._locations_specials(loc, location)
 
-            self._loc_data[loc.id] = {"name": loc.name}
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
         return
 
@@ -598,7 +596,7 @@ class SmileHelper:
 
         return appl
 
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> Munch:
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self._loc_data.keys()))
         appl.dev_id = self.gateway_id
@@ -628,44 +626,40 @@ class SmileHelper:
             if value is not None or key == "location":
                 self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-        return appl
-
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
 
         Use the home_location or FAKE_APPL as device id.
         """
-        if self._smile_legacy:
-            self.gateway_id = self._home_location
-            if self.smile_type == "power":
-                self.gateway_id = FAKE_APPL
+        self.gateway_id = self._home_location
+        if self.smile_type == "power":
+            self.gateway_id = FAKE_APPL
 
-            self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
-            for key, value in {
-                "firmware": self.smile_fw_version,
-                "location": self._home_location,
-                "mac_address": self.smile_mac_address,
-                "model": self.smile_model,
-                "name": self.smile_name,
-                "zigbee_mac_address": self.smile_zigbee_mac_address,
-                "vendor": "Plugwise",
-            }.items():
-                if value is not None:
-                    self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
-
-            if self.smile_type == "power":
-                # For legacy P1 collect the connected SmartMeter info
-                appl = Munch()
-                appl = self._p1_smartmeter_info_finder(appl)
+        self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
+        for key, value in {
+            "firmware": self.smile_fw_version,
+            "location": self._home_location,
+            "mac_address": self.smile_mac_address,
+            "model": self.smile_model,
+            "name": self.smile_name,
+            "zigbee_mac_address": self.smile_zigbee_mac_address,
+            "vendor": "Plugwise",
+        }.items():
+            if value is not None:
+                self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
 
-        self._create_legacy_gateway()
-        # Legacy P1 has no more devices
-        if self._smile_legacy and self.smile_type == "power":
-            return
+        if self._smile_legacy:
+            self._create_legacy_gateway()
+            # For legacy P1 collect the connected SmartMeter info
+            if self.smile_type == "power":
+                appl = Munch()
+                self._p1_smartmeter_info_finder(appl)
+                # Legacy P1 has no more devices
+                return
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -728,12 +722,12 @@ class SmileHelper:
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
-            appl = self._p1_smartmeter_info_finder(appl)
+            self._p1_smartmeter_info_finder(appl)
             # P1: for gateway and smartmeter switch device_id - part 2
             for item in self._appl_data:
                 if item != self.gateway_id:
                     self.gateway_id = item
-                    # Leave for-loop to avoid a 2nd switch
+                    # Leave for-loop to avoid a 2nd device_id switch
                     break
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
@@ -744,7 +738,7 @@ class SmileHelper:
 
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
-            for _, appliance_details in self._appl_data.items():
+            for appliance_details in list(self._appl_data.values()):
                 if appliance_details["location"] == location_id:
                     location_details.update(
                         {"master": None, "master_prio": 0, "slaves": set()}
@@ -949,6 +943,7 @@ class SmileHelper:
             ):
                 if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
+                    # For Adam + OnOff cooling heating_state = True means cooling is active
                     if self._cooling_present:
                         self._cooling_active = True
 

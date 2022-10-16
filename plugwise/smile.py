@@ -19,6 +19,7 @@ from .constants import (
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
+    LEGACY_SMILES,
     LOCATIONS,
     LOGGER,
     MAX_SETPOINT,
@@ -53,13 +54,7 @@ class SmileData(SmileHelper):
 
     def update_for_cooling(self, devices: dict[str, DeviceData]) -> None:
         """Helper-function for adding/updating various cooling-related values."""
-        for _, device in devices.items():
-            # For Anna or Adama + cooling, modify cooling_state based on provided info by Plugwise
-            if device["dev_class"] == "heater_central" and self._cooling_present:
-                device["binary_sensors"]["cooling_state"] = False
-                if self._cooling_active:
-                    device["binary_sensors"]["cooling_state"] = True
-
+        for device in list(devices.values()):
             # For Adam + on/off cooling, modify heating_state and cooling_state
             # based on provided info by Plugwise
             if (
@@ -76,8 +71,8 @@ class SmileData(SmileHelper):
             if device["dev_class"] not in ZONE_THERMOSTATS:
                 continue
 
+            # For heating + cooling, replace setpoint with setpoint_high/_low
             if self._cooling_present:
-                # Replace setpoint with setpoint_high/_low
                 thermostat = device["thermostat"]
                 sensors = device["sensors"]
                 max_setpoint = MAX_SETPOINT
@@ -152,7 +147,7 @@ class SmileData(SmileHelper):
             self._cooling_present = False
             if search.find(locator_1) is not None:
                 self._cooling_present = True
-            # Alternative method for the Anna with Elga, or alternative method for the Anna with Loria/Thermastage
+            # Alternative method for the Anna with Elga
             elif search.find(locator_2) is not None:
                 self._cooling_present = True
 
@@ -188,11 +183,14 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
-        if self.smile_name == "Adam":
-            # Indicate heating_state based on valves being open in case of city-provided heating
-            if details.get("dev_class") == "heater_central":
-                if self._on_off_device and self._heating_valves() is not None:
-                    device_data["heating_state"] = self._heating_valves() != 0
+        # Indicate heating_state based on valves being open in case of city-provided heating
+        if (
+            self.smile_name == "Adam"
+            and details.get("dev_class") == "heater_central"
+            and self._on_off_device
+            and self._heating_valves() is not None
+        ):
+            device_data["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
@@ -210,7 +208,6 @@ class SmileData(SmileHelper):
         if presets := self._presets(loc_id):
             presets_list = list(presets)
             device_data["preset_modes"] = presets_list
-
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
@@ -258,16 +255,16 @@ class SmileData(SmileHelper):
         # OpenTherm device
         if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
             device_data["available"] = True
-            for _, data in self._notifications.items():
-                for _, msg in data.items():
+            for data in list(self._notifications.values()):
+                for msg in list(data.values()):
                     if "no OpenTherm communication" in msg:
                         device_data["available"] = False
 
         # Smartmeter
         if details["dev_class"] == "smartmeter":
             device_data["available"] = True
-            for _, data in self._notifications.items():
-                for _, msg in data.items():
+            for data in list(self._notifications.values()):
+                for msg in list(data.values()):
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
 
@@ -299,31 +296,30 @@ class SmileData(SmileHelper):
             device_data.pop("thermostat")
 
         # Generic
-        if details["dev_class"] == "gateway" or dev_id == self.gateway_id:
-            if self.smile_type == "thermostat":
-                # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-                # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-                outdoor_temperature = self._object_value(
-                    self._home_location, "outdoor_temperature"
-                )
-                if outdoor_temperature is not None:
-                    device_data["outdoor_temperature"] = outdoor_temperature
+        if self.smile_type == "thermostat" and details["dev_class"] == "gateway":
+            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                device_data["outdoor_temperature"] = outdoor_temperature
 
-                # Show the allowed regulation modes
-                if self._reg_allowed_modes:
-                    device_data["regulation_modes"] = self._reg_allowed_modes
+            # Show the allowed regulation modes
+            if self._reg_allowed_modes:
+                device_data["regulation_modes"] = self._reg_allowed_modes
 
         # Show the allowed dhw_modes
-        if details["dev_class"] == "heater_central":
-            if self._dhw_allowed_modes:
-                device_data["dhw_modes"] = self._dhw_allowed_modes
+        if details["dev_class"] == "heater_central" and self._dhw_allowed_modes:
+            device_data["dhw_modes"] = self._dhw_allowed_modes
 
-        if details["dev_class"] == "smartmeter":
-            # Get P1 data from LOCATIONS
-            if (
-                power_data := self._power_data_from_location(details["location"])
-            ) is not None:
-                device_data.update(power_data)
+        # Get P1 data from LOCATIONS
+        if (
+            details["dev_class"] == "smartmeter"
+            and (power_data := self._power_data_from_location(details["location"]))
+            is not None
+        ):
+            device_data.update(power_data)
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
@@ -388,14 +384,13 @@ class Smile(SmileComm, SmileData):
             models.append(model.text)
 
         dsmrmain = result.find("./module/protocols/dsmrmain")
-        if "Plugwise" not in names:
-            if dsmrmain is None:  # pragma: no cover
-                LOGGER.error(
-                    "Connected but expected text not returned, we got %s. Please create \
-                    an issue on http://github.com/plugwise/python-plugwise",
-                    result,
-                )
-                raise ResponseError
+        if "Plugwise" not in names and dsmrmain is None:  # pragma: no cover
+            LOGGER.error(
+                "Connected but expected text not returned, we got %s. Please create \
+                an issue on http://github.com/plugwise/python-plugwise",
+                result,
+            )
+            raise ResponseError
 
         # Check if Anna is connected to an Adam
         if "159.2" in models:
@@ -499,7 +494,7 @@ class Smile(SmileComm, SmileData):
         self.smile_type = SMILES[target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
 
-        if target_smile in ("smile_thermo_v1", "smile_v2", "stretch_v3", "stretch_v2"):
+        if target_smile in LEGACY_SMILES:
             self._smile_legacy = True
 
         if self.smile_type == "stretch":
