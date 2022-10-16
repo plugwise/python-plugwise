@@ -22,8 +22,6 @@ from .constants import (
     LEGACY_SMILES,
     LOCATIONS,
     LOGGER,
-    MAX_SETPOINT,
-    MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
     RULES,
@@ -75,8 +73,7 @@ class SmileData(SmileHelper):
             if self._cooling_present:
                 thermostat = device["thermostat"]
                 sensors = device["sensors"]
-                max_setpoint = MAX_SETPOINT
-                min_setpoint = MIN_SETPOINT
+                max_setpoint = min_setpoint = device["thermostat"]
                 if self._sched_setpoints is not None:
                     max_setpoint = self._sched_setpoints[1]
                     min_setpoint = self._sched_setpoints[0]
