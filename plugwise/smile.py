@@ -73,7 +73,7 @@ class SmileData(SmileHelper):
             if self._cooling_present:
                 thermostat = device["thermostat"]
                 sensors = device["sensors"]
-                max_setpoint = min_setpoint = device["thermostat"]
+                max_setpoint = min_setpoint = thermostat["setpoint"]
                 if self._sched_setpoints is not None:
                     max_setpoint = self._sched_setpoints[1]
                     min_setpoint = self._sched_setpoints[0]
