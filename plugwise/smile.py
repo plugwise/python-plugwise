@@ -74,7 +74,7 @@ class SmileData(SmileHelper):
                 thermostat = device["thermostat"]
                 sensors = device["sensors"]
                 max_setpoint = min_setpoint = thermostat["setpoint"]
-                if self._sched_setpoints is not None:
+                if device["selected_schedule"] != "None":
                     max_setpoint = self._sched_setpoints[1]
                     min_setpoint = self._sched_setpoints[0]
 
