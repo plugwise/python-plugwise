@@ -2836,8 +2836,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A11",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 20.5,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -2852,8 +2852,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 21.9,
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 20.5,
                 },
             },
             "2e0fc4db2a6d4cbeb7cf786143543961": {
@@ -2897,8 +2897,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat WK",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 21.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 21.5,
                     "lower_bound": 1.0,
                     "upper_bound": 35.0,
                     "resolution": 0.01,
@@ -2913,8 +2913,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 22.5,
-                    "setpoint_low": 21.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 21.5,
                 },
             },
             "838c2f48195242709b87217cf8d8a71f": {
@@ -2974,8 +2974,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A09",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 20.5,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -2990,8 +2990,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 21.5,
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 20.5,
                 },
             },
             "beb32da072274e698146db8b022f3c36": {
@@ -3140,8 +3140,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 21.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 21.5,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
                     "resolution": 0.01,
@@ -3157,8 +3157,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 22.5,
                     "battery": 53,
-                    "setpoint_low": 21.5,
-                    "setpoint_high": 22.0,
+                    "setpoint_low": 18.0,
+                    "setpoint_high": 21.5,
                 },
             },
             "d3a276aeb3114a509bab1e4bf8c40348": {
