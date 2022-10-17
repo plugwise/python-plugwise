@@ -86,13 +86,13 @@ class SmileData(SmileHelper):
                     "setpoint_low": min_setpoint,
                     "setpoint_high": thermostat["setpoint"],
                 }
+            thermostat.pop("setpoint")
+            temp_dict.update(thermostat)
+            device["thermostat"] = temp_dict
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
-            thermostat.pop("setpoint")
-            temp_dict.update(thermostat)
-            device["thermostat"] = temp_dict
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
@@ -566,6 +566,9 @@ class Smile(SmileComm, SmileData):
                             key,
                             notifs,
                         )
+
+            # Update for cooling
+            self.update_for_cooling(dev_dict)
 
         return [self.gw_data, self.gw_devices]
 
