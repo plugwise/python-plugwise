@@ -3884,8 +3884,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "thermostat": {
                     "setpoint_low": 22.0,
                     "setpoint_high": 22.0,
-                    "lower_bound": 22.0,
-                    "upper_bound": 22.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
                     "resolution": 0.1,
                 },
                 "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
