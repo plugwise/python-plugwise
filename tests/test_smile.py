@@ -26,7 +26,6 @@ pw_constants = importlib.import_module("plugwise.constants")
 pp = PrettyPrinter(indent=8)
 
 _LOGGER = logging.getLogger(__name__)
-
 _LOGGER.setLevel(logging.DEBUG)
 
 # Prepare aiohttp app routes
@@ -2771,7 +2770,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 18.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
@@ -2788,7 +2787,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "temperature": 18.8,
                     "battery": 55,
-                    "setpoint_low": 18.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                 },
             },
@@ -2944,7 +2943,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A04",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 17.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 17.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
@@ -2960,7 +2959,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.7,
-                    "setpoint_low": 17.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 17.0,
                 },
             },
@@ -3004,7 +3003,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A07",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 18.5,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.5,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
@@ -3020,7 +3019,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 21.4,
-                    "setpoint_low": 18.5,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.5,
                 },
             },
@@ -3171,7 +3170,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A13",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 20.5,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 20.5,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
@@ -3187,7 +3186,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 22.6,
-                    "setpoint_low": 20.5,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 20.5,
                 },
             },
@@ -3201,7 +3200,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A20",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 18.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
@@ -3217,7 +3216,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 22.0,
-                    "setpoint_low": 18.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                 },
             },
@@ -3231,7 +3230,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 18.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                     "lower_bound": 0.0,
                     "upper_bound": 99.9,
@@ -3247,7 +3246,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.0,
-                    "setpoint_low": 18.0,
+                    "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                 },
             },
