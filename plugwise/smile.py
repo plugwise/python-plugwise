@@ -255,7 +255,7 @@ class SmileData(SmileHelper):
         if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
             device_data["available"] = True
             for data in self._notifications.values():
-                for msg in list(data.values()):
+                for msg in data.values():
                     if "no OpenTherm communication" in msg:
                         device_data["available"] = False
 
@@ -550,7 +550,7 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
-            for key, value in list(data.items()):
+            for key, value in data.items():
                 if key in dev_dict:
                     dev_dict[key] = value  # type: ignore [literal-required]
 
@@ -559,7 +559,7 @@ class Smile(SmileComm, SmileData):
                 if item == "binary_sensors":
                     notifs = self._notifications
                 if item in dev_dict:
-                    for key, value in list(data.items()):
+                    for key, value in data.items():
                         update_helper(
                             data,
                             self.gw_devices,
