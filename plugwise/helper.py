@@ -118,12 +118,12 @@ def _get_actuator_functionalities(xml: etree) -> DeviceData:
 
 def schedules_temps(
     schedules: dict[str, dict[str, list[float]]], name: str
-) -> list[float] | None:
+) -> list[float]:
     """Helper-function for schedules().
     Obtain the schedule temperature of the schedule.
     """
     if name == NONE:
-        return None  # pragma: no cover
+        return []  # pragma: no cover
 
     schedule_list: list[tuple[int, dt.time, list[float]]] = []
     for period, temp in schedules[name].items():
@@ -153,7 +153,7 @@ def schedules_temps(
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 
-    return None  # pragma: no cover
+    return []  # pragma: no cover
 
 
 def power_data_local_format(
@@ -329,7 +329,7 @@ class SmileHelper:
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
-        self._sched_setpoints: list[float] | None = None
+        self._sched_setpoints: list[float] = []
         self._smile_legacy = False
         self._status: etree
         self._stretch_v2 = False
@@ -738,7 +738,7 @@ class SmileHelper:
 
         self._all_appliances()
         for location_id, location_details in self._loc_data.items():
-            for appliance_details in list(self._appl_data.values()):
+            for appliance_details in self._appl_data.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
                         {"master": None, "master_prio": 0, "slaves": set()}
@@ -1186,7 +1186,7 @@ class SmileHelper:
 
     def _schedules_legacy(
         self, avail: list[str], sel: str
-    ) -> tuple[list[str], str, None, None]:
+    ) -> tuple[list[str], str, list[float], None]:
         """Helper-function for _schedules().
         Collect available schedules/schedules for the legacy thermostat.
         """
@@ -1209,11 +1209,11 @@ class SmileHelper:
             if active:
                 sel = name
 
-        return avail, sel, None, None
+        return avail, sel, [], None
 
     def _schedules(
         self, location: str
-    ) -> tuple[list[str], str, list[float] | None, str | None]:
+    ) -> tuple[list[str], str, list[float], str | None]:
         """Helper-function for smile.py: _device_data_climate().
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
@@ -1221,7 +1221,7 @@ class SmileHelper:
         available: list[str] = [NONE]
         last_used: str | None = None
         rule_ids: dict[str, str] = {}
-        schedule_temperatures: list[float] | None = None
+        schedule_temperatures: list[float] = []
         selected = NONE
 
         # Legacy Anna schedule, only one schedule allowed

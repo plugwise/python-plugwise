@@ -52,51 +52,50 @@ from .helper import SmileComm, SmileHelper, update_helper
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def update_for_cooling(self, devices: dict[str, DeviceData]) -> None:
+    def update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
-        for device in list(devices.values()):
-            # For Adam + on/off cooling, modify heating_state and cooling_state
-            # based on provided info by Plugwise
-            if (
-                self.smile_name == "Adam"
-                and device["dev_class"] == "heater_central"
-                and self._on_off_device
-                and self._cooling_active
-                and device["binary_sensors"]["heating_state"]
-            ):
-                device["binary_sensors"]["cooling_state"] = True
-                device["binary_sensors"]["heating_state"] = False
+        # For Adam + on/off cooling, modify heating_state and cooling_state
+        # based on provided info by Plugwise
+        if (
+            self.smile_name == "Adam"
+            and device["dev_class"] == "heater_central"
+            and self._on_off_device
+            and self._cooling_active
+            and device["binary_sensors"]["heating_state"]
+        ):
+            device["binary_sensors"]["cooling_state"] = True
+            device["binary_sensors"]["heating_state"] = False
 
-            # Add setpoint_low and setpoint_high when cooling is enabled
-            if device["dev_class"] not in ZONE_THERMOSTATS:
-                continue
+        # Add setpoint_low and setpoint_high when cooling is enabled
+        if device["dev_class"] not in ZONE_THERMOSTATS:
+            return
 
-            # For heating + cooling, replace setpoint with setpoint_high/_low
-            if self._cooling_present:
-                thermostat = device["thermostat"]
-                sensors = device["sensors"]
-                max_setpoint = MAX_SETPOINT
-                min_setpoint = MIN_SETPOINT
-                if self._sched_setpoints is not None:
-                    max_setpoint = self._sched_setpoints[1]
-                    min_setpoint = self._sched_setpoints[0]
+        # For heating + cooling, replace setpoint with setpoint_high/_low
+        if self._cooling_present:
+            thermostat = device["thermostat"]
+            sensors = device["sensors"]
+            max_setpoint = MAX_SETPOINT
+            min_setpoint = MIN_SETPOINT
+            if device["selected_schedule"] != "None":
+                max_setpoint = self._sched_setpoints[1]
+                min_setpoint = self._sched_setpoints[0]
 
-                temp_dict: ActuatorData = {
-                    "setpoint_low": thermostat["setpoint"],
-                    "setpoint_high": max_setpoint,
+            temp_dict: ActuatorData = {
+                "setpoint_low": thermostat["setpoint"],
+                "setpoint_high": max_setpoint,
+            }
+            if self._cooling_enabled:
+                temp_dict = {
+                    "setpoint_low": min_setpoint,
+                    "setpoint_high": thermostat["setpoint"],
                 }
-                if self._cooling_active:
-                    temp_dict = {
-                        "setpoint_low": min_setpoint,
-                        "setpoint_high": thermostat["setpoint"],
-                    }
-                if "setpoint" in sensors:
-                    sensors.pop("setpoint")
-                sensors["setpoint_low"] = temp_dict["setpoint_low"]
-                sensors["setpoint_high"] = temp_dict["setpoint_high"]
-                thermostat.pop("setpoint")
-                temp_dict.update(thermostat)
-                device["thermostat"] = temp_dict
+            thermostat.pop("setpoint")
+            temp_dict.update(thermostat)
+            device["thermostat"] = temp_dict
+            if "setpoint" in sensors:
+                sensors.pop("setpoint")
+            sensors["setpoint_low"] = temp_dict["setpoint_low"]
+            sensors["setpoint_high"] = temp_dict["setpoint_high"]
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
@@ -111,8 +110,8 @@ class SmileData(SmileHelper):
                 device_id, data, device, bs_dict, s_dict, sw_dict
             )
 
-        # After all device data has been determined, add/update for cooling
-        self.update_for_cooling(self.gw_devices)
+            # Update for cooling
+            self.update_for_cooling(self.gw_devices[device_id])
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -255,16 +254,16 @@ class SmileData(SmileHelper):
         # OpenTherm device
         if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
             device_data["available"] = True
-            for data in list(self._notifications.values()):
-                for msg in list(data.values()):
+            for data in self._notifications.values():
+                for msg in data.values():
                     if "no OpenTherm communication" in msg:
                         device_data["available"] = False
 
         # Smartmeter
         if details["dev_class"] == "smartmeter":
             device_data["available"] = True
-            for data in list(self._notifications.values()):
-                for msg in list(data.values()):
+            for data in self._notifications.values():
+                for msg in data.values():
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
 
@@ -551,7 +550,7 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
-            for key, value in list(data.items()):
+            for key, value in data.items():
                 if key in dev_dict:
                     dev_dict[key] = value  # type: ignore [literal-required]
 
@@ -560,7 +559,7 @@ class Smile(SmileComm, SmileData):
                 if item == "binary_sensors":
                     notifs = self._notifications
                 if item in dev_dict:
-                    for key, value in list(data.items()):
+                    for key, value in data.items():
                         update_helper(
                             data,
                             self.gw_devices,
@@ -571,8 +570,8 @@ class Smile(SmileComm, SmileData):
                             notifs,
                         )
 
-        # After all device data has been determined, add/update for cooling
-        self.update_for_cooling(self.gw_devices)
+            # Update for cooling
+            self.update_for_cooling(dev_dict)
 
         return [self.gw_data, self.gw_devices]
 

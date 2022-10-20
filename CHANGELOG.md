@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.25.3: Bugfix for https://github.com/plugwise/plugwise-beta/issues/309
+
 # v0.25.2: Bugfix, code improvements
 - Fix a set_temperature() and heat_cool related bug
 
