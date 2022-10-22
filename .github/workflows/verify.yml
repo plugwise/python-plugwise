@@ -352,7 +352,7 @@ jobs:
         run: >-
           python setup.py sdist
       - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         continue-on-error: true
         with:
           password: ${{ secrets.testpypi_token }}
