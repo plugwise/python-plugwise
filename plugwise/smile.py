@@ -533,7 +533,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> list[GatewayData | dict[str, DeviceData]]:
+    async def async_update(self) -> tuple[GatewayData, dict[str, DeviceData]]:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -573,7 +573,7 @@ class Smile(SmileComm, SmileData):
             # Update for cooling
             self.update_for_cooling(dev_dict)
 
-        return [self.gw_data, self.gw_devices]
+        return (self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
         self, loc_id: str, name: str, status: str
