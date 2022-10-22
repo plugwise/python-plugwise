@@ -752,6 +752,7 @@ class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
 
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData
+    maximum_boiler_temperature: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData
