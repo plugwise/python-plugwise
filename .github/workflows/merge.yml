@@ -8,7 +8,7 @@ env:
   DEFAULT_PYTHON: 3.9
 
 # Only run on merges
-on: 
+on:
   pull_request:
     types: closed
     branches:
@@ -32,7 +32,7 @@ jobs:
         run: >-
           python setup.py sdist
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.pypi_token }}
           skip_existing: true
