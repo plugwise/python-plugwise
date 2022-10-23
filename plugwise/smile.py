@@ -287,7 +287,7 @@ class SmileData(SmileHelper):
 
             device_data.pop("modified")
 
-    def _get_device_data(self, dev_id: str) -> DeviceData:
+    def _get_device_data(self, dev_id: str) -> DeviceDataPoints:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
