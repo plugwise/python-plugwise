@@ -854,7 +854,7 @@ class SmileHelper:
         appliance: etree,
         data: DeviceDataPoints,
         measurements: dict[str, DATA | UOM],
-    ) -> DeviceData:
+    ) -> DeviceDataPoints:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
