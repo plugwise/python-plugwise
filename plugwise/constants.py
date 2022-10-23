@@ -753,13 +753,15 @@ class DeviceDataPoints(
     # Device availability
     available: bool | None
 
+    # Actuator setpoints
+    domestic_hot_water_setpoint: ActuatorData
+    maximum_boiler_temperature: ActuatorData
+    thermostat: ActuatorData | ActuatorDataHeatCool
+
 
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
     binary_sensors: SmileBinarySensors
-    domestic_hot_water_setpoint: ActuatorData
-    maximum_boiler_temperature: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
-    thermostat: ActuatorData | ActuatorDataHeatCool
