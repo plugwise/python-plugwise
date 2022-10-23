@@ -122,7 +122,7 @@ def _get_actuator_functionalities(xml: etree) -> DeviceDataPoints:
             "resolution": 0.0,
             "upper_bound": 0.0,
         }:
-            data[item] = temp_dict
+            data[item] = temp_dict  # type: ignore [literal-required]
 
     return data
 
