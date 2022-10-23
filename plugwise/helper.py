@@ -1354,7 +1354,7 @@ class SmileHelper:
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
-    ) -> DeviceData:
+    ) -> DeviceDataPoints:
         """Helper-function for smile.py: _all_device_data().
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
