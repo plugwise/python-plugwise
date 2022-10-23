@@ -605,14 +605,14 @@ class ApplianceData(TypedDict):
     zigbee_mac_address: NotRequired[str | None]
 
 
-class GatewayData(TypedDict, total=False):
+class GatewayData(TypedDict):
     """The Gateway Data class."""
 
     smile_name: str
     gateway_id: str | None
-    heater_id: str | None
-    cooling_present: bool
-    notifications: dict[str, dict[str, str]]
+    heater_id: NotRequired[str | None]
+    cooling_present: NotRequired[bool]
+    notifications: NotRequired[dict[str, dict[str, str]]]
 
 
 class ModelData(TypedDict):
