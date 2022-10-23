@@ -720,8 +720,21 @@ class ActuatorDataHeatCool(ActuatorData, TypedDict):
     setpoint_low: float
 
 
+class ActuatorItems(TypedDict):
+    """Actuator Items."""
+
+    domestic_hot_water_setpoint: NotRequired[ActuatorData]
+    maximum_boiler_temperature: NotRequired[ActuatorData]
+    thermostat: NotRequired[ActuatorData | ActuatorDataHeatCool]
+
+
 class DeviceDataPoints(
-    SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
+    SmileBinarySensors,
+    SmileSensors,
+    SmileSwitches,
+    ActuatorItems,
+    TypedDict,
+    total=False,
 ):
     """The class covering all possible collected data points."""
 
@@ -752,11 +765,6 @@ class DeviceDataPoints(
 
     # Device availability
     available: bool | None
-
-    # Actuator setpoints
-    domestic_hot_water_setpoint: ActuatorData
-    maximum_boiler_temperature: ActuatorData
-    thermostat: ActuatorData | ActuatorDataHeatCool
 
 
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
