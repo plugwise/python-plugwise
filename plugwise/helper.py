@@ -116,7 +116,12 @@ def _get_actuator_functionalities(xml: etree) -> dict[str, ActuatorData]:
 
                 temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
 
-        if temp_dict:
+        if temp_dict != {
+            "lower_bound": 0.0,
+            "setpoint": 0.0,
+            "resolution": 0.0,
+            "upper_bound": 0.0,
+        }:
             data[item] = temp_dict
 
     return data
