@@ -97,9 +97,9 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree) -> DeviceData:
+def _get_actuator_functionalities(xml: etree) -> dict[str, dict[str, float]]:
     """Helper-function for _get_appliance_data()."""
-    data: DeviceData = {}
+    data: dict[str, dict[str, float]] = {}
     for item in ACTIVE_ACTUATORS:
         temp_dict: dict[str, float] = {}
         for key in LIMITS:
@@ -111,7 +111,7 @@ def _get_actuator_functionalities(xml: etree) -> DeviceData:
                 temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})
 
         if temp_dict:
-            data[item] = temp_dict  # type: ignore [literal-required]
+            data[item] = temp_dict
 
     return data
 
