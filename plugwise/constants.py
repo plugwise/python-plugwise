@@ -6,7 +6,7 @@ import datetime as dt
 import logging
 from typing import Final
 
-from typing_extensions import NotRequired, TypedDict
+from typing_extensions import NotRequired, Required, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -707,20 +707,17 @@ class ThermoLoc(TypedDict, total=False):
 class ActuatorData(TypedDict):
     """Actuator data for thermostat types."""
 
-    lower_bound: float
+    lower_bound: Required[float]
     setpoint: float
-    resolution: float
-    upper_bound: float
+    resolution: Required[float]
+    upper_bound: Required[float]
 
 
-class ActuatorDataHeatCool(TypedDict):
+class ActuatorDataHeatCool(ActuatorData, TypedDict):
     """Actuator data for thermostat types."""
 
-    lower_bound: float
     setpoint_high: float
     setpoint_low: float
-    resolution: float
-    upper_bound: float
 
 
 class DeviceDataPoints(
