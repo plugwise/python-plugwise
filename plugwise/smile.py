@@ -180,8 +180,8 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_adam(
-        self, details: ApplianceData, device_data: DeviceData
-    ) -> DeviceData:
+        self, details: ApplianceData, device_data: DeviceDataPoints
+    ) -> DeviceDataPoints:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
@@ -197,8 +197,8 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_climate(
-        self, details: ApplianceData, device_data: DeviceData
-    ) -> DeviceData:
+        self, details: ApplianceData, device_data: DeviceDataPoints
+    ) -> DeviceDataPoints:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
