@@ -98,9 +98,9 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree) -> dict[str, ActuatorData]:
+def _get_actuator_functionalities(xml: etree) -> DeviceDataPoints:
     """Helper-function for _get_appliance_data()."""
-    data: dict[str, ActuatorData] = {}
+    data: DeviceDataPoints = {}
     for item in ACTIVE_ACTUATORS:
         temp_dict: ActuatorData = {
             "lower_bound": 0.0,
