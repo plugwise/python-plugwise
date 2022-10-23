@@ -1144,11 +1144,11 @@ class SmileHelper:
 
         return loc
 
-    def _power_data_from_location(self, loc_id: str) -> DeviceData:
+    def _power_data_from_location(self, loc_id: str) -> DeviceDataPoints:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceData = {}
+        direct_data: DeviceDataPoints = {}
         loc = Munch()
 
         search = self._locations
@@ -1331,7 +1331,7 @@ class SmileHelper:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
-        data: DeviceData = {}
+        data: DeviceDataPoints = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
         if self._stretch_v2:
@@ -1357,7 +1357,7 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        device_out: DeviceData = {}
+        device_out: DeviceDataPoints = {}
         for d_key, d_value in device_in.items():
             device_out.update({d_key: d_value})  # type: ignore [misc]
         for key, value in list(data.items()):
