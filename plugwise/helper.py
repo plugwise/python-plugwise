@@ -98,11 +98,16 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree) -> ActuatorData:
+def _get_actuator_functionalities(xml: etree) -> dict[str, ActuatorData]:
     """Helper-function for _get_appliance_data()."""
-    data: dict[str, dict[str, float]] = {}
+    data: dict[str, ActuatorData] = {}
     for item in ACTIVE_ACTUATORS:
-        temp_dict: dict[str, float] = {}
+        temp_dict: ActuatorData = {
+            "lower_bound": 0.0,
+            "setpoint": 0.0,
+            "resolution": 0.0,
+            "upper_bound": 0.0,
+        }
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
             if (function := xml.find(locator)) is not None:
