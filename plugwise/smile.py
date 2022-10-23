@@ -164,7 +164,7 @@ class SmileData(SmileHelper):
 
     def _device_data_switching_group(
         self, details: ApplianceData, device_data: DeviceDataPoints
-    ) -> DeviceData:
+    ) -> DeviceDataPoints:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
