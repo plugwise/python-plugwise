@@ -852,7 +852,7 @@ class SmileHelper:
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceData,
+        data: DeviceDataPoints,
         measurements: dict[str, DATA | UOM],
     ) -> DeviceData:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
@@ -894,7 +894,7 @@ class SmileHelper:
 
         return data
 
-    def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
+    def _wireless_availablity(self, appliance: etree, data: DeviceDataPoints) -> None:
         """Helper-function for _get_appliance_data().
         Collect the availablity-status for wireless connected devices.
         """
@@ -912,12 +912,12 @@ class SmileHelper:
             if module_data["available"] is not None:
                 data["available"] = module_data["available"]
 
-    def _get_appliance_data(self, d_id: str) -> DeviceData:
+    def _get_appliance_data(self, d_id: str) -> DeviceDataPoints:
         """Helper-function for smile.py: _get_device_data().
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: DeviceData = {}
+        data: DeviceDataPoints = {}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
@@ -1327,7 +1327,7 @@ class SmileHelper:
 
         return val
 
-    def _get_lock_state(self, xml: etree) -> DeviceData:
+    def _get_lock_state(self, xml: etree) -> DeviceDataPoints:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
