@@ -113,9 +113,8 @@ class SmileData(SmileHelper):
             # Update for cooling
             self.update_for_cooling(self.gw_devices[device_id])
 
-        self.gw_data.update(
-            {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
-        )
+        self.gw_data["smile_name"] = self.smile_name
+        self.gw_data["gateway_id"] = self.gateway_id
         if self._is_thermostat:
             self.gw_data.update(
                 {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
