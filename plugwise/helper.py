@@ -44,6 +44,7 @@ from .constants import (
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     UOM,
+    ActuatorData,
     ApplianceData,
     DeviceData,
     DeviceDataPoints,
@@ -97,7 +98,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree) -> dict[str, dict[str, float]]:
+def _get_actuator_functionalities(xml: etree) -> ActuatorData:
     """Helper-function for _get_appliance_data()."""
     data: dict[str, dict[str, float]] = {}
     for item in ACTIVE_ACTUATORS:
