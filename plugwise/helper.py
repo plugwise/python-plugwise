@@ -1349,12 +1349,12 @@ class SmileHelper:
     def _update_device_with_dicts(
         self,
         d_id: str,
-        data: DeviceDataPoints,
+        data: DeviceData,
         device_in: ApplianceData,
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
-    ) -> DeviceDataPoints:
+    ) -> DeviceData:
         """Helper-function for smile.py: _all_device_data().
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
