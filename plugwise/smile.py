@@ -35,6 +35,7 @@ from .constants import (
     ActuatorDataHeatCool,
     ApplianceData,
     DeviceData,
+    DeviceDataPoints,
     GatewayData,
     SmileBinarySensors,
     SmileSensors,
@@ -162,7 +163,7 @@ class SmileData(SmileHelper):
         self._all_device_data()
 
     def _device_data_switching_group(
-        self, details: ApplianceData, device_data: DeviceData
+        self, details: ApplianceData, device_data: DeviceDataPoints
     ) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine switching group device data.
@@ -248,7 +249,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _check_availability(
-        self, details: ApplianceData, device_data: DeviceData
+        self, details: ApplianceData, device_data: DeviceDataPoints
     ) -> None:
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
