@@ -762,4 +762,4 @@ class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     maximum_boiler_temperature: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
-    thermostat: ActuatorData
+    thermostat: ActuatorData | ActuatorDataHeatCool
