@@ -766,10 +766,11 @@ class DeviceDataPoints(
     # Device availability
     available: bool | None
 
-
-class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
-    """The Device Data class, covering the collected and ordere output-data per device."""
-
+    # Collected types
     binary_sensors: SmileBinarySensors
     sensors: SmileSensors
     switches: SmileSwitches
+
+
+class DeviceData(ApplianceData, DeviceDataPoints):
+    """The Device Data class, covering the collected and ordere output-data per device."""
