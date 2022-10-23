@@ -88,10 +88,12 @@ class SmileData(SmileHelper):
                 "upper_bound": thermostat["upper_bound"],
             }
             if self._cooling_enabled:
-                temp_dict.update = {
-                    "setpoint_low": min_setpoint,
-                    "setpoint_high": thermostat["setpoint"],
-                }
+                temp_dict.update(
+                    {
+                        "setpoint_low": min_setpoint,
+                        "setpoint_high": thermostat["setpoint"],
+                    }
+                )
             device["thermostat"] = temp_dict
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
