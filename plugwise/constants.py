@@ -4,7 +4,9 @@ from __future__ import annotations
 from collections import namedtuple
 import datetime as dt
 import logging
-from typing import Final, TypedDict
+from typing import Final
+
+from typing_extensions import NotRequired, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -588,19 +590,19 @@ SWITCHES: Final[tuple[str, ...]] = (
 )
 
 
-class ApplianceData(TypedDict, total=False):
+class ApplianceData(TypedDict):
     """The Appliance Data class."""
 
     dev_class: str
-    firmware: str | None
-    hardware: str
-    location: str
-    mac_address: str | None
-    members: list[str]
-    model: str
-    name: str
-    vendor: str
-    zigbee_mac_address: str | None
+    firmware: NotRequired[str | None]
+    hardware: NotRequired[str | None]
+    location: NotRequired[str]
+    mac_address: NotRequired[str | None]
+    members: NotRequired[list[str]]
+    model: NotRequired[str | None]
+    name: NotRequired[str | None]
+    vendor: NotRequired[str | None]
+    zigbee_mac_address: NotRequired[str | None]
 
 
 class GatewayData(TypedDict, total=False):
