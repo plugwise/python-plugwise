@@ -1359,11 +1359,8 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        LOGGER.debug("HOI 0 data %s", data)
-        LOGGER.debug("HOI 1 device_in %s", device_in)
-        device_out: DeviceData = {}
         for d_key, d_value in device_in.items():
-            device_out.update({d_key: d_value})  # type: ignore [misc]
+            data.update({d_key: d_value})  # type: ignore [misc]
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
                 if item == key:
@@ -1386,12 +1383,11 @@ class SmileHelper:
             ):
                 bs_dict["plugwise_notification"] = False
 
-        device_out.update(data)
         if bs_dict:
-            device_out["binary_sensors"] = bs_dict
+            data["binary_sensors"] = bs_dict
         if s_dict:
-            device_out["sensors"] = s_dict
+            data["sensors"] = s_dict
         if sw_dict:
-            device_out["switches"] = sw_dict
+            data["switches"] = sw_dict
 
-        return device_out
+        return data
