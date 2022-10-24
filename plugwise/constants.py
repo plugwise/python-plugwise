@@ -704,28 +704,33 @@ class ThermoLoc(TypedDict, total=False):
     slaves: set[str]
 
 
-class ActuatorData(TypedDict):
-    """Actuator data for thermostat types."""
+class ActuatorBase(TypedDict):
+    """Actuator base data for al thermostat types."""
 
     lower_bound: float
-    setpoint: NotRequired[float]
     resolution: float
     upper_bound: float
 
 
-class ActuatorDataHeatCool(ActuatorData, TypedDict):
-    """Actuator data for thermostat types."""
+class ActuatorData(ActuatorBase, TypedDict):
+    """Actuator data for heat or cooling only thermostat types."""
+
+    setpoint: float
+
+
+class ActuatorDataHeatCool(ActuatorBase, TypedDict):
+    """Actuator data for heat_cool thermostat types."""
 
     setpoint_high: float
     setpoint_low: float
 
 
-class ActuatorItems(TypedDict):
+class ActuatorItems(TypedDict, total=False):
     """Actuator Items."""
 
-    domestic_hot_water_setpoint: NotRequired[ActuatorData]
-    maximum_boiler_temperature: NotRequired[ActuatorData]
-    thermostat: NotRequired[ActuatorData | ActuatorDataHeatCool]
+    domestic_hot_water_setpoint: ActuatorData
+    maximum_boiler_temperature: ActuatorData
+    thermostat: ActuatorData | ActuatorDataHeatCool
 
 
 class DeviceDataPoints(
