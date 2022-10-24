@@ -74,7 +74,7 @@ class SmileData(SmileHelper):
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if self._cooling_present:
             thermostat = device["thermostat"]
-            sensors = device["sensors"]
+            setpoint = thermostat["setpoint"]
             max_setpoint = MAX_SETPOINT
             min_setpoint = MIN_SETPOINT
             if device["selected_schedule"] != "None":
@@ -85,17 +85,19 @@ class SmileData(SmileHelper):
                 "lower_bound": thermostat["lower_bound"],
                 "resolution": thermostat["resolution"],
                 "setpoint_high": max_setpoint,
-                "setpoint_low": thermostat["setpoint"],
+                "setpoint_low": setpoint,
                 "upper_bound": thermostat["upper_bound"],
             }
             if self._cooling_enabled:
                 temp_dict.update(
                     {
-                        "setpoint_high": thermostat["setpoint"],
+                        "setpoint_high": setpoint,
                         "setpoint_low": min_setpoint,
                     }
                 )
             device["thermostat"] = temp_dict
+
+            sensors = device["sensors"]
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
