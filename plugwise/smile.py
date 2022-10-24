@@ -84,22 +84,22 @@ class SmileData(SmileHelper):
             temp_dict: ActuatorDataHeatCool = {
                 "lower_bound": thermostat["lower_bound"],
                 "resolution": thermostat["resolution"],
-                "setpoint_low": thermostat["setpoint"],
                 "setpoint_high": max_setpoint,
+                "setpoint_low": thermostat["setpoint"],
                 "upper_bound": thermostat["upper_bound"],
             }
             if self._cooling_enabled:
                 temp_dict.update(
                     {
-                        "setpoint_low": min_setpoint,
                         "setpoint_high": thermostat["setpoint"],
+                        "setpoint_low": min_setpoint,
                     }
                 )
             device["thermostat"] = temp_dict
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
-            sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
+            sensors["setpoint_low"] = temp_dict["setpoint_low"]
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
