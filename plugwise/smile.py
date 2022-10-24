@@ -95,7 +95,8 @@ class SmileData(SmileHelper):
                         "setpoint_low": min_setpoint,
                     }
                 )
-            device["thermostat"] = temp_dict
+            device["hc_thermostat"] = temp_dict
+            device.pop(thermostat)
 
             sensors = device["sensors"]
             if "setpoint" in sensors:
