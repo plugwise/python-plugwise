@@ -174,7 +174,7 @@ class SmileData(SmileHelper):
         if details["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
-                member_data = self._get_appliance_data(member)
+                member_data = self._add_appliance_data(member, details)
                 if member_data.get("relay"):
                     counter += 1
 
@@ -294,14 +294,16 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        details = self._appl_data[dev_id]
-        device_data = self._get_appliance_data(dev_id)
+        device_data = self._add_appliance_data(dev_id, self._appl_data[dev_id])
         # Remove thermostat-dict for thermo_sensors
-        if details["dev_class"] == "thermo_sensor":
+        if self._appl_data[dev_id]["dev_class"] == "thermo_sensor":
             device_data.pop("thermostat")
 
         # Generic
-        if self.smile_type == "thermostat" and details["dev_class"] == "gateway":
+        if (
+            self.smile_type == "thermostat"
+            and self._appl_data[dev_id]["dev_class"] == "gateway"
+        ):
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
             # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             outdoor_temperature = self._object_value(
@@ -315,31 +317,40 @@ class SmileData(SmileHelper):
                 device_data["regulation_modes"] = self._reg_allowed_modes
 
         # Show the allowed dhw_modes
-        if details["dev_class"] == "heater_central" and self._dhw_allowed_modes:
+        if (
+            self._appl_data[dev_id]["dev_class"] == "heater_central"
+            and self._dhw_allowed_modes
+        ):
             device_data["dhw_modes"] = self._dhw_allowed_modes
 
         # Get P1 data from LOCATIONS
         if (
-            details["dev_class"] == "smartmeter"
-            and (power_data := self._power_data_from_location(details["location"]))
+            self._appl_data[dev_id]["dev_class"] == "smartmeter"
+            and (
+                power_data := self._power_data_from_location(
+                    self._appl_data[dev_id]["location"]
+                )
+            )
             is not None
         ):
             device_data.update(power_data)
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
-            self._check_availability(details, device_data)
+            self._check_availability(self._appl_data[dev_id], device_data)
 
         # Switching groups data
-        device_data = self._device_data_switching_group(details, device_data)
+        device_data = self._device_data_switching_group(
+            self._appl_data[dev_id], device_data
+        )
         # Specific, not generic Adam data
-        device_data = self._device_data_adam(details, device_data)
+        device_data = self._device_data_adam(self._appl_data[dev_id], device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details["dev_class"] not in ZONE_THERMOSTATS:
+        if self._appl_data[dev_id]["dev_class"] not in ZONE_THERMOSTATS:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
-        device_data = self._device_data_climate(details, device_data)
+        device_data = self._device_data_climate(self._appl_data[dev_id], device_data)
 
         return device_data
 

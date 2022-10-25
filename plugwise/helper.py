@@ -99,7 +99,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
 
 
 def _get_actuator_functionalities(xml: etree) -> DeviceDataPoints:
-    """Helper-function for _get_appliance_data()."""
+    """Helper-function for _add_appliance_data()."""
     data: DeviceDataPoints = {}
     for item in ACTIVE_ACTUATORS:
         temp_dict: ActuatorData = {
@@ -855,7 +855,7 @@ class SmileHelper:
         data: DeviceDataPoints,
         measurements: dict[str, DATA | UOM],
     ) -> DeviceDataPoints:
-        """Helper-function for _get_appliance_data() - collect appliance measurement data."""
+        """Helper-function for _add_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
@@ -895,7 +895,7 @@ class SmileHelper:
         return data
 
     def _wireless_availablity(self, appliance: etree, data: DeviceDataPoints) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _add_appliance_data().
         Collect the availablity-status for wireless connected devices.
         """
         if self.smile_name == "Adam":
@@ -912,12 +912,11 @@ class SmileHelper:
             if module_data["available"] is not None:
                 data["available"] = module_data["available"]
 
-    def _get_appliance_data(self, d_id: str) -> DeviceDataPoints:
-        """Helper-function for smile.py: _get_device_data().
+    def _add_appliance_data(self, d_id: str, data: DeviceData) -> DeviceData:
+        """Helper-function for smile.py: _add_device_data().
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: DeviceDataPoints = {}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
@@ -1330,7 +1329,7 @@ class SmileHelper:
         return val
 
     def _get_lock_state(self, xml: etree) -> DeviceDataPoints:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _add_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
         data: DeviceDataPoints = {}
