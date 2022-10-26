@@ -108,7 +108,7 @@ class SmileData(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        for device_id, device in self._appl_data.items():
+        for device_id, device in self.gw_devices.items():
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
@@ -160,7 +160,7 @@ class SmileData(SmileHelper):
         self._scan_thermostats()
 
         if group_data := self._group_switches():
-            self._appl_data.update(group_data)
+            self.gw_devices.update(group_data)
 
         # Collect data for each device via helper function
         self._all_device_data()
@@ -294,15 +294,15 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        device_data = self._add_appliance_data(dev_id, self._appl_data[dev_id])
+        device_data = self._add_appliance_data(dev_id, self.gw_devices[dev_id])
         # Remove thermostat-dict for thermo_sensors
-        if self._appl_data[dev_id]["dev_class"] == "thermo_sensor":
+        if self.gw_devices[dev_id]["dev_class"] == "thermo_sensor":
             device_data.pop("thermostat")
 
         # Generic
         if (
             self.smile_type == "thermostat"
-            and self._appl_data[dev_id]["dev_class"] == "gateway"
+            and self.gw_devices[dev_id]["dev_class"] == "gateway"
         ):
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
             # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
@@ -318,17 +318,17 @@ class SmileData(SmileHelper):
 
         # Show the allowed dhw_modes
         if (
-            self._appl_data[dev_id]["dev_class"] == "heater_central"
+            self.gw_devices[dev_id]["dev_class"] == "heater_central"
             and self._dhw_allowed_modes
         ):
             device_data["dhw_modes"] = self._dhw_allowed_modes
 
         # Get P1 data from LOCATIONS
         if (
-            self._appl_data[dev_id]["dev_class"] == "smartmeter"
+            self.gw_devices[dev_id]["dev_class"] == "smartmeter"
             and (
                 power_data := self._power_data_from_location(
-                    self._appl_data[dev_id]["location"]
+                    self.gw_devices[dev_id]["location"]
                 )
             )
             is not None
@@ -337,20 +337,20 @@ class SmileData(SmileHelper):
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
-            self._check_availability(self._appl_data[dev_id], device_data)
+            self._check_availability(self.gw_devices[dev_id], device_data)
 
         # Switching groups data
         device_data = self._device_data_switching_group(
-            self._appl_data[dev_id], device_data
+            self.gw_devices[dev_id], device_data
         )
         # Specific, not generic Adam data
-        device_data = self._device_data_adam(self._appl_data[dev_id], device_data)
+        device_data = self._device_data_adam(self.gw_devices[dev_id], device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if self._appl_data[dev_id]["dev_class"] not in ZONE_THERMOSTATS:
+        if self.gw_devices[dev_id]["dev_class"] not in ZONE_THERMOSTATS:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
-        device_data = self._device_data_climate(self._appl_data[dev_id], device_data)
+        device_data = self._device_data_climate(self.gw_devices[dev_id], device_data)
 
         return device_data
 
