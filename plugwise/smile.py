@@ -112,13 +112,17 @@ class SmileData(SmileHelper):
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
-            data = self._get_device_data(device_id)
-            self.gw_devices[device_id] = self._update_device_with_dicts(
-                device_id, data, device, bs_dict, s_dict, sw_dict
+            device = self._get_device_data(device_id)
+            device = self._update_device_with_dicts(
+                device_id,
+                device,
+                bs_dict,
+                s_dict,
+                sw_dict,
             )
 
             # Update for cooling
-            self.update_for_cooling(self.gw_devices[device_id])
+            self.update_for_cooling(device)
 
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["gateway_id"] = self.gateway_id

@@ -1349,7 +1349,6 @@ class SmileHelper:
         self,
         d_id: str,
         data: DeviceData,
-        device_in: ApplianceData,
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
@@ -1358,8 +1357,6 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        for d_key, d_value in device_in.items():
-            data.update({d_key: d_value})  # type: ignore [misc]
         for key, value in list(data.items()):
             for item in BINARY_SENSORS:
                 if item == key:
