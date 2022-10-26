@@ -570,8 +570,9 @@ class Smile(SmileComm, SmileData):
         self.gw_data["notifications"] = self._notifications
 
         for dev_id, device in self.gw_devices.items():
-            LOGGER.debug("HOI 3 %s", device)
+            LOGGER.debug("HOI 3a %s", device)
             data = self._get_device_data(dev_id)
+            LOGGER.debug("HOI 3b %s", data)
             for item in ("binary_sensors", "sensors", "switches"):
                 notifs: dict[str, dict[str, str]] = {}
                 if item == "binary_sensors":
