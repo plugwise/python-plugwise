@@ -71,23 +71,22 @@ from .util import (
 
 def update_helper(
     data: DeviceDataPoints,
-    devices: dict[str, DeviceData],
-    device_dict: DeviceData,
+    device: DeviceData,
     device_id: str,
     bsssw_type: str,
     key: str,
     notifs: dict[str, dict[str, str]],
 ) -> None:
     """Helper-function for async_update()."""
-    for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
+    for item in device[bsssw_type]:  # type: ignore [literal-required]
         # Update the PW_Notification binary_sensor state
         if bsssw_type == "binary_sensors" and item == "plugwise_notification":
-            devices[device_id][bsssw_type]["plugwise_notification"] = notifs != {}  # type: ignore [literal-required]
+            device[bsssw_type]["plugwise_notification"] = notifs != {}  # type: ignore [literal-required]
 
         if item == key:
-            for device in devices[device_id][bsssw_type]:  # type: ignore [literal-required]
-                if device == key:
-                    devices[device_id][bsssw_type][device] = data[key]  # type: ignore [literal-required]
+            for dev_item in device[bsssw_type]:  # type: ignore [literal-required]
+                if dev_item == key:
+                    device[bsssw_type][dev_item] = data[key]  # type: ignore [literal-required]
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:

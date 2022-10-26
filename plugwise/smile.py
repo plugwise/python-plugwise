@@ -569,22 +569,21 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data["notifications"] = self._notifications
 
-        for dev_id, dev_dict in self.gw_devices.items():
+        for dev_id, device in self.gw_devices.items():
             data = self._get_device_data(dev_id)
             for key, value in data.items():
-                if key in dev_dict:
-                    dev_dict[key] = value  # type: ignore [literal-required]
+                if key in device:
+                    device[key] = value  # type: ignore [literal-required]
 
             for item in ("binary_sensors", "sensors", "switches"):
                 notifs: dict[str, dict[str, str]] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
-                if item in dev_dict:
+                if item in device:
                     for key, value in data.items():
                         update_helper(
                             data,
-                            self.gw_devices,
-                            dev_dict,
+                            device,
                             dev_id,
                             item,
                             key,
@@ -592,7 +591,7 @@ class Smile(SmileComm, SmileData):
                         )
 
             # Update for cooling
-            self.update_for_cooling(dev_dict)
+            self.update_for_cooling(device)
 
         return (self.gw_data, self.gw_devices)
 
