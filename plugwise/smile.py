@@ -571,7 +571,8 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, device in self.gw_devices.items():
             LOGGER.debug("HOI 3a %s", device)
-            data = self._get_device_data(dev_id)
+            data = self._add_appliance_data(dev_id, {})
+            # data = self._get_device_data(dev_id)
             LOGGER.debug("HOI 3b %s", data)
             for item in ("binary_sensors", "sensors", "switches"):
                 notifs: dict[str, dict[str, str]] = {}
