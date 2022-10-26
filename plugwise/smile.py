@@ -572,16 +572,12 @@ class Smile(SmileComm, SmileData):
         for dev_id, device in self.gw_devices.items():
             LOGGER.debug("HOI 3 %s", device)
             data = self._get_device_data(dev_id)
-            for key, value in data.items():
-                if key in device:
-                    device[key] = value  # type: ignore [literal-required]
-
             for item in ("binary_sensors", "sensors", "switches"):
                 notifs: dict[str, dict[str, str]] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
                 if item in device:
-                    for key, value in data.items():
+                    for key in data:
                         update_helper(
                             data,
                             device,
