@@ -1358,19 +1358,16 @@ class SmileHelper:
         and add these to the output.
         """
         for key, value in list(data.items()):
-            for item in BINARY_SENSORS:
-                if item == key:
-                    data.pop(key)  # type: ignore [misc]
-                    if self._opentherm_device or self._on_off_device:
-                        bs_dict[key] = value  # type: ignore[literal-required]
-            for item in SENSORS:
-                if item == key:
-                    data.pop(key)  # type: ignore [misc]
-                    s_dict[key] = value  # type: ignore[literal-required]
-            for item in SWITCHES:
-                if item == key:
-                    data.pop(key)  # type: ignore [misc]
-                    sw_dict[key] = value  # type: ignore[literal-required]
+            if key in BINARY_SENSORS:
+                data.pop(key)  # type: ignore [misc]
+                if self._opentherm_device or self._on_off_device:
+                    bs_dict[key] = value  # type: ignore[literal-required]
+            if key in SENSORS:
+                data.pop(key)  # type: ignore [misc]
+                s_dict[key] = value  # type: ignore[literal-required]
+            if key in SWITCHES:
+                data.pop(key)  # type: ignore [misc]
+                sw_dict[key] = value  # type: ignore[literal-required]
 
         # Add plugwise notification binary_sensor to the relevant gateway
         if d_id == self.gateway_id:
