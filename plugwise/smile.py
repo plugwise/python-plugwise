@@ -580,14 +580,15 @@ class Smile(SmileComm, SmileData):
                     notifs = self._notifications
                 if item in device:
                     for key in data:
-                        update_helper(
-                            data,
-                            device,
-                            dev_id,
-                            item,
-                            key,
-                            notifs,
-                        )
+                        if key in device[item]:
+                            update_helper(
+                                data,
+                                device,
+                                dev_id,
+                                item,
+                                key,
+                                notifs,
+                            )
 
             LOGGER.debug("HOI 4 %s", device)
             # Update for cooling
