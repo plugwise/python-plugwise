@@ -570,6 +570,7 @@ class Smile(SmileComm, SmileData):
         self.gw_data["notifications"] = self._notifications
 
         for dev_id, device in self.gw_devices.items():
+            LOGGER.debug("HOI 3 %s", device)
             data = self._get_device_data(dev_id)
             for key, value in data.items():
                 if key in device:
@@ -590,6 +591,7 @@ class Smile(SmileComm, SmileData):
                             notifs,
                         )
 
+            LOGGER.debug("HOI 4 %s", device)
             # Update for cooling
             self.update_for_cooling(device)
 

@@ -78,7 +78,7 @@ def update_helper(
     notifs: dict[str, dict[str, str]],
 ) -> None:
     """Helper-function for async_update()."""
-    LOGGER.debug("HOI 3 %s", device)
+    LOGGER.debug("HOI 5 %s", device)
     for item in device[bsssw_type]:  # type: ignore [literal-required]
         # Update the PW_Notification binary_sensor state
         if bsssw_type == "binary_sensors" and item == "plugwise_notification":
@@ -89,7 +89,7 @@ def update_helper(
                 if dev_item == key:
                     device[bsssw_type][dev_item] = data[key]  # type: ignore [literal-required]
 
-    LOGGER.debug("HOI 4 %s", device)
+    LOGGER.debug("HOI 6 %s", device)
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
