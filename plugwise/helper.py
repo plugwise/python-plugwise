@@ -85,9 +85,7 @@ def update_helper(
             device[bsssw_type]["plugwise_notification"] = notifs != {}  # type: ignore [literal-required]
 
         if item == key:
-            for dev_item in device[bsssw_type]:  # type: ignore [literal-required]
-                if dev_item == key:
-                    device[bsssw_type][dev_item] = data[key]  # type: ignore [literal-required]
+            device[bsssw_type][item] = data[key]  # type: ignore [literal-required]
 
     LOGGER.debug("HOI 6 %s", device)
 
