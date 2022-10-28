@@ -1336,7 +1336,6 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        LOGGER.debug("HOI 1 %s", data)
         for key, value in list(data.items()):
             if key in BINARY_SENSORS:
                 data.pop(key)  # type: ignore [misc]
@@ -1349,7 +1348,6 @@ class SmileHelper:
                 data.pop(key)  # type: ignore [misc]
                 sw_dict[key] = value  # type: ignore[literal-required]
 
-        LOGGER.debug("HOI 2 %s", data)
         # Add plugwise notification binary_sensor to the relevant gateway
         if d_id == self.gateway_id:
             if self._is_thermostat or (
