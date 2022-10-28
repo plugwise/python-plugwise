@@ -33,7 +33,6 @@ from .constants import (
     SYSTEM,
     ZONE_THERMOSTATS,
     ActuatorDataHeatCool,
-    ApplianceData,
     DeviceData,
     DeviceDataPoints,
     GatewayData,
@@ -170,55 +169,49 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
-    def _device_data_switching_group(
-        self, details: ApplianceData, device_data: DeviceData
-    ) -> DeviceData:
+    def _device_switching_group(self, device: DeviceData) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
-        if details["dev_class"] in SWITCH_GROUP_TYPES:
+        if device["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
-            for member in details["members"]:
-                member_data = self._add_appliance_data(member, details)
+            for member in device["members"]:
+                member_data = self._add_appliance_data(member, device)
                 if member_data.get("relay"):
                     counter += 1
 
-            device_data["relay"] = counter != 0
+            device["relay"] = counter != 0
 
-        return device_data
+        return device
 
-    def _device_data_adam(
-        self, details: ApplianceData, device_data: DeviceData
-    ) -> DeviceData:
+    def _device_adam(self, device: DeviceData) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine Adam device data.
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
         if (
             self.smile_name == "Adam"
-            and details.get("dev_class") == "heater_central"
+            and device.get("dev_class") == "heater_central"
             and self._on_off_device
             and self._heating_valves() is not None
         ):
-            device_data["heating_state"] = self._heating_valves() != 0
+            device["heating_state"] = self._heating_valves() != 0
 
-        return device_data
+        return device
 
-    def _device_data_climate(
-        self, details: ApplianceData, device_data: DeviceData
-    ) -> DeviceData:
+    def _device_climate(self, device: DeviceData) -> DeviceData:
         """Helper-function for _get_device_data().
         Determine climate-control device data.
         """
-        loc_id = details["location"]
+        loc_id = device["location"]
 
         # Presets
-        device_data["preset_modes"] = None
-        device_data["active_preset"] = None
+        device["preset_modes"] = None
+        device["active_preset"] = None
         if presets := self._presets(loc_id):
             presets_list = list(presets)
-            device_data["preset_modes"] = presets_list
-            device_data["active_preset"] = self._preset(loc_id)
+            device["preset_modes"] = presets_list
+            device["active_preset"] = self._preset(loc_id)
 
         # Schedule
         (
@@ -227,34 +220,34 @@ class SmileData(SmileHelper):
             self._sched_setpoints,
             last_active,
         ) = self._schedules(loc_id)
-        device_data["available_schedules"] = avail_schedules
-        device_data["selected_schedule"] = sel_schedule
+        device["available_schedules"] = avail_schedules
+        device["selected_schedule"] = sel_schedule
         if self._smile_legacy:
-            device_data["last_used"] = "".join(map(str, avail_schedules))
+            device["last_used"] = "".join(map(str, avail_schedules))
         else:
-            device_data["last_used"] = last_active
+            device["last_used"] = last_active
 
         # Control_state, only for Adam master thermostats
         if ctrl_state := self._control_state(loc_id):
-            device_data["control_state"] = ctrl_state
+            device["control_state"] = ctrl_state
 
         # Operation modes: auto, heat, heat_cool
-        device_data["mode"] = "auto"
+        device["mode"] = "auto"
         if sel_schedule == "None":
-            device_data["mode"] = "heat"
+            device["mode"] = "heat"
             if self._cooling_present:
-                device_data["mode"] = "heat_cool"
+                device["mode"] = "heat_cool"
 
         if "None" not in avail_schedules:
             loc_schedule_states = {}
             for schedule in avail_schedules:
                 loc_schedule_states[schedule] = "off"
-                if device_data["mode"] == "auto":
+                if device["mode"] == "auto":
                     loc_schedule_states[sel_schedule] = "on"
 
             self._schedule_old_states[loc_id] = loc_schedule_states
 
-        return device_data
+        return device
 
     def _check_availability(self, device: DeviceDataPoints) -> None:
         """Helper-function for _get_device_data().
@@ -298,10 +291,10 @@ class SmileData(SmileHelper):
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        device_data = self._add_appliance_data(dev_id, self.gw_devices[dev_id])
+        device = self._add_appliance_data(dev_id, self.gw_devices[dev_id])
         # Remove thermostat-dict for thermo_sensors
         if self.gw_devices[dev_id]["dev_class"] == "thermo_sensor":
-            device_data.pop("thermostat")
+            device.pop("thermostat")
 
         # Generic
         if (
@@ -314,18 +307,18 @@ class SmileData(SmileHelper):
                 self._home_location, "outdoor_temperature"
             )
             if outdoor_temperature is not None:
-                device_data["outdoor_temperature"] = outdoor_temperature
+                device["outdoor_temperature"] = outdoor_temperature
 
             # Show the allowed regulation modes
             if self._reg_allowed_modes:
-                device_data["regulation_modes"] = self._reg_allowed_modes
+                device["regulation_modes"] = self._reg_allowed_modes
 
         # Show the allowed dhw_modes
         if (
             self.gw_devices[dev_id]["dev_class"] == "heater_central"
             and self._dhw_allowed_modes
         ):
-            device_data["dhw_modes"] = self._dhw_allowed_modes
+            device["dhw_modes"] = self._dhw_allowed_modes
 
         # Get P1 data from LOCATIONS
         if (
@@ -337,26 +330,24 @@ class SmileData(SmileHelper):
             )
             is not None
         ):
-            device_data.update(power_data)
+            device.update(power_data)
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
             self._check_availability(self.gw_devices[dev_id])
 
         # Switching groups data
-        device_data = self._device_data_switching_group(
-            self.gw_devices[dev_id], device_data
-        )
+        device = self._device_switching_group(self.gw_devices[dev_id])
         # Specific, not generic Adam data
-        device_data = self._device_data_adam(self.gw_devices[dev_id], device_data)
+        device = self._device_adam(self.gw_devices[dev_id])
         # No need to obtain thermostat data when the device is not a thermostat
         if self.gw_devices[dev_id]["dev_class"] not in ZONE_THERMOSTATS:
-            return device_data
+            return device
 
         # Thermostat data (presets, temperatures etc)
-        device_data = self._device_data_climate(self.gw_devices[dev_id], device_data)
+        device = self._device_climate(self.gw_devices[dev_id])
 
-        return device_data
+        return device
 
 
 class Smile(SmileComm, SmileData):
