@@ -69,27 +69,6 @@ from .util import (
 )
 
 
-def update_helper(
-    data: DeviceDataPoints,
-    device: DeviceData,
-    device_id: str,
-    bsssw_type: str,
-    key: str,
-    notifs: dict[str, dict[str, str]],
-) -> None:
-    """Helper-function for async_update()."""
-    LOGGER.debug("HOI 5 %s", device)
-    for item in device[bsssw_type]:  # type: ignore [literal-required]
-        # Update the PW_Notification binary_sensor state
-        if bsssw_type == "binary_sensors" and item == "plugwise_notification":
-            device[bsssw_type]["plugwise_notification"] = notifs != {}  # type: ignore [literal-required]
-
-        if item == key:
-            device[bsssw_type][item] = data[key]  # type: ignore [literal-required]
-
-    LOGGER.debug("HOI 6 %s", device)
-
-
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
     """Model checking before using version_to_model."""
     if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
