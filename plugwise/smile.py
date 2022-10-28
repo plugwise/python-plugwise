@@ -182,6 +182,7 @@ class SmileData(SmileHelper):
 
             device["relay"] = counter != 0
 
+        LOGGER.debug("HOI -1 %s", device)
         return device
 
     def _device_adam(self, device: DeviceData) -> DeviceData:
