@@ -255,44 +255,43 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def _check_availability(
-        self, details: ApplianceData, device_data: DeviceDataPoints
-    ) -> None:
+    def _check_availability(self, device: DeviceDataPoints) -> None:
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
         """
         # OpenTherm device
-        if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
-            device_data["available"] = True
+        if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
+            device["available"] = True
             for data in self._notifications.values():
                 for msg in data.values():
                     if "no OpenTherm communication" in msg:
-                        device_data["available"] = False
+                        device["available"] = False
 
         # Smartmeter
-        if details["dev_class"] == "smartmeter":
-            device_data["available"] = True
+        if device["dev_class"] == "smartmeter":
+            device["available"] = True
             for data in self._notifications.values():
                 for msg in data.values():
                     if "P1 does not seem to be connected to a smart meter" in msg:
-                        device_data["available"] = False
+                        device["available"] = False
 
         # Anna thermostat
-        if "modified" in device_data:
+        if "modified" in device:
             time_now: str | None = None
             if (
                 time_now := self._domain_objects.find("./gateway/time").text
             ) is not None:
-                interval = (
-                    parse(time_now) - parse(device_data["modified"])
-                ).total_seconds()
-                if interval > 0:
-                    if details["dev_class"] == "thermostat":
-                        device_data["available"] = False
+                if (
+                    interval := (
+                        parse(time_now) - parse(device["modified"])
+                    ).total_seconds()
+                ) > 0:
+                    if device["dev_class"] == "thermostat":
+                        device["available"] = False
                         if interval < 90:
-                            device_data["available"] = True
+                            device["available"] = True
 
-            device_data.pop("modified")
+            device.pop("modified")
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
@@ -341,7 +340,7 @@ class SmileData(SmileHelper):
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
-            self._check_availability(self.gw_devices[dev_id], device_data)
+            self._check_availability(self.gw_devices[dev_id])
 
         # Switching groups data
         device_data = self._device_data_switching_group(
