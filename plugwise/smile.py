@@ -581,7 +581,10 @@ class Smile(SmileComm, SmileData):
                         device[item][key] = data[key]
 
             # Update the PW_Notification binary_sensor state
-            if "plugwise_notification" in device["binary_sensors"]:
+            if (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
+            ):
                 device["binary_sensors"]["plugwise_notification"] = self._notifications
 
             LOGGER.debug("HOI 4 %s", device)
