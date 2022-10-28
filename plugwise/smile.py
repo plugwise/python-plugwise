@@ -47,7 +47,7 @@ from .exceptions import (
     ResponseError,
     UnsupportedDeviceError,
 )
-from .helper import SmileComm, SmileHelper, update_helper
+from .helper import SmileComm, SmileHelper
 
 
 class SmileData(SmileHelper):
@@ -572,24 +572,17 @@ class Smile(SmileComm, SmileData):
         for dev_id, device in self.gw_devices.items():
             LOGGER.debug("HOI 3a %s", device)
             data = self._add_appliance_data(dev_id, {})
-            # data = self._get_device_data(dev_id)
             LOGGER.debug("HOI 3b %s", data)
-            for item in ("binary_sensors", "sensors", "switches"):
-                notifs: dict[str, dict[str, str]] = {}
-                if item == "binary_sensors":
-                    notifs = self._notifications
-                LOGGER.debug("HOI 3c %s", notifs)
-                if item in device:
-                    for key in data:
-                        if key in device[item]:
-                            update_helper(
-                                data,
-                                device,
-                                dev_id,
-                                item,
-                                key,
-                                notifs,
-                            )
+            for key in data:
+                if key in device:
+                    device[key] = data[key]
+                for item in ("binary_sensors", "sensors", "switches"):
+                    if item in device and key in device[item]:
+                        device[item][key] = data[key]
+
+            # Update the PW_Notification binary_sensor state
+            if "plugwise_notification" in device["binary_sensors"]:
+                device["binary_sensors"]["plugwise_notification"] = self._notifications
 
             LOGGER.debug("HOI 4 %s", device)
             # Update for cooling
