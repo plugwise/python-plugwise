@@ -578,6 +578,7 @@ class Smile(SmileComm, SmileData):
                 notifs: dict[str, dict[str, str]] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
+                LOGGER.debug("HOI 3c %s", notifs)
                 if item in device:
                     for key in data:
                         if key in device[item]:
