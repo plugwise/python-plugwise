@@ -585,7 +585,9 @@ class Smile(SmileComm, SmileData):
                 "binary_sensors" in device
                 and "plugwise_notification" in device["binary_sensors"]
             ):
-                device["binary_sensors"]["plugwise_notification"] = self._notifications
+                device["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
 
             LOGGER.debug("HOI 4 %s", device)
             # Update for cooling
