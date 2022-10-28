@@ -897,6 +897,7 @@ class SmileHelper:
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
+        LOGGER.debug("HOI 0 %s", data)
         if self._smile_legacy and self.smile_type == "power":
             return data
 
