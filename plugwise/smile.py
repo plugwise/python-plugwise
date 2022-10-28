@@ -123,6 +123,7 @@ class SmileData(SmileHelper):
 
             # Update for cooling
             self.update_for_cooling(device)
+        LOGGER.debug("HOI %s", self.gw_devices)
 
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["gateway_id"] = self.gateway_id
