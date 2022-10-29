@@ -312,7 +312,7 @@ class SmileData(SmileHelper):
         device_old = copy.deepcopy(device)
         LOGGER.debug("HOI -2 device in: %s", device_old)
         # Remove thermostat-dict for thermo_sensors
-        if device_old["dev_class"] == "thermo_sensor":
+        if device_old["dev_class"] == "thermo_sensor" and "thermostat" in device:
             device.pop("thermostat")
 
         # Generic
