@@ -3,6 +3,8 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
+import copy
+
 import aiohttp
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
@@ -173,12 +175,12 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
-        device_old = device
+        device_old = copy.deepcopy(device)
         LOGGER.debug("HOI 1 device_old in: %s", device_old)
         if device["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member_id in device["members"]:
-                device = device_old
+                device = copy.deepcopy(device_old)
                 LOGGER.debug("HOI 1 device reset to old: %s", device)
                 member_data = self._add_appliance_data(member_id, device)
                 LOGGER.debug("HOI 1 member_data: %s", member_data)
