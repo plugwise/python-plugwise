@@ -337,7 +337,7 @@ class SmileData(SmileHelper):
         LOGGER.debug("HOI -1 before pdfl: %s", device)
         if (
             device_old["dev_class"] == "smartmeter"
-            and (power_data := self._power_data_from_location(device["location"]))
+            and (power_data := self._power_data_from_location(device_old["location"]))
             is not None
         ):
             device.update(power_data)
@@ -591,6 +591,7 @@ class Smile(SmileComm, SmileData):
                 for item in ("binary_sensors", "sensors", "switches"):
                     if item in device and key in device[item]:
                         device[item][key] = data[key]
+            LOGGER.debug("HOI a_update out 1: %s", device)
 
             # Update the PW_Notification binary_sensor state
             if (
@@ -600,12 +601,13 @@ class Smile(SmileComm, SmileData):
                 device["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
-            LOGGER.debug("HOI a_update updated: %s", device)
+            LOGGER.debug("HOI a_update updated 2: %s", device)
 
             # Update for cooling
             device = self.update_for_cooling(device)
-            LOGGER.debug("HOI a_update updated for cooling: %s", device)
+            LOGGER.debug("HOI a_update updated 3 for cooling: %s", device)
             self.gw_devices[dev_id] = device
+            LOGGER.debug("HOI gw_devices out: %s", self.gw_devices[dev_id])
 
         return (self.gw_data, self.gw_devices)
 
