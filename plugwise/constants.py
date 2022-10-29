@@ -736,11 +736,11 @@ class ActuatorItems(TypedDict, total=False):
 
 
 class DeviceData(
-    ApplianceData,
+    ActuatorItems,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
-    ActuatorItems,
+    ApplianceData,
     TypedDict,
     total=False,
 ):
