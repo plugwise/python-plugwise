@@ -958,6 +958,7 @@ class SmileHelper:
                     elif "cooling_ena_switch" in data:
                         self._cooling_enabled = data["cooling_ena_switch"]
                         self._cooling_active = data["cooling_state"]
+                LOGGER.debug("HOI cooling determined: %s", self._cooling_enabled)
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
