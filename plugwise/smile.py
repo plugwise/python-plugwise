@@ -592,7 +592,7 @@ class Smile(SmileComm, SmileData):
                 )
 
             # Update for cooling
-            self.update_for_cooling(device)
+            device = self.update_for_cooling(device)
 
         return (self.gw_data, self.gw_devices)
 
