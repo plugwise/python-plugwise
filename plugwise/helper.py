@@ -1328,7 +1328,7 @@ class SmileHelper:
     def _update_device_with_dicts(
         self,
         d_id: str,
-        data: DeviceData,
+        device: DeviceData,
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
@@ -1337,16 +1337,16 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        for key, value in list(data.items()):
+        for key, value in device.items():
             if key in BINARY_SENSORS:
-                data.pop(key)  # type: ignore [misc]
+                device.pop(key)  # type: ignore [misc]
                 if self._opentherm_device or self._on_off_device:
                     bs_dict[key] = value  # type: ignore[literal-required]
             if key in SENSORS:
-                data.pop(key)  # type: ignore [misc]
+                device.pop(key)  # type: ignore [misc]
                 s_dict[key] = value  # type: ignore[literal-required]
             if key in SWITCHES:
-                data.pop(key)  # type: ignore [misc]
+                device.pop(key)  # type: ignore [misc]
                 sw_dict[key] = value  # type: ignore[literal-required]
 
         # Add plugwise notification binary_sensor to the relevant gateway
@@ -1357,10 +1357,10 @@ class SmileHelper:
                 bs_dict["plugwise_notification"] = False
 
         if bs_dict:
-            data["binary_sensors"] = bs_dict
+            device["binary_sensors"] = bs_dict
         if s_dict:
-            data["sensors"] = s_dict
+            device["sensors"] = s_dict
         if sw_dict:
-            data["switches"] = sw_dict
+            device["switches"] = sw_dict
 
-        return data
+        return device
