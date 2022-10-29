@@ -346,13 +346,13 @@ class SmileData(SmileHelper):
         device = self._device_adam(device)
         # No need to obtain thermostat data when the device is not a thermostat
         if device["dev_class"] not in ZONE_THERMOSTATS:
-            LOGGER.debug("HOI -3 device out: %s", device)
+            LOGGER.debug("HOI -3 device data out: %s", device)
             return device
 
         # Thermostat data (presets, temperatures etc)
         device = self._device_climate(device)
 
-        LOGGER.debug("HOI -3 device out: %s", device)
+        LOGGER.debug("HOI -3 device data out: %s", device)
         return device
 
 
