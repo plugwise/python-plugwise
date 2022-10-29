@@ -74,7 +74,7 @@ class SmileData(SmileHelper):
             return device
 
         # For heating + cooling, replace setpoint with setpoint_high/_low
-        if self._cooling_present:
+        if self._cooling_present and "thermostat" in device_old:
             thermostat = device_old["thermostat"]
             setpoint = thermostat["setpoint"]
             max_setpoint = MAX_SETPOINT
