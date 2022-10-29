@@ -578,7 +578,13 @@ class Smile(SmileComm, SmileData):
         for dev_id, device in self.gw_devices.items():
             LOGGER.debug("HOI a_update in: %s", device)
             data = self._get_device_data(dev_id, device)
-            LOGGER.debug("HOI gdd_data oit %s", data)
+            if "binary_sensors" in data:
+                data.pop("binary_sensors")
+            if "sensors" in data:
+                data.pop("sensors")
+            if "switches" in data:
+                data.pop("switches")
+            LOGGER.debug("HOI gdd_data out %s", data)
             for key in data:
                 if key in device:
                     device[key] = data[key]
