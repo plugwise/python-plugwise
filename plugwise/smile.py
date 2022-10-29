@@ -577,7 +577,8 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, device in self.gw_devices.items():
             LOGGER.debug("HOI a_update in: %s", device)
-            data = self._get_device_data(dev_id, device)
+            device_old = copy.deepcopy(device)
+            data = self._get_device_data(dev_id, device_old)
             if "binary_sensors" in data:
                 data.pop("binary_sensors")
             if "sensors" in data:
