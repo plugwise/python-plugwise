@@ -4,6 +4,7 @@ Plugwise Smile protocol helpers.
 from __future__ import annotations
 
 import asyncio
+import copy
 import datetime as dt
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
@@ -1337,7 +1338,7 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        for key, value in device.items():
+        for key, value in copy.deepcopy(device.items()):
             if key in BINARY_SENSORS:
                 device.pop(key)  # type: ignore [misc]
                 if self._opentherm_device or self._on_off_device:
