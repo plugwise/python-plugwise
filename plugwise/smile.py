@@ -128,11 +128,14 @@ class SmileData(SmileHelper):
                 sw_dict,
             )
             LOGGER.debug("HOI udwd done: %s", device)
+            self.gw_devices[dev_id] = device
 
-            # Update for cooling
+        # Separate pass updating for cooling
+        for dev_id, device in self.gw_devices.items():
             device = self.update_for_cooling(device)
             LOGGER.debug("HOI ufc done: %s", device)
             self.gw_devices[dev_id] = device
+
         LOGGER.debug("HOI done: %s", self.gw_devices)
 
         self.gw_data["smile_name"] = self.smile_name
@@ -606,11 +609,14 @@ class Smile(SmileComm, SmileData):
                 )
             LOGGER.debug("HOI a_update updated 2: %s", device)
 
-            # Update for cooling
+            self.gw_devices[dev_id] = device
+            LOGGER.debug("HOI gw_devices out: %s", self.gw_devices[dev_id])
+
+        # Separate pass updating for cooling
+        for dev_id, device in self.gw_devices.items():
             device = self.update_for_cooling(device)
             LOGGER.debug("HOI a_update updated 3 for cooling: %s", device)
             self.gw_devices[dev_id] = device
-            LOGGER.debug("HOI gw_devices out: %s", self.gw_devices[dev_id])
 
         return (self.gw_data, self.gw_devices)
 
