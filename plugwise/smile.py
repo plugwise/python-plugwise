@@ -204,9 +204,10 @@ class SmileData(SmileHelper):
         Determine Adam device data.
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
+        device_old = copy.deepcopy(device)
         if (
             self.smile_name == "Adam"
-            and device.get("dev_class") == "heater_central"
+            and device_old.get("dev_class") == "heater_central"
             and self._on_off_device
             and self._heating_valves() is not None
         ):
@@ -309,13 +310,14 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         device = self._add_appliance_data(dev_id, self.gw_devices[dev_id])
-        LOGGER.debug("HOI -2 device in: %s", device)
+        device_old = copy.deepcopy(device)
+        LOGGER.debug("HOI -2 device in: %s", device_old)
         # Remove thermostat-dict for thermo_sensors
-        if device["dev_class"] == "thermo_sensor":
+        if device_old["dev_class"] == "thermo_sensor":
             device.pop("thermostat")
 
         # Generic
-        if self.smile_type == "thermostat" and device["dev_class"] == "gateway":
+        if self.smile_type == "thermostat" and device_old["dev_class"] == "gateway":
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
             # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             outdoor_temperature = self._object_value(
@@ -329,12 +331,12 @@ class SmileData(SmileHelper):
                 device["regulation_modes"] = self._reg_allowed_modes
 
         # Show the allowed dhw_modes
-        if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
+        if device_old["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device["dhw_modes"] = self._dhw_allowed_modes
 
         # Get P1 data from LOCATIONS
         if (
-            device["dev_class"] == "smartmeter"
+            device_old["dev_class"] == "smartmeter"
             and (power_data := self._power_data_from_location(device["location"]))
             is not None
         ):
@@ -350,7 +352,7 @@ class SmileData(SmileHelper):
         # Specific, not generic Adam data
         device = self._device_adam(device)
         # No need to obtain thermostat data when the device is not a thermostat
-        if device["dev_class"] not in ZONE_THERMOSTATS:
+        if device_old["dev_class"] not in ZONE_THERMOSTATS:
             LOGGER.debug("HOI -3 device data out: %s", device)
             return device
 
