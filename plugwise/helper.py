@@ -913,7 +913,9 @@ class SmileHelper:
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     for item in ACTIVE_ACTUATORS:
-                        if actuator := _get_actuator_data(appliance, item) is not None:
+                        if (
+                            actuator := _get_actuator_data(appliance, item)
+                        ) is not None:
                             device[item] = actuator
 
             # Collect availability-status for wireless connected devices to Adam
