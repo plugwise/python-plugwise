@@ -77,7 +77,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree, item: str) -> ActuatorData:
+def _get_actuator_functionalities(xml: etree, item: str) -> ActuatorData | None:
     """Helper-function for _add_appliance_data()."""
     temp_dict: ActuatorData = {
         "lower_bound": 0.0,
@@ -95,7 +95,15 @@ def _get_actuator_functionalities(xml: etree, item: str) -> ActuatorData:
 
             temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
 
-    return temp_dict
+    if temp_dict != {
+        "lower_bound": 0.0,
+        "setpoint": 0.0,
+        "resolution": 0.0,
+        "upper_bound": 0.0,
+    }:
+        return temp_dict
+
+    return None
 
 
 def schedules_temps(
