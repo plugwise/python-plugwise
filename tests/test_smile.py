@@ -2769,7 +2769,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat BK",
                 "zigbee_mac_address": "ABCD012345670A17",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                     "lower_bound": 0.0,
@@ -2834,7 +2834,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat  BK2",
                 "zigbee_mac_address": "ABCD012345670A11",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 18.0,
                     "setpoint_high": 20.5,
                     "lower_bound": 0.0,
@@ -2895,7 +2895,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Thermostaat WK",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 18.0,
                     "setpoint_high": 21.5,
                     "lower_bound": 1.0,
@@ -2942,7 +2942,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat RB",
                 "zigbee_mac_address": "ABCD012345670A04",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 4.0,
                     "setpoint_high": 17.0,
                     "lower_bound": 0.0,
@@ -2972,7 +2972,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat BK1",
                 "zigbee_mac_address": "ABCD012345670A09",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 18.0,
                     "setpoint_high": 20.5,
                     "lower_bound": 0.0,
@@ -3002,7 +3002,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat SQ",
                 "zigbee_mac_address": "ABCD012345670A07",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 4.0,
                     "setpoint_high": 18.5,
                     "lower_bound": 0.0,
@@ -3138,7 +3138,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat KK",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 18.0,
                     "setpoint_high": 21.5,
                     "lower_bound": 0.0,
@@ -3169,7 +3169,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat SJ",
                 "zigbee_mac_address": "ABCD012345670A13",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 4.0,
                     "setpoint_high": 20.5,
                     "lower_bound": 0.0,
@@ -3199,7 +3199,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat DB",
                 "zigbee_mac_address": "ABCD012345670A20",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                     "lower_bound": 0.0,
@@ -3229,7 +3229,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Thermostaat JM",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 4.0,
                     "setpoint_high": 18.0,
                     "lower_bound": 0.0,
@@ -3762,7 +3762,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 20.5,
                     "setpoint_high": 24.0,
                     "lower_bound": 4.0,
@@ -3880,7 +3880,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 4.0,
                     "setpoint_high": 22.0,
                     "lower_bound": 4.0,
@@ -4031,7 +4031,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 19.5,
                     "setpoint_high": 23.0,
                     "lower_bound": 4.0,
@@ -4134,7 +4134,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 19.5,
                     "setpoint_high": 30.0,
                     "lower_bound": 4.0,
@@ -4186,7 +4186,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 19.0,
                     "setpoint_high": 23.0,
                     "lower_bound": 4.0,
@@ -4289,7 +4289,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 20.5,
                     "setpoint_high": 25.5,
                     "lower_bound": 4.0,
@@ -4398,7 +4398,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
+                "hc_thermostat": {
                     "setpoint_low": 19.5,
                     "setpoint_high": 23.5,
                     "lower_bound": 4.0,
