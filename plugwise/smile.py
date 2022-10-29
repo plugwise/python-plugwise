@@ -173,10 +173,10 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
         Determine switching group device data.
         """
+        device_old = device
         if device["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member_id in device["members"]:
-                device_old = device
                 member_data = self._add_appliance_data(member_id, device)
                 LOGGER.debug("HOI 1 %s", member_data)
                 if member_data.get("relay"):
