@@ -575,7 +575,7 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, device in self.gw_devices.items():
             LOGGER.debug("HOI a_update in: %s", device)
-            data = self._add_appliance_data(dev_id, {})
+            data = self._get_device_data(dev_id)
             for key in data:
                 if key in device:
                     device[key] = data[key]
