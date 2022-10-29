@@ -160,8 +160,8 @@ def power_data_local_format(
 
 
 def power_data_energy_diff(
-    measurement: str, net_string: str, f_val: float | int, direct_data: SmileSensors
-) -> SmileSensors:
+    measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
+) -> DeviceData:
     """Calculate differential energy."""
     if "electricity" in measurement and "interval" not in net_string:
         diff = 1
@@ -1088,7 +1088,7 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
-    def _power_data_peak_value(self, direct_data: SmileSensors, loc: Munch) -> Munch:
+    def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
         no_tariffs = False
@@ -1125,11 +1125,11 @@ class SmileHelper:
 
         return loc
 
-    def _power_data_from_location(self, loc_id: str) -> SmileSensors:
+    def _power_data_from_location(self, loc_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: SmileSensors = {}
+        direct_data: DeviceData = {}
         loc = Munch()
 
         search = self._locations
