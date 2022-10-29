@@ -257,7 +257,7 @@ class SmileData(SmileHelper):
 
         return device
 
-    def _check_availability(self, device: DeviceDataPoints) -> None:
+    def _check_availability(self, device: DeviceDataPoints) -> DeviceDataPoints:
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
         """
@@ -294,6 +294,8 @@ class SmileData(SmileHelper):
                             device["available"] = True
 
             device.pop("modified")
+
+        return device
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
@@ -333,7 +335,7 @@ class SmileData(SmileHelper):
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
-            self._check_availability(device)
+            device = self._check_availability(device)
 
         # Switching groups data
         device = self._device_switching_group(device)
