@@ -177,6 +177,7 @@ class SmileData(SmileHelper):
             counter = 0
             for member in device["members"]:
                 member_data = self._add_appliance_data(member, device)
+                LOGGER.debug("HOI 1 %s", member_data)
                 if member_data.get("relay"):
                     counter += 1
 
