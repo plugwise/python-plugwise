@@ -348,12 +348,13 @@ class SmileData(SmileHelper):
 
         # Switching groups data
         device = self._device_switching_group(device)
-        LOGGER.debug("HOI -1 %s", device)
+        LOGGER.debug("HOI -1 dsw: %s", device)
         # Specific, not generic Adam data
         device = self._device_adam(device)
+        LOGGER.debug("HOI -1 d_adam: %s", device)
         # No need to obtain thermostat data when the device is not a thermostat
         if device_old["dev_class"] not in ZONE_THERMOSTATS:
-            LOGGER.debug("HOI -3 device data out: %s", device)
+            LOGGER.debug("HOI -3 device no zone_th data out: %s", device)
             return device
 
         # Thermostat data (presets, temperatures etc)
