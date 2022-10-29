@@ -375,6 +375,7 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
 )
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
     "domestic_hot_water_setpoint",
+    "hc_thermostat",
     "maximum_boiler_temperature",
     "thermostat",
 )
