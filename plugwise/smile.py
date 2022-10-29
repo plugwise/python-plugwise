@@ -333,6 +333,7 @@ class SmileData(SmileHelper):
             and (power_data := self._power_data_from_location(device_old["location"]))
             is not None
         ):
+            LOGGER.debug("HOI power data: %s", power_data)
             device.update(power_data)
 
         # Check availability of non-legacy wired-connected devices
