@@ -117,7 +117,6 @@ class SmileData(SmileHelper):
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
             device = self._get_device_data(device_id)
-            LOGGER.debug("HOI update_dev_with_dicts in: %s", device)
             device = self._update_device_with_dicts(
                 device_id,
                 device,
