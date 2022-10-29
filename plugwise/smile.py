@@ -129,6 +129,7 @@ class SmileData(SmileHelper):
             # Update for cooling
             device = self.update_for_cooling(device)
             LOGGER.debug("HOI ufc done: %s", device)
+            self.gw_devices[device_id] = device
         LOGGER.debug("HOI done: %s", self.gw_devices)
 
         self.gw_data["smile_name"] = self.smile_name
