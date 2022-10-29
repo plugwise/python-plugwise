@@ -917,7 +917,7 @@ class SmileHelper:
                         if (
                             actuator := _get_actuator_data(appliance, item)
                         ) is not None:
-                            device[item] = actuator
+                            device[item] = actuator  # type: ignore [literal-required]
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, device)
@@ -1320,7 +1320,7 @@ class SmileHelper:
         if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
-                return found.text == "true"
+                return bool(found.text == "true")
 
         return None
 
