@@ -301,7 +301,7 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         device = self._add_appliance_data(dev_id, self.gw_devices[dev_id])
-        LOGGER.debug("HOI -2 %s", device)
+        LOGGER.debug("HOI -2 device in: %s", device)
         # Remove thermostat-dict for thermo_sensors
         if self.gw_devices[dev_id]["dev_class"] == "thermo_sensor":
             device.pop("thermostat")
@@ -357,6 +357,7 @@ class SmileData(SmileHelper):
         # Thermostat data (presets, temperatures etc)
         device = self._device_climate(self.gw_devices[dev_id])
 
+        LOGGER.debug("HOI -3 device out: %s", device)
         return device
 
 
