@@ -112,13 +112,14 @@ class SmileData(SmileHelper):
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        for device_id, device in self.gw_devices.items():
+        for dev_id, device in self.gw_devices.items():
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
-            device = self._get_device_data(device_id)
+            device = self._add_appliance_data(dev_id, device)
+            device = self._get_device_data(dev_id, device)
             device = self._update_device_with_dicts(
-                device_id,
+                dev_id,
                 device,
                 bs_dict,
                 s_dict,
@@ -129,7 +130,7 @@ class SmileData(SmileHelper):
             # Update for cooling
             device = self.update_for_cooling(device)
             LOGGER.debug("HOI ufc done: %s", device)
-            self.gw_devices[device_id] = device
+            self.gw_devices[dev_id] = device
         LOGGER.debug("HOI done: %s", self.gw_devices)
 
         self.gw_data["smile_name"] = self.smile_name
@@ -304,11 +305,10 @@ class SmileData(SmileHelper):
 
         return device
 
-    def _get_device_data(self, dev_id: str) -> DeviceData:
+    def _get_device_data(self, dev_id: str, device: DeviceData) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        device = self._add_appliance_data(dev_id, self.gw_devices[dev_id])
         device_old = copy.deepcopy(device)
         LOGGER.debug("HOI -2 device in: %s", device_old)
         # Remove thermostat-dict for thermo_sensors
@@ -575,7 +575,7 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, device in self.gw_devices.items():
             LOGGER.debug("HOI a_update in: %s", device)
-            data = self._get_device_data(dev_id)
+            data = self._get_device_data(dev_id, device)
             for key in data:
                 if key in device:
                     device[key] = data[key]
