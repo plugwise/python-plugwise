@@ -5018,7 +5018,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
+                "binary_sensors": {"plugwise_notification": True},
             },
             "ba4de7613517478da82dd9b6abea36af": {
                 "dev_class": "smartmeter",
