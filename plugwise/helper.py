@@ -77,7 +77,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree, item: str) -> ActuatorData | None:
+def _get_actuator_data(xml: etree, item: str) -> ActuatorData | None:
     """Helper-function for _add_appliance_data()."""
     temp_dict: ActuatorData = {
         "lower_bound": 0.0,
@@ -913,7 +913,8 @@ class SmileHelper:
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     for item in ACTIVE_ACTUATORS:
-                        device[item] = _get_actuator_functionalities(appliance, item)
+                        if actuator := _get_actuator_data(appliance, item) is not None:
+                            device[item] = actuator
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, device)
