@@ -54,31 +54,32 @@ from .helper import SmileComm, SmileHelper
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def update_for_cooling(self, device: DeviceData) -> None:
+    def update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
         # For Adam + on/off cooling, modify heating_state and cooling_state
         # based on provided info by Plugwise
+        device_old = copy.deepcopy(device)
         if (
             self.smile_name == "Adam"
-            and device["dev_class"] == "heater_central"
+            and device_old["dev_class"] == "heater_central"
             and self._on_off_device
             and self._cooling_active
-            and device["binary_sensors"]["heating_state"]
+            and device_old["binary_sensors"]["heating_state"]
         ):
             device["binary_sensors"]["cooling_state"] = True
             device["binary_sensors"]["heating_state"] = False
 
         # Add setpoint_low and setpoint_high when cooling is enabled
-        if device["dev_class"] not in ZONE_THERMOSTATS:
+        if device_old["dev_class"] not in ZONE_THERMOSTATS:
             return
 
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if self._cooling_present:
-            thermostat = device["thermostat"]
+            thermostat = device_old["thermostat"]
             setpoint = thermostat["setpoint"]
             max_setpoint = MAX_SETPOINT
             min_setpoint = MIN_SETPOINT
-            if device["selected_schedule"] != "None":
+            if device_old["selected_schedule"] != "None":
                 max_setpoint = self._sched_setpoints[1]
                 min_setpoint = self._sched_setpoints[0]
 
@@ -105,6 +106,8 @@ class SmileData(SmileHelper):
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
 
+        return device
+
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
@@ -124,7 +127,7 @@ class SmileData(SmileHelper):
             )
 
             # Update for cooling
-            self.update_for_cooling(device)
+            device = self.update_for_cooling(device)
         LOGGER.debug("HOI done: %s", self.gw_devices)
 
         self.gw_data["smile_name"] = self.smile_name
