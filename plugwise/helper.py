@@ -898,7 +898,6 @@ class SmileHelper:
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
-        LOGGER.debug("HOI 0 %s", data)
         if self._smile_legacy and self.smile_type == "power":
             return data
 
@@ -958,7 +957,6 @@ class SmileHelper:
                     elif "cooling_ena_switch" in data:
                         self._cooling_enabled = data["cooling_ena_switch"]
                         self._cooling_active = data["cooling_state"]
-                LOGGER.debug("HOI cooling determined: %s", self._cooling_enabled)
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
@@ -1340,7 +1338,6 @@ class SmileHelper:
         and add these to the output.
         """
         device_old = copy.deepcopy(device)
-        LOGGER.debug("HOI udwd in: %s", device_old)
         for key, value in device_old.items():
             if key in BINARY_SENSORS:
                 device.pop(key)  # type: ignore [misc]
@@ -1354,7 +1351,6 @@ class SmileHelper:
                 sw_dict[key] = value  # type: ignore[literal-required]
 
         # Add plugwise notification binary_sensor to the relevant gateway
-        LOGGER.debug("HOI udwd gateway id: %s", self.gateway_id)
         if d_id == self.gateway_id:
             if self._is_thermostat or (
                 not self._smile_legacy and self.smile_type == "power"
@@ -1368,5 +1364,4 @@ class SmileHelper:
         if sw_dict:
             device["switches"] = sw_dict
 
-        LOGGER.debug("HOI udwd out: %s", device)
         return device

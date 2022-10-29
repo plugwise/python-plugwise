@@ -82,8 +82,6 @@ class SmileData(SmileHelper):
             if device_old["selected_schedule"] != "None":
                 loc_id = device["location"]
                 (_, _, self._sched_setpoints, _) = self._schedules(loc_id)
-                LOGGER.debug("HOI setpoints: %s", self._sched_setpoints)
-                LOGGER.debug("HOI cooling: %s", self._cooling_enabled)
                 max_setpoint = self._sched_setpoints[1]
                 min_setpoint = self._sched_setpoints[0]
 
@@ -129,16 +127,12 @@ class SmileData(SmileHelper):
                 s_dict,
                 sw_dict,
             )
-            LOGGER.debug("HOI udwd done: %s", device)
             self.gw_devices[dev_id] = device
 
         # Separate pass updating for cooling
         for dev_id, device in self.gw_devices.items():
             device = self.update_for_cooling(device)
-            LOGGER.debug("HOI ufc done: %s", device)
             self.gw_devices[dev_id] = device
-
-        LOGGER.debug("HOI done: %s", self.gw_devices)
 
         self.gw_data["smile_name"] = self.smile_name
         self.gw_data["gateway_id"] = self.gateway_id
@@ -183,7 +177,6 @@ class SmileData(SmileHelper):
             self.gw_devices.update(group_data)
 
         # Collect data for each device via helper function
-        LOGGER.debug("HOI start %s", self.gw_devices)
         self._all_device_data()
 
     def _device_switching_group(self, device: DeviceData) -> DeviceData:
@@ -191,15 +184,11 @@ class SmileData(SmileHelper):
         Determine switching group device data.
         """
         device_old = copy.deepcopy(device)
-        LOGGER.debug("HOI 1 device_old in: %s", device_old)
         if device["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member_id in device["members"]:
                 device = copy.deepcopy(device_old)
-                LOGGER.debug("HOI 1 device reset to old: %s", device)
                 member_data = self._add_appliance_data(member_id, device)
-                LOGGER.debug("HOI 1 member_data: %s", member_data)
-                LOGGER.debug("HOI 1 device_old out: %s", device_old)
                 if member_data.get("relay"):
                     counter += 1
 
@@ -317,7 +306,6 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         device_old = copy.deepcopy(device)
-        LOGGER.debug("HOI -2 device in: %s", device_old)
         # Remove thermostat-dict for thermo_sensors
         if device_old["dev_class"] == "thermo_sensor" and "thermostat" in device:
             device.pop("thermostat")
@@ -341,7 +329,6 @@ class SmileData(SmileHelper):
             device["dhw_modes"] = self._dhw_allowed_modes
 
         # Get P1 data from LOCATIONS
-        LOGGER.debug("HOI -1 before pdfl: %s", device)
         if (
             device_old["dev_class"] == "smartmeter"
             and (power_data := self._power_data_from_location(device_old["location"]))
@@ -354,21 +341,16 @@ class SmileData(SmileHelper):
             device = self._check_availability(device)
 
         # Switching groups data
-        LOGGER.debug("HOI -1 before dsw: %s", device)
         device = self._device_switching_group(device)
-        LOGGER.debug("HOI -1 dsw: %s", device)
         # Specific, not generic Adam data
         device = self._device_adam(device)
-        LOGGER.debug("HOI -1 d_adam: %s", device)
         # No need to obtain thermostat data when the device is not a thermostat
         if device_old["dev_class"] not in ZONE_THERMOSTATS:
-            LOGGER.debug("HOI -3 device no zone_th data out: %s", device)
             return device
 
         # Thermostat data (presets, temperatures etc)
         device = self._device_climate(device)
 
-        LOGGER.debug("HOI -3 device data out: %s", device)
         return device
 
 
@@ -583,7 +565,6 @@ class Smile(SmileComm, SmileData):
         self.gw_data["notifications"] = self._notifications
 
         for dev_id, device in self.gw_devices.items():
-            LOGGER.debug("HOI a_update in: %s", device)
             device_old = copy.deepcopy(device)
             data = self._get_device_data(dev_id, device_old)
             if "binary_sensors" in data:
@@ -592,14 +573,12 @@ class Smile(SmileComm, SmileData):
                 data.pop("sensors")
             if "switches" in data:
                 data.pop("switches")
-            LOGGER.debug("HOI gdd_data out %s", data)
             for key in data:
                 if key in device:
                     device[key] = data[key]
                 for item in ("binary_sensors", "sensors", "switches"):
                     if item in device and key in device[item]:
                         device[item][key] = data[key]
-            LOGGER.debug("HOI a_update out 1: %s", device)
 
             # Update the PW_Notification binary_sensor state
             if (
@@ -609,15 +588,12 @@ class Smile(SmileComm, SmileData):
                 device["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
-            LOGGER.debug("HOI a_update updated 2: %s", device)
 
             self.gw_devices[dev_id] = device
-            LOGGER.debug("HOI gw_devices out: %s", self.gw_devices[dev_id])
 
         # Separate pass updating for cooling
         for dev_id, device in self.gw_devices.items():
             device = self.update_for_cooling(device)
-            LOGGER.debug("HOI a_update updated 3 for cooling: %s", device)
             self.gw_devices[dev_id] = device
 
         return (self.gw_data, self.gw_devices)
