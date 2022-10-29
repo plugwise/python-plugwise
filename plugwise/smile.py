@@ -346,6 +346,7 @@ class SmileData(SmileHelper):
             device = self._check_availability(device)
 
         # Switching groups data
+        LOGGER.debug("HOI -1 before dsw: %s", device)
         device = self._device_switching_group(device)
         LOGGER.debug("HOI -1 dsw: %s", device)
         # Specific, not generic Adam data
