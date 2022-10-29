@@ -891,14 +891,14 @@ class SmileHelper:
             if module_data["available"] is not None:
                 data["available"] = module_data["available"]
 
-    def _add_appliance_data(self, d_id: str, data: DeviceData) -> DeviceData:
+    def _add_appliance_data(self, d_id: str, device: DeviceData) -> DeviceData:
         """Helper-function for smile.py: _add_device_data().
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
-            return data
+            return device
 
         measurements = DEVICE_MEASUREMENTS
         if d_id == self._heater_id:
@@ -908,60 +908,58 @@ class SmileHelper:
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
 
-            data = self._appliance_measurements(appliance, data, measurements)
-            data.update(self._get_lock_state(appliance))
+            device = self._appliance_measurements(appliance, device, measurements)
+            device.update(self._get_lock_state(appliance))
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
-                    data.update(_get_actuator_functionalities(appliance))
+                    device.update(_get_actuator_functionalities(appliance))
 
             # Collect availability-status for wireless connected devices to Adam
-            self._wireless_availablity(appliance, data)
+            self._wireless_availablity(appliance, device)
 
             # Collect modified_date for devices without available-status
             if not self._smile_legacy and (
-                d_id != self.gateway_id or "available" not in data
+                d_id != self.gateway_id or "available" not in device
             ):
-                data["modified"] = appliance.find("modified_date").text
+                device["modified"] = appliance.find("modified_date").text
 
         # Remove c_heating_state from the output
-        if "c_heating_state" in data:
+        if "c_heating_state" in device:
             # Anna + Elga and Adam + OnOff heater/cooler don't use intended_cental_heating_state
             # to show the generic heating state
-            if (self._cooling_present and "heating_state" in data) or (
+            if (self._cooling_present and "heating_state" in device) or (
                 self.smile_name == "Adam" and self._on_off_device
             ):
-                if data.get("c_heating_state") and not data.get("heating_state"):
-                    data["heating_state"] = True
+                if device.get("c_heating_state") and not device.get("heating_state"):
+                    device["heating_state"] = True
                     # For Adam + OnOff cooling heating_state = True means cooling is active
                     if self._cooling_present:
                         self._cooling_active = True
 
-            data.pop("c_heating_state")
+            device.pop("c_heating_state")
 
         # Fix for Adam + Anna: heating_state also present under Anna, remove
-        if "temperature" in data:
-            data.pop("heating_state", None)
+        if "temperature" in device:
+            device.pop("heating_state", None)
 
-        if d_id == self._heater_id:
-            # Adam
-            if self.smile_name == "Smile Anna":
-                # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
-                if self._cooling_present:
-                    # Elga:
-                    if "elga_status_code" in data:
-                        self._cooling_enabled = data["elga_status_code"] in [8, 9]
-                        self._cooling_active = data["elga_status_code"] == 8
-                        data.pop("elga_status_code", None)
-                    # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                    elif "cooling_ena_switch" in data:
-                        self._cooling_enabled = data["cooling_ena_switch"]
-                        self._cooling_active = data["cooling_state"]
+        if d_id == self._heater_id and self.smile_name == "Smile Anna":
+            # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
+            if self._cooling_present:
+                # Elga:
+                if "elga_status_code" in device:
+                    self._cooling_enabled = device["elga_status_code"] in [8, 9]
+                    self._cooling_active = device["elga_status_code"] == 8
+                    device.pop("elga_status_code", None)
+                # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+                elif "cooling_ena_switch" in device:
+                    self._cooling_enabled = device["cooling_ena_switch"]
+                    self._cooling_active = device["cooling_state"]
 
         # Don't show cooling_state when no cooling present
-        if not self._cooling_present and "cooling_state" in data:
-            data.pop("cooling_state")
+        if not self._cooling_present and "cooling_state" in device:
+            device.pop("cooling_state")
 
-        return data
+        return device
 
     def _rank_thermostat(
         self,
