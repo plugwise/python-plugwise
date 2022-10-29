@@ -334,6 +334,7 @@ class SmileData(SmileHelper):
             device["dhw_modes"] = self._dhw_allowed_modes
 
         # Get P1 data from LOCATIONS
+        LOGGER.debug("HOI -1 before pdfl: %s", device)
         if (
             device_old["dev_class"] == "smartmeter"
             and (power_data := self._power_data_from_location(device["location"]))
