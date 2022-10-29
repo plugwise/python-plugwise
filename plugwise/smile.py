@@ -175,16 +175,17 @@ class SmileData(SmileHelper):
         """
         if device["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
-            for member in device["members"]:
-                member_data = self._add_appliance_data(member, device)
+            for member_id in device["members"]:
+                device_old = device
+                member_data = self._add_appliance_data(member_id, device)
                 LOGGER.debug("HOI 1 %s", member_data)
                 if member_data.get("relay"):
                     counter += 1
 
-            device["relay"] = counter != 0
+            device_old["relay"] = counter != 0
 
-        LOGGER.debug("HOI -1 %s", device)
-        return device
+        LOGGER.debug("HOI -1 %s", device_old)
+        return device_old
 
     def _device_adam(self, device: DeviceData) -> DeviceData:
         """Helper-function for _get_device_data().
