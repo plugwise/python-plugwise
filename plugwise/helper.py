@@ -1040,11 +1040,11 @@ class SmileHelper:
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self) -> DeviceData:
+    def _group_switches(self) -> dict[str, DeviceData]:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
-        switch_groups: DeviceData = {}
+        switch_groups: dict[str, DeviceData] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Smile Anna":
             return switch_groups
