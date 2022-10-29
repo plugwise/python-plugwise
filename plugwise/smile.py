@@ -169,6 +169,7 @@ class SmileData(SmileHelper):
             self.gw_devices.update(group_data)
 
         # Collect data for each device via helper function
+        LOGGER.debug("HOI start %s", self.gw_devices)
         self._all_device_data()
 
     def _device_switching_group(self, device: DeviceData) -> DeviceData:
