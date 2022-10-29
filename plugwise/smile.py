@@ -352,6 +352,7 @@ class SmileData(SmileHelper):
         device = self._device_adam(self.gw_devices[dev_id])
         # No need to obtain thermostat data when the device is not a thermostat
         if self.gw_devices[dev_id]["dev_class"] not in ZONE_THERMOSTATS:
+            LOGGER.debug("HOI -3 device out: %s", device)
             return device
 
         # Thermostat data (presets, temperatures etc)
