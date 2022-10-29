@@ -48,7 +48,6 @@ from .constants import (
     ActuatorData,
     ApplianceData,
     DeviceData,
-    DeviceDataPoints,
     GatewayData,
     ModelData,
     SmileBinarySensors,
@@ -78,9 +77,9 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree) -> DeviceDataPoints:
+def _get_actuator_functionalities(xml: etree) -> DeviceData:
     """Helper-function for _add_appliance_data()."""
-    data: DeviceDataPoints = {}
+    data: DeviceData = {}
     for item in ACTIVE_ACTUATORS:
         temp_dict: ActuatorData = {
             "lower_bound": 0.0,
@@ -161,8 +160,8 @@ def power_data_local_format(
 
 
 def power_data_energy_diff(
-    measurement: str, net_string: str, f_val: float | int, direct_data: DeviceDataPoints
-) -> DeviceDataPoints:
+    measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
+) -> DeviceData:
     """Calculate differential energy."""
     if "electricity" in measurement and "interval" not in net_string:
         diff = 1
@@ -832,9 +831,9 @@ class SmileHelper:
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceDataPoints,
+        data: DeviceData,
         measurements: dict[str, DATA | UOM],
-    ) -> DeviceDataPoints:
+    ) -> DeviceData:
         """Helper-function for _add_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
@@ -874,7 +873,7 @@ class SmileHelper:
 
         return data
 
-    def _wireless_availablity(self, appliance: etree, data: DeviceDataPoints) -> None:
+    def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _add_appliance_data().
         Collect the availablity-status for wireless connected devices.
         """
@@ -1086,9 +1085,7 @@ class SmileHelper:
 
         return None if loc_found == 0 else open_valve_count
 
-    def _power_data_peak_value(
-        self, direct_data: DeviceDataPoints, loc: Munch
-    ) -> Munch:
+    def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
         no_tariffs = False
@@ -1125,11 +1122,11 @@ class SmileHelper:
 
         return loc
 
-    def _power_data_from_location(self, loc_id: str) -> DeviceDataPoints:
+    def _power_data_from_location(self, loc_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceDataPoints = {}
+        direct_data: DeviceData = {}
         loc = Munch()
 
         search = self._locations
@@ -1308,11 +1305,11 @@ class SmileHelper:
 
         return val
 
-    def _get_lock_state(self, xml: etree) -> DeviceDataPoints:
+    def _get_lock_state(self, xml: etree) -> DeviceData:
         """Helper-function for _add_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
-        data: DeviceDataPoints = {}
+        data: DeviceData = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
         if self._stretch_v2:

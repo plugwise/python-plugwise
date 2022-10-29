@@ -36,7 +36,6 @@ from .constants import (
     ZONE_THERMOSTATS,
     ActuatorDataHeatCool,
     DeviceData,
-    DeviceDataPoints,
     GatewayData,
     SmileBinarySensors,
     SmileSensors,
@@ -261,7 +260,7 @@ class SmileData(SmileHelper):
 
         return device
 
-    def _check_availability(self, device: DeviceDataPoints) -> DeviceDataPoints:
+    def _check_availability(self, device: DeviceData) -> DeviceData:
         """Helper-function for _get_device_data().
         Provide availability status for the wired-commected devices.
         """
