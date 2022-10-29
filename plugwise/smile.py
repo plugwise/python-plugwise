@@ -574,10 +574,10 @@ class Smile(SmileComm, SmileData):
                 data.pop("switches")
             for key in data:
                 if key in device:
-                    device[key] = data[key]
+                    device[key] = data[key]  # type: ignore [literal-required]
                 for item in ("binary_sensors", "sensors", "switches"):
-                    if item in device and key in device[item]:
-                        device[item][key] = data[key]
+                    if item in device and key in device[item]:  # type: ignore [literal-required]
+                        device[item][key] = data[key]  # type: ignore [literal-required]
 
             # Update the PW_Notification binary_sensor state
             if (
