@@ -1338,7 +1338,8 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        for key, value in copy.deepcopy(device.items()):
+        device_old = copy.deepcopy(device)
+        for key, value in device_old.items():
             if key in BINARY_SENSORS:
                 device.pop(key)  # type: ignore [misc]
                 if self._opentherm_device or self._on_off_device:
