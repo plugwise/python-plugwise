@@ -80,6 +80,8 @@ class SmileData(SmileHelper):
             max_setpoint = MAX_SETPOINT
             min_setpoint = MIN_SETPOINT
             if device_old["selected_schedule"] != "None":
+                loc_id = device["location"]
+                (_, _, self._sched_setpoints, _) = self._schedules(loc_id)
                 LOGGER.debug("HOI setpoints: %s", self._sched_setpoints)
                 LOGGER.debug("HOI cooling: %s", self._cooling_enabled)
                 max_setpoint = self._sched_setpoints[1]
