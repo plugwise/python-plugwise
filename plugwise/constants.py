@@ -735,7 +735,8 @@ class ActuatorItems(TypedDict, total=False):
     hc_thermostat: ActuatorDataHeatCool
 
 
-class DeviceDataPoints(
+class DeviceData(
+    ApplianceData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -743,7 +744,7 @@ class DeviceDataPoints(
     TypedDict,
     total=False,
 ):
-    """The class covering all possible collected data points."""
+    """The Device Data class, covering the collected and ordered output-data per device."""
 
     # Loria
     dhw_mode: str
@@ -777,7 +778,3 @@ class DeviceDataPoints(
     binary_sensors: SmileBinarySensors
     sensors: SmileSensors
     switches: SmileSwitches
-
-
-class DeviceData(ApplianceData, DeviceDataPoints):
-    """The Device Data class, covering the collected and ordere output-data per device."""
