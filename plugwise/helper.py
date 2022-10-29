@@ -908,7 +908,7 @@ class SmileHelper:
         ) is not None:
 
             device = self._appliance_measurements(appliance, device, measurements)
-            device.update(self._get_lock_state(appliance, device))
+            device["lock"] = self._get_lock_state(appliance)
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     device.update(_get_actuator_functionalities(appliance, device))
@@ -1302,21 +1302,22 @@ class SmileHelper:
 
         return val
 
-    def _get_lock_state(self, xml: etree, device: DeviceData) -> DeviceData:
+    def _get_lock_state(self, xml: etree) -> bool:
         """Helper-function for _add_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
+        state = False
         if self._stretch_v2:
             actuator = "actuators"
             func_type = "relay"
         if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
-                device["lock"] = found.text == "true"
+                state = found.text == "true"
 
-        return device
+        return state
 
     def _update_device_with_dicts(
         self,
