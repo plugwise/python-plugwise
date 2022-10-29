@@ -71,7 +71,7 @@ class SmileData(SmileHelper):
 
         # Add setpoint_low and setpoint_high when cooling is enabled
         if device_old["dev_class"] not in ZONE_THERMOSTATS:
-            return
+            return device
 
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if self._cooling_present:
