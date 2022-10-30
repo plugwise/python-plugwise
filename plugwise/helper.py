@@ -160,17 +160,17 @@ def power_data_local_format(
 
 
 def power_data_energy_diff(
-    measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
+    measurement: str, net_string: str, f_val: float | int, device: DeviceData
 ) -> DeviceData:
     """Calculate differential energy."""
     if "electricity" in measurement and "interval" not in net_string:
         diff = 1
         if "produced" in measurement:
             diff = -1
-        if net_string not in direct_data:
+        if net_string not in device:
             tmp_val: float | int = 0
         else:
-            tmp_val = direct_data[net_string]  # type: ignore [literal-required]
+            tmp_val = device[net_string]  # type: ignore [literal-required]
 
         if isinstance(f_val, int):
             tmp_val += f_val * diff
@@ -178,9 +178,9 @@ def power_data_energy_diff(
             tmp_val += float(f_val * diff)
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
-        direct_data[net_string] = tmp_val  # type: ignore [literal-required]
+        device[net_string] = tmp_val  # type: ignore [literal-required]
 
-    return direct_data
+    return device
 
 
 class SmileComm:
@@ -1125,11 +1125,10 @@ class SmileHelper:
 
         return loc
 
-    def _power_data_from_location(self, loc_id: str) -> DeviceData:
+    def _power_data_from_location(self, loc_id: str, device: DeviceData) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceData = {}
         loc = Munch()
 
         search = self._locations
@@ -1148,16 +1147,16 @@ class SmileHelper:
                         f'./{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
-                    loc = self._power_data_peak_value(direct_data, loc)
+                    loc = self._power_data_peak_value(device, loc)
                     if not loc.found:
                         continue
 
-                    direct_data = power_data_energy_diff(
-                        loc.measurement, loc.net_string, loc.f_val, direct_data
+                    device = power_data_energy_diff(
+                        loc.measurement, loc.net_string, loc.f_val, device
                     )
-                    direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                    device[loc.key_string] = loc.f_val  # type: ignore [literal-required]
 
-        return direct_data
+        return device
 
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().

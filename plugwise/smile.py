@@ -328,11 +328,8 @@ class SmileData(SmileHelper):
             device["dhw_modes"] = self._dhw_allowed_modes
 
         # Get P1 data from LOCATIONS
-        if device_old["dev_class"] == "smartmeter" and (
-            power_data := self._power_data_from_location(device_old["location"])
-        ):
-            LOGGER.debug("HOI power data: %s", power_data)
-            device.update(power_data)
+        if device_old["dev_class"] == "smartmeter":
+            device = self._power_data_from_location(device_old["location"], device)
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
