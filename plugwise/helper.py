@@ -341,8 +341,8 @@ class SmileHelper:
         self._cooling_active = False
         self._cooling_enabled = False
 
-        self.gateway_id: str | None = None
-        self.gw_data: GatewayData = {"smile_name": "dummy", "gateway_id": None}
+        self.gateway_id: str = FAKE_APPL
+        self.gw_data: GatewayData = {"smile_name": "dummy", "gateway_id": FAKE_APPL}
         self.gw_devices: dict[str, DeviceData] = {}
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
