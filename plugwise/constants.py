@@ -610,7 +610,7 @@ class GatewayData(TypedDict):
     """The Gateway Data class."""
 
     smile_name: str
-    gateway_id: str | None
+    gateway_id: str
     heater_id: NotRequired[str | None]
     cooling_present: NotRequired[bool]
     notifications: NotRequired[dict[str, dict[str, str]]]
