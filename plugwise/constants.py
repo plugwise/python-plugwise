@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections import namedtuple
 import datetime as dt
 import logging
-from typing import Final
+from typing import Final, NamedTuple
 
 from typing_extensions import NotRequired, TypedDict
 
@@ -778,3 +778,10 @@ class DeviceData(
     binary_sensors: SmileBinarySensors
     sensors: SmileSensors
     switches: SmileSwitches
+
+
+class PlugwiseData(NamedTuple):
+    """Plugwise data provided as output."""
+
+    gateway: GatewayData
+    devices: dict[str, DeviceData]
