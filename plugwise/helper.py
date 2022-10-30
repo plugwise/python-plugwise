@@ -306,7 +306,7 @@ class SmileHelper:
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._heater_id: str | None = None
-        self._home_location: str
+        self._home_location: str = FAKE_LOC
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
         self._last_modified: dict[str, str] = {}
@@ -358,7 +358,6 @@ class SmileHelper:
         Create locations for legacy devices.
         """
         appliances = set()
-        self._home_location = FAKE_LOC
 
         # Add Anna appliances
         for appliance in self._appliances.findall("./appliance"):
