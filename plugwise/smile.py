@@ -4,6 +4,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import copy
+from typing import cast
 
 import aiohttp
 from dateutil.parser import parse
@@ -591,7 +592,7 @@ class Smile(SmileComm, SmileData):
             device = self.update_for_cooling(device)
             self.gw_devices[dev_id] = device
 
-        return (self.gw_data, self.gw_devices)
+        return cast(PlugwiseData, (self.gw_data, self.gw_devices))
 
     async def _set_schedule_state_legacy(
         self, loc_id: str, name: str, status: str
