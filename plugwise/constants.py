@@ -628,81 +628,81 @@ class ModelData(TypedDict):
     available: bool | None
 
 
-class SmileBinarySensors(TypedDict, total=False):
+class SmileBinarySensors(TypedDict):
     """Smile Binary Sensors class."""
 
-    compressor_state: bool
-    cooling_state: bool
-    dhw_state: bool
-    flame_state: bool
-    heating_state: bool
-    plugwise_notification: bool
-    slave_boiler_state: bool
+    compressor_state: NotRequired[bool]
+    cooling_state: NotRequired[bool]
+    dhw_state: NotRequired[bool]
+    flame_state: NotRequired[bool]
+    heating_state: NotRequired[bool]
+    plugwise_notification: NotRequired[bool]
+    slave_boiler_state: NotRequired[bool]
 
 
-class SmileSensors(TypedDict, total=False):
+class SmileSensors(TypedDict):
     """Smile Sensors class."""
 
-    battery: float
-    cooling_activation_outdoor_temperature: float
-    cooling_deactivation_threshold: float
-    dhw_temperature: float
-    temperature: float
-    electricity_consumed: float
-    electricity_consumed_interval: float
-    electricity_consumed_off_peak_cumulative: float
-    electricity_consumed_off_peak_interval: int
-    electricity_consumed_off_peak_point: int
-    electricity_consumed_peak_cumulative: float
-    electricity_consumed_peak_interval: int
-    electricity_consumed_peak_point: int
-    electricity_consumed_point: float
-    electricity_produced: float
-    electricity_produced_interval: float
-    electricity_produced_off_peak_cumulative: float
-    electricity_produced_off_peak_interval: int
-    electricity_produced_off_peak_point: int
-    electricity_produced_peak_cumulative: float
-    electricity_produced_peak_interval: int
-    electricity_produced_peak_point: int
-    electricity_produced_point: float
-    elga_status_code: int
-    gas_consumed_cumulative: float
-    gas_consumed_interval: float
-    humidity: float
-    illuminance: float
-    intended_boiler_temperature: float
-    modulation_level: float
-    net_electricity_cumulative: float
-    net_electricity_point: int
-    outdoor_air_temperature: float
-    outdoor_temperature: float
-    return_temperature: float
-    setpoint: float
-    setpoint_high: float
-    setpoint_low: float
-    temperature_difference: float
-    valve_position: float
-    water_pressure: float
-    water_temperature: float
+    battery: NotRequired[float]
+    cooling_activation_outdoor_temperature: NotRequired[float]
+    cooling_deactivation_threshold: NotRequired[float]
+    dhw_temperature: NotRequired[float]
+    temperature: NotRequired[float]
+    electricity_consumed: NotRequired[float]
+    electricity_consumed_interval: NotRequired[float]
+    electricity_consumed_off_peak_cumulative: NotRequired[float]
+    electricity_consumed_off_peak_interval: NotRequired[int]
+    electricity_consumed_off_peak_point: NotRequired[int]
+    electricity_consumed_peak_cumulative: NotRequired[float]
+    electricity_consumed_peak_interval: NotRequired[int]
+    electricity_consumed_peak_point: NotRequired[int]
+    electricity_consumed_point: NotRequired[float]
+    electricity_produced: NotRequired[float]
+    electricity_produced_interval: NotRequired[float]
+    electricity_produced_off_peak_cumulative: NotRequired[float]
+    electricity_produced_off_peak_interval: NotRequired[int]
+    electricity_produced_off_peak_point: NotRequired[int]
+    electricity_produced_peak_cumulative: NotRequired[float]
+    electricity_produced_peak_interval: NotRequired[int]
+    electricity_produced_peak_point: NotRequired[int]
+    electricity_produced_point: NotRequired[float]
+    elga_status_code: NotRequired[int]
+    gas_consumed_cumulative: NotRequired[float]
+    gas_consumed_interval: NotRequired[float]
+    humidity: NotRequired[float]
+    illuminance: NotRequired[float]
+    intended_boiler_temperature: NotRequired[float]
+    modulation_level: NotRequired[float]
+    net_electricity_cumulative: NotRequired[float]
+    net_electricity_point: NotRequired[int]
+    outdoor_air_temperature: NotRequired[float]
+    outdoor_temperature: NotRequired[float]
+    return_temperature: NotRequired[float]
+    setpoint: NotRequired[float]
+    setpoint_high: NotRequired[float]
+    setpoint_low: NotRequired[float]
+    temperature_difference: NotRequired[float]
+    valve_position: NotRequired[float]
+    water_pressure: NotRequired[float]
+    water_temperature: NotRequired[float]
 
 
-class SmileSwitches(TypedDict, total=False):
+class SmileSwitches(TypedDict):
     """Smile Switches class."""
 
-    cooling_ena_switch: bool
-    dhw_cm_switch: bool
-    lock: bool
-    relay: bool
+    cooling_ena_switch: NotRequired[bool]
+    dhw_cm_switch: NotRequired[bool]
+    lock: NotRequired[bool]
+    relay: NotRequired[bool]
 
 
-class ThermoLoc(TypedDict, total=False):
+class ThermoLoc(TypedDict):
     """Thermo Location class."""
 
-    name: str
-    master: str | None
-    master_prio: int
-    slaves: set[str]
+    name: NotRequired[str]
+    master: NotRequired[str | None]
+    master_prio: NotRequired[int]
+    slaves: NotRequired[set[str]]
 
 
 class ActuatorBase(TypedDict):
@@ -726,13 +726,13 @@ class ActuatorDataHeatCool(ActuatorBase, TypedDict):
     setpoint_low: float
 
 
-class ActuatorItems(TypedDict, total=False):
+class ActuatorItems(TypedDict):
     """Actuator Items."""
 
-    domestic_hot_water_setpoint: ActuatorData
-    maximum_boiler_temperature: ActuatorData
-    thermostat: ActuatorData
-    hc_thermostat: ActuatorDataHeatCool
+    domestic_hot_water_setpoint: NotRequired[ActuatorData]
+    maximum_boiler_temperature: NotRequired[ActuatorData]
+    thermostat: NotRequired[ActuatorData]
+    hc_thermostat: NotRequired[ActuatorDataHeatCool]
 
 
 class DeviceData(
@@ -742,42 +742,41 @@ class DeviceData(
     SmileSwitches,
     ApplianceData,
     TypedDict,
-    total=False,
 ):
     """The Device Data class, covering the collected and ordered output-data per device."""
 
     # Loria
-    dhw_mode: str
-    dhw_modes: list[str]
+    dhw_mode: NotRequired[str]
+    dhw_modes: NotRequired[list[str]]
 
     # Gateway
-    regulation_mode: str
-    regulation_modes: list[str]
+    regulation_mode: NotRequired[str]
+    regulation_modes: NotRequired[list[str]]
 
     # Master Thermostats
-    preset_modes: list[str] | None
-    active_preset: str | None
+    preset_modes: NotRequired[list[str] | None]
+    active_preset: NotRequired[str | None]
 
-    available_schedules: list[str]
-    selected_schedule: str
-    last_used: str | None
+    available_schedules: NotRequired[list[str]]
+    selected_schedule: NotRequired[str]
+    last_used: NotRequired[str | None]
 
-    mode: str
+    mode: NotRequired[str]
 
     # Extra for Adam Master Thermostats
-    control_state: str | bool
+    control_state: NotRequired[str | bool]
 
     # For temporary use
-    c_heating_state: str
-    modified: str
+    c_heating_state: NotRequired[str]
+    modified: NotRequired[str]
 
     # Device availability
-    available: bool | None
+    available: NotRequired[bool | None]
 
     # Collected types
-    binary_sensors: SmileBinarySensors
-    sensors: SmileSensors
-    switches: SmileSwitches
+    binary_sensors: NotRequired[SmileBinarySensors]
+    sensors: NotRequired[SmileSensors]
+    switches: NotRequired[SmileSwitches]
 
 
 class PlugwiseData(NamedTuple):
