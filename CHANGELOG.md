@@ -1,6 +1,8 @@
 # Changelog
 
-# v0.25.4: Add py.typed, fix typing as suggested in #231
+# v0.25.5: Add py.typed, fix typing as suggested in #231
+
+(# v0.25.4: not released)
 
 # v0.25.3: Bugfix for https://github.com/plugwise/plugwise-beta/issues/309
 
