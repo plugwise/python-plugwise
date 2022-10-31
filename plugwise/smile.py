@@ -184,17 +184,16 @@ class SmileData(SmileHelper):
         Determine switching group device data.
         """
         device_old = copy.deepcopy(device)
-        if device["dev_class"] in SWITCH_GROUP_TYPES:
+        if device_old["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
-            for member_id in device["members"]:
-                device = copy.deepcopy(device_old)
-                member_data = self._add_appliance_data(member_id, device)
+            for member_id in device_old["members"]:
+                member_data = self._add_appliance_data(member_id, device_old)
                 if member_data.get("relay"):
                     counter += 1
 
-            device_old["relay"] = counter != 0
+            device["relay"] = counter != 0
 
-        return device_old
+        return device
 
     def _device_adam(self, device: DeviceData) -> DeviceData:
         """Helper-function for _get_device_data().
