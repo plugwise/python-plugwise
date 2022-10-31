@@ -620,9 +620,8 @@ class SmileHelper:
 
         Use the home_location or FAKE_APPL as device id.
         """
-        self.gateway_id = self._home_location
-        if self.smile_type == "power":
-            self.gateway_id = FAKE_APPL
+        if self.smile_type != "power":
+            self.gateway_id = self._home_location
 
         self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
         for key, value in {
