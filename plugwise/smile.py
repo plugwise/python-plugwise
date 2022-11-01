@@ -567,6 +567,7 @@ class Smile(SmileComm, SmileData):
                 data.pop("sensors")
             if "switches" in data:
                 data.pop("switches")
+            LOGGER.debug("HOI 2 %s", data)
             for key in data:
                 if key in device:
                     device[key] = data[key]  # type: ignore [literal-required]
