@@ -117,7 +117,6 @@ class SmileData(SmileHelper):
             bs_dict: SmileBinarySensors = {}
             s_dict: SmileSensors = {}
             sw_dict: SmileSwitches = {}
-            device = self._add_appliance_data(dev_id, device)
             device = self._get_device_data(dev_id, device)
             device = self._update_device_with_dicts(
                 dev_id,
@@ -304,6 +303,7 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         device_old = copy.deepcopy(device)
+        device = self._add_appliance_data(dev_id, device_old)
         # Remove thermostat-dict for thermo_sensors
         if device_old["dev_class"] == "thermo_sensor" and "thermostat" in device:
             device.pop("thermostat")
@@ -560,8 +560,6 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, device in self.gw_devices.items():
             device_old = copy.deepcopy(device)
-            data = self._add_appliance_data(dev_id, {})
-            LOGGER.debug("HOI 1 %s", data)
             data = self._get_device_data(dev_id, device_old)
             if "binary_sensors" in data:
                 data.pop("binary_sensors")
