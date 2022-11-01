@@ -82,22 +82,20 @@ def _get_actuator_data(
     xml: etree, item: str, cooling: bool
 ) -> ActuatorData | ActuatorDataHeatCool | None:
     """Helper-function for _add_appliance_data()."""
-    if item == "thermostat" and cooling:
-        temp_dict_hc: ActuatorDataHeatCool = {
-            "lower_bound": 0.0,
-            "resolution": 0.0,
-            "setpoint": 0.0,
-            "setpoint_high": 0.0,
-            "setpoint_low": 0.0,
-            "upper_bound": 0.0,
-        }
-    else:
-        temp_dict: ActuatorData = {
-            "lower_bound": 0.0,
-            "resolution": 0.0,
-            "setpoint": 0.0,
-            "upper_bound": 0.0,
-        }
+    temp_dict: ActuatorData = {
+        "lower_bound": 0.0,
+        "resolution": 0.0,
+        "setpoint": 0.0,
+        "upper_bound": 0.0,
+    }
+    temp_dict_hc: ActuatorDataHeatCool = {
+        "lower_bound": 0.0,
+        "resolution": 0.0,
+        "setpoint": 0.0,
+        "setpoint_high": 0.0,
+        "setpoint_low": 0.0,
+        "upper_bound": 0.0,
+    }
     for key in LIMITS:
         locator = (
             f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
@@ -106,21 +104,17 @@ def _get_actuator_data(
             if function.text == "nil":
                 break
 
-            if temp_dict_hc:
-                temp_dict_hc.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
-            else:
-                temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
+            temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
+            temp_dict_hc.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
 
-    LOGGER.debug("HOI 1 %s", temp_dict_hc)
-    LOGGER.debug("HOI 2 %s", temp_dict)
-    # if temp_dict_hc:
-    #     temp_dict_hc["resolution"] != 0.0:
-    #     return temp_dict_hc
-    # else:
-    #     temp_dict["resolution"] != 0.0:
-    #     return temp_dict
+    if item == "thermostat" and cooling:
+        if temp_dict_hc["resolution"] != 0.0:
+            return temp_dict_hc
+    else:
+        if temp_dict["resolution"] != 0.0:
+            return temp_dict
 
-    # return None
+    return None
 
 
 def schedules_temps(
