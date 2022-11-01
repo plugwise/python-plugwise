@@ -560,30 +560,17 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, device in self.gw_devices.items():
             device_old = copy.deepcopy(device)
-            data = self._get_device_data(dev_id, device_old)
-            if "binary_sensors" in data:
-                data.pop("binary_sensors")
-            if "sensors" in data:
-                data.pop("sensors")
-            if "switches" in data:
-                data.pop("switches")
-            LOGGER.debug("HOI 2 %s", data)
-            for key in data:
-                if key in device:
-                    device[key] = data[key]  # type: ignore [literal-required]
-                for item in ("binary_sensors", "sensors", "switches"):
-                    if item in device and key in device[item]:  # type: ignore [literal-required]
-                        device[item][key] = data[key]  # type: ignore [literal-required]
-
-            # Update the PW_Notification binary_sensor state
-            if (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ):
-                device["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
-
+            bs_dict: SmileBinarySensors = {}
+            s_dict: SmileSensors = {}
+            sw_dict: SmileSwitches = {}
+            device = self._get_device_data(dev_id, device_old)
+            device = self._update_device_with_dicts(
+                dev_id,
+                device,
+                bs_dict,
+                s_dict,
+                sw_dict,
+            )
             self.gw_devices[dev_id] = device
 
         # Separate pass updating for cooling
