@@ -722,7 +722,7 @@ class ActuatorData(ActuatorBase, TypedDict):
 class ActuatorDataHeatCool(ActuatorBase, TypedDict):
     """Actuator data for heat_cool thermostat types."""
 
-    setpoint: NotRequired(float)
+    setpoint: NotRequired[float]
     setpoint_high: float
     setpoint_low: float
 
