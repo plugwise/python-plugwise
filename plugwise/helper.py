@@ -84,16 +84,17 @@ def _get_actuator_data(
     """Helper-function for _add_appliance_data()."""
     temp_dict: ActuatorData = {
         "lower_bound": 0.0,
-        "setpoint": 0.0,
         "resolution": 0.0,
+        "setpoint": 0.0,
         "upper_bound": 0.0,
     }
     if item == "thermostat" and cooling:
         temp_dict: ActuatorDataHeatCool = {
             "lower_bound": 0.0,
+            "resolution": 0.0,
+            "setpoint": 0.0,
             "setpoint_high": 0.0,
             "setpoint_low": 0.0,
-            "resolution": 0.0,
             "upper_bound": 0.0,
         }
     for key in LIMITS:
@@ -103,9 +104,6 @@ def _get_actuator_data(
         if (function := xml.find(locator)) is not None:
             if function.text == "nil":
                 break
-
-            if item == "thermostat" and cooling and key == "setpoint":
-                key = "setpoint_high"
 
             temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
 
