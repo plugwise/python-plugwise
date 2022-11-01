@@ -83,7 +83,7 @@ def _get_actuator_data(
 ) -> ActuatorData | ActuatorDataHeatCool | None:
     """Helper-function for _add_appliance_data()."""
     if item == "thermostat" and cooling:
-        temp_dict: ActuatorDataHeatCool = {
+        temp_dict_hc: ActuatorDataHeatCool = {
             "lower_bound": 0.0,
             "resolution": 0.0,
             "setpoint": 0.0,
@@ -106,12 +106,21 @@ def _get_actuator_data(
             if function.text == "nil":
                 break
 
-            temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
+            if temp_dict_hc:
+                temp_dict_hc.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
+            else:
+                temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
 
-    if temp_dict["resolution"] != 0.0:
-        return temp_dict
+    LOGGER.debug("HOI 1 %s", temp_dict_hc)
+    LOGGER.debug("HOI 2 %s", temp_dict)
+    # if temp_dict_hc:
+    #     temp_dict_hc["resolution"] != 0.0:
+    #     return temp_dict_hc
+    # else:
+    #     temp_dict["resolution"] != 0.0:
+    #     return temp_dict
 
-    return None
+    # return None
 
 
 def schedules_temps(
