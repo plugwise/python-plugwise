@@ -82,12 +82,6 @@ def _get_actuator_data(
     xml: etree, item: str, cooling: bool
 ) -> ActuatorData | ActuatorDataHeatCool | None:
     """Helper-function for _add_appliance_data()."""
-    temp_dict: ActuatorData = {
-        "lower_bound": 0.0,
-        "resolution": 0.0,
-        "setpoint": 0.0,
-        "upper_bound": 0.0,
-    }
     if item == "thermostat" and cooling:
         temp_dict: ActuatorDataHeatCool = {
             "lower_bound": 0.0,
@@ -95,6 +89,13 @@ def _get_actuator_data(
             "setpoint": 0.0,
             "setpoint_high": 0.0,
             "setpoint_low": 0.0,
+            "upper_bound": 0.0,
+        }
+    else:
+        temp_dict: ActuatorData = {
+            "lower_bound": 0.0,
+            "resolution": 0.0,
+            "setpoint": 0.0,
             "upper_bound": 0.0,
         }
     for key in LIMITS:
