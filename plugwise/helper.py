@@ -46,6 +46,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
     UOM,
     ActuatorData,
+    ActuatorDataHeatCool,
     ApplianceData,
     DeviceData,
     GatewayData,
@@ -77,7 +78,9 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_data(xml: etree, item: str) -> ActuatorData | None:
+def _get_actuator_data(
+    xml: etree, item: str, cooling: bool
+) -> ActuatorData | ActuatorDataHeatCool | None:
     """Helper-function for _add_appliance_data()."""
     temp_dict: ActuatorData = {
         "lower_bound": 0.0,
@@ -85,6 +88,14 @@ def _get_actuator_data(xml: etree, item: str) -> ActuatorData | None:
         "resolution": 0.0,
         "upper_bound": 0.0,
     }
+    if item == "thermostat" and cooling:
+        temp_dict: ActuatorDataHeatCool = {
+            "lower_bound": 0.0,
+            "setpoint_high": 0.0,
+            "setpoint_low": 0.0,
+            "resolution": 0.0,
+            "upper_bound": 0.0,
+        }
     for key in LIMITS:
         locator = (
             f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
@@ -93,14 +104,12 @@ def _get_actuator_data(xml: etree, item: str) -> ActuatorData | None:
             if function.text == "nil":
                 break
 
+            if item == "thermostat" and cooling and key == "setpoint":
+                key = "setpoint_high"
+
             temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})  # type: ignore [misc]
 
-    if temp_dict != {
-        "lower_bound": 0.0,
-        "setpoint": 0.0,
-        "resolution": 0.0,
-        "upper_bound": 0.0,
-    }:
+    if temp_dict["resolution"] != 0.0:
         return temp_dict
 
     return None
@@ -913,7 +922,9 @@ class SmileHelper:
                 if appl_type.text in ACTUATOR_CLASSES:
                     for item in ACTIVE_ACTUATORS:
                         if (
-                            actuator := _get_actuator_data(appliance, item)
+                            actuator := _get_actuator_data(
+                                appliance, item, self._cooling_present
+                            )
                         ) is not None:
                             device[item] = actuator  # type: ignore [literal-required]
 
