@@ -74,6 +74,7 @@ class SmileData(SmileHelper):
 
         # For heating + cooling, update setpoint_high/_low
         if self._cooling_present and "thermostat" in device_old:
+            LOGGER.debug("HOI thermostat: %s", device_old["thermostat"])
             thermostat = device_old["thermostat"]
             setpoint = thermostat["setpoint"]
             max_setpoint = MAX_SETPOINT
