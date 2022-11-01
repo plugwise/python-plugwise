@@ -35,7 +35,6 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     ZONE_THERMOSTATS,
-    ActuatorDataHeatCool,
     DeviceData,
     PlugwiseData,
     SmileBinarySensors,
@@ -73,7 +72,7 @@ class SmileData(SmileHelper):
         if device_old["dev_class"] not in ZONE_THERMOSTATS:
             return device
 
-        # For heating + cooling, replace setpoint with setpoint_high/_low
+        # For heating + cooling, update setpoint_high/_low
         if self._cooling_present and "thermostat" in device_old:
             thermostat = device_old["thermostat"]
             setpoint = thermostat["setpoint"]
@@ -85,28 +84,27 @@ class SmileData(SmileHelper):
                 max_setpoint = self._sched_setpoints[1]
                 min_setpoint = self._sched_setpoints[0]
 
-            temp_dict: ActuatorDataHeatCool = {
-                "lower_bound": thermostat["lower_bound"],
-                "resolution": thermostat["resolution"],
-                "setpoint_high": max_setpoint,
-                "setpoint_low": setpoint,
-                "upper_bound": thermostat["upper_bound"],
-            }
+            thermostat.update(
+                {
+                    "setpoint_high": max_setpoint,
+                    "setpoint_low": setpoint,
+                }
+            )
             if self._cooling_enabled:
-                temp_dict.update(
+                thermostat.update(
                     {
                         "setpoint_high": setpoint,
                         "setpoint_low": min_setpoint,
                     }
                 )
-            device["hc_thermostat"] = temp_dict
-            device.pop("thermostat")
+            thermostat.pop("setpoint")
+            device["thermostat"] = thermostat
 
             sensors = device["sensors"]
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
-            sensors["setpoint_high"] = temp_dict["setpoint_high"]
-            sensors["setpoint_low"] = temp_dict["setpoint_low"]
+            sensors["setpoint_high"] = thermostat["setpoint_high"]
+            sensors["setpoint_low"] = thermostat["setpoint_low"]
 
         return device
 
