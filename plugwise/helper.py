@@ -929,6 +929,7 @@ class SmileHelper:
                             )
                         ) is not None:
                             device[item] = actuator  # type: ignore [literal-required]
+                            LOGGER.debug("HOI acttuator type: %s", type(actuator))
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, device)
