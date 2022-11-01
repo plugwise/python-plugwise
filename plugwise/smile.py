@@ -571,6 +571,16 @@ class Smile(SmileComm, SmileData):
                 s_dict,
                 sw_dict,
             )
+
+            # Update the PW_Notification binary_sensor state
+            if (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
+            ):
+                device["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
+
             self.gw_devices[dev_id] = device
 
         # Separate pass updating for cooling
