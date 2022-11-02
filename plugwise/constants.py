@@ -732,8 +732,7 @@ class ActuatorItems(TypedDict, total=False):
 
     domestic_hot_water_setpoint: ActuatorData
     maximum_boiler_temperature: ActuatorData
-    thermostat: ActuatorData
-    hc_thermostat: ActuatorDataHeatCool
+    thermostat: ActuatorData | ActuatorDataHeatCool
 
 
 class DeviceData(
