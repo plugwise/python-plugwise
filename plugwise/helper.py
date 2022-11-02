@@ -626,7 +626,7 @@ class SmileHelper:
             "vendor": appl.vendor_name,
         }.items():
             if value is not None or key == "location":
-                devices[appl.dev_id].update({key: value})  # type: ignore[misc]
+                devices[appl.dev_id].update({key: value})
 
         return cast(dict[str, DeviceData], devices)
 
@@ -650,7 +650,7 @@ class SmileHelper:
             "vendor": "Plugwise",
         }.items():
             if value is not None:
-                devices[self.gateway_id].update({key: value})  # type: ignore[misc]
+                devices[self.gateway_id].update({key: value})
 
         return cast(dict[str, DeviceData], devices)
 
@@ -725,7 +725,7 @@ class SmileHelper:
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
-                    devices[appl.dev_id].update({key: value})  # type: ignore[misc]
+                    devices[appl.dev_id].update({key: value})
 
         try:
             self.gw_devices.update(devices)
