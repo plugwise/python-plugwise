@@ -6,6 +6,7 @@ from __future__ import annotations
 import asyncio
 import copy
 import datetime as dt
+from typing import Any, cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -354,7 +355,7 @@ class SmileHelper:
 
         self.gateway_id: str = FAKE_APPL
         self.gw_data: GatewayData = {"smile_name": "dummy", "gateway_id": FAKE_APPL}
-        self.gw_devices: dict[str, DeviceData] = {}
+        self.gw_devices: dict[str, DeviceData]
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
@@ -596,7 +597,7 @@ class SmileHelper:
 
         return appl
 
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> dict[str, DeviceData]:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self._loc_data.keys()))
         appl.dev_id = self.gateway_id
@@ -611,7 +612,8 @@ class SmileHelper:
         location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(location, appl)
 
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+        devices: dict[str, Any] = {}
+        devices[appl.dev_id] = {"dev_class": appl.pwclass}
 
         for key, value in {
             "firmware": appl.firmware,
@@ -624,9 +626,11 @@ class SmileHelper:
             "vendor": appl.vendor_name,
         }.items():
             if value is not None or key == "location":
-                self.gw_devices[appl.dev_id].update({key: value})  # type: ignore[misc]
+                devices[appl.dev_id].update({key: value})  # type: ignore[misc]
 
-    def _create_legacy_gateway(self) -> None:
+        return cast(dict[str, DeviceData], devices)
+
+    def _create_legacy_gateway(self) -> dict[str, DeviceData]:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
 
         Use the home_location or FAKE_APPL as device id.
@@ -634,7 +638,8 @@ class SmileHelper:
         if self.smile_type != "power":
             self.gateway_id = self._home_location
 
-        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
+        devices: dict[str, Any] = {}
+        devices[self.gateway_id] = {"dev_class": "gateway"}
         for key, value in {
             "firmware": self.smile_fw_version,
             "location": self._home_location,
@@ -645,21 +650,24 @@ class SmileHelper:
             "vendor": "Plugwise",
         }.items():
             if value is not None:
-                self.gw_devices[self.gateway_id].update({key: value})  # type: ignore[misc]
+                devices[self.gateway_id].update({key: value})  # type: ignore[misc]
+
+        return cast(dict[str, DeviceData], devices)
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._all_locations()
 
         if self._smile_legacy:
-            self._create_legacy_gateway()
+            self.gw_devices = self._create_legacy_gateway()
             # For legacy P1 collect the connected SmartMeter info
             if self.smile_type == "power":
                 appl = Munch()
-                self._p1_smartmeter_info_finder(appl)
+                self.gw_devices.update(self._p1_smartmeter_info_finder(appl))
                 # Legacy P1 has no more devices
                 return
 
+        devices: dict[str, Any] = {}
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
 
@@ -705,7 +713,7 @@ class SmileHelper:
             ):
                 continue
 
-            self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+            devices[appl.dev_id] = {"dev_class": appl.pwclass}
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
@@ -717,11 +725,16 @@ class SmileHelper:
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
-                    self.gw_devices[appl.dev_id].update({key: value})  # type: ignore[misc]
+                    devices[appl.dev_id].update({key: value})  # type: ignore[misc]
+
+        try:
+            self.gw_devices.update(devices)
+        except AttributeError:
+            self.gw_devices = cast(dict[str, DeviceData], devices)
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
-            self._p1_smartmeter_info_finder(appl)
+            self.gw_devices.update(self._p1_smartmeter_info_finder(appl))
             # P1: for gateway and smartmeter switch device_id - part 2
             for item in self.gw_devices:
                 if item != self.gateway_id:
@@ -1057,7 +1070,7 @@ class SmileHelper:
         """Helper-function for smile.py: get_all_devices().
         Collect switching- or pump-group info.
         """
-        switch_groups: dict[str, DeviceData] = {}
+        switch_groups: dict[str, Any] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Smile Anna":
             return switch_groups
@@ -1083,7 +1096,7 @@ class SmileHelper:
                     },
                 )
 
-        return switch_groups
+        return cast(dict[str, DeviceData], switch_groups)
 
     def _heating_valves(self) -> int | None:
         """Helper-function for smile.py: _device_data_adam().
