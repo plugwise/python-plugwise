@@ -35,6 +35,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     ZONE_THERMOSTATS,
+    ActuatorDataHeatCool,
     DeviceData,
     PlugwiseData,
     SmileBinarySensors,
@@ -74,7 +75,7 @@ class SmileData(SmileHelper):
 
         # For heating + cooling, update setpoint_high/_low
         if self._cooling_present and "thermostat" in device_old:
-            thermostat = device_old["thermostat"]
+            thermostat = cast(ActuatorDataHeatCool, device_old["thermostat"])
             setpoint = thermostat["setpoint"]
             max_setpoint = MAX_SETPOINT
             min_setpoint = MIN_SETPOINT
@@ -98,7 +99,7 @@ class SmileData(SmileHelper):
                     }
                 )
             thermostat.pop("setpoint")
-            device["thermostat"] = thermostat
+            device.update({"thermostat": thermostat})
 
             sensors = device["sensors"]
             if "setpoint" in sensors:
