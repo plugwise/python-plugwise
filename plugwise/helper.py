@@ -1379,6 +1379,7 @@ class SmileHelper:
                         LOGGER.debug("HOI 1a %s", data)
 
             if data:
+                LOGGER.debug("HOI 1b %s", data)
                 return data
 
         return None
