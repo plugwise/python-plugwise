@@ -512,7 +512,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 }
 
 TOGGLES: Final[dict[str, ...]] = {
-    "cooling_enabled": "cool_ena_switch",
+    "cooling_enabled": "cooling_ena_switch",
     "domestic_hot_water_comfort_mode": "dhw_cm_switch",
 }
 
