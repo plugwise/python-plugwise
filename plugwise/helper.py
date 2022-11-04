@@ -1369,7 +1369,7 @@ class SmileHelper:
                     if toggle_type.text == toggle:
                         data[toggle] = item.find("state") == "on"
 
-        LOGGER.debug("HOI %s, %s", toggle, data[toggle])
+        LOGGER.debug("HOI %s, %s", toggle, data)
         return None
 
     def _update_device_with_dicts(
