@@ -512,9 +512,9 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
 }
 
-TOGGLES: Final[dict[str, RENAME]] = {
-    "cooling_enabled": RENAME("cool_ena_switch"),
-    "domestic_hot_water_comfort_mode": RENAME("dhw_cm_switch"),
+TOGGLES: Final[dict[str, ...]] = {
+    "cooling_enabled": "cool_ena_switch",
+    "domestic_hot_water_comfort_mode": "dhw_cm_switch",
 }
 
 # Known types of Smiles and Stretches
