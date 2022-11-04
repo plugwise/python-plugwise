@@ -513,7 +513,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 
 TOGGLES: Final[tuple[str, ...]] = (
     "cooling_enabled",
-    "domestic_hot_water_state",
+    "domestic_hot_water_comfort_mode",
 )
 
 # Known types of Smiles and Stretches
