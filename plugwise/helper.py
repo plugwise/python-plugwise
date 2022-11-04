@@ -1373,7 +1373,7 @@ class SmileHelper:
             for item in found:
                 if (toggle_type := item.find("type")) is not None:
                     if toggle_type.text == toggle:
-                        data.update({name: item.find("state") == "on"})
+                        data.update({name: item.find("state").text == "on"})
 
             if data:
                 return data
