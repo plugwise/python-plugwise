@@ -934,7 +934,9 @@ class SmileHelper:
                     toggle_data := self._get_toggle_state(appliance, toggle, name)
                     is not None
                 ):
-                    LOGGER.debug("HOI %s ", toggle_data)
+                    LOGGER.debug(
+                        "HOI %s ", self._get_toggle_state(appliance, toggle, name)
+                    )
                     data.update(toggle_data)
 
             if (appl_type := appliance.find("type")) is not None:
@@ -1365,7 +1367,6 @@ class SmileHelper:
         """Helper-function for _get_appliance_data().
         Obtain the toggle state of 'toggle'.
         """
-        LOGGER.debug("HOI 1 %s %s", toggle, name)
         data: DeviceData = {}
         if xml.find("type").text == "heater_central":
             locator = "./actuator_functionalities/toggle_functionality"
@@ -1376,10 +1377,8 @@ class SmileHelper:
                 if (toggle_type := item.find("type")) is not None:
                     if toggle_type.text == toggle:
                         data.update({name: item.find("state") == "on"})
-                        LOGGER.debug("HOI 1a %s", data)
 
             if data:
-                LOGGER.debug("HOI 1b %s", data)
                 return data
 
         return None
