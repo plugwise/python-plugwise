@@ -39,6 +39,7 @@ from .constants import (
     NONE,
     P1_MEASUREMENTS,
     POWER_WATT,
+    RENAME,
     SENSORS,
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
@@ -1355,7 +1356,9 @@ class SmileHelper:
 
         return data
 
-    def _get_toggle_state(self, xml: etree, toggle: str) -> DeviceData | None:
+    def _get_toggle_state(
+        self, xml: etree, toggle: dict[str, RENAME]
+    ) -> DeviceData | None:
         """Helper-function for _get_appliance_data().
         Obtain the toggle state of 'toggle'.
         """
@@ -1366,9 +1369,10 @@ class SmileHelper:
                 return
 
             for item in found:
-                if (toggle_type := item.find("type")) is not None:
-                    if toggle_type.text == toggle:
-                        data[toggle] = item.find("state") == "on"
+                for key, name in toggle.items():
+                    if (toggle_type := item.find("type")) is not None:
+                        if toggle_type.text == key:
+                            data[name] = item.find("state") == "on"
 
         LOGGER.debug("HOI %s, %s", toggle, data)
         return None
