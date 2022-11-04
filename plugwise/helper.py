@@ -1350,6 +1350,24 @@ class SmileHelper:
 
         return data
 
+    def _get_toggle_state(self, xml: etree, toggle: str) -> DeviceData:
+        """Helper-function for _get_appliance_data().
+        Obtain the toggle state of 'toggle'.
+        """
+        data: DeviceData = {}
+        if xml.find("type").text == "heater_central":
+            locator = "./actuator_functionalities/toggle_functionality"
+            if not (found := xml.findall(locator)):
+                return
+
+            for item in found:
+                if (toggle_type := item.find("type")) is not None:
+                    if toggle_type.text == toggle:
+                        data[toggle] = item.find("state") == "on"
+
+        LOGGER.debug("HOI %s, %s", toggle, data[toggle])
+        return data
+
     def _update_device_with_dicts(
         self,
         d_id: str,
