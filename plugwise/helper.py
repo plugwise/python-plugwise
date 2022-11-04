@@ -931,14 +931,10 @@ class SmileHelper:
             data.update(self._get_lock_state(appliance))
             for toggle, name in TOGGLES.items():
                 if self._get_toggle_state(appliance, toggle, name) is not None:
-                    LOGGER.debug(
-                        "HOI %s ", self._get_toggle_state(appliance, toggle, name)
-                    )
                     data.update(self._get_toggle_state(appliance, toggle, name))
 
-            if (appl_type := appliance.find("type")) is not None:
-                if appl_type.text in ACTUATOR_CLASSES:
-                    data.update(_get_actuator_functionalities(appliance))
+            if appliance.find("type").text in ACTUATOR_CLASSES:
+                data.update(_get_actuator_functionalities(appliance))
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
@@ -979,9 +975,10 @@ class SmileHelper:
                         self._cooling_active = data["elga_status_code"] == 8
                         data.pop("elga_status_code", None)
                     # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                    elif "cooling_ena_switch" in data:
-                        self._cooling_enabled = data["cooling_ena_switch"]
-                        self._cooling_active = data["cooling_state"]
+                    for item in ("cooling_ena_switch", "cooling_enabled"):
+                        if item in data:
+                            self._cooling_enabled = data[item]
+                            self._cooling_active = data["cooling_state"]
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
