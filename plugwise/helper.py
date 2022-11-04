@@ -930,7 +930,8 @@ class SmileHelper:
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
             for toggle in TOGGLES:
-                data.update(self._get_toggle_state(appliance, toggle))
+                if toggle_data := self._get_toggle_state(appliance, toggle) is not None:
+                    data.update(toggle_data)
 
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
