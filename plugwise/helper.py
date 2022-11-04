@@ -1376,8 +1376,9 @@ class SmileHelper:
                 if (toggle_type := item.find("type")) is not None:
                     if toggle_type.text == toggle:
                         data[name] = item.find("state") == "on"
-            LOGGER.debug("HOI 1a %s", data)
-            return data
+
+            if data:
+                return data
 
         return None
 
