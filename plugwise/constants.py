@@ -440,6 +440,7 @@ STATUS: Final = "/system/status.xml"
 
 UOM = namedtuple("UOM", "unit_of_measurement")
 DATA = namedtuple("DATA", "name unit_of_measurement")
+RENAME = namedtuple("RENAME", "name")
 # P1 related measurements:
 P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
@@ -511,10 +512,10 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
 }
 
-TOGGLES: Final[tuple[str, ...]] = (
-    "cooling_enabled",
-    "domestic_hot_water_comfort_mode",
-)
+TOGGLES: Final[dict[str, RENAME]] = {
+    "cooling_enabled": RENAME("cool_ena_switch"),
+    "domestic_hot_water_comfort_mode": RENAME("dhw_cm_switch"),
+}
 
 # Known types of Smiles and Stretches
 SMILE = namedtuple("SMILE", "smile_type smile_name")
