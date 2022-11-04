@@ -1368,14 +1368,14 @@ class SmileHelper:
         if xml.find("type").text == "heater_central":
             locator = "./actuator_functionalities/toggle_functionality"
             if not (found := xml.findall(locator)):
-                return
+                return None
 
             for item in found:
                 if (toggle_type := item.find("type")) is not None:
                     if toggle_type.text == toggle:
                         data[name] = item.find("state") == "on"
+            return data
 
-        LOGGER.debug("HOI %s, %s", toggle, data)
         return None
 
     def _update_device_with_dicts(
