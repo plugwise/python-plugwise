@@ -1354,7 +1354,7 @@ class SmileHelper:
 
         return data
 
-    def _get_toggle_state(self, xml: etree, toggle: str) -> DeviceData:
+    def _get_toggle_state(self, xml: etree, toggle: str) -> DeviceData | None:
         """Helper-function for _get_appliance_data().
         Obtain the toggle state of 'toggle'.
         """
@@ -1370,7 +1370,7 @@ class SmileHelper:
                         data[toggle] = item.find("state") == "on"
 
         LOGGER.debug("HOI %s, %s", toggle, data[toggle])
-        return data
+        return None
 
     def _update_device_with_dicts(
         self,
