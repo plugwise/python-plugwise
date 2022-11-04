@@ -964,21 +964,23 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        if d_id == self._heater_id:
-            # Adam
-            if self.smile_name == "Smile Anna":
-                # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
-                if self._cooling_present:
-                    # Elga:
-                    if "elga_status_code" in data:
-                        self._cooling_enabled = data["elga_status_code"] in [8, 9]
-                        self._cooling_active = data["elga_status_code"] == 8
-                        data.pop("elga_status_code", None)
-                    # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                    for item in ("cooling_ena_switch", "cooling_enabled"):
-                        if item in data:
-                            self._cooling_enabled = data[item]
-                            self._cooling_active = data["cooling_state"]
+        if (
+            d_id == self._heater_id
+            and self.smile_name == "Smile Anna"
+            and self._cooling_present
+        ):
+            # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
+            if "elga_status_code" in data:
+                self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                self._cooling_active = data["elga_status_code"] == 8
+                data.pop("elga_status_code", None)
+            # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+            for item in ("cooling_ena_switch", "cooling_enabled"):
+                if item in data:
+                    self._cooling_enabled = data[item]
+                    self._cooling_active = data["cooling_state"]
+            if all(item in data for item in ("cooling_ena_switch", "cooling_enabled")):
+                data.pop("cooling_enabled")
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
