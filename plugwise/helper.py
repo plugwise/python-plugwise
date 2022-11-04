@@ -45,6 +45,7 @@ from .constants import (
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
+    TOGGLES,
     UOM,
     ApplianceData,
     DeviceData,
@@ -928,6 +929,9 @@ class SmileHelper:
 
             data = self._appliance_measurements(appliance, data, measurements)
             data.update(self._get_lock_state(appliance))
+            for toggle in TOGGLES:
+                data.update(self._get_toggle_state(appliance, toggle))
+
             if (appl_type := appliance.find("type")) is not None:
                 if appl_type.text in ACTUATOR_CLASSES:
                     data.update(_get_actuator_functionalities(appliance))

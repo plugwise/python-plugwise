@@ -511,6 +511,11 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
 }
 
+TOGGLES: Final[tuple[str, ...]] = (
+    "cooling_enabled",
+    "domestic_hot_water_state",
+)
+
 # Known types of Smiles and Stretches
 SMILE = namedtuple("SMILE", "smile_type smile_name")
 SMILES: Final[dict[str, SMILE]] = {
