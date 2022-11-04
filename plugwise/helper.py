@@ -934,6 +934,7 @@ class SmileHelper:
                     toggle_data := self._get_toggle_state(appliance, toggle, name)
                     is not None
                 ):
+                    LOGGER.debug("HOI %s ", toggle_data)
                     data.update(toggle_data)
 
             if (appl_type := appliance.find("type")) is not None:
