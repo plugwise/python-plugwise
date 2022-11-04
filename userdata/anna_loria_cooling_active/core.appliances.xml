@@ -560,7 +560,7 @@
 				<cooling_toggle id='bb06428d40a44079bebcce46e5132fa9'/>
 				<updated_date>2022-09-29T16:33:27.169+02:00</updated_date>
 				<type>cooling_enabled</type>
-				<state>off</state>
+				<state>on</state>
 			</toggle_functionality>
 		</actuator_functionalities>
 	</appliance>
