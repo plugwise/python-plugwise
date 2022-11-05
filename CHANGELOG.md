@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.25.6: Revert py.typed, fix Core PR #81531
+
+# v0.25.5: not released
+
 # v0.25.4: Add py.typed, fix typing as suggested in #231
 
 # v0.25.3: Bugfix for https://github.com/plugwise/plugwise-beta/issues/309
