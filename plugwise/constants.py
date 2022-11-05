@@ -534,6 +534,7 @@ SMILES: Final[dict[str, SMILE]] = {
 # All available Binary Sensor, Sensor, and Switch Types
 
 BINARY_SENSORS: Final[tuple[str, ...]] = (
+    "cooling_enabled",
     "compressor_state",
     "cooling_state",
     "dhw_state",
@@ -635,6 +636,7 @@ class ModelData(TypedDict):
 class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
+    cooling_enabled: bool
     compressor_state: bool
     cooling_state: bool
     dhw_state: bool
