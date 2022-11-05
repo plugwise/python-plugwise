@@ -800,12 +800,12 @@ class SmileHelper:
                     if not self._cooling_present or self._cooling_enabled:
                         presets[directive.attrib["preset"]] = [
                             float(preset["setpoint"]),
-                            DEFAULT_PW_MAX,
+                            DEFAULT_PW_MIN,
                         ]
                     else:
                         presets[directive.attrib["preset"]] = [
                             float(preset["setpoint"]),
-                            DEFAULT_PW_MIN,
+                            DEFAULT_PW_MAX,
                         ]
                 else:
                     presets[directive.attrib["preset"]] = [
@@ -1258,12 +1258,12 @@ class SmileHelper:
                         if not self._cooling_present or self._cooling_enabled:
                             schedule[directive.attrib["time"]] = [
                                 float(entry["setpoint"]),
-                                DEFAULT_PW_MAX,
+                                DEFAULT_PW_MIN,
                             ]
                         else:
                             schedule[directive.attrib["time"]] = [
                                 float(entry["setpoint"]),
-                                DEFAULT_PW_MIN,
+                                DEFAULT_PW_MAX,
                             ]
                     elif "preset" in entry:
                         schedule[directive.attrib["time"]] = [
