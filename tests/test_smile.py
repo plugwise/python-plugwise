@@ -1354,7 +1354,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not self.notifications
 
         result = await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Test", "Normal"]
+            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Normal"]
         )
         assert result
         await smile.close_connection()
