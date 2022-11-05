@@ -792,7 +792,6 @@ class SmileHelper:
             directives: etree = self._domain_objects.find(
                 f'rule[@id="{rule_id}"]/directives'
             )
-
             for directive in directives:
                 preset = directive.find("then").attrib
                 if "setpoint" in preset:
@@ -981,9 +980,11 @@ class SmileHelper:
             if all(item in data for item in ("cooling_ena_switch", "cooling_enabled")):
                 data.pop("cooling_enabled")
 
-        # Don't show cooling_state when no cooling present
-        if not self._cooling_present and "cooling_state" in data:
-            data.pop("cooling_state")
+        # Don't show cooling-related when no cooling present
+        if not self._cooling_present:
+            for item in ("cooling_state", "cooling_ena_switch", "cooling_enabled"):
+                if item in data:
+                    data.pop(item)
 
         return cast(DeviceData, data)
 
@@ -1254,10 +1255,13 @@ class SmileHelper:
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
+            locator = f'./rule[@id="{rule_id}"]/directives'
+            # Show an empty schedule as no schedule found
+            if not (directives := self._domain_objects.find(locator)):
+                continue
+
             # Only process the active schedule in detail for Adam or Anna with cooling
             if self._cooling_present and loc_id != NONE:
-                locator = f'./rule[@id="{rule_id}"]/directives'
-                directives = self._domain_objects.find(locator)
                 for directive in directives:
                     entry = directive.find("then").attrib
                     if "setpoint" in entry:

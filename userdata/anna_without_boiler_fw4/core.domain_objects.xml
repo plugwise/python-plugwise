@@ -159,7 +159,6 @@
 		<modified_date>2020-03-12T14:20:45.656+01:00</modified_date>
 		<deleted_date></deleted_date>
 		<directives>
-			<when time="[mo 02:00,mo 02:00)"><then preset="home"/></when>
 		</directives>
 		<contexts>
 			<context>
