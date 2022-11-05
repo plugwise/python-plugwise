@@ -975,10 +975,12 @@ class SmileHelper:
                 self._cooling_active = data["elga_status_code"] == 8
                 data.pop("elga_status_code", None)
             # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+            # Anna + Elga >= 4.3.7: the Elga cooling-enabled state is shown but there is no cooling-switch
             for item in ("cooling_ena_switch", "cooling_enabled"):
                 if item in data:
                     self._cooling_enabled = data[item]
                     self._cooling_active = data["cooling_state"]
+
             if all(item in data for item in ("cooling_ena_switch", "cooling_enabled")):
                 data.pop("cooling_enabled")
 
