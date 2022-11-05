@@ -101,9 +101,8 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree) -> dict[str, Any]:
+def _get_actuator_functionalities(xml: etree, data: dict[str, Any]) -> None:
     """Helper-function for _get_appliance_data()."""
-    data: dict[str, Any] = {}
     for item in ACTIVE_ACTUATORS:
         temp_dict: dict[str, float] = {}
         for key in LIMITS:
@@ -116,8 +115,6 @@ def _get_actuator_functionalities(xml: etree) -> dict[str, Any]:
 
         if temp_dict:
             data[item] = temp_dict
-
-    return data
 
 
 def schedules_temps(
@@ -934,7 +931,7 @@ class SmileHelper:
                 self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                data.update(_get_actuator_functionalities(appliance))
+                _get_actuator_functionalities(appliance, data)
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
