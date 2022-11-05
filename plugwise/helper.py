@@ -1254,15 +1254,21 @@ class SmileHelper:
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
                     entry = directive.find("then").attrib
-                    if "preset" in entry:
+                    if "setpoint" in entry:
+                        if not self._cooling_present or self._cooling_enabled:
+                            schedule[directive.attrib["time"]] = [
+                                float(entry["setpoint"]),
+                                DEFAULT_PW_MAX,
+                            ]
+                        else:
+                            schedule[directive.attrib["time"]] = [
+                                float(entry["setpoint"]),
+                                DEFAULT_PW_MIN,
+                            ]
+                    else:  # preset in entry
                         schedule[directive.attrib["time"]] = [
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
-                        ]
-                    else:
-                        schedule[directive.attrib["time"]] = [
-                            float(entry["heating_setpoint"]),
-                            float(entry["cooling_setpoint"]),
                         ]
 
             available.append(name)
