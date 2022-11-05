@@ -510,7 +510,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
 }
 
-TOGGLES: Final[dict[str, ...]] = {
+TOGGLES: Final[dict[str, str]] = {
     "cooling_enabled": "cooling_ena_switch",
     "domestic_hot_water_comfort_mode": "dhw_cm_switch",
 }
@@ -758,7 +758,6 @@ class DeviceDataPoints(
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
-    cooling_enabled: bool
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData
     sensors: SmileSensors
