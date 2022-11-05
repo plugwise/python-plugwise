@@ -1322,7 +1322,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available": True,
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "home",
-                "available_schedules": ["Test", "Normal"],
+                "available_schedules": ["Normal"],
                 "selected_schedule": "Normal",
                 "last_used": "Normal",
                 "mode": "auto",
