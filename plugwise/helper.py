@@ -1258,7 +1258,7 @@ class SmileHelper:
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
             if not (directives := self._domain_objects.find(locator)):
-                return available, selected, schedule_temperatures, None
+                continue
 
             # Only process the active schedule in detail for Adam or Anna with cooling
             if self._cooling_present and loc_id != NONE:
