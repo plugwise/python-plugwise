@@ -794,6 +794,7 @@ class SmileHelper:
 
             for directive in directives:
                 preset = directive.find("then").attrib
+                LOGGER.debug("HOI %s", preset)
                 keys, dummy = zip(*preset.items())
                 if str(keys[0]) == "setpoint":
                     presets[directive.attrib["preset"]] = [
