@@ -2010,7 +2010,7 @@
 			<when time="[tu 06:45,we 06:45)"><then preset="home"/></when>
 			<when time="[we 06:45,th 06:45)"><then preset="home"/></when>
 			<when time="[th 06:45,fr 06:45)"><then preset="home"/></when>
-			<when time="[fr 06:45,su 08:30)"><then preset="home"/></when>
+			<when time="[fr 06:45,su 08:30)"><then setpoint="21.5"/></when>
 			<when time="[su 22:45,mo 23:00)"><then preset="asleep"/></when>
 			<when time="[mo 23:00,th 23:00)"><then preset="asleep"/></when>
 			<when time="[th 23:00,fr 23:00)"><then preset="asleep"/></when>
