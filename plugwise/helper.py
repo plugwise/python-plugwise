@@ -792,7 +792,6 @@ class SmileHelper:
             directives: etree = self._domain_objects.find(
                 f'rule[@id="{rule_id}"]/directives'
             )
-
             for directive in directives:
                 preset = directive.find("then").attrib
                 if "setpoint" in preset:
@@ -1259,7 +1258,10 @@ class SmileHelper:
             # Only process the active schedule in detail for Adam or Anna with cooling
             if self._cooling_present and loc_id != NONE:
                 locator = f'./rule[@id="{rule_id}"]/directives'
-                directives = self._domain_objects.find(locator)
+                # Show an empty schedule as no schedule found
+                if not (directives := self._domain_objects.find(locator)):
+                    return available, selected, schedule_temperatures, None
+
                 for directive in directives:
                     entry = directive.find("then").attrib
                     if "setpoint" in entry:
