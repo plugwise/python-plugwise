@@ -35,7 +35,6 @@ setup(
     author_email="info@compa.nl",
     license="MIT",
     packages=find_packages(),
-    package_data={"plugwise": ["py.typed"]},
     install_requires=[
         "aiohttp",
         "async_timeout",
