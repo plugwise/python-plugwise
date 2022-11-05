@@ -981,9 +981,11 @@ class SmileHelper:
             if all(item in data for item in ("cooling_ena_switch", "cooling_enabled")):
                 data.pop("cooling_enabled")
 
-        # Don't show cooling_state when no cooling present
-        if not self._cooling_present and "cooling_state" in data:
-            data.pop("cooling_state")
+        # Don't show cooling-related when no cooling present
+        if not self._cooling_present:
+            for item in ("cooling_state", "cooling_ena_switch", "cooling_enabled"):
+                if item in data:
+                    data.pop(item)
 
         return cast(DeviceData, data)
 
