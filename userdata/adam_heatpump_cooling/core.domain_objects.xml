@@ -1979,7 +1979,7 @@
 		<directives>
 			<when time="[sa 16:30,sa 23:30)"><then preset="home"/></when>
 			<when time="[su 09:00,su 23:00)"><then preset="home"/></when>
-			<when time="[sa 23:30,su 09:00)"><then preset="asleep"/></when>
+			<when time="[sa 23:30,su 09:00)"><then setpoint="17.5"/></when>
 			<when time="[fr 23:30,sa 08:30)"><then preset="asleep"/></when>
 			<when time="[sa 08:30,sa 16:30)"><then preset="away"/></when>
 			<when time="[su 23:00,mo 08:00)"><then preset="asleep"/></when>

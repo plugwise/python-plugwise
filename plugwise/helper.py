@@ -25,6 +25,8 @@ from .constants import (
     BINARY_SENSORS,
     DATA,
     DAYS,
+    DEFAULT_PW_MAX,
+    DEFAULT_PW_MIN,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -794,16 +796,21 @@ class SmileHelper:
 
             for directive in directives:
                 preset = directive.find("then").attrib
-                keys, dummy = zip(*preset.items())
-                if str(keys[0]) == "setpoint":
-                    presets[directive.attrib["preset"]] = [
-                        float(preset.get("setpoint")),
-                        0,
-                    ]
+                if "setpoint" in preset:
+                    if not self._cooling_present or self._cooling_enabled:
+                        presets[directive.attrib["preset"]] = [
+                            float(preset["setpoint"]),
+                            DEFAULT_PW_MIN,
+                        ]
+                    else:
+                        presets[directive.attrib["preset"]] = [  # pragma: no cover
+                            float(preset["setpoint"]),
+                            DEFAULT_PW_MAX,
+                        ]
                 else:
                     presets[directive.attrib["preset"]] = [
-                        float(preset.get("heating_setpoint")),
-                        float(preset.get("cooling_setpoint")),
+                        float(preset["heating_setpoint"]),
+                        float(preset["cooling_setpoint"]),
                     ]
 
         return presets
@@ -1241,14 +1248,24 @@ class SmileHelper:
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
-            # Only process the active schedule in detail for Anna with cooling
+            # Only process the active schedule in detail for Adam or Anna with cooling
             if self._cooling_present and loc_id != NONE:
                 locator = f'./rule[@id="{rule_id}"]/directives'
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
                     entry = directive.find("then").attrib
-                    keys, dummy = zip(*entry.items())
-                    if str(keys[0]) == "preset":
+                    if "setpoint" in entry:
+                        if not self._cooling_present or self._cooling_enabled:
+                            schedule[directive.attrib["time"]] = [
+                                float(entry["setpoint"]),
+                                DEFAULT_PW_MIN,
+                            ]
+                        else:
+                            schedule[directive.attrib["time"]] = [
+                                float(entry["setpoint"]),
+                                DEFAULT_PW_MAX,
+                            ]
+                    elif "preset" in entry:
                         schedule[directive.attrib["time"]] = [
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
