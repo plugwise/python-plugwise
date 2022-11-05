@@ -803,7 +803,7 @@ class SmileHelper:
                             DEFAULT_PW_MIN,
                         ]
                     else:
-                        presets[directive.attrib["preset"]] = [
+                        presets[directive.attrib["preset"]] = [  # pragma: no cover
                             float(preset["setpoint"]),
                             DEFAULT_PW_MAX,
                         ]
