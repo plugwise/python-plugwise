@@ -1247,8 +1247,10 @@ class SmileHelper:
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
                     entry = directive.find("then").attrib
+                    LOGGER.debug("HOI %s", entry)
+                    LOGGER.debug("HOI 1 %s", type(entry))
                     if "preset" in entry:
-                        LOGGER.debug("HOI %s", entry["preset"])
+                        LOGGER.debug("HOI 2 %s", entry["preset"])
                         schedule[directive.attrib["time"]] = [
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
