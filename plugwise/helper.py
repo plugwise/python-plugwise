@@ -1242,7 +1242,7 @@ class SmileHelper:
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
             # Only process the active schedule in detail for Anna with cooling
-            if self._cooling_present and loc_id != NONE:
+            if self.smile_name == "Anna" and self._cooling_present and loc_id != NONE:
                 locator = f'./rule[@id="{rule_id}"]/directives'
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
