@@ -25,6 +25,8 @@ from .constants import (
     BINARY_SENSORS,
     DATA,
     DAYS,
+    DEFAULT_PW_MAX,
+    DEFAULT_PW_MIN,
     DEVICE_MEASUREMENTS,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -798,12 +800,12 @@ class SmileHelper:
                     if not self._cooling_present or self._cooling_enabled:
                         presets[directive.attrib["preset"]] = [
                             float(preset["setpoint"]),
-                            30,
+                            DEFAULT_PW_MAX,
                         ]
                     else:
                         presets[directive.attrib["preset"]] = [
                             float(preset["setpoint"]),
-                            7,
+                            DEFAULT_PW_MIN,
                         ]
                 else:
                     presets[directive.attrib["preset"]] = [
