@@ -795,10 +795,16 @@ class SmileHelper:
             for directive in directives:
                 preset = directive.find("then").attrib
                 if "setpoint" in preset:
-                    presets[directive.attrib["preset"]] = [
-                        float(preset["setpoint"]),
-                        0,
-                    ]
+                    if not self._cooling_present or self._cooling_enabled:
+                        presets[directive.attrib["preset"]] = [
+                            float(preset["setpoint"]),
+                            30,
+                        ]
+                    else:
+                        presets[directive.attrib["preset"]] = [
+                            float(preset["setpoint"]),
+                            7,
+                        ]
                 else:
                     presets[directive.attrib["preset"]] = [
                         float(preset["heating_setpoint"]),
