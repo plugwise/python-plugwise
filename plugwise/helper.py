@@ -1265,10 +1265,15 @@ class SmileHelper:
                                 float(entry["setpoint"]),
                                 DEFAULT_PW_MIN,
                             ]
-                    else:  # preset in entry
+                    elif "preset" in entry:
                         schedule[directive.attrib["time"]] = [
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
+                        ]
+                    else:
+                        schedule[directive.attrib["time"]] = [
+                            float(entry["heating_setpoint"]),
+                            float(entry["cooling_setpoint"]),
                         ]
 
             available.append(name)
