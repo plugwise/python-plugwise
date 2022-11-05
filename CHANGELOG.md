@@ -2,6 +2,7 @@
 
 # v0.26.9: Hide cooling-related switch, binary_sensors when there is no cooling present
 - This fixes the unexpected appearance of new entities after the Adam 3.7.1 firmware-update
+- Properly handle an empty schedule, should fix #313
 
 # v0.25.8: Make collection of toggle-data future-proof
 
