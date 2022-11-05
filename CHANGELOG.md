@@ -2,6 +2,8 @@
 
 # v0.25.7: Correct faulty logic in the v0.25.6 release
 
+# v0.25.7: Make collection of toggle-data future-proof
+
 # v0.25.6: Revert py.typed, fix Core PR #81531
 
 # v0.25.5: not released
