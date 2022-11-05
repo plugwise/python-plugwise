@@ -1255,13 +1255,13 @@ class SmileHelper:
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
+            locator = f'./rule[@id="{rule_id}"]/directives'
+            # Show an empty schedule as no schedule found
+            if not (directives := self._domain_objects.find(locator)):
+                return available, selected, schedule_temperatures, None
+
             # Only process the active schedule in detail for Adam or Anna with cooling
             if self._cooling_present and loc_id != NONE:
-                locator = f'./rule[@id="{rule_id}"]/directives'
-                # Show an empty schedule as no schedule found
-                if not (directives := self._domain_objects.find(locator)):
-                    return available, selected, schedule_temperatures, None
-
                 for directive in directives:
                     entry = directive.find("then").attrib
                     if "setpoint" in entry:
