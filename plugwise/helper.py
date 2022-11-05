@@ -1241,12 +1241,13 @@ class SmileHelper:
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
-            # Only process the active schedule in detail for Anna with cooling
-            if self.smile_name == "Anna" and self._cooling_present and loc_id != NONE:
+            # Only process the active schedule in detail for Adam or Anna with cooling
+            if self._cooling_present and loc_id != NONE:
                 locator = f'./rule[@id="{rule_id}"]/directives'
                 directives = self._domain_objects.find(locator)
                 for directive in directives:
                     entry = directive.find("then").attrib
+                    LOGGER.debug("HOI %s", entry)
                     keys, dummy = zip(*entry.items())
                     if str(keys[0]) == "preset":
                         schedule[directive.attrib["time"]] = [
