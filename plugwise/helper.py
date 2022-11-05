@@ -794,17 +794,15 @@ class SmileHelper:
 
             for directive in directives:
                 preset = directive.find("then").attrib
-                LOGGER.debug("HOI %s", preset)
-                keys, dummy = zip(*preset.items())
-                if str(keys[0]) == "setpoint":
+                if "setpoint" in preset:
                     presets[directive.attrib["preset"]] = [
-                        float(preset.get("setpoint")),
+                        float(preset["setpoint"]),
                         0,
                     ]
                 else:
                     presets[directive.attrib["preset"]] = [
-                        float(preset.get("heating_setpoint")),
-                        float(preset.get("cooling_setpoint")),
+                        float(preset["heating_setpoint"]),
+                        float(preset["cooling_setpoint"]),
                     ]
 
         return presets
