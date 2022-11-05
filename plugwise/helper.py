@@ -1250,7 +1250,7 @@ class SmileHelper:
                     LOGGER.debug("HOI %s", entry)
                     # keys, dummy = zip(*entry.items())
                     # LOGGER.debug("HOI 1 %s", keys)
-                    if entry.keys()[0] == "preset":
+                    if "preset" in entry:
                         schedule[directive.attrib["time"]] = [
                             float(self._presets(loc_id)[entry["preset"]][0]),
                             float(self._presets(loc_id)[entry["preset"]][1]),
