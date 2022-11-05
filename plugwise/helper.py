@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+from typing import Any, cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -45,6 +46,7 @@ from .constants import (
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
+    TOGGLES,
     UOM,
     ApplianceData,
     DeviceData,
@@ -99,9 +101,8 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree) -> DeviceData:
+def _get_actuator_functionalities(xml: etree, data: dict[str, Any]) -> None:
     """Helper-function for _get_appliance_data()."""
-    data: DeviceData = {}
     for item in ACTIVE_ACTUATORS:
         temp_dict: dict[str, float] = {}
         for key in LIMITS:
@@ -113,9 +114,7 @@ def _get_actuator_functionalities(xml: etree) -> DeviceData:
                 temp_dict.update({key: format_measure(function.text, TEMP_CELSIUS)})
 
         if temp_dict:
-            data[item] = temp_dict  # type: ignore [literal-required]
-
-    return data
+            data[item] = temp_dict
 
 
 def schedules_temps(
@@ -848,9 +847,9 @@ class SmileHelper:
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceData,
+        data: dict[str, Any],
         measurements: dict[str, DATA | UOM],
-    ) -> DeviceData:
+    ) -> None:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
@@ -869,28 +868,28 @@ class SmileHelper:
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
-                data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
+                data[measurement] = appl_p_loc.text
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ["dhw_mode", "regulation_mode"]:
-                    data[measurement] = format_measure(appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))  # type: ignore [literal-required]
+                    data[measurement] = format_measure(
+                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    )
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
-                    self._cooling_activation_outdoor_temp = data[measurement]  # type: ignore [literal-required]
+                    self._cooling_activation_outdoor_temp = data[measurement]
                 if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data[measurement]  # type: ignore [literal-required]
+                    self._cooling_deactivation_threshold = data[measurement]
                 if measurement == "outdoor_air_temperature":
-                    self._outdoor_temp = data[measurement]  # type: ignore [literal-required]
+                    self._outdoor_temp = data[measurement]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
-                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
+                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
-        return data
-
-    def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
+    def _wireless_availablity(self, appliance: etree, data: dict[str, Any]) -> None:
         """Helper-function for _get_appliance_data().
         Collect the availablity-status for wireless connected devices.
         """
@@ -913,10 +912,10 @@ class SmileHelper:
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: DeviceData = {}
+        data: dict[str, Any] = {}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
-            return data
+            return cast(DeviceData, data)
 
         measurements = DEVICE_MEASUREMENTS
         if d_id == self._heater_id:
@@ -926,11 +925,13 @@ class SmileHelper:
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
 
-            data = self._appliance_measurements(appliance, data, measurements)
-            data.update(self._get_lock_state(appliance))
-            if (appl_type := appliance.find("type")) is not None:
-                if appl_type.text in ACTUATOR_CLASSES:
-                    data.update(_get_actuator_functionalities(appliance))
+            self._appliance_measurements(appliance, data, measurements)
+            self._get_lock_state(appliance, data)
+            for toggle, name in TOGGLES.items():
+                self._get_toggle_state(appliance, toggle, name, data)
+
+            if appliance.find("type").text in ACTUATOR_CLASSES:
+                _get_actuator_functionalities(appliance, data)
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
@@ -960,26 +961,31 @@ class SmileHelper:
         if "temperature" in data:
             data.pop("heating_state", None)
 
-        if d_id == self._heater_id:
-            # Adam
-            if self.smile_name == "Smile Anna":
-                # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
-                if self._cooling_present:
-                    # Elga:
-                    if "elga_status_code" in data:
-                        self._cooling_enabled = data["elga_status_code"] in [8, 9]
-                        self._cooling_active = data["elga_status_code"] == 8
-                        data.pop("elga_status_code", None)
-                    # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                    elif "cooling_ena_switch" in data:
-                        self._cooling_enabled = data["cooling_ena_switch"]
-                        self._cooling_active = data["cooling_state"]
+        if (
+            d_id == self._heater_id
+            and self.smile_name == "Smile Anna"
+            and self._cooling_present
+        ):
+            # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
+            if "elga_status_code" in data:
+                self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                self._cooling_active = data["elga_status_code"] == 8
+                data.pop("elga_status_code", None)
+            # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+            # Anna + Elga >= 4.3.7: the Elga cooling-enabled state is shown but there is no cooling-switch
+            for item in ("cooling_ena_switch", "cooling_enabled"):
+                if item in data:
+                    self._cooling_enabled = data[item]
+                    self._cooling_active = data["cooling_state"]
+
+            if all(item in data for item in ("cooling_ena_switch", "cooling_enabled")):
+                data.pop("cooling_enabled")
 
         # Don't show cooling_state when no cooling present
         if not self._cooling_present and "cooling_state" in data:
             data.pop("cooling_state")
 
-        return data
+        return cast(DeviceData, data)
 
     def _rank_thermostat(
         self,
@@ -1333,11 +1339,10 @@ class SmileHelper:
 
         return val
 
-    def _get_lock_state(self, xml: etree) -> DeviceData:
+    def _get_lock_state(self, xml: etree, data: dict[str, Any]) -> None:
         """Helper-function for _get_appliance_data().
         Adam & Stretches: obtain the relay-switch lock state.
         """
-        data: DeviceData = {}
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
         if self._stretch_v2:
@@ -1348,7 +1353,19 @@ class SmileHelper:
             if (found := xml.find(locator)) is not None:
                 data["lock"] = found.text == "true"
 
-        return data
+    def _get_toggle_state(
+        self, xml: etree, toggle: str, name: str, data: dict[str, Any]
+    ) -> None:
+        """Helper-function for _get_appliance_data().
+        Obtain the toggle state of 'toggle'.
+        """
+        if xml.find("type").text == "heater_central":
+            locator = "./actuator_functionalities/toggle_functionality"
+            if found := xml.findall(locator):
+                for item in found:
+                    if (toggle_type := item.find("type")) is not None:
+                        if toggle_type.text == toggle:
+                            data.update({name: item.find("state").text == "on"})
 
     def _update_device_with_dicts(
         self,

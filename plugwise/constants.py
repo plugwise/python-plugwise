@@ -478,7 +478,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
     "domestic_hot_water_mode": DATA("dhw_mode", NONE),
-    "domestic_hot_water_comfort_mode": DATA("dhw_cm_switch", NONE),
     "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
     "elga_status_code": UOM(NONE),
@@ -498,7 +497,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "compressor_state": UOM(NONE),
     "cooling_state": UOM(NONE),
     # Available with the Loria and Elga (newer Anna firmware) heatpumps
-    "cooling_enabled": DATA("cooling_ena_switch", TEMP_CELSIUS),
+    "cooling_enabled": UOM(NONE),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
     "slave_boiler_state": UOM(NONE),
     "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
@@ -509,6 +508,11 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "intended_boiler_state": DATA("heating_state", NONE),
     # Outdoor temperature from APPLIANCES - present for a heatpump
     "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
+}
+
+TOGGLES: Final[dict[str, str]] = {
+    "cooling_enabled": "cooling_ena_switch",
+    "domestic_hot_water_comfort_mode": "dhw_cm_switch",
 }
 
 # Known types of Smiles and Stretches
@@ -529,6 +533,7 @@ SMILES: Final[dict[str, SMILE]] = {
 # All available Binary Sensor, Sensor, and Switch Types
 
 BINARY_SENSORS: Final[tuple[str, ...]] = (
+    "cooling_enabled",
     "compressor_state",
     "cooling_state",
     "dhw_state",
@@ -630,6 +635,7 @@ class ModelData(TypedDict):
 class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
+    cooling_enabled: bool
     compressor_state: bool
     cooling_state: bool
     dhw_state: bool
@@ -752,7 +758,6 @@ class DeviceDataPoints(
 class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
-    cooling_enabled: bool
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData
     sensors: SmileSensors

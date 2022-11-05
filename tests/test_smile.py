@@ -3950,6 +3950,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             # Heater central
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "binary_sensors": {
+                    "cooling_enabled": True,
                     "cooling_state": True,
                     "dhw_state": False,
                     "heating_state": False,

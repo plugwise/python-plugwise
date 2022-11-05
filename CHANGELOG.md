@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.25.8: Make collection of toggle-data future-proof
+
 # v0.25.7: Correct faulty logic in the v0.25.6 release
 
 # v0.25.6: Revert py.typed, fix Core PR #81531
