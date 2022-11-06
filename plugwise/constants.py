@@ -687,6 +687,7 @@ class SmileSensors(TypedDict, total=False):
     electricity_phase_one_produced: float
     electricity_phase_two_produced: float
     electricity_phase_three_produced: float
+    electricity_produced: float
     electricity_produced_interval: float
     electricity_produced_off_peak_cumulative: float
     electricity_produced_off_peak_interval: int
