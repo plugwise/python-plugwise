@@ -174,7 +174,11 @@ def power_data_energy_diff(
     measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
 ) -> DeviceData:
     """Calculate differential energy."""
-    if "electricity" in measurement and "interval" not in net_string:
+    if (
+        "electricity" in measurement
+        and "phase" not in measurement
+        and "interval" not in net_string
+    ):
         diff = 1
         if "produced" in measurement:
             diff = -1
