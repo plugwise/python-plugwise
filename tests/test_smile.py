@@ -5137,7 +5137,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "4.4.0",
                 "hardware": "AME Smile 2.0 board",
                 "location": "03e65b16e4b247a29ae0d75a78cb492e",
-                "mac_address": "C49300137E71",
+                "mac_address": "012345670001",
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
