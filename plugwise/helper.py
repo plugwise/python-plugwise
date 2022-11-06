@@ -948,6 +948,7 @@ class SmileHelper:
 
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
+
             for toggle, name in TOGGLES.items():
                 self._get_toggle_state(appliance, toggle, name, data)
 
@@ -1387,6 +1388,9 @@ class SmileHelper:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
                             data.update({name: item.find("state").text == "on"})
+                            # Remove the cooling_enabled key when the corresponding toggle is present
+                            if toggle == "cooling_enabled":
+                                data.pop("cooling_enabled")
 
     def _update_device_with_dicts(
         self,
