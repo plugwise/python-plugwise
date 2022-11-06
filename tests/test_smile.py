@@ -5175,9 +5175,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_phase_three_produced": 486,
                     "gas_consumed_cumulative": 15263.4,
                     "gas_consumed_interval": 0.0,
-                    "voltage_phase_one": 230,
-                    "voltage_phase_two": 233,
-                    "voltage_phase_three": 233,
+                    "voltage_phase_one": 230.3,
+                    "voltage_phase_two": 232.8,
+                    "voltage_phase_three": 232.6,
                 },
             },
         }
