@@ -5090,7 +5090,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "SHENZHEN KAIFA TECHNOLOGY （CHENGDU） CO., LTD.",
                 "available": True,
                 "sensors": {
-                    "net_electricity_point": 0,
+                    "net_electricity_point": 581,
                     "electricity_consumed_peak_point": 581,
                     "electricity_consumed_off_peak_point": 0,
                     "net_electricity_cumulative": 30718.064,
