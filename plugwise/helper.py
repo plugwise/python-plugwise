@@ -918,21 +918,6 @@ class SmileHelper:
         """Helper-function for _get_appliance_data().
         Clean up the data dict.
         """
-        # Remove c_heating_state from the output
-        if "c_heating_state" in data:
-            # Anna + Elga and Adam + OnOff heater/cooler don't use intended_cental_heating_state
-            # to show the generic heating state
-            if (self._cooling_present and "heating_state" in data) or (
-                self.smile_name == "Adam" and self._on_off_device
-            ):
-                if data.get("c_heating_state") and not data.get("heating_state"):
-                    data["heating_state"] = True
-                    # For Adam + OnOff cooling heating_state = True means cooling is active
-                    if self._cooling_present:
-                        self._cooling_active = True
-
-            data.pop("c_heating_state")
-
         # Fix for Adam + Anna: heating_state also present under Anna, remove
         if "temperature" in data:
             data.pop("heating_state", None)
@@ -978,6 +963,24 @@ class SmileHelper:
             ):
                 data["modified"] = appliance.find("modified_date").text
 
+        if d_id == self.gateway_id and self.smile_name == "Adam":
+            self._get_regulation_mode(appliance, data)
+
+        # Remove c_heating_state from the output
+        if "c_heating_state" in data:
+            # Anna + Elga and Adam + OnOff heater/cooler don't use intended_cental_heating_state
+            # to show the generic heating state
+            if (self._cooling_present and "heating_state" in data) or (
+                self.smile_name == "Adam" and self._on_off_device
+            ):
+                if data.get("c_heating_state") and not data.get("heating_state"):
+                    data["heating_state"] = True
+                    # For Adam + OnOff cooling heating_state = True means cooling is active
+                    if self._cooling_present:
+                        self._cooling_active = True
+
+            data.pop("c_heating_state")
+
         if (
             d_id == self._heater_id
             and self.smile_name == "Smile Anna"
@@ -997,9 +1000,6 @@ class SmileHelper:
 
             if all(item in data for item in ("cooling_ena_switch", "cooling_enabled")):
                 data.pop("cooling_enabled")
-
-        if d_id == self.gateway_id and self.smile_name == "Adam":
-            self._get_regulation_mode(appliance, data)
 
         self._cleanup_data(data)
 
