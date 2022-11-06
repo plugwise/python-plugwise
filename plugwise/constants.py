@@ -15,6 +15,7 @@ ATTR_STATE: Final = "state"
 ATTR_STATE_CLASS: Final = "state_class"
 ATTR_UNIT_OF_MEASUREMENT: Final = "unit_of_measurement"
 DEGREE: Final = "°"
+ELECTRIC_POTENTIAL_VOLT: Final = "V"
 ENERGY_KILO_WATT_HOUR: Final = "kWh"
 ENERGY_WATT_HOUR: Final = "Wh"
 PERCENTAGE: Final = "%"
@@ -445,6 +446,7 @@ P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "gas_consumed": UOM(VOLUME_CUBIC_METERS),
+    "voltage": UOM(ELECTRIC_POTENTIAL_VOLT),
 }
 # Thermostat and Plug/Stretch related measurements
 # Excluded:
@@ -558,6 +560,12 @@ SENSORS: Final[tuple[str, ...]] = (
     "electricity_consumed_peak_interval",
     "electricity_consumed_peak_point",
     "electricity_consumed_point",
+    "electricity_phase_one_consumed",
+    "electricity_phase_two_consumed",
+    "electricity_phase_three_consumed",
+    "electricity_phase_one_produced",
+    "electricity_phase_two_produced",
+    "electricity_phase_three_produced",
     "electricity_produced",
     "electricity_produced_interval",
     "electricity_produced_off_peak_cumulative",
@@ -583,6 +591,9 @@ SENSORS: Final[tuple[str, ...]] = (
     "setpoint_low",
     "temperature_difference",
     "valve_position",
+    "voltage_phase_one",
+    "voltage_phase_two",
+    "voltage_phase_three",
     "water_pressure",
     "water_temperature",
 )
@@ -662,7 +673,12 @@ class SmileSensors(TypedDict, total=False):
     electricity_consumed_peak_interval: int
     electricity_consumed_peak_point: int
     electricity_consumed_point: float
-    electricity_produced: float
+    electricity_phase_one_consumed: float
+    electricity_phase_two_consumed: float
+    electricity_phase_three_consumed: float
+    electricity_phase_one_produced: float
+    electricity_phase_two_produced: float
+    electricity_phase_three_produced: float
     electricity_produced_interval: float
     electricity_produced_off_peak_cumulative: float
     electricity_produced_off_peak_interval: int
@@ -687,6 +703,9 @@ class SmileSensors(TypedDict, total=False):
     setpoint_high: float
     setpoint_low: float
     temperature_difference: float
+    voltage_phase_one: float
+    voltage_phase_two: float
+    voltage_phase_three: float
     valve_position: float
     water_pressure: float
     water_temperature: float
