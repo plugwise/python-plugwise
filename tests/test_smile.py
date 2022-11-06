@@ -5076,7 +5076,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "4.4.0",
                 "hardware": "AME Smile 2.0 board",
                 "location": "a455b61e52394b2db5081ce025a430f3",
-                "mac_address": "C49300136E15",
+                "mac_address": "012345670001",
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
@@ -5123,7 +5123,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
         assert self.device_items == 29
-        assert "97a04c0c263049b29350a660b4cdd01e" in self.notifications
+        assert not self.notifications
 
         await smile.close_connection()
         await self.disconnect(server, client)
