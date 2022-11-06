@@ -5108,7 +5108,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
         }
 
-        self.smile_setup = "p1test_connect_p1v4_440beta_singlev4"
+        self.smile_setup = "p1v4_440beta_single"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
