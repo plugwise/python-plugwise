@@ -471,7 +471,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "relay": UOM(NONE),
-    "regulation_mode": UOM(NONE),
 }
 
 # Heater Central related measurements
