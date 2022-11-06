@@ -445,8 +445,16 @@ DATA = namedtuple("DATA", "name unit_of_measurement")
 P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
+    "electricity_phase_one_consumed": UOM(POWER_WATT),
+    "electricity_phase_two_consumed": UOM(POWER_WATT),
+    "electricity_phase_three_consumed": UOM(POWER_WATT),
+    "electricity_phase_one_produced": UOM(POWER_WATT),
+    "electricity_phase_two_produced": UOM(POWER_WATT),
+    "electricity_phase_three_produced": UOM(POWER_WATT),
     "gas_consumed": UOM(VOLUME_CUBIC_METERS),
-    "voltage": UOM(ELECTRIC_POTENTIAL_VOLT),
+    "voltage_phase_one": UOM(ELECTRIC_POTENTIAL_VOLT),
+    "voltage_phase_two": UOM(ELECTRIC_POTENTIAL_VOLT),
+    "voltage_phase_three": UOM(ELECTRIC_POTENTIAL_VOLT),
 }
 # Thermostat and Plug/Stretch related measurements
 # Excluded:
