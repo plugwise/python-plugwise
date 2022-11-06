@@ -174,7 +174,11 @@ def power_data_energy_diff(
     measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
 ) -> DeviceData:
     """Calculate differential energy."""
-    if "electricity" in measurement and "interval" not in net_string:
+    if (
+        "electricity" in measurement
+        and "phase" not in measurement
+        and "interval" not in net_string
+    ):
         diff = 1
         if "produced" in measurement:
             diff = -1
@@ -1141,6 +1145,8 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
+        if "phase" in loc.measurement:
+            loc.key_string = f"{loc.measurement}"
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
