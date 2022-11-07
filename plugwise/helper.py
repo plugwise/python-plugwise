@@ -73,13 +73,10 @@ from .util import (
 )
 
 
-def _find(xml_in: etree, locator: str) -> etree | None:
+def _find(xml_in: etree, locator: str) -> etree:
     """Helper-function for use of etree.find()."""
     if xml_in is not None:
-        if (found := xml_in.find(locator)) is not None:
-            return found
-
-        return None
+        return xml_in.find(locator)
 
     raise XMLDataMissingError()
 
