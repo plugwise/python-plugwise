@@ -992,14 +992,17 @@ class SmileHelper:
                 self._cooling_enabled = data["elga_status_code"] in [8, 9]
                 self._cooling_active = data["elga_status_code"] == 8
                 data.pop("elga_status_code", None)
-            # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-            # Anna + Elga >= 4.3.7: the Elga cooling-enabled state is shown but there is no cooling-switch
-            for item in ("cooling_enabled", "cooling_ena_switch"):
-                if item in data:
-                    self._cooling_enabled = data[item]
-                    self._cooling_active = data["cooling_state"]
-                    # Execute one time is enough
-                    break
+                # Elga has no cooling-switch
+                data.pop("cooling_ena_switch")
+            else:
+                # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+                # Anna + Elga >= 4.3.7: the Elga cooling-enabled state is shown but there is no cooling-switch
+                for item in ("cooling_enabled", "cooling_ena_switch"):
+                    if item in data:
+                        self._cooling_enabled = data[item]
+                        self._cooling_active = data["cooling_state"]
+                        # Execute one time is enough
+                        break
 
         self._cleanup_data(data)
 
