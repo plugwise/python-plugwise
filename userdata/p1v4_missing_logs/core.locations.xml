@@ -10,8 +10,6 @@
 		<preset>home</preset>
 		<clients/>
 		<appliances/>
-		<logs>
-		</logs>
 		<actuator_functionalities/>
 	</location>
 </locations>
