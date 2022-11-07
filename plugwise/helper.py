@@ -1163,7 +1163,7 @@ class SmileHelper:
             )
 
         # Locator not found
-        if _find(loc.logs, loc.locator) is None:
+        if loc.logs.find(loc.locator) is None:
             loc.found = False
             return loc
 
@@ -1196,7 +1196,7 @@ class SmileHelper:
         if self._smile_legacy:
             t_string = "tariff_indicator"
 
-        loc.logs = _find(search, f'./location[@id="{loc_id}"]/logs')
+        loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
