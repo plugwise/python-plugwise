@@ -82,6 +82,15 @@ def _find(xml_in: etree, locator: str) -> etree:
     raise XMLDataMissingError
 
 
+def _findall(xml_in: etree, locator: str) -> list[etree]:
+    """Helper-function for use of etree.findall()."""
+    if xml_in is not None:
+        return xml_in.findall(locator)
+
+    LOGGER.error("XML data unexpectedly not found, processing stopped!")
+    raise XMLDataMissingError
+
+
 def update_helper(
     data: DeviceDataPoints,
     devices: dict[str, DeviceData],
