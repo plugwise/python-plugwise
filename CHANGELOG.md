@@ -1,6 +1,10 @@
 # Changelog
 
-# v0.26.9: Hide cooling-related switch, binary_sensors when there is no cooling present
+# v0.25.10: Thermostats: more improvements
+- Anna + Elga: hide cooling_enable switch
+- Adam: improve collecting regulation_mode related.
+
+# v0.25.9: Adam: hide cooling-related switch, binary_sensors when there is no cooling present
 - This fixes the unexpected appearance of new entities after the Adam 3.7.1 firmware-update
 - Properly handle an empty schedule, should fix #313
 
