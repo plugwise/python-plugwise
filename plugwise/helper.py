@@ -63,6 +63,7 @@ from .exceptions import (
     InvalidAuthentication,
     InvalidXMLError,
     ResponseError,
+    XMLDataMissingError,
 )
 from .util import (
     escape_illegal_xml_characters,
@@ -70,6 +71,17 @@ from .util import (
     in_between,
     version_to_model,
 )
+
+
+def _find(xml_in: etree, locator: str) -> list[str]:
+    """Helper-function for use of etree.find()."""
+    if xml_in is not None:
+        if (found := xml_in.find(locator)) is not None:
+            return found
+
+        return None
+
+    raise XMLDataMissingError()
 
 
 def update_helper(
