@@ -5062,7 +5062,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             await self.device_test(smile, testdata)
         except pw_exceptions.XMLDataMissingError:
-            _LOGGER.info("Passed XML data missing testcase, processing stopped")
+            _LOGGER.error("XML data missing, processing stopped")
 
         await smile.close_connection()
         await self.disconnect(server, client)
