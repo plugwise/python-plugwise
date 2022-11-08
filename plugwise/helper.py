@@ -951,6 +951,7 @@ class SmileHelper:
         ) is not None:
 
             self._appliance_measurements(appliance, data, measurements)
+            LOGGER.debug("HOI 0 %s", data)
             self._get_lock_state(appliance, data)
 
             for toggle, name in TOGGLES.items():
