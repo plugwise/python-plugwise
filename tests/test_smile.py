@@ -3728,13 +3728,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "dhw_state": False,
                     "heating_state": True,
                     "compressor_state": True,
-                    "cooling_state": False,
                     "cooling_enabled": False,
                     "slave_boiler_state": False,
                     "flame_state": False,
                 },
                 "sensors": {
                     "water_temperature": 29.1,
+                    "dhw_temperature": 46.3,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 52,
                     "return_temperature": 25.1,
@@ -3764,8 +3764,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 24.0,
+                    "setpoint": 20.5,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3779,11 +3778,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
+                    "setpoint": 20.5,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
-                    "setpoint_low": 20.5,
-                    "setpoint_high": 24.0,
                 },
             },
         }
@@ -3802,8 +3800,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.device_items == 60
-        assert self.cooling_present
+        assert self.device_items == 54
+        assert not self.cooling_present
         assert not self.notifications
 
         assert not smile._cooling_enabled
