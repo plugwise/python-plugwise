@@ -1401,7 +1401,8 @@ class SmileHelper:
                         if toggle_type.text == toggle:
                             data.update({name: item.find("state").text == "on"})
                             # Remove the cooling_enabled key when the corresponding toggle is present
-                            if toggle == "cooling_enabled":
+                            # Except for Elga
+                            if toggle == "cooling_enabled" and not self._elga:
                                 data.pop("cooling_enabled")
 
     def _update_device_with_dicts(
