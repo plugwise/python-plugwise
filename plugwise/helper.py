@@ -930,7 +930,7 @@ class SmileHelper:
                     data.pop(item)
             # Keep cooling_enabled for Elga
             if not self._elga and "cooling_enabled" in data:
-                data.pop("cooling_enabled")
+                data.pop("cooling_enabled")  # pragma: no cover
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
