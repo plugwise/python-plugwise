@@ -149,6 +149,7 @@ class SmileData(SmileHelper):
             # Alternative method for the Anna with Elga
             elif search.find(locator_2) is not None:
                 self._cooling_present = True
+                self._elga = True
 
         # Gather all the device and initial data
         self._scan_thermostats()

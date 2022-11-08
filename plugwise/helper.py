@@ -316,6 +316,7 @@ class SmileHelper:
         self._cooling_present = False
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
+        self._elga = False
         self._heater_id: str | None = None
         self._home_location: str
         self._is_thermostat = False
