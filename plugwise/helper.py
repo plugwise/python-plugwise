@@ -925,9 +925,12 @@ class SmileHelper:
 
         # Don't show cooling-related when no cooling present
         if not self._cooling_present:
-            for item in ("cooling_state", "cooling_ena_switch", "cooling_enabled"):
+            for item in ("cooling_state", "cooling_ena_switch"):
                 if item in data:
                     data.pop(item)
+            # Keep cooling_enabled for Elga
+            if not self._elga:
+                data.pop("cooling_enabled")
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
