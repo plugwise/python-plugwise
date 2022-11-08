@@ -4228,6 +4228,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "heating_state": False,
                     "compressor_state": True,
                     "cooling_state": True,
+                    "cooling_enabled": True,
                     "slave_boiler_state": False,
                     "flame_state": False,
                 },
@@ -4268,7 +4269,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 58
+        assert self.device_items == 59
         assert self.cooling_present
         assert not self.notifications
 
