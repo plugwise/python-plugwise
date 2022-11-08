@@ -994,6 +994,7 @@ class SmileHelper:
             # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
             # Elga
             if "elga_status_code" in data:
+                LOGGER("HOI %s", data)
                 if "cooling_enabled" in data and not data["cooling_enabled"]:
                     self._cooling_present = False
                 self._cooling_enabled = data["elga_status_code"] in [8, 9]
