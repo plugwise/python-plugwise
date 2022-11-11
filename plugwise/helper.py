@@ -964,12 +964,6 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-            # Collect modified_date for devices without available-status
-            if not self._smile_legacy and (
-                d_id != self.gateway_id or "available" not in data
-            ):
-                data["modified"] = appliance.find("modified_date").text
-
         if d_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 

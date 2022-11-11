@@ -268,23 +268,6 @@ class SmileData(SmileHelper):
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
 
-        # Anna thermostat
-        if "modified" in device_data:
-            time_now: str | None = None
-            if (
-                time_now := self._domain_objects.find("./gateway/time").text
-            ) is not None:
-                interval = (
-                    parse(time_now) - parse(device_data["modified"])
-                ).total_seconds()
-                if interval > 0:
-                    if details["dev_class"] == "thermostat":
-                        device_data["available"] = False
-                        if interval < 90:
-                            device_data["available"] = True
-
-            device_data.pop("modified")
-
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
