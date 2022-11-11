@@ -525,13 +525,15 @@ class SmileHelper:
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
-            # Adam: check for active heating/cooling operation-mode and collect modes
+            # Adam: collect modes and check for cooling, indicating cooling-mode is present
             reg_mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
                 if search.find("allowed_modes") is not None:
                     for mode in search.find("allowed_modes"):
                         reg_mode_list.append(mode.text)
+                        if mode.text == "cooling":
+                            self._cooling_present = True
                     self._reg_allowed_modes = reg_mode_list
 
             return appl
