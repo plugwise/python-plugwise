@@ -971,12 +971,11 @@ class SmileHelper:
         if d_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
-        # Remove c_heating_state from the output
+        # Anna + Elga and Adam/Anna + OnOff heater/cooler don't use intended_central_heating_state
+        # to show the generic heating state
         if "c_heating_state" in data:
-            # Anna + Elga and Adam + OnOff heater/cooler don't use intended_cental_heating_state
-            # to show the generic heating state
             if (self._elga and "heating_state" in data) or (
-                self.smile_name == "Adam" and self._on_off_device
+                self.smile_name in ("Adam", "Anna") and self._on_off_device
             ):
                 if data.get("c_heating_state") and not data.get("heating_state"):
                     data["heating_state"] = True
@@ -984,6 +983,7 @@ class SmileHelper:
                     if self._cooling_present:
                         self._cooling_active = True
 
+            # Finally, remove c_heating_state from the output
             data.pop("c_heating_state")
 
         if (
