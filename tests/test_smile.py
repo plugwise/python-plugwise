@@ -1202,7 +1202,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 54
+        assert self.device_items == 53
 
         result = await self.tinker_thermostat(
             smile,
@@ -1601,7 +1601,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 72
+        assert self.device_items == 71
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
@@ -3966,7 +3966,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 60
+        assert self.device_items == 59
         assert smile._cooling_present
         assert smile._cooling_enabled
         assert smile._cooling_active
