@@ -2894,7 +2894,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 35.0,
                     "resolution": 0.01,
                 },
-                "available": True,
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "active_preset": "away",
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
