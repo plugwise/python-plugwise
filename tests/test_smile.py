@@ -5053,6 +5053,67 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_p1v4_missing_logs(self):
+        """Test a P1 firmware 4 setup."""
+        testdata = {
+            "a455b61e52394b2db5081ce025a430f3": {
+                "dev_class": "gateway",
+                "firmware": "4.1.1",
+                "hardware": "AME Smile 2.0 board",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+            },
+            "ba4de7613517478da82dd9b6abea36af": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
+                "name": "P1",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
+                "available": False,
+                "sensors": {
+                    "net_electricity_point": 548,
+                    "electricity_consumed_peak_point": 548,
+                    "electricity_consumed_off_peak_point": 0,
+                    "net_electricity_cumulative": 20983.453,
+                    "electricity_consumed_peak_cumulative": 9067.554,
+                    "electricity_consumed_off_peak_cumulative": 11915.899,
+                    "electricity_consumed_peak_interval": 335,
+                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_produced_peak_point": 0,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_off_peak_cumulative": 0.0,
+                    "electricity_produced_peak_cumulative": 0.0,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                },
+            },
+        }
+
+        self.smile_setup = "p1v4_missing_logs"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = power")
+        assert smile.smile_type == "power"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.1.1"
+        _LOGGER.info(" # Assert legacy")
+        assert not smile._smile_legacy
+
+        await self.device_test(smile, testdata)
+        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
+        assert self.device_items == 29
+        assert "97a04c0c263049b29350a660b4cdd01e" in self.notifications
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_fail_legacy_system(self):
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
