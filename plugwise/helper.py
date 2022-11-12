@@ -1289,7 +1289,7 @@ class SmileHelper:
                 for directive in directives:
                     entry = directive.find("then").attrib
                     if "setpoint" in entry:
-                        if not self._cooling_present or not self._cooling_enabled:
+                        if not self._cooling_enabled:
                             schedule[directive.attrib["time"]] = [
                                 float(entry["setpoint"]),
                                 DEFAULT_PW_MAX,
