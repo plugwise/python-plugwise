@@ -87,8 +87,7 @@ def _find(xml_in: etree, locator: str) -> etree:
 def _findall(xml_in: etree, locator: str) -> list[etree]:
     """Helper-function for use of etree.findall()."""
     if xml_in is not None:
-        xml_list: list[etree] = xml_in.findall(locator)
-        return xml_list
+        return xml_in.findall(locator)
 
     LOGGER.warning(
         "XML data unexpectedly not present, processing stopped. Please retry."
