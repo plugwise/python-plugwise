@@ -90,10 +90,10 @@ def _findall(xml_in: etree, locator: str) -> list[etree]:
         xml_list: list[etree] = xml_in.findall(locator)
         return xml_list
 
-    LOGGER.warning(
+    LOGGER.warning(  # pragma: no cover
         "XML data unexpectedly not present, processing stopped. Please retry."
     )
-    raise XMLDataMissingError
+    raise XMLDataMissingError  # pragma: no cover
 
 
 def update_helper(
