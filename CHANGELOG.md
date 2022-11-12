@@ -5,6 +5,7 @@
 - Adam: improve collecting regulation_mode-related. Fix for https://github.com/plugwise/python-plugwise/issues/240
 - Anna: remove device availability, fixing https://github.com/home-assistant/core/issues/81716
 - Anna + OnOff device: fix incorrect heating-state, https://github.com/home-assistant/core/issues/81839
+- Improve xml-data missing, raise exception with warning. Due to https://github.com/home-assistant/core/issues/81672
 
 # v0.25.9: Adam: hide cooling-related switch, binary_sensors when there is no cooling present
 - This fixes the unexpected appearance of new entities after the Adam 3.7.1 firmware-update
