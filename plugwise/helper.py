@@ -78,9 +78,7 @@ def _find(xml_in: etree, locator: str) -> etree:
     if xml_in is not None:
         return xml_in.find(locator)
 
-    LOGGER.warning(
-        "XML data unexpectedly not present, processing stopped. Please retry."
-    )
+    LOGGER.error("XML data unexpectedly not present, processing stopped!")
     raise XMLDataMissingError
 
 
@@ -89,9 +87,7 @@ def _findall(xml_in: etree, locator: str) -> list[etree]:
     if xml_in is not None:
         return xml_in.findall(locator)
 
-    LOGGER.warning(
-        "XML data unexpectedly not present, processing stopped. Please retry."
-    )
+    LOGGER.error("XML data unexpectedly not present, processing stopped!")
     raise XMLDataMissingError
 
 
