@@ -4,7 +4,6 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import aiohttp
-from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 
 # Dict as class
