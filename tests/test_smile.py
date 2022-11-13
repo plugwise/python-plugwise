@@ -981,6 +981,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
+                "available": True,
                 "domestic_hot_water_setpoint": {
                     "setpoint": 60.0,
                     "lower_bound": 30.0,
