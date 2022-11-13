@@ -981,13 +981,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "available": True,
                 "domestic_hot_water_setpoint": {
                     "setpoint": 60.0,
                     "lower_bound": 30.0,
                     "upper_bound": 60.0,
                     "resolution": 0.01,
                 },
+                "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": True,
@@ -1052,7 +1052,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
-        assert self.device_items == 53
+        assert self.device_items == 52
         assert not self.notifications
 
         assert not smile._cooling_present
