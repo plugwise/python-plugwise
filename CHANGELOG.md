@@ -1,8 +1,16 @@
 # Changelog
 
-# v0.26.9: Hide cooling-related switch, binary_sensors when there is no cooling present
+# v0.25.10: Thermostats: more improvements
+- Anna + Elga: hide cooling_enable switch, (hardware-)switch is on Elga, not in Plugwise App
+- Adam: improve collecting regulation_mode-related data. Fix for https://github.com/plugwise/python-plugwise/issues/240
+- Anna: remove device availability, fix for https://github.com/home-assistant/core/issues/81716
+- Anna + OnOff device: fix incorrect heating-state, fix for https://github.com/home-assistant/core/issues/81839
+- Improve handling of xml-data missing, raise exception with warning. Solution for https://github.com/home-assistant/core/issues/81672
+- Improve handling of empty schedule, fix for https://github.com/plugwise/python-plugwise/issues/241
+
+# v0.25.9: Adam: hide cooling-related switch, binary_sensors when there is no cooling present
 - This fixes the unexpected appearance of new entities after the Adam 3.7.1 firmware-update
-- Properly handle an empty schedule, should fix #313
+- Properly handle an empty schedule, should fix https://github.com/plugwise/plugwise-beta/issues/313
 
 # v0.25.8: Make collection of toggle-data future-proof
 

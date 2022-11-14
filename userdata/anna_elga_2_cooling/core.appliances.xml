@@ -482,6 +482,17 @@
 					<measurement log_date="2022-03-02T17:48:17.871+01:00">on</measurement>
 				</period>
 			</point_log>
+			<point_log id='9257714483e4423a8a3423072eda3d40'>
+				<type>cooling_enabled</type>
+				<unit></unit>
+				<updated_date>2022-11-02T03:57:23.207+01:00</updated_date>
+				<last_consecutive_log_date>2022-11-02T03:57:23.207+01:00</last_consecutive_log_date>
+				<interval/>
+				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
+				<period start_date="2022-11-02T03:57:23.207+01:00" end_date="2022-11-02T03:57:23.207+01:00">
+					<measurement log_date="2022-11-02T03:57:23.207+01:00">on</measurement>
+				</period>
+			</point_log>
 			<point_log id='375a05154d6647148cf393ac8b2c8b65'>
 				<type>refrigerent_in_temperature</type>
 				<unit>C</unit>
@@ -1146,6 +1157,12 @@
 				<regulations/>
 				<thermostat id='3636e8c24b764f9dae52ba36695ed476'/>
 			</thermostat_functionality>
+			<toggle_functionality id='7de76401da0249e1b9f13759d8938749'>
+				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
+				<updated_date>2022-11-02T03:57:23.207+01:00</updated_date>
+				<type>cooling_enabled</type>
+				<state>on</state>
+			</toggle_functionality>
 			<thermostat_functionality id='a1f29fd4edae4894a74c0b8c523f8ef3'>
 				<updated_date>2022-03-10T18:51:54.508+01:00</updated_date>
 				<type>minimum_cooling_supply_temperature</type>
