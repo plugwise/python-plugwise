@@ -1,8 +1,5 @@
 # Changelog
 
-# v0.26.0: Smile P1: add support for 3-phase DSMR
-- Add support for the P1 4.4.0-beta firmware
-
 # v0.26.9: Hide cooling-related switch, binary_sensors when there is no cooling present
 - This fixes the unexpected appearance of new entities after the Adam 3.7.1 firmware-update
 - Properly handle an empty schedule, should fix #313

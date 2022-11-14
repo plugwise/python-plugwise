@@ -14,7 +14,6 @@ import crcmod
 
 from .constants import (
     ARBITRARY_DATE,
-    ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
     LOGADDR_OFFSET,
@@ -119,8 +118,6 @@ def format_measure(measure: str, unit: str) -> float | int | bool:
 
             if unit in SPECIAL_FORMAT:
                 result = float(f"{round(float_measure, 3):.3f}")
-            elif unit == ELECTRIC_POTENTIAL_VOLT:
-                result = float(f"{round(float_measure, 1):.1f}")
             else:
                 if abs(float_measure) < 10:
                     result = float(f"{round(float_measure, 2):.2f}")
