@@ -40,7 +40,7 @@ from .constants import (
     SmileSwitches,
 )
 from .exceptions import PlugwiseError, ResponseError, UnsupportedDeviceError
-from .helper import SmileComm, SmileHelper, _find, _findall, update_helper
+from .helper import SmileComm, SmileHelper, update_helper
 
 
 class SmileData(SmileHelper):
@@ -124,11 +124,11 @@ class SmileData(SmileHelper):
         # Start by determining the system capabilities:
         # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
         if self.smile_type == "thermostat":
-            onoff_boiler: etree = _find(
-                self._domain_objects, "./module/protocols/onoff_boiler"
+            onoff_boiler: etree = self._domain_objects.find(
+                "./module/protocols/onoff_boiler"
             )
-            open_therm_boiler: etree = _find(
-                self._domain_objects, "./module/protocols/open_therm_boiler"
+            open_therm_boiler: etree = self._domain_objects.find(
+                "./module/protocols/open_therm_boiler"
             )
             self._on_off_device = onoff_boiler is not None
             self._opentherm_device = open_therm_boiler is not None
@@ -138,10 +138,10 @@ class SmileData(SmileHelper):
             locator_2 = "./gateway/features/elga_support"
             search = self._domain_objects
             self._cooling_present = False
-            if _find(search, locator_1) is not None:
+            if search.find(locator_1) is not None:
                 self._cooling_present = True
             # Alternative method for the Anna with Elga
-            elif _find(search, locator_2) is not None:
+            elif search.find(locator_2) is not None:
                 self._cooling_present = True
                 self._elga = True
 
@@ -343,15 +343,15 @@ class Smile(SmileComm, SmileData):
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
         # Work-around for Stretch fv 2.7.18
-        if not (vendor_names := _findall(result, "./module/vendor_name")):
+        if not (vendor_names := result.findall("./module/vendor_name")):
             result = await self._request(MODULES)
-            vendor_names = _findall(result, "./module/vendor_name")
+            vendor_names = result.findall("./module/vendor_name")
 
         names: list[str] = []
         for name in vendor_names:
             names.append(name.text)
 
-        dsmrmain = _find(result, "./module/protocols/dsmrmain")
+        dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names and dsmrmain is None:  # pragma: no cover
             LOGGER.error(
                 "Connected but expected text not returned, we got %s. Please create \
@@ -371,14 +371,14 @@ class Smile(SmileComm, SmileData):
     async def _smile_detect_legacy(self, result: etree, dsmrmain: etree) -> str:
         """Helper-function for _smile_detect()."""
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
-        if network := _find(result, "./module/protocols/master_controller"):
-            self.smile_zigbee_mac_address = _find(network, "mac_address").text
+        if network := result.find("./module/protocols/master_controller"):
+            self.smile_zigbee_mac_address = network.find("mac_address").text
         # Find the active MAC in case there is an orphaned Stick
-        if zb_networks := _findall(result, "./network"):
+        if zb_networks := result.findall("./network"):
             for zb_network in zb_networks:
-                if _find(zb_network, "./nodes/network_router"):
-                    network = _find(zb_network, "./master_controller")
-                    self.smile_zigbee_mac_address = _find(network, "mac_address").text
+                if zb_network.find("./nodes/network_router"):
+                    network = zb_network.find("./master_controller")
+                    self.smile_zigbee_mac_address = network.find("mac_address").text
 
         # Assume legacy
         self._smile_legacy = True
@@ -386,27 +386,25 @@ class Smile(SmileComm, SmileData):
         # fake insert version assuming Anna, couldn't find another way to identify as legacy Anna
         self.smile_fw_version = "1.8.0"
         model = "smile_thermo"
-        if _find(result, './appliance[type="thermostat"]') is None:
+        if result.find('./appliance[type="thermostat"]') is None:
             # It's a P1 legacy:
             if dsmrmain is not None:
                 self._status = await self._request(STATUS)
-                self.smile_fw_version = _find(self._status, "./system/version").text
-                model = _find(self._status, "./system/product").text
-                self.smile_hostname = _find(self._status, "./network/hostname").text
-                self.smile_mac_address = _find(
-                    self._status, "./network/mac_address"
-                ).text
+                self.smile_fw_version = self._status.find("./system/version").text
+                model = self._status.find("./system/product").text
+                self.smile_hostname = self._status.find("./network/hostname").text
+                self.smile_mac_address = self._status.find("./network/mac_address").text
 
             # Or a legacy Stretch:
             elif network is not None:
                 self._system = await self._request(SYSTEM)
-                self.smile_fw_version = _find(self._system, "./gateway/firmware").text
-                model = _find(self._system, "./gateway/product").text
-                self.smile_hostname = _find(self._system, "./gateway/hostname").text
+                self.smile_fw_version = self._system.find("./gateway/firmware").text
+                model = self._system.find("./gateway/product").text
+                self.smile_hostname = self._system.find("./gateway/hostname").text
                 # If wlan0 contains data it's active, so eth0 should be checked last
                 for network in ("wlan0", "eth0"):
                     locator = f"./{network}/mac"
-                    if (net_locator := _find(self._system, locator)) is not None:
+                    if (net_locator := self._system.find(locator)) is not None:
                         self.smile_mac_address = net_locator.text
 
             else:  # pragma: no cover
@@ -424,12 +422,12 @@ class Smile(SmileComm, SmileData):
         Detect which type of Smile is connected.
         """
         model: str | None = None
-        if (gateway := _find(result, "./gateway")) is not None:
-            model = _find(gateway, "vendor_model").text
-            self.smile_fw_version = _find(gateway, "firmware_version").text
-            self.smile_hw_version = _find(gateway, "hardware_version").text
-            self.smile_hostname = _find(gateway, "hostname").text
-            self.smile_mac_address = _find(gateway, "mac_address").text
+        if (gateway := result.find("./gateway")) is not None:
+            model = gateway.find("vendor_model").text
+            self.smile_fw_version = gateway.find("firmware_version").text
+            self.smile_hw_version = gateway.find("hardware_version").text
+            self.smile_hostname = gateway.find("hostname").text
+            self.smile_mac_address = gateway.find("mac_address").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain)
 
@@ -484,11 +482,11 @@ class Smile(SmileComm, SmileData):
 
         # If Plugwise notifications present:
         self._notifications = {}
-        for notification in _findall(self._domain_objects, "./notification"):
+        for notification in self._domain_objects.findall("./notification"):
             try:
                 msg_id = notification.attrib["id"]
-                msg_type = _find(notification, "type").text
-                msg = _find(notification, "message").text
+                msg_type = notification.find("type").text
+                msg = notification.find("message").text
                 self._notifications.update({msg_id: {msg_type: msg}})
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
@@ -544,8 +542,8 @@ class Smile(SmileComm, SmileData):
     ) -> None:
         """Helper-function for set_schedule_state()."""
         schedule_rule_id: str | None = None
-        for rule in _findall(self._domain_objects, "rule"):
-            if _find(rule, "name").text == name:
+        for rule in self._domain_objects.findall("rule"):
+            if rule.find("name").text == name:
                 schedule_rule_id = rule.attrib["id"]
 
         if schedule_rule_id is None:
@@ -559,7 +557,7 @@ class Smile(SmileComm, SmileData):
             return
 
         locator = f'.//*[@id="{schedule_rule_id}"]/template'
-        for rule in _findall(self._domain_objects, locator):
+        for rule in self._domain_objects.findall(locator):
             template_id = rule.attrib["id"]
 
         uri = f"{RULES};id={schedule_rule_id}"
@@ -607,13 +605,13 @@ class Smile(SmileComm, SmileData):
         )
         if self.smile_name != "Adam":
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
-            template_id = _find(self._domain_objects, locator).attrib["id"]
+            template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
 
         locator = f'.//*[@id="{schedule_rule_id}"]/contexts'
-        contexts = _find(self._domain_objects, locator)
+        contexts = self._domain_objects.find(locator)
         locator = f'.//*[@id="{loc_id}"].../...'
-        if (subject := _find(contexts, locator)) is None:
+        if (subject := contexts.find(locator)) is None:
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
@@ -636,7 +634,7 @@ class Smile(SmileComm, SmileData):
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = _find(self._domain_objects, locator)
+        rule = self._domain_objects.find(locator)
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
         await self._request(RULES, method="put", data=data)
@@ -652,9 +650,9 @@ class Smile(SmileComm, SmileData):
             await self._set_preset_legacy(preset)
             return
 
-        current_location = _find(self._locations, f'location[@id="{loc_id}"]')
-        location_name = _find(current_location, "name").text
-        location_type = _find(current_location, "type").text
+        current_location = self._locations.find(f'location[@id="{loc_id}"]')
+        location_name = current_location.find("name").text
+        location_type = current_location.find("type").text
 
         uri = f"{LOCATIONS};id={loc_id}"
         data = (
@@ -696,9 +694,9 @@ class Smile(SmileComm, SmileData):
         temp = str(temperature)
         thermostat_id: str | None = None
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
-        if th_func_list := _findall(self._appliances, locator):
+        if th_func_list := self._appliances.findall(locator):
             for th_func in th_func_list:
-                if _find(th_func, "type").text == key:
+                if th_func.find("type").text == key:
                     thermostat_id = th_func.attrib["id"]
 
         if thermostat_id is None:
@@ -716,7 +714,7 @@ class Smile(SmileComm, SmileData):
         """
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = _find(self._appliances, locator).attrib["id"]
+            switch_id = self._appliances.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
             if self._stretch_v2:
                 uri = f"{APPLIANCES};id={member}/{switch.device}"
@@ -755,9 +753,9 @@ class Smile(SmileComm, SmileData):
             return await self._set_groupswitch_member_state(members, state, switch)
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found: list[etree] = _findall(self._appliances, locator)
+        found: list[etree] = self._appliances.findall(locator)
         for item in found:
-            if (sw_type := _find(item, "type")) is not None:
+            if (sw_type := item.find("type")) is not None:
                 if sw_type.text == switch.act_type:
                     switch_id = item.attrib["id"]
             else:
@@ -774,7 +772,7 @@ class Smile(SmileComm, SmileData):
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
             # Don't bother switching a relay when the corresponding lock-state is true
-            if _find(self._appliances, locator).text == "true":
+            if self._appliances.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
