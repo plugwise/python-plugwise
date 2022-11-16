@@ -295,13 +295,9 @@ class SmileData(SmileHelper):
         if details["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device_data["dhw_modes"] = self._dhw_allowed_modes
 
-        # Get P1 data from LOCATIONS
-        if (
-            details["dev_class"] == "smartmeter"
-            and (power_data := self._power_data_from_location(details["location"]))
-            is not None
-        ):
-            device_data.update(power_data)
+        # Get P1 smartmeter data from LOCATIONS
+        if details["dev_class"] == "smartmeter":
+            device_data.update(self._power_data_from_location(details["location"]))
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
