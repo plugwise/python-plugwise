@@ -474,6 +474,11 @@ class Smile(SmileComm, SmileData):
             self._appliances = await self._request(APPLIANCES)
             await self._update_domain_objects()
 
+        if self.smile_type != "power":
+            await self._update_domain_objects()
+            if not self._smile_legacy:
+                self._appliances = await self._request(APPLIANCES)
+
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
         Request domain_objects data.
