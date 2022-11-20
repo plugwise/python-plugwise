@@ -666,10 +666,12 @@ class SmileHelper:
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
-
             appl.pwclass = appliance.find("type").text
-            # Nothing useful in opentherm so skip it
-            if appl.pwclass == "open_therm_gateway":
+            # Skip thermostats that have this key, should be an orphaned device (Core #81712)
+            if (
+                appl.pwclass == "thermostat"
+                and appliance.find("actuator_functionalities/") is None
+            ):
                 continue
 
             appl.location = None
@@ -701,7 +703,7 @@ class SmileHelper:
             if appl.pwclass == "gateway" and self.smile_type == "power":
                 appl.dev_id = appl.location
 
-            # Don't show orphaned non-legacy thermostat-types.
+            # Don't show orphaned non-legacy thermostat-types or the OpenTherm Gateway.
             if (
                 not self._smile_legacy
                 and appl.pwclass in THERMOSTAT_CLASSES
