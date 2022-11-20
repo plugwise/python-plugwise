@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <appliances>
+	<appliance id='d440da497ab549dfb7e76bcf4827f388'>
+		<name>OpenThermThermostat</name>
+		<description>A Thermostat</description>
+		<type>thermostat</type>
+		<created_date>2020-06-03T00:26:51.308+02:00</created_date>
+		<modified_date>2020-07-31T16:04:57.153+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='c3807baa2be64289a6e8d0f64468bdad'/>
+		<groups/>
+		<logs>
+			<point_log id='2c4226827eae48559a697bb343f72b8a'>
+				<type>maximum_modulation_level</type>
+				<unit></unit>
+				<updated_date>2020-07-31T08:12:56.454+02:00</updated_date>
+				<last_consecutive_log_date>2020-06-03T00:27:08.401+02:00</last_consecutive_log_date>
+				<interval/>
+				<modulation_level id='f50ac168cc0a462b952c07bd0256f434'/>
+				<period start_date="2020-07-31T08:12:56.454+02:00" end_date="2020-07-31T08:12:56.454+02:00">
+					<measurement log_date="2020-07-31T08:12:56.454+02:00">1.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
 	<appliance id='2743216f626f43948deec1f7ab3b3d70'>
 		<name>Central heating boiler</name>
 		<description></description>
