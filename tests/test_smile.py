@@ -5054,20 +5054,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_p1v4_missing_logs(self):
-        """Test a P1 firmware 4 setup."""
-        testdata = {}
-        self.smile_setup = "p1v4_missing_logs"
-        server, smile, client = await self.connect_wrapper()
-        try:
-            await self.device_test(smile, testdata)
-        except pw_exceptions.XMLDataMissingError:
-            _LOGGER.info("Passed XML data missing testcase.")
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
     async def test_fail_legacy_system(self):
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
@@ -5075,16 +5061,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _server, _smile, _client = await self.connect_wrapper()
             assert False  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
-            assert True
-
-    @pytest.mark.asyncio
-    async def test_fail_anna_connected_to_adam(self):
-        """Test erroneous adam with anna system."""
-        self.smile_setup = "anna_connected_to_adam"
-        try:
-            _server, _smile, _client = await self.connect_wrapper()
-            assert False  # pragma: no cover
-        except pw_exceptions.InvalidSetupError:
             assert True
 
     @pytest.mark.asyncio

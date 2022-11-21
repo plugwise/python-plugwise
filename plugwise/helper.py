@@ -63,7 +63,6 @@ from .exceptions import (
     InvalidAuthentication,
     InvalidXMLError,
     ResponseError,
-    XMLDataMissingError,
 )
 from .util import (
     escape_illegal_xml_characters,
@@ -71,29 +70,6 @@ from .util import (
     in_between,
     version_to_model,
 )
-
-
-def _find(xml_in: etree, locator: str) -> etree:
-    """Helper-function for use of etree.find()."""
-    if xml_in is not None:
-        return xml_in.find(locator)
-
-    LOGGER.warning(
-        "XML data unexpectedly not present, processing stopped. Please retry."
-    )
-    raise XMLDataMissingError
-
-
-def _findall(xml_in: etree, locator: str) -> list[etree]:
-    """Helper-function for use of etree.findall()."""
-    if xml_in is not None:
-        xml_list: list[etree] = xml_in.findall(locator)
-        return xml_list
-
-    LOGGER.warning(  # pragma: no cover
-        "XML data unexpectedly not present, processing stopped. Please retry."
-    )
-    raise XMLDataMissingError  # pragma: no cover
 
 
 def update_helper(
@@ -131,7 +107,7 @@ def _get_actuator_functionalities(xml: etree, data: dict[str, Any]) -> None:
         temp_dict: dict[str, float] = {}
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
-            if (function := _find(xml, locator)) is not None:
+            if (function := xml.find(locator)) is not None:
                 if function.text == "nil":
                     break
 
@@ -397,7 +373,7 @@ class SmileHelper:
         self._home_location = FAKE_LOC
 
         # Add Anna appliances
-        for appliance in _findall(self._appliances, "./appliance"):
+        for appliance in self._appliances.findall("./appliance"):
             appliances.add(appliance.attrib["id"])
 
         if self.smile_type in ("stretch", "thermostat"):
@@ -422,20 +398,20 @@ class SmileHelper:
         loc = Munch()
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
-        locations = _findall(self._locations, "./location")
+        locations = self._locations.findall("./location")
         if not locations and self._smile_legacy:
             self._locations_legacy()
             return
 
         for location in locations:
-            loc.name = _find(location, "name").text
+            loc.name = location.find("name").text
             loc.loc_id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if (
                 self._smile_legacy
                 and self.smile_type == "power"
-                and len(_find(location, locator)) == 0
+                and len(location.find(locator)) == 0
             ):
                 continue
 
@@ -461,29 +437,29 @@ class SmileHelper:
             "zigbee_mac_address": None,
             "available": None,
         }
-        if (appl_search := _find(appliance, locator)) is not None:
+        if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
             loc = f".//{mod_type}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
-            module = _find(self._modules, loc)
+            module = self._modules.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
-                model_data["vendor_name"] = _find(module, "vendor_name").text
+                model_data["vendor_name"] = module.find("vendor_name").text
                 if model_data["vendor_name"] == "Plugwise B.V.":
                     model_data["vendor_name"] = "Plugwise"
-                model_data["vendor_model"] = _find(module, "vendor_model").text
-                model_data["hardware_version"] = _find(module, "hardware_version").text
-                model_data["firmware_version"] = _find(module, "firmware_version").text
+                model_data["vendor_model"] = module.find("vendor_model").text
+                model_data["hardware_version"] = module.find("hardware_version").text
+                model_data["firmware_version"] = module.find("firmware_version").text
                 # Adam
-                if found := _find(module, "./protocols/zig_bee_node"):
-                    model_data["zigbee_mac_address"] = _find(found, "mac_address").text
-                    model_data["available"] = _find(found, "reachable").text == "true"
+                if found := module.find("./protocols/zig_bee_node"):
+                    model_data["zigbee_mac_address"] = found.find("mac_address").text
+                    model_data["available"] = found.find("reachable").text == "true"
                 # Stretches
-                if found := _find(module, "./protocols/network_router"):
-                    model_data["zigbee_mac_address"] = _find(found, "mac_address").text
+                if found := module.find("./protocols/network_router"):
+                    model_data["zigbee_mac_address"] = found.find("mac_address").text
                 # Also look for the Circle+/Stealth M+
-                if found := _find(module, "./protocols/network_coordinator"):
-                    model_data["zigbee_mac_address"] = _find(found, "mac_address").text
+                if found := module.find("./protocols/network_coordinator"):
+                    model_data["zigbee_mac_address"] = found.find("mac_address").text
 
         return model_data
 
@@ -545,16 +521,16 @@ class SmileHelper:
 
             # Adam: look for the ZigBee MAC address of the Smile
             if self.smile_name == "Adam" and (
-                found := _find(self._modules, ".//protocols/zig_bee_coordinator")
+                found := self._modules.find(".//protocols/zig_bee_coordinator")
             ):
-                appl.zigbee_mac = _find(found, "mac_address").text
+                appl.zigbee_mac = found.find("mac_address").text
 
             # Adam: collect modes and check for cooling, indicating cooling-mode is present
             reg_mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
-            if (search := _find(appliance, locator)) is not None:
-                if _find(search, "allowed_modes") is not None:
-                    for mode in _find(search, "allowed_modes"):
+            if (search := appliance.find(locator)) is not None:
+                if search.find("allowed_modes") is not None:
+                    for mode in search.find("allowed_modes"):
                         reg_mode_list.append(mode.text)
                         if mode.text == "cooling":
                             self._cooling_present = True
@@ -610,9 +586,9 @@ class SmileHelper:
             # Anna + Loria: collect dhw control operation modes
             dhw_mode_list: list[str] = []
             locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
-            if (search := _find(appliance, locator)) is not None:
-                if _find(search, "allowed_modes") is not None:
-                    for mode in _find(search, "allowed_modes"):
+            if (search := appliance.find(locator)) is not None:
+                if search.find("allowed_modes") is not None:
+                    for mode in search.find("allowed_modes"):
                         dhw_mode_list.append(mode.text)
                     self._dhw_allowed_modes = dhw_mode_list
 
@@ -635,7 +611,7 @@ class SmileHelper:
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
-        location = _find(self._locations, f'./location[@id="{loc_id}"]')
+        location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(location, appl)
 
         self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
@@ -688,16 +664,18 @@ class SmileHelper:
                 # Legacy P1 has no more devices
                 return
 
-        for appliance in _findall(self._appliances, "./appliance"):
+        for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
-
-            appl.pwclass = _find(appliance, "type").text
-            # Nothing useful in opentherm so skip it
-            if appl.pwclass == "open_therm_gateway":
+            appl.pwclass = appliance.find("type").text
+            # Skip thermostats that have this key, should be an orphaned device (Core #81712)
+            if (
+                appl.pwclass == "thermostat"
+                and appliance.find("actuator_functionalities/") is None
+            ):
                 continue
 
             appl.location = None
-            if (appl_loc := _find(appliance, "location")) is not None:
+            if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
             # Provide a home_location for legacy_anna, don't assign the _home_location
             # to thermostat-devices without a location, they are not active
@@ -707,7 +685,7 @@ class SmileHelper:
                 appl.location = self._home_location
 
             appl.dev_id = appliance.attrib["id"]
-            appl.name = _find(appliance, "name").text
+            appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.firmware = None
             appl.hardware = None
@@ -725,7 +703,7 @@ class SmileHelper:
             if appl.pwclass == "gateway" and self.smile_type == "power":
                 appl.dev_id = appl.location
 
-            # Don't show orphaned non-legacy thermostat-types.
+            # Don't show orphaned non-legacy thermostat-types or the OpenTherm Gateway.
             if (
                 not self._smile_legacy
                 and appl.pwclass in THERMOSTAT_CLASSES
@@ -781,9 +759,9 @@ class SmileHelper:
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         locator = f'location[@id="{loc_id}"]'
-        if (location := _find(self._domain_objects, locator)) is not None:
+        if (location := self._domain_objects.find(locator)) is not None:
             locator = './actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
-            if (ctrl_state := _find(location, locator)) is not None:
+            if (ctrl_state := location.find(locator)) is not None:
                 return str(ctrl_state.text)
 
         return False
@@ -791,7 +769,7 @@ class SmileHelper:
     def _presets_legacy(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
         presets: dict[str, list[float]] = {}
-        for directive in _findall(self._domain_objects, "rule/directives/when/then"):
+        for directive in self._domain_objects.findall("rule/directives/when/then"):
             if directive is not None and "icon" in directive.keys():
                 # Ensure list of heating_setpoint, cooling_setpoint
                 presets[directive.attrib["icon"]] = [
@@ -815,11 +793,11 @@ class SmileHelper:
                 return presets  # pragma: no cover
 
         for rule_id in rule_ids:
-            directives: etree = _find(
-                self._domain_objects, f'rule[@id="{rule_id}"]/directives'
+            directives: etree = self._domain_objects.find(
+                f'rule[@id="{rule_id}"]/directives'
             )
             for directive in directives:
-                preset = _find(directive, "then").attrib
+                preset = directive.find("then").attrib
                 if "setpoint" in preset:
                     presets[directive.attrib["preset"]] = [  # pragma: no cover
                         DEFAULT_PW_MIN,
@@ -844,8 +822,8 @@ class SmileHelper:
         """
         schedule_ids: dict[str, str] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in _findall(self._domain_objects, f'./rule[name="{name}"]'):
-            if _find(rule, locator) is not None:
+        for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
+            if rule.find(locator) is not None:
                 schedule_ids[rule.attrib["id"]] = loc_id
             else:
                 schedule_ids[rule.attrib["id"]] = NONE
@@ -859,9 +837,9 @@ class SmileHelper:
         schedule_ids: dict[str, str] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in _findall(self._domain_objects, "./rule"):
-            if _find(rule, locator1) is not None:
-                if _find(rule, locator2) is not None:
+        for rule in self._domain_objects.findall("./rule"):
+            if rule.find(locator1) is not None:
+                if rule.find(locator2) is not None:
                     schedule_ids[rule.attrib["id"]] = loc_id
                 else:
                     schedule_ids[rule.attrib["id"]] = NONE
@@ -877,7 +855,7 @@ class SmileHelper:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            if (appl_p_loc := _find(appliance, p_locator)) is not None:
+            if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
                     continue
 
@@ -909,7 +887,7 @@ class SmileHelper:
                     self._outdoor_temp = data[measurement]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            if (appl_i_loc := _find(appliance, i_locator)) is not None:
+            if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
@@ -936,9 +914,9 @@ class SmileHelper:
         Collect the gateway regulation_mode.
         """
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
-        if (search := _find(appliance, locator)) is not None:
-            data["regulation_mode"] = _find(search, "mode").text
-            self._cooling_enabled = _find(search, "mode").text == "cooling"
+        if (search := appliance.find(locator)) is not None:
+            data["regulation_mode"] = search.find("mode").text
+            self._cooling_enabled = search.find("mode").text == "cooling"
 
     def _cleanup_data(self, data: dict[str, Any]) -> None:
         """Helper-function for _get_appliance_data().
@@ -972,7 +950,7 @@ class SmileHelper:
             measurements = HEATER_CENTRAL_MEASUREMENTS
 
         if (
-            appliance := _find(self._appliances, f'./appliance[@id="{d_id}"]')
+            appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
 
             self._appliance_measurements(appliance, data, measurements)
@@ -981,7 +959,7 @@ class SmileHelper:
             for toggle, name in TOGGLES.items():
                 self._get_toggle_state(appliance, toggle, name, data)
 
-            if _find(appliance, "type").text in ACTUATOR_CLASSES:
+            if appliance.find("type").text in ACTUATOR_CLASSES:
                 _get_actuator_functionalities(appliance, data)
 
             # Collect availability-status for wireless connected devices to Adam
@@ -1094,7 +1072,7 @@ class SmileHelper:
         Determine the location-set_temperature uri - from APPLIANCES.
         """
         locator = "./appliance[type='thermostat']"
-        appliance_id = _find(self._appliances, locator).attrib["id"]
+        appliance_id = self._appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
 
@@ -1105,7 +1083,7 @@ class SmileHelper:
             return self._thermostat_uri_legacy()
 
         locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
-        thermostat_functionality_id = _find(self._locations, locator).attrib["id"]
+        thermostat_functionality_id = self._locations.find(locator).attrib["id"]
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
@@ -1118,12 +1096,12 @@ class SmileHelper:
         if self.smile_type == "power" or self.smile_name == "Smile Anna":
             return switch_groups
 
-        for group in _findall(self._domain_objects, "./group"):
+        for group in self._domain_objects.findall("./group"):
             members: list[str] = []
             group_id = group.attrib["id"]
-            group_name = _find(group, "name").text
-            group_type = _find(group, "type").text
-            group_appliances = _findall(group, "appliances/appliance")
+            group_name = group.find("name").text
+            group_type = group.find("type").text
+            group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
                 members.append(item.attrib["id"])
 
@@ -1148,9 +1126,9 @@ class SmileHelper:
         """
         loc_found: int = 0
         open_valve_count: int = 0
-        for appliance in _findall(self._appliances, "./appliance"):
+        for appliance in self._appliances.findall("./appliance"):
             locator = './logs/point_log[type="valve_position"]/period/measurement'
-            if (appl_loc := _find(appliance, locator)) is not None:
+            if (appl_loc := appliance.find(locator)) is not None:
                 loc_found += 1
                 if float(appl_loc.text) > 0.0:
                     open_valve_count += 1
@@ -1163,7 +1141,7 @@ class SmileHelper:
         no_tariffs = False
 
         # Only once try to find P1 Legacy values
-        if _find(loc.logs, loc.locator) is None and self.smile_type == "power":
+        if loc.logs.find(loc.locator) is None and self.smile_type == "power":
             no_tariffs = True
             # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
             if loc.peak_select == "nl_offpeak":
@@ -1175,7 +1153,7 @@ class SmileHelper:
             )
 
         # Locator not found
-        if _find(loc.logs, loc.locator) is None:
+        if loc.logs.find(loc.locator) is None:
             loc.found = False
             return loc
 
@@ -1189,7 +1167,7 @@ class SmileHelper:
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
         loc.net_string = f"net_electricity_{log_found}"
-        val = _find(loc.logs, loc.locator).text
+        val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
@@ -1208,7 +1186,7 @@ class SmileHelper:
         if self._smile_legacy:
             t_string = "tariff_indicator"
 
-        loc.logs = _find(search, f'./location[@id="{loc_id}"]/logs')
+        loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
@@ -1234,13 +1212,13 @@ class SmileHelper:
         """
         if not self._smile_legacy:
             locator = f'./location[@id="{loc_id}"]/preset'
-            if (preset := _find(self._domain_objects, locator)) is not None:
+            if (preset := self._domain_objects.find(locator)) is not None:
                 return str(preset.text)
             return None
 
         locator = "./rule[active='true']/directives/when/then"
         if (
-            active_rule := _find(self._domain_objects, locator)
+            active_rule := self._domain_objects.find(locator)
         ) is None or "icon" not in active_rule.keys():
             return None
         return str(active_rule.attrib["icon"])
@@ -1254,15 +1232,15 @@ class SmileHelper:
         name: str | None = None
 
         search = self._domain_objects
-        for schedule in _findall(search, "./rule"):
-            if rule_name := _find(schedule, "name").text:
+        for schedule in search.findall("./rule"):
+            if rule_name := schedule.find("name").text:
                 if "preset" not in rule_name:
                     name = rule_name
 
         log_type = "schedule_state"
         locator = f"./appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
-        if (result := _find(search, locator)) is not None:
+        if (result := search.find(locator)) is not None:
             active = result.text == "on"
 
         if name is not None:
@@ -1300,17 +1278,17 @@ class SmileHelper:
 
         schedules: dict[str, dict[str, list[float]]] = {}
         for rule_id, loc_id in rule_ids.items():
-            name = _find(self._domain_objects, f'./rule[@id="{rule_id}"]/name').text
+            name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             schedule: dict[str, list[float]] = {}
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
-            if not (directives := _find(self._domain_objects, locator)):
+            if not (directives := self._domain_objects.find(locator)):
                 continue
 
             # Only process the active schedule in detail for Adam or Anna with cooling
             if self._cooling_present and loc_id != NONE:
                 for directive in directives:
-                    entry = _find(directive, "then").attrib
+                    entry = directive.find("then").attrib
                     if "setpoint" in entry:
                         schedule[directive.attrib["time"]] = [
                             DEFAULT_PW_MIN,
@@ -1366,8 +1344,8 @@ class SmileHelper:
         schedules_dates: dict[str, float] = {}
 
         for name in schedules:
-            result = _find(self._domain_objects, f'./rule[name="{name}"]')
-            schedule_date = _find(result, "modified_date").text
+            result = self._domain_objects.find(f'./rule[name="{name}"]')
+            schedule_date = result.find("modified_date").text
             schedule_time = parse(schedule_date)
             schedules_dates[name] = (schedule_time - epoch).total_seconds()
 
@@ -1383,7 +1361,7 @@ class SmileHelper:
         val: float | int | None = None
         search = self._domain_objects
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
-        if (found := _find(search, locator)) is not None:
+        if (found := search.find(locator)) is not None:
             val = format_measure(found.text, NONE)
             return val
 
@@ -1398,9 +1376,9 @@ class SmileHelper:
         if self._stretch_v2:
             actuator = "actuators"
             func_type = "relay"
-        if _find(xml, "type").text not in SPECIAL_PLUG_TYPES:
+        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
-            if (found := _find(xml, locator)) is not None:
+            if (found := xml.find(locator)) is not None:
                 data["lock"] = found.text == "true"
 
     def _get_toggle_state(
@@ -1409,13 +1387,13 @@ class SmileHelper:
         """Helper-function for _get_appliance_data().
         Obtain the toggle state of 'toggle'.
         """
-        if _find(xml, "type").text == "heater_central":
+        if xml.find("type").text == "heater_central":
             locator = "./actuator_functionalities/toggle_functionality"
-            if found := _findall(xml, locator):
+            if found := xml.findall(locator):
                 for item in found:
-                    if (toggle_type := _find(item, "type")) is not None:
+                    if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
-                            data.update({name: _find(item, "state").text == "on"})
+                            data.update({name: item.find("state").text == "on"})
                             # Remove the cooling_enabled key when the corresponding toggle is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
