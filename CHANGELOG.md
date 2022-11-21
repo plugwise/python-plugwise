@@ -1,9 +1,9 @@
 # Changelog
 
 # v0.25.11: Improve/change contents building on v0.25.10
-- Revert: Improve handling of xml-data missing, raise exception with warning, the reason for adding these is not clear. Investigate further.
-- Remove raising of InvalidSetupError, no longer needed, handled in Plugwise config_flow (function added by Frenck)
-- Simplify logic calling _power_data_from_location(), (similar to v0.21.4)
+- Revert: Improve handling of xml-data missing, raise exception with warning; the reason for adding this fix is not clear. Needs further investigation.
+- Remove raising of InvalidSetupError, no longer needed; handled in Plugwise config_flow (function added by Frenck)
+- Simplify logic calling _power_data_from_location() (similar to v0.21.4); possible solution for https://github.com/home-assistant/core/issues/81672
 - _full_update_device(): revert back to v0.21.4 logic
 - async_update(): not needed to refresh self._modules
 - Add fix for Core #81712
