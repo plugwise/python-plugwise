@@ -347,17 +347,17 @@ class Smile(SmileComm, SmileData):
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
-        vendor_names: list[etree] = result.findall("./module/vendor_name")
-        vendor_models: list[etree] = result.findall("./module/vendor_model")
         # Work-around for Stretch fv 2.7.18
-        if not vendor_names:
+        if not (vendor_names := result.findall("./module/vendor_name")):
             result = await self._request(MODULES)
             vendor_names = result.findall("./module/vendor_name")
 
         names: list[str] = []
-        models: list[str] = []
         for name in vendor_names:
             names.append(name.text)
+
+        vendor_models = result.findall("./module/vendor_model")
+        models: list[str] = []
         for model in vendor_models:
             models.append(model.text)
 
