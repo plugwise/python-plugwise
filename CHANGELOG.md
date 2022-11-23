@@ -1,5 +1,7 @@
 # Changelog
 
+# 0.25.12: Revert remove raising of InvalidSetupError
+
 # v0.25.11: Improve/change contents building on v0.25.10
 - Revert: Improve handling of xml-data missing, raise exception with warning; the reason for adding this fix is not clear. Needs further investigation.
 - Remove raising of InvalidSetupError, no longer needed; handled in Plugwise config_flow (function added by Frenck)
