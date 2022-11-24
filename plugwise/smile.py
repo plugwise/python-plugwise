@@ -39,7 +39,12 @@ from .constants import (
     SmileSensors,
     SmileSwitches,
 )
-from .exceptions import PlugwiseError, ResponseError, UnsupportedDeviceError
+from .exceptions import (
+    InvalidSetupError,
+    PlugwiseError,
+    ResponseError,
+    UnsupportedDeviceError,
+)
 from .helper import SmileComm, SmileHelper, update_helper
 
 
@@ -351,6 +356,11 @@ class Smile(SmileComm, SmileData):
         for name in vendor_names:
             names.append(name.text)
 
+        vendor_models = result.findall("./module/vendor_model")
+        models: list[str] = []
+        for model in vendor_models:
+            models.append(model.text)
+
         dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names and dsmrmain is None:  # pragma: no cover
             LOGGER.error(
@@ -359,6 +369,13 @@ class Smile(SmileComm, SmileData):
                 result,
             )
             raise ResponseError
+
+        # Check if Anna is connected to an Adam
+        if "159.2" in models:
+            LOGGER.error(
+                "Your Anna is connected to an Adam, make sure to only add the Adam as integration."
+            )
+            raise InvalidSetupError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)

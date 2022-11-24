@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='5b13651d79c4454684fd268850b1bff8'>
+		<name>Living room</name>
+		<description>The room containing the (central) home thermostat.</description>
+		<type>livingroom</type>
+		<created_date>2021-12-18T11:59:14.377+01:00</created_date>
+		<modified_date>2022-03-10T18:51:47.701+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>asleep</preset>
+		<clients/>
+		<appliances>
+			<appliance id='1e5e55b958ac445583602f767cb45942'/>
+		</appliances>
+		<logs>
+			<point_log id='0d07ba7d4e374118bf9671d8dcab4f21'>
+				<updated_date>2022-03-10T16:00:21.263+01:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2021-12-27T22:00:30.398+01:00</last_consecutive_log_date>
+				<period start_date="2022-03-10T16:00:21.263+01:00" end_date="2022-03-10T16:00:21.263+01:00">
+					<measurement log_date="2022-03-10T16:00:21.263+01:00">19.00</measurement>
+				</period>
+			</point_log>
+			<point_log id='7743c4ace1284cc282a896a1bdca43f6'>
+				<updated_date>2022-03-10T18:51:47.685+01:00</updated_date>
+				<type>temperature</type>
+				<unit></unit>
+				<last_consecutive_log_date>2021-12-28T05:55:48.016+01:00</last_consecutive_log_date>
+				<period start_date="2022-03-10T18:51:47.685+01:00" end_date="2022-03-10T18:51:47.685+01:00">
+					<measurement log_date="2022-03-10T18:51:47.685+01:00">19.46</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='9e3dcbfd026f48d88a50add3dab7713c'>
+				<updated_date>2022-03-10T16:00:21.264+01:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>19</setpoint>
+				<lower_bound>4</lower_bound>
+				<upper_bound>30</upper_bound>
+				<resolution>0.1</resolution>
+				<regulations><ame_regulation id='4a99fbf28ea848a0b25d34dc18e1ed20'/></regulations>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='da7be222ab3b420c927f3e49fade0304'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2021-12-18T11:58:59.698+01:00</created_date>
+		<modified_date>2022-03-10T18:58:16.023+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='2a2f6cb60e3c4084a65ad436cd8b7905'>
+				<updated_date>2022-03-10T18:58:14+01:00</updated_date>
+				<type>weather_description</type>
+				<unit></unit>
+				<last_consecutive_log_date>2022-03-10T18:58:14+01:00</last_consecutive_log_date>
+				<period start_date="2022-03-10T18:58:14+01:00" end_date="2022-03-10T18:58:14+01:00">
+					<measurement log_date="2022-03-10T18:58:14+01:00">clear</measurement>
+				</period>
+				<weather_descriptor id='3e533c23f5d347c1adb570b6886a8355'/>
+			</point_log>
+			<point_log id='8281d3abb99449de80fd612f9b6c5d8d'>
+				<updated_date>2022-03-10T18:58:14+01:00</updated_date>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<last_consecutive_log_date>2022-03-10T18:58:14+01:00</last_consecutive_log_date>
+				<period start_date="2022-03-10T18:58:14+01:00" end_date="2022-03-10T18:58:14+01:00">
+					<measurement log_date="2022-03-10T18:58:14+01:00">45.00</measurement>
+				</period>
+				<hygro_meter id='31e793ddeb7e4937b3bd9c7de6132ab9'/>
+			</point_log>
+			<point_log id='851cd3a850e746d583271c63b643d3ae'>
+				<updated_date>2022-03-10T18:58:14+01:00</updated_date>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2022-03-10T18:58:14+01:00</last_consecutive_log_date>
+				<period start_date="2022-03-10T18:58:14+01:00" end_date="2022-03-10T18:58:14+01:00">
+					<measurement log_date="2022-03-10T18:58:14+01:00">11.44</measurement>
+				</period>
+				<thermo_meter id='fd37d82e84514985893fb34ee0c665df'/>
+			</point_log>
+			<point_log id='9bf25e1ed8644f628ad9ca64cb35226d'>
+				<updated_date>2022-03-10T18:58:14+01:00</updated_date>
+				<type>wind_vector</type>
+				<unit>m_s</unit>
+				<last_consecutive_log_date>2022-03-10T18:58:14+01:00</last_consecutive_log_date>
+				<period start_date="2022-03-10T18:58:14+01:00" end_date="2022-03-10T18:58:14+01:00">
+					<measurement log_date="2022-03-10T18:58:14+01:00">(0.45,123.00)</measurement>
+				</period>
+				<wind_vector id='23f929d7fac24edeb4202c73bba576e2'/>
+			</point_log>
+			<point_log id='9e6e8353f2e84617a63fd3e2a37a7ed5'>
+				<updated_date>2022-03-10T18:58:14+01:00</updated_date>
+				<type>solar_irradiance</type>
+				<unit>W_m2</unit>
+				<last_consecutive_log_date>2022-03-10T18:58:14+01:00</last_consecutive_log_date>
+				<period start_date="2022-03-10T18:58:14+01:00" end_date="2022-03-10T18:58:14+01:00">
+					<measurement log_date="2022-03-10T18:58:14+01:00">0.00</measurement>
+				</period>
+				<irradiance_meter id='86ba5de390134606ac3be5b7dd5603a3'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+</locations>
