@@ -1,6 +1,7 @@
 # Changelog
 
 # v0.25.13: Anna+Elga, OnOff device: base heating_state, cooling_state on central_heating_state key only
+- Fixing https://github.com/plugwise/plugwise-beta/issues/320
 
 # v0.25.12: Revert remove raising of InvalidSetupError
 
