@@ -972,7 +972,7 @@ class SmileHelper:
         # to show the generic heating state
         if "c_heating_state" in data:
             if self._elga or (
-                self.smile_name in ("Adam", "Anna") and self._on_off_device
+                self.smile_name in ("Adam", "Smile Anna") and self._on_off_device
             ):
                 data["heating_state"] = data["c_heating_state"]
                 # For Adam + OnOff cooling, central_heating_state = True means cooling is active
