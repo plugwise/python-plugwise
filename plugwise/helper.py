@@ -976,7 +976,7 @@ class SmileHelper:
             ):
                 data["heating_state"] = data["c_heating_state"]
                 # For Adam + OnOff cooling, central_heating_state = True means cooling is active
-                # For Smile Anna, _cooling-active will be corrected in the next if-construc
+                # For Smile Anna, _cooling_active will be corrected in the next if-construc
                 if self._cooling_present:
                     self._cooling_active = True
 
