@@ -548,6 +548,7 @@ SENSORS: Final[tuple[str, ...]] = (
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
     "dhw_temperature",
+    "domestic_hot_water_setpoint",
     "temperature",
     "electricity_consumed",
     "electricity_consumed_interval",
@@ -572,6 +573,7 @@ SENSORS: Final[tuple[str, ...]] = (
     "humidity",
     "illuminance",
     "intended_boiler_temperature",
+    "maximum_boiler_temperature",
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
@@ -652,6 +654,7 @@ class SmileSensors(TypedDict, total=False):
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
     dhw_temperature: float
+    domestic_hot_water_setpoint: float
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
@@ -677,6 +680,7 @@ class SmileSensors(TypedDict, total=False):
     humidity: float
     illuminance: float
     intended_boiler_temperature: float
+    maximum_boiler_temperature: float
     modulation_level: float
     net_electricity_cumulative: float
     net_electricity_point: int
