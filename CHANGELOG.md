@@ -1,6 +1,10 @@
 # Changelog
 
-# 0.25.12: Revert remove raising of InvalidSetupError
+# v0.25.13: Anna+Elga, OnOff device: base heating_state, cooling_state on central_heating_state key only
+- Partial solution for https://github.com/plugwise/plugwise-beta/issues/320
+- Improving the solution for https://github.com/home-assistant/core/issues/81839
+
+# v0.25.12: Revert remove raising of InvalidSetupError
 
 # v0.25.11: Improve/change contents building on v0.25.10
 - Revert: Improve handling of xml-data missing, raise exception with warning; the reason for adding this fix is not clear. Needs further investigation.

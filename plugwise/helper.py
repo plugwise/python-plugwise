@@ -971,14 +971,14 @@ class SmileHelper:
         # Anna + Elga and Adam/Anna + OnOff heater/cooler don't use intended_central_heating_state
         # to show the generic heating state
         if "c_heating_state" in data:
-            if (self._elga and "heating_state" in data) or (
-                self.smile_name in ("Adam", "Anna") and self._on_off_device
+            if self._elga or (
+                self.smile_name in ("Adam", "Smile Anna") and self._on_off_device
             ):
-                if data.get("c_heating_state") and not data.get("heating_state"):
-                    data["heating_state"] = True
-                    # For Adam + OnOff cooling heating_state = True means cooling is active
-                    if self._cooling_present:
-                        self._cooling_active = True
+                data["heating_state"] = data["c_heating_state"]
+                # For Adam + OnOff cooling, central_heating_state = True means cooling is active
+                # For Smile Anna, _cooling_active will be corrected in the next if-construc
+                if self._cooling_present:
+                    self._cooling_active = True
 
             # Finally, remove c_heating_state from the output
             data.pop("c_heating_state")
