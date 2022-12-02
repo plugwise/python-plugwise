@@ -654,7 +654,6 @@ class SmileSensors(TypedDict, total=False):
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
     dhw_temperature: float
-    domestic_hot_water_setpoint: float
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
@@ -680,7 +679,6 @@ class SmileSensors(TypedDict, total=False):
     humidity: float
     illuminance: float
     intended_boiler_temperature: float
-    maximum_boiler_temperature: float
     modulation_level: float
     net_electricity_cumulative: float
     net_electricity_point: int
@@ -763,7 +761,8 @@ class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
     binary_sensors: SmileBinarySensors
-    domestic_hot_water_setpoint: ActuatorData
+    domestic_hot_water_setpoint: ActuatorData | float
+    maximum_boiler_temperature: ActuatorData | float
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData
