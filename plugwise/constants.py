@@ -477,7 +477,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
     "domestic_hot_water_mode": DATA("dhw_mode", NONE),
-    "domestic_hot_water_setpoint": DATA("dhw_setpoint", TEMP_CELSIUS),
+    "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
     "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
     "elga_status_code": UOM(NONE),
