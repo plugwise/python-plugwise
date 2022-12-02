@@ -1427,7 +1427,7 @@ class SmileHelper:
                     if self._opentherm_device or self._on_off_device:
                         bs_dict[key] = value  # type: ignore[literal-required]
             for item in SENSORS:
-                if item == key:
+                if item == key and not isinstance(value, dict):
                     data.pop(key)  # type: ignore [misc]
                     s_dict[key] = value  # type: ignore[literal-required]
             for item in SWITCHES:
