@@ -974,11 +974,12 @@ class SmileHelper:
             if self._elga or (
                 self.smile_name in ("Adam", "Smile Anna") and self._on_off_device
             ):
-                data["heating_state"] = data["c_heating_state"]
-                # For Adam + OnOff cooling, central_heating_state = True means cooling is active
-                # For Smile Anna, _cooling_active will be corrected in the next if-construc
-                if self._cooling_present:
-                    self._cooling_active = True
+                if data["intended_boiler_temperature"] != 0:
+                    data["heating_state"] = data["c_heating_state"]
+                    # For Adam + OnOff cooling, central_heating_state = True means cooling is active
+                    # For Smile Anna, _cooling_active will be corrected in the next if-construc
+                    if self._cooling_present:
+                        self._cooling_active = True
 
             # Finally, remove c_heating_state from the output
             data.pop("c_heating_state")
