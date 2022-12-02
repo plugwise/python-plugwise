@@ -489,7 +489,6 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "intended_central_heating_state": DATA(
         "heating_state", NONE
     ),  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
-    "maximum_boiler_temperature": UOM(TEMP_CELSIUS),
     "modulation_level": UOM(PERCENTAGE),
     "return_water_temperature": DATA("return_temperature", TEMP_CELSIUS),
     # Used with the Elga heatpump - marcelveldt
