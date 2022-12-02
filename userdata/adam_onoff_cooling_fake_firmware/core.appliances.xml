@@ -28,7 +28,7 @@
 				<interval/>
 				<thermo_meter id='a98b220b5a7e4834ae0fbcb949caa7b8'/>
 				<period start_date="2021-12-31T13:36:00.350+01:00" end_date="2021-12-31T13:36:00.350+01:00">
-					<measurement log_date="2021-12-31T13:36:00.350+01:00">0.00</measurement>
+					<measurement log_date="2021-12-31T13:36:00.350+01:00">35.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='0ffcb99c5efe4b26bc2fe33232be4bb2'>
