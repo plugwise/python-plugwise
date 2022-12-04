@@ -2,7 +2,7 @@
 
 # v0.25.14: Improve, bugfix
 - Anna+Elga: final solution for https://github.com/plugwise/plugwise-beta/issues/320
-- Fix for https://github.com/home-assistant/core/issues/83068: handle actuator_functionality or sensor depending on which one is present
+- Related to https://github.com/home-assistant/core/issues/83068: handle actuator_functionality or sensor depending on which one is present
 
 # v0.25.13: Anna+Elga, OnOff device: base heating_state, cooling_state on central_heating_state key only
 - Partial solution for https://github.com/plugwise/plugwise-beta/issues/320
