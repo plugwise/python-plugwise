@@ -302,7 +302,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-03T07:54:47.729+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-08T19:24:39.363+02:00" end_date="2020-04-08T19:24:39.363+02:00">
-					<measurement log_date="2020-04-08T19:24:39.363+02:00">0.00</measurement>
+					<measurement log_date="2020-04-08T19:24:39.363+02:00">35.00</measurement>
 				</period>
 				<thermo_meter id='6a3b56382ef04a2db54c35c349a6521f'/>
 			</point_log>

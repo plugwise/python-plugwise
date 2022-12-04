@@ -975,6 +975,12 @@ class SmileHelper:
                 self.smile_name in ("Adam", "Smile Anna") and self._on_off_device
             ):
                 data["heating_state"] = data["c_heating_state"]
+                # Heating is not active when intended_boiler_temperature is 0
+                if (
+                    "intended_boiler_temperature" in data
+                    and data["intended_boiler_temperature"] == 0
+                ):
+                    data["heating_state"] = False
                 # For Adam + OnOff cooling, central_heating_state = True means cooling is active
                 # For Smile Anna, _cooling_active will be corrected in the next if-construc
                 if self._cooling_present:
@@ -1422,7 +1428,8 @@ class SmileHelper:
                     if self._opentherm_device or self._on_off_device:
                         bs_dict[key] = value  # type: ignore[literal-required]
             for item in SENSORS:
-                if item == key:
+                # Filter for actuator_functionalities, they are not sensors
+                if item == key and not isinstance(value, dict):
                     data.pop(key)  # type: ignore [misc]
                     s_dict[key] = value  # type: ignore[literal-required]
             for item in SWITCHES:

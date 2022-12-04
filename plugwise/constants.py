@@ -477,7 +477,8 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
     "domestic_hot_water_mode": DATA("dhw_mode", NONE),
-    "domestic_hot_water_state": DATA("dhw_state", TEMP_CELSIUS),
+    "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
+    "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
     "elga_status_code": UOM(NONE),
     "intended_boiler_temperature": UOM(
@@ -547,6 +548,7 @@ SENSORS: Final[tuple[str, ...]] = (
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
     "dhw_temperature",
+    "domestic_hot_water_setpoint",
     "temperature",
     "electricity_consumed",
     "electricity_consumed_interval",
@@ -571,6 +573,7 @@ SENSORS: Final[tuple[str, ...]] = (
     "humidity",
     "illuminance",
     "intended_boiler_temperature",
+    "maximum_boiler_temperature",
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
@@ -758,7 +761,8 @@ class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
     binary_sensors: SmileBinarySensors
-    domestic_hot_water_setpoint: ActuatorData
+    domestic_hot_water_setpoint: ActuatorData | float
+    maximum_boiler_temperature: ActuatorData | float
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData

@@ -3726,8 +3726,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 29.1,
+                    "domestic_hot_water_setpoint": 60.0,
                     "dhw_temperature": 46.3,
-                    "intended_boiler_temperature": 0.0,
+                    "intended_boiler_temperature": 35.0,
                     "modulation_level": 52,
                     "return_temperature": 25.1,
                     "water_pressure": 1.57,
@@ -3791,7 +3792,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.device_items == 56
+        assert self.device_items == 57
         assert not self.cooling_present
         assert not self.notifications
 
@@ -3854,6 +3855,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 24.7,
+                    "domestic_hot_water_setpoint": 60.0,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 40,
                     "return_temperature": 23.8,
@@ -3907,7 +3909,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 58
+        assert self.device_items == 59
         assert self.cooling_present
         assert not self.notifications
 
@@ -3966,7 +3968,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 59
+        assert self.device_items == 60
         assert smile._cooling_present
         assert smile._cooling_enabled
         assert smile._cooling_active
@@ -4067,6 +4069,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 22.8,
+                    "domestic_hot_water_setpoint": 60.0,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 0.0,
                     "return_temperature": 23.4,
@@ -4102,7 +4105,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 57
+        assert self.device_items == 58
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self.notifications
@@ -4154,7 +4157,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile._cooling_present
-        assert self.device_items == 57
+        assert self.device_items == 58
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4221,6 +4224,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 22.8,
+                    "domestic_hot_water_setpoint": 60.0,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 0.0,
                     "return_temperature": 23.4,
@@ -4256,7 +4260,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 58
+        assert self.device_items == 59
         assert self.cooling_present
         assert not self.notifications
 
