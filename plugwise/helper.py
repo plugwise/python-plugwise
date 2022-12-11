@@ -1039,7 +1039,7 @@ class SmileHelper:
                 if "cooling_state" in data:
                     self._cooling_enabled = data["cooling_state"]
                     self._cooling_active = (
-                        data["cooling_state"] and data["modulation_level"] == 1
+                        data["cooling_state"] and data["modulation_level"] == 100
                     )
 
             LOGGER.debug("HOI heating-state: %s", data["heating_state"])
