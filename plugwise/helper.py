@@ -1012,11 +1012,7 @@ class SmileHelper:
             # Finally, remove c_heating_state from the output
             data.pop("c_heating_state")
 
-        if (
-            d_id == self._heater_id
-            and self.smile_name == "Smile Anna"
-            and self._cooling_present
-        ):
+        if d_id == self._heater_id and self.smile_name == "Smile Anna":
             # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
             # Elga(?) and Elga Ace:
             if "elga_status_code" in data:
