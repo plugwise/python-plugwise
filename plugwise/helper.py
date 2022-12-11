@@ -1044,7 +1044,7 @@ class SmileHelper:
                     self._cooling_active = (
                         data["cooling_state"] and data["modulation_level"] == 1
                     )
-
+        LOGGER.debug("HOI heating-state: %s", data["heating_state"])
         self._cleanup_data(data)
 
         return cast(DeviceData, data)
