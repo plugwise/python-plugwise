@@ -3707,12 +3707,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_heating(self):
-        """Test a Anna with Elga setup in heating mode."""
+        """Test an Anna with Elga, cooling-mode off, in heating mode."""
         testdata = {
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "model": "Generic heater/cooler",
+                "model": "Generic heater",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
