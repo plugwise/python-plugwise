@@ -142,16 +142,13 @@ class SmileData(SmileHelper):
             self._on_off_device = onoff_boiler is not None
             self._opentherm_device = open_therm_boiler is not None
 
-            # Determine if the Adam or Anna has cooling capability
+            # Determine the present special features
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
             search = self._domain_objects
-            self._cooling_present = False
             if search.find(locator_1) is not None:
                 self._cooling_present = True
-            # Alternative method for the Anna with Elga
-            elif search.find(locator_2) is not None:
-                self._cooling_present = True
+            if search.find(locator_2) is not None:
                 self._elga = True
 
         # Gather all the device and initial data
