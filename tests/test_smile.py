@@ -3856,6 +3856,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "dhw_state": False,
                     "heating_state": False,
                     "compressor_state": True,
+                    "cooling_enabled": False,
                     "cooling_state": True,
                     "slave_boiler_state": False,
                     "flame_state": False,

@@ -765,7 +765,7 @@
 				<interval/>
 				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
 				<period start_date="2022-11-02T03:57:23.207+01:00" end_date="2022-11-02T03:57:23.207+01:00">
-					<measurement log_date="2022-11-02T03:57:23.207+01:00">off</measurement>
+					<measurement log_date="2022-11-02T03:57:23.207+01:00">on</measurement>
 				</period>
 			</point_log>
 		</logs>
