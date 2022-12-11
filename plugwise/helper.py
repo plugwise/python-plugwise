@@ -1028,6 +1028,7 @@ class SmileHelper:
 
                 if "cooling_enabled" in data and data["cooling_enabled"]:
                     self._cooling_present = True
+                    data["mode"] = "Generic heater/cooler"
                 self._cooling_enabled = data["cooling_enabled"]
                 data.pop("elga_status_code", None)
                 # Elga has no cooling-switch
