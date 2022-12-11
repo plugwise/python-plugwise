@@ -1022,7 +1022,10 @@ class SmileHelper:
             if "elga_status_code" in data:
                 data["heating_state"] = False
                 data["cooling_state"] = False
-                if data["elga_status_code"] in [3, 4, 5, 6, 10, 11]:
+                if (
+                    data["elga_status_code"] in [3, 4, 5, 6, 10, 11]
+                    and not data["dhw_state"]
+                ):
                     data["heating_state"] = True
                 if data["elga_status_code"] == 8:
                     data["cooling_state"] = self._cooling_active = True
