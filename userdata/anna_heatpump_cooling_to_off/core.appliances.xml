@@ -757,6 +757,17 @@
 				</period>
 				<fault_code id='c2f0f2af06284c9999e1446431bb0438'/>
 			</point_log>
+			<point_log id='9257714483e4423a8a3423072eda3d40'>
+				<type>cooling_enabled</type>
+				<unit></unit>
+				<updated_date>2022-11-02T03:57:23.207+01:00</updated_date>
+				<last_consecutive_log_date>2022-11-02T03:57:23.207+01:00</last_consecutive_log_date>
+				<interval/>
+				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
+				<period start_date="2022-11-02T03:57:23.207+01:00" end_date="2022-11-02T03:57:23.207+01:00">
+					<measurement log_date="2022-11-02T03:57:23.207+01:00">off</measurement>
+				</period>
+			</point_log>
 		</logs>
 		<actuator_functionalities>
 			<offset_functionality id='0150ad6c0a2d47aba4c490e88205d026'>
