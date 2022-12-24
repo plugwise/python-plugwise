@@ -443,6 +443,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     if key_1 != key_2:
                                         continue
 
+                                    _LOGGER.info(
+                                        "%s",
+                                        f"  + Testing {key_1} ({val_1} should be {val_2})",
+                                    )
                                     assert val_1 == val_2
                                     asserts += 1
                         else:
@@ -5061,11 +5065,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_p1v4_442_single(self):
-        """Test a P1 firmware 4 single-phase setup."""
+        """Test a P1 firmware 4.4 single-phase setup."""
         testdata = {
             "a455b61e52394b2db5081ce025a430f3": {
                 "dev_class": "gateway",
-                "firmware": "4.4.0",
+                "firmware": "4.4.2",
                 "hardware": "AME Smile 2.0 board",
                 "location": "a455b61e52394b2db5081ce025a430f3",
                 "mac_address": "012345670001",
@@ -5082,22 +5086,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "SHENZHEN KAIFA TECHNOLOGY （CHENGDU） CO., LTD.",
                 "available": True,
                 "sensors": {
-                    "net_electricity_point": 581,
-                    "electricity_consumed_peak_point": 581,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 30718.064,
-                    "electricity_consumed_peak_cumulative": 13523.584,
-                    "electricity_consumed_off_peak_cumulative": 17194.48,
-                    "electricity_consumed_peak_interval": 9,
-                    "electricity_consumed_off_peak_interval": 0,
+                    "net_electricity_point": 421,
+                    "electricity_consumed_peak_point": 0,
+                    "electricity_consumed_off_peak_point": 421,
+                    "net_electricity_cumulative": 31610.113,
+                    "electricity_consumed_peak_cumulative": 13966.608,
+                    "electricity_consumed_off_peak_cumulative": 17643.505,
+                    "electricity_consumed_peak_interval": 0,
+                    "electricity_consumed_off_peak_interval": 21,
                     "electricity_produced_peak_point": 0,
                     "electricity_produced_off_peak_point": 0,
                     "electricity_produced_peak_cumulative": 0.0,
                     "electricity_produced_off_peak_cumulative": 0.0,
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
-                    "electricity_phase_one_consumed": 0,
-                    "electricity_phase_one_produced": 581,
+                    "electricity_phase_one_consumed": 413,
+                    "electricity_phase_one_produced": 0,
                 },
             },
         }
@@ -5110,7 +5114,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert type = power")
         assert smile.smile_type == "power"
         _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.4.0"
+        assert smile.smile_version[0] == "4.4.2"
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
@@ -5128,7 +5132,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             "03e65b16e4b247a29ae0d75a78cb492e": {
                 "dev_class": "gateway",
-                "firmware": "4.4.0",
+                "firmware": "4.4.2",
                 "hardware": "AME Smile 2.0 board",
                 "location": "03e65b16e4b247a29ae0d75a78cb492e",
                 "mac_address": "012345670001",
@@ -5145,31 +5149,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "XEMEX NV",
                 "available": True,
                 "sensors": {
-                    "net_electricity_point": 2422,
-                    "electricity_consumed_peak_point": 2422,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 220806.738,
-                    "electricity_consumed_peak_cumulative": 154585.221,
-                    "electricity_consumed_off_peak_cumulative": 66221.517,
+                    "net_electricity_point": 5553,
+                    "electricity_consumed_peak_point": 0,
+                    "electricity_consumed_off_peak_point": 5553,
+                    "net_electricity_cumulative": 231866.539,
+                    "electricity_consumed_peak_cumulative": 161328.641,
+                    "electricity_consumed_off_peak_cumulative": 70537.898,
                     "electricity_consumed_peak_interval": 0,
-                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_consumed_off_peak_interval": 314,
                     "electricity_produced_peak_point": 0,
                     "electricity_produced_off_peak_point": 0,
                     "electricity_produced_peak_cumulative": 0.0,
                     "electricity_produced_off_peak_cumulative": 0.0,
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
-                    "electricity_phase_one_consumed": 0,
-                    "electricity_phase_two_consumed": 0,
-                    "electricity_phase_three_consumed": 0,
-                    "electricity_phase_one_produced": 1737,
-                    "electricity_phase_two_produced": 200,
-                    "electricity_phase_three_produced": 486,
-                    "gas_consumed_cumulative": 15263.4,
-                    "gas_consumed_interval": 0.0,
-                    "voltage_phase_one": 230.3,
-                    "voltage_phase_two": 232.8,
-                    "voltage_phase_three": 232.6,
+                    "electricity_phase_one_consumed": 1763,
+                    "electricity_phase_two_consumed": 1703,
+                    "electricity_phase_three_consumed": 2080,
+                    "electricity_phase_one_produced": 0,
+                    "electricity_phase_two_produced": 0,
+                    "electricity_phase_three_produced": 0,
+                    "gas_consumed_cumulative": 16811.37,
+                    "gas_consumed_interval": 0.06,
+                    "voltage_phase_one": 233.2,
+                    "voltage_phase_two": 234.4,
+                    "voltage_phase_three": 234.7,
                 },
             },
         }
@@ -5182,7 +5186,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert type = power")
         assert smile.smile_type == "power"
         _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.4.0"
+        assert smile.smile_version[0] == "4.4.2"
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 

@@ -1,28 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
-	<module id='22acdcc87bc441589c583fcbb037ffa0'>
-		<vendor_name></vendor_name>
-		<vendor_model></vendor_model>
-		<hardware_version></hardware_version>
-		<firmware_version></firmware_version>
-		<created_date>2020-05-20T14:47:57.682+02:00</created_date>
-		<modified_date>2020-05-20T14:47:58.290+02:00</modified_date>
-		<deleted_date></deleted_date>
-		<services>
-			<gas_interval_meter id='0258f656d7384027b6d7d1df0e5bb73b' log_type='gas'>
-				<functionalities><interval_log id='a433a531189b4d36bc269c8086e29685'/></functionalities>
-			</gas_interval_meter>
-			<gas_cumulative_meter id='c9a8a56c5c4445d98b55c931af5a4d80' log_type='gas'>
-				<functionalities><cumulative_log id='e5996058ba3b4a9f8ac418ad1d942f6d'/></functionalities>
-			</gas_cumulative_meter>
-		</services>
-		<protocols>
-			<dsmr_gas id='3bb9c70d5f31445487b44e1dab72d570'>
-				<serial>G0039001919375719</serial>
-				<dsmr_main id='8b34bcfa5a6f423fb30190e75b7c6e48'/>
-			</dsmr_gas>
-		</protocols>
-	</module>
 	<module id='b0ea732032ce4656a5c409ca3903c1a2'>
 		<vendor_name>Plugwise</vendor_name>
 		<vendor_model>Gateway</vendor_model>
@@ -56,13 +33,36 @@
 			<local_area_network id='2d4db3265e874b6da54bc01fcaa17795'/>
 		</protocols>
 	</module>
+	<module id='22acdcc87bc441589c583fcbb037ffa0'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2020-05-20T14:47:57.682+02:00</created_date>
+		<modified_date>2020-05-20T14:47:58.290+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<gas_interval_meter id='0258f656d7384027b6d7d1df0e5bb73b' log_type='gas'>
+				<functionalities><interval_log id='a433a531189b4d36bc269c8086e29685'/></functionalities>
+			</gas_interval_meter>
+			<gas_cumulative_meter id='c9a8a56c5c4445d98b55c931af5a4d80' log_type='gas'>
+				<functionalities><cumulative_log id='e5996058ba3b4a9f8ac418ad1d942f6d'/></functionalities>
+			</gas_cumulative_meter>
+		</services>
+		<protocols>
+			<dsmr_gas id='3bb9c70d5f31445487b44e1dab72d570'>
+				<serial>G0039001919375719</serial>
+				<dsmr_main id='8b34bcfa5a6f423fb30190e75b7c6e48'/>
+			</dsmr_gas>
+		</protocols>
+	</module>
 	<module id='560672c43a964ef29202bad5b8284985'>
 		<vendor_name>XEMEX NV</vendor_name>
 		<vendor_model>XMX5LGF0010453051839</vendor_model>
 		<hardware_version></hardware_version>
 		<firmware_version></firmware_version>
 		<created_date>2020-05-20T14:47:55.458+02:00</created_date>
-		<modified_date>2022-10-17T16:28:02.745+02:00</modified_date>
+		<modified_date>2022-11-09T07:59:47.938+01:00</modified_date>
 		<deleted_date></deleted_date>
 		<services>
 			<electricity_cumulative_meter id='10d8b530be00409b9fd360bc5c8a2ab3' log_type='electricity'>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<appliances>
+	<appliance id='b82b6b3322484f2ea4e25e0bd5f3d61f'>
+		<name>Gateway C49300137E6F</name>
+		<description>Container for variables logged about the Gateway in general.</description>
+		<type>gateway</type>
+		<created_date>2020-01-30T12:13:48.968+01:00</created_date>
+		<modified_date>2022-12-24T10:15:47.222+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='45346b2dbc664f02803b8bca72674c33'>
+				<type>lan_ip_address</type>
+				<unit></unit>
+				<updated_date>2022-12-24T10:15:47+01:00</updated_date>
+				<last_consecutive_log_date>2022-12-24T10:15:47+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_address id='fdc95f8b19d44041b3de87a4a2ea0ca0'/>
+				<period start_date="2022-12-24T10:15:47+01:00" end_date="2022-12-24T10:15:47+01:00">
+					<measurement log_date="2022-12-24T10:15:47+01:00">0.0.0.0</measurement>
+				</period>
+			</point_log>
+			<point_log id='4da36bbdae8b4130af04ead1a862c8a6'>
+				<type>wlan_ip_address</type>
+				<unit></unit>
+				<updated_date>2022-12-24T10:15:36+01:00</updated_date>
+				<last_consecutive_log_date>2022-12-24T10:15:36+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_address id='0234617ceffd445bbc88209445c12cce'/>
+				<period start_date="2022-12-24T10:15:36+01:00" end_date="2022-12-24T10:15:36+01:00">
+					<measurement log_date="2022-12-24T10:15:36+01:00">127.0.0.1</measurement>
+				</period>
+			</point_log>
+			<point_log id='53f41ce5ae814b73b8eae60dc94b9d6b'>
+				<type>wlan_state</type>
+				<unit></unit>
+				<updated_date>2022-12-24T10:15:36.277+01:00</updated_date>
+				<last_consecutive_log_date>2022-12-24T10:15:36.277+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_state id='cf1e426a0d654f079cbcbb78bc6f8b7c'/>
+				<period start_date="2022-12-24T10:15:36.277+01:00" end_date="2022-12-24T10:15:36.277+01:00">
+					<measurement log_date="2022-12-24T10:15:36.277+01:00">up</measurement>
+				</period>
+			</point_log>
+			<point_log id='6bd9b2fb2a334fa89d2f6171b44f25a4'>
+				<type>lan_state</type>
+				<unit></unit>
+				<updated_date>2022-12-24T10:15:47.200+01:00</updated_date>
+				<last_consecutive_log_date>2022-12-24T10:15:47.200+01:00</last_consecutive_log_date>
+				<interval/>
+				<network_state id='b187ae7629bc43a4aa80009ff95290ee'/>
+				<period start_date="2022-12-24T10:15:47.200+01:00" end_date="2022-12-24T10:15:47.200+01:00">
+					<measurement log_date="2022-12-24T10:15:47.200+01:00">down</measurement>
+				</period>
+			</point_log>
+			<point_log id='f37523b5452145f092a4d41e811d6ba1'>
+				<type>link_quality</type>
+				<unit></unit>
+				<updated_date>2022-12-24T10:15:36.276+01:00</updated_date>
+				<last_consecutive_log_date>2022-12-24T10:15:36.276+01:00</last_consecutive_log_date>
+				<interval/>
+				<link_quality id='61fd1337390744e88a19f435da25d692'/>
+				<period start_date="2022-12-24T10:15:36.276+01:00" end_date="2022-12-24T10:15:36.276+01:00">
+					<measurement log_date="2022-12-24T10:15:36.276+01:00">41</measurement>
+				</period>
+			</point_log>
+			<point_log id='f48837879c1b4a73b1fc56d4b67a8948'>
+				<type>signal_strength</type>
+				<unit>dBm</unit>
+				<updated_date>2022-12-24T10:15:36.276+01:00</updated_date>
+				<last_consecutive_log_date>2022-12-24T10:15:36.276+01:00</last_consecutive_log_date>
+				<interval/>
+				<signal_strength id='8c803c25af184cefa940d2150dff6585'/>
+				<period start_date="2022-12-24T10:15:36.276+01:00" end_date="2022-12-24T10:15:36.276+01:00">
+					<measurement log_date="2022-12-24T10:15:36.276+01:00">-69.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
+</appliances>
