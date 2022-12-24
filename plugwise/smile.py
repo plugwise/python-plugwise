@@ -97,7 +97,9 @@ class SmileData(SmileHelper):
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
 
     def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
+        """
+        Helper-function for get_all_devices().
+
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._appl_data.items():
@@ -123,6 +125,7 @@ class SmileData(SmileHelper):
     def get_all_devices(self) -> None:
         """
         Determine the evices present from the obtained XML-data.
+
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
         """
@@ -162,7 +165,9 @@ class SmileData(SmileHelper):
     def _device_data_switching_group(
         self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
-        """Helper-function for _get_device_data().
+        """
+        Helper-function for _get_device_data().
+
         Determine switching group device data.
         """
         if details["dev_class"] in SWITCH_GROUP_TYPES:
@@ -179,7 +184,9 @@ class SmileData(SmileHelper):
     def _device_data_adam(
         self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
-        """Helper-function for _get_device_data().
+        """
+        Helper-function for _get_device_data().
+
         Determine Adam device data.
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
@@ -196,7 +203,9 @@ class SmileData(SmileHelper):
     def _device_data_climate(
         self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
-        """Helper-function for _get_device_data().
+        """
+        Helper-function for _get_device_data().
+
         Determine climate-control device data.
         """
         loc_id = details["location"]
@@ -248,7 +257,9 @@ class SmileData(SmileHelper):
     def _check_availability(
         self, details: ApplianceData, device_data: DeviceData
     ) -> None:
-        """Helper-function for _get_device_data().
+        """
+        Helper-function for _get_device_data().
+
         Provide availability status for the wired-commected devices.
         """
         # OpenTherm device
@@ -268,7 +279,9 @@ class SmileData(SmileHelper):
                         device_data["available"] = False
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for _all_device_data() and async_update().
+        """
+        Helper-function for _all_device_data() and async_update().
+
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         details = self._appl_data[dev_id]
@@ -435,7 +448,9 @@ class Smile(SmileComm, SmileData):
         return model
 
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
-        """Helper-function for connect().
+        """
+        Helper-function for connect().
+
         Detect which type of Smile is connected.
         """
         model: str | None = None
@@ -497,7 +512,9 @@ class Smile(SmileComm, SmileData):
                 self._appliances = await self._request(APPLIANCES)
 
     async def _update_domain_objects(self) -> None:
-        """Helper-function for smile.py: full_update_device() and async_update().
+        """
+        Helper-function for smile.py: full_update_device() and async_update().
+
         Request domain_objects data.
         """
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
@@ -593,7 +610,9 @@ class Smile(SmileComm, SmileData):
     async def set_schedule_state(
         self, loc_id: str, name: str | None, new_state: str
     ) -> None:
-        """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
+        """
+        Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
+
         Determined from - DOMAIN_OBJECTS.
         In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
         """
@@ -729,7 +748,9 @@ class Smile(SmileComm, SmileData):
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
     ) -> None:
-        """Helper-function for set_switch_state() .
+        """
+        Helper-function for set_switch_state().
+
         Set the given State of the relevant Switch within a group of members.
         """
         for member in members:

@@ -2,49 +2,49 @@
 
 
 class PlugwiseException(Exception):
-    """Base error class for this Plugwise library"""
+    """Base error class for this Plugwise library."""
 
 
-### Stick exceptions ###
+# --- Stick exceptions ---
 
 
 class PortError(PlugwiseException):
-    """Connection to USBstick failed"""
+    """Connection to USBstick failed."""
 
 
 class StickInitError(PlugwiseException):
-    """Initialization of USBstick failed"""
+    """Initialization of USBstick failed."""
 
 
 class NetworkDown(PlugwiseException):
-    """Zigbee network not online"""
+    """Zigbee network not online."""
 
 
 class CirclePlusError(PlugwiseException):
-    """Connection to Circle+ node failed"""
+    """Connection to Circle+ node failed."""
 
 
 class InvalidMessageLength(PlugwiseException):
-    """Invalid message length"""
+    """Invalid message length."""
 
 
 class InvalidMessageHeader(PlugwiseException):
-    """Invalid message header"""
+    """Invalid message header."""
 
 
 class InvalidMessageFooter(PlugwiseException):
-    """Invalid message footer"""
+    """Invalid message footer."""
 
 
 class InvalidMessageChecksum(PlugwiseException):
-    """Invalid data checksum"""
+    """Invalid data checksum."""
 
 
 class TimeoutException(PlugwiseException):
-    """Timeout expired while waiting for response from node"""
+    """Timeout expired while waiting for response from node."""
 
 
-### Smile exceptions ###
+# --- Smile exceptions ---
 
 
 class ConnectionFailedError(PlugwiseException):

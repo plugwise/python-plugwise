@@ -30,7 +30,7 @@ UNIT_LUMEN: Final = "lm"
 VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
-### Stick constants ###
+# --- Stick constants ---
 
 UTF8_DECODE: Final = "utf-8"
 
@@ -363,7 +363,7 @@ FEATURE_RSSI_OUT: Final[dict[str, str]] = {
 }
 
 
-### Smile constants ###
+# --- Smile constants ---
 
 ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "heater_central",
