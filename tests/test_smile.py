@@ -5243,6 +5243,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     # Test connect for timeout
     @patch("plugwise.helper.ClientSession.get", side_effect=aiohttp.ServerTimeoutError)
+    @pytest.mark.asyncio
     async def test_connect_timeout(self, timeout_test):
         """Wrap connect to raise timeout during get."""
 
