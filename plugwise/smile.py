@@ -1,4 +1,5 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
+
 Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations

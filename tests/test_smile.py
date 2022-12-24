@@ -542,6 +542,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_schedule(
         self, smile, loc_id, state, good_schedules=None, single=False, unhappy=False
     ):
+        """Toggle schedules to test functionality."""
         if good_schedules != []:
             if not single and not ("!VeryBogusSchedule" in good_schedules):
                 good_schedules.append("!VeryBogusSchedule")
@@ -3821,6 +3822,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_anna_heatpump_cooling(self):
         """
         Test an Anna with Elga setup in cooling mode.
+
         This test also covers the situation that the operation-mode it switched
         from heating to cooling due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
@@ -3937,8 +3939,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling_fake_firmware(self):
         """
-        Test an Anna with a fake Loria/Thermastate setup in cooling mode. The
-        Anna + Elga firmware has been amended with the point_log cooling_enabled and
+        Test an Anna with a fake Loria/Thermastate setup in cooling mode.
+
+        The Anna + Elga firmware has been amended with the point_log cooling_enabled and
         gateway/features/cooling keys.
         This test also covers the situation that the operation-mode it switched
         from heating to cooling due to the outdoor temperature rising above the
@@ -4017,10 +4020,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
-        """
-        Test a 2nd Anna with Elga setup, cooling off, in idle mode
-        (with missing outdoor temperature - solved).
-        """
+        """Test a 2nd Anna with Elga setup, cooling off, in idle mode (with missing outdoor temperature - solved)."""
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
                 "dev_class": "thermostat",
@@ -4121,9 +4121,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_schedule_off(self):
-        """
-        Test Anna with Elga setup, cooling off, in idle mode, modified to schedule off.
-        """
+        """Test Anna with Elga setup, cooling off, in idle mode, modified to schedule off."""
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
                 "dev_class": "thermostat",
@@ -4171,9 +4169,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
         """
-        Test a 2nd Anna with Elga setup with cooling active. This testcase also covers
-        testing of the generation of a cooling-based schedule, opposite the generation
-        of a heating-based schedule.
+        Test a 2nd Anna with Elga setup with cooling active.
+
+        This testcase also covers testing of the generation of a cooling-based
+        schedule, opposite the generation of a heating-based schedule.
         """
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
