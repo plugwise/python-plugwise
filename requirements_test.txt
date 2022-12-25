@@ -1,6 +1,6 @@
 # Import from setup.py
 -e .
 # Versioning omitted (leave this up to HA-core)
-pytest-asyncio==0.20.2
+pytest-asyncio
 radon==5.1.0
-types-python-dateutil==2.8.19.5
+types-python-dateutil

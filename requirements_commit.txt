@@ -3,8 +3,8 @@
 # Minimal requirements for committing
 # Versioning omitted (leave this up to HA-core)
 coverage
-flake8-black
+flake8-black==0.3.6
 mypy
 pre-commit
 pylint
-pylint_strict_informational
+pylint_strict_informational==0.1
