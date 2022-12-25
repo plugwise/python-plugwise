@@ -1,6 +1,7 @@
 # Import from setup.py
 -e .
 # Minimal requirements for committing
+# Versioning omitted (leave this up to HA-core)
 coverage
 flake8-black
 mypy
