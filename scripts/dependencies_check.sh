@@ -59,8 +59,8 @@ done
 pkgpy=$(sed -n '/install_requires=\[/,/\]/p' setup.py | tr -d '\n' | sed 's/^.*\[\(.*\)\].*$/\1/g' | tr -d ',"')
 for pkgfull in ${pkgpy}; do
   # Very ugly multi-character split
-  # shellcheck disable=SC3011,SC2086
-  pkg=$(cut -d '=' -f 1 <<< ${pkgfull} | cut -d '<' -f 1 | cut -d '>' -f 1)
+  # shellcheck disable=SC3011
+  pkg=$(echo "${pkgfull}" | cut -d '=' -f 1 | cut -d '<' -f 1 | cut -d '>' -f 1)
   # shellcheck disable=SC2046,SC2143
   if [ ! $(grep -qrhE "^${pkg}" ./tmp/urls) ]; then
 #    echo "DEBUG:   ${pkg} from setup.py not in upstream requirements/constraints"
