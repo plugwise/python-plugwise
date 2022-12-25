@@ -87,7 +87,7 @@ echo ""
   echo "INFO:    Packages redundant with upstream:"
   # shellcheck disable=SC2013
   for pkg in $(sort -u ${pkgredundant}); do
-    echo "INFO:      ${pkg} in ($(grep -hlE "^${pkg}" ./requirements*.txt)) already avavilable via $(grep -rhlE "^${pkg}" ./tmp/urls/)"
+    echo "INFO:      ${pkg} in ($(grep -hlE "^${pkg}" ./requirements*.txt)) already available via upstream"
   done
   echo ""
 #fi
