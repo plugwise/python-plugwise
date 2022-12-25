@@ -67,7 +67,7 @@ for pkgfull in ${pkgpy}; do
     if [ ! $(grep -rhE "^${pkg}==" ./requirements*.txt) ]; then
 #      echo "DEBUG:   ${pkg} from setup.py not in local requirements"
       # shellcheck disable=SC3014
-      if [ "${pkg}" == "${pkgfull}" ]; then
+      if [ "${pkg}" = "${pkgfull}" ]; then
         echo "WARNING: ${pkg} not in any requirements and no version specified in setup.py"
 #      else
 #        echo "DEBUG:   ${pkg} version specified in setup.py"
