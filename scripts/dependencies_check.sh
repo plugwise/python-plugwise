@@ -61,9 +61,11 @@ for pkgfull in ${pkgpy}; do
   # Very ugly multi-character split
   # shellcheck disable=SC3011
   pkg=$(echo "${pkgfull}" | cut -d '=' -f 1 | cut -d '<' -f 1 | cut -d '>' -f 1)
+  # Check for package in upstream
   # shellcheck disable=SC2046,SC2143
-  if [ ! $(grep -qrhE "^${pkg}" ./tmp/urls) ]; then
+  if [ ! $(grep -rhE "^${pkg}$|^${pkg}[=<>]+" ./tmp/urls) ]; then
 #    echo "DEBUG:   ${pkg} from setup.py not in upstream requirements/constraints"
+    # Check for package locally
     if [ ! $(grep -rhE "^${pkg}==" ./requirements*.txt) ]; then
 #      echo "DEBUG:   ${pkg} from setup.py not in local requirements"
       # shellcheck disable=SC3014
@@ -84,12 +86,12 @@ echo ""
 # Print redundant information (no error value)
 # shellcheck disable=SC2046
 #if [ $(wc -l "${pkgmiss}" | awk '{print $1}') -gt 0 ]; then
-  echo "INFO:    Packages redundant with upstream:"
-  # shellcheck disable=SC2013
-  for pkg in $(sort -u ${pkgredundant}); do
-    echo "INFO:      ${pkg} in ($(grep -hlE "^${pkg}" ./requirements*.txt)) already available via upstream"
-  done
-  echo ""
+#  echo "INFO:    Packages redundant with upstream:"
+#  # shellcheck disable=SC2013
+#  for pkg in $(sort -u ${pkgredundant}); do
+#    echo "INFO:      ${pkg} in ($(grep -hlE "^${pkg}" ./requirements*.txt)) already available via upstream"
+#  done
+#  echo ""
 #fi
 
 # Print missing information and exit error out
