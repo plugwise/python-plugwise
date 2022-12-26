@@ -293,7 +293,7 @@ jobs:
       - name: Check out committed code
         uses: actions/checkout@v3
       - name: Run dependency checker
-        run: scripts/dependencies_check.sh
+        run: scripts/dependencies_check.sh debug
 
   coverage:
     name: Process test coverage

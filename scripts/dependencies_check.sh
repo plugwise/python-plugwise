@@ -15,47 +15,59 @@ if [ ! -d ./tmp ]; then
   mkdir -p ./tmp/urls
 fi
 
-# Find URLs used
+# Debugging
+DEBUG=1
+if [ "${1}" = "debug" ]; then DEBUG=0; fi
+
+# Simple debugging trigger
+debug_output () {
+  if [ ${DEBUG} -eq 0 ]; then echo "DEBUG:   ${1}"; fi
+}
+
+debug_output "Finding URLs used for setup"
 urls=$(grep -hEo "(http|https)://[a-zA-Z0-9./?=_%:-]*" ./scripts/setup*.sh | sort -u)
 
-# Cache upstream information
+debug_output "Caching upstream information"
 i=1
 for url in ${urls}; do
   curl -s "${url}" > ./tmp/urls/${i}
   i=$((i+1))
 done
 
-# Find local packages
+debug_output "Find local package requirements"
 packages=$(grep -hEv "^$|^#|^\-e" ./requirements*.txt | cut -f 1 -d '=' | sort -u)
 
-# Check for local defined packages against upstream
+debug_output "Check local defined packages against upstream"
 pkglist="./tmp/pkglist"
 pkgredundant="./tmp/pkgredundant"
 true > "${pkglist}"
 true > "${pkgredundant}"
 for pkg in ${packages}; do
   # shellcheck disable=SC2046,SC2143
-  if [ ! $(grep -rhE "^${pkg}" ./tmp/urls) ]; then
-#    echo "${pkg} not in upstream requirements/constraints"
+  if [ ! $(grep -rhE "^${pkg}$|${pkg}[=,.]" ./tmp/urls) ]; then
+    debug_output "${pkg} not in upstream requirements/constraints"
     echo "${pkg}" >> "${pkglist}"
   else
+    debug_output "${pkg} redundant through upstream requirements/constraints as $(grep -rhE "^${pkg}$|${pkg}[=<>]" ./tmp/urls)"
     echo "${pkg}" >> "${pkgredundant}"
   fi
 done
 
-# Check for versioning in local packages
+debug_output "Check for versioning in local packages"
 pkgmiss="./tmp/pkglist.miss"
 true > "${pkgmiss}"
 # shellcheck disable=SC2013
 for pkg in $(sort -u ${pkglist}); do
   # shellcheck disable=SC2046,SC2143
-  if [ ! $(grep -rhE "^${pkg}==" ./requirements*.txt) ]; then
-#    echo "${pkg} no versioning defined"
+  if [ ! $(grep -rhE "^${pkg}$|${pkg}[=<>]" ./requirements*.txt) ]; then
+    debug_output "${pkg} no versioning defined"
     echo "${pkg}" >> "${pkgmiss}"
+  else
+    debug_output "${pkg} version locally defined in $(grep -rhE "^${pkg}$|${pkg}[=<>]" ./requirements*.txt)"
   fi
 done
 
-# Check for versioning in setup.py
+debug_output "Check for versioning in setup.py"
 pkgpy=$(sed -n '/install_requires=\[/,/\]/p' setup.py | tr -d '\n' | sed 's/^.*\[\(.*\)\].*$/\1/g' | tr -d ',"')
 for pkgfull in ${pkgpy}; do
   # Very ugly multi-character split
@@ -64,35 +76,24 @@ for pkgfull in ${pkgpy}; do
   # Check for package in upstream
   # shellcheck disable=SC2046,SC2143
   if [ ! $(grep -rhE "^${pkg}$|^${pkg}[=<>]+" ./tmp/urls) ]; then
-#    echo "DEBUG:   ${pkg} from setup.py not in upstream requirements/constraints"
+    debug_output "${pkg} from setup.py not in upstream requirements/constraints"
     # Check for package locally
-    if [ ! $(grep -rhE "^${pkg}==" ./requirements*.txt) ]; then
-#      echo "DEBUG:   ${pkg} from setup.py not in local requirements"
+    if [ ! $(grep -rhE "^${pkg}$|${pkg}[=<>]" ./requirements*.txt) ]; then
+      debug_output "${pkg} from setup.py not in local requirements"
       # shellcheck disable=SC3014
       if [ "${pkg}" = "${pkgfull}" ]; then
         echo "WARNING: ${pkg} not in any requirements and no version specified in setup.py"
-#      else
-#        echo "DEBUG:   ${pkg} version specified in setup.py"
+      else
+        debug_output "${pkg} version specified in setup.py as ${pkgfull}"
       fi
-#    else
-#      echo "DEBUG:   ${pkg} found in local requirements"
+    else
+      debug_output "${pkg} found in local requirements as $(grep -rhE "^${pkg}$|${pkg}[=<>]" ./requirements*.txt)"
     fi
-#  else
-#    echo "DEBUG:   ${pkg} found in upstream URLs"
+  else
+    debug_output "${pkg} found in upstream URLs as $(grep -rhE "^${pkg}$|^${pkg}[=<>]+" ./tmp/urls)"
   fi
 done
 echo ""
-
-# Print redundant information (no error value)
-# shellcheck disable=SC2046
-#if [ $(wc -l "${pkgmiss}" | awk '{print $1}') -gt 0 ]; then
-#  echo "INFO:    Packages redundant with upstream:"
-#  # shellcheck disable=SC2013
-#  for pkg in $(sort -u ${pkgredundant}); do
-#    echo "INFO:      ${pkg} in ($(grep -hlE "^${pkg}" ./requirements*.txt)) already available via upstream"
-#  done
-#  echo ""
-#fi
 
 # Print missing information and exit error out
 # shellcheck disable=SC2046
