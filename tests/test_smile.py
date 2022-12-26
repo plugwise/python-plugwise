@@ -443,6 +443,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                     if key_1 != key_2:
                                         continue
 
+                                    _LOGGER.info(
+                                        "%s",
+                                        f"  + Testing {key_1} ({val_1} should be {val_2})",
+                                    )
                                     assert val_1 == val_2
                                     asserts += 1
                         else:
@@ -538,6 +542,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_thermostat_schedule(
         self, smile, loc_id, state, good_schedules=None, single=False, unhappy=False
     ):
+        """Toggle schedules to test functionality."""
         if good_schedules != []:
             if not single and not ("!VeryBogusSchedule" in good_schedules):
                 good_schedules.append("!VeryBogusSchedule")
@@ -3817,6 +3822,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_anna_heatpump_cooling(self):
         """
         Test an Anna with Elga setup in cooling mode.
+
         This test also covers the situation that the operation-mode it switched
         from heating to cooling due to the outdoor temperature rising above the
         cooling_activation_outdoor_temperature threshold.
@@ -3933,8 +3939,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling_fake_firmware(self):
         """
-        Test an Anna with a fake Loria/Thermastate setup in cooling mode. The
-        Anna + Elga firmware has been amended with the point_log cooling_enabled and
+        Test an Anna with a fake Loria/Thermastate setup in cooling mode.
+
+        The Anna + Elga firmware has been amended with the point_log cooling_enabled and
         gateway/features/cooling keys.
         This test also covers the situation that the operation-mode it switched
         from heating to cooling due to the outdoor temperature rising above the
@@ -4013,10 +4020,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
-        """
-        Test a 2nd Anna with Elga setup, cooling off, in idle mode
-        (with missing outdoor temperature - solved).
-        """
+        """Test a 2nd Anna with Elga setup, cooling off, in idle mode (with missing outdoor temperature - solved)."""
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
                 "dev_class": "thermostat",
@@ -4117,9 +4121,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_schedule_off(self):
-        """
-        Test Anna with Elga setup, cooling off, in idle mode, modified to schedule off.
-        """
+        """Test Anna with Elga setup, cooling off, in idle mode, modified to schedule off."""
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
                 "dev_class": "thermostat",
@@ -4167,9 +4169,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
         """
-        Test a 2nd Anna with Elga setup with cooling active. This testcase also covers
-        testing of the generation of a cooling-based schedule, opposite the generation
-        of a heating-based schedule.
+        Test a 2nd Anna with Elga setup with cooling active.
+
+        This testcase also covers testing of the generation of a cooling-based
+        schedule, opposite the generation of a heating-based schedule.
         """
         testdata = {
             "ebd90df1ab334565b5895f37590ccff4": {
@@ -5060,6 +5063,141 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_p1v4_442_single(self):
+        """Test a P1 firmware 4.4 single-phase setup."""
+        testdata = {
+            "a455b61e52394b2db5081ce025a430f3": {
+                "dev_class": "gateway",
+                "firmware": "4.4.2",
+                "hardware": "AME Smile 2.0 board",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+            },
+            "ba4de7613517478da82dd9b6abea36af": {
+                "dev_class": "smartmeter",
+                "location": "a455b61e52394b2db5081ce025a430f3",
+                "model": "KFM5KAIFA-METER",
+                "name": "P1",
+                "vendor": "SHENZHEN KAIFA TECHNOLOGY （CHENGDU） CO., LTD.",
+                "available": True,
+                "sensors": {
+                    "net_electricity_point": 421,
+                    "electricity_consumed_peak_point": 0,
+                    "electricity_consumed_off_peak_point": 421,
+                    "net_electricity_cumulative": 31610.113,
+                    "electricity_consumed_peak_cumulative": 13966.608,
+                    "electricity_consumed_off_peak_cumulative": 17643.505,
+                    "electricity_consumed_peak_interval": 0,
+                    "electricity_consumed_off_peak_interval": 21,
+                    "electricity_produced_peak_point": 0,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_peak_cumulative": 0.0,
+                    "electricity_produced_off_peak_cumulative": 0.0,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                    "electricity_phase_one_consumed": 413,
+                    "electricity_phase_one_produced": 0,
+                },
+            },
+        }
+
+        self.smile_setup = "p1v4_442_single"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = power")
+        assert smile.smile_type == "power"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.4.2"
+        _LOGGER.info(" # Assert legacy")
+        assert not smile._smile_legacy
+
+        await self.device_test(smile, testdata)
+        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
+        assert self.device_items == 31
+        assert not self.notifications
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_p1v4_442_triple(self):
+        """Test a P1 firmware 4 3-phase setup."""
+        testdata = {
+            "03e65b16e4b247a29ae0d75a78cb492e": {
+                "dev_class": "gateway",
+                "firmware": "4.4.2",
+                "hardware": "AME Smile 2.0 board",
+                "location": "03e65b16e4b247a29ae0d75a78cb492e",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile P1",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+            },
+            "b82b6b3322484f2ea4e25e0bd5f3d61f": {
+                "dev_class": "smartmeter",
+                "location": "03e65b16e4b247a29ae0d75a78cb492e",
+                "model": "XMX5LGF0010453051839",
+                "name": "P1",
+                "vendor": "XEMEX NV",
+                "available": True,
+                "sensors": {
+                    "net_electricity_point": 5553,
+                    "electricity_consumed_peak_point": 0,
+                    "electricity_consumed_off_peak_point": 5553,
+                    "net_electricity_cumulative": 231866.539,
+                    "electricity_consumed_peak_cumulative": 161328.641,
+                    "electricity_consumed_off_peak_cumulative": 70537.898,
+                    "electricity_consumed_peak_interval": 0,
+                    "electricity_consumed_off_peak_interval": 314,
+                    "electricity_produced_peak_point": 0,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_peak_cumulative": 0.0,
+                    "electricity_produced_off_peak_cumulative": 0.0,
+                    "electricity_produced_peak_interval": 0,
+                    "electricity_produced_off_peak_interval": 0,
+                    "electricity_phase_one_consumed": 1763,
+                    "electricity_phase_two_consumed": 1703,
+                    "electricity_phase_three_consumed": 2080,
+                    "electricity_phase_one_produced": 0,
+                    "electricity_phase_two_produced": 0,
+                    "electricity_phase_three_produced": 0,
+                    "gas_consumed_cumulative": 16811.37,
+                    "gas_consumed_interval": 0.06,
+                    "voltage_phase_one": 233.2,
+                    "voltage_phase_two": 234.4,
+                    "voltage_phase_three": 234.7,
+                },
+            },
+        }
+
+        self.smile_setup = "p1v4_442_triple"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = power")
+        assert smile.smile_type == "power"
+        _LOGGER.info(" # Assert version")
+        assert smile.smile_version[0] == "4.4.2"
+        _LOGGER.info(" # Assert legacy")
+        assert not smile._smile_legacy
+
+        await self.device_test(smile, testdata)
+        assert smile.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"
+        assert self.device_items == 40
+        assert not self.notifications
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_fail_legacy_system(self):
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
@@ -5104,6 +5242,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     # Test connect for timeout
     @patch("plugwise.helper.ClientSession.get", side_effect=aiohttp.ServerTimeoutError)
+    @pytest.mark.asyncio
     async def test_connect_timeout(self, timeout_test):
         """Wrap connect to raise timeout during get."""
 

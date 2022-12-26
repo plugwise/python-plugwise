@@ -1,4 +1,5 @@
 """Use of this source code is governed by the MIT license found in the LICENSE file.
+
 Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
@@ -120,7 +121,9 @@ def _get_actuator_functionalities(xml: etree, data: dict[str, Any]) -> None:
 def schedules_temps(
     schedules: dict[str, dict[str, list[float]]], name: str
 ) -> list[float]:
-    """Helper-function for schedules().
+    """
+    Helper-function for schedules().
+
     Obtain the schedule temperature of the schedule.
     """
     if name == NONE:
@@ -174,7 +177,11 @@ def power_data_energy_diff(
     measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
 ) -> DeviceData:
     """Calculate differential energy."""
-    if "electricity" in measurement and "interval" not in net_string:
+    if (
+        "electricity" in measurement
+        and "phase" not in measurement
+        and "interval" not in net_string
+    ):
         diff = 1
         if "produced" in measurement:
             diff = -1
@@ -366,7 +373,9 @@ class SmileHelper:
         self.smile_zigbee_mac_address: str | None = None
 
     def _locations_legacy(self) -> None:
-        """Helper-function for _all_locations().
+        """
+        Helper-function for _all_locations().
+
         Create locations for legacy devices.
         """
         appliances = set()
@@ -380,7 +389,9 @@ class SmileHelper:
             self._loc_data[FAKE_LOC] = {"name": "Home"}
 
     def _locations_specials(self, loc: Munch, location: str) -> Munch:
-        """Helper-function for _all_locations().
+        """
+        Helper-function for _all_locations().
+
         Correct location info in special cases.
         """
         if loc.name == "Home":
@@ -425,7 +436,9 @@ class SmileHelper:
     def _get_module_data(
         self, appliance: etree, locator: str, mod_type: str
     ) -> ModelData:
-        """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
+        """
+        Helper-function for _energy_device_info_finder() and _appliance_info_finder().
+
         Collect requested info from MODULES.
         """
         model_data: ModelData = {
@@ -464,7 +477,9 @@ class SmileHelper:
         return model_data
 
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch | None:
-        """Helper-function for _appliance_info_finder().
+        """
+        Helper-function for _appliance_info_finder().
+
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
         if self.smile_type in ("power", "stretch"):
@@ -630,7 +645,8 @@ class SmileHelper:
                 self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
 
     def _create_legacy_gateway(self) -> None:
-        """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
+        """
+        Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
 
         Use the home_location or FAKE_APPL as device id.
         """
@@ -736,7 +752,9 @@ class SmileHelper:
                     break
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
-        """Helper-function for _scan_thermostats().
+        """
+        Helper-function for _scan_thermostats().
+
         Match appliances with locations.
         """
         matched_locations: dict[str, ThermoLoc] = {}
@@ -753,7 +771,9 @@ class SmileHelper:
         return matched_locations
 
     def _control_state(self, loc_id: str) -> str | bool:
-        """Helper-function for _device_data_adam().
+        """
+        Helper-function for _device_data_adam().
+
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local master thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
@@ -817,7 +837,9 @@ class SmileHelper:
         return presets
 
     def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
-        """Helper-function for _presets().
+        """
+        Helper-function for _presets().
+
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
         schedule_ids: dict[str, str] = {}
@@ -831,7 +853,9 @@ class SmileHelper:
         return schedule_ids
 
     def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str]:
-        """Helper-function for _presets(), _schedules() and _last_active_schedule().
+        """
+        Helper-function for _presets(), _schedules() and _last_active_schedule().
+
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
         schedule_ids: dict[str, str] = {}
@@ -892,7 +916,9 @@ class SmileHelper:
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
     def _wireless_availablity(self, appliance: etree, data: dict[str, Any]) -> None:
-        """Helper-function for _get_appliance_data().
+        """
+        Helper-function for _get_appliance_data().
+
         Collect the availablity-status for wireless connected devices.
         """
         if self.smile_name == "Adam":
@@ -910,7 +936,9 @@ class SmileHelper:
                 data["available"] = module_data["available"]
 
     def _get_regulation_mode(self, appliance: etree, data: dict[str, Any]) -> None:
-        """Helper-function for _get_appliance_data().
+        """
+        Helper-function for _get_appliance_data().
+
         Collect the gateway regulation_mode.
         """
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
@@ -919,7 +947,9 @@ class SmileHelper:
             self._cooling_enabled = search.find("mode").text == "cooling"
 
     def _cleanup_data(self, data: dict[str, Any]) -> None:
-        """Helper-function for _get_appliance_data().
+        """
+        Helper-function for _get_appliance_data().
+
         Clean up the data dict.
         """
         # Fix for Adam + Anna: heating_state also present under Anna, remove
@@ -936,7 +966,9 @@ class SmileHelper:
                 data.pop("cooling_enabled")  # pragma: no cover
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
+        """
+        Helper-function for smile.py: _get_device_data().
+
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
@@ -1026,8 +1058,11 @@ class SmileHelper:
         appliance_id: str,
         appliance_details: ApplianceData,
     ) -> None:
-        """Helper-function for _scan_thermostats().
-        Rank the thermostat based on appliance_details: master or slave."""
+        """
+        Helper-function for _scan_thermostats().
+
+        Rank the thermostat based on appliance_details: master or slave.
+        """
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
         if loc_id == appl_d_loc and appl_class in thermo_matching:
@@ -1046,7 +1081,9 @@ class SmileHelper:
                 self._thermo_locs[loc_id]["slaves"].add(appliance_id)
 
     def _scan_thermostats(self) -> None:
-        """Helper-function for smile.py: get_all_devices().
+        """
+        Helper-function for smile.py: get_all_devices().
+
         Update locations with thermostat ranking results and use
         the result to update the device_class of slave thermostats.
         """
@@ -1074,7 +1111,9 @@ class SmileHelper:
                     details["dev_class"] = "thermo_sensor"
 
     def _thermostat_uri_legacy(self) -> str:
-        """Helper-function for _thermostat_uri().
+        """
+        Helper-function for _thermostat_uri().
+
         Determine the location-set_temperature uri - from APPLIANCES.
         """
         locator = "./appliance[type='thermostat']"
@@ -1083,8 +1122,11 @@ class SmileHelper:
         return f"{APPLIANCES};id={appliance_id}/thermostat"
 
     def _thermostat_uri(self, loc_id: str) -> str:
-        """Helper-function for smile.py: set_temperature().
-        Determine the location-set_temperature uri - from LOCATIONS."""
+        """
+        Helper-function for smile.py: set_temperature().
+
+        Determine the location-set_temperature uri - from LOCATIONS.
+        """
         if self._smile_legacy:
             return self._thermostat_uri_legacy()
 
@@ -1094,7 +1136,9 @@ class SmileHelper:
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
     def _group_switches(self) -> dict[str, ApplianceData]:
-        """Helper-function for smile.py: get_all_devices().
+        """
+        Helper-function for smile.py: get_all_devices().
+
         Collect switching- or pump-group info.
         """
         switch_groups: dict[str, ApplianceData] = {}
@@ -1126,7 +1170,9 @@ class SmileHelper:
         return switch_groups
 
     def _heating_valves(self) -> int | None:
-        """Helper-function for smile.py: _device_data_adam().
+        """
+        Helper-function for smile.py: _device_data_adam().
+
         Collect amount of open valves indicating active direct heating.
         For cases where the heat is provided from an external shared source (city heating).
         """
@@ -1172,6 +1218,8 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
+        if "phase" in loc.measurement:
+            loc.key_string = f"{loc.measurement}"
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
@@ -1179,7 +1227,9 @@ class SmileHelper:
         return loc
 
     def _power_data_from_location(self, loc_id: str) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
+        """
+        Helper-function for smile.py: _get_device_data().
+
         Collect the power-data based on Location ID, from LOCATIONS.
         """
         direct_data: DeviceData = {}
@@ -1213,7 +1263,9 @@ class SmileHelper:
         return direct_data
 
     def _preset(self, loc_id: str) -> str | None:
-        """Helper-function for smile.py: device_data_climate().
+        """
+        Helper-function for smile.py: device_data_climate().
+
         Collect the active preset based on Location ID.
         """
         if not self._smile_legacy:
@@ -1232,7 +1284,9 @@ class SmileHelper:
     def _schedules_legacy(
         self, avail: list[str], sel: str
     ) -> tuple[list[str], str, list[float], None]:
-        """Helper-function for _schedules().
+        """
+        Helper-function for _schedules().
+
         Collect available schedules/schedules for the legacy thermostat.
         """
         name: str | None = None
@@ -1259,7 +1313,9 @@ class SmileHelper:
     def _schedules(
         self, location: str
     ) -> tuple[list[str], str, list[float], str | None]:
-        """Helper-function for smile.py: _device_data_climate().
+        """
+        Helper-function for smile.py: _device_data_climate().
+
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
@@ -1333,7 +1389,9 @@ class SmileHelper:
     def _last_used_schedule(
         self, loc_id: str, schedules: dict[str, dict[str, list[float]]]
     ) -> str | None:
-        """Helper-function for smile.py: _device_data_climate().
+        """
+        Helper-function for smile.py: _device_data_climate().
+
         Determine the last-used schedule based on the location or the modified date.
         """
         # First, find last_used == selected
@@ -1361,7 +1419,9 @@ class SmileHelper:
         return last_used
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
+        """
+        Helper-function for smile.py: _get_device_data() and _device_data_anna().
+
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
         val: float | int | None = None
@@ -1374,7 +1434,9 @@ class SmileHelper:
         return val
 
     def _get_lock_state(self, xml: etree, data: dict[str, Any]) -> None:
-        """Helper-function for _get_appliance_data().
+        """
+        Helper-function for _get_appliance_data().
+
         Adam & Stretches: obtain the relay-switch lock state.
         """
         actuator = "actuator_functionalities"
@@ -1390,7 +1452,9 @@ class SmileHelper:
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: str, data: dict[str, Any]
     ) -> None:
-        """Helper-function for _get_appliance_data().
+        """
+        Helper-function for _get_appliance_data().
+
         Obtain the toggle state of 'toggle'.
         """
         if xml.find("type").text == "heater_central":
@@ -1414,7 +1478,9 @@ class SmileHelper:
         s_dict: SmileSensors,
         sw_dict: SmileSwitches,
     ) -> DeviceData:
-        """Helper-function for smile.py: _all_device_data().
+        """
+        Helper-function for smile.py: _all_device_data().
+
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
