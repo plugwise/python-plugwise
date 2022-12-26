@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.26.0: Smile P1: support 3-phase measurements
+
 # v0.25.14: Improve, bugfix
 - Anna+Elga: final solution for https://github.com/plugwise/plugwise-beta/issues/320
 - Related to https://github.com/home-assistant/core/issues/83068: handle actuator_functionality or sensor depending on which one is present
