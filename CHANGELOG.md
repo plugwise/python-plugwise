@@ -1,6 +1,8 @@
 # Changelog
 
-# v0.26.0: Smile P1: support 3-phase measurements
+# v0.27.0: Smile P1: support 3-phase measurements
+
+(# v0.26.0: not released)
 
 # v0.25.14: Improve, bugfix
 - Anna+Elga: final solution for https://github.com/plugwise/plugwise-beta/issues/320
