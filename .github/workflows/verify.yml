@@ -4,7 +4,7 @@
 name: Latest commit
 
 env:
-  CACHE_VERSION: 6
+  CACHE_VERSION: 9
   DEFAULT_PYTHON: "3.9"
   PRE_COMMIT_HOME: ~/.cache/pre-commit
 
@@ -275,20 +275,32 @@ jobs:
           pip list | grep -i mypy
           mypy plugwise/
 
+  # Check shellscripts
   shellcheck:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out committed code
+        uses: actions/checkout@v3
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
+
+  # Check for missing python dependencies
+  dependencies_check:
+    runs-on: ubuntu-latest
+    name: Dependency
+    steps:
+      - name: Check out committed code
+        uses: actions/checkout@v3
+      - name: Run dependency checker
+        run: scripts/dependencies_check.sh debug
 
   coverage:
     name: Process test coverage
     runs-on: ubuntu-latest
     needs: pytest
     steps:
-      - name: Check out code from GitHub
+      - name: Check out committed code
         uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
@@ -326,7 +338,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [coverage, mypy]
     steps:
-      - name: Check out code from GitHub
+      - name: Check out committed code
         uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
@@ -364,7 +376,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: coverage
     steps:
-      - name: Check out code from GitHub
+      - name: Check out committed code
         uses: actions/checkout@v3
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python

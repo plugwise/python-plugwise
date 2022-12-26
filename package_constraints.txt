@@ -1,7 +1,0 @@
-# Plugwise package constraints
-
-# Test constraints
-#jsonpickle==1.4.1
-#pytest-asyncio==0.14.0
-pytest-cover==3.0.0
-radon==5.1.0

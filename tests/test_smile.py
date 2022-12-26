@@ -23,6 +23,8 @@ pw_exceptions = importlib.import_module("plugwise.exceptions")
 pw_smile = importlib.import_module("plugwise.smile")
 pw_constants = importlib.import_module("plugwise.constants")
 
+pytestmark = pytest.mark.asyncio
+
 pp = PrettyPrinter(indent=8)
 
 _LOGGER = logging.getLogger(__name__)

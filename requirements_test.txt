@@ -1,5 +1,6 @@
 # Import from setup.py
 -e .
-pytest-cover
-radon
+# Versioning omitted (leave this up to HA-core)
+pytest-asyncio
+radon==5.1.0
 types-python-dateutil
