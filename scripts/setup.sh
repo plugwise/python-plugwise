@@ -12,7 +12,7 @@ if [ -f "${my_venv}/bin/activate" ]; then
     . "${my_venv}/bin/activate"
     # Install commit requirements
     pip install wheel
-    pip install --upgrade -r requirements_commit.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
+    pip install --upgrade -e . -r requirements_commit.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
     # Install pre-commit hook
     "${my_venv}/bin/pre-commit" install
 else
