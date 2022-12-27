@@ -2,7 +2,7 @@
 
 import importlib.metadata
 
-__version__ = importlib.metadata.version(__package__ or __name__)
+__version__ = importlib.metadata.version("plugwise")
 
 from plugwise.smile import Smile
 from plugwise.stick import Stick
