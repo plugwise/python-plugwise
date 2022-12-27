@@ -216,7 +216,7 @@ exclude = [
 ]
 
 [tool.coverage.run]
-source = "plugwise"
+source = [ "plugwise" ]
 omit= [
     "*/venv/*",
     "setup.py",
