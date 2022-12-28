@@ -131,7 +131,6 @@ body:
 
   - type: textarea
     attributes:
-      label: Generic or other logging (provide tools and version used)
       label: Diagnostics information
       description: >-
         Provide your version of python used and/or include any and all informational, error and debug messages.
