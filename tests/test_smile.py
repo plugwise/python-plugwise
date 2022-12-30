@@ -308,7 +308,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self, raise_timeout=False, fail_auth=False, stretch=False
     ):
         """Wrap connect to try negative testing before positive testing."""
-
         if fail_auth:
             try:
                 _LOGGER.warning("Connecting to device with invalid credentials:")
@@ -5220,7 +5219,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_invalid_credentials(self):
         """Test P1 with invalid credentials setup."""
-
         self.smile_setup = "p1v4"
         try:
             await self.connect_wrapper(fail_auth=True)
@@ -5232,7 +5230,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_fail_firmware(self):
         """Test a P1 non existing firmware setup."""
-
         self.smile_setup = "fail_firmware"
         try:
             await self.connect_wrapper()
@@ -5245,7 +5242,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def test_connect_timeout(self, timeout_test):
         """Wrap connect to raise timeout during get."""
-
         # pylint: disable=unused-variable
         try:
             self.smile_setup = "p1v4"
