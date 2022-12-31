@@ -124,7 +124,7 @@ def schedules_temps(
     """
     Helper-function for schedules().
 
-    Obtain the schedule temperature of the schedule.
+    Obtain the temperature-setpoints of the schedule.
     """
     if name == NONE:
         return []  # pragma: no cover
