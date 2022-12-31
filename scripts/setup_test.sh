@@ -11,7 +11,7 @@ if [ -f "${my_venv}/bin/activate" ]; then
     # shellcheck disable=SC1091
     . "${my_venv}/bin/activate"
     # Install test requirements
-    pip install --upgrade -r requirements_test.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
+    pip install --upgrade -e . -r requirements_test.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
     # Install pre-commit hook
     "${my_venv}/bin/pre-commit" install
 else

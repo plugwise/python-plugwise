@@ -496,7 +496,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 ### 0.2.12 - Fix available schema's
 
 - Thanks to report from @fsaris
-- Adept code to allow for change introducted by firmware 4.x
+- Adept code to allow for change introduced by firmware 4.x
 
 ### 0.2.11 - Add community requested sensors
 

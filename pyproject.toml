@@ -1,3 +1,54 @@
+[build-system]
+requires = ["setuptools~=62.3", "wheel~=0.37.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name            = "plugwise"
+version         = "0.27.0"
+license         = {file = "LICENSE"}
+description     = "Plugwise Smile (Adam/Anna/P1), Stretch and USB (Stick) module for Python 3."
+readme          = "README.md"
+keywords        = ["home", "automation", "plugwise", "module"]
+classifiers     = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Home Automation",
+]
+authors = [
+        { name = "Plugwise device owners"}
+]
+maintainers = [
+        { name = "bouwew"},
+        { name = "brefra"},
+        { name = "CoMPaTech" }
+]
+requires-python = ">=3.9.0"
+dependencies    = [
+        "aiohttp",
+        "async_timeout",
+        "crcmod",
+        "defusedxml",
+        "munch",
+        "pyserial",
+        "python-dateutil",
+        "semver",
+]
+
+[project.urls]
+"Source Code" = "https://github.com/plugwise/python-plugwise"
+"Bug Reports" = "https://github.com/plugwise/python-plugwise/issues"
+
+[tool.setuptools]
+platforms = ["any"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["plugwise*"]
+
 [tool.black]
 target-version = ["py39", "py310"]
 exclude = 'generated'
@@ -121,6 +172,12 @@ overgeneral-exceptions = [
 ]
 
 [tool.pytest.ini_options]
+asyncio_mode = "strict"
+markers = [
+    # mark a test as a asynchronous io test.
+    "asyncio",
+]
+
 testpaths = [
     "tests",
 ]
@@ -130,7 +187,7 @@ norecursedirs = [
 ]
 
 [tool.mypy]
-python_version = 3.9
+python_version = 3.10
 show_error_codes = true
 follow_imports = "silent"
 ignore_missing_imports = true
@@ -156,4 +213,18 @@ exclude = [
     "nodes",
     "messages",
     "connections",
+]
+
+[tool.coverage.run]
+source = [ "plugwise" ]
+omit= [
+    "*/venv/*",
+    "setup.py",
+    "plugwise/connections/*",
+    "plugwise/controller.py",
+    "plugwise/messages/*",
+    "plugwise/nodes/*",
+    "plugwise/parser.py",
+    "plugwise/stick.py",
+    "plugwise/util.py",
 ]

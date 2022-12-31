@@ -27,7 +27,7 @@ Once the project is ready for upload to test (i.e. version number ending in `a0`
 
 Prepare:
 
- - [ ] `python3.9 -m venv venv ; source venv/bin/activate ; pip install --upgrade pip; pip install -r requirements_test.txt ; pip install --upgrade setuptools wheel twine`
+ - [ ] `python3 -m venv venv ; source venv/bin/activate ; pip install --upgrade pip; pip install -r requirements_test.txt ; pip install --upgrade setuptools wheel twine`
 
 Package: (** ensure you are in your venv**)
 
