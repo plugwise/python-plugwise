@@ -1013,24 +1013,24 @@ class SmileHelper:
             data.pop("c_heating_state")
 
         if d_id == self._heater_id and self.smile_name == "Smile Anna":
-            # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
-            # Elga(?) and Elga Ace:
             if "elga_status_code" in data:
+                # Base heating_/cooling_state on the elga-status-code
                 data["heating_state"] = False
                 data["cooling_state"] = False
-                if (
-                    data["elga_status_code"] in [3, 4, 5, 6, 10, 11]
-                    and not data["dhw_state"]
-                ) or (data["elga_status_code"] in [4, 10] and data["dhw_state"]):
+                if data["elga_status_code"] in [4, 10] or (
+                    data["elga_status_code"] in [3, 5, 6, 11] and not data["dhw_state"]
+                ):
                     data["heating_state"] = True
                 if data["elga_status_code"] == 8:
                     data["cooling_state"] = self._cooling_active = True
 
-                if "cooling_enabled" in data and data["cooling_enabled"]:
-                    self._cooling_present = True
-                    data["model"] = "Generic heater/cooler"
-                self._cooling_enabled = data["cooling_enabled"]
                 data.pop("elga_status_code", None)
+
+                # Determine _cooling_present and _cooling_enabled
+                if "cooling_enabled" in data and data["cooling_enabled"]:
+                    self._cooling_present = self._cooling_enabled = True
+                    data["model"] = "Generic heater/cooler"
+
                 # Elga has no cooling-switch
                 if "cooling_ena_switch" in data:
                     data.pop("cooling_ena_switch")
@@ -1042,7 +1042,6 @@ class SmileHelper:
                         data["cooling_state"] and data["modulation_level"] == 100
                     )
 
-            LOGGER.debug("HOI heating-state: %s", data["heating_state"])
         self._cleanup_data(data)
 
         return cast(DeviceData, data)
