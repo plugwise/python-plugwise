@@ -142,7 +142,7 @@ class SmileData(SmileHelper):
             self._on_off_device = onoff_boiler is not None
             self._opentherm_device = open_therm_boiler is not None
 
-            # Determine the present special features
+            # Determine the presence of special features
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
             search = self._domain_objects
