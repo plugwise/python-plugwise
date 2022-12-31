@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.27.1: More Elga-related updates, based on additional info from Plugwise
+
 # v0.27.0: Smile P1: support 3-phase measurements
 
 (# v0.26.0: not released)
