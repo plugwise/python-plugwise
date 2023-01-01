@@ -1002,11 +1002,16 @@ class SmileHelper:
 
         # Adam/Anna + OnOff heater/cooler use central_heating_state to show the generic heating state
         if "c_heating_state" in data:
-            if self.smile_name in ("Adam", "Smile Anna") and self._on_off_device:
+            if self.smile_name == "Smile Anna" and self._on_off_device:
                 data["heating_state"] = data["c_heating_state"]
+
+            if self.smile_name == "Adam" and self._on_off_device:
+                data["cooling_state"] = data["heating_state"] = False
                 # For Adam + OnOff cooling, central_heating_state = True means cooling is active
-                if self._cooling_present:
-                    self._cooling_active = True
+                if self._cooling_enabled:
+                    data["cooling_state"] = data["c_heating_state"]
+                else:
+                    data["heating_state"] = data["c_heating_state"]
 
             # Finally, remove c_heating_state from the output
             data.pop("c_heating_state")
