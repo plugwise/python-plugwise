@@ -54,18 +54,6 @@ class SmileData(SmileHelper):
 
     def update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
-        # For Adam + on/off cooling, modify heating_state and cooling_state
-        # based on provided info by Plugwise
-        if (
-            self.smile_name == "Adam"
-            and device["dev_class"] == "heater_central"
-            and self._on_off_device
-            and self._cooling_active
-            and device["binary_sensors"]["heating_state"]
-        ):
-            device["binary_sensors"]["cooling_state"] = True
-            device["binary_sensors"]["heating_state"] = False
-
         # Add setpoint_low and setpoint_high when cooling is enabled
         if device["dev_class"] not in ZONE_THERMOSTATS:
             return
@@ -142,16 +130,13 @@ class SmileData(SmileHelper):
             self._on_off_device = onoff_boiler is not None
             self._opentherm_device = open_therm_boiler is not None
 
-            # Determine if the Adam or Anna has cooling capability
+            # Determine the presence of special features
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
             search = self._domain_objects
-            self._cooling_present = False
             if search.find(locator_1) is not None:
                 self._cooling_present = True
-            # Alternative method for the Anna with Elga
-            elif search.find(locator_2) is not None:
-                self._cooling_present = True
+            if search.find(locator_2) is not None:
                 self._elga = True
 
         # Gather all the device and initial data

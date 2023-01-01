@@ -124,7 +124,7 @@ def schedules_temps(
     """
     Helper-function for schedules().
 
-    Obtain the schedule temperature of the schedule.
+    Obtain the temperature-setpoints of the schedule.
     """
     if name == NONE:
         return []  # pragma: no cover
@@ -965,6 +965,26 @@ class SmileHelper:
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
 
+    def _process_c_heating_state(self, data: dict[str, Any]) -> None:
+        """
+        Helper-function for _get_appliance_data().
+
+        Process the central_heating_state value.
+        """
+        if self._on_off_device:
+            # Anna + OnOff heater: use central_heating_state to show heating_state
+            # Solution for Core issue #81839
+            if self.smile_name == "Smile Anna":
+                data["heating_state"] = data["c_heating_state"]
+
+            if self.smile_name == "Adam":
+                data["heating_state"] = False
+                # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
+                if self._cooling_enabled:
+                    data["cooling_state"] = data["c_heating_state"]
+                else:
+                    data["heating_state"] = data["c_heating_state"]
+
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """
         Helper-function for smile.py: _get_device_data().
@@ -1000,52 +1020,38 @@ class SmileHelper:
         if d_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
-        # Anna + Elga and Adam/Anna + OnOff heater/cooler don't use intended_central_heating_state
-        # to show the generic heating state
         if "c_heating_state" in data:
-            if self._elga or (
-                self.smile_name in ("Adam", "Smile Anna") and self._on_off_device
-            ):
-                data["heating_state"] = data["c_heating_state"]
-                # Heating is not active when intended_boiler_temperature is 0
-                if (
-                    "intended_boiler_temperature" in data
-                    and data["intended_boiler_temperature"] == 0
-                ):
-                    data["heating_state"] = False
-                # For Adam + OnOff cooling, central_heating_state = True means cooling is active
-                # For Smile Anna, _cooling_active will be corrected in the next if-construc
-                if self._cooling_present:
-                    self._cooling_active = True
-
-            # Finally, remove c_heating_state from the output
+            self._process_c_heating_state(data)
+            # Remove c_heating_state after processing
             data.pop("c_heating_state")
 
-        if (
-            d_id == self._heater_id
-            and self.smile_name == "Smile Anna"
-            and self._cooling_present
-        ):
-            # Use elga_status_code or cooling_enabled to set _cooling_enabled to True
-            # Elga
+        if d_id == self._heater_id and self.smile_name == "Smile Anna":
             if "elga_status_code" in data:
-                if "cooling_enabled" in data and not data["cooling_enabled"]:
-                    self._cooling_present = False
-                self._cooling_enabled = data["elga_status_code"] in [8, 9]
-                self._cooling_active = data["elga_status_code"] == 8
+                # Base heating_/cooling_state on the elga-status-code
+                data["heating_state"] = False
+                data["cooling_state"] = False
+                if data["elga_status_code"] in [4, 10] or (
+                    data["elga_status_code"] in [3, 5, 6, 11] and not data["dhw_state"]
+                ):
+                    data["heating_state"] = True
+                if data["elga_status_code"] == 8:
+                    data["cooling_state"] = self._cooling_active = True
+
                 data.pop("elga_status_code", None)
+
+                # Determine _cooling_present and _cooling_enabled
+                if "cooling_enabled" in data and data["cooling_enabled"]:
+                    self._cooling_present = self._cooling_enabled = True
+                    data["model"] = "Generic heater/cooler"
+
                 # Elga has no cooling-switch
                 if "cooling_ena_switch" in data:
                     data.pop("cooling_ena_switch")
             else:
-                # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
-                # Anna + Elga >= 4.3.7: the Elga cooling-enabled state is shown but there is no cooling-switch
-                for item in ("cooling_enabled", "cooling_ena_switch"):
-                    if item in data:
-                        self._cooling_enabled = data[item]
-                        self._cooling_active = data["cooling_state"]
-                        # Execute one time is enough
-                        break
+                # Loria/Thermastage: cooling-related is based on cooling_state and modulation_level
+                if "cooling_state" in data:
+                    self._cooling_enabled = data["cooling_state"]
+                    self._cooling_active = data["modulation_level"] == 100
 
         self._cleanup_data(data)
 
