@@ -1000,8 +1000,7 @@ class SmileHelper:
         if d_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
-        # Adam/Anna + OnOff heater/cooler don't use intended_central_heating_state
-        # to show the generic heating state
+        # Adam/Anna + OnOff heater/cooler use central_heating_state to show the generic heating state
         if "c_heating_state" in data:
             if self.smile_name in ("Adam", "Smile Anna") and self._on_off_device:
                 data["heating_state"] = data["c_heating_state"]
