@@ -965,6 +965,29 @@ class SmileHelper:
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
 
+    def _process_c_heating_state(self, data: dict[str, Any]) -> None:
+        """
+        Helper-function for _get_appliance_data().
+
+        Process the central_heating_state value.
+        """
+        if self._on_off_device:
+            # Anna + OnOff heater: use central_heating_state to show heating-state
+            # Solution for Core issue #81839
+            if self.smile_name == "Smile Anna":
+                data["heating_state"] = data["c_heating_state"]
+
+            if self.smile_name == "Adam":
+                data["heating_state"] = False
+                # Adam + OnOff cooling: use central_heating_state to show heating/cooling-state
+                if self._cooling_enabled:
+                    data["cooling_state"] = data["c_heating_state"]
+                else:
+                    data["heating_state"] = data["c_heating_state"]
+
+        # Remove c_heating_state after processing
+        data.pop("c_heating_state")
+
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """
         Helper-function for smile.py: _get_device_data().
@@ -1000,21 +1023,8 @@ class SmileHelper:
         if d_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
-        # Adam/Anna + OnOff heater/cooler use central_heating_state to show the generic heating state
         if "c_heating_state" in data:
-            if self.smile_name == "Smile Anna" and self._on_off_device:
-                data["heating_state"] = data["c_heating_state"]
-
-            if self.smile_name == "Adam" and self._on_off_device:
-                data["cooling_state"] = data["heating_state"] = False
-                # For Adam + OnOff cooling, central_heating_state = True means cooling is active
-                if self._cooling_enabled:
-                    data["cooling_state"] = data["c_heating_state"]
-                else:
-                    data["heating_state"] = data["c_heating_state"]
-
-            # Finally, remove c_heating_state from the output
-            data.pop("c_heating_state")
+            self._process_c_heating_state(data)
 
         if d_id == self._heater_id and self.smile_name == "Smile Anna":
             if "elga_status_code" in data:
