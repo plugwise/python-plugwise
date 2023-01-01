@@ -1049,12 +1049,10 @@ class SmileHelper:
                 if "cooling_ena_switch" in data:
                     data.pop("cooling_ena_switch")
             else:
-                # Loria/Thermastate: look at cooling_state, not at cooling_enabled, not available on R32!
+                # Loria/Thermastage: cooling-related is based on cooling_state and modulation_level
                 if "cooling_state" in data:
                     self._cooling_enabled = data["cooling_state"]
-                    self._cooling_active = (
-                        data["cooling_state"] and data["modulation_level"] == 100
-                    )
+                    self._cooling_active = data["modulation_level"] == 100
 
         self._cleanup_data(data)
 
