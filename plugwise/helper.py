@@ -972,21 +972,18 @@ class SmileHelper:
         Process the central_heating_state value.
         """
         if self._on_off_device:
-            # Anna + OnOff heater: use central_heating_state to show heating-state
+            # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
             if self.smile_name == "Smile Anna":
                 data["heating_state"] = data["c_heating_state"]
 
             if self.smile_name == "Adam":
                 data["heating_state"] = False
-                # Adam + OnOff cooling: use central_heating_state to show heating/cooling-state
+                # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
                 if self._cooling_enabled:
                     data["cooling_state"] = data["c_heating_state"]
                 else:
                     data["heating_state"] = data["c_heating_state"]
-
-        # Remove c_heating_state after processing
-        data.pop("c_heating_state")
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """
@@ -1025,6 +1022,8 @@ class SmileHelper:
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
+            # Remove c_heating_state after processing
+            data.pop("c_heating_state")
 
         if d_id == self._heater_id and self.smile_name == "Smile Anna":
             if "elga_status_code" in data:
