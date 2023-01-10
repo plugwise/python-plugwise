@@ -560,10 +560,7 @@ class Smile(SmileComm, SmileData):
             # Update for cooling
             self.update_for_cooling(dev_dict)
 
-        return (
-            cast(GatewayData, self.gw_data),
-            cast(dict[str, DeviceData], self.gw_devices),
-        )
+        return (cast(GatewayData, self.gw_data), self.gw_devices)
 
     async def _set_schedule_state_legacy(
         self, loc_id: str, name: str, status: str
