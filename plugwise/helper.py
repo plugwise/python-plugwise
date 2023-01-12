@@ -113,7 +113,7 @@ def _get_actuator_functionalities(xml: etree, data: dict[str, ActuatorData]) -> 
                 if function.text == "nil":
                     break
 
-                temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)
+                temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
 
         if temp_dict:
             data[item] = temp_dict
