@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+from typing import cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -1492,7 +1493,7 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        device_out: DeviceData = {}
+        device_out: DeviceDataPoints = {}
         for d_key, d_value in device_in.items():
             device_out.update({d_key: d_value})  # type: ignore [misc]
         for key, value in list(data.items()):
@@ -1518,6 +1519,7 @@ class SmileHelper:
             ):
                 bs_dict["plugwise_notification"] = False
 
+        data = cast(DeviceData, data)
         device_out.update(data)
         if bs_dict:
             device_out["binary_sensors"] = bs_dict
