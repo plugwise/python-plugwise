@@ -1493,7 +1493,7 @@ class SmileHelper:
         Move relevant data into dicts of binary_sensors, sensors, switches,
         and add these to the output.
         """
-        device_out: DeviceDataPoints = {}
+        device_out: DeviceData = {}
         for d_key, d_value in device_in.items():
             device_out.update({d_key: d_value})  # type: ignore [misc]
         for key, value in list(data.items()):
