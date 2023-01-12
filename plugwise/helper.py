@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
-from typing import cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -73,6 +72,8 @@ from .util import (
     version_to_model,
 )
 
+# from typing import cast
+
 
 def update_helper(
     data: DeviceDataPoints,
@@ -103,7 +104,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree, data: DeviceDataPoints) -> None:
+def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
     """Helper-function for _get_appliance_data()."""
     for item in ACTIVE_ACTUATORS:
         temp_dict: ActuatorData = {}
@@ -874,7 +875,7 @@ class SmileHelper:
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceDataPoints,
+        data: DeviceData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
@@ -916,7 +917,7 @@ class SmileHelper:
                 name = f"{measurement}_interval"
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
-    def _wireless_availablity(self, appliance: etree, data: DeviceDataPoints) -> None:
+    def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """
         Helper-function for _get_appliance_data().
 
@@ -936,7 +937,7 @@ class SmileHelper:
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
 
-    def _get_regulation_mode(self, appliance: etree, data: DeviceDataPoints) -> None:
+    def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """
         Helper-function for _get_appliance_data().
 
@@ -947,7 +948,7 @@ class SmileHelper:
             data["regulation_mode"] = search.find("mode").text
             self._cooling_enabled = search.find("mode").text == "cooling"
 
-    def _cleanup_data(self, data: DeviceDataPoints) -> None:
+    def _cleanup_data(self, data: DeviceData) -> None:
         """
         Helper-function for _get_appliance_data().
 
@@ -966,7 +967,7 @@ class SmileHelper:
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
 
-    def _process_c_heating_state(self, data: DeviceDataPoints) -> None:
+    def _process_c_heating_state(self, data: DeviceData) -> None:
         """
         Helper-function for _get_appliance_data().
 
@@ -976,15 +977,15 @@ class SmileHelper:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
             if self.smile_name == "Smile Anna":
-                data["heating_state"] = data["c_heating_state"]
+                data["heating_state"] = data["c_heating_state"] is True
 
             if self.smile_name == "Adam":
                 data["heating_state"] = False
                 # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
                 if self._cooling_enabled:
-                    data["cooling_state"] = data["c_heating_state"]
+                    data["cooling_state"] = data["c_heating_state"] is True
                 else:
-                    data["heating_state"] = data["c_heating_state"]
+                    data["heating_state"] = data["c_heating_state"] is True
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """
@@ -993,10 +994,10 @@ class SmileHelper:
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: DeviceDataPoints = {}
+        data: DeviceData = {}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
-            return cast(DeviceData, data)
+            return data
 
         measurements = DEVICE_MEASUREMENTS
         if d_id == self._heater_id:
@@ -1440,7 +1441,7 @@ class SmileHelper:
 
         return val
 
-    def _get_lock_state(self, xml: etree, data: DeviceDataPoints) -> None:
+    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
         """
         Helper-function for _get_appliance_data().
 
@@ -1457,7 +1458,7 @@ class SmileHelper:
                 data["lock"] = found.text == "true"
 
     def _get_toggle_state(
-        self, xml: etree, toggle: str, name: str, data: DeviceDataPoints
+        self, xml: etree, toggle: str, name: str, data: DeviceData
     ) -> None:
         """
         Helper-function for _get_appliance_data().
