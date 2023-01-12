@@ -117,7 +117,7 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
                 temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
 
         if temp_dict:
-            data[item] = temp_dict
+            data[item] = temp_dict  # type: ignore [literal-required]
 
 
 def schedules_temps(
@@ -896,26 +896,26 @@ class SmileHelper:
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
-                data[measurement] = appl_p_loc.text
+                data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement not in ("dhw_mode"):
-                    data[measurement] = format_measure(
+                    data[measurement] = format_measure(  # type: ignore [literal-required]
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
-                    self._cooling_activation_outdoor_temp = data[measurement]
+                    self._cooling_activation_outdoor_temp = data[measurement]  # type: ignore [literal-required]
                 if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data[measurement]
+                    self._cooling_deactivation_threshold = data[measurement]  # type: ignore [literal-required]
                 if measurement == "outdoor_air_temperature":
-                    self._outdoor_temp = data[measurement]
+                    self._outdoor_temp = data[measurement]  # type: ignore [literal-required]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
-                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
+                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """
@@ -962,7 +962,7 @@ class SmileHelper:
         if not self._cooling_present:
             for item in ("cooling_state", "cooling_ena_switch"):
                 if item in data:
-                    data.pop(item)
+                    data.pop(item)  # type: ignore [misc]
             # Keep cooling_enabled for Elga
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
@@ -977,15 +977,15 @@ class SmileHelper:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
             if self.smile_name == "Smile Anna":
-                data["heating_state"] = data["c_heating_state"] is True
+                data["heating_state"] = bool(data["c_heating_state"])
 
             if self.smile_name == "Adam":
                 data["heating_state"] = False
                 # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
                 if self._cooling_enabled:
-                    data["cooling_state"] = data["c_heating_state"] is True
+                    data["cooling_state"] = bool(data["c_heating_state"])
                 else:
-                    data["heating_state"] = data["c_heating_state"] is True
+                    data["heating_state"] = bool(data["c_heating_state"])
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """
@@ -1471,7 +1471,7 @@ class SmileHelper:
                 for item in found:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
-                            data.update({name: item.find("state").text == "on"})
+                            data[name] = item.find("state").text == "on"  # type: ignore [literal-required]
                             # Remove the cooling_enabled key when the corresponding toggle is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
