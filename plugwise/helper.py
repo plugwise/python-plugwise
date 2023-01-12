@@ -916,7 +916,7 @@ class SmileHelper:
                 name = f"{measurement}_interval"
                 data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
-    def _wireless_availablity(self, appliance: etree, data: dict[str, Any]) -> None:
+    def _wireless_availablity(self, appliance: etree, data: dict[str, bool]) -> None:
         """
         Helper-function for _get_appliance_data().
 
