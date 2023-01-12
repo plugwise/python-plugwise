@@ -49,6 +49,7 @@ from .constants import (
     THERMOSTAT_CLASSES,
     TOGGLES,
     UOM,
+    ActuatorData,
     ApplianceData,
     DeviceData,
     DeviceDataPoints,
@@ -102,10 +103,10 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree, data: dict[str, Any]) -> None:
+def _get_actuator_functionalities(xml: etree, data: dict[str, ActuatorData]) -> None:
     """Helper-function for _get_appliance_data()."""
     for item in ACTIVE_ACTUATORS:
-        temp_dict: dict[str, float] = {}
+        temp_dict: ActuatorData = {}
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
             if (function := xml.find(locator)) is not None:
