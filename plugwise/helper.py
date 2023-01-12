@@ -936,7 +936,7 @@ class SmileHelper:
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
 
-    def _get_regulation_mode(self, appliance: etree, data: dict[str, Any]) -> None:
+    def _get_regulation_mode(self, appliance: etree, data: dict[str, str]) -> None:
         """
         Helper-function for _get_appliance_data().
 
