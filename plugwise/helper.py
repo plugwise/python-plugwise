@@ -443,12 +443,12 @@ class SmileHelper:
         """
         model_data: ModelData = {
             "contents": False,
+            "firmware_version": None,
+            "hardware_version": None,
+            "reachable": None,
             "vendor_name": None,
             "vendor_model": None,
-            "hardware_version": None,
-            "firmware_version": None,
             "zigbee_mac_address": None,
-            "available": None,
         }
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
@@ -466,7 +466,7 @@ class SmileHelper:
                 # Adam
                 if found := module.find("./protocols/zig_bee_node"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
-                    model_data["available"] = found.find("reachable").text == "true"
+                    model_data["reachable"] = found.find("reachable").text == "true"
                 # Stretches
                 if found := module.find("./protocols/network_router"):
                     model_data["zigbee_mac_address"] = found.find("mac_address").text
@@ -926,14 +926,14 @@ class SmileHelper:
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            if module_data["available"] is None:
+            if module_data["reachable"] is None:
                 # Collect for wireless thermostats
                 locator = "./logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
                 module_data = self._get_module_data(appliance, locator, mod_type)
 
-            if module_data["available"] is not None:
-                data["available"] = module_data["available"]
+            if module_data["reachable"] is not None:
+                data["available"] = module_data["reachable"]
 
     def _get_regulation_mode(self, appliance: etree, data: dict[str, Any]) -> None:
         """
