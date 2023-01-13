@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.27.3 More typing improvements
+
 # v0.27.2: Strict-typing
 
 # v0.27.1: More cooling-related updates, based on additional info from Plugwise
