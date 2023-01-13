@@ -976,15 +976,15 @@ class SmileHelper:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
             if self.smile_name == "Smile Anna":
-                data["heating_state"] = bool(data["c_heating_state"])
+                data["heating_state"] = data["c_heating_state"]
 
             if self.smile_name == "Adam":
                 data["heating_state"] = False
                 # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
                 if self._cooling_enabled:
-                    data["cooling_state"] = bool(data["c_heating_state"])
+                    data["cooling_state"] = data["c_heating_state"]
                 else:
-                    data["heating_state"] = bool(data["c_heating_state"])
+                    data["heating_state"] = data["c_heating_state"]
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """
