@@ -759,7 +759,7 @@ class DeviceData(
     TypedDict,
     total=False,
 ):
-    """The Device Data class, covering the collected and ordere output-data per device."""
+    """The Device Data class, covering the collected and ordered output-data per device."""
 
     # Loria
     dhw_mode: str
