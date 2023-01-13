@@ -35,7 +35,6 @@ from .constants import (
     ActuatorData,
     ApplianceData,
     DeviceData,
-    DeviceDataPoints,
     GatewayData,
     SmileBinarySensors,
     SmileSensors,
@@ -265,7 +264,7 @@ class SmileData(SmileHelper):
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
 
-    def _get_device_data(self, dev_id: str) -> DeviceDataPoints:
+    def _get_device_data(self, dev_id: str) -> DeviceData:
         """
         Helper-function for _all_device_data() and async_update().
 

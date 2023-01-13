@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
-from typing import cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -52,7 +51,6 @@ from .constants import (
     ActuatorData,
     ApplianceData,
     DeviceData,
-    DeviceDataPoints,
     GatewayData,
     ModelData,
     SmileBinarySensors,
@@ -77,7 +75,7 @@ from .util import (
 
 
 def update_helper(
-    data: DeviceDataPoints,
+    data: DeviceData,
     devices: dict[str, DeviceData],
     device_dict: DeviceData,
     device_id: str,
@@ -1481,7 +1479,7 @@ class SmileHelper:
     def _update_device_with_dicts(
         self,
         d_id: str,
-        data: DeviceDataPoints,
+        data: DeviceData,
         device_in: ApplianceData,
         bs_dict: SmileBinarySensors,
         s_dict: SmileSensors,
@@ -1519,7 +1517,6 @@ class SmileHelper:
             ):
                 bs_dict["plugwise_notification"] = False
 
-        data = cast(DeviceData, data)
         device_out.update(data)
         if bs_dict:
             device_out["binary_sensors"] = bs_dict
