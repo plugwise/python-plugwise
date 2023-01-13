@@ -751,7 +751,14 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class DeviceData(ApplianceData, TypedDict, total=False):
+class DeviceData(
+    ApplianceData,
+    SmileBinarySensors,
+    SmileSensors,
+    SmileSwitches,
+    TypedDict,
+    total=False,
+):
     """The Device Data class, covering the collected and ordere output-data per device."""
 
     # Loria
