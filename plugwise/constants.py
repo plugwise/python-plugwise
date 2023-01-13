@@ -783,7 +783,7 @@ class DeviceData(
     control_state: str | bool
 
     # For temporary use
-    c_heating_state: str
+    c_heating_state: bool
     modified: str
 
     # Device availability
