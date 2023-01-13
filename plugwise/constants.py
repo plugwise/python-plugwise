@@ -650,7 +650,7 @@ class ModelData(TypedDict):
     hardware_version: str | None
     firmware_version: str | None
     zigbee_mac_address: str | None
-    available: bool | None
+    reachable: bool | None
 
 
 class SmileBinarySensors(TypedDict, total=False):
@@ -751,10 +751,15 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class DeviceDataPoints(
-    SmileBinarySensors, SmileSensors, SmileSwitches, TypedDict, total=False
+class DeviceData(
+    ApplianceData,
+    SmileBinarySensors,
+    SmileSensors,
+    SmileSwitches,
+    TypedDict,
+    total=False,
 ):
-    """The class covering all possible collected data points."""
+    """The Device Data class, covering the collected and ordered output-data per device."""
 
     # Loria
     dhw_mode: str
@@ -778,15 +783,11 @@ class DeviceDataPoints(
     control_state: str | bool
 
     # For temporary use
-    c_heating_state: str
+    c_heating_state: bool
     modified: str
 
     # Device availability
     available: bool | None
-
-
-class DeviceData(ApplianceData, DeviceDataPoints, TypedDict, total=False):
-    """The Device Data class, covering the collected and ordere output-data per device."""
 
     binary_sensors: SmileBinarySensors
     domestic_hot_water_setpoint: ActuatorData | float
