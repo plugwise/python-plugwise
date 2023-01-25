@@ -153,7 +153,6 @@ def schedules_temps(
         # Roll over from end to beginning of schedule = monday
         if j < i:
             day_1 = 7  # day 7 = day 0
-            today += 7
         time_0 = schedule_list[i][1]
         time_1 = schedule_list[j][1]
         if in_between(today, day_0, day_1, now, time_0, time_1):
