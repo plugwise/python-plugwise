@@ -144,16 +144,26 @@ def schedules_temps(
 
     length = len(schedule_list)
     schedule_list = sorted(schedule_list)
+    before_first: bool = False
+    first_schedule_day: int = 0
     for i in range(length):
         j = (i + 1) % (length)
         now = dt.datetime.now().time()
         today = dt.datetime.now().weekday()
         day_0 = schedule_list[i][0]
-        day_1 = schedule_list[j][0]
-        if j < i:
-            day_1 = schedule_list[i][0] + 2
         time_0 = schedule_list[i][1]
+        day_1 = schedule_list[j][0]
         time_1 = schedule_list[j][1]
+        # Handle Monday-now is before first schedule point
+        if i == 0 and now < time_0:
+            before_first = True
+            first_schedule_day = day_0
+        # Roll over from end to beginning of schedule = next Monday
+        if j < i:
+            day_1 = first_schedule_day + 7  # day_7 = day_0, day_8 = day_1 etc.
+            # Roll over to next Monday when now is before first schedule point
+            if today == 0 and before_first:
+                today = 7
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 

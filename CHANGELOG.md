@@ -1,5 +1,9 @@
 # Changelog
 
+# v0.27.4: Fix for HA Core Issue https://github.com/home-assistant/core/issues/85910
+
+(# v0.27.3, v0.27.2: not released)
+
 # v0.27.1: More cooling-related updates, based on additional info from Plugwise
 - Updates for Anna+Elga and Adam-OnOff systems
 - Loria/Thermastage fix
