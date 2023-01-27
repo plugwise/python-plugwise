@@ -9,6 +9,7 @@ import binascii
 import datetime
 import re
 import struct
+from typing import Any
 
 import crcmod
 
@@ -175,7 +176,7 @@ class BaseType:
 
 class CompositeType:
     def __init__(self) -> None:
-        self.contents: list = []
+        self.contents: list[Any] = []
         # datetime because of DateTime and Time and RealClockDate
         self.value: datetime.datetime | datetime.time | datetime.date | None = None
 
