@@ -53,7 +53,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         with open(datafile, "w", encoding="utf-8") as fixture_file:
             fixture_file.write(
                 json.dumps(
-                    dataclasses.asdict(data),
+                    data,
                     indent=2,
                     default=lambda x: list(x) if isinstance(x, set) else x,
                 )
@@ -388,7 +388,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if "heater_id" in extra:
             self.cooling_present = extra["cooling_present"]
         self.notifications = extra["notifications"]
-        self._write_json("all_data", data)
+        self._write_json("all_data", dataclasses.asdict(data))
         self._write_json("notifications", extra["notifications"])
 
         location_list = smile._thermo_locs
