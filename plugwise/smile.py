@@ -558,8 +558,10 @@ class Smile(SmileComm, SmileData):
             # Update for cooling
             self.update_for_cooling(dev_dict)
 
-        LOGGER.debug("HOI %s", PlugwiseData(self.gw_data, self.gw_devices))
-        return PlugwiseData(self.gw_data, self.gw_devices)
+        output = PlugwiseData(self.gw_data, self.gw_devices)
+        LOGGER.debug("HOI %s", type(output))
+        LOGGER.debug("HOI %s", output)
+        return output
 
     async def _set_schedule_state_legacy(
         self, loc_id: str, name: str, status: str
