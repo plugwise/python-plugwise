@@ -381,8 +381,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await smile._full_update_device()
             smile.get_all_devices()
             data = await smile.async_update()
-        extra = data[0]
-        device_list = data[1]
+        extra = data.gateway
+        device_list = data.devices
 
         if "heater_id" in extra:
             self.cooling_present = extra["cooling_present"]
