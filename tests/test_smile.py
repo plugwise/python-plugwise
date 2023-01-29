@@ -1,6 +1,7 @@
 # pylint: disable=protected-access
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 import asyncio
+import dataclasses
 import importlib
 import json
 
@@ -52,7 +53,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         with open(datafile, "w", encoding="utf-8") as fixture_file:
             fixture_file.write(
                 json.dumps(
-                    data,
+                    dataclasses.asdict(data),
                     indent=2,
                     default=lambda x: list(x) if isinstance(x, set) else x,
                 )
