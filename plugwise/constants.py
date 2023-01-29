@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 from collections import namedtuple
+from dataclasses import dataclass
 import datetime as dt
 import logging
-from typing import Final, NamedTuple, TypedDict
+from typing import Final, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -506,7 +507,8 @@ class DeviceData(
     thermostat: ActuatorData
 
 
-class PlugwiseData(NamedTuple):
+@dataclass
+class PlugwiseData:
     """Plugwise data provided as output."""
 
     gateway: GatewayData
