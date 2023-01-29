@@ -381,6 +381,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await smile._full_update_device()
             smile.get_all_devices()
             data = await smile.async_update()
+            _LOGGER.debug("HOI test %s, %s", data.gateway, data.devices)
         extra = data.gateway
         device_list = data.devices
 
