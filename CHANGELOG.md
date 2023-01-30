@@ -1,6 +1,8 @@
 # Changelog
 
-# v0.27.4: Fix for HA Core Issue https://github.com/home-assistant/core/issues/85910
+# v0.27.5: Bugfix for https://github.com/plugwise/plugwise-beta/issues/340
+
+# v0.27.4: Bugfix for HA Core Issue https://github.com/home-assistant/core/issues/85910
 
 (# v0.27.3, v0.27.2: not released)
 
