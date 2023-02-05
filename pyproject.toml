@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "plugwise"
-version         = "0.27.5"
+version         = "0.27.6"
 license         = {file = "LICENSE"}
 description     = "Plugwise Smile (Adam/Anna/P1), Stretch and USB (Stick) module for Python 3."
 readme          = "README.md"

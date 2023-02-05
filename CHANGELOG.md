@@ -1,5 +1,7 @@
 # Changelog
 
+# v0.27.6: Stick bugfix: properly handle responses without mac
+
 # v0.27.5: Bugfix for https://github.com/plugwise/plugwise-beta/issues/340
 
 # v0.27.4: Bugfix for HA Core Issue https://github.com/home-assistant/core/issues/85910
