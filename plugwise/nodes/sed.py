@@ -81,7 +81,8 @@ class NodeSED(PlugwiseNode):
             SED_AWAKE_STARTUP,
             SED_AWAKE_BUTTON,
         ]:
-            for request_message, callback in self._sed_requests.items():
+            for pending_request in self._sed_requests.values():
+                request_message, callback = pending_request
                 _LOGGER.info(
                     "Send queued %s message to SED node %s",
                     request_message.__class__.__name__,

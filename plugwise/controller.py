@@ -226,21 +226,22 @@ class StickMessageController:
                 # if previous seq_id is unknown use fake b"0000"
                 seq_id = inc_seq_id(self.last_seq_id)
                 self.expected_responses[seq_id] = request_set
-                mac = "None"
-                if hasattr(self.expected_responses[seq_id][0], "mac"):
-                    mac = self.expected_responses[seq_id][0].mac
                 if self.expected_responses[seq_id][2] == 0:
                     _LOGGER.info(
                         "Send %s to %s using seq_id %s",
                         self.expected_responses[seq_id][0].__class__.__name__,
-                        mac,
+                        self.expected_responses[seq_id][0].mac.decode(
+                            UTF8_DECODE
+                        ),
                         str(seq_id),
                     )
                 else:
                     _LOGGER.info(
                         "Resend %s to %s using seq_id %s, retry %s",
                         self.expected_responses[seq_id][0].__class__.__name__,
-                        mac,
+                        self.expected_responses[seq_id][0].mac.decode(
+                            UTF8_DECODE
+                        ),
                         str(seq_id),
                         str(self.expected_responses[seq_id][2]),
                     )
