@@ -49,6 +49,7 @@ class StickMessageController:
         self.connection = None
         self.discovery_finished = False
         self.expected_responses = {}
+        self.lock_expected_responses = threading.Lock()
         self.init_callback = None
         self.last_seq_id = None
         self.message_processor = message_processor
@@ -151,6 +152,7 @@ class StickMessageController:
     def resend(self, seq_id):
         """Resend message."""
         _mac = "<unknown>"
+        self.lock_expected_responses.acquire()
         if not self.expected_responses.get(seq_id):
             _LOGGER.warning(
                 "Cannot resend unknown request %s",
@@ -211,6 +213,7 @@ class StickMessageController:
                         MESSAGE_RETRY + 1,
                     )
             del self.expected_responses[seq_id]
+        self.lock_expected_responses.release()
 
     def _send_message_loop(self):
         """Daemon to send messages waiting in queue."""
@@ -225,6 +228,7 @@ class StickMessageController:
                 # Calc next seq_id based last received ack message
                 # if previous seq_id is unknown use fake b"0000"
                 seq_id = inc_seq_id(self.last_seq_id)
+                self.lock_expected_responses.acquire()
                 self.expected_responses[seq_id] = request_set
                 if self.expected_responses[seq_id][2] == 0:
                     _LOGGER.info(
@@ -248,6 +252,7 @@ class StickMessageController:
                 self.expected_responses[seq_id][3] = datetime.now()
                 # Send request
                 self.connection.send(self.expected_responses[seq_id][0])
+                self.lock_expected_responses.release()
                 time.sleep(SLEEP_TIME)
                 timeout_counter = 0
                 # Wait max 1 second for acknowledge response from USB-stick
@@ -290,7 +295,8 @@ class StickMessageController:
                 )
 
     def _post_message_action(self, seq_id, ack_response=None, request="unknown"):
-        """Execute action if request has been successful.."""
+        """Execute action if request has been successful."""
+        self.lock_expected_responses.acquire()
         if seq_id in self.expected_responses:
             if ack_response in (*REQUEST_SUCCESS, None):
                 if self.expected_responses[seq_id][1]:
@@ -325,10 +331,12 @@ class StickMessageController:
                     request,
                     str(seq_id),
                 )
+        self.lock_expected_responses.release()
 
     def _receive_timeout_loop(self):
         """Daemon to time out open requests without any (n)ack response message."""
         while self._receive_timeout_thread_state:
+            self.lock_expected_responses.acquire()
             for seq_id in list(self.expected_responses.keys()):
                 if self.expected_responses[seq_id][3] is not None:
                     if self.expected_responses[seq_id][3] < (
@@ -347,6 +355,7 @@ class StickMessageController:
                             str(seq_id),
                         )
                         self.resend(seq_id)
+            self.lock_expected_responses.release()
             receive_timeout_checker = 0
             while (
                 receive_timeout_checker < MESSAGE_TIME_OUT
@@ -367,6 +376,7 @@ class StickMessageController:
                     str(message.seq_id),
                 )
             else:
+                self.lock_expected_responses.acquire()
                 if self.expected_responses.get(message.seq_id):
                     _LOGGER.warning(
                         "Received unmanaged (%s) %s in response to %s with seq_id %s",
@@ -386,6 +396,7 @@ class StickMessageController:
                         message.__class__.__name__,
                         str(message.seq_id),
                     )
+                self.lock_expected_responses.release()
         else:
             _LOGGER.info(
                 "Received %s from %s with sequence id %s",
