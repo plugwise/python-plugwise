@@ -234,18 +234,14 @@ class StickMessageController:
                     _LOGGER.info(
                         "Send %s to %s using seq_id %s",
                         self.expected_responses[seq_id][0].__class__.__name__,
-                        self.expected_responses[seq_id][0].mac.decode(
-                            UTF8_DECODE
-                        ),
+                        self.expected_responses[seq_id][0].mac.decode(UTF8_DECODE),
                         str(seq_id),
                     )
                 else:
                     _LOGGER.info(
                         "Resend %s to %s using seq_id %s, retry %s",
                         self.expected_responses[seq_id][0].__class__.__name__,
-                        self.expected_responses[seq_id][0].mac.decode(
-                            UTF8_DECODE
-                        ),
+                        self.expected_responses[seq_id][0].mac.decode(UTF8_DECODE),
                         str(seq_id),
                         str(self.expected_responses[seq_id][2]),
                     )
