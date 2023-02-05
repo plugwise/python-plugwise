@@ -315,7 +315,9 @@ class StickMessageController:
             else:
                 if not self.last_seq_id:
                     if b"0000" in self.expected_responses:
-                        self.expected_responses[seq_id] = self.expected_responses[b"0000"]
+                        self.expected_responses[seq_id] = self.expected_responses[
+                            b"0000"
+                        ]
                         del self.expected_responses[b"0000"]
                     self.last_seq_id = seq_id
                 else:
