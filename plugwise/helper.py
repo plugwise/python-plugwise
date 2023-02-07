@@ -225,7 +225,6 @@ class SmileComm:
     ):
         """Set the constructor for this class."""
         if not websession:
-
             aio_timeout = ClientTimeout(total=timeout)
 
             async def _create_session() -> ClientSession:
@@ -303,7 +302,9 @@ class SmileComm:
                     data=data,
                     auth=self._auth,
                 )
-        except ClientError as err:  # ClientError is an ancestor class of ServerTimeoutError
+        except (
+            ClientError
+        ) as err:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
                 LOGGER.warning(
                     "Failed sending %s %s to Plugwise Smile, error: %s",
@@ -1014,7 +1015,6 @@ class SmileHelper:
         if (
             appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
         ) is not None:
-
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
 
@@ -1082,7 +1082,6 @@ class SmileHelper:
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
         if loc_id == appl_d_loc and appl_class in thermo_matching:
-
             # Pre-elect new master
             if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
                 # Demote former master
