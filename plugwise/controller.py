@@ -233,14 +233,14 @@ class StickMessageController:
                         _LOGGER.info(
                             "Send %s to %s using seq_id %s",
                             self.expected_responses[seq_id][0].__class__.__name__,
-                            self.expected_responses[seq_id][0].mac.decode(UTF8_DECODE),
+                            self.expected_responses[seq_id][0].mac,
                             str(seq_id),
                         )
                     else:
                         _LOGGER.info(
                             "Resend %s to %s using seq_id %s, retry %s",
                             self.expected_responses[seq_id][0].__class__.__name__,
-                            self.expected_responses[seq_id][0].mac.decode(UTF8_DECODE),
+                            self.expected_responses[seq_id][0].mac,
                             str(seq_id),
                             str(self.expected_responses[seq_id][2]),
                         )
@@ -339,9 +339,7 @@ class StickMessageController:
                         ):
                             _mac = "<unknown>"
                             if self.expected_responses[seq_id][0].mac:
-                                _mac = self.expected_responses[seq_id][0].mac.decode(
-                                    UTF8_DECODE
-                                )
+                                _mac = self.expected_responses[seq_id][0].mac
                             _LOGGER.info(
                                 "No response within %s seconds timeout for %s to %s with sequence ID %s",
                                 str(MESSAGE_TIME_OUT),
