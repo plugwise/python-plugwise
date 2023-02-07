@@ -290,6 +290,7 @@ class StickMessageController:
 
     def _post_message_action(self, seq_id, ack_response=None, request="unknown"):
         """Execute action if request has been successful."""
+        resend_request = False
         with self.lock_expected_responses:
             if seq_id in self.expected_responses:
                 if ack_response in (*REQUEST_SUCCESS, None):
@@ -311,7 +312,7 @@ class StickMessageController:
                             )
                     del self.expected_responses[seq_id]
                 elif ack_response in REQUEST_FAILED:
-                    self.resend(seq_id)
+                    resend_request = True
             else:
                 if not self.last_seq_id:
                     if b"0000" in self.expected_responses:
@@ -327,10 +328,13 @@ class StickMessageController:
                         request,
                         str(seq_id),
                     )
+        if resend_request:
+            self.resend(seq_id)
 
     def _receive_timeout_loop(self):
         """Daemon to time out open requests without any (n)ack response message."""
         while self._receive_timeout_thread_state:
+            resend_list = []
             with self.lock_expected_responses:
                 for seq_id in list(self.expected_responses.keys()):
                     if self.expected_responses[seq_id][3] is not None:
@@ -347,7 +351,9 @@ class StickMessageController:
                                 _mac,
                                 str(seq_id),
                             )
-                            self.resend(seq_id)
+                            resend_list.append(seq_id)
+            for seq_id in resend_list:
+                self.resend(seq_id)
             receive_timeout_checker = 0
             while (
                 receive_timeout_checker < MESSAGE_TIME_OUT
