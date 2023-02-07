@@ -1276,7 +1276,12 @@ class SmileHelper:
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
                     direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
-                    if "interval" in loc.key_string and "electricity" in loc.key_string:
+                    if (
+                        self.smile_type == "power"
+                        and self._smile_legacy
+                        and "interval" in loc.key_string
+                        and "electricity" in loc.key_string
+                    ):
                         if "peak" in loc.key_string:
                             if new_val := (loc.f_val - self._old_peak_value) > 0:
                                 direct_data[loc.key_string] = new_val
