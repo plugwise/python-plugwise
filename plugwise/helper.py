@@ -344,6 +344,8 @@ class SmileHelper:
         self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
         self._notifications: dict[str, dict[str, str]] = {}
+        self._old_off_peak_value: float = 0
+        self._old_peak_value: float = 0
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float
@@ -1274,6 +1276,22 @@ class SmileHelper:
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
                     direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                    if "interval" in loc.key_string and "electricity" in loc.key_string:
+                        if "peak" in loc.key_string:
+                            if new_val := (loc.f_val - self._old_peak_value) > 0:
+                                direct_data[loc.key_string] = new_val
+                                self._old_peak_value = new_val
+                            else:
+                                direct_data[loc.key_string] = loc.f_val
+                                self._old_peak_value = loc.f_val
+                        if "off_peak" in loc.key_string:
+                            if new_val := (loc.f_val - self._old_off_peak_value) > 0:
+                                direct_data[loc.key_string] = new_val
+
+                                self._old_off_peak_value = new_val
+                            else:
+                                direct_data[loc.key_string] = loc.f_val
+                                self._old_off_peak_value = loc.f_val
 
         return direct_data
 
