@@ -1283,14 +1283,14 @@ class SmileHelper:
                         and "electricity" in loc.key_string
                     ):
                         if "peak" in loc.key_string:
-                            if new_val := (loc.f_val - self._old_peak_value) > 0:
+                            if (new_val := (loc.f_val - self._old_peak_value)) > 0:
                                 direct_data[loc.key_string] = new_val
                                 self._old_peak_value = new_val
                             else:
                                 direct_data[loc.key_string] = loc.f_val
                                 self._old_peak_value = loc.f_val
                         if "off_peak" in loc.key_string:
-                            if new_val := (loc.f_val - self._old_off_peak_value) > 0:
+                            if (new_val := (loc.f_val - self._old_off_peak_value)) > 0:
                                 direct_data[loc.key_string] = new_val
                                 self._old_off_peak_value = new_val
                             else:
