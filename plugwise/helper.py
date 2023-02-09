@@ -1288,18 +1288,6 @@ class SmileHelper:
                         and "interval" in loc.key_string
                         and "electricity" in loc.key_string
                     ):
-                        LOGGER.debug("keystring: %s", loc.key_string)
-                        LOGGER.debug("value: %s", loc.f_val)
-                        LOGGER.debug(
-                            "consumed old_peak/off_peak values %s, %s",
-                            self._old_c_peak_value,
-                            self._old_c_off_peak_value,
-                        )
-                        LOGGER.debug(
-                            "produced old_peak/off_peak values %s, %s",
-                            self._old_p_peak_value,
-                            self._old_p_off_peak_value,
-                        )
                         if "consumed_off_peak" in loc.key_string:
                             if (
                                 tmp_copv := (loc.f_val - self._old_c_off_peak_value)
