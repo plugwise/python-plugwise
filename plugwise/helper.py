@@ -1287,7 +1287,7 @@ class SmileHelper:
                         LOGGER.debug(
                             "old_peak/off_peak values %s, %s",
                             self._old_peak_value,
-                            self._old_peak_value,
+                            self._old_off_peak_value,
                         )
                         if "off_peak" in loc.key_string:
                             if (new_val := (loc.f_val - self._old_off_peak_value)) > 0:
