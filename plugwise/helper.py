@@ -344,6 +344,10 @@ class SmileHelper:
         self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
         self._notifications: dict[str, dict[str, str]] = {}
+        self._c_off_peak_value: float = 0
+        self._c_peak_value: float = 0
+        self._p_off_peak_value: float = 0
+        self._p_peak_value: float = 0
         self._old_c_off_peak_value: float = 0
         self._old_c_peak_value: float = 0
         self._old_p_off_peak_value: float = 0
@@ -1298,36 +1302,44 @@ class SmileHelper:
                         )
                         if "consumed_off_peak" in loc.key_string:
                             if (
-                                new_val := (loc.f_val - self._old_c_off_peak_value)
+                                tmp_copv := (loc.f_val - self._old_c_off_peak_value)
                             ) != 0:
-                                if new_val > 0:
-                                    direct_data[loc.key_string] = new_val  # type: ignore [literal-required]
+                                if tmp_copv > 0:
+                                    direct_data[loc.key_string] = self._c_off_peak_value = tmp_copv  # type: ignore [literal-required]
                                 else:
-                                    direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                                    direct_data[loc.key_string] = self._c_off_peak_value = loc.f_val  # type: ignore [literal-required]
                                 self._old_c_off_peak_value = loc.f_val
+                            else:
+                                direct_data[loc.key_string] = self._c_off_peak_value
                         if "consumed_peak" in loc.key_string:
-                            if (new_val := (loc.f_val - self._old_c_peak_value)) != 0:
-                                if new_val > 0:
-                                    direct_data[loc.key_string] = new_val  # type: ignore [literal-required]
+                            if (tmp_cpv := (loc.f_val - self._old_c_peak_value)) != 0:
+                                if tmp_cpv > 0:
+                                    direct_data[loc.key_string] = self._c_peak_value = tmp_cpv  # type: ignore [literal-required]
                                 else:
-                                    direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                                    direct_data[loc.key_string] = self._c_peak_value = loc.f_val  # type: ignore [literal-required]
                                 self._old_c_peak_value = loc.f_val
+                            else:
+                                direct_data[loc.key_string] = self._c_peak_value
                         if "produced_off_peak" in loc.key_string:
                             if (
-                                new_val := (loc.f_val - self._old_p_off_peak_value)
+                                tmp_popv := (loc.f_val - self._old_p_off_peak_value)
                             ) != 0:
-                                if new_val > 0:
-                                    direct_data[loc.key_string] = new_val  # type: ignore [literal-required]
+                                if tmp_popv > 0:
+                                    direct_data[loc.key_string] = self._p_off_peak_value = tmp_popv  # type: ignore [literal-required]
                                 else:
-                                    direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                                    direct_data[loc.key_string] = self._p_off_peak_value = loc.f_val  # type: ignore [literal-required]
                                 self._old_p_off_peak_value = loc.f_val
+                            else:
+                                direct_data[loc.key_string] = self._p_off_peak_value
                         if "produced_peak" in loc.key_string:
-                            if (new_val := (loc.f_val - self._old_p_peak_value)) != 0:
-                                if new_val > 0:
-                                    direct_data[loc.key_string] = new_val  # type: ignore [literal-required]
+                            if (tmp_ppv := (loc.f_val - self._old_p_peak_value)) != 0:
+                                if tmp_ppv > 0:
+                                    direct_data[loc.key_string] = self._p_peak_value = tmp_ppv  # type: ignore [literal-required]
                                 else:
-                                    direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                                    direct_data[loc.key_string] = self._p_peak_value = loc.f_val  # type: ignore [literal-required]
                                 self._old_p_peak_value = loc.f_val
+                            else:
+                                direct_data[loc.key_string] = self._p_peak_value
                     LOGGER.debug("end-value: %s", direct_data[loc.key_string])
 
         return direct_data
