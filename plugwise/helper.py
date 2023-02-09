@@ -1289,14 +1289,6 @@ class SmileHelper:
                             self._old_peak_value,
                             self._old_peak_value,
                         )
-                        if "peak" in loc.key_string:
-                            if (new_val := (loc.f_val - self._old_peak_value)) > 0:
-                                direct_data[loc.key_string] = new_val  # type: ignore [literal-required]
-                                self._old_peak_value = new_val
-                            else:
-                                direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
-                                self._old_peak_value = loc.f_val
-
                         if "off_peak" in loc.key_string:
                             if (new_val := (loc.f_val - self._old_off_peak_value)) > 0:
                                 direct_data[loc.key_string] = new_val  # type: ignore [literal-required]
@@ -1304,6 +1296,13 @@ class SmileHelper:
                             else:
                                 direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
                                 self._old_off_peak_value = loc.f_val
+                        else:
+                            if (new_val := (loc.f_val - self._old_peak_value)) > 0:
+                                direct_data[loc.key_string] = new_val  # type: ignore [literal-required]
+                                self._old_peak_value = new_val
+                            else:
+                                direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                                self._old_peak_value = loc.f_val
 
         return direct_data
 
