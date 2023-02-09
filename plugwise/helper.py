@@ -1328,6 +1328,7 @@ class SmileHelper:
                                 else:
                                     direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
                                 self._old_p_peak_value = loc.f_val
+                    LOGGER.debug("end-value: %s", direct_data[loc.key_string])
 
         return direct_data
 
