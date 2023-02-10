@@ -1308,14 +1308,14 @@ class SmileHelper:
                             if (
                                 tmp_popv := (loc.f_val - self._old_p_off_peak_value)
                             ) != 0:
-                                if tmp_copv < 0:
+                                if tmp_popv < 0:
                                     direct_data[loc.key_string] = self._p_off_peak_value = self._old_p_off_peak_value  # type: ignore [literal-required]
                             else:
                                 direct_data[loc.key_string] = self._p_off_peak_value  # type: ignore [literal-required]
                             self._old_p_off_peak_value = loc.f_val
                         if "produced_peak" in loc.key_string:
                             if (tmp_ppv := (loc.f_val - self._old_p_peak_value)) != 0:
-                                if tmp_cpv < 0:
+                                if tmp_ppv < 0:
                                     direct_data[loc.key_string] = self._p_peak_value = self._old_p_peak_value  # type: ignore [literal-required]
                             else:
                                 direct_data[loc.key_string] = self._p_peak_value  # type: ignore [literal-required]
