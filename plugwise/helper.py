@@ -1289,7 +1289,7 @@ class SmileHelper:
                         and "electricity" in loc.key_string
                     ):
                         if loc.f_val == 0:
-                            break
+                            continue
                         if "consumed_off_peak" in loc.key_string:
                             if (loc.f_val - self._old_c_off_peak_value) < 0:
                                 direct_data[loc.key_string] = self._c_off_peak_value = self._old_c_off_peak_value  # type: ignore [literal-required]
