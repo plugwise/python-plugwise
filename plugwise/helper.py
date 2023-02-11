@@ -1289,25 +1289,33 @@ class SmileHelper:
                         and "electricity" in loc.key_string
                     ):
                         if "consumed_off_peak" in loc.key_string:
-                            if (loc.f_val - self._old_c_off_peak_value) < 0:
+                            if loc.f_val == 0:
+                                direct_data[loc.key_string] = 0  # type: ignore [literal-required]
+                            elif (loc.f_val - self._old_c_off_peak_value) < 0:
                                 direct_data[loc.key_string] = self._c_off_peak_value = self._old_c_off_peak_value  # type: ignore [literal-required]
                             else:
                                 direct_data[loc.key_string] = self._c_off_peak_value  # type: ignore [literal-required]
                             self._old_c_off_peak_value = loc.f_val
                         if "consumed_peak" in loc.key_string:
-                            if (loc.f_val - self._old_c_peak_value) < 0:
+                            if loc.f_val == 0:
+                                direct_data[loc.key_string] = 0  # type: ignore [literal-required]
+                            elif (loc.f_val - self._old_c_peak_value) < 0:
                                 direct_data[loc.key_string] = self._c_peak_value = self._old_c_peak_value  # type: ignore [literal-required]
                             else:
                                 direct_data[loc.key_string] = self._c_peak_value  # type: ignore [literal-required]
                             self._old_c_peak_value = loc.f_val
                         if "produced_off_peak" in loc.key_string:
-                            if (loc.f_val - self._old_p_off_peak_value) < 0:
+                            if loc.f_val == 0:
+                                direct_data[loc.key_string] = 0  # type: ignore [literal-required]
+                            elif (loc.f_val - self._old_p_off_peak_value) < 0:
                                 direct_data[loc.key_string] = self._p_off_peak_value = self._old_p_off_peak_value  # type: ignore [literal-required]
                             else:
                                 direct_data[loc.key_string] = self._p_off_peak_value  # type: ignore [literal-required]
                             self._old_p_off_peak_value = loc.f_val
                         if "produced_peak" in loc.key_string:
-                            if (loc.f_val - self._old_p_peak_value) < 0:
+                            if loc.f_val == 0:
+                                direct_data[loc.key_string] = 0  # type: ignore [literal-required]
+                            elif (loc.f_val - self._old_p_peak_value) < 0:
                                 direct_data[loc.key_string] = self._p_peak_value = self._old_p_peak_value  # type: ignore [literal-required]
                             else:
                                 direct_data[loc.key_string] = self._p_peak_value  # type: ignore [literal-required]
