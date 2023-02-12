@@ -1282,6 +1282,7 @@ class SmileHelper:
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
                     direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                    # Change P1-fw2 electricity_x_y_z_interval sensors into hourly Wh sensors
                     if (
                         self.smile_type == "power"
                         and self._smile_legacy
