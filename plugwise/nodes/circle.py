@@ -66,6 +66,7 @@ class PlugwiseCircle(PlugwiseNode):
         self._energy_consumption_today_reset = datetime.now().replace(
             hour=0, minute=0, second=0, microsecond=0
         )
+        self._energy_memory = {}
         self._energy_history_collecting = False
         self._energy_history_collecting_timestamp = datetime.now()
         self._energy_history = {}
@@ -634,12 +635,19 @@ class PlugwiseCircle(PlugwiseNode):
                     self._request_info(self.request_energy_counters)
                 else:
                     # Request new energy counters
-                    self.message_sender(
-                        CircleEnergyCountersRequest(self._mac, log_address),
-                        None,
-                        0,
-                        PRIORITY_LOW,
-                    )
+                    if self._energy_memory.get(log_address, 0) < 4:
+                        self.message_sender(
+                            CircleEnergyCountersRequest(self._mac, log_address),
+                            None,
+                            0,
+                            PRIORITY_LOW,
+                        )
+                    else:
+                        _LOGGER.info(
+                            "Drop known request_energy_counters for %s of address %s",
+                            self.mac,
+                            str(log_address),
+                        )
             else:
                 # Collect energy counters of today and yesterday
                 # Each request contains will return 4 hours, except last request
@@ -648,18 +656,32 @@ class PlugwiseCircle(PlugwiseNode):
                 self._energy_history_collecting = True
                 self._energy_history_collecting_timestamp = datetime.now()
                 for req_log_address in range(log_address - 13, log_address):
+                    if self._energy_memory.get(req_log_address, 0) < 4:
+                        self.message_sender(
+                            CircleEnergyCountersRequest(self._mac, req_log_address),
+                            None,
+                            0,
+                            PRIORITY_LOW,
+                        )
+                    else:
+                        _LOGGER.info(
+                            "Drop known request_energy_counters at collecting for %s of address %s",
+                            self.mac,
+                            str(log_address),
+                        )
+                if self._energy_memory.get(log_address, 0) < 4:
                     self.message_sender(
-                        CircleEnergyCountersRequest(self._mac, req_log_address),
-                        None,
+                        CircleEnergyCountersRequest(self._mac, log_address),
+                        callback,
                         0,
                         PRIORITY_LOW,
                     )
-                self.message_sender(
-                    CircleEnergyCountersRequest(self._mac, log_address),
-                    callback,
-                    0,
-                    PRIORITY_LOW,
-                )
+                else:
+                    _LOGGER.info(
+                        "Drop known request_energy_counters at collecting end for %s of address %s",
+                        self.mac,
+                        str(log_address),
+                    )
 
     def _response_energy_counters(self, message: CircleEnergyCountersResponse):
         """
@@ -688,6 +710,10 @@ class PlugwiseCircle(PlugwiseNode):
                 _log_timestamp := getattr(message, "logdate%d" % (_slot,)).value
             ) is None:
                 break
+            # Register collected history memory
+            if _slot > self._energy_memory.get(message.logaddr.value, 0):
+                self._energy_memory[message.logaddr.value] = _slot
+
             self._energy_history[_log_timestamp] = getattr(
                 message, "pulses%d" % (_slot,)
             ).value
