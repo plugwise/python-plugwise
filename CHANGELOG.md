@@ -1,6 +1,6 @@
 # Changelog
 
-# v0.27.7b0: Stick bugfix: Attempt to fix reported issue https://github.com/plugwise/plugwise-beta/issues/312
+# v0.27.7b1: Stick bugfix: Attempt to fix reported issue https://github.com/plugwise/plugwise-beta/issues/312
 
 # v0.27.6: Stick bugfix: properly handle responses without mac
 
