@@ -67,6 +67,7 @@ class PlugwiseCircle(PlugwiseNode):
             hour=0, minute=0, second=0, microsecond=0
         )
         self._energy_history_collecting = False
+        self._energy_history_collecting_timestamp = datetime.now()
         self._energy_history = {}
         self._energy_last_collected_timestamp = datetime(2000, 1, 1)
         self._energy_last_rollover_timestamp = datetime(2000, 1, 1)
@@ -613,7 +614,16 @@ class PlugwiseCircle(PlugwiseNode):
         if log_address is None:
             log_address = self._last_log_address
         if log_address is not None:
-            if len(self._energy_history) > 48 or self._energy_history_collecting:
+            if self._energy_history_collecting and (
+                self._energy_history_collecting_timestamp
+                < datetime.now() - timedelta(minutes=15)
+            ):
+                _LOGGER.debug(
+                    "Skip request_energy_counters for %s of address %s",
+                    self.mac,
+                    str(log_address),
+                )
+            elif len(self._energy_history) > 48:
                 # Energy history already collected
                 if (
                     log_address == self._last_log_address
@@ -636,6 +646,7 @@ class PlugwiseCircle(PlugwiseNode):
 
                 # TODO: validate range of log_addresses
                 self._energy_history_collecting = True
+                self._energy_history_collecting_timestamp = datetime.now()
                 for req_log_address in range(log_address - 13, log_address):
                     self.message_sender(
                         CircleEnergyCountersRequest(self._mac, req_log_address),
