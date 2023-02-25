@@ -39,15 +39,14 @@ class SocketConnection(StickConnection):
                 err,
             )
             raise PortError(err)
-        else:
-            self._reader_start("socket_reader_thread")
-            self._writer_start("socket_writer_thread")
-            self._is_connected = True
-            _LOGGER.debug(
-                "Successfully connected to host '%s' at port %s",
-                self._socket_host,
-                str(self._socket_port),
-            )
+        self._reader_start("socket_reader_thread")
+        self._writer_start("socket_writer_thread")
+        self._is_connected = True
+        _LOGGER.debug(
+            "Successfully connected to host '%s' at port %s",
+            self._socket_host,
+            str(self._socket_port),
+        )
 
     def _close_connection(self):
         """Close the socket."""
@@ -76,8 +75,7 @@ class SocketConnection(StickConnection):
                 )
                 self._is_connected = False
                 raise PortError(err)
-            else:
-                return socket_data
+            return socket_data
         return None
 
     def _write_data(self, data):
