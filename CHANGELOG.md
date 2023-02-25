@@ -1,6 +1,8 @@
 # Changelog
 
 # v0.27.7: Stick bugfix: fix for reported issue https://github.com/plugwise/plugwise-beta/issues/312
+- Fix Stick-related memory-leaks
+- Add python 3.11 support
 
 # v0.27.6: Stick bugfix: properly handle responses without mac
 
