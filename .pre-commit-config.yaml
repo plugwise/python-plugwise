@@ -9,7 +9,7 @@ default_language_version:
 repos:
   # Run manually in CI skipping the branch checks
   - repo: https://github.com/PyCQA/isort
-    rev: 5.11.4
+    rev: 5.12.0
     hooks:
       - id: isort
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -26,7 +26,7 @@ repos:
       - id: pyupgrade
         args: [--py39-plus]
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 23.1.0
     hooks:
       - id: black
         args:
