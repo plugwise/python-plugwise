@@ -49,6 +49,7 @@ class StickMessageController:
         self.connection = None
         self.discovery_finished = False
         self.expected_responses = {}
+        self.lock_expected_responses = threading.Lock()
         self.init_callback = None
         self.last_seq_id = None
         self.message_processor = message_processor
@@ -151,66 +152,67 @@ class StickMessageController:
     def resend(self, seq_id):
         """Resend message."""
         _mac = "<unknown>"
-        if not self.expected_responses.get(seq_id):
-            _LOGGER.warning(
-                "Cannot resend unknown request %s",
-                str(seq_id),
-            )
-        else:
-            if self.expected_responses[seq_id][0].mac:
-                _mac = self.expected_responses[seq_id][0].mac.decode(UTF8_DECODE)
-            _request = self.expected_responses[seq_id][0].__class__.__name__
+        with self.lock_expected_responses:
+            if not self.expected_responses.get(seq_id):
+                _LOGGER.warning(
+                    "Cannot resend unknown request %s",
+                    str(seq_id),
+                )
+            else:
+                if self.expected_responses[seq_id][0].mac:
+                    _mac = self.expected_responses[seq_id][0].mac.decode(UTF8_DECODE)
+                _request = self.expected_responses[seq_id][0].__class__.__name__
 
-            if self.expected_responses[seq_id][2] == -1:
-                _LOGGER.debug("Drop single %s to %s ", _request, _mac)
-            elif self.expected_responses[seq_id][2] <= MESSAGE_RETRY:
-                if (
-                    isinstance(self.expected_responses[seq_id][0], NodeInfoRequest)
-                    and not self.discovery_finished
-                ):
-                    # Time out for node which is not discovered yet
-                    # to speedup the initial discover phase skip retries and mark node as not discovered.
-                    _LOGGER.debug(
-                        "Skip retry %s to %s to speedup discover process",
-                        _request,
-                        _mac,
-                    )
-                    if self.expected_responses[seq_id][1]:
-                        self.expected_responses[seq_id][1]()
+                if self.expected_responses[seq_id][2] == -1:
+                    _LOGGER.debug("Drop single %s to %s ", _request, _mac)
+                elif self.expected_responses[seq_id][2] <= MESSAGE_RETRY:
+                    if (
+                        isinstance(self.expected_responses[seq_id][0], NodeInfoRequest)
+                        and not self.discovery_finished
+                    ):
+                        # Time out for node which is not discovered yet
+                        # to speedup the initial discover phase skip retries and mark node as not discovered.
+                        _LOGGER.debug(
+                            "Skip retry %s to %s to speedup discover process",
+                            _request,
+                            _mac,
+                        )
+                        if self.expected_responses[seq_id][1]:
+                            self.expected_responses[seq_id][1]()
+                    else:
+                        _LOGGER.info(
+                            "Resend %s for %s, retry %s of %s",
+                            _request,
+                            _mac,
+                            str(self.expected_responses[seq_id][2] + 1),
+                            str(MESSAGE_RETRY + 1),
+                        )
+                        self.send(
+                            self.expected_responses[seq_id][0],
+                            self.expected_responses[seq_id][1],
+                            self.expected_responses[seq_id][2] + 1,
+                        )
                 else:
-                    _LOGGER.info(
-                        "Resend %s for %s, retry %s of %s",
+                    _LOGGER.warning(
+                        "Drop %s to %s because max retries %s reached",
                         _request,
                         _mac,
-                        str(self.expected_responses[seq_id][2] + 1),
                         str(MESSAGE_RETRY + 1),
                     )
-                    self.send(
-                        self.expected_responses[seq_id][0],
-                        self.expected_responses[seq_id][1],
-                        self.expected_responses[seq_id][2] + 1,
-                    )
-            else:
-                _LOGGER.warning(
-                    "Drop %s to %s because max retries %s reached",
-                    _request,
-                    _mac,
-                    str(MESSAGE_RETRY + 1),
-                )
-                # Report node as unavailable for missing NodePingRequest
-                if isinstance(self.expected_responses[seq_id][0], NodePingRequest):
-                    self.node_state(_mac, False)
-                else:
-                    _LOGGER.debug(
-                        "Do a single ping request to %s to validate if node is reachable",
-                        _mac,
-                    )
-                    self.send(
-                        NodePingRequest(self.expected_responses[seq_id][0].mac),
-                        None,
-                        MESSAGE_RETRY + 1,
-                    )
-            del self.expected_responses[seq_id]
+                    # Report node as unavailable for missing NodePingRequest
+                    if isinstance(self.expected_responses[seq_id][0], NodePingRequest):
+                        self.node_state(_mac, False)
+                    else:
+                        _LOGGER.debug(
+                            "Do a single ping request to %s to validate if node is reachable",
+                            _mac,
+                        )
+                        self.send(
+                            NodePingRequest(self.expected_responses[seq_id][0].mac),
+                            None,
+                            MESSAGE_RETRY + 1,
+                        )
+                del self.expected_responses[seq_id]
 
     def _send_message_loop(self):
         """Daemon to send messages waiting in queue."""
@@ -225,28 +227,26 @@ class StickMessageController:
                 # Calc next seq_id based last received ack message
                 # if previous seq_id is unknown use fake b"0000"
                 seq_id = inc_seq_id(self.last_seq_id)
-                self.expected_responses[seq_id] = request_set
-                mac = "None"
-                if hasattr(self.expected_responses[seq_id][0], "mac"):
-                    mac = self.expected_responses[seq_id][0].mac
-                if self.expected_responses[seq_id][2] == 0:
-                    _LOGGER.info(
-                        "Send %s to %s using seq_id %s",
-                        self.expected_responses[seq_id][0].__class__.__name__,
-                        mac,
-                        str(seq_id),
-                    )
-                else:
-                    _LOGGER.info(
-                        "Resend %s to %s using seq_id %s, retry %s",
-                        self.expected_responses[seq_id][0].__class__.__name__,
-                        mac,
-                        str(seq_id),
-                        str(self.expected_responses[seq_id][2]),
-                    )
-                self.expected_responses[seq_id][3] = datetime.now()
-                # Send request
-                self.connection.send(self.expected_responses[seq_id][0])
+                with self.lock_expected_responses:
+                    self.expected_responses[seq_id] = request_set
+                    if self.expected_responses[seq_id][2] == 0:
+                        _LOGGER.info(
+                            "Send %s to %s using seq_id %s",
+                            self.expected_responses[seq_id][0].__class__.__name__,
+                            self.expected_responses[seq_id][0].mac,
+                            str(seq_id),
+                        )
+                    else:
+                        _LOGGER.info(
+                            "Resend %s to %s using seq_id %s, retry %s",
+                            self.expected_responses[seq_id][0].__class__.__name__,
+                            self.expected_responses[seq_id][0].mac,
+                            str(seq_id),
+                            str(self.expected_responses[seq_id][2]),
+                        )
+                    self.expected_responses[seq_id][3] = datetime.now()
+                    # Send request
+                    self.connection.send(self.expected_responses[seq_id][0])
                 time.sleep(SLEEP_TIME)
                 timeout_counter = 0
                 # Wait max 1 second for acknowledge response from USB-stick
@@ -289,63 +289,71 @@ class StickMessageController:
                 )
 
     def _post_message_action(self, seq_id, ack_response=None, request="unknown"):
-        """Execute action if request has been successful.."""
-        if seq_id in self.expected_responses:
-            if ack_response in (*REQUEST_SUCCESS, None):
-                if self.expected_responses[seq_id][1]:
-                    _LOGGER.debug(
-                        "Execute action %s of request with seq_id %s",
-                        self.expected_responses[seq_id][1].__name__,
-                        str(seq_id),
-                    )
-                    try:
-                        self.expected_responses[seq_id][1]()
-                    # TODO: narrow exception
-                    except Exception as err:  # pylint: disable=broad-except
-                        _LOGGER.error(
-                            "Execution of  %s for request with seq_id %s failed: %s",
+        """Execute action if request has been successful."""
+        resend_request = False
+        with self.lock_expected_responses:
+            if seq_id in self.expected_responses:
+                if ack_response in (*REQUEST_SUCCESS, None):
+                    if self.expected_responses[seq_id][1]:
+                        _LOGGER.debug(
+                            "Execute action %s of request with seq_id %s",
                             self.expected_responses[seq_id][1].__name__,
                             str(seq_id),
-                            err,
                         )
-                del self.expected_responses[seq_id]
-            elif ack_response in REQUEST_FAILED:
-                self.resend(seq_id)
-        else:
-            if not self.last_seq_id:
-                if b"0000" in self.expected_responses:
-                    self.expected_responses[seq_id] = self.expected_responses[b"0000"]
-                    del self.expected_responses[b"0000"]
-                self.last_seq_id = seq_id
+                        try:
+                            self.expected_responses[seq_id][1]()
+                        # TODO: narrow exception
+                        except Exception as err:  # pylint: disable=broad-except
+                            _LOGGER.error(
+                                "Execution of  %s for request with seq_id %s failed: %s",
+                                self.expected_responses[seq_id][1].__name__,
+                                str(seq_id),
+                                err,
+                            )
+                    del self.expected_responses[seq_id]
+                elif ack_response in REQUEST_FAILED:
+                    resend_request = True
             else:
-                _LOGGER.info(
-                    "Drop unexpected %s%s using seq_id %s",
-                    STATUS_RESPONSES.get(ack_response, "") + " ",
-                    request,
-                    str(seq_id),
-                )
+                if not self.last_seq_id:
+                    if b"0000" in self.expected_responses:
+                        self.expected_responses[seq_id] = self.expected_responses[
+                            b"0000"
+                        ]
+                        del self.expected_responses[b"0000"]
+                    self.last_seq_id = seq_id
+                else:
+                    _LOGGER.info(
+                        "Drop unexpected %s%s using seq_id %s",
+                        STATUS_RESPONSES.get(ack_response, "") + " ",
+                        request,
+                        str(seq_id),
+                    )
+        if resend_request:
+            self.resend(seq_id)
 
     def _receive_timeout_loop(self):
         """Daemon to time out open requests without any (n)ack response message."""
         while self._receive_timeout_thread_state:
-            for seq_id in list(self.expected_responses.keys()):
-                if self.expected_responses[seq_id][3] is not None:
-                    if self.expected_responses[seq_id][3] < (
-                        datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
-                    ):
-                        _mac = "<unknown>"
-                        if self.expected_responses[seq_id][0].mac:
-                            _mac = self.expected_responses[seq_id][0].mac.decode(
-                                UTF8_DECODE
+            resend_list = []
+            with self.lock_expected_responses:
+                for seq_id in list(self.expected_responses.keys()):
+                    if self.expected_responses[seq_id][3] is not None:
+                        if self.expected_responses[seq_id][3] < (
+                            datetime.now() - timedelta(seconds=MESSAGE_TIME_OUT)
+                        ):
+                            _mac = "<unknown>"
+                            if self.expected_responses[seq_id][0].mac:
+                                _mac = self.expected_responses[seq_id][0].mac
+                            _LOGGER.info(
+                                "No response within %s seconds timeout for %s to %s with sequence ID %s",
+                                str(MESSAGE_TIME_OUT),
+                                self.expected_responses[seq_id][0].__class__.__name__,
+                                _mac,
+                                str(seq_id),
                             )
-                        _LOGGER.info(
-                            "No response within %s seconds timeout for %s to %s with sequence ID %s",
-                            str(MESSAGE_TIME_OUT),
-                            self.expected_responses[seq_id][0].__class__.__name__,
-                            _mac,
-                            str(seq_id),
-                        )
-                        self.resend(seq_id)
+                            resend_list.append(seq_id)
+            for seq_id in resend_list:
+                self.resend(seq_id)
             receive_timeout_checker = 0
             while (
                 receive_timeout_checker < MESSAGE_TIME_OUT
@@ -366,25 +374,26 @@ class StickMessageController:
                     str(message.seq_id),
                 )
             else:
-                if self.expected_responses.get(message.seq_id):
-                    _LOGGER.warning(
-                        "Received unmanaged (%s) %s in response to %s with seq_id %s",
-                        str(status),
-                        message.__class__.__name__,
-                        str(
-                            self.expected_responses[message.seq_id][
-                                1
-                            ].__class__.__name__
-                        ),
-                        str(message.seq_id),
-                    )
-                else:
-                    _LOGGER.warning(
-                        "Received unmanaged (%s) %s for unknown request with seq_id %s",
-                        str(status),
-                        message.__class__.__name__,
-                        str(message.seq_id),
-                    )
+                with self.lock_expected_responses:
+                    if self.expected_responses.get(message.seq_id):
+                        _LOGGER.warning(
+                            "Received unmanaged (%s) %s in response to %s with seq_id %s",
+                            str(status),
+                            message.__class__.__name__,
+                            str(
+                                self.expected_responses[message.seq_id][
+                                    1
+                                ].__class__.__name__
+                            ),
+                            str(message.seq_id),
+                        )
+                    else:
+                        _LOGGER.warning(
+                            "Received unmanaged (%s) %s for unknown request with seq_id %s",
+                            str(status),
+                            message.__class__.__name__,
+                            str(message.seq_id),
+                        )
         else:
             _LOGGER.info(
                 "Received %s from %s with sequence id %s",
