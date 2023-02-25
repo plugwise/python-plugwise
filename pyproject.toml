@@ -16,6 +16,7 @@ classifiers     = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Home Automation",
 ]
 authors = [
@@ -50,7 +51,7 @@ include-package-data = true
 include = ["plugwise*"]
 
 [tool.black]
-target-version = ["py39", "py310"]
+target-version = ["py39", "py310", "py311"]
 exclude = 'generated'
 
 [tool.isort]
@@ -166,9 +167,8 @@ expected-line-ending-format = "LF"
 
 [tool.pylint.EXCEPTIONS]
 overgeneral-exceptions = [
-    "BaseException",
-    "Exception",
-    "HomeAssistantError",
+    "builtins.BaseException",
+    "builtins.Exception",
 ]
 
 [tool.pytest.ini_options]
@@ -187,7 +187,7 @@ norecursedirs = [
 ]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 show_error_codes = true
 follow_imports = "silent"
 ignore_missing_imports = true
