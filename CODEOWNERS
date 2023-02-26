@@ -2,14 +2,14 @@
 # Order is important. The last matching pattern has the most precedence.
 
 # Specific files
-setup.cfg @plugwise/Plugwise4HomeAssistant
-setup.py @plugwise/Plugwise4HomeAssistant
-pyproject.toml @plugwise/Plugwise4HomeAssistant
-requirements*.txt @plugwise/Plugwise4HomeAssistant
+setup.cfg @plugwise/devs
+setup.py @plugwise/devs
+pyproject.toml @plugwise/devs
+requirements*.txt @plugwise/devs
 
 # Main code
-/plugwise/ @plugwise/Plugwise4HomeAssistant
-/userdata/ @plugwise/Plugwise4HomeAssistant
+/plugwise/ @plugwise/devs
+/userdata/ @plugwise/devs
 
 # Tests and development support
 /tests/ @bouwew @compatech
