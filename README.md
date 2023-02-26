@@ -1,16 +1,18 @@
 # Plugwise python module
 
-This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain in Home Assistant Core.
+This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain as co-code owners Home Assistant Core.
 
 Our main usage for this module is supporting [Home Assistant](https://www.home-assistant.io) / [home-assistant](http://github.com/home-assistant/core/)
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/plugwise)
-[![CodeFactor](https://www.codefactor.io/repository/github/plugwise/python-plugwise/badge)](https://www.codefactor.io/repository/github/plugwise/python-plugwise)
-[![Latest release](https://github.com/plugwise/python-plugwise/workflows/Latest%20release/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
-[![codecov](https://codecov.io/gh/plugwise/python-plugwise/branch/main/graph/badge.svg)](https://codecov.io/gh/plugwise/python-plugwise)
 [![PyPI version fury.io](https://badge.fury.io/py/plugwise.svg)](https://pypi.python.org/pypi/plugwise/)
+
+[![Latest release](https://github.com/plugwise/python-plugwise/workflows/Latest%20release/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
 [![Newest commit](https://github.com/plugwise/python-plugwise/workflows/Latest%20commit/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/plugwise/python-plugwise/main.svg)](https://results.pre-commit.ci/latest/github/plugwise/python-plugwise/main)
+
+[![CodeFactor](https://www.codefactor.io/repository/github/plugwise/python-plugwise/badge)](https://www.codefactor.io/repository/github/plugwise/python-plugwise)
+[![codecov](https://codecov.io/gh/plugwise/python-plugwise/branch/main/graph/badge.svg)](https://codecov.io/gh/plugwise/python-plugwise)
 
 ## Integration
 
@@ -20,23 +22,27 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 
 [![Generic badge](https://img.shields.io/badge/HA%20core-yes-green.svg)](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise)
 
-Works out of the box with every Home Assistant installation
+Works out of the box with every Home Assistant installation, use the button below to install
+
+[![Open your Home Assistant instance and show your integrations.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/) 
 
 ### Home-Assistant custom_component (beta)
 
-Intended for users helping us test new features (use at your own risk)
+We do (also) maintain a `custom_component`, please note this is **only** intended for users helping us test new features (use at your own risk)
 
 [![Generic badge](https://img.shields.io/github/v/release/plugwise/plugwise-beta)](https://github.com/plugwise/plugwise-beta)
-[![Generic badge](https://img.shields.io/badge/HA%20custom_component-yes-green.svg)](https://github.com/plugwise/plugwise-beta)
+
+You can add our `custom_component` repository to HACS, do note that we do not intent for our `beta` `custom_component` to be included in the HACS repository.
+
 [![Generic badge](https://img.shields.io/badge/HACS-add%20our%20repo-yellow.svg)](https://github.com/plugwise/plugwise-beta)
 
-See the [`plugwise-beta`](https://github.com/plugwise/plugwise-beta) repository for more info. Requires additional configuration/handling to get your integration running.
+See the [`plugwise-beta`](https://github.com/plugwise/plugwise-beta) repository for more info.
 
 ## Development/patches
 
-Like Home Assistant Core we use `pre-commit` to validate your commits and eventually PRs.
+Like Home Assistant Core we use `pre-commit` and additionally run [pre-commit.ci](http://pre-commit.ci) to automatically validate your commits and PRs.
 
-Please make sure you at least ran `scripts/setup.sh` before attempting to `git commit`. But we sincerely recommended to also use local testing, see `tests/README.md` for more information.
+If you want to create a PR please make sure you at least run `scripts/setup.sh`. This will ensure your environment is set up correctly before attempting to `git commit`. We sincerely and highly recommended also setting up local testing, see [`tests/README.md`](https://github.com/plugwise/python-plugwise/blob/main/tests/README.md) for more information and run `scripts/setup_test.sh` to prepare your environment.
 
 ## Project support status
 
@@ -80,4 +86,4 @@ Origins (from newest to oldest):
 
 ## Thanks
 
-On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl)for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.
+On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl) for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.

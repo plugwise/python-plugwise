@@ -1,0 +1,29 @@
+# Plugwise CodeOwners
+# Order is important. The last matching pattern has the most precedence.
+
+# Specific files
+setup.cfg @plugwise/Plugwise4HomeAssistant
+setup.py @plugwise/Plugwise4HomeAssistant
+pyproject.toml @plugwise/Plugwise4HomeAssistant
+requirements*.txt @plugwise/Plugwise4HomeAssistant
+
+# Main code
+/plugwise/ @plugwise/Plugwise4HomeAssistant
+/userdata/ @plugwise/Plugwise4HomeAssistant
+
+# Tests and development support
+/tests/ @bouwew @compatech
+/scripts/ @bouwew @compatech
+
+# NET specific
+/plugwise/smile.py @bouwew @compatech
+
+# USB specific
+/plugwise/connections/ @brefra
+/plugwise/controller.py @bouwew @brefra
+/plugwise/messages/ @brefra
+/plugwise/nodes/ @brefra
+/plugwise/parser.py @brefra
+/plugwise/stick.py @brefra
+/plugwise/util.py @brefra
+
