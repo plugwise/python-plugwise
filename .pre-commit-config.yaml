@@ -1,5 +1,5 @@
 ci:
-  skip: [pylint]
+  skip: [pylint, markdownlint]
   submodules: true
 
 default_language_version:
