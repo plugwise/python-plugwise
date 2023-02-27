@@ -4,35 +4,35 @@
 
 Needed:
 
- - [ ] Github account (or organisation and account(s))
- - [ ] Codecov account (just choose 'login with github')
- - [ ] CodeFactor account (again, login with github)
- - [ ] Add codecov as an integration from Github's integrations (basically 'buy' it, except its at no cost)
+- [ ] Github account (or organisation and account(s))
+- [ ] Codecov account (just choose 'login with github')
+- [ ] CodeFactor account (again, login with github)
+- [ ] Add codecov as an integration from Github's integrations (basically 'buy' it, except its at no cost)
 
 ## Configuration
 
 After the initial setup of the repo/initial commit, walk the repo-settings on GitHub using your browser.
 
- - [ ] [Set the product image, turn off wiki and automatically delete branches (from defaults)](https://github.com/plugwise/python-plugwise/settings)
- - [ ] [Activate both dependabots and keep dependency graph open](https://github.com/plugwise/python-plugwise/settings/security_analysis)
- - [ ] [Integrations, configure codecov (should show up from organisation)](https://github.com/plugwise/python-plugwise/settings/installations)
+- [ ] [Set the product image, turn off wiki and automatically delete branches (from defaults)](https://github.com/plugwise/python-plugwise/settings)
+- [ ] [Activate both dependabots and keep dependency graph open](https://github.com/plugwise/python-plugwise/settings/security_analysis)
+- [ ] [Integrations, configure codecov (should show up from organisation)](https://github.com/plugwise/python-plugwise/settings/installations)
 
 For this step you might need to follow [this publishing guide](https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/) taking you through most of the steps. Note that the projects on PyPi already [**need to exist**](https://packaging.python.org/tutorials/packaging-projects/) so use a generic token first and later adjust that to only this project (as explained on that howto):
 
- - [ ] [Configure secrets for PYPI_TOKEN and TESTPYPI_TOKEN](https://github.com/plugwise/Plugwise-Smile/settings/secrets)
+- [ ] [Configure secrets for PYPI_TOKEN and TESTPYPI_TOKEN](https://github.com/plugwise/Plugwise-Smile/settings/secrets)
 
 ## Initializing pypi
 
-Once the project is ready for upload to test (i.e. version number ending in `a0` or something likewise): upload it manually using `twine upload`: 
+Once the project is ready for upload to test (i.e. version number ending in `a0` or something likewise): upload it manually using `twine upload`:
 
 Prepare:
 
- - [ ] `python3 -m venv venv ; source venv/bin/activate ; pip install --upgrade pip; pip install -r requirements_test.txt ; pip install --upgrade setuptools wheel twine`
+- [ ] `python3 -m venv venv ; source venv/bin/activate ; pip install --upgrade pip; pip install -r requirements_test.txt ; pip install --upgrade setuptools wheel twine`
 
-Package: (** ensure you are in your venv**)
+Package: (**ensure you are in your venv**)
 
- - [ ] [pypi packaging](https://packaging.python.org/tutorials/packaging-projects/)
- - [ ] `python3 setup.py sdist bdist_wheel`
+- [ ] [pypi packaging](https://packaging.python.org/tutorials/packaging-projects/)
+- [ ] `python3 setup.py sdist bdist_wheel`
 
 Then reconfigure your tokens on the pypi website accordingly (only allowing project updates) and carry on.
 
@@ -65,6 +65,4 @@ From [integrations](https://github.com/plugwise/python-plugwise/settings/install
 
 If you push templates within the `.github/ISSUE_TEMPLATES` directory they should be available, if not:
 
- - [ ] Go to [issue templates](https://github.com/plugwise/python-plugwise/issues/templates/edit) and create them
-
-
+- [ ] Go to [issue templates](https://github.com/plugwise/python-plugwise/issues/templates/edit) and create them
