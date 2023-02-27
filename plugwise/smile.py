@@ -560,7 +560,8 @@ class Smile(SmileComm, SmileData):
 
         output = PlugwiseData(self.gw_data, self.gw_devices)
         LOGGER.debug("HOI %s", type(output))
-        LOGGER.debug("HOI %s", output)
+        LOGGER.debug("HOI %s", output.gateway)
+        LOGGER.debug("HOI %s", output.devices)
         return output
 
     async def _set_schedule_state_legacy(
