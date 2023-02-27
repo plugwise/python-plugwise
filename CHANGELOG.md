@@ -1,110 +1,138 @@
 # Changelog
 
-# v0.27.7: Stick bugfix: fix for reported issue https://github.com/plugwise/plugwise-beta/issues/312
+## Ongoing
+
+- Improved markdown (i.e. markup and contents), added linter for markdown & added code owners
+
+## v0.27.7: Stick bugfix: fix for reported issue #312
+
+- [#312](https://github.com/plugwise/plugwise-beta/issues/312)
 - Fix Stick-related memory-leaks
 - Add python 3.11 support
 
-# v0.27.6: Stick bugfix: properly handle responses without mac
+## v0.27.6: Stick bugfix: properly handle responses without mac
 
-# v0.27.5: Bugfix for https://github.com/plugwise/plugwise-beta/issues/340
+## v0.27.5: Bugfix for #340
 
-# v0.27.4: Bugfix for HA Core Issue https://github.com/home-assistant/core/issues/85910
+- [#340](https://github.com/plugwise/plugwise-beta/issues/340)
 
-(# v0.27.3, v0.27.2: not released)
+## v0.27.4: Bugfix for HA Core Issue 85910
 
-# v0.27.1: More cooling-related updates, based on additional info from Plugwise
+- [Core Issue 85910](https://github.com/home-assistant/core/issues/85910)
+
+(# v0.27.3, v0.27.2: were not released)
+
+## v0.27.1: More cooling-related updates, based on additional info from Plugwise
+
 - Updates for Anna+Elga and Adam-OnOff systems
 - Loria/Thermastage fix
 
-# v0.27.0: Smile P1: support 3-phase measurements
+## v0.27.0: Smile P1: support 3-phase measurements
 
 (# v0.26.0: not released)
 
-# v0.25.14: Improve, bugfix
-- Anna+Elga: final solution for https://github.com/plugwise/plugwise-beta/issues/320
-- Related to https://github.com/home-assistant/core/issues/83068: handle actuator_functionality or sensor depending on which one is present
+## v0.25.14: Improve, bugfix
 
-# v0.25.13: Anna+Elga, OnOff device: base heating_state, cooling_state on central_heating_state key only
-- Partial solution for https://github.com/plugwise/plugwise-beta/issues/320
-- Improving the solution for https://github.com/home-assistant/core/issues/81839
+- Anna+Elga: final solution for [#312](https://github.com/plugwise/plugwise-beta/issues/320)
+- Related to [Core Issue 83068](https://github.com/home-assistant/core/issues/83068): handle actuator_functionality or sensor depending on which one is present
 
-# v0.25.12: Revert remove raising of InvalidSetupError
+## v0.25.13: Anna+Elga, OnOff device: base heating_state, cooling_state on central_heating_state key only
 
-# v0.25.11: Improve/change contents building on v0.25.10
+- Partial solution for [#320](https://github.com/plugwise/plugwise-beta/issues/320)
+- Improving the solution for [Core Issue 81839](https://github.com/home-assistant/core/issues/81839)
+
+## v0.25.12: Revert remove raising of InvalidSetupError
+
+## v0.25.11: Improve/change contents building on v0.25.10
+
 - Revert: Improve handling of xml-data missing, raise exception with warning; the reason for adding this fix is not clear. Needs further investigation.
 - Remove raising of InvalidSetupError, no longer needed; handled in Plugwise config_flow (function added by Frenck)
-- Simplify logic calling _power_data_from_location() (similar to v0.21.4); possible solution for https://github.com/home-assistant/core/issues/81672
+- Simplify logic calling _power_data_from_location() (similar to v0.21.4); possible solution for [Core Issue 81672](https://github.com/home-assistant/core/issues/81672)
 - _full_update_device(): revert back to v0.21.4 logic
 - async_update(): not needed to refresh self._modules
 - Add fix for Core #81712
 
-# v0.25.10: Thermostats: more improvements
+## v0.25.10: Thermostats: more improvements
+
 - Anna + Elga: hide cooling_enable switch, (hardware-)switch is on Elga, not in Plugwise App
-- Adam: improve collecting regulation_mode-related data. Fix for https://github.com/plugwise/python-plugwise/issues/240
-- Anna: remove device availability, fix for https://github.com/home-assistant/core/issues/81716
-- Anna + OnOff device: fix incorrect heating-state, fix for https://github.com/home-assistant/core/issues/81839
-- Improve handling of xml-data missing, raise exception with warning. Solution for https://github.com/home-assistant/core/issues/81672
-- Improve handling of empty schedule, fix for https://github.com/plugwise/python-plugwise/issues/241
+- Adam: improve collecting regulation_mode-related data. Fix for [#240](https://github.com/plugwise/python-plugwise/issues/240)
+- Anna: remove device availability, fix for [Core Issue 81716](https://github.com/home-assistant/core/issues/81716)
+- Anna + OnOff device: fix incorrect heating-state, fix for [Core Issue 81839](https://github.com/home-assistant/core/issues/81839)
+- Improve handling of xml-data missing, raise exception with warning. Solution for [Core Issue 81672](https://github.com/home-assistant/core/issues/81672)
+- Improve handling of empty schedule, fix for [#241](https://github.com/plugwise/python-plugwise/issues/241)
 
-# v0.25.9: Adam: hide cooling-related switch, binary_sensors when there is no cooling present
+## v0.25.9: Adam: hide cooling-related switch, binary_sensors when there is no cooling present
+
 - This fixes the unexpected appearance of new entities after the Adam 3.7.1 firmware-update
-- Properly handle an empty schedule, should fix https://github.com/plugwise/plugwise-beta/issues/313
+- Properly handle an empty schedule, should fix [#313](https://github.com/plugwise/plugwise-beta/issues/313)
 
-# v0.25.8: Make collection of toggle-data future-proof
+## v0.25.8: Make collection of toggle-data future-proof
 
-# v0.25.7: Correct faulty logic in the v0.25.6 release
+## v0.25.7: Correct faulty logic in the v0.25.6 release
 
-# v0.25.6: Revert py.typed, fix Core PR #81531
+## v0.25.6: Revert py.typed, fix Core PR #81531
 
-# v0.25.5: not released
+## v0.25.5: not released
 
-# v0.25.4: Add py.typed, fix typing as suggested in #231
+## v0.25.4: Add py.typed, fix typing as suggested in #231
 
-# v0.25.3: Bugfix for https://github.com/plugwise/plugwise-beta/issues/309
+## v0.25.3: Bugfix for #309
 
-# v0.25.2: Bugfix, code improvements
+- [#309](https://github.com/plugwise/plugwise-beta/issues/309)
+
+## v0.25.2: Bugfix, code improvements
+
 - Fix a set_temperature() and heat_cool related bug
 
-# v0.25.1: Remove sensor-keys from output when cooling is present
+## v0.25.1: Remove sensor-keys from output when cooling is present
 
-# v0.25.0: Improve compatibility with HA Core climate platform
+## v0.25.0: Improve compatibility with HA Core climate platform
+
 - Change mode cool to heat_cool
 - Add setpoint_high/setpoint_low to output
 
-# v0.24.1: Bugfix: fix root-cause of https://github.com/home-assistant/core/issues/79708
+## v0.24.1: Bugfix: fix root-cause of Core issue 79708
 
-# v0.24.0: Improve support for Anna-Loria combination
+- [Core Issue 79708](https://github.com/home-assistant/core/issues/79708)
+
+## v0.24.0: Improve support for Anna-Loria combination
+
 - Replace mode heat_cool by cool (available modes are: auto, heat, cool)
 - Add cooling_enabled switch
 - Add dhw_mode/dhw_modes (for selector in HA)
 - Add dhw_temperature sensor
 - Show Plugwise notifications for non-legacy Smile P1
 
-# v0.23.0: Add device availability for non-legacy Smiles
+## v0.23.0: Add device availability for non-legacy Smiles
+
 - Add back Adam vacation preset, fixing reopened issue #185
 
-# v0.22.1: Improve solution for issue #213
+## v0.22.1: Improve solution for issue #213
 
-# v0.22.0: Smile P1 - add a P1 smartmeter device
+## v0.22.0: Smile P1 - add a P1 smartmeter device
+
 - Change all gateway model names to Gateway
 - Change Anna Smile name to Smile Anna, Anna model name to ThermoTouch
 - Change P1 Smile name to Smile P1
 - Remove raise error-message, change priority of logger messages to less critical
 - Fix for issue #213
 
-# v0.21.3: Revert all hvac_mode HEAT_COOL related
--  The Anna-Elga usecase, providing a heating and a cooling setpoint, was reverted back to providing a single setpoint.
+## v0.21.3: Revert all hvac_mode HEAT_COOL related
 
-# v0.21.2: Code improvements, cleanup
+- The Anna-Elga usecase, providing a heating and a cooling setpoint, was reverted back to providing a single setpoint.
 
-# v0.21.1: Smile: various updates % fixes
-- Change Anna-gateway model to Smile - related to https://developers.home-assistant.io/blog/2022/07/10/entity_naming/ and changes in the Core Plugwise(-beta) code.
+## v0.21.2: Code improvements, cleanup
+
+## v0.21.1: Smile: various updates % fixes
+
+- Change Anna-gateway model to Smile - related to [Core blog entity_naming](https://developers.home-assistant.io/blog/2022/07/10/entity_naming/) and changes in the Core Plugwise(-beta) code.
 - Output elga_cooling_enabled, lortherm_cooling_enabled or adam_cooling_enabled when applicable. To be used in Core Plugwise(-beta) instead of calling api-variables.
 - Protect the self-variables that will no longer be used in Core Plugwise(-beta).
 - pyproject.toml updates.
 - Adapt test-code where needed.
 
-# v0.21.0: Smile: improve and add to output, fix cooling-bug
+## v0.21.0: Smile: improve and add to output, fix cooling-bug
+
 - Add `domestic_hot_water_setpoint` to the output. Will become an additional Number in Plugwise(-beta).
 - Create separate dicts for `domestic_hot_water_setpoint`, `maximum_boiler_temperature`, and `thermostat` in the output.
 - Change `set_max_boiler_temperature()` to `set_number_setpoint()` and make it more general so that more than one Number setpoint can be changed.
@@ -112,22 +140,26 @@
 - Improve `set_temperature()`function.
 - Update the testcode accordingly.
 
-# v0.20.1: Smile: fix/improve cooling support (Elga/Loria/Thermastage) based on input from Plugwise
+## v0.20.1: Smile: fix/improve cooling support (Elga/Loria/Thermastage) based on input from Plugwise
 
-# v0.20.0: Adam: add support for the Aqara Plug
+## v0.20.0: Adam: add support for the Aqara Plug
 
-# v0.19.1: Smile & Stretch: line up error handling with Plugwise-beta
+## v0.19.1: Smile & Stretch: line up error handling with Plugwise-beta
 
-# v0.19.0: Smile Adam & Anna: cooling-related updates
+## v0.19.0: Smile Adam & Anna: cooling-related updates
+
 - Anna: replace `setpoint` with `setpoint_low` and `setpoint_high` when cooling is active
 - Anna: update according to recent Anna-with-cooling firmware updates (info provided by Plugwise)
 - Anna: handle `cooling_state = on` according to Plugwise specification (`cooling_state = on` and `modulation_level = 100`)
 - Move boiler-type detection and cooling-present detection into `_all_device_data()`
 - Update/extend testing and corresponding userdata
 
-# v0.18.5: Smile bugfix for https://github.com/plugwise/python-plugwise/issues/192
+## v0.18.5: Smile bugfix for #192
 
-# v0.18.4: Smile: schedule-related bug-fixes and clean-up
+- [#192](https://github.com/plugwise/python-plugwise/issues/192)
+
+## v0.18.4: Smile: schedule-related bug-fixes and clean-up
+
 - Update `_last_used_schedule()`: provide the collected schedules as input in order to find the last-modified valid schedule.
 - `_rule_ids_by_x()`: replace None by NONE, allowing for simpler typing.
 - Remove `schedule_temperature` from output: for Adam the schedule temperature cannot be collected when a schedule is not active.
@@ -135,21 +167,28 @@
 - Improve solution for plugwise-beta issue #276
 - Move HA Core input-checks into the backend library (into set_schedule_state() and set_preset())
 
-# v0.18.3: Smile: move solution for https://github.com/plugwise/plugwise-beta/issues/276 into backend
+## v0.18.3: Smile: move solution for #276 into backend
 
-# v0.18.2: Smile: fix for https://github.com/plugwise/python-plugwise/issues/187
+- [#276](https://github.com/plugwise/plugwise-beta/issues/276)
 
-# v0.18.1: Smile Adam: don't show vacation-preset, as not shown in the Plugwise App or on the local Adam-website
+## v0.18.2: Smile: fix for #187
 
-# v0.18.0: Smile: add generation of cooling-schedules
+- [#187](https://github.com/plugwise/plugwise-beta/issues/187)
+
+## v0.18.1: Smile Adam: don't show vacation-preset, as not shown in the Plugwise App or on the local Adam-website
+
+## v0.18.0: Smile: add generation of cooling-schedules
+
 - Further improve typing hints: e.g. all collected measurements are now typed via TypedDicts
 - Implement correct generation of schedules for both heating and cooling (needs testing)
 
-# v0.17.8: Smile: Bugfix, improve testing
-- Fix https://github.com/plugwise/plugwise-beta/issues/277
+## v0.17.8: Smile: Bugfix, improve testing
+
+- Fix [#277](https://github.com/plugwise/plugwise-beta/issues/277)
 - Improve incorrect test-case validation
 
-# v0.17.7: Smile: Corrections, fixes, clean up
+## v0.17.7: Smile: Corrections, fixes, clean up
+
 - Move compressor_state into binary_sensors
 - Adam: add missing zigbee_mac to wireless thermostats
 - Stretch & Adam: don't show devices without a zigbee_mac, should be orphaned devices
@@ -157,39 +196,47 @@
 - Typing improvements
 - Fix related test asserts
 
-# v0.17.6: Smile: revert removing LOGGER.error messages
+## v0.17.6: Smile: revert removing LOGGER.error messages
 
-# v0.17.5: Smile: rework to raise instead of return
+## v0.17.5: Smile: rework to raise instead of return
+
 - raise in error-cases, move LOGGER.debug messages into raise
 - clean up code
 
-# v0.17.4 - Smile: improve typing hints, implement mypy testing
+## v0.17.4 - Smile: improve typing hints, implement mypy testing
 
-# v0.17.3 - Smile Adam: add support for heater_electric type Plugs
+## v0.17.3 - Smile Adam: add support for heater_electric type Plugs
 
-# v0.17.2 - Smile Adam: more bugfixes, improvementds
+## v0.17.2 - Smile Adam: more bugfixes, improvementds
+
 - Bugfix: update set_schedule_state() to handle multi thermostat scenario's
 - Improve tracking of the last used schedule, needed due to the changes in set_schedule_state()
 - Improve invalid schedule handling
 - Update & add related testcases
 - Naming cleanup
 
-# v0.17.1 - Smile: bugfix for https://github.com/home-assistant/core/issues/68621
+## v0.17.1 - Smile: bugfix for Core Issue 68621
 
-# v0.17.0 - Smile: add more outputs
+- [Core Issue 68621](https://github.com/home-assistant/core/issues/68621)
+
+## v0.17.0 - Smile: add more outputs
+
 - Add regulation_mode and regulation_modes to gateway dict, add related set-function
 - Add max_boiler_temperature to heater_central dict, add related set-function
 - Improve typing hints
 
-# v0.16.9 - Smile: bugfix and improve
-- Fix for https://github.com/plugwise/plugwise-beta/issues/250
+## v0.16.9 - Smile: bugfix and improve
+
+- Fix for [#250](https://github.com/plugwise/plugwise-beta/issues/250)
 - Rename heatpump outdoor_temperature sensor to outdoor_air_temperature sensor
 
-# v0.16.8 - Smile: bugfixes, continued
-- Fix for https://github.com/home-assistant/core/issues/68003
-- Refix solution for #158 
+## v0.16.8 - Smile: bugfixes, continued
 
-# v0.16.7 - Smile: Bugfixes, more changes and improvements
+- Fix for [Core Issue 68003](https://github.com/home-assistant/core/issues/68003)
+- Refix solution for #158
+
+## v0.16.7 - Smile: Bugfixes, more changes and improvements
+
 - Fix for #158: error setting up for systems with an Anna and and Elga (heatpump).
 - Block connecting to the Anna when an Adam is present (fixes pw-beta #231).
 - Combine helper-functions, possible after removing code related to the device_state sensor.
@@ -198,28 +245,34 @@
 - Implement walrus constructs ( := ) where possible.
 - Improve and simplify.
 
-# v0.16.6 - Smile: various changes/improvements
+## v0.16.6 - Smile: various changes/improvements
+
 - Provide cooling_state and heating_state as `binary_sensors`, show cooling_state only when cooling is present.
 - Clean up gw_data, e.g. remove `single_master_thermostat` key.
 
-# v0.16.5 - Smile: small improvements
+## v0.16.5 - Smile: small improvements
+
 - Move schedule debug-message to the correct position.
 - Code quality fixes.
 
-# v0.16.4 - Adding measurements
+## v0.16.4 - Adding measurements
+
 - Expose mac-addresses for network and zigbee devices.
 - Expose min/max thermostat (and heater) values and resolution (step in HA).
-- Changed mac-addresses in userdata/fixtures to be obfuscated but unique. 
+- Changed mac-addresses in userdata/fixtures to be obfuscated but unique.
 
-# v0.16.3 - Typing
+## v0.16.3 - Typing
+
 - Code quality improvements.
 
-# v0.16.2 - Generic and Stretch
+## v0.16.2 - Generic and Stretch
+
 - As per Core deprecation of python 3.8, removed CI/CD testing and bumped pypi to 3.9 and production.
 - Add support for Stretch with fw 2.7.18.
 
-# v0.16.1 - Smile - various updates:
-- BREAKING: Change active device detection, detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
+## v0.16.1 - Smile - various updates
+
+- **BREAKING**: Change active device detection, detect both OpenTherm (replace Auxiliary) and OnOff (new) heating and cooling devices.
 - Stretch: base detection on the always present Stick
 - Add Adam v3.6.x (beta) and Anna firmware 4.2 support (representation and switching on/off of a schedule has changed)
 - Anna: Fix cooling_active prediction
@@ -227,18 +280,21 @@
 - Cleanup and optimize code
 - Adapt and improve testcode
 
-# v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
+## v0.16.0 - Smile - Change output format, allowing full use of Core DataUpdateCoordintor in plugwise-beta
+
 - Change from list- to dict-format for binary_sensors, sensors and switches
 - Provide gateway-devices for Legacy Anna and Stretch
 - Code-optimizations
 
-# v0.15.7 - Smile - Improve implementation of cooling-function-detection
+## v0.15.7 - Smile - Improve implementation of cooling-function-detection
+
 - Anna: add two sensors related to automatic switching between heating and cooling and add a heating/cooling-mode active indication
 - Adam: also provide a heating/cooling-mode active indication
 - Fixing #171
 - Improved dependency handling (@dependabot)
 
-# v0.15.6 - Smile - Various fixes and improvements
+## v0.15.6 - Smile - Various fixes and improvements
+
 - Adam: collect `control_state` from master thermostats, allows showing the thermostat state as on the Plugwise App
 - Adam: collect `allowed_modes` and look for `cooling`, indicating cooling capability being available
 - Optimize code: use `_all_appliances()` once instead of 3 times, by updating/changing `single_master_thermostat()`,
@@ -250,9 +306,10 @@
 - Add testing for python 3.10, improve dependencies (github workflow)
 - Bump aiohttp to 3.8.1, remove fixed dependencies
 
-# v0.15.5 - Skipping, not released
+## v0.15.5 - Skipping, not released
 
 ## v0.15.4 - Smile - Bugfix: handle removed thermostats
+
 - Recognize when a thermostat has been removed from a zone and don't show it in Core
 - Rename Group Switch to Switchgroup, remove vendor name
 
@@ -275,7 +332,7 @@
 
 ## v0.14.1 - Smile: removing further `last_reset`s
 
-- As per https://developers.home-assistant.io/blog/2021/08/16/state_class_total
+- As per [Core Blog `state_class_total`](https://developers.home-assistant.io/blog/2021/08/16/state_class_total)
 
 ## v0.14.0 - Smile: sensor-platform updates - 2021.9 compatible
 
@@ -689,8 +746,11 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 
 ### 0.0.26 - Add relay (plugs) support and tests
 
-### 0.0.x - Not individually release but left in [this repo](https://github.com/plugwise/Plugwise-HA)
+### 0.0.x - Not individually release but left in old repository
 
-### x.x.x - Before that commits where made in [haanna](https://github.com/laetificat/haanna)
+- [this repo](https://github.com/plugwise/Plugwise-HA)
 
+### x.x.x - Before that commits where made in haanna
+
+- [haanna](https://github.com/laetificat/haanna)
 - After mostly leaving `haanna` as a stale project (where @bouwew didn't have PyPi permissions) development was shortly split between personal repositories from both @bouwew and @CoMPaTech before we decided to fully rewrite - from scratch - it to `Plugwise-HA` which was renamed to `Plugwise_Smile` from 0.0.26 onwards.

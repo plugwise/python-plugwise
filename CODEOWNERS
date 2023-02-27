@@ -1,0 +1,29 @@
+# Plugwise CodeOwners
+# Order is important. The last matching pattern has the most precedence.
+
+# Specific files
+setup.cfg @plugwise/devs
+setup.py @plugwise/devs
+pyproject.toml @plugwise/devs
+requirements*.txt @plugwise/devs
+
+# Main code
+/plugwise/ @plugwise/devs
+/userdata/ @plugwise/devs
+
+# Tests and development support
+/tests/ @bouwew @compatech
+/scripts/ @bouwew @compatech
+
+# NET specific
+/plugwise/smile.py @bouwew @compatech
+
+# USB specific
+/plugwise/connections/ @brefra
+/plugwise/controller.py @bouwew @brefra
+/plugwise/messages/ @brefra
+/plugwise/nodes/ @brefra
+/plugwise/parser.py @brefra
+/plugwise/stick.py @brefra
+/plugwise/util.py @brefra
+

@@ -1,5 +1,5 @@
 ci:
-  skip: [pylint]
+  skip: [pylint, markdownlint]
   submodules: true
 
 default_language_version:
@@ -111,3 +111,7 @@ repos:
         language: script
         types: [python]
         files: ^plugwise/.+\.py$
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.33.0
+    hooks:
+      - id: markdownlint
