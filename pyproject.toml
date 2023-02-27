@@ -47,9 +47,6 @@ dependencies    = [
 platforms = ["any"]
 include-package-data = true
 
-[tool.setuptools.package-data]
-"plugwise" = ["py.typed"]
-
 [tool.setuptools.packages.find]
 include = ["plugwise*"]
 

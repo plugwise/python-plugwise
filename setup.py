@@ -2,4 +2,8 @@
 
 from setuptools import setup
 
-setup()
+setup(
+    package_data={
+        "plugwise": ["py.typed"],
+    }
+)
