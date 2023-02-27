@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improved markdown (i.e. markup and contents), added linter for markdown & added code owners
+
 ## v0.27.7: Stick bugfix: fix for reported issue #312
 
 - [#312](https://github.com/plugwise/plugwise-beta/issues/312)
