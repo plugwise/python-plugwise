@@ -4,6 +4,10 @@
 
 - Improved markdown (i.e. markup and contents), added linter for markdown & added code owners
 
+## v0.27.8: Stick bugfix: fix for reported Plugwise-Beta issue [#347](https://github.com/plugwise/plugwise-beta/issues/347)
+
+- Change message request queue a FiFO queue
+
 ## v0.27.7: Stick bugfix: fix for reported issue #312
 
 - [#312](https://github.com/plugwise/plugwise-beta/issues/312)
