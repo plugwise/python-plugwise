@@ -320,7 +320,7 @@ class Smile(SmileComm, SmileData):
     """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
-    _plugwise_data: PlugwiseData | None = None
+    _plugwise_data: PlugwiseData
 
     def __init__(
         self,
