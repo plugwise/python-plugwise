@@ -804,3 +804,10 @@ class PlugwiseData:
 
     gateway: GatewayData
     devices: dict[str, DeviceData]
+
+    def update(
+        self, gw_data: GatewayData, gw_devices: dict[str, DeviceData]
+    ) -> PlugwiseData:
+        """Update the Plugwise output Data."""
+        self.gateway = gw_data
+        self.devices = gw_devices

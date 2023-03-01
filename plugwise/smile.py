@@ -320,6 +320,7 @@ class Smile(SmileComm, SmileData):
     """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
+    _plugwise_data: PlugwiseData | None = None
 
     def __init__(
         self,
@@ -558,11 +559,7 @@ class Smile(SmileComm, SmileData):
             # Update for cooling
             self.update_for_cooling(dev_dict)
 
-        output = PlugwiseData(self.gw_data, self.gw_devices)
-        LOGGER.debug("HOI %s", type(output))
-        LOGGER.debug("HOI %s", output.gateway)
-        LOGGER.debug("HOI %s", output.devices)
-        return output
+        return self._plugwise_data.update(self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
         self, loc_id: str, name: str, status: str
