@@ -811,3 +811,5 @@ class PlugwiseData:
         """Update the Plugwise output Data."""
         self.gateway = gw_data
         self.devices = gw_devices
+
+        return self
