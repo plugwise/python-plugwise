@@ -52,6 +52,8 @@ from .helper import SmileComm, SmileHelper, update_helper
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
+    _plugwise_data: PlugwiseData
+
     def update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         # Add setpoint_low and setpoint_high when cooling is enabled
@@ -110,6 +112,10 @@ class SmileData(SmileHelper):
             self.gw_data.update(
                 {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
             )
+
+        self._plugwise_data = PlugwiseData(
+            gateway=self.gw_data, devices=self.gw_devices
+        )
 
     def get_all_devices(self) -> None:
         """
@@ -320,7 +326,6 @@ class Smile(SmileComm, SmileData):
     """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
-    _plugwise_data: PlugwiseData
 
     def __init__(
         self,
