@@ -564,7 +564,9 @@ class Smile(SmileComm, SmileData):
             # Update for cooling
             self.update_for_cooling(dev_dict)
 
-        output = self._plugwise_data.update(self.gw_data, self.gw_devices)
+        output = self._plugwise_data = PlugwiseData(
+            gateway=self.gw_data, devices=self.gw_devices
+        )
         LOGGER.debug("HOI %s", output)
         return output
 
