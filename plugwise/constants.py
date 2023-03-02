@@ -802,14 +802,16 @@ class DeviceData(
 class PlugwiseData:
     """Plugwise data provided as output."""
 
-    gateway: GatewayData
-    devices: dict[str, DeviceData]
+    def __init__(self, gateway: GatewayData, devices: dict[str, DeviceData]) -> None:
+        """Init parameters."""
+        self.gateway = gateway
+        self.devices = devices
 
     def update(
-        self, gw_data: GatewayData, gw_devices: dict[str, DeviceData]
+        self, gateway: GatewayData, devices: dict[str, DeviceData]
     ) -> PlugwiseData:
         """Update the Plugwise output Data."""
-        self.gateway = gw_data
-        self.devices = gw_devices
+        self.gateway = gateway
+        self.devices = devices
 
         return self
