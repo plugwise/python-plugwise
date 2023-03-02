@@ -561,7 +561,8 @@ class Smile(SmileComm, SmileData):
             self.update_for_cooling(dev_dict)
 
         self._plugwise_data = PlugwiseData(self.gw_data, self.gw_devices)
-        LOGGER.debug("HOI COORD %s", self._plugwise_data)
+        LOGGER.debug("HOI COORD %s", self._plugwise_data.gateway)
+        LOGGER.debug("HOI COORD %s", self._plugwise_data.devices)
         return self._plugwise_data
 
     async def _set_schedule_state_legacy(
