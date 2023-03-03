@@ -3,6 +3,7 @@
 ## Ongoing
 
 - Improved markdown (i.e. markup and contents), added linter for markdown & added code owners
+- Default to python 3.11
 
 ## v0.27.7: Stick bugfix: fix for reported issue #312
 
