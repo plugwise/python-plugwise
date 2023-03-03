@@ -783,7 +783,7 @@ class DeviceDataPoints(
     control_state: str | bool
 
     # For temporary use
-    c_heating_state: str
+    # c_heating_state: str - disable for testing
     modified: str
 
     # Device availability
