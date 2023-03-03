@@ -1033,10 +1033,11 @@ class SmileHelper:
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
             # Remove c_heating_state after processing
-            data.pop("c_heating_state")
+            # data.pop("c_heating_state") - keep for testing
 
         if d_id == self._heater_id and self.smile_name == "Smile Anna":
             if "elga_status_code" in data:
+                data["i_heating_state"] = data["heating_state"]  # added for testing
                 # Base heating_/cooling_state on the elga-status-code
                 data["heating_state"] = False
                 data["cooling_state"] = False
