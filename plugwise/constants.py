@@ -661,6 +661,8 @@ class SmileBinarySensors(TypedDict, total=False):
     cooling_state: bool
     dhw_state: bool
     flame_state: bool
+    c_heating_state: bool
+    i_heating_state: bool
     heating_state: bool
     plugwise_notification: bool
     slave_boiler_state: bool
