@@ -33,15 +33,17 @@ repos:
           - --safe
           - --quiet
         files: ^((plugwise|tests)/.+)?[^/]+\.py$
+  # Note: "Leeg" is a user-data reference to a "plug component" so not a usual Dutch codespell issue (e.g. Leeg means Empty)
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
     hooks:
       - id: codespell
         args:
           - --ignore-words-list=hass,alot,datas,dof,dur,ether,farenheit,hist,iff,iif,ines,ist,lightsensor,mut,nd,pres,referer,rime,ser,serie,te,technik,ue,uint,visability,wan,wanna,withing,iam,incomfort,ba,haa,pullrequests,Leeg
-          - --skip="./.*,*.csv,*.json,./userdata"
+          - --skip="./.*,*.csv,*.json,*.xml"
           - --quiet-level=2
-        exclude_types: [csv, json]
+        exclude_types: [csv, json, xml]
+        exclude: ./userdata
   - repo: https://github.com/PyCQA/flake8
     rev: 6.0.0
     hooks:
