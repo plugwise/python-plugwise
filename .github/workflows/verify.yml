@@ -157,6 +157,10 @@ jobs:
         run: |
           . venv/bin/activate
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual markdownlint
+      - name: Codespell files
+        run: |
+          . venv/bin/activate
+          pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual codespell
 
   prepare-test-cache:
     runs-on: ubuntu-latest
