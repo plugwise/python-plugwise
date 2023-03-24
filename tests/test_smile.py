@@ -400,7 +400,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Count the available device-items.
         self.device_items = 0
-        for dev_id, details in device_list.items():
+        # ruff-todo dev_id not used in loop
+        for dev_id, details in device_list.items():  # noqa: B007
             for dev_key, _ in details.items():
                 self.device_items += 1
                 if dev_key in bsw_list or dev_key in pw_constants.ACTIVE_ACTUATORS:
@@ -543,7 +544,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Toggle schedules to test functionality."""
         if good_schedules != []:
-            if not single and not ("!VeryBogusSchedule" in good_schedules):
+            # ruff-todo test for membership should be `not in`
+            if not single and not (
+                "!VeryBogusSchedule" in good_schedules  # noqa: E713
+            ):
                 good_schedules.append("!VeryBogusSchedule")
             for new_schedule in good_schedules:
                 tinker_schedule_passed = False
@@ -3819,8 +3823,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling(self):
-        """
-        Test an Anna with Elga setup in cooling mode.
+        """Test an Anna with Elga setup in cooling mode.
 
         This test also covers the situation that the operation-mode it switched
         from heating to cooling due to the outdoor temperature rising above the
@@ -3938,8 +3941,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_heatpump_cooling_fake_firmware(self):
-        """
-        Test an Anna with a fake Loria/Thermastate setup in cooling mode.
+        """Test an Anna with a fake Loria/Thermastate setup in cooling mode.
 
         The Anna + Elga firmware has been amended with the point_log cooling_enabled and
         gateway/features/cooling keys.
@@ -4164,8 +4166,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_anna_elga_2_cooling(self):
-        """
-        Test a 2nd Anna with Elga setup with cooling active.
+        """Test a 2nd Anna with Elga setup with cooling active.
 
         This testcase also covers testing of the generation of a cooling-based
         schedule, opposite the generation of a heating-based schedule.
