@@ -793,7 +793,7 @@ class SmileHelper:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
         presets: dict[str, list[float]] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
-            # ruff-todo suggest icon in directive (skip keys)
+            # ruff-todo suggest icon in directive (skipping keys)
             if directive is not None and "icon" in directive.keys():  # noqa: SIM118
                 # Ensure list of heating_setpoint, cooling_setpoint
                 presets[directive.attrib["icon"]] = [

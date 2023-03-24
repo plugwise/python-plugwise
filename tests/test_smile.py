@@ -400,8 +400,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Count the available device-items.
         self.device_items = 0
-        # ruff-todo dev_id not used in loop
-        for dev_id, details in device_list.items():  # noqa: B007
+        for _, details in device_list.items():
             for dev_key, _ in details.items():
                 self.device_items += 1
                 if dev_key in bsw_list or dev_key in pw_constants.ACTIVE_ACTUATORS:
@@ -544,10 +543,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Toggle schedules to test functionality."""
         if good_schedules != []:
-            # ruff-todo test for membership should be `not in`
-            if not single and not (
-                "!VeryBogusSchedule" in good_schedules  # noqa: E713
-            ):
+            if not single and ("!VeryBogusSchedule" not in good_schedules):
                 good_schedules.append("!VeryBogusSchedule")
             for new_schedule in good_schedules:
                 tinker_schedule_passed = False
