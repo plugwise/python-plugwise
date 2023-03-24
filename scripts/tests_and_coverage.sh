@@ -17,7 +17,7 @@ if [ -f "${my_venv}/bin/activate" ]; then
     echo "-----------------------------------------------------------"
     echo "Running plugwise/smile.py through pytest including coverage"
     echo "-----------------------------------------------------------"
-    PYTHONPATH=$(pwd) pytest -rpP --log-level debug tests/test_smile.py --cov='.' --no-cov-on-fail --cov-report term-missing && echo "... flake8-ing ..." && flake8 plugwise/ tests/ && echo "... pylint-ing ..." && pylint plugwise/ tests/ && echo "... black-ing ..." && black plugwise/ tests/
+    PYTHONPATH=$(pwd) pytest -rpP --log-level debug tests/test_smile.py --cov='.' --no-cov-on-fail --cov-report term-missing && echo "... ruff-ing ..." && ruff plugwise/ tests/ && echo "... pylint-ing ..." && pylint plugwise/ tests/ && echo "... black-ing ..." && black plugwise/ tests/
 else
     echo "Virtualenv available, bailing out"
     exit 2
