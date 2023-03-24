@@ -535,8 +535,7 @@ class Smile(SmileComm, SmileData):
                 if item == "binary_sensors":
                     notifs = self._notifications
                 if item in dev_dict:
-                    # ruff-todo value not used in loop
-                    for key, value in data.items():  # noqa: B007
+                    for key in data:
                         update_helper(
                             data,
                             self.gw_devices,
