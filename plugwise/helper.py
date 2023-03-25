@@ -39,6 +39,7 @@ from .constants import (
     LOCATIONS,
     LOGGER,
     NONE,
+    P1_LEGACY_MEASUREMENTS,
     P1_MEASUREMENTS,
     POWER_WATT,
     SENSORS,
@@ -1269,7 +1270,7 @@ class SmileHelper:
 
         mod.logs = search.find("./modules/services")
         # meter_string = ".//{}[type='{}']/"
-        for mod.measurement, mod.attrs in P1_MEASUREMENTS.items():
+        for mod.measurement, mod.attrs in P1_LEGACY_MEASUREMENTS.items():
             meas_list = mod.measurement.split("_")
             for mod.log_type in mod_list:
                 for mod.peak_select in peak_list:
