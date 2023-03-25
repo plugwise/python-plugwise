@@ -1232,8 +1232,6 @@ class SmileHelper:
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff"
-        if self._smile_legacy:
-            t_string = "tariff_indicator"
 
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         # meter_string = ".//{}[type='{}']/"
@@ -1252,6 +1250,42 @@ class SmileHelper:
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
                     direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+
+        return direct_data
+
+    def _power_data_from_modules(self) -> DeviceData:
+        """
+        Helper-function for smile.py: _get_device_data().
+
+        Collect the power-data from MODULES (P1 legacy only).
+        """
+        direct_data: DeviceData = {}
+        mod = Munch()
+
+        search = self._modules
+        mod_list: list[str] = ["point_meter", "cumulative_meter", "interval_meter"]
+        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
+        t_string = "tariff_indicator"
+
+        mod.logs = search.find("./modules/services")
+        # meter_string = ".//{}[type='{}']/"
+        for mod.measurement, mod.attrs in P1_MEASUREMENTS.items():
+            meas_list = mod.measurement.split("_")
+            for mod.log_type in mod_list:
+                for mod.peak_select in peak_list:
+                    mod.locator = (
+                        f"./(meas_list[0]_{mod.log_type}/"
+                        f'measurement[@directionality="{meas_list[1]}"]'
+                        f'[@{t_string}="{mod.peak_select}"]'
+                    )
+                    mod = self._power_data_peak_value(direct_data, mod)
+                    if not mod.found:
+                        continue
+
+                    # direct_data = power_data_energy_diff(
+                    #     loc.measurement, loc.net_string, loc.f_val, direct_data
+                    # )
+                    # direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
 
         return direct_data
 
