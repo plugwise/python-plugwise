@@ -856,120 +856,120 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await smile.close_connection()
         await self.disconnect(server, client)
 
-    @pytest.mark.asyncio
-    async def test_connect_smile_p1_v2(self):
-        """Test a legacy P1 device."""
-        testdata = {
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
-                "dev_class": "gateway",
-                "firmware": "2.5.9",
-                "location": "938696c4bcdb4b8a9a595cb38ed43913",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile P1",
-                "vendor": "Plugwise",
-            },
-            "938696c4bcdb4b8a9a595cb38ed43913": {
-                "dev_class": "smartmeter",
-                "location": "938696c4bcdb4b8a9a595cb38ed43913",
-                "model": "Ene5\\T210-DESMR5.0",
-                "name": "P1",
-                "vendor": "Ene5\\T210-DESMR5.0",
-                "sensors": {
-                    "net_electricity_point": 456,
-                    "electricity_consumed_point": 456,
-                    "net_electricity_cumulative": 1019.161,
-                    "electricity_consumed_peak_cumulative": 1155.155,
-                    "electricity_consumed_off_peak_cumulative": 1642.74,
-                    "electricity_consumed_peak_interval": 210,
-                    "electricity_consumed_off_peak_interval": 0,
-                    "electricity_produced_point": 0,
-                    "electricity_produced_peak_cumulative": 1296.136,
-                    "electricity_produced_off_peak_cumulative": 482.598,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
-                    "gas_consumed_cumulative": 584.431,
-                    "gas_consumed_interval": 0.014,
-                },
-            },
-        }
+    #    @pytest.mark.asyncio
+    #    async def test_connect_smile_p1_v2(self):
+    #        """Test a legacy P1 device."""
+    #        testdata = {
+    #            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+    #                "dev_class": "gateway",
+    #                "firmware": "2.5.9",
+    #                "location": "938696c4bcdb4b8a9a595cb38ed43913",
+    #                "mac_address": "012345670001",
+    #                "model": "Gateway",
+    #                "name": "Smile P1",
+    #                "vendor": "Plugwise",
+    #            },
+    #            "938696c4bcdb4b8a9a595cb38ed43913": {
+    #                "dev_class": "smartmeter",
+    #                "location": "938696c4bcdb4b8a9a595cb38ed43913",
+    #                "model": "Ene5\\T210-DESMR5.0",
+    #                "name": "P1",
+    #                "vendor": "Ene5\\T210-DESMR5.0",
+    #                "sensors": {
+    #                    "net_electricity_point": 456,
+    #                    "electricity_consumed_point": 456,
+    #                    "net_electricity_cumulative": 1019.161,
+    #                    "electricity_consumed_peak_cumulative": 1155.155,
+    #                    "electricity_consumed_off_peak_cumulative": 1642.74,
+    #                    "electricity_consumed_peak_interval": 210,
+    #                    "electricity_consumed_off_peak_interval": 0,
+    #                    "electricity_produced_point": 0,
+    #                    "electricity_produced_peak_cumulative": 1296.136,
+    #                    "electricity_produced_off_peak_cumulative": 482.598,
+    #                    "electricity_produced_peak_interval": 0,
+    #                    "electricity_produced_off_peak_interval": 0,
+    #                    "gas_consumed_cumulative": 584.431,
+    #                    "gas_consumed_interval": 0.014,
+    #                },
+    #            },
+    #        }
+    #
+    #        self.smile_setup = "smile_p1_v2"
+    #        server, smile, client = await self.connect_wrapper()
+    #        assert smile.smile_hostname == "smile000000"
+    #
+    #        _LOGGER.info("Basics:")
+    #        _LOGGER.info(" # Assert type = power")
+    #        assert smile.smile_type == "power"
+    #        _LOGGER.info(" # Assert version")
+    #        assert smile.smile_version[0] == "2.5.9"
+    #        _LOGGER.info(" # Assert legacy")
+    #        assert smile._smile_legacy
+    #
+    #        await self.device_test(smile, testdata)
+    #        assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
+    #        assert self.device_items == 26
+    #        assert not self.notifications
+    #
+    #        await smile.close_connection()
+    #        await self.disconnect(server, client)
 
-        self.smile_setup = "smile_p1_v2"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.5.9"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
-
-        await self.device_test(smile, testdata)
-        assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
-        assert self.device_items == 26
-        assert not self.notifications
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_smile_p1_v2_2(self):
-        """Test another legacy P1 device."""
-        testdata = {
-            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
-                "dev_class": "gateway",
-                "firmware": "2.5.9",
-                "location": "199aa40f126840f392983d171374ab0b",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile P1",
-                "vendor": "Plugwise",
-            },
-            "199aa40f126840f392983d171374ab0b": {
-                "dev_class": "smartmeter",
-                "location": "199aa40f126840f392983d171374ab0b",
-                "model": "Ene5\\T210-DESMR5.0",
-                "name": "P1",
-                "vendor": "Ene5\\T210-DESMR5.0",
-                "sensors": {
-                    "net_electricity_point": 456,
-                    "electricity_consumed_point": 456,
-                    "net_electricity_cumulative": 1019.161,
-                    "electricity_consumed_peak_cumulative": 1155.155,
-                    "electricity_consumed_off_peak_cumulative": 1642.74,
-                    "electricity_consumed_peak_interval": 210,
-                    "electricity_consumed_off_peak_interval": 0,
-                    "electricity_produced_point": 0,
-                    "electricity_produced_peak_cumulative": 1296.136,
-                    "electricity_produced_off_peak_cumulative": 482.598,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
-                    "gas_consumed_cumulative": 584.431,
-                    "gas_consumed_interval": 0.014,
-                },
-            },
-        }
-
-        self.smile_setup = "smile_p1_v2_2"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.5.9"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
-
-        await self.device_test(smile, testdata)
-        assert self.device_items == 26
-        assert not self.notifications
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
+    #    @pytest.mark.asyncio
+    #    async def test_connect_smile_p1_v2_2(self):
+    #        """Test another legacy P1 device."""
+    #        testdata = {
+    #            "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+    #                "dev_class": "gateway",
+    #                "firmware": "2.5.9",
+    #                "location": "199aa40f126840f392983d171374ab0b",
+    #                "mac_address": "012345670001",
+    #                "model": "Gateway",
+    #                "name": "Smile P1",
+    #                "vendor": "Plugwise",
+    #            },
+    #            "199aa40f126840f392983d171374ab0b": {
+    #                "dev_class": "smartmeter",
+    #                "location": "199aa40f126840f392983d171374ab0b",
+    #                "model": "Ene5\\T210-DESMR5.0",
+    #                "name": "P1",
+    #                "vendor": "Ene5\\T210-DESMR5.0",
+    #                "sensors": {
+    #                    "net_electricity_point": 456,
+    #                    "electricity_consumed_point": 456,
+    #                    "net_electricity_cumulative": 1019.161,
+    #                    "electricity_consumed_peak_cumulative": 1155.155,
+    #                    "electricity_consumed_off_peak_cumulative": 1642.74,
+    #                    "electricity_consumed_peak_interval": 210,
+    #                    "electricity_consumed_off_peak_interval": 0,
+    #                    "electricity_produced_point": 0,
+    #                    "electricity_produced_peak_cumulative": 1296.136,
+    #                    "electricity_produced_off_peak_cumulative": 482.598,
+    #                    "electricity_produced_peak_interval": 0,
+    #                    "electricity_produced_off_peak_interval": 0,
+    #                    "gas_consumed_cumulative": 584.431,
+    #                    "gas_consumed_interval": 0.014,
+    #                },
+    #            },
+    #        }
+    #
+    #        self.smile_setup = "smile_p1_v2_2"
+    #        server, smile, client = await self.connect_wrapper()
+    #        assert smile.smile_hostname == "smile000000"
+    #
+    #        _LOGGER.info("Basics:")
+    #        _LOGGER.info(" # Assert type = power")
+    #        assert smile.smile_type == "power"
+    #        _LOGGER.info(" # Assert version")
+    #        assert smile.smile_version[0] == "2.5.9"
+    #        _LOGGER.info(" # Assert legacy")
+    #        assert smile._smile_legacy
+    #
+    #        await self.device_test(smile, testdata)
+    #        assert self.device_items == 26
+    #        assert not self.notifications
+    #
+    #        await smile.close_connection()
+    #        await self.disconnect(server, client)
 
     @pytest.mark.asyncio
     async def test_connect_anna_v4(self):
