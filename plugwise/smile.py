@@ -518,8 +518,10 @@ class Smile(SmileComm, SmileData):
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
-        else:
+        elif not self._smile_legacy:
             self._locations = await self._request(LOCATIONS)
+        else:
+            self._modules = await self._request(MODULES)
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
