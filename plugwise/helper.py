@@ -1264,7 +1264,7 @@ class SmileHelper:
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff_indicator"
 
-        mod_logs = search.find("./modules/services")
+        mod_logs = search.find("./module/services")
         # meter_string = ".//{}[type='{}']/"
         for mod.measurement, mod.attrs in P1_LEGACY_MEASUREMENTS.items():
             meas_list = mod.measurement.split("_")
