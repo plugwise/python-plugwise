@@ -1192,7 +1192,9 @@ class SmileHelper:
         # If locator not found look for gas_consumed or phase data (without tariff)
         if loc.logs.find(loc.locator) is None:
             LOGGER.debug("HOI1 not found")
-            if "gas" in loc.measurement or "phase" in loc.measurement:
+            if "log" in loc.log_type and (
+                "gas" in loc.measurement or "phase" in loc.measurement
+            ):
                 LOGGER.debug("HOI no tarrifs")
                 # Avoid double processing by skipping one peak-list option
                 if loc.peak_select == "nl_offpeak":
@@ -1206,8 +1208,10 @@ class SmileHelper:
                     loc.found = False
                     return loc
             # P1 legacy point_meter has no tariff_indicator
-            elif "point" in loc.log_type:
-                LOGGER.debug("HOI point_meter")
+            elif "meter" in loc.log_type and (
+                "point" in loc.log_type or "gas" in loc.measurement
+            ):
+                LOGGER.debug("HOI point_meter or gas")
                 # Avoid double processing by skipping one peak-list option
                 if loc.peak_select == "nl_offpeak":
                     loc.found = False
