@@ -1206,6 +1206,8 @@ class SmileHelper:
                 LOGGER.debug("HOI not found")
                 loc.found = False
                 return loc
+
+            LOGGER.debug("No Tariff item?")
             loc.locator_ = (
                 f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
             )
