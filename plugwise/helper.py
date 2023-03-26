@@ -1268,7 +1268,7 @@ class SmileHelper:
         # meter_string = ".//{}[type='{}']/"
         for mod.measurement, mod.attrs in P1_LEGACY_MEASUREMENTS.items():
             meas_list = mod.measurement.split("_")
-            for mod.log in mod_logs:
+            for mod.logs in mod_logs:
                 for mod.log_type in mod_list:
                     for mod.peak_select in peak_list:
                         mod.locator = (
