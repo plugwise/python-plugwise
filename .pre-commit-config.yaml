@@ -103,7 +103,7 @@ repos:
       - id: testing
         name: "Local Testing - Performing Tests"
         # yamllint disable-line rule:line-length
-        entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" scripts/tests_and_coverage.sh testing'
+        entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" scripts/tests_and_coverage.sh test_and_coverage'
         language: script
         pass_filenames: false
   - repo: https://github.com/igorshubovych/markdownlint-cli

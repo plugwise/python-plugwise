@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env bash -x
 set -eu
 
 my_path=$(git rev-parse --show-toplevel)
