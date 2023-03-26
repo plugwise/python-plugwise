@@ -1307,10 +1307,10 @@ class SmileHelper:
                         if not mod.found:
                             continue
 
-                    direct_data = power_data_energy_diff(
-                        mod.measurement, mod.net_string, mod.f_val, direct_data
-                    )
-                    direct_data[mod.key_string] = mod.f_val  # type: ignore [literal-required]
+                        direct_data = power_data_energy_diff(
+                            mod.measurement, mod.net_string, mod.f_val, direct_data
+                        )
+                        direct_data[mod.key_string] = mod.f_val  # type: ignore [literal-required]
 
         return direct_data
 
