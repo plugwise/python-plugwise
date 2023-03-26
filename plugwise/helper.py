@@ -1219,13 +1219,9 @@ class SmileHelper:
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        LOGGER.debug("HOI %s", loc.key_string)
         if no_tariffs:
             loc.key_string = f"{loc.measurement}_{log_found}"
-        if "gas" in loc.measurement:
-            loc.key_string = f"{loc.measurement}_{log_found}"
-        if "phase" in loc.measurement:
-            loc.key_string = f"{loc.measurement}"
+        LOGGER.debug("HOI %s", loc.key_string)
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
