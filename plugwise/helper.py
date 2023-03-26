@@ -1289,6 +1289,7 @@ class SmileHelper:
                             f'measurement[@directionality="{mod.meas_list[1]}"]'
                             f'[@{t_string}="{mod.peak_select}"]'
                         )
+                        LOGGER.debug("HOI locator: %s", mod.locator)
                         mod = self._power_data_peak_value(direct_data, mod)
                         if not mod.found:
                             continue
