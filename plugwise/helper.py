@@ -1221,6 +1221,7 @@ class SmileHelper:
                     f"./{loc.meas_list[0]}_{loc.log_type}/"
                     f'measurement[@directionality="{loc.meas_list[1]}"]'
                 )
+                LOGGER.debug("HOI new locator: %s", loc.locator)
                 if loc.logs.find(loc.locator) is None:
                     loc.found = False
                     return loc
