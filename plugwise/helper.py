@@ -1272,7 +1272,7 @@ class SmileHelper:
                 for mod.log_type in mod_list:
                     for mod.peak_select in peak_list:
                         mod.locator = (
-                            f"./(meas_list[0]_{mod.log_type}/"
+                            f"./{meas_list[0]}_{mod.log_type}/"
                             f'measurement[@directionality="{meas_list[1]}"]'
                             f'[@{t_string}="{mod.peak_select}"]'
                         )
