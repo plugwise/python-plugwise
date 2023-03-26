@@ -1203,7 +1203,7 @@ class SmileHelper:
         LOGGER.debug("HOI %s", loc.measurement)
         if loc.logs.find(loc.locator) is None:
             if "gas" not in loc.measurement or "phase" not in loc.measurement:
-                LOGGER.debug("HOI not found")
+                LOGGER.debug("HOI1 not found")
                 loc.found = False
                 return loc
 
@@ -1212,7 +1212,7 @@ class SmileHelper:
                 f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
             )
             if loc.logs.find(loc.locator) is None:
-                LOGGER.debug("HOI not found")
+                LOGGER.debug("HOI2 not found")
                 loc.found = False
                 return loc
 
