@@ -3576,7 +3576,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        assert self.device_items == 28
+        assert self.device_items == 27
         assert not self.notifications
 
         await smile.close_connection()
@@ -3634,7 +3634,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 28
+        assert self.device_items == 27
         assert not self.notifications
 
         await smile.close_connection()
