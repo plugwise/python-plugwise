@@ -1204,8 +1204,9 @@ class SmileHelper:
             loc.locator = (
                 f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
             )
-            no_tariffs = True
-            if loc.logs.find(loc.locator) is None:
+            if loc.logs.find(loc.locator) is not None:
+                no_tariffs = True
+            else:
                 loc.found = False
                 return loc
 
