@@ -1199,9 +1199,9 @@ class SmileHelper:
         #         f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
         #     )
 
-        # If locator not found look for gas_consumed data (without tariff)
+        # If locator not found look for gas_consumed or phase data (without tariff)
         if loc.logs.find(loc.locator) is None:
-            if "gas" not in loc.measurement:
+            if "gas" not in loc.measurement or "phase" not in loc.measurement:
                 loc.found = False
                 return loc
 
