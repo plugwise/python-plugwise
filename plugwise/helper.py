@@ -1184,20 +1184,20 @@ class SmileHelper:
 
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
-        loc.found = True
-        no_tariffs = False
+        # loc.found = True
+        # no_tariffs = False
 
         # Only once try to find P1 Legacy values
-        if loc.logs.find(loc.locator) is None and self.smile_type == "power":
-            no_tariffs = True
-            # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
-            # if loc.peak_select == "nl_offpeak":
-            #     loc.found = False
-            #    return loc
+        # if loc.logs.find(loc.locator) is None and self.smile_type == "power":
+        # no_tariffs = True
+        # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
+        # if loc.peak_select == "nl_offpeak":
+        #     loc.found = False
+        #    return loc
 
-            loc.locator = (
-                f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-            )
+        #     loc.locator = (
+        #         f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+        #     )
 
         # Locator not found
         if loc.logs.find(loc.locator) is None:
@@ -1209,8 +1209,8 @@ class SmileHelper:
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
         # P1 with fw 2.x does not have tariff indicators for point_log values
-        if no_tariffs:
-            loc.key_string = f"{loc.measurement}_{log_found}"
+        # if no_tariffs:
+        #     loc.key_string = f"{loc.measurement}_{log_found}"
         if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "phase" in loc.measurement:
