@@ -187,6 +187,7 @@ def power_data_energy_diff(
     measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
 ) -> DeviceData:
     """Calculate differential energy."""
+    LOGGER.debug("HOI net measurement: %s", measurement)
     if (
         "electricity" in measurement
         and "phase" not in measurement
@@ -207,6 +208,7 @@ def power_data_energy_diff(
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
         direct_data[net_string] = tmp_val  # type: ignore [literal-required]
+        LOGGER.debug("HOI %s: %s", net_string, tmp_val)
 
     return direct_data
 
