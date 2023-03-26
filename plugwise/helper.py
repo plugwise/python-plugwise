@@ -187,7 +187,6 @@ def power_data_energy_diff(
     measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
 ) -> DeviceData:
     """Calculate differential energy."""
-    LOGGER.debug("HOI net measurement: %s", measurement)
     if (
         "electricity" in measurement
         and "phase" not in measurement
@@ -208,7 +207,6 @@ def power_data_energy_diff(
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
         direct_data[net_string] = tmp_val  # type: ignore [literal-required]
-        LOGGER.debug("HOI %s: %s", net_string, tmp_val)
 
     return direct_data
 
@@ -1188,14 +1186,11 @@ class SmileHelper:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
 
-        LOGGER.debug("HOI measurement: %s", loc.measurement)
         # If locator not found look for gas_consumed or phase data (without tariff)
         if loc.logs.find(loc.locator) is None:
-            LOGGER.debug("HOI1 not found")
             if "log" in loc.log_type and (
                 "gas" in loc.measurement or "phase" in loc.measurement
             ):
-                LOGGER.debug("HOI no tarrifs")
                 # Avoid double processing by skipping one peak-list option
                 if loc.peak_select == "nl_offpeak":
                     loc.found = False
@@ -1211,7 +1206,6 @@ class SmileHelper:
             elif "meter" in loc.log_type and (
                 "point" in loc.log_type or "gas" in loc.measurement
             ):
-                LOGGER.debug("HOI point_meter or gas")
                 # Avoid double processing by skipping one peak-list option
                 if loc.peak_select == "nl_offpeak":
                     loc.found = False
@@ -1221,7 +1215,6 @@ class SmileHelper:
                     f"./{loc.meas_list[0]}_{loc.log_type}/"
                     f'measurement[@directionality="{loc.meas_list[1]}"]'
                 )
-                LOGGER.debug("HOI new locator: %s", loc.locator)
                 if loc.logs.find(loc.locator) is None:
                     loc.found = False
                     return loc
@@ -1237,12 +1230,10 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "phase" in loc.measurement:
             loc.key_string = f"{loc.measurement}"
-        LOGGER.debug("HOI key_string: %s", loc.key_string)
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
-        LOGGER.debug("HOI value: %s", loc.f_val)
         return loc
 
     def _power_data_from_location(self, loc_id: str) -> DeviceData:
@@ -1302,7 +1293,6 @@ class SmileHelper:
                             f"./{mod.meas_list[0]}_{mod.log_type}/measurement"
                             f'[@directionality="{mod.meas_list[1]}"][@{t_string}="{mod.peak_select}"]'
                         )
-                        LOGGER.debug("HOI locator: %s", mod.locator)
                         mod = self._power_data_peak_value(direct_data, mod)
                         if not mod.found:
                             continue
