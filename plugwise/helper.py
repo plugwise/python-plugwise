@@ -1186,36 +1186,24 @@ class SmileHelper:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
 
-        # Only once try to find P1 Legacy values
-        # if loc.logs.find(loc.locator) is None and self.smile_type == "power":
-        # no_tariffs = True
-        # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
-        # if loc.peak_select == "nl_offpeak":
-        #     loc.found = False
-        #    return loc
-
-        #     loc.locator = (
-        #         f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-        #     )
-
         # If locator not found look for gas_consumed or phase data (without tariff)
-        LOGGER.debug("HOI measurement: %s %s", loc.measurement, loc.log_type)
         if loc.logs.find(loc.locator) is None:
-            LOGGER.debug("HOI1 not found")
             if "gas" in loc.measurement or "phase" in loc.measurement:
-                LOGGER.debug("No Tariff item?")
+                # Avoid double processing by skipping one peak-list option
+                if loc.peak_select == "nl_offpeak":
+                    loc.found = False
+                    return loc
+
                 loc.locator = (
                     f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
                 )
                 if loc.logs.find(loc.locator) is None:
-                    LOGGER.debug("HOI2 not found")
                     loc.found = False
                     return loc
             else:
                 loc.found = False
                 return loc
 
-        LOGGER.debug("HOI found")
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
@@ -1224,7 +1212,6 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "phase" in loc.measurement:
             loc.key_string = f"{loc.measurement}"
-        LOGGER.debug("HOI %s", loc.key_string)
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
