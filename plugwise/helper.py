@@ -1201,15 +1201,19 @@ class SmileHelper:
         # If locator not found look for gas_consumed or phase data (without tariff)
         LOGGER.debug("HOI measurement: %s %s", loc.measurement, loc.log_type)
         if loc.logs.find(loc.locator) is None:
+            LOGGER.debug("HOI1 not found")
             if "gas" in loc.measurement or "phase" in loc.measurement:
                 LOGGER.debug("No Tariff item?")
                 loc.locator = (
                     f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
                 )
                 if loc.logs.find(loc.locator) is None:
-                    LOGGER.debug("HOI not found")
+                    LOGGER.debug("HOI2 not found")
                     loc.found = False
                     return loc
+            else:
+                loc.found = False
+                return loc
 
         LOGGER.debug("HOI found")
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
