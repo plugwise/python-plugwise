@@ -1225,10 +1225,12 @@ class SmileHelper:
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "phase" in loc.measurement:
             loc.key_string = f"{loc.measurement}"
+        LOGGER.debug("HOI key_string: %s", loc.key_string)
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
+        LOGGER.debug("HOI value: %s", loc.f_val)
         return loc
 
     def _power_data_from_location(self, loc_id: str) -> DeviceData:
