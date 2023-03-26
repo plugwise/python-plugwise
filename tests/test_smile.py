@@ -878,7 +878,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {
                     "net_electricity_point": 458,
                     "electricity_consumed_point": 458,
-                    "net_electricity_cumulative": 1019.161,
+                    "net_electricity_cumulative": 1019.201,
                     "electricity_consumed_peak_cumulative": 1155.195,
                     "electricity_consumed_off_peak_cumulative": 1642.74,
                     "electricity_consumed_peak_interval": 250,
