@@ -291,8 +291,8 @@ class SmileData(SmileHelper):
         if details["dev_class"] == "smartmeter":
             if not self._smile_legacy:
                 device_data.update(self._power_data_from_location(details["location"]))
-            # else:
-            #    device_data.update(self._power_data_from_modules())
+            else:
+                device_data.update(self._power_data_from_modules())
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
