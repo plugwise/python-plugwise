@@ -1264,20 +1264,21 @@ class SmileHelper:
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff_indicator"
 
-        mod.logs = search.find("./modules/services")
+        mod_logs = search.find("./modules/services")
         # meter_string = ".//{}[type='{}']/"
         for mod.measurement, mod.attrs in P1_LEGACY_MEASUREMENTS.items():
             meas_list = mod.measurement.split("_")
-            for mod.log_type in mod_list:
-                for mod.peak_select in peak_list:
-                    mod.locator = (
-                        f"./(meas_list[0]_{mod.log_type}/"
-                        f'measurement[@directionality="{meas_list[1]}"]'
-                        f'[@{t_string}="{mod.peak_select}"]'
-                    )
-                    mod = self._power_data_peak_value(direct_data, mod)
-                    if not mod.found:
-                        continue
+            for mod.log in mod_logs:
+                for mod.log_type in mod_list:
+                    for mod.peak_select in peak_list:
+                        mod.locator = (
+                            f"./(meas_list[0]_{mod.log_type}/"
+                            f'measurement[@directionality="{meas_list[1]}"]'
+                            f'[@{t_string}="{mod.peak_select}"]'
+                        )
+                        mod = self._power_data_peak_value(direct_data, mod)
+                        if not mod.found:
+                            continue
 
                     # direct_data = power_data_energy_diff(
                     #     loc.measurement, loc.net_string, loc.f_val, direct_data
