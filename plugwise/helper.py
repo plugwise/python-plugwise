@@ -1186,7 +1186,7 @@ class SmileHelper:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
 
-        LOGGER.debug("HOI %s:", loc.measurement)
+        LOGGER.debug("HOI measurement: %s", loc.measurement)
         # If locator not found look for gas_consumed or phase data (without tariff)
         if loc.logs.find(loc.locator) is None:
             LOGGER.debug("HOI1 not found")
@@ -1285,9 +1285,8 @@ class SmileHelper:
                 for mod.log_type in mod_list:
                     for mod.peak_select in peak_list:
                         mod.locator = (
-                            f"./{mod.meas_list[0]}_{mod.log_type}/"
-                            f'measurement[@directionality="{mod.meas_list[1]}"]'
-                            f'[@{t_string}="{mod.peak_select}"]'
+                            f"./{mod.meas_list[0]}_{mod.log_type}/measurement"
+                            f'[@directionality="{mod.meas_list[1]} and @{t_string}="{mod.peak_select}"]'
                         )
                         LOGGER.debug("HOI locator: %s", mod.locator)
                         mod = self._power_data_peak_value(direct_data, mod)
