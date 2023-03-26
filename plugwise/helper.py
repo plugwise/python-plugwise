@@ -1206,7 +1206,7 @@ class SmileHelper:
                     loc.found = False
                     return loc
             # P1 legacy point_meter has no tariff_indicator
-            elif "point" in loc.measurement:
+            elif "point" in loc.log_type:
                 LOGGER.debug("HOI point_meter")
                 loc.locator = (
                     f"./{loc.meas_list[0]}_{loc.log_type}/"
