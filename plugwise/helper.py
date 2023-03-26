@@ -1186,9 +1186,12 @@ class SmileHelper:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
 
+        LOGGER.debug("HOI %s:", loc.measurement)
         # If locator not found look for gas_consumed or phase data (without tariff)
         if loc.logs.find(loc.locator) is None:
+            LOGGER.debug("HOI1 not found")
             if "gas" in loc.measurement or "phase" in loc.measurement:
+                LOGGER.debug("HOI no tarrifs")
                 # Avoid double processing by skipping one peak-list option
                 if loc.peak_select == "nl_offpeak":
                     loc.found = False
@@ -1280,10 +1283,10 @@ class SmileHelper:
                         if not mod.found:
                             continue
 
-                    # direct_data = power_data_energy_diff(
-                    #     loc.measurement, loc.net_string, loc.f_val, direct_data
-                    # )
-                    # direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                    direct_data = power_data_energy_diff(
+                        mod.measurement, mod.net_string, mod.f_val, direct_data
+                    )
+                    direct_data[mod.key_string] = mod.f_val  # type: ignore [literal-required]
 
         return direct_data
 
