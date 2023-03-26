@@ -1273,7 +1273,7 @@ class SmileHelper:
         mod = Munch()
 
         search = self._modules
-        mod_list: list[str] = ["point_meter", "cumulative_meter", "interval_meter"]
+        mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff_indicator"
 
