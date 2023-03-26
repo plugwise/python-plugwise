@@ -1191,9 +1191,9 @@ class SmileHelper:
         if loc.logs.find(loc.locator) is None and self.smile_type == "power":
             no_tariffs = True
             # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
-            if loc.peak_select == "nl_offpeak":
-                loc.found = False
-                return loc
+            # if loc.peak_select == "nl_offpeak":
+            #     loc.found = False
+            #    return loc
 
             loc.locator = (
                 f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
@@ -1255,8 +1255,7 @@ class SmileHelper:
         return direct_data
 
     def _power_data_from_modules(self) -> DeviceData:
-        """
-        Helper-function for smile.py: _get_device_data().
+        """Helper-function for smile.py: _get_device_data().
 
         Collect the power-data from MODULES (P1 legacy only).
         """
