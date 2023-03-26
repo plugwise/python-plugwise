@@ -1200,6 +1200,7 @@ class SmileHelper:
         #     )
 
         # Locator not found
+        LOGGER.debug("HOI %s", loc.locator)
         if loc.logs.find(loc.locator) is None:
             loc.found = False
             return loc
