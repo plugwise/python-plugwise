@@ -1210,10 +1210,10 @@ class SmileHelper:
                 if loc.logs.find(loc.locator) is not None:
                     no_tariffs = True
 
-        if not no_tariffs:
-            LOGGER.debug("HOI not found")
-            loc.found = False
-            return loc
+            if not no_tariffs:
+                LOGGER.debug("HOI not found")
+                loc.found = False
+                return loc
 
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
