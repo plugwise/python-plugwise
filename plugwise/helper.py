@@ -1184,7 +1184,7 @@ class SmileHelper:
 
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
-        # loc.found = True
+        loc.found = True
         # no_tariffs = False
 
         # Only once try to find P1 Legacy values
