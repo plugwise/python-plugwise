@@ -1203,17 +1203,18 @@ class SmileHelper:
         LOGGER.debug("HOI %s", loc.measurement)
         if loc.logs.find(loc.locator) is None:
             if "gas" not in loc.measurement or "phase" not in loc.measurement:
-                loc.found = False
-                return loc
-            loc.locator = (
-                f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-            )
-            if loc.logs.find(loc.locator) is not None:
-                no_tariffs = True
-            else:
                 LOGGER.debug("HOI not found")
                 loc.found = False
                 return loc
+            loc.locator_ = (
+                f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+            )
+            if loc.logs.find(loc.locator) is None:
+                LOGGER.debug("HOI not found")
+                loc.found = False
+                return loc
+
+            no_tariffs = True
 
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
