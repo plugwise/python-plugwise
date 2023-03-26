@@ -1185,7 +1185,6 @@ class SmileHelper:
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location()."""
         loc.found = True
-        no_tariffs = False
 
         # Only once try to find P1 Legacy values
         # if loc.logs.find(loc.locator) is None and self.smile_type == "power":
@@ -1207,21 +1206,20 @@ class SmileHelper:
                 loc.locator = (
                     f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
                 )
-                if loc.logs.find(loc.locator) is not None:
-                    no_tariffs = True
-
-            if not no_tariffs:
-                LOGGER.debug("HOI not found")
-                loc.found = False
-                return loc
+                if loc.logs.find(loc.locator) is None:
+                    LOGGER.debug("HOI not found")
+                    loc.found = False
+                    return loc
 
         LOGGER.debug("HOI found")
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        if no_tariffs:
+        if "gas" in loc.measurement:
             loc.key_string = f"{loc.measurement}_{log_found}"
+        if "phase" in loc.measurement:
+            loc.key_string = f"{loc.measurement}"
         LOGGER.debug("HOI %s", loc.key_string)
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
