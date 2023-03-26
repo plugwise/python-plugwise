@@ -1226,7 +1226,7 @@ class SmileHelper:
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        if "gas" in loc.measurement or "point_meter" in loc.log_type:
+        if "gas" in loc.measurement or loc.log_type == "point_meter":
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "phase" in loc.measurement:
             loc.key_string = f"{loc.measurement}"
