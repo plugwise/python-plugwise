@@ -13,7 +13,7 @@ The controller will:
 
 from datetime import datetime, timedelta
 import logging
-from queue import Empty, PriorityQueue
+from queue import Empty, SimpleQueue
 import threading
 import time
 
@@ -102,7 +102,7 @@ class StickMessageController:
         if self.connection.connect():
             _LOGGER.debug("Starting message controller threads...")
             # send daemon
-            self._send_message_queue = PriorityQueue()
+            self._send_message_queue = SimpleQueue()
             self._send_message_thread_state = True
             self._send_message_thread = threading.Thread(
                 None, self._send_message_loop, "send_messages_thread", (), {}
