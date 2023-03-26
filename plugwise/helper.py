@@ -1204,10 +1204,10 @@ class SmileHelper:
         if loc.logs.find(loc.locator) is None:
             if "gas" in loc.measurement or "phase" in loc.measurement:
                 LOGGER.debug("No Tariff item?")
-                loc.locator_no_tariff = (
+                loc.locator = (
                     f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
                 )
-                if loc.logs.find(loc.locator_no_tariff) is not None:
+                if loc.logs.find(loc.locator) is not None:
                     no_tariffs = True
 
             if not no_tariffs:
