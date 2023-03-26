@@ -1203,6 +1203,16 @@ class SmileHelper:
                 if loc.logs.find(loc.locator) is None:
                     loc.found = False
                     return loc
+            # P1 legacy point_meter has no tariff_indicator
+            elif "point" in loc.measurement:
+                LOGGER.debug("HOI point_meter")
+                loc.locator = (
+                    f"./{loc.meas_list[0]}_{loc.log_type}/"
+                    f'measurement[@directionality="{loc.meas_list[1]}"]'
+                )
+                if loc.logs.find(loc.locator) is None:
+                    loc.found = False
+                    return loc
             else:
                 loc.found = False
                 return loc
@@ -1270,13 +1280,13 @@ class SmileHelper:
         mod_logs = search.find("./module/services")
         # meter_string = ".//{}[type='{}']/"
         for mod.measurement, mod.attrs in P1_LEGACY_MEASUREMENTS.items():
-            meas_list = mod.measurement.split("_")
+            mod.meas_list = mod.measurement.split("_")
             for mod.logs in mod_logs:
                 for mod.log_type in mod_list:
                     for mod.peak_select in peak_list:
                         mod.locator = (
-                            f"./{meas_list[0]}_{mod.log_type}/"
-                            f'measurement[@directionality="{meas_list[1]}"]'
+                            f"./{mod.meas_list[0]}_{mod.log_type}/"
+                            f'measurement[@directionality="{mod.meas_list[1]}"]'
                             f'[@{t_string}="{mod.peak_select}"]'
                         )
                         mod = self._power_data_peak_value(direct_data, mod)
