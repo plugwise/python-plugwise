@@ -1183,10 +1183,10 @@ class SmileHelper:
         return None if loc_found == 0 else open_valve_count
 
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
-        """Helper-function for _power_data_from_location()."""
+        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
-
-        # If locator not found look for gas_consumed or phase data (without tariff)
+        # If locator not found look for P1 gas_consumed or phase data (without tariff)
+        # or for P1 legacy electricity_point_meter or gas_*_meter data
         if loc.logs.find(loc.locator) is None:
             if "log" in loc.log_type and (
                 "gas" in loc.measurement or "phase" in loc.measurement
@@ -1243,17 +1243,16 @@ class SmileHelper:
         """
         direct_data: DeviceData = {}
         loc = Munch()
-
-        search = self._locations
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff"
 
+        search = self._locations
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
-        # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 for loc.peak_select in peak_list:
+                    # meter_string = ".//{}[type='{}']/"
                     loc.locator = (
                         f'./{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
@@ -1275,32 +1274,30 @@ class SmileHelper:
         Collect the power-data from MODULES (P1 legacy only).
         """
         direct_data: DeviceData = {}
-        mod = Munch()
-
-        search = self._modules
+        loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff_indicator"
 
+        search = self._modules
         mod_logs = search.findall("./module/services")
-        # meter_string = ".//{}[type='{}']/"
-        for mod.measurement, mod.attrs in P1_LEGACY_MEASUREMENTS.items():
-            mod.meas_list = mod.measurement.split("_")
-            for mod.logs in mod_logs:
-                for mod.log_type in mod_list:
-                    for mod.peak_select in peak_list:
-                        mod.locator = (
+        for loc.measurement, loc.attrs in P1_LEGACY_MEASUREMENTS.items():
+            loc.meas_list = loc.measurement.split("_")
+            for loc.logs in mod_logs:
+                for loc.log_type in mod_list:
+                    for loc.peak_select in peak_list:
+                        loc.locator = (
                             f"./{mod.meas_list[0]}_{mod.log_type}/measurement"
                             f'[@directionality="{mod.meas_list[1]}"][@{t_string}="{mod.peak_select}"]'
                         )
-                        mod = self._power_data_peak_value(direct_data, mod)
-                        if not mod.found:
+                        loc = self._power_data_peak_value(direct_data, loc)
+                        if not loc.found:
                             continue
 
                         direct_data = power_data_energy_diff(
-                            mod.measurement, mod.net_string, mod.f_val, direct_data
+                            loc.measurement, loc.net_string, loc.f_val, direct_data
                         )
-                        direct_data[mod.key_string] = mod.f_val  # type: ignore [literal-required]
+                        direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
 
         return direct_data
 
