@@ -2,5 +2,5 @@
 -e .
 # Versioning omitted (leave this up to HA-core)
 pytest-asyncio
-radon==5.1.0
+radon==6.0.1
 types-python-dateutil
