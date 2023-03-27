@@ -2,8 +2,11 @@
 
 ## Ongoing
 
-- Improved markdown (i.e. markup and contents), added linter for markdown & added code owners
-- Default to python 3.11
+- `Dependencies`: Default to python 3.11
+- `Development`
+  - Improved markdown (i.e. markup and contents), added linter for markdown & added code owners
+  - Replaced flake8 linting with ruff (following HA-Core)
+  - Improved testing on commit
 
 ## v0.27.8: Stick bugfix: fix for reported Plugwise-Beta issue [#347](https://github.com/plugwise/plugwise-beta/issues/347)
 
@@ -13,7 +16,7 @@
 
 - [#312](https://github.com/plugwise/plugwise-beta/issues/312)
 - Fix Stick-related memory-leaks
-- Add python 3.11 support
+- `Dependencies`: Add python 3.11 support
 
 ## v0.27.6: Stick bugfix: properly handle responses without mac
 
