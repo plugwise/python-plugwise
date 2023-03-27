@@ -1287,8 +1287,8 @@ class SmileHelper:
                 for loc.log_type in mod_list:
                     for loc.peak_select in peak_list:
                         loc.locator = (
-                            f"./{mod.meas_list[0]}_{mod.log_type}/measurement"
-                            f'[@directionality="{mod.meas_list[1]}"][@{t_string}="{mod.peak_select}"]'
+                            f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
+                            f'[@directionality="{loc.meas_list[1]}"][@{t_string}="{loc.peak_select}"]'
                         )
                         loc = self._power_data_peak_value(direct_data, loc)
                         if not loc.found:
