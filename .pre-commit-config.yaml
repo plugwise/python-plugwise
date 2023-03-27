@@ -8,6 +8,12 @@ default_language_version:
 
 repos:
   # Run manually in CI skipping the branch checks
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.259
+    hooks:
+      - id: ruff
+        args:
+          - --fix
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0
     hooks:
@@ -39,12 +45,6 @@ repos:
     hooks:
       - id: codespell
         exclude_types: [csv, json]
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.259
-    hooks:
-      - id: ruff
-        args:
-          - --fix
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:
