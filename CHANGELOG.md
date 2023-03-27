@@ -1,7 +1,8 @@
 # Changelog
 
-## Ongoing
+## v0.27.9: P1 legacy: collect data from /core/modules
 
+- Collect P1 legacy data from /core/modules - fix for [#368](https://github.com/plugwise/plugwise-beta/issues/368)
 - `Dependencies`: Default to python 3.11
 - `Development`
   - Improved markdown (i.e. markup and contents), added linter for markdown & added code owners
@@ -41,7 +42,7 @@
 
 ## v0.25.14: Improve, bugfix
 
-- Anna+Elga: final solution for [#312](https://github.com/plugwise/plugwise-beta/issues/320)
+- Anna+Elga: final solution for [#320](https://github.com/plugwise/plugwise-beta/issues/320)
 - Related to [Core Issue 83068](https://github.com/home-assistant/core/issues/83068): handle actuator_functionality or sensor depending on which one is present
 
 ## v0.25.13: Anna+Elga, OnOff device: base heating_state, cooling_state on central_heating_state key only

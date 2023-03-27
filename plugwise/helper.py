@@ -39,6 +39,7 @@ from .constants import (
     LOCATIONS,
     LOGGER,
     NONE,
+    P1_LEGACY_MEASUREMENTS,
     P1_MEASUREMENTS,
     POWER_WATT,
     SENSORS,
@@ -1182,35 +1183,50 @@ class SmileHelper:
         return None if loc_found == 0 else open_valve_count
 
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
-        """Helper-function for _power_data_from_location()."""
+        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
-        no_tariffs = False
+        # If locator not found look for P1 gas_consumed or phase data (without tariff)
+        # or for P1 legacy electricity_point_meter or gas_*_meter data
+        if loc.logs.find(loc.locator) is None:
+            if "log" in loc.log_type and (
+                "gas" in loc.measurement or "phase" in loc.measurement
+            ):
+                # Avoid double processing by skipping one peak-list option
+                if loc.peak_select == "nl_offpeak":
+                    loc.found = False
+                    return loc
 
-        # Only once try to find P1 Legacy values
-        if loc.logs.find(loc.locator) is None and self.smile_type == "power":
-            no_tariffs = True
-            # P1 Legacy: avoid doubling the net_electricity_..._point value by skipping one peak-list option
-            if loc.peak_select == "nl_offpeak":
+                loc.locator = (
+                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+                )
+                if loc.logs.find(loc.locator) is None:
+                    loc.found = False
+                    return loc
+            # P1 legacy point_meter has no tariff_indicator
+            elif "meter" in loc.log_type and (
+                "point" in loc.log_type or "gas" in loc.measurement
+            ):
+                # Avoid double processing by skipping one peak-list option
+                if loc.peak_select == "nl_offpeak":
+                    loc.found = False
+                    return loc
+
+                loc.locator = (
+                    f"./{loc.meas_list[0]}_{loc.log_type}/"
+                    f'measurement[@directionality="{loc.meas_list[1]}"]'
+                )
+                if loc.logs.find(loc.locator) is None:
+                    loc.found = False
+                    return loc
+            else:
                 loc.found = False
                 return loc
-
-            loc.locator = (
-                f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-            )
-
-        # Locator not found
-        if loc.logs.find(loc.locator) is None:
-            loc.found = False
-            return loc
 
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
         log_found = loc.log_type.split("_")[0]
         loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        # P1 with fw 2.x does not have tariff indicators for point_log values
-        if no_tariffs:
-            loc.key_string = f"{loc.measurement}_{log_found}"
-        if "gas" in loc.measurement:
+        if "gas" in loc.measurement or loc.log_type == "point_meter":
             loc.key_string = f"{loc.measurement}_{log_found}"
         if "phase" in loc.measurement:
             loc.key_string = f"{loc.measurement}"
@@ -1227,19 +1243,16 @@ class SmileHelper:
         """
         direct_data: DeviceData = {}
         loc = Munch()
-
-        search = self._locations
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff"
-        if self._smile_legacy:
-            t_string = "tariff_indicator"
 
+        search = self._locations
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
-        # meter_string = ".//{}[type='{}']/"
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 for loc.peak_select in peak_list:
+                    # meter_string = ".//{}[type='{}']/"
                     loc.locator = (
                         f'./{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
@@ -1252,6 +1265,39 @@ class SmileHelper:
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
                     direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+
+        return direct_data
+
+    def _power_data_from_modules(self) -> DeviceData:
+        """Helper-function for smile.py: _get_device_data().
+
+        Collect the power-data from MODULES (P1 legacy only).
+        """
+        direct_data: DeviceData = {}
+        loc = Munch()
+        mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
+        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
+        t_string = "tariff_indicator"
+
+        search = self._modules
+        mod_logs = search.findall("./module/services")
+        for loc.measurement, loc.attrs in P1_LEGACY_MEASUREMENTS.items():
+            loc.meas_list = loc.measurement.split("_")
+            for loc.logs in mod_logs:
+                for loc.log_type in mod_list:
+                    for loc.peak_select in peak_list:
+                        loc.locator = (
+                            f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
+                            f'[@directionality="{loc.meas_list[1]}"][@{t_string}="{loc.peak_select}"]'
+                        )
+                        loc = self._power_data_peak_value(direct_data, loc)
+                        if not loc.found:
+                            continue
+
+                        direct_data = power_data_energy_diff(
+                            loc.measurement, loc.net_string, loc.f_val, direct_data
+                        )
+                        direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
 
         return direct_data
 

@@ -287,9 +287,12 @@ class SmileData(SmileHelper):
         if details["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device_data["dhw_modes"] = self._dhw_allowed_modes
 
-        # Get P1 smartmeter data from LOCATIONS
+        # Get P1 smartmeter data from LOCATIONS or MODULES
         if details["dev_class"] == "smartmeter":
-            device_data.update(self._power_data_from_location(details["location"]))
+            if not self._smile_legacy:
+                device_data.update(self._power_data_from_location(details["location"]))
+            else:
+                device_data.update(self._power_data_from_modules())
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
@@ -484,11 +487,6 @@ class Smile(SmileComm, SmileData):
             self._appliances = await self._request(APPLIANCES)
             await self._update_domain_objects()
 
-        if self.smile_type != "power":
-            await self._update_domain_objects()
-            if not self._smile_legacy:
-                self._appliances = await self._request(APPLIANCES)
-
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
 
@@ -515,8 +513,10 @@ class Smile(SmileComm, SmileData):
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
-        else:
+        elif not self._smile_legacy:
             self._locations = await self._request(LOCATIONS)
+        else:
+            self._modules = await self._request(MODULES)
 
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):

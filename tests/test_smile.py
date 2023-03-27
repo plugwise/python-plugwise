@@ -876,20 +876,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "P1",
                 "vendor": "Ene5\\T210-DESMR5.0",
                 "sensors": {
-                    "net_electricity_point": 456,
-                    "electricity_consumed_point": 456,
-                    "net_electricity_cumulative": 1019.161,
-                    "electricity_consumed_peak_cumulative": 1155.155,
+                    "net_electricity_point": 458,
+                    "electricity_consumed_point": 458,
+                    "net_electricity_cumulative": 1019.201,
+                    "electricity_consumed_peak_cumulative": 1155.195,
                     "electricity_consumed_off_peak_cumulative": 1642.74,
-                    "electricity_consumed_peak_interval": 210,
+                    "electricity_consumed_peak_interval": 250,
                     "electricity_consumed_off_peak_interval": 0,
                     "electricity_produced_point": 0,
                     "electricity_produced_peak_cumulative": 1296.136,
                     "electricity_produced_off_peak_cumulative": 482.598,
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
-                    "gas_consumed_cumulative": 584.431,
-                    "gas_consumed_interval": 0.014,
+                    "gas_consumed_cumulative": 584.433,
+                    "gas_consumed_interval": 0.016,
                 },
             },
         }
@@ -934,20 +934,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "P1",
                 "vendor": "Ene5\\T210-DESMR5.0",
                 "sensors": {
-                    "net_electricity_point": 456,
-                    "electricity_consumed_point": 456,
-                    "net_electricity_cumulative": 1019.161,
-                    "electricity_consumed_peak_cumulative": 1155.155,
+                    "net_electricity_point": 458,
+                    "electricity_consumed_point": 458,
+                    "net_electricity_cumulative": 1019.201,
+                    "electricity_consumed_peak_cumulative": 1155.195,
                     "electricity_consumed_off_peak_cumulative": 1642.74,
-                    "electricity_consumed_peak_interval": 210,
+                    "electricity_consumed_peak_interval": 250,
                     "electricity_consumed_off_peak_interval": 0,
                     "electricity_produced_point": 0,
                     "electricity_produced_peak_cumulative": 1296.136,
                     "electricity_produced_off_peak_cumulative": 482.598,
                     "electricity_produced_peak_interval": 0,
                     "electricity_produced_off_peak_interval": 0,
-                    "gas_consumed_cumulative": 584.431,
-                    "gas_consumed_interval": 0.014,
+                    "gas_consumed_cumulative": 584.433,
+                    "gas_consumed_interval": 0.016,
                 },
             },
         }
@@ -3554,7 +3554,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_consumed_peak_cumulative": 7702.167,
                     "electricity_consumed_off_peak_cumulative": 10263.159,
                     "electricity_consumed_peak_interval": 179,
-                    "electricity_produced_point": 0,
                     "electricity_produced_off_peak_point": 0,
                     "electricity_produced_peak_cumulative": 0.0,
                     "electricity_produced_off_peak_cumulative": 0.0,
@@ -3577,7 +3576,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        assert self.device_items == 28
+        assert self.device_items == 27
         assert not self.notifications
 
         await smile.close_connection()
@@ -3613,7 +3612,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_consumed_peak_cumulative": 7702.167,
                     "electricity_consumed_off_peak_cumulative": 10263.159,
                     "electricity_consumed_peak_interval": 179,
-                    "electricity_produced_point": 0,
                     "electricity_produced_off_peak_point": 0,
                     "electricity_produced_peak_cumulative": 20.0,
                     "electricity_produced_off_peak_cumulative": 3.0,
@@ -3636,7 +3634,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 28
+        assert self.device_items == 27
         assert not self.notifications
 
         await smile.close_connection()

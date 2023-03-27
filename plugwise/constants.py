@@ -456,6 +456,11 @@ P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "voltage_phase_two": UOM(ELECTRIC_POTENTIAL_VOLT),
     "voltage_phase_three": UOM(ELECTRIC_POTENTIAL_VOLT),
 }
+P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
+    "electricity_consumed": UOM(POWER_WATT),
+    "electricity_produced": UOM(POWER_WATT),
+    "gas_consumed": UOM(VOLUME_CUBIC_METERS),
+}
 # Thermostat and Plug/Stretch related measurements
 # Excluded:
 # zone_thermosstat: 'temperature_offset'
