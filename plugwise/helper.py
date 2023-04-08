@@ -164,10 +164,9 @@ def schedules_temps(
             # Roll over to next Monday when now is before first schedule point
             if today == 0 and before_first:
                 today = 7
+
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
-
-    return []  # pragma: no cover
 
 
 def power_data_local_format(
