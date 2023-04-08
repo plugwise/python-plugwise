@@ -764,7 +764,6 @@ class SmileHelper:
         """
         matched_locations: dict[str, ThermoLoc] = {}
 
-        self._all_appliances()
         for location_id, location_details in self._loc_data.items():
             for appliance_details in self._appl_data.values():
                 if appliance_details["location"] == location_id:
@@ -1086,8 +1085,9 @@ class SmileHelper:
         Update locations with thermostat ranking results and use
         the result to update the device_class of slave thermostats.
         """
+        self._all_appliances()
         if self.smile_type != "thermostat":
-            pass
+            return
 
         self._thermo_locs = self._match_locations()
 
