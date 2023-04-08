@@ -685,7 +685,7 @@ class SmileHelper:
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
-            # Provide a home_location for legacy_anna, don't assign the _home_location
+            # Provide a location for legacy_anna, also don't assign the _home_location
             # to thermostat-devices without a location, they are not active
             elif (
                 self._smile_legacy and self.smile_type == "thermostat"
