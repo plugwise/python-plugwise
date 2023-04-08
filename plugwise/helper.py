@@ -749,7 +749,6 @@ class SmileHelper:
         Match appliances with locations.
         """
         matched_locations: dict[str, ThermoLoc] = {}
-
         for location_id, location_details in self._loc_data.items():
             for appliance_details in self._appl_data.values():
                 if appliance_details["location"] == location_id:
