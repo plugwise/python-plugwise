@@ -383,21 +383,6 @@ class SmileHelper:
         self.smile_version: tuple[str, VersionInfo]
         self.smile_zigbee_mac_address: str | None = None
 
-    def _locations_legacy(self) -> None:
-        """Helper-function for _all_locations().
-
-        Create locations for legacy devices.
-        """
-        appliances = set()
-        self._home_location = FAKE_LOC
-
-        # Add Anna appliances
-        for appliance in self._appliances.findall("./appliance"):
-            appliances.add(appliance.attrib["id"])
-
-        if self.smile_type in ("stretch", "thermostat"):
-            self._loc_data[FAKE_LOC] = {"name": "Home"}
-
     def _locations_specials(self, loc: Munch, location: str) -> Munch:
         """Helper-function for _all_locations().
 
@@ -420,7 +405,8 @@ class SmileHelper:
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         locations = self._locations.findall("./location")
         if not locations and self._smile_legacy:
-            self._locations_legacy()
+            self._home_location = FAKE_LOC
+            self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
 
         for location in locations:
