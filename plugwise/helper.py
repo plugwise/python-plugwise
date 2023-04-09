@@ -968,6 +968,10 @@ class SmileHelper:
                 else:
                     data["heating_state"] = data["c_heating_state"]
 
+        if self._elga:
+            # Anna + Elga: use central_heating_state to show heating_state
+            data["heating_state"] = data["c_heating_state"]
+
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
 
@@ -1008,16 +1012,10 @@ class SmileHelper:
 
         if d_id == self._heater_id and self.smile_name == "Smile Anna":
             if "elga_status_code" in data:
-                # Base heating_/cooling_state on the elga-status-code
-                data["heating_state"] = False
-                data["cooling_state"] = False
-                if data["elga_status_code"] in [4, 10] or (
-                    data["elga_status_code"] in [3, 5, 6, 11] and not data["dhw_state"]
-                ):
-                    data["heating_state"] = True
-                if data["elga_status_code"] == 8:
-                    data["cooling_state"] = self._cooling_active = True
-
+                # Base cooling_state on the elga-status-code
+                data["cooling_state"] = self._cooling_active = (
+                    data["elga_status_code"] == 8
+                )
                 data.pop("elga_status_code", None)
 
                 # Determine _cooling_present and _cooling_enabled
