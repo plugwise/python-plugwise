@@ -164,6 +164,7 @@ def schedules_temps(
             # Roll over to next Monday when now is before first schedule point
             if today == 0 and before_first:
                 today = 7
+
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 
@@ -383,21 +384,6 @@ class SmileHelper:
         self.smile_version: tuple[str, VersionInfo]
         self.smile_zigbee_mac_address: str | None = None
 
-    def _locations_legacy(self) -> None:
-        """Helper-function for _all_locations().
-
-        Create locations for legacy devices.
-        """
-        appliances = set()
-        self._home_location = FAKE_LOC
-
-        # Add Anna appliances
-        for appliance in self._appliances.findall("./appliance"):
-            appliances.add(appliance.attrib["id"])
-
-        if self.smile_type in ("stretch", "thermostat"):
-            self._loc_data[FAKE_LOC] = {"name": "Home"}
-
     def _locations_specials(self, loc: Munch, location: str) -> Munch:
         """Helper-function for _all_locations().
 
@@ -420,7 +406,8 @@ class SmileHelper:
         # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         locations = self._locations.findall("./location")
         if not locations and self._smile_legacy:
-            self._locations_legacy()
+            self._home_location = FAKE_LOC
+            self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
 
         for location in locations:
@@ -699,7 +686,7 @@ class SmileHelper:
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
-            # Provide a home_location for legacy_anna, don't assign the _home_location
+            # Provide a location for legacy_anna, also don't assign the _home_location
             # to thermostat-devices without a location, they are not active
             elif (
                 self._smile_legacy and self.smile_type == "thermostat"
@@ -763,8 +750,6 @@ class SmileHelper:
         Match appliances with locations.
         """
         matched_locations: dict[str, ThermoLoc] = {}
-
-        self._all_appliances()
         for location_id, location_details in self._loc_data.items():
             for appliance_details in self._appl_data.values():
                 if appliance_details["location"] == location_id:
@@ -1086,8 +1071,9 @@ class SmileHelper:
         Update locations with thermostat ranking results and use
         the result to update the device_class of slave thermostats.
         """
+        self._all_appliances()
         if self.smile_type != "thermostat":
-            pass
+            return
 
         self._thermo_locs = self._match_locations()
 
