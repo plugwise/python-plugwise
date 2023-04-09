@@ -168,6 +168,8 @@ def schedules_temps(
         if in_between(today, day_0, day_1, now, time_0, time_1):
             return schedule_list[i][2]
 
+    return []  # pragma: no cover
+
 
 def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
