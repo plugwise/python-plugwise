@@ -207,12 +207,7 @@ no_implicit_optional = true
 warn_return_any = true
 warn_unreachable = true
 exclude = [
-    "controller.py",
-    "stick.py",
-    "parser.py",
-    "nodes",
-    "messages",
-    "connections",
+    "plugwise/stick/*",
 ]
 
 [tool.coverage.run]
@@ -220,13 +215,7 @@ source = [ "plugwise" ]
 omit= [
     "*/venv/*",
     "setup.py",
-    "plugwise/connections/*",
-    "plugwise/controller.py",
-    "plugwise/messages/*",
-    "plugwise/nodes/*",
-    "plugwise/parser.py",
-    "plugwise/stick.py",
-    "plugwise/util.py",
+    "plugwise/stick/*",
 ]
 
 [tool.ruff]
@@ -269,13 +258,7 @@ ignore = [
 #    "UP038", # Use `X | Y` in `isinstance` call instead of `(X, Y)`
 
 exclude = [
-    "plugwise/connections/*.py",
-    "plugwise/messages/*.py",
-    "plugwise/nodes/*.py",
-    "plugwise/controller.py",
-    "plugwise/parser.py",
-    "plugwise/stick.py",
-    "plugwise/util.py"
+    "plugwise/stick/*",
 ]
 
 [tool.ruff.flake8-import-conventions.extend-aliases]

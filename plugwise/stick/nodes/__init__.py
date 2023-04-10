@@ -2,12 +2,16 @@
 from datetime import datetime
 import logging
 
+from plugwise.stick.util import validate_mac
+from plugwise.util import version_to_model
+
 from ..constants import (
     FEATURE_AVAILABLE,
     FEATURE_PING,
     FEATURE_RELAY,
     FEATURE_RSSI_IN,
     FEATURE_RSSI_OUT,
+    HW_MODELS,
     PRIORITY_LOW,
     UTF8_DECODE,
 )
@@ -18,7 +22,6 @@ from ..messages.responses import (
     NodeJoinAckResponse,
     NodePingResponse,
 )
-from ..util import validate_mac, version_to_model
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -86,7 +89,7 @@ class PlugwiseNode:
     def hardware_model(self) -> str:
         """Return hardware model."""
         if self._hardware_version:
-            return version_to_model(self._hardware_version)
+            return version_to_model(HW_MODELS, self._hardware_version)
         return None
 
     @property

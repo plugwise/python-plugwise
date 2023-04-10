@@ -18,6 +18,10 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 from semver import VersionInfo
 
+from plugwise.stick.constants import HW_MODELS as Stick_MODELS
+from plugwise.util import version_to_model
+
+# Merge HW_MODELS for re-use in Smile environments
 from .constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -35,6 +39,7 @@ from .constants import (
     FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
+    HW_MODELS as Smile_MODELS,
     LIMITS,
     LOCATIONS,
     LOGGER,
@@ -66,12 +71,9 @@ from .exceptions import (
     InvalidXMLError,
     ResponseError,
 )
-from .util import (
-    escape_illegal_xml_characters,
-    format_measure,
-    in_between,
-    version_to_model,
-)
+from .util import escape_illegal_xml_characters, format_measure, in_between
+
+HW_MODELS = {**Smile_MODELS, **Stick_MODELS}
 
 
 def update_helper(
@@ -97,7 +99,9 @@ def update_helper(
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
     """Model checking before using version_to_model."""
-    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
+    if vendor_name == "Plugwise" and (
+        (model := version_to_model(HW_MODELS, name)) != "Unknown"
+    ):
         return model
 
     return name
@@ -493,7 +497,7 @@ class SmileHelper:
             appl.vendor_name = module_data["vendor_name"]
             if appl.hardware is not None:
                 hw_version = appl.hardware.replace("-", "")
-                appl.model = version_to_model(hw_version)
+                appl.model = version_to_model(HW_MODELS, hw_version)
             appl.firmware = module_data["firmware_version"]
 
             return appl
