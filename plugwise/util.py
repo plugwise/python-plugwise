@@ -1,10 +1,8 @@
 """Plugwise Shared functionality definitions."""
 
 
-def version_to_model(hw_models: dict | None, version: str | None) -> str | None:
+def version_to_model(hw_models: dict[str, str], version: str | None) -> str | None:
     """Translate hardware_version to device type."""
-    if hw_models is None:
-        return None
     if version is None:
         return None
 
