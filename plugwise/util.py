@@ -1,4 +1,5 @@
 """Plugwise Shared functionality definitions."""
+from __future__ import annotations
 
 
 def version_to_model(hw_models: dict[str, str], version: str | None) -> str | None:
