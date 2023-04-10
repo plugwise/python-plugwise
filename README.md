@@ -11,6 +11,8 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 [![Newest commit](https://github.com/plugwise/python-plugwise/workflows/Latest%20commit/badge.svg)](https://github.com/plugwise/python-plugwise/actions)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/plugwise/python-plugwise/main.svg)](https://results.pre-commit.ci/latest/github/plugwise/python-plugwise/main)
 
+The below scoring only applies to Plugwise Smile components:
+
 [![CodeFactor](https://www.codefactor.io/repository/github/plugwise/python-plugwise/badge)](https://www.codefactor.io/repository/github/plugwise/python-plugwise)
 [![codecov](https://codecov.io/gh/plugwise/python-plugwise/branch/main/graph/badge.svg)](https://codecov.io/gh/plugwise/python-plugwise)
 
@@ -46,7 +48,11 @@ If you want to create a PR please make sure you at least run `scripts/setup.sh`.
 
 ## Project support status
 
+**Notice** at this time we are refactoring the module code to move towards a supporting way for the integration to become multiple components under an umbrella `plugwise` integration featuring multiple components.
+
 Module providing interfacing with the Plugwise devices:
+
+### Smile
 
 - [x] Adam
   - [x] Lisa
@@ -58,6 +64,11 @@ Module providing interfacing with the Plugwise devices:
   - [x] Aqara Plug
 - [x] Anna
 - [x] Smile P1
+- [x] Stretch
+- [ ] Some of the equipment mentioned in USB when in use via Stretch or Adam
+
+### USB
+
 - [x] Stick
   - [x] Circle+ / Stealth+
   - [x] Circle / Stealth
@@ -65,7 +76,6 @@ Module providing interfacing with the Plugwise devices:
   The devices listed below have **NOT** been tested and are therefore unknown for their correct operation
     - [x] Sense
     - [x] Switch
-- [x] Stretch
 - [x] [Home-Assistant](https://home-assistant.io) via
   - [x] Native supporting networked Plugwise products
   - [ ] Native supporting USB Plugwise products (in progress)
