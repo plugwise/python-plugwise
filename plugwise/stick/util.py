@@ -12,9 +12,25 @@ import struct
 
 import crcmod
 
-from .constants import LOGADDR_OFFSET, PLUGWISE_EPOCH, UTF8_DECODE
+from .constants import HW_MODELS, LOGADDR_OFFSET, PLUGWISE_EPOCH, UTF8_DECODE
 
 crc_fun = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
+
+
+# NOTE: this function version_to_model is shared between Smile and USB
+def version_to_model(version: str | None) -> str | None:
+    """Translate hardware_version to device type."""
+    if version is None:
+        return None
+
+    model = HW_MODELS.get(version)
+    if model is None:
+        model = HW_MODELS.get(version[4:10])
+    if model is None:
+        # Try again with reversed order
+        model = HW_MODELS.get(version[-2:] + version[-4:-2] + version[-6:-4])
+
+    return model if model is not None else "Unknown"
 
 
 def validate_mac(mac: str) -> bool:

@@ -8,12 +8,11 @@ from .constants import (
     ARBITRARY_DATE,
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
+    HW_MODELS,
     PERCENTAGE,
     SPECIAL_FORMAT,
     TEMP_CELSIUS,
 )
-
-# from plugwise.util import version_to_model
 
 
 def escape_illegal_xml_characters(xmldata: str) -> str:
@@ -80,3 +79,19 @@ def in_between(
     end_point = ARBITRARY_DATE + time_end
 
     return start_point <= now_point <= end_point
+
+
+# NOTE: this function version_to_model is shared between Smile and USB
+def version_to_model(version: str | None) -> str | None:
+    """Translate hardware_version to device type."""
+    if version is None:
+        return None
+
+    model = HW_MODELS.get(version)
+    if model is None:
+        model = HW_MODELS.get(version[4:10])
+    if model is None:
+        # Try again with reversed order
+        model = HW_MODELS.get(version[-2:] + version[-4:-2] + version[-6:-4])
+
+    return model if model is not None else "Unknown"

@@ -2,8 +2,7 @@
 from datetime import datetime
 import logging
 
-from plugwise.stick.util import validate_mac
-from plugwise.util import version_to_model
+from plugwise.stick.util import validate_mac, version_to_model
 
 from ..constants import (
     FEATURE_AVAILABLE,
@@ -89,7 +88,7 @@ class PlugwiseNode:
     def hardware_model(self) -> str:
         """Return hardware model."""
         if self._hardware_version:
-            return version_to_model(HW_MODELS, self._hardware_version)
+            return version_to_model(self._hardware_version)
         return None
 
     @property
