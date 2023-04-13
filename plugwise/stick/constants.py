@@ -1,4 +1,4 @@
-"""Plugwise Stick (power_usb_ constants."""
+"""Plugwise Stick (usb) constants."""
 from __future__ import annotations
 
 import datetime as dt
