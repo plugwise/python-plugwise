@@ -2,6 +2,7 @@
 -e .
 # Minimal requirements for committing
 # Versioning omitted (leave this up to HA-core)
+black
 coverage
 ruff
 mypy
