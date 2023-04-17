@@ -1,6 +1,8 @@
 # Plugwise python module
 
-This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) which we maintain as co-code owners Home Assistant Core.
+This module is the backend for the [`plugwise` component](https://github.com/home-assistant/core/tree/dev/homeassistant/components/plugwise) in Home Assistant Core (which we maintain as co-code owners).
+
+This module supports `Smile`s (and `Stretch`), i.e. the networked plugwise devices. For the USB (or Stick-standalone version) please refer to upcoming [`plugwise-usb` component](https://github.com/plugwise/plugwise-usb-beta).
 
 Our main usage for this module is supporting [Home Assistant](https://www.home-assistant.io) / [home-assistant](http://github.com/home-assistant/core/)
 
@@ -67,15 +69,6 @@ Module providing interfacing with the Plugwise devices:
 - [x] Stretch
 - [ ] Some of the equipment mentioned in USB when in use via Stretch or Adam
 
-### USB
-
-- [x] Stick
-  - [x] Circle+ / Stealth+
-  - [x] Circle / Stealth
-  - [x] Scan
-  The devices listed below have **NOT** been tested and are therefore unknown for their correct operation
-    - [x] Sense
-    - [x] Switch
 - [x] [Home-Assistant](https://home-assistant.io) via
   - [x] Native supporting networked Plugwise products
   - [x] [HACS](https://hacs.xyz) and `custom_component` [Plugwise Beta](https://github.com/plugwise/plugwise-beta/) (supporting all devices above)
@@ -86,7 +79,7 @@ As per the origins we have retained the appropriate licensing and including the 
 
 Origins (from newest to oldest):
 
-- 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
+- 'All' available Plugwise support by @bouwew (Bouwe) and @CoMPaTech (Tom). We both support and help out @brefra (Frank) where possible, he's our lead on the USB module and integration.
 - Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
 - Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via <https://github.com/laetificat> (Kevin)
 - USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)

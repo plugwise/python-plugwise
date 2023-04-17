@@ -19,9 +19,9 @@ import aiohttp
 from freezegun import freeze_time
 import pytest
 
-pw_constants = importlib.import_module("plugwise.smile.constants")
-pw_exceptions = importlib.import_module("plugwise.smile.exceptions")
-pw_smile = importlib.import_module("plugwise.smile")
+pw_constants = importlib.import_module("plugwise.constants")
+pw_exceptions = importlib.import_module("plugwise.exceptions")
+pw_smile = importlib.import_module("plugwise")
 
 pytestmark = pytest.mark.asyncio
 
@@ -5231,7 +5231,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     # Test connect for timeout
     @patch(
-        "plugwise.smile.helper.ClientSession.get",
+        "plugwise.helper.ClientSession.get",
         side_effect=aiohttp.ServerTimeoutError,
     )
     @pytest.mark.asyncio

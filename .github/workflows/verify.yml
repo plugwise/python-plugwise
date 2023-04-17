@@ -399,4 +399,4 @@ jobs:
         run: |
           . venv/bin/activate
           echo "Showing complexity higher or equal to 'C'"
-          radon cc plugwise/smile.py plugwise/helper.py tests/test_smile.py -s -nc --no-assert
+          radon cc plugwise/ tests/ -s -nc --no-assert

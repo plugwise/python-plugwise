@@ -1,6 +1,12 @@
 # Changelog
 
-## Ongoing: Logic separation between USB and non-USB
+## v0.31 refactoring (alpha only, effectively not to be released): Logic separation between USB and non-USB
+
+- Smile component (suggested `python-plugwise-usb` for USB (or stick-standalone) route)
+
+## v0.30 refactoring (alpha only, effectively unreleased)
+
+- More formal Split between Networked and USB code
 
 ## v0.27.10: Anna + Elga: final fix for [#320](https://github.com/plugwise/plugwise-beta/issues/320)
 
