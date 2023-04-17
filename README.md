@@ -79,7 +79,8 @@ As per the origins we have retained the appropriate licensing and including the 
 
 Origins (from newest to oldest):
 
-- 'All' available Plugwise support by @bouwew (Bouwe) and @CoMPaTech (Tom). We both support and help out @brefra (Frank) where possible, he's our lead on the USB module and integration.
+- Networked (Smile/Stretch) Plugwise support by @bouwew (Bouwe) and @CoMPaTech (Tom). We both support and help out @brefra (Frank) where possible, he's supporting the USB module and integration.
+- 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
 - Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
 - Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via <https://github.com/laetificat> (Kevin)
 - USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
