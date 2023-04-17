@@ -1,5 +1,7 @@
 # Changelog
 
+## Ongoing: Logic separation between USB and non-USB
+
 ## v0.27.10: Anna + Elga: final fix for [#320](https://github.com/plugwise/plugwise-beta/issues/320)
 
 ## v0.27.9: P1 legacy: collect data from /core/modules
