@@ -113,7 +113,10 @@ jobs:
   commitcheck:
     runs-on: ubuntu-latest
     name: Check commit
-    needs: black
+    needs:
+      - black
+      - shellcheck
+      - dependencies_check
     steps:
       - name: Check out committed code
         uses: actions/checkout@v3
