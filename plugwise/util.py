@@ -82,8 +82,11 @@ def in_between(
 
 
 # NOTE: this function version_to_model is shared between Smile and USB
-def version_to_model(version: str) -> str | None:
+def version_to_model(version: str | None) -> str | None:
     """Translate hardware_version to device type."""
+
+    if version is None:  # pragma: no cover #294
+        return version
 
     model = HW_MODELS.get(version)
     if model is None:
