@@ -1,6 +1,6 @@
 # Cross domain functionalities
 
-Below contents are the dependencies between the various supported Plugwise domains.
+Below contents are the shared code between the various supported Plugwise domains.
 
 ## Smile / Stretch
 
@@ -9,7 +9,7 @@ Below contents are the dependencies between the various supported Plugwise domai
 
 ## Smile generic and legacy
 
-- No cross dependencies, lots of dependencies
+- No cross shared code, lots of dependencies within Smile
 
 ## Stick
 

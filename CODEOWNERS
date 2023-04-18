@@ -15,5 +15,5 @@ requirements*.txt @plugwise/devs
 /tests/ @bouwew @compatech
 /scripts/ @bouwew @compatech
 
-# NET specific
+# Networked Plugwise components
 /plugwise @bouwew @compatech
