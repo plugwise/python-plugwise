@@ -78,8 +78,7 @@ Module providing interfacing with the Plugwise devices:
     - [x] Switch
 - [x] [Home-Assistant](https://home-assistant.io) via
   - [x] Native supporting networked Plugwise products
-  - [ ] Native supporting USB Plugwise products (in progress)
-  - [x] [HACS](https://hacs.xyz) and `custom_component` [Plugwise-HA](https://github.com/plugwise/plugwise-beta/) (supporting all devices above)
+  - [x] [HACS](https://hacs.xyz) and `custom_component` [Plugwise Beta](https://github.com/plugwise/plugwise-beta/) (supporting all devices above)
 
 ## License, origins and contributors
 
