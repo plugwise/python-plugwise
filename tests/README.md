@@ -22,8 +22,6 @@ Data processing (positive)
 
 ## Running tests against Plugwise Smile
 
-`*) This states Smile as unfortunately tests for USB are still to be added`
-
 Our tests are mainly conducted locally by the contributors and using Github Actions, see the workflows in `.github/workflows`. You can always look up the latest (hopefully successful) build at [python-plugwise Github actions](https://github.com/plugwise/python-plugwise/actions).
 
 If you want to run tests locally, use the provided `scripts/setup_test.sh` to initialize and enable your virtualenv using `source venv/bin/activate`.

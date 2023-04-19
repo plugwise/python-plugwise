@@ -83,13 +83,12 @@ body:
     attributes:
       label: What kind of Plugwise device is having issues?
       description: >
-        Select the best possible option (i.e. for issues with a Lisa or Tom, select Adam - for issues with a Circle, select Stretch or USB).
+        Select the best possible option (i.e. for issues with a Lisa or Tom, select Adam, etc.)
       options:
         - "Smile: Adam (including Lisa, Tom, Floor)"
         - "Smile: Anna"
         - "Smile: P1"
         - "Smile: Stretch"
-        - "USB: Stick"
         - "Other product (we might not (yet) know of it's existence!)"
   - type: input
     validations:
