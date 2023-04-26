@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- CI/CD Improvements
+
 ## v0.31 refactoring (alpha only, effectively not to be released): Logic separation between USB and non-USB
 
 - Smile component (suggested `python-plugwise-usb` for USB (or stick-standalone) route)

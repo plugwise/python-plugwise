@@ -1,4 +1,6 @@
 ci:
+  # Defer autoupdate to quarterly (there is no 'off' button) to have renovate pick up first
+  autoupdate_schedule: quarterly
   skip: [pylint, markdownlint, testing]
   submodules: true
 
