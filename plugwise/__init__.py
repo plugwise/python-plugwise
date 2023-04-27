@@ -392,13 +392,18 @@ class Smile(SmileComm, SmileData):
                     network = zb_network.find("./master_controller")
                     self.smile_zigbee_mac_address = network.find("mac_address").text
 
-        # Assume legacy
         self._smile_legacy = True
-        # Try if it is a legacy Anna, assuming appliance thermostat,
-        # fake insert version assuming Anna, couldn't find another way to identify as legacy Anna
-        self.smile_fw_version = "1.8.0"
-        model = "smile_thermo"
-        if result.find('./appliance[type="thermostat"]') is None:
+        if result.find('./appliance[type="thermostat"]') is not None:
+            self._system = await self._request(SYSTEM)
+            self.smile_fw_version = self._system.find("./gateway/firmware").text
+            model = self._system.find("./gateway/product").text
+            self.smile_hostname = self._system.find("./gateway/hostname").text
+            # If wlan0 contains data it's active, so eth0 should be checked last
+            for network in ("wlan0", "eth0"):
+                locator = f"./{network}/mac"
+                if (net_locator := self._system.find(locator)) is not None:
+                    self.smile_mac_address = net_locator.text
+        else:
             # It's a P1 legacy:
             if dsmrmain is not None:
                 self._status = await self._request(STATUS)

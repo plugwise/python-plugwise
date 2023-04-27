@@ -2,19 +2,19 @@
 <system>
 	<gateway>
 		<product>smile_thermo</product>
-		<hostname>smileabcdef</hostname>
+		<hostname>smile000000</hostname>
 		<firmware>1.8.22</firmware>
 		<upgrade/>
 	</gateway>
 	<wlan0>
 		<mac>01:23:45:67:89:AB</mac>
 		<ip>127.0.0.1</ip>
-		<bcast>192.168.1.255</bcast>
-		<mask>255.255.255.0</mask>
+		<bcast>127.0.0.1</bcast>
+		<mask>127.0.0.1</mask>
 		<encryption><![CDATA[psk2]]></encryption>
 		<proto>static</proto>
-		<gateway>192.168.1.1</gateway>
-		<dns>1.1.1.1</dns>
+		<gateway>127.0.0.1</gateway>
+		<dns>127.0.0.1</dns>
 		<ieee>802.11bgn</ieee>
 		<ssid><![CDATA[accespoint name]]></ssid>
 		<mode>Client</mode>
