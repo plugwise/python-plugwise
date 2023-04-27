@@ -393,7 +393,11 @@ class Smile(SmileComm, SmileData):
                     self.smile_zigbee_mac_address = network.find("mac_address").text
 
         self._smile_legacy = True
-        if result.find('./appliance[type="thermostat"]') is not None:
+        # Legacy Anna or Stretch:
+        if (
+            result.find('./appliance[type="thermostat"]') is not None
+            or network is not None
+        ):
             self._system = await self._request(SYSTEM)
             self.smile_fw_version = self._system.find("./gateway/firmware").text
             model = self._system.find("./gateway/product").text
@@ -404,25 +408,13 @@ class Smile(SmileComm, SmileData):
                 if (net_locator := self._system.find(locator)) is not None:
                     self.smile_mac_address = net_locator.text
         else:
-            # It's a P1 legacy:
+            # P1 legacy:
             if dsmrmain is not None:
                 self._status = await self._request(STATUS)
                 self.smile_fw_version = self._status.find("./system/version").text
                 model = self._status.find("./system/product").text
                 self.smile_hostname = self._status.find("./network/hostname").text
                 self.smile_mac_address = self._status.find("./network/mac_address").text
-
-            # Or a legacy Stretch:
-            elif network is not None:
-                self._system = await self._request(SYSTEM)
-                self.smile_fw_version = self._system.find("./gateway/firmware").text
-                model = self._system.find("./gateway/product").text
-                self.smile_hostname = self._system.find("./gateway/hostname").text
-                # If wlan0 contains data it's active, so eth0 should be checked last
-                for network in ("wlan0", "eth0"):
-                    locator = f"./{network}/mac"
-                    if (net_locator := self._system.find(locator)) is not None:
-                        self.smile_mac_address = net_locator.text
 
             else:  # pragma: no cover
                 # No cornercase, just end of the line
