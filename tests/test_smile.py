@@ -655,8 +655,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             "0000aaaa0000aaaa0000aaaa0000aa00": {
                 "dev_class": "gateway",
-                "firmware": "1.8.0",
+                "firmware": "1.8.22",
                 "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+                "mac_address": "01:23:45:67:89:AB",
                 "model": "Gateway",
                 "name": "Smile Anna",
                 "vendor": "Plugwise",
@@ -709,19 +710,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         self.smile_setup = "legacy_anna"
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname is None
+        assert smile.smile_hostname == "smile000000"
 
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert type = thermostat")
         assert smile.smile_type == "thermostat"
         _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "1.8.0"
+        assert smile.smile_version[0] == "1.8.22"
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert self.device_items == 44
+        assert self.device_items == 45
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -755,8 +756,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata = {
             "be81e3f8275b4129852c4d8d550ae2eb": {
                 "dev_class": "gateway",
-                "firmware": "1.8.0",
+                "firmware": "1.8.22",
                 "location": "be81e3f8275b4129852c4d8d550ae2eb",
+                "mac_address": "01:23:45:67:89:AB",
                 "model": "Gateway",
                 "name": "Smile Anna",
                 "vendor": "Plugwise",
@@ -809,20 +811,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         self.smile_setup = "legacy_anna_2"
         server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname is None
+        assert smile.smile_hostname == "smile000000"
 
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert type = thermostat")
         assert smile.smile_type == "thermostat"
         _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "1.8.0"
+        assert smile.smile_version[0] == "1.8.22"
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy
 
         await self.device_test(smile, testdata)
 
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
-        assert self.device_items == 44
+        assert self.device_items == 45
         assert not self.notifications
 
         result = await self.tinker_thermostat(

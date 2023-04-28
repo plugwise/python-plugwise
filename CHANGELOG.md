@@ -1,16 +1,13 @@
 # Changelog
 
-## Ongoing
+## v0.31.1: Legacy Anna - read and process system-xml data
 
-- CI/CD Improvements
+- Add support for reading the system-xml data from the legacy Smile T
+- Repo-generic: CI/CD Improvements
 
-## v0.31 refactoring (alpha only, effectively not to be released): Logic separation between USB and non-USB
+## v0.31.0: Split off the USB-related code: the Plugwise Stick related code has been moved into [#plugwise_usb](https://github.com/plugwise/python-plugwise-usb)
 
-- Smile component (suggested `python-plugwise-usb` for USB (or stick-standalone) route)
-
-## v0.30 refactoring (alpha only, effectively unreleased)
-
-- More formal Split between Networked and USB code
+--- Split between Smile/Stretch and USB-Stick related code ---
 
 ## v0.27.10: Anna + Elga: final fix for [#320](https://github.com/plugwise/plugwise-beta/issues/320)
 

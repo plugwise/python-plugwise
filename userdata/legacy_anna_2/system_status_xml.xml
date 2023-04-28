@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+	<gateway>
+		<product>smile_thermo</product>
+		<hostname>smile000000</hostname>
+		<firmware>1.8.22</firmware>
+		<upgrade/>
+	</gateway>
+	<wlan0>
+		<mac>01:23:45:67:89:AB</mac>
+		<ip>127.0.0.1</ip>
+		<bcast>127.0.0.1</bcast>
+		<mask>127.0.0.1</mask>
+		<encryption><![CDATA[psk2]]></encryption>
+		<proto>static</proto>
+		<gateway>127.0.0.1</gateway>
+		<dns>127.0.0.1</dns>
+		<ieee>802.11bgn</ieee>
+		<ssid><![CDATA[accespoint name]]></ssid>
+		<mode>Client</mode>
+		<frequency unit="GHz">2.437</frequency>
+		<access_point_mac>01:23:45:67:89:AB</access_point_mac>
+		<link_quality>47/70</link_quality>
+		<signal_strength unit="dBm">-63</signal_strength>
+	</wlan0>
+	<eth0/>
+	<time>2022-10-17T14:50:00.511+02:00</time>
+	<timezone><![CDATA[Europe/Amsterdam]]></timezone>
+<remote_control origin='any'>not initialized</remote_control></system>

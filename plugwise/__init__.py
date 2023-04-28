@@ -380,7 +380,9 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result: etree, dsmrmain: etree) -> str:
+    async def _smile_detect_legacy(
+        self, result: etree, dsmrmain: etree, model: str
+    ) -> str:
         """Helper-function for _smile_detect()."""
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if network := result.find("./module/protocols/master_controller"):
@@ -392,32 +394,29 @@ class Smile(SmileComm, SmileData):
                     network = zb_network.find("./master_controller")
                     self.smile_zigbee_mac_address = network.find("mac_address").text
 
-        # Assume legacy
         self._smile_legacy = True
-        # Try if it is a legacy Anna, assuming appliance thermostat,
-        # fake insert version assuming Anna, couldn't find another way to identify as legacy Anna
-        self.smile_fw_version = "1.8.0"
-        model = "smile_thermo"
-        if result.find('./appliance[type="thermostat"]') is None:
-            # It's a P1 legacy:
+        # Legacy Anna or Stretch:
+        if (
+            result.find('./appliance[type="thermostat"]') is not None
+            or network is not None
+        ):
+            self._system = await self._request(SYSTEM)
+            self.smile_fw_version = self._system.find("./gateway/firmware").text
+            model = self._system.find("./gateway/product").text
+            self.smile_hostname = self._system.find("./gateway/hostname").text
+            # If wlan0 contains data it's active, so eth0 should be checked last
+            for network in ("wlan0", "eth0"):
+                locator = f"./{network}/mac"
+                if (net_locator := self._system.find(locator)) is not None:
+                    self.smile_mac_address = net_locator.text
+        else:
+            # P1 legacy:
             if dsmrmain is not None:
                 self._status = await self._request(STATUS)
                 self.smile_fw_version = self._status.find("./system/version").text
                 model = self._status.find("./system/product").text
                 self.smile_hostname = self._status.find("./network/hostname").text
                 self.smile_mac_address = self._status.find("./network/mac_address").text
-
-            # Or a legacy Stretch:
-            elif network is not None:
-                self._system = await self._request(SYSTEM)
-                self.smile_fw_version = self._system.find("./gateway/firmware").text
-                model = self._system.find("./gateway/product").text
-                self.smile_hostname = self._system.find("./gateway/hostname").text
-                # If wlan0 contains data it's active, so eth0 should be checked last
-                for network in ("wlan0", "eth0"):
-                    locator = f"./{network}/mac"
-                    if (net_locator := self._system.find(locator)) is not None:
-                        self.smile_mac_address = net_locator.text
 
             else:  # pragma: no cover
                 # No cornercase, just end of the line
@@ -434,17 +433,18 @@ class Smile(SmileComm, SmileData):
 
         Detect which type of Smile is connected.
         """
-        model: str | None = None
+        model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
-            model = gateway.find("vendor_model").text
+            if (v_model := gateway.find("vendor_model")) is not None:
+                model = v_model.text
             self.smile_fw_version = gateway.find("firmware_version").text
             self.smile_hw_version = gateway.find("hardware_version").text
             self.smile_hostname = gateway.find("hostname").text
             self.smile_mac_address = gateway.find("mac_address").text
         else:
-            model = await self._smile_detect_legacy(result, dsmrmain)
+            model = await self._smile_detect_legacy(result, dsmrmain, model)
 
-        if model is None or self.smile_fw_version is None:  # pragma: no cover
+        if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
             LOGGER.error(
                 "Unable to find model or version information, please create \
