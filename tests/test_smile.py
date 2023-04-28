@@ -382,26 +382,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await smile._full_update_device()
             smile.get_all_devices()
             data = await smile.async_update()
-        extra = data.gateway
-        device_list = data.devices
 
-        if "heater_id" in extra:
-            self.cooling_present = extra["cooling_present"]
-        self.notifications = extra["notifications"]
+        if "heater_id" in data.gateway:
+            self.cooling_present = data.gateway["cooling_present"]
+        self.notifications = data.gateway["notifications"]
         self._write_json("all_data", dataclasses.asdict(data))
-        self._write_json("notifications", extra["notifications"])
+        self._write_json("notifications", data.gateway["notifications"])
 
         location_list = smile._thermo_locs
 
-        _LOGGER.info("Gateway id = %s", extra["gateway_id"])
+        _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
-        _LOGGER.info("Extra = %s", extra)
-        _LOGGER.info("Device list = %s", device_list)
-        self.show_setup(location_list, device_list)
+        _LOGGER.info("Gateway data = %s", data.gateway)
+        _LOGGER.info("Device list = %s", data.devices)
+        self.show_setup(location_list, data.devices)
 
         # Count the available device-items.
         self.device_items = 0
-        for _, details in device_list.items():
+        for _, details in data.devices.items():
             for dev_key, _ in details.items():
                 self.device_items += 1
                 if dev_key in bsw_list or dev_key in pw_constants.ACTIVE_ACTUATORS:
@@ -415,9 +413,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         asserts = 0
         for testdevice, measurements in testdata.items():
             tests += 1
-            assert testdevice in device_list
+            assert testdevice in data.devices
             asserts += 1
-            for dev_id, details in device_list.items():
+            for dev_id, details in data.devices.items():
                 if testdevice == dev_id:
                     _LOGGER.info(
                         "%s",
