@@ -2,7 +2,7 @@
 
 ## v0.31.1: Legacy Anna - read and process system-xml data
 
-- Add support for reading the system-xml data
+- Add support for reading the system-xml data from the legacy Smile T
 - Repo-generic: CI/CD Improvements
 
 ## v0.31.0: Split off the USB-related code: the Plugwise Stick related code has been moved into [#plugwise_usb](https://github.com/plugwise/python-plugwise-usb)
