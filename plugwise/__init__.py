@@ -52,11 +52,11 @@ from .helper import SmileComm, SmileHelper, update_helper
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def update_for_cooling(self, device: DeviceData) -> None:
+    def update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
         # Add setpoint_low and setpoint_high when cooling is enabled
         if device["dev_class"] not in ZONE_THERMOSTATS:
-            return
+            return device
 
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if self._cooling_present:
@@ -84,6 +84,8 @@ class SmileData(SmileHelper):
                 sensors.pop("setpoint")
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
+
+            return device
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
@@ -237,7 +239,7 @@ class SmileData(SmileHelper):
 
     def _check_availability(
         self, details: ApplianceData, device_data: DeviceData
-    ) -> None:
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
 
         Provide availability status for the wired-commected devices.
@@ -257,6 +259,8 @@ class SmileData(SmileHelper):
                 for msg in data.values():
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
+
+        return device_data
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
