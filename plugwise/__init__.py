@@ -54,10 +54,6 @@ class SmileData(SmileHelper):
 
     def update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
-        # Add setpoint_low and setpoint_high when cooling is enabled
-        if device["dev_class"] not in ZONE_THERMOSTATS:
-            return device
-
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if self._cooling_present:
             thermostat = device["thermostat"]
@@ -85,7 +81,7 @@ class SmileData(SmileHelper):
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
 
-            return device
+        return device
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
@@ -102,7 +98,8 @@ class SmileData(SmileHelper):
             )
 
             # Update for cooling
-            self.update_for_cooling(self.gw_devices[device_id])
+            if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(self.gw_devices[device_id])
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -551,7 +548,8 @@ class Smile(SmileComm, SmileData):
                         )
 
             # Update for cooling
-            self.update_for_cooling(dev_dict)
+            if dev_dict["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(dev_dict)
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
