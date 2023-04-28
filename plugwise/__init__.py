@@ -380,7 +380,9 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(self, result: etree, dsmrmain: etree) -> str:
+    async def _smile_detect_legacy(
+        self, result: etree, dsmrmain: etree, model: str
+    ) -> str:
         """Helper-function for _smile_detect()."""
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if network := result.find("./module/protocols/master_controller"):
@@ -431,17 +433,18 @@ class Smile(SmileComm, SmileData):
 
         Detect which type of Smile is connected.
         """
-        model: str | None = None
+        model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
-            model = gateway.find("vendor_model").text
+            if (v_model := gateway.find("vendor_model")) is not None:
+                model = v_model.text
             self.smile_fw_version = gateway.find("firmware_version").text
             self.smile_hw_version = gateway.find("hardware_version").text
             self.smile_hostname = gateway.find("hostname").text
             self.smile_mac_address = gateway.find("mac_address").text
         else:
-            model = await self._smile_detect_legacy(result, dsmrmain)
+            model = await self._smile_detect_legacy(result, dsmrmain, model)
 
-        if model is None or self.smile_fw_version is None:  # pragma: no cover
+        if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
             LOGGER.error(
                 "Unable to find model or version information, please create \
