@@ -4,7 +4,7 @@ from __future__ import annotations
 from collections import namedtuple
 import datetime as dt
 import logging
-from typing import Final, TypedDict
+from typing import Final, NamedTuple, TypedDict
 
 LOGGER = logging.getLogger(__name__)
 
@@ -504,3 +504,10 @@ class DeviceData(
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData
+
+
+class PlugwiseData(NamedTuple):
+    """Plugwise data provided as output."""
+
+    gateway: GatewayData
+    devices: dict[str, DeviceData]
