@@ -15,3 +15,4 @@ fixtures/*
 !fixtures/.keep
 *.sedbck
 tmp
+.mypy_cache
