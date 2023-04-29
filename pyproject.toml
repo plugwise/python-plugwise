@@ -35,7 +35,7 @@ dependencies    = [
         "munch",
         "pyserial",
         "python-dateutil",
-        "semver",
+        "semver>=3.0.0",
 ]
 
 [project.urls]
