@@ -35,7 +35,7 @@ from .constants import (
     ActuatorData,
     ApplianceData,
     DeviceData,
-    GatewayData,
+    PlugwiseData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -52,12 +52,8 @@ from .helper import SmileComm, SmileHelper, update_helper
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def update_for_cooling(self, device: DeviceData) -> None:
+    def update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
-        # Add setpoint_low and setpoint_high when cooling is enabled
-        if device["dev_class"] not in ZONE_THERMOSTATS:
-            return
-
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if self._cooling_present:
             thermostat = device["thermostat"]
@@ -85,6 +81,8 @@ class SmileData(SmileHelper):
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
 
+        return device
+
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
 
@@ -100,7 +98,8 @@ class SmileData(SmileHelper):
             )
 
             # Update for cooling
-            self.update_for_cooling(self.gw_devices[device_id])
+            if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(self.gw_devices[device_id])
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -237,7 +236,7 @@ class SmileData(SmileHelper):
 
     def _check_availability(
         self, details: ApplianceData, device_data: DeviceData
-    ) -> None:
+    ) -> DeviceData:
         """Helper-function for _get_device_data().
 
         Provide availability status for the wired-commected devices.
@@ -257,6 +256,8 @@ class SmileData(SmileHelper):
                 for msg in data.values():
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
+
+        return device_data
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
@@ -452,7 +453,7 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
-        ver = semver.VersionInfo.parse(self.smile_fw_version)
+        ver = semver.version.Version.parse(self.smile_fw_version)
         target_smile = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
@@ -509,7 +510,7 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> tuple[GatewayData, dict[str, DeviceData]]:
+    async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         if self.smile_type != "power":
             await self._update_domain_objects()
@@ -547,9 +548,10 @@ class Smile(SmileComm, SmileData):
                         )
 
             # Update for cooling
-            self.update_for_cooling(dev_dict)
+            if dev_dict["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(dev_dict)
 
-        return (self.gw_data, self.gw_devices)
+        return PlugwiseData(self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
         self, loc_id: str, name: str, status: str
