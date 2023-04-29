@@ -453,7 +453,7 @@ class Smile(SmileComm, SmileData):
             )
             raise UnsupportedDeviceError
 
-        ver = semver.VersionInfo.parse(self.smile_fw_version)
+        ver = semver.version.Version.parse(self.smile_fw_version)
         target_smile = f"{model}_v{ver.major}"
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
