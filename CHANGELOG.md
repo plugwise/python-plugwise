@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improved fixture generation and manual mode-changes
+
 ## v0.31.2: Introduce strict-typing (py.typed)
 
 ## v0.31.1: Legacy Anna - read and process system-xml data
