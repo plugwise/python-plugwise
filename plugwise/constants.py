@@ -300,7 +300,6 @@ SENSORS: Final[tuple[str, ...]] = (
     "humidity",
     "illuminance",
     "intended_boiler_temperature",
-    "maximum_boiler_temperature",
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
