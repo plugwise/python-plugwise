@@ -383,6 +383,7 @@ class SmileSensors(TypedDict, total=False):
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
     dhw_temperature: float
+    domestic_hot_water_setpoint: float
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
