@@ -235,7 +235,7 @@ m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"]["sensors"][
 ] = 38.1
 m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"][
     "domestic_hot_water_setpoint"
-] = {"setpoint": 60.0, "lower_bound": 25.0, "upper_bound": 95.0, "resolution": 0.01}
+] = {"setpoint": 60.0, "lower_bound": 40.0, "upper_bound": 60.0, "resolution": 0.01}
 
 fake_name = "m_adam_heating"
 
