@@ -1,8 +1,6 @@
 # Changelog
 
-## Ongoing
-
-- Improved fixture generation and manual mode-changes
+## v0.31.3: Typing updates, improved fixture generation and manual mode-changes
 
 ## v0.31.2: Introduce strict-typing (py.typed)
 
