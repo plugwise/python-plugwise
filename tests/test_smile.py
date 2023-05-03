@@ -987,7 +987,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "domestic_hot_water_setpoint": {
+                "max_dhw_temperature": {
                     "setpoint": 60.0,
                     "lower_bound": 30.0,
                     "upper_bound": 60.0,
@@ -1104,7 +1104,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
-                "domestic_hot_water_setpoint": {
+                "max_dhw_temperature": {
                     "setpoint": 60.0,
                     "lower_bound": 30.0,
                     "upper_bound": 60.0,
@@ -2735,7 +2735,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 50.0,
                     "resolution": 0.01,
                 },
-                "domestic_hot_water_setpoint": {
+                "max_dhw_temperature": {
                     "setpoint": 60.0,
                     "lower_bound": 40.0,
                     "upper_bound": 65.0,
@@ -3275,7 +3275,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 90.0,
                     "resolution": 0.01,
                 },
-                "domestic_hot_water_setpoint": {
+                "max_dhw_temperature": {
                     "setpoint": 60.0,
                     "lower_bound": 40.0,
                     "upper_bound": 60.0,
@@ -4311,7 +4311,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 45.0,
                     "resolution": 0.01,
                 },
-                "domestic_hot_water_setpoint": {
+                "max_dhw_temperature": {
                     "setpoint": 53.0,
                     "lower_bound": 35.0,
                     "upper_bound": 60.0,
@@ -4419,7 +4419,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 45.0,
                     "resolution": 0.01,
                 },
-                "domestic_hot_water_setpoint": {
+                "max_dhw_temperature": {
                     "setpoint": 53.0,
                     "lower_bound": 35.0,
                     "upper_bound": 60.0,

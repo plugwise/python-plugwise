@@ -501,7 +501,7 @@ class DeviceData(
     available: bool | None
 
     binary_sensors: SmileBinarySensors
-    domestic_hot_water_setpoint: ActuatorData | float
+    max_dhw_temperature: ActuatorData | float
     maximum_boiler_temperature: ActuatorData | float
     sensors: SmileSensors
     switches: SmileSwitches
