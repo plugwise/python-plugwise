@@ -40,6 +40,7 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
 )
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
     "domestic_hot_water_setpoint",
+    "max_dhw_temperature",
     "maximum_boiler_temperature",
     "thermostat",
 )
@@ -299,7 +300,6 @@ SENSORS: Final[tuple[str, ...]] = (
     "humidity",
     "illuminance",
     "intended_boiler_temperature",
-    "maximum_boiler_temperature",
     "modulation_level",
     "net_electricity_cumulative",
     "net_electricity_point",
@@ -383,6 +383,7 @@ class SmileSensors(TypedDict, total=False):
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
     dhw_temperature: float
+    domestic_hot_water_setpoint: float
     temperature: float
     electricity_consumed: float
     electricity_consumed_interval: float
@@ -500,7 +501,7 @@ class DeviceData(
     available: bool | None
 
     binary_sensors: SmileBinarySensors
-    domestic_hot_water_setpoint: ActuatorData | float
+    max_dhw_temperature: ActuatorData | float
     maximum_boiler_temperature: ActuatorData | float
     sensors: SmileSensors
     switches: SmileSwitches

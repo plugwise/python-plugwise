@@ -117,6 +117,12 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
                 temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
 
         if temp_dict:
+            if item == "domestic_hot_water_setpoint":
+                item = "max_dhw_temperature"
+                # If max_dhw_temperature is present, don't show domestic_hot_water_setpoint sensor
+                if "domestic_hot_water_setpoint" in data:
+                    data.pop("domestic_hot_water_setpoint")
+
             data[item] = temp_dict  # type: ignore [literal-required]
 
 

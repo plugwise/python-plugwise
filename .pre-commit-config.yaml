@@ -40,7 +40,7 @@ repos:
         args:
           - --safe
           - --quiet
-        files: ^((plugwise|tests)/.+)?[^/]+\.py$
+        files: ^((plugwise|tests|scripts)/.+)?[^/]+\.py$
   #  Moved codespell configuration to setup.cfg as per 'all-files' issues not reading args
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
