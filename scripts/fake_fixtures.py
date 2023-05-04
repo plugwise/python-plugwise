@@ -233,9 +233,12 @@ m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"]["sensors"][
 m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 38.1
-m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"][
-    "domestic_hot_water_setpoint"
-] = {"setpoint": 60.0, "lower_bound": 40.0, "upper_bound": 60.0, "resolution": 0.01}
+m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"]["max_dhw_temperature"] = {
+    "setpoint": 60.0,
+    "lower_bound": 40.0,
+    "upper_bound": 60.0,
+    "resolution": 0.01,
+}
 
 fake_name = "m_adam_heating"
 
