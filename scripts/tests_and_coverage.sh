@@ -39,4 +39,7 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
 
     echo "... crafting fake_fixtures ..." 
     PYTHONPATH=$(pwd) python3 scripts/fake_fixtures.py
+
+    echo "... formatting fixtures ..." 
+    PYTHONPATH=$(pwd) black -q fixtures/**/*json
 fi
