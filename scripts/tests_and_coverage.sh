@@ -36,7 +36,9 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
 
     echo "... pylint-ing ..." 
     pylint plugwise/ tests/
+fi
 
+if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
     echo "... crafting fake_fixtures ..." 
     PYTHONPATH=$(pwd) python3 scripts/fake_fixtures.py
 
