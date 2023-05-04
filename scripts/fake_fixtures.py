@@ -131,12 +131,22 @@ if not os.path.exists(f"./fixtures/{fake_name}"):
     os.makedirs(f"./fixtures/{fake_name}")
 
 outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(m_adam_cooling, indent=2)
+data = json.dumps(
+    m_adam_cooling,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)
 
 outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(base_n, indent=2)
+data = json.dumps(
+    base_n,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)
 
@@ -246,12 +256,22 @@ if not os.path.exists(f"./fixtures/{fake_name}"):
     os.makedirs(f"./fixtures/{fake_name}")
 
 outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(m_adam_heating, indent=2)
+data = json.dumps(
+    m_adam_heating,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)
 
 outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(base_n, indent=2)
+data = json.dumps(
+    base_n,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)
 
@@ -341,12 +361,22 @@ if not os.path.exists(f"./fixtures/{fake_name}"):
     os.makedirs(f"./fixtures/{fake_name}")
 
 outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(m_anna_heatpump_cooling, indent=2)
+data = json.dumps(
+    m_anna_heatpump_cooling,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)
 
 outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(base_n, indent=2)
+data = json.dumps(
+    base_n,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)
 
@@ -398,11 +428,21 @@ if not os.path.exists(f"./fixtures/{fake_name}"):
     os.makedirs(f"./fixtures/{fake_name}")
 
 outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(m_anna_heatpump_idle, indent=2)
+data = json.dumps(
+    m_anna_heatpump_idle,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)
 
 outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(base_n, indent=2)
+data = json.dumps(
+    base_n,
+    indent=2,
+    sort_keys=True,
+    default=lambda x: list(x) if isinstance(x, set) else x,
+)
 with open(outfile, "w") as f:
     f.write(data)

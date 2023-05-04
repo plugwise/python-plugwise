@@ -54,6 +54,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 json.dumps(
                     data,
                     indent=2,
+                    sort_keys=True,
                     default=lambda x: list(x) if isinstance(x, set) else x,
                 )
             )
