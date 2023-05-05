@@ -44,4 +44,6 @@ fi
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
     echo "... crafting manual fixtures ..." 
     PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
+else
+    pre-commit run --hook-stage commit prettier --all-files || git add fixtures/
 fi

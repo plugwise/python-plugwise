@@ -1,0 +1,71 @@
+{
+  "devices": {
+    "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
+      "active_preset": "home",
+      "available_schedules": [
+        "Test",
+        "Normal"
+      ],
+      "dev_class": "thermostat",
+      "firmware": "2018-02-08T11:15:53+01:00",
+      "hardware": "6539-1301-5002",
+      "last_used": "Test",
+      "location": "c34c6864216446528e95d88985e714cc",
+      "mode": "auto",
+      "model": "ThermoTouch",
+      "name": "Anna",
+      "preset_modes": [
+        "no_frost",
+        "asleep",
+        "away",
+        "home",
+        "vacation"
+      ],
+      "selected_schedule": "Test",
+      "sensors": {
+        "illuminance": 0.25,
+        "setpoint": 21.0,
+        "temperature": 20.6
+      },
+      "thermostat": {
+        "lower_bound": 4.0,
+        "resolution": 0.1,
+        "setpoint": 21.0,
+        "upper_bound": 30.0
+      },
+      "vendor": "Plugwise"
+    },
+    "a270735e4ccd45239424badc0578a2b1": {
+      "binary_sensors": {
+        "plugwise_notification": false
+      },
+      "dev_class": "gateway",
+      "firmware": "4.2.1",
+      "hardware": "AME Smile 2.0 board",
+      "location": "0f4f2ada20734a339fe353348fe87b96",
+      "mac_address": "012345670001",
+      "model": "Gateway",
+      "name": "Smile Anna",
+      "sensors": {
+        "outdoor_temperature": 3.56
+      },
+      "vendor": "Plugwise"
+    },
+    "c46b4794d28149699eacf053deedd003": {
+      "binary_sensors": {
+        "heating_state": true
+      },
+      "dev_class": "heater_central",
+      "location": "0f4f2ada20734a339fe353348fe87b96",
+      "model": "Unknown",
+      "name": "OnOff"
+    }
+  },
+  "gateway": {
+    "cooling_present": false,
+    "gateway_id": "a270735e4ccd45239424badc0578a2b1",
+    "heater_id": "c46b4794d28149699eacf053deedd003",
+    "notifications": {},
+    "smile_name": "Smile Anna"
+  }
+}
