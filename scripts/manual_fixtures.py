@@ -1,16 +1,45 @@
 #!/usr/bin/env python3
-"""Generate fake fixtures from existing fixtures."""
+"""Generate manual fixtures from existing fixtures."""
 
 import json
 import os
+
+
+def json_writer(manual_name: str, all_data: dict, notifications: dict):
+    """Standardized writing json files."""
+    if not os.path.exists(f"./fixtures/{manual_name}"):
+        os.makedirs(f"./fixtures/{manual_name}")
+
+    outfile = f"./fixtures/{manual_name}/all_data.json"
+    data = json.dumps(
+        all_data,
+        indent=2,
+        separators=(",", ": "),
+        sort_keys=True,
+        default=lambda x: list(x) if isinstance(x, set) else x,
+    )
+    with open(outfile, "w") as f:
+        f.write(data + "\n")
+
+    outfile = f"./fixtures/{manual_name}/notifications.json"
+    data = json.dumps(
+        notifications,
+        indent=2,
+        separators=(",", ": "),
+        sort_keys=True,
+        default=lambda x: list(x) if isinstance(x, set) else x,
+    )
+    with open(outfile, "w") as f:
+        f.write(data + "\n")
+
 
 print("... Crafting m_* fixtures from userdata ...")  # noqa: T201
 
 ### ADAM
 
-base_adam_fake = "adam_plus_anna_new"
-basefile = f"./fixtures/{base_adam_fake}/all_data.json"
-basefile_n = f"./fixtures/{base_adam_fake}/notifications.json"
+base_adam_manual = "adam_plus_anna_new"
+basefile = f"./fixtures/{base_adam_manual}/all_data.json"
+basefile_n = f"./fixtures/{base_adam_manual}/notifications.json"
 
 io = open(basefile)
 base = json.load(io)
@@ -125,31 +154,7 @@ m_adam_cooling["devices"]["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 17.5
 
-fake_name = "m_adam_cooling"
-
-if not os.path.exists(f"./fixtures/{fake_name}"):
-    os.makedirs(f"./fixtures/{fake_name}")
-
-outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(
-    m_adam_cooling,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
-
-outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(
-    base_n,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
-
+json_writer("m_adam_cooling", m_adam_cooling, base_n)
 
 ### FROM ABOVE
 
@@ -250,36 +255,13 @@ m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"]["max_dhw_temperatu
     "resolution": 0.01,
 }
 
-fake_name = "m_adam_heating"
-
-if not os.path.exists(f"./fixtures/{fake_name}"):
-    os.makedirs(f"./fixtures/{fake_name}")
-
-outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(
-    m_adam_heating,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
-
-outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(
-    base_n,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
+json_writer("m_adam_heating", m_adam_heating, base_n)
 
 ### ANNA
 
-base_anna_fake = "anna_heatpump_heating"
-basefile = f"./fixtures/{base_anna_fake}/all_data.json"
-basefile_n = f"./fixtures/{base_anna_fake}/notifications.json"
+base_anna_manual = "anna_heatpump_heating"
+basefile = f"./fixtures/{base_anna_manual}/all_data.json"
+basefile_n = f"./fixtures/{base_anna_manual}/notifications.json"
 
 io = open(basefile)
 base = json.load(io)
@@ -355,31 +337,7 @@ m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"
     "setpoint_high"
 ] = 24.0
 
-fake_name = "m_anna_heatpump_cooling"
-
-if not os.path.exists(f"./fixtures/{fake_name}"):
-    os.makedirs(f"./fixtures/{fake_name}")
-
-outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(
-    m_anna_heatpump_cooling,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
-
-outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(
-    base_n,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
-
+json_writer("m_anna_heatpump_cooling", m_anna_heatpump_cooling, base_n)
 
 ### FROM ABOVE
 
@@ -422,27 +380,4 @@ m_anna_heatpump_idle["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
     "cooling_activation_outdoor_temperature"
 ] = 25.0
 
-fake_name = "m_anna_heatpump_idle"
-
-if not os.path.exists(f"./fixtures/{fake_name}"):
-    os.makedirs(f"./fixtures/{fake_name}")
-
-outfile = f"./fixtures/{fake_name}/all_data.json"
-data = json.dumps(
-    m_anna_heatpump_idle,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
-
-outfile = f"./fixtures/{fake_name}/notifications.json"
-data = json.dumps(
-    base_n,
-    indent=2,
-    sort_keys=True,
-    default=lambda x: list(x) if isinstance(x, set) else x,
-)
-with open(outfile, "w") as f:
-    f.write(data)
+json_writer("m_anna_heatpump_idle", m_anna_heatpump_idle, base_n)
