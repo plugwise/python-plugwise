@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Improve fixture generation and manual fixtures
+- Improve fixture generation and manual fixtures, exposing (prettier-ed) fixtures
 
 ## v0.31.3: Typing updates, improved fixture generation and manual mode-changes
 
