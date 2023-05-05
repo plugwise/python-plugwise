@@ -56,6 +56,10 @@ repos:
           - --format=custom
           - --configfile=tests/bandit.yaml
         files: ^(plugwise|tests)/.+\.py$
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0-alpha.9-for-vscode
+    hooks:
+      - id: prettier
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.31.0
     hooks:
@@ -104,10 +108,6 @@ repos:
         entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" scripts/tests_and_coverage.sh test_and_coverage'
         language: script
         pass_filenames: false
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.0-alpha.9-for-vscode
-    hooks:
-      - id: prettier
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.34.0
     hooks:
