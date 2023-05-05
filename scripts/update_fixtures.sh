@@ -16,7 +16,7 @@ if [ -d "${target}" ]; then
     diff -qr "fixtures/${fixture}" "${target}/tests/components/plugwise/fixtures/${fixture}" > /dev/null && continue
     echo " - Out-of-date ... updating fixture in ${target}"
     if [ -d "${target}/tests/components/plugwise/fixtures/${fixture}" ]; then
-      cp -pfr fixtures/"${fixture}"/* ${target}/tests/components/plugwise/fixtures/"${fixture}"/
+      cp -pfr fixtures/"${fixture}"/* "${target}"/tests/components/plugwise/fixtures/"${fixture}"/
     fi
   done
 fi
