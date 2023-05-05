@@ -38,6 +38,9 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
     pylint plugwise/ tests/
 fi
 
+# As to not generated fixtures, leaving prettier to re-do them
+# so no auto-generation during github run of testing
+# Creating todo #313 to 'gracefully' do this on merge on github action
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
     echo "... crafting manual fixtures ..." 
     PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
