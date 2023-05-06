@@ -1,7 +1,7 @@
 ci:
   # Defer autoupdate to quarterly (there is no 'off' button) to have renovate pick up first
   autoupdate_schedule: quarterly
-  skip: [pylint, markdownlint, testing, fixtures]
+  skip: [pylint, markdownlint, testing]
   submodules: true
 
 default_language_version:
@@ -60,10 +60,6 @@ repos:
     rev: v1.31.0
     hooks:
       - id: yamllint
-  - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v3.0.0-alpha.9-for-vscode
-    hooks:
-      - id: prettier
   - repo: https://github.com/cdce8p/python-typing-update
     rev: v0.5.1
     hooks:
@@ -108,12 +104,10 @@ repos:
         entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" scripts/tests_and_coverage.sh test_and_coverage'
         language: script
         pass_filenames: false
-      - id: fixtures
-        name: "Fixture formatting"
-        # yamllint disable-line rule:line-length
-        entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" scripts/tests_and_coverage.sh fixtures'
-        language: script
-        pass_filenames: false
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.0.0-alpha.9-for-vscode
+    hooks:
+      - id: prettier
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.34.0
     hooks:

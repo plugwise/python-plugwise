@@ -1,0 +1,279 @@
+{
+  "devices": {
+    "0000aaaa0000aaaa0000aaaa0000aa00": {
+      "dev_class": "gateway",
+      "firmware": "2.7.18",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "mac_address": "01:23:45:67:89:AB",
+      "model": "Gateway",
+      "name": "Stretch",
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670101"
+    },
+    "0b078d5862614880bc670cabf9f54b4e": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-05-13T09:19:23+02:00",
+      "hardware": "6539-0701-4023",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "769C03",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A01"
+    },
+    "3b729c63ca41421b9e21264adfa0a4e7": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "261B34C",
+      "sensors": {
+        "electricity_consumed": 8.5,
+        "electricity_consumed_interval": 5.19,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A06"
+    },
+    "4661019bbe7b4a3bbe39f345ca5b5d98": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "25F68CC",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A02"
+    },
+    "553dfa416df94802851de32913f1ebd3": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-05-13T09:19:23+02:00",
+      "hardware": "6539-0701-4023",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "B7DEED",
+      "sensors": {
+        "electricity_consumed": 2.5,
+        "electricity_consumed_interval": 1.66,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A09"
+    },
+    "5ee135e752034ad2a3e38a407332757f": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "261B329",
+      "sensors": {
+        "electricity_consumed": 6.75,
+        "electricity_consumed_interval": 3.98,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A03"
+    },
+    "7c7f0d3da801402291b057f9ec69b5b6": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "261B34D",
+      "sensors": {
+        "electricity_consumed": 7.81,
+        "electricity_consumed_interval": 4.54,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A08"
+    },
+    "8b8d14b242e24cd789743c828b9a2ea9": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-05-13T09:19:23+02:00",
+      "hardware": "6539-0701-4022",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "76BF93",
+      "sensors": {
+        "electricity_consumed": 1.69,
+        "electricity_consumed_interval": 1.14,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A05"
+    },
+    "8e4ecdcc9094481387e0273437bb51f9": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "25F68C3",
+      "sensors": {
+        "electricity_consumed": 4.69,
+        "electricity_consumed_interval": 2.83,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A07"
+    },
+    "9b9bfdb3c7ad4ca5817ccaa235f1e094": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:47:37+02:00",
+      "hardware": "6539-0700-7326",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle+ type F",
+      "name": "25881A2",
+      "sensors": {
+        "electricity_consumed": 13.3,
+        "electricity_consumed_interval": 7.77,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": true,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A04"
+    },
+    "9db23f92fd114e83acce036b6cb82295": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-05-13T09:19:23+02:00",
+      "hardware": "6539-0701-4023",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "76B2F2",
+      "sensors": {
+        "electricity_consumed": 0.63,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A13"
+    },
+    "ad858f416f3e42e6a25bbd6b18178b0e": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "261B2AE",
+      "sensors": {
+        "electricity_consumed": 6.06,
+        "electricity_consumed_interval": 3.41,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A12"
+    },
+    "d0122ac66eba47b99d8e5fbd1e2f5932": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "25F66AD",
+      "sensors": {
+        "electricity_consumed": 3.88,
+        "electricity_consumed_interval": 2.21,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A10"
+    },
+    "e4172142264f488a99b63c73817c9d21": {
+      "dev_class": "zz_misc",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "261B32A",
+      "sensors": {
+        "electricity_consumed": 9.63,
+        "electricity_consumed_interval": 5.84,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A11"
+    }
+  },
+  "gateway": {
+    "gateway_id": "0000aaaa0000aaaa0000aaaa0000aa00",
+    "notifications": {},
+    "smile_name": "Stretch"
+  }
+}

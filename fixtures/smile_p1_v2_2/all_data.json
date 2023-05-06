@@ -1,0 +1,41 @@
+{
+  "devices": {
+    "199aa40f126840f392983d171374ab0b": {
+      "dev_class": "smartmeter",
+      "location": "199aa40f126840f392983d171374ab0b",
+      "model": "Ene5\\T210-DESMR5.0",
+      "name": "P1",
+      "sensors": {
+        "electricity_consumed_off_peak_cumulative": 1642.74,
+        "electricity_consumed_off_peak_interval": 0,
+        "electricity_consumed_peak_cumulative": 1155.195,
+        "electricity_consumed_peak_interval": 250,
+        "electricity_consumed_point": 458,
+        "electricity_produced_off_peak_cumulative": 482.598,
+        "electricity_produced_off_peak_interval": 0,
+        "electricity_produced_peak_cumulative": 1296.136,
+        "electricity_produced_peak_interval": 0,
+        "electricity_produced_point": 0,
+        "gas_consumed_cumulative": 584.433,
+        "gas_consumed_interval": 0.016,
+        "net_electricity_cumulative": 1019.201,
+        "net_electricity_point": 458
+      },
+      "vendor": "Ene5\\T210-DESMR5.0"
+    },
+    "aaaa0000aaaa0000aaaa0000aaaa00aa": {
+      "dev_class": "gateway",
+      "firmware": "2.5.9",
+      "location": "199aa40f126840f392983d171374ab0b",
+      "mac_address": "012345670001",
+      "model": "Gateway",
+      "name": "Smile P1",
+      "vendor": "Plugwise"
+    }
+  },
+  "gateway": {
+    "gateway_id": "aaaa0000aaaa0000aaaa0000aaaa00aa",
+    "notifications": {},
+    "smile_name": "Smile P1"
+  }
+}

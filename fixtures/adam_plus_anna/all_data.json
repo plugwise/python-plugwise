@@ -1,0 +1,121 @@
+{
+  "devices": {
+    "2743216f626f43948deec1f7ab3b3d70": {
+      "available": false,
+      "binary_sensors": {
+        "dhw_state": false,
+        "flame_state": false,
+        "heating_state": false
+      },
+      "dev_class": "heater_central",
+      "location": "07d618f0bb80412687f065b8698ce3e7",
+      "maximum_boiler_temperature": {
+        "lower_bound": 0.0,
+        "resolution": 1.0,
+        "setpoint": 80.0,
+        "upper_bound": 100.0
+      },
+      "model": "Generic heater",
+      "name": "OpenTherm",
+      "sensors": {
+        "intended_boiler_temperature": 0.0,
+        "water_temperature": 47.0
+      },
+      "switches": {
+        "dhw_cm_switch": false
+      }
+    },
+    "aa6b0002df0a46e1b1eb94beb61eddfe": {
+      "available": true,
+      "dev_class": "hometheater",
+      "firmware": "2019-06-21T02:00:00+02:00",
+      "location": "45d410adf8fd461e85cebf16d5ead542",
+      "model": "Plug",
+      "name": "MediaCenter",
+      "sensors": {
+        "electricity_consumed": 10.3,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A01"
+    },
+    "b128b4bbbd1f47e9bf4d756e8fb5ee94": {
+      "binary_sensors": {
+        "plugwise_notification": true
+      },
+      "dev_class": "gateway",
+      "firmware": "3.0.15",
+      "hardware": "AME Smile 2.0 board",
+      "location": "07d618f0bb80412687f065b8698ce3e7",
+      "mac_address": "012345670001",
+      "model": "Gateway",
+      "name": "Adam",
+      "regulation_mode": "heating",
+      "sensors": {
+        "outdoor_temperature": 11.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670101"
+    },
+    "ee62cad889f94e8ca3d09021f03a660b": {
+      "active_preset": "home",
+      "available_schedules": ["Weekschema"],
+      "dev_class": "thermostat",
+      "last_used": "Weekschema",
+      "location": "009490cc2f674ce6b576863fbb64f867",
+      "mode": "auto",
+      "model": "ThermoTouch",
+      "name": "Anna",
+      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "selected_schedule": "Weekschema",
+      "sensors": {
+        "setpoint": 20.5,
+        "temperature": 20.5
+      },
+      "thermostat": {
+        "lower_bound": 1.0,
+        "resolution": 0.01,
+        "setpoint": 20.5,
+        "upper_bound": 35.0
+      },
+      "vendor": "Plugwise"
+    },
+    "f2be121e4a9345ac83c6e99ed89a98be": {
+      "available": true,
+      "dev_class": "computer_desktop",
+      "firmware": "2019-06-21T02:00:00+02:00",
+      "location": "5ccb6c41a7d9403988d261ceee04239f",
+      "model": "Plug",
+      "name": "Work-PC",
+      "sensors": {
+        "electricity_consumed": 79.8,
+        "electricity_consumed_interval": 7.03,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A02"
+    }
+  },
+  "gateway": {
+    "cooling_present": false,
+    "gateway_id": "b128b4bbbd1f47e9bf4d756e8fb5ee94",
+    "heater_id": "2743216f626f43948deec1f7ab3b3d70",
+    "notifications": {
+      "6fb89e35caeb4b1cb275184895202d84": {
+        "error": "There is no OpenTherm communication with the boiler."
+      }
+    },
+    "smile_name": "Adam"
+  }
+}

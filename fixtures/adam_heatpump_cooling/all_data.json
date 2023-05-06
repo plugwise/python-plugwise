@@ -1,0 +1,562 @@
+{
+  "devices": {
+    "0ca13e8176204ca7bf6f09de59f81c83": {
+      "available": true,
+      "binary_sensors": {
+        "cooling_state": false,
+        "dhw_state": false,
+        "flame_state": false,
+        "heating_state": false
+      },
+      "dev_class": "heater_central",
+      "location": "eedadcb297564f1483faa509179aebed",
+      "max_dhw_temperature": {
+        "lower_bound": 40.0,
+        "resolution": 0.01,
+        "setpoint": 60.0,
+        "upper_bound": 65.0
+      },
+      "maximum_boiler_temperature": {
+        "lower_bound": 7.0,
+        "resolution": 0.01,
+        "setpoint": 35.0,
+        "upper_bound": 50.0
+      },
+      "model": "17.1",
+      "name": "OpenTherm",
+      "sensors": {
+        "dhw_temperature": 63.5,
+        "intended_boiler_temperature": 0.0,
+        "modulation_level": 0.0,
+        "outdoor_air_temperature": 13.5,
+        "return_temperature": 24.9,
+        "water_pressure": 2.0,
+        "water_temperature": 24.5
+      },
+      "switches": {
+        "dhw_cm_switch": true
+      },
+      "vendor": "Remeha B.V."
+    },
+    "1053c8bbf8be43c6921742b146a625f1": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "b52908550469425b812c87f766fe5303",
+      "mode": "heat_cool",
+      "model": "Lisa",
+      "name": "Thermostaat BK",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "None",
+      "sensors": {
+        "battery": 55,
+        "setpoint_high": 18.0,
+        "setpoint_low": 4.0,
+        "temperature": 18.8
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 18.0,
+        "setpoint_low": 4.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A17"
+    },
+    "1a27dd03b5454c4e8b9e75c8d1afc7af": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "20e735858f8146cead98b873177a4f99",
+      "model": "Plug",
+      "name": "Smart Plug DB",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A05"
+    },
+    "2e0fc4db2a6d4cbeb7cf786143543961": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
+      "model": "Plug",
+      "name": "Smart Plug KK",
+      "sensors": {
+        "electricity_consumed": 2.13,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A06"
+    },
+    "3b4d2574e2c9443a832b48d19a1c4f06": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "04b15f6e884448288f811d29fb7b1b30",
+      "model": "Plug",
+      "name": "Smart Plug SJ",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A14"
+    },
+    "3f0afa71f16c45ab964050002560e43c": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "fa5fa6b34f6b40a0972988b20e888ed4",
+      "model": "Plug",
+      "name": "Smart Plug WK",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A18"
+    },
+    "47e2c550a33846b680725aa3fb229473": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "20e735858f8146cead98b873177a4f99",
+      "mode": "heat_cool",
+      "model": "Lisa",
+      "name": "Thermostaat DB",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "None",
+      "sensors": {
+        "setpoint_high": 18.0,
+        "setpoint_low": 4.0,
+        "temperature": 22.0
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 18.0,
+        "setpoint_low": 4.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A20"
+    },
+    "5ead63c65e5f44e7870ba2bd680ceb9e": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "9a27714b970547ee9a6bdadc2b815ad5",
+      "model": "Plug",
+      "name": "Smart Plug SQ",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A15"
+    },
+    "7d97fc3117784cfdafe347bcedcbbbcb": {
+      "binary_sensors": {
+        "plugwise_notification": false
+      },
+      "dev_class": "gateway",
+      "firmware": "3.2.8",
+      "hardware": "AME Smile 2.0 board",
+      "location": "eedadcb297564f1483faa509179aebed",
+      "mac_address": "012345670001",
+      "model": "Gateway",
+      "name": "Adam",
+      "regulation_mode": "cooling",
+      "regulation_modes": [
+        "heating",
+        "off",
+        "bleeding_cold",
+        "bleeding_hot",
+        "cooling"
+      ],
+      "sensors": {
+        "outdoor_temperature": 13.4
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670101"
+    },
+    "7fda9f84f01342f8afe9ebbbbff30c0f": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "e39529c79ab54fda9bed26cfc0447546",
+      "mode": "heat_cool",
+      "model": "Lisa",
+      "name": "Thermostaat JM",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "None",
+      "sensors": {
+        "setpoint_high": 18.0,
+        "setpoint_low": 4.0,
+        "temperature": 20.0
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 18.0,
+        "setpoint_low": 4.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A01"
+    },
+    "838c2f48195242709b87217cf8d8a71f": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "b52908550469425b812c87f766fe5303",
+      "model": "Plug",
+      "name": "Smart Plug BK",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A12"
+    },
+    "8a482fa9dddb43acb765d019d8c9838b": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "5cc21042f87f4b4c94ccb5537c47a53f",
+      "model": "Plug",
+      "name": "Smart Plug BK2",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A10"
+    },
+    "96714ad90fc948bcbcb5021c4b9f5ae9": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "e39529c79ab54fda9bed26cfc0447546",
+      "model": "Plug",
+      "name": "Smart Plug JM",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A03"
+    },
+    "a03b6e8e76dd4646af1a77c31dd9370c": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
+      "model": "Plug",
+      "name": "Smart Plug RB",
+      "sensors": {
+        "electricity_consumed": 3.13,
+        "electricity_consumed_interval": 0.77,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A08"
+    },
+    "bbcffa48019f4b09b8368bbaf9559e68": {
+      "available": true,
+      "dev_class": "valve_actuator",
+      "firmware": "2020-05-13T02:00:00+02:00",
+      "location": "8cf650a4c10c44819e426bed406aec34",
+      "model": "Plug",
+      "name": "Smart Plug BK1",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_consumed_interval": 0.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "relay": false
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A16"
+    },
+    "beb32da072274e698146db8b022f3c36": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "9a27714b970547ee9a6bdadc2b815ad5",
+      "mode": "heat_cool",
+      "model": "Lisa",
+      "name": "Thermostaat SQ",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "None",
+      "sensors": {
+        "setpoint_high": 18.5,
+        "setpoint_low": 4.0,
+        "temperature": 21.4
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 18.5,
+        "setpoint_low": 4.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A07"
+    },
+    "c4ed311d54e341f58b4cdd201d1fde7e": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
+      "mode": "heat_cool",
+      "model": "Lisa",
+      "name": "Thermostaat RB",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "None",
+      "sensors": {
+        "setpoint_high": 17.0,
+        "setpoint_low": 4.0,
+        "temperature": 20.7
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 17.0,
+        "setpoint_low": 4.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A04"
+    },
+    "ca79d23ae0094120b877558734cff85c": {
+      "active_preset": "away",
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "thermostat",
+      "last_used": "Werkdag schema",
+      "location": "fa5fa6b34f6b40a0972988b20e888ed4",
+      "mode": "auto",
+      "model": "ThermoTouch",
+      "name": "Thermostaat WK",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "Werkdag schema",
+      "sensors": {
+        "setpoint_high": 21.5,
+        "setpoint_low": 18.0,
+        "temperature": 22.5
+      },
+      "thermostat": {
+        "lower_bound": 1.0,
+        "resolution": 0.01,
+        "setpoint_high": 21.5,
+        "setpoint_low": 18.0,
+        "upper_bound": 35.0
+      },
+      "vendor": "Plugwise"
+    },
+    "d3a276aeb3114a509bab1e4bf8c40348": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "04b15f6e884448288f811d29fb7b1b30",
+      "mode": "heat_cool",
+      "model": "Lisa",
+      "name": "Thermostaat SJ",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "None",
+      "sensors": {
+        "setpoint_high": 20.5,
+        "setpoint_low": 4.0,
+        "temperature": 22.6
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 20.5,
+        "setpoint_low": 4.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A13"
+    },
+    "ea8372c0e3ad4622ad45a041d02425f5": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
+      "mode": "auto",
+      "model": "Lisa",
+      "name": "Thermostaat KK",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "Werkdag schema",
+      "sensors": {
+        "battery": 53,
+        "setpoint_high": 21.5,
+        "setpoint_low": 18.0,
+        "temperature": 22.5
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 21.5,
+        "setpoint_low": 18.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A02"
+    },
+    "eac5db95d97241f6b17790897847ccf5": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "8cf650a4c10c44819e426bed406aec34",
+      "mode": "auto",
+      "model": "Lisa",
+      "name": "Thermostaat BK1",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "Werkdag schema",
+      "sensors": {
+        "setpoint_high": 20.5,
+        "setpoint_low": 18.0,
+        "temperature": 21.5
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 20.5,
+        "setpoint_low": 18.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A09"
+    },
+    "f04c985c11ad4848b8fcd710343f9dcf": {
+      "active_preset": "away",
+      "available": true,
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "last_used": "Werkdag schema",
+      "location": "5cc21042f87f4b4c94ccb5537c47a53f",
+      "mode": "auto",
+      "model": "Lisa",
+      "name": "Thermostaat  BK2",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "Werkdag schema",
+      "sensors": {
+        "setpoint_high": 20.5,
+        "setpoint_low": 18.0,
+        "temperature": 21.9
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint_high": 20.5,
+        "setpoint_low": 18.0,
+        "upper_bound": 99.9
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A11"
+    }
+  },
+  "gateway": {
+    "cooling_present": true,
+    "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
+    "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
+    "notifications": {},
+    "smile_name": "Adam"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "devices": {
+    "0ca13e8176204ca7bf6f09de59f81c83": {
+      "binary_sensors": {
+        "cooling_state": true,
+        "dhw_state": false,
+        "flame_state": false,
+        "heating_state": false
+      },
+      "dev_class": "heater_central",
+      "location": "eedadcb297564f1483faa509179aebed",
+      "max_dhw_temperature": {
+        "lower_bound": 40.0,
+        "resolution": 0.01,
+        "setpoint": 60.0,
+        "upper_bound": 65.0
+      },
+      "maximum_boiler_temperature": {
+        "lower_bound": 7.0,
+        "resolution": 0.01,
+        "setpoint": 35.0,
+        "upper_bound": 50.0
+      },
+      "model": "Unknown",
+      "name": "OnOff",
+      "sensors": {
+        "dhw_temperature": 63.5,
+        "intended_boiler_temperature": 35.0,
+        "modulation_level": 0.0,
+        "outdoor_air_temperature": 13.5,
+        "return_temperature": 24.9,
+        "water_pressure": 2.0,
+        "water_temperature": 24.5
+      },
+      "switches": {
+        "dhw_cm_switch": true
+      }
+    },
+    "7d97fc3117784cfdafe347bcedcbbbcb": {
+      "binary_sensors": {
+        "plugwise_notification": false
+      },
+      "dev_class": "gateway",
+      "firmware": "3.2.8",
+      "hardware": "AME Smile 2.0 board",
+      "location": "eedadcb297564f1483faa509179aebed",
+      "mac_address": "012345670001",
+      "model": "Gateway",
+      "name": "Adam",
+      "regulation_mode": "cooling",
+      "regulation_modes": [
+        "heating",
+        "off",
+        "bleeding_cold",
+        "bleeding_hot",
+        "cooling"
+      ],
+      "sensors": {
+        "outdoor_temperature": 13.4
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670101"
+    },
+    "ca79d23ae0094120b877558734cff85c": {
+      "active_preset": "away",
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+      "control_state": "off",
+      "dev_class": "thermostat",
+      "last_used": "Werkdag schema",
+      "location": "fa5fa6b34f6b40a0972988b20e888ed4",
+      "mode": "auto",
+      "model": "ThermoTouch",
+      "name": "Thermostaat WK",
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
+      "selected_schedule": "Werkdag schema",
+      "sensors": {
+        "setpoint_high": 21.5,
+        "setpoint_low": 18.0,
+        "temperature": 22.5
+      },
+      "thermostat": {
+        "lower_bound": 1.0,
+        "resolution": 0.01,
+        "setpoint_high": 21.5,
+        "setpoint_low": 18.0,
+        "upper_bound": 35.0
+      },
+      "vendor": "Plugwise"
+    }
+  },
+  "gateway": {
+    "cooling_present": true,
+    "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
+    "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
+    "notifications": {},
+    "smile_name": "Adam"
+  }
+}
