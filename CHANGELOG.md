@@ -1,8 +1,9 @@
 # Changelog
 
-## Ongoing
+## v0.31.4: Improvements
 
 - Improve fixture generation and manual fixtures, exposing (prettier-ed) fixtures
+- Fix unneeded Union-typing
 
 ## v0.31.3: Typing updates, improved fixture generation and manual mode-changes
 
