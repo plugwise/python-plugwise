@@ -270,8 +270,5 @@ voluptuous = "vol"
 [tool.ruff.flake8-pytest-style]
 fixture-parentheses = false
 
-[tool.ruff.pyupgrade]
-keep-runtime-typing = true
-
 [tool.ruff.mccabe]
 max-complexity = 25
