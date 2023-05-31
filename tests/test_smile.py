@@ -4283,7 +4283,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint_low": 20.5,
-                    "setpoint_high": 25.5,
+                    "setpoint_high": 35.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -4298,7 +4298,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 22.1,
                     "illuminance": 45.0,
                     "setpoint_low": 20.5,
-                    "setpoint_high": 25.5,
+                    "setpoint_high": 35.0,
                 },
             },
             "bfb5ee0a88e14e5f97bfa725a760cc49": {
