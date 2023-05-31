@@ -1020,15 +1020,14 @@ class SmileHelper:
         if d_id == self._heater_id and self.smile_name == "Smile Anna":
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
-                data["cooling_state"] = self._cooling_active = (
-                    data["elga_status_code"] == 8
-                )
-                data.pop("elga_status_code", None)
-
                 # Determine _cooling_present and _cooling_enabled
                 if "cooling_enabled" in data and data["cooling_enabled"]:
                     self._cooling_present = self._cooling_enabled = True
                     data["model"] = "Generic heater/cooler"
+                    data["cooling_state"] = self._cooling_active = (
+                        data["elga_status_code"] == 8
+                    )
+                    data.pop("elga_status_code", None)
 
                 # Elga has no cooling-switch
                 if "cooling_ena_switch" in data:
