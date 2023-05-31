@@ -3,7 +3,9 @@
     "1346fbd8498d4dbcab7e18d51b771f3d": {
       "active_preset": "no_frost",
       "available": true,
-      "available_schedules": ["None"],
+      "available_schedules": [
+        "None"
+      ],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-27T02:00:00+02:00",
@@ -13,7 +15,13 @@
       "mode": "heat",
       "model": "Lisa",
       "name": "Slaapkamer",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "selected_schedule": "None",
       "sensors": {
         "battery": 92,
@@ -82,7 +90,9 @@
     "6f3e9d7084214c21b9dfa46f6eeb8700": {
       "active_preset": "home",
       "available": true,
-      "available_schedules": ["None"],
+      "available_schedules": [
+        "None"
+      ],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-27T02:00:00+02:00",
@@ -92,7 +102,13 @@
       "mode": "heat",
       "model": "Lisa",
       "name": "Kinderkamer",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "selected_schedule": "None",
       "sensors": {
         "battery": 79,
@@ -128,7 +144,9 @@
     "a6abc6a129ee499c88a4d420cc413b47": {
       "active_preset": "home",
       "available": true,
-      "available_schedules": ["None"],
+      "available_schedules": [
+        "None"
+      ],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-27T02:00:00+02:00",
@@ -138,7 +156,13 @@
       "mode": "heat",
       "model": "Lisa",
       "name": "Logeerkamer",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "selected_schedule": "None",
       "sensors": {
         "battery": 80,
@@ -166,7 +190,12 @@
       "model": "Gateway",
       "name": "Adam",
       "regulation_mode": "heating",
-      "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
+      "regulation_modes": [
+        "heating",
+        "off",
+        "bleeding_cold",
+        "bleeding_hot"
+      ],
       "sensors": {
         "outdoor_temperature": 24.9
       },
@@ -228,7 +257,9 @@
     "f61f1a2535f54f52ad006a3d18e459ca": {
       "active_preset": "home",
       "available": true,
-      "available_schedules": ["None"],
+      "available_schedules": [
+        "None"
+      ],
       "control_state": "off",
       "dev_class": "zone_thermometer",
       "firmware": "2020-09-01T02:00:00+02:00",
@@ -238,7 +269,13 @@
       "mode": "heat",
       "model": "Jip",
       "name": "Woonkamer",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "selected_schedule": "None",
       "sensors": {
         "battery": 100,
