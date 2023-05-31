@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.31.5: Cooling-related fix/improvements
+
+- Fix cooling-related bug in set_temperature()
+- Change setpoint_low/_high generation, only show the active setpoint and the related min/max values
+- Update related test-assert / fixtures
+- Improve dhw_setpoint related code
+
 ## v0.31.4: Improvements
 
 - Improve fixture generation and manual fixtures, exposing (prettier-ed) fixtures
