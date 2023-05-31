@@ -1027,8 +1027,7 @@ class SmileHelper:
                     data["cooling_state"] = self._cooling_active = (
                         data["elga_status_code"] == 8
                     )
-                    data.pop("elga_status_code", None)
-
+                data.pop("elga_status_code", None)
                 # Elga has no cooling-switch
                 if "cooling_ena_switch" in data:
                     data.pop("cooling_ena_switch")
