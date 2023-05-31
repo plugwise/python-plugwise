@@ -62,14 +62,22 @@
     },
     "ee62cad889f94e8ca3d09021f03a660b": {
       "active_preset": null,
-      "available_schedules": ["'S avonds uit"],
+      "available_schedules": [
+        "'S avonds uit"
+      ],
       "dev_class": "thermostat",
       "last_used": "'S avonds uit",
       "location": "009490cc2f674ce6b576863fbb64f867",
       "mode": "heat",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": ["home", "away", "no_frost", "asleep", "vacation"],
+      "preset_modes": [
+        "home",
+        "away",
+        "no_frost",
+        "asleep",
+        "vacation"
+      ],
       "selected_schedule": "None",
       "sensors": {
         "setpoint": 20.5,
