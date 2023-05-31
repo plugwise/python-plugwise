@@ -55,6 +55,7 @@ class SmileData(SmileHelper):
     def update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
         # For heating + cooling, replace setpoint with setpoint_high/_low
+        LOGGER.debug("HOI cooling present, cooling enabled: %s, %s", self._cooling_present, self._cooling_enabled)
         if self._cooling_present:
             thermostat = device["thermostat"]
             sensors = device["sensors"]
@@ -684,7 +685,7 @@ class Smile(SmileComm, SmileData):
         if self._cooling_present:
             if "setpoint_low" in items:
                 setpoint = items["setpoint_low"]
-            if self._cooling_active:
+            if self._cooling_enabled:
                 if "setpoint_high" in items:
                     setpoint = items["setpoint_high"]
 
