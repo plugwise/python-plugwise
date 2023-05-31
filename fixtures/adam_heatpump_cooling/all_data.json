@@ -41,11 +41,7 @@
     "1053c8bbf8be43c6921742b146a625f1": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -55,13 +51,7 @@
       "mode": "heat_cool",
       "model": "Lisa",
       "name": "Thermostaat BK",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "None",
       "sensors": {
         "battery": 55,
@@ -158,11 +148,7 @@
     "47e2c550a33846b680725aa3fb229473": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -172,13 +158,7 @@
       "mode": "heat_cool",
       "model": "Lisa",
       "name": "Thermostaat DB",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "None",
       "sensors": {
         "setpoint_high": 18.0,
@@ -242,11 +222,7 @@
     "7fda9f84f01342f8afe9ebbbbff30c0f": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -256,13 +232,7 @@
       "mode": "heat_cool",
       "model": "Lisa",
       "name": "Thermostaat JM",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "None",
       "sensors": {
         "setpoint_high": 18.0,
@@ -377,11 +347,7 @@
     "beb32da072274e698146db8b022f3c36": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -391,13 +357,7 @@
       "mode": "heat_cool",
       "model": "Lisa",
       "name": "Thermostaat SQ",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "None",
       "sensors": {
         "setpoint_high": 18.5,
@@ -417,11 +377,7 @@
     "c4ed311d54e341f58b4cdd201d1fde7e": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -431,13 +387,7 @@
       "mode": "heat_cool",
       "model": "Lisa",
       "name": "Thermostaat RB",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "None",
       "sensors": {
         "setpoint_high": 17.0,
@@ -456,11 +406,7 @@
     },
     "ca79d23ae0094120b877558734cff85c": {
       "active_preset": "away",
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "thermostat",
       "last_used": "Werkdag schema",
@@ -468,13 +414,7 @@
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Thermostaat WK",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 21.5,
@@ -493,11 +433,7 @@
     "d3a276aeb3114a509bab1e4bf8c40348": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -507,13 +443,7 @@
       "mode": "heat_cool",
       "model": "Lisa",
       "name": "Thermostaat SJ",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "None",
       "sensors": {
         "setpoint_high": 20.5,
@@ -533,11 +463,7 @@
     "ea8372c0e3ad4622ad45a041d02425f5": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -547,13 +473,7 @@
       "mode": "auto",
       "model": "Lisa",
       "name": "Thermostaat KK",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "battery": 53,
@@ -574,11 +494,7 @@
     "eac5db95d97241f6b17790897847ccf5": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -588,13 +504,7 @@
       "mode": "auto",
       "model": "Lisa",
       "name": "Thermostaat BK1",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 20.5,
@@ -614,11 +524,7 @@
     "f04c985c11ad4848b8fcd710343f9dcf": {
       "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -628,13 +534,7 @@
       "mode": "auto",
       "model": "Lisa",
       "name": "Thermostaat  BK2",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 20.5,

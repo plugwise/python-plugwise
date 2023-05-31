@@ -63,11 +63,7 @@
     },
     "ca79d23ae0094120b877558734cff85c": {
       "active_preset": "away",
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend"
-      ],
+      "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "control_state": "off",
       "dev_class": "thermostat",
       "last_used": "Werkdag schema",
@@ -75,13 +71,7 @@
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Thermostaat WK",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 21.5,
