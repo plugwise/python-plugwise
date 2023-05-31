@@ -4170,15 +4170,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """
         testdata = {
             "573c152e7d4f4720878222bd75638f5b": {
-                "available": true,
+                "available": True,
                 "binary_sensors": {
-                    "compressor_state": true,
-                    "cooling_enabled": true,
-                    "cooling_state": true,
-                    "dhw_state": false,
-                    "flame_state": false,
-                    "heating_state": false,
-                    "slave_boiler_state": false,
+                    "compressor_state": True,
+                    "cooling_enabled": True,
+                    "cooling_state": True,
+                    "dhw_state": False,
+                    "flame_state": False,
+                    "heating_state": False,
+                    "slave_boiler_state": False,
                 },
                 "dev_class": "heater_central",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
@@ -4199,7 +4199,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "water_pressure": 0.5,
                     "water_temperature": 22.8,
                 },
-                "switches": {"dhw_cm_switch": true},
+                "switches": {"dhw_cm_switch": True},
                 "vendor": "Techneco",
             },
             "ebd90df1ab334565b5895f37590ccff4": {
@@ -4233,7 +4233,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "vendor": "Plugwise",
             },
             "fb49af122f6e4b0f91267e1cf7666d6f": {
-                "binary_sensors": {"plugwise_notification": false},
+                "binary_sensors": {"plugwise_notification": False},
                 "dev_class": "gateway",
                 "firmware": "4.2.1",
                 "hardware": "AME Smile 2.0 board",
