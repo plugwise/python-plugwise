@@ -333,7 +333,6 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
-        self._prev_setpoint: float | None = None
         self._prev_setpoint_high: float | None = None
         self._prev_setpoint_low: float | None = None
 
@@ -680,23 +679,26 @@ class Smile(SmileComm, SmileData):
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         setpoint: float | None = None
+        tmp_setpoint_low: float | None = None
+        tmp_setpoint_high: float | None = None
+
         if "setpoint" in items:
             setpoint = items["setpoint"]
-            if self._prev_setpoint == setpoint:
-                return
-            self._prev_setpoint = setpoint
+
         if self._cooling_present:
-            if "setpoint_low" in items:
-                setpoint = items["setpoint_low"]
-                if self._prev_setpoint_low == setpoint:
-                    return
+            if "setpoint_high" in items:
+                tmp_setpoint_high = items["setpoint_high"]
+                tmp_setpoint_low = items["setpoint_low"]
+            if self._cooling_enabled: # in cooling mode
+                setpoint = tmp_setpoint_high
                 self._prev_setpoint_high = setpoint
-            if self._cooling_enabled:
-                if "setpoint_high" in items:
-                    setpoint = items["setpoint_high"]
-                    if self._prev_setpoint_high == setpoint:
-                        return
-                    self._prev_setpoint_high = setpoint
+                if self._prev_setpoint_low != tmp_setpoint_low:
+                    raise PlugwiseError("Plugwise: cooling setpoint cannot be changed when in heating mode!")
+            else: # in heating mode
+                setpoint = tmp_setpoint_low
+                self._prev_setpoint_low = setpoint
+                if self._prev_setpoint_high != tmp_setpoint_high:
+                    raise PlugwiseError("Plugwise: heating setpoint cannot be changed when in cooling mode!")
 
         if setpoint is None:
             raise PlugwiseError(
