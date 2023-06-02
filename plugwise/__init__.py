@@ -333,6 +333,9 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
+        self._prev_setpoint: float | None = None
+        self._prev_setpoint_high: float | None = None
+        self._prev_setpoint_low: float | None = None
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
@@ -679,12 +682,21 @@ class Smile(SmileComm, SmileData):
         setpoint: float | None = None
         if "setpoint" in items:
             setpoint = items["setpoint"]
+            if self._prev_setpoint == setpoint:
+                return
+            self._prev_setpoint = setpoint
         if self._cooling_present:
             if "setpoint_low" in items:
                 setpoint = items["setpoint_low"]
+                if self._prev_setpoint_low == setpoint:
+                    return
+                self._prev_setpoint_high = setpoint
             if self._cooling_enabled:
                 if "setpoint_high" in items:
                     setpoint = items["setpoint_high"]
+                    if self._prev_setpoint_high == setpoint:
+                        return
+                    self._prev_setpoint_high = setpoint
 
         if setpoint is None:
             raise PlugwiseError(
