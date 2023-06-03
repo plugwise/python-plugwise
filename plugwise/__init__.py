@@ -689,16 +689,20 @@ class Smile(SmileComm, SmileData):
             if "setpoint_high" in items:
                 tmp_setpoint_high = items["setpoint_high"]
                 tmp_setpoint_low = items["setpoint_low"]
-            if self._cooling_enabled: # in cooling mode
+            if self._cooling_enabled:  # in cooling mode
                 setpoint = tmp_setpoint_high
                 self._prev_setpoint_high = setpoint
                 if self._prev_setpoint_low != tmp_setpoint_low:
-                    raise PlugwiseError("Plugwise: cooling setpoint cannot be changed when in heating mode!")
-            else: # in heating mode
+                    raise PlugwiseError(
+                        "Plugwise: cooling setpoint cannot be changed when in heating mode!"
+                    )
+            else:  # in heating mode
                 setpoint = tmp_setpoint_low
                 self._prev_setpoint_low = setpoint
                 if self._prev_setpoint_high != tmp_setpoint_high:
-                    raise PlugwiseError("Plugwise: heating setpoint cannot be changed when in cooling mode!")
+                    raise PlugwiseError(
+                        "Plugwise: heating setpoint cannot be changed when in cooling mode!"
+                    )
 
         if setpoint is None:
             raise PlugwiseError(
