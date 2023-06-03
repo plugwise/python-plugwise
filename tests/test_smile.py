@@ -3924,14 +3924,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._cooling_enabled
         assert smile._cooling_active
 
-        result = await self.tinker_thermostat(
-            smile,
-            "c784ee9fdab44e1395b8dee7d7a497d5",
-            good_schedules=[
-                "standaard",
-            ],
-        )
-        assert result
+        with pytest.raises(pw_exceptions.PlugwiseError):
+            result = await self.tinker_thermostat(
+                smile,
+                "c784ee9fdab44e1395b8dee7d7a497d5",
+                good_schedules=[
+                    "standaard",
+                ],
+            )
+            assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
