@@ -333,8 +333,8 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
-        self._prev_setpoint_high: float | None = None
-        self._prev_setpoint_low: float | None = None
+        self._prev_setpoint_high: float = MAX_SETPOINT
+        self._prev_setpoint_low: float = MIN_SETPOINT
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
@@ -690,18 +690,16 @@ class Smile(SmileComm, SmileData):
                 tmp_setpoint_high = items["setpoint_high"]
                 tmp_setpoint_low = items["setpoint_low"]
             if self._cooling_enabled:  # in cooling mode
-                setpoint = tmp_setpoint_high
-                self._prev_setpoint_high = setpoint
+                setpoint = self._prev_setpoint_high = tmp_setpoint_high
                 if self._prev_setpoint_low != tmp_setpoint_low:
                     raise PlugwiseError(
-                        "Plugwise: cooling setpoint cannot be changed when in heating mode!"
+                        "Plugwise: heating setpoint cannot be changed when in cooling mode!"
                     )
             else:  # in heating mode
-                setpoint = tmp_setpoint_low
-                self._prev_setpoint_low = setpoint
+                setpoint = self._prev_setpoint_low = tmp_setpoint_low
                 if self._prev_setpoint_high != tmp_setpoint_high:
                     raise PlugwiseError(
-                        "Plugwise: heating setpoint cannot be changed when in cooling mode!"
+                        "Plugwise: cooling setpoint cannot be changed when in heating mode!"
                     )
 
         if setpoint is None:
