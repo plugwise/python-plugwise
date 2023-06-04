@@ -112,7 +112,7 @@ HW_MODELS: Final[dict[str, str]] = {
     "080029": "Switch",
 }
 
-MAX_SETPOINT: Final[float] = 35.0
+MAX_SETPOINT: Final[float] = 30.0
 MIN_SETPOINT: Final[float] = 4.0
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
 SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
