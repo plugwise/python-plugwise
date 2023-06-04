@@ -679,8 +679,8 @@ class Smile(SmileComm, SmileData):
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         setpoint: float | None = None
-        tmp_setpoint_low: float | None = None
-        tmp_setpoint_high: float | None = None
+        tmp_setpoint_low: float = 4.0
+        tmp_setpoint_high: float = 30.0
 
         if "setpoint" in items:
             setpoint = items["setpoint"]
