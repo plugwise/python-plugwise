@@ -1036,8 +1036,8 @@ class SmileHelper:
             # and modulation_level
             else:
                 if self._cooling_present and "cooling_state" in data:
-                    self._cooling_enabled = data["cooling_state"]
-                    self._cooling_active = data["modulation_level"] == 100
+                    self._cooling_enabled = data["cooling_ena_switch"]
+                    self._cooling_active = data["cooling_state"]
 
         self._cleanup_data(data)
 
