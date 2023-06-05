@@ -333,8 +333,6 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
-        self._prev_setpoint_high: float = MAX_SETPOINT
-        self._prev_setpoint_low: float = MIN_SETPOINT
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
@@ -679,8 +677,6 @@ class Smile(SmileComm, SmileData):
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         setpoint: float | None = None
-        tmp_setpoint_low: float = 4.0
-        tmp_setpoint_high: float = 30.0
 
         if "setpoint" in items:
             setpoint = items["setpoint"]
@@ -690,14 +686,14 @@ class Smile(SmileComm, SmileData):
                 tmp_setpoint_high = items["setpoint_high"]
                 tmp_setpoint_low = items["setpoint_low"]
             if self._cooling_enabled:  # in cooling mode
-                setpoint = self._prev_setpoint_high = tmp_setpoint_high
-                if self._prev_setpoint_low != tmp_setpoint_low:
+                setpoint = tmp_setpoint_high
+                if tmp_setpoint_low != MIN_SETPOINT:
                     raise PlugwiseError(
                         "Plugwise: heating setpoint cannot be changed when in cooling mode!"
                     )
             else:  # in heating mode
-                setpoint = self._prev_setpoint_low = tmp_setpoint_low
-                if self._prev_setpoint_high != tmp_setpoint_high:
+                setpoint = tmp_setpoint_low
+                if tmp_setpoint_high != MAX_SETPOINT:
                     raise PlugwiseError(
                         "Plugwise: cooling setpoint cannot be changed when in heating mode!"
                     )
