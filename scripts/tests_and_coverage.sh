@@ -8,8 +8,8 @@ my_path=$(git rev-parse --show-toplevel)
 
 # shellcheck disable=SC2154
 if [ -f "${my_venv}/bin/activate" ]; then
-    # shellcheck disable=SC1091
     set +o nounset  # Workaround https://github.com/pypa/virtualenv/issues/150 for nodeenv
+    # shellcheck disable=SC1091
     . "${my_venv}/bin/activate"
     set -o nounset
     if [ ! "$(which pytest)" ]; then
