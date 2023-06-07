@@ -8,8 +8,10 @@ my_path=$(git rev-parse --show-toplevel)
 
 # shellcheck disable=SC2154
 if [ -f "${my_venv}/bin/activate" ]; then
+    set +o nounset  # Workaround https://github.com/pypa/virtualenv/issues/150 for nodeenv
     # shellcheck disable=SC1091
     . "${my_venv}/bin/activate"
+    set -o nounset
     # Install test requirements
     pip install --upgrade -e . -r requirements_test.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
     # Install pre-commit hook

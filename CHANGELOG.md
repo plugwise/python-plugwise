@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improved fixture generation and prettifying
+
 ## v0.31.5: Cooling-related fix/improvements
 
 - Fix cooling-related bug in set_temperature(), raise an error when the user tries to change the not-active setpoint
