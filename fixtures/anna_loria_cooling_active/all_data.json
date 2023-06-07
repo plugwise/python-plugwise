@@ -16,14 +16,14 @@
       "sensors": {
         "illuminance": 45.0,
         "setpoint_high": 23.5,
-        "setpoint_low": 19.5,
+        "setpoint_low": 4.0,
         "temperature": 24.1
       },
       "thermostat": {
         "lower_bound": 4.0,
         "resolution": 0.1,
         "setpoint_high": 23.5,
-        "setpoint_low": 19.5,
+        "setpoint_low": 4.0,
         "upper_bound": 30.0
       },
       "vendor": "Plugwise"

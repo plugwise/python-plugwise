@@ -418,14 +418,14 @@
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 21.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "temperature": 22.5
       },
       "thermostat": {
         "lower_bound": 1.0,
         "resolution": 0.01,
         "setpoint_high": 21.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "upper_bound": 35.0
       },
       "vendor": "Plugwise"
@@ -478,14 +478,14 @@
       "sensors": {
         "battery": 53,
         "setpoint_high": 21.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "temperature": 22.5
       },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
         "setpoint_high": 21.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -508,14 +508,14 @@
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 20.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "temperature": 21.5
       },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
         "setpoint_high": 20.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -538,14 +538,14 @@
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 20.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "temperature": 21.9
       },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
         "setpoint_high": 20.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",

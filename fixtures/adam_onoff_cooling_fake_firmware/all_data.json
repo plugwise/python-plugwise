@@ -75,14 +75,14 @@
       "selected_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 21.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "temperature": 22.5
       },
       "thermostat": {
         "lower_bound": 1.0,
         "resolution": 0.01,
         "setpoint_high": 21.5,
-        "setpoint_low": 18.0,
+        "setpoint_low": 4.0,
         "upper_bound": 35.0
       },
       "vendor": "Plugwise"

@@ -58,19 +58,13 @@ class SmileData(SmileHelper):
         if self._cooling_present:
             thermostat = device["thermostat"]
             sensors = device["sensors"]
-            max_setpoint = MAX_SETPOINT
-            min_setpoint = MIN_SETPOINT
-            if device["selected_schedule"] != "None":
-                max_setpoint = self._sched_setpoints[1]
-                min_setpoint = self._sched_setpoints[0]
-
             temp_dict: ActuatorData = {
                 "setpoint_low": thermostat["setpoint"],
-                "setpoint_high": max_setpoint,
+                "setpoint_high": MAX_SETPOINT,
             }
             if self._cooling_enabled:
                 temp_dict = {
-                    "setpoint_low": min_setpoint,
+                    "setpoint_low": MIN_SETPOINT,
                     "setpoint_high": thermostat["setpoint"],
                 }
             thermostat.pop("setpoint")
@@ -683,14 +677,26 @@ class Smile(SmileComm, SmileData):
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         setpoint: float | None = None
+
         if "setpoint" in items:
             setpoint = items["setpoint"]
+
         if self._cooling_present:
-            if "setpoint_low" in items:
-                setpoint = items["setpoint_low"]
-            if self._cooling_active:
-                if "setpoint_high" in items:
-                    setpoint = items["setpoint_high"]
+            if "setpoint_high" in items:
+                tmp_setpoint_high = items["setpoint_high"]
+                tmp_setpoint_low = items["setpoint_low"]
+            if self._cooling_enabled:  # in cooling mode
+                setpoint = tmp_setpoint_high
+                if tmp_setpoint_low != MIN_SETPOINT:
+                    raise PlugwiseError(
+                        "Plugwise: heating setpoint cannot be changed when in cooling mode!"
+                    )
+            else:  # in heating mode
+                setpoint = tmp_setpoint_low
+                if tmp_setpoint_high != MAX_SETPOINT:
+                    raise PlugwiseError(
+                        "Plugwise: cooling setpoint cannot be changed when in heating mode!"
+                    )
 
         if setpoint is None:
             raise PlugwiseError(
