@@ -8,8 +8,10 @@ my_path=$(git rev-parse --show-toplevel)
 
 # shellcheck disable=SC2154
 if [ -f "${my_venv}/bin/activate" ]; then
+    set +o nounset  # Workaround https://github.com/pypa/virtualenv/issues/150 for nodeenv
     # shellcheck disable=SC1091
     . "${my_venv}/bin/activate"
+    set -o nounset
     if [ ! "$(which pytest)" ]; then
         echo "Unable to find pytest, run setup_test.sh before this script"
         exit 1
@@ -44,6 +46,9 @@ fi
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
     echo "... crafting manual fixtures ..." 
     PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
+    echo "... prettier-ing (fixtures) ..." 
+    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/
 else
-    pre-commit run --hook-stage commit prettier --all-files || git add fixtures/
+    echo "... prettier-ing (fixtures) ..." 
+    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/
 fi
