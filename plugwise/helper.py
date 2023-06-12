@@ -29,6 +29,7 @@ from .constants import (
     DEFAULT_PW_MAX,
     DEFAULT_PW_MIN,
     DEVICE_MEASUREMENTS,
+    DHW_SETPOINT,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     FAKE_APPL,
@@ -107,6 +108,8 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
 def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
     """Helper-function for _get_appliance_data()."""
     for item in ACTIVE_ACTUATORS:
+        if item == "max_dhw_temperature":
+            continue
         temp_dict: ActuatorData = {}
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
@@ -119,9 +122,10 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
         if temp_dict:
             # If domestic_hot_water_setpoint is present as actuator,
             # rename and remove as sensor
-            if item == "domestic_hot_water_setpoint":
+            if item == DHW_SETPOINT:
                 item = "max_dhw_temperature"
-                data.pop("domestic_hot_water_setpoint")
+                if DHW_SETPOINT in data:
+                    data.pop(DHW_SETPOINT)
 
             data[item] = temp_dict  # type: ignore [literal-required]
 

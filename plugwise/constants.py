@@ -58,22 +58,9 @@ DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 DEFAULT_PW_MAX: Final = 30.0
 DEFAULT_PW_MIN: Final = 4.0
-NONE: Final = "None"
+DHW_SETPOINT: Final = "domestic_hot_water_setpoint"
 FAKE_APPL: Final = "aaaa0000aaaa0000aaaa0000aaaa00aa"
 FAKE_LOC: Final = "0000aaaa0000aaaa0000aaaa0000aa00"
-LEGACY_SMILES: Final[tuple[str, ...]] = (
-    "smile_thermo_v1",
-    "smile_v2",
-    "stretch_v2",
-    "stretch_v3",
-)
-LIMITS: Final[tuple[str, ...]] = (
-    "setpoint",
-    "lower_bound",
-    "upper_bound",
-    "resolution",
-)
-
 HW_MODELS: Final[dict[str, str]] = {
     "143.1": "ThermoTouch",
     "159.2": "Adam",
@@ -111,9 +98,21 @@ HW_MODELS: Final[dict[str, str]] = {
     "070051": "Switch",
     "080029": "Switch",
 }
-
+LEGACY_SMILES: Final[tuple[str, ...]] = (
+    "smile_thermo_v1",
+    "smile_v2",
+    "stretch_v2",
+    "stretch_v3",
+)
+LIMITS: Final[tuple[str, ...]] = (
+    "setpoint",
+    "lower_bound",
+    "upper_bound",
+    "resolution",
+)
 MAX_SETPOINT: Final[float] = 30.0
 MIN_SETPOINT: Final[float] = 4.0
+NONE: Final = "None"
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
 SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
