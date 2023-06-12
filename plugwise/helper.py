@@ -29,6 +29,7 @@ from .constants import (
     DEFAULT_PW_MAX,
     DEFAULT_PW_MIN,
     DEVICE_MEASUREMENTS,
+    DHW_SETPOINT,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     FAKE_APPL,
@@ -106,7 +107,6 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
 
 def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
     """Helper-function for _get_appliance_data()."""
-    DHW_SETPOINT = "domestic_hot_water_setpoint"
     for item in ACTIVE_ACTUATORS:
         if item == "max_dhw_temperature":
             continue
