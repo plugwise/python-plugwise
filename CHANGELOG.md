@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Add guarding for popping domestic_hot_water_setpoint
 - Improved fixture generation and prettifying
 
 ## v0.31.5: Cooling-related fix/improvements
