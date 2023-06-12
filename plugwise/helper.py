@@ -107,6 +107,8 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
 def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
     """Helper-function for _get_appliance_data()."""
     for item in ACTIVE_ACTUATORS:
+        if item == "max_dhw_temperature":
+            continue
         temp_dict: ActuatorData = {}
         for key in LIMITS:
             locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
