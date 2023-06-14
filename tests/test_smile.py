@@ -3924,14 +3924,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._cooling_active
 
         with pytest.raises(pw_exceptions.PlugwiseError):
-            result = await self.tinker_thermostat(
+            await self.tinker_thermostat(
                 smile,
                 "c784ee9fdab44e1395b8dee7d7a497d5",
                 good_schedules=[
                     "standaard",
                 ],
             )
-            assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4373,14 +4372,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert switch_change
 
         with pytest.raises(pw_exceptions.PlugwiseError):
-            result = await self.tinker_thermostat(
+            await self.tinker_thermostat(
                 smile,
                 "15da035090b847e7a21f93e08c015ebc",
                 good_schedules=[
                     "Winter",
                 ],
             )
-            assert result
 
         await self.tinker_dhw_mode(smile)
 
