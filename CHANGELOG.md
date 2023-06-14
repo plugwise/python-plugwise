@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Repair coverage/fix testing - #294
+
 ## V0.31.6: Fix domestic_hot_water_setpoint-related bug for Anna + Elga
 
 - Add guarding for popping domestic_hot_water_setpoint

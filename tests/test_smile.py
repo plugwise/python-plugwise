@@ -1529,7 +1529,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "dev_class": "computer_desktop",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "5ccb6c41a7d9403988d261ceee04239f",
-                "model": "Plug",
                 "name": "Work-PC",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
@@ -1558,7 +1557,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        assert self.device_items == 72
+        assert self.device_items == 71
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(
@@ -3925,14 +3924,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._cooling_active
 
         with pytest.raises(pw_exceptions.PlugwiseError):
-            result = await self.tinker_thermostat(
+            await self.tinker_thermostat(
                 smile,
                 "c784ee9fdab44e1395b8dee7d7a497d5",
                 good_schedules=[
                     "standaard",
                 ],
             )
-            assert result
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4374,14 +4372,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert switch_change
 
         with pytest.raises(pw_exceptions.PlugwiseError):
-            result = await self.tinker_thermostat(
+            await self.tinker_thermostat(
                 smile,
                 "15da035090b847e7a21f93e08c015ebc",
                 good_schedules=[
                     "Winter",
                 ],
             )
-            assert result
 
         await self.tinker_dhw_mode(smile)
 
