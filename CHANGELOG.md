@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Fix TODO #294
+- Repair coverage/fix testing - #294
 
 ## V0.31.6: Fix domestic_hot_water_setpoint-related bug for Anna + Elga
 
