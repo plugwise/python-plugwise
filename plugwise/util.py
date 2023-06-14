@@ -85,7 +85,7 @@ def in_between(
 def version_to_model(version: str | None) -> str | None:
     """Translate hardware_version to device type."""
 
-    if version is None:  # pragma: no cover #294
+    if version is None:
         return version
 
     model = HW_MODELS.get(version)
