@@ -463,22 +463,23 @@ class SmileHelper:
             module = self._modules.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
-                model_data["vendor_name"] = module.find("vendor_name").text
-                if model_data["vendor_name"] == "Plugwise B.V.":
-                    model_data["vendor_name"] = "Plugwise"
+                if (vendor_name := module.find("vendor_name").text) is not None:
+                    model_data["vendor_name"] = vendor_name
+                    if "Plugwise" in vendor_name:
+                        model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
                 # Adam
-                if found := module.find("./protocols/zig_bee_node"):
-                    model_data["zigbee_mac_address"] = found.find("mac_address").text
-                    model_data["reachable"] = found.find("reachable").text == "true"
+                if zb_node := module.find("./protocols/zig_bee_node"):
+                    model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
+                    model_data["reachable"] = zb_node.find("reachable").text == "true"
                 # Stretches
-                if found := module.find("./protocols/network_router"):
-                    model_data["zigbee_mac_address"] = found.find("mac_address").text
+                if router := module.find("./protocols/network_router"):
+                    model_data["zigbee_mac_address"] = router.find("mac_address").text
                 # Also look for the Circle+/Stealth M+
-                if found := module.find("./protocols/network_coordinator"):
-                    model_data["zigbee_mac_address"] = found.find("mac_address").text
+                if coord := module.find("./protocols/network_coordinator"):
+                    model_data["zigbee_mac_address"] = coord.find("mac_address").text
 
         return model_data
 
