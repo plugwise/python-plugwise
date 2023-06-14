@@ -39,7 +39,9 @@
     },
     "0d266432d64443e283b5d708ae98b455": {
       "active_preset": "home",
-      "available_schedules": ["Thermostat schedule"],
+      "available_schedules": [
+        "Thermostat schedule"
+      ],
       "dev_class": "thermostat",
       "firmware": "2017-03-13T11:54:58+01:00",
       "hardware": "6539-1301-500",
@@ -48,7 +50,13 @@
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
+      "preset_modes": [
+        "away",
+        "vacation",
+        "asleep",
+        "home",
+        "no_frost"
+      ],
       "selected_schedule": "Thermostat schedule",
       "sensors": {
         "illuminance": 151,

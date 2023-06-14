@@ -65,14 +65,22 @@
     },
     "ee62cad889f94e8ca3d09021f03a660b": {
       "active_preset": "home",
-      "available_schedules": ["Weekschema"],
+      "available_schedules": [
+        "Weekschema"
+      ],
       "dev_class": "thermostat",
       "last_used": "Weekschema",
       "location": "009490cc2f674ce6b576863fbb64f867",
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "selected_schedule": "Weekschema",
       "sensors": {
         "setpoint": 20.5,
@@ -91,7 +99,6 @@
       "dev_class": "computer_desktop",
       "firmware": "2019-06-21T02:00:00+02:00",
       "location": "5ccb6c41a7d9403988d261ceee04239f",
-      "model": "Plug",
       "name": "Work-PC",
       "sensors": {
         "electricity_consumed": 79.8,

@@ -1529,7 +1529,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "dev_class": "computer_desktop",
                 "firmware": "2019-06-21T02:00:00+02:00",
                 "location": "5ccb6c41a7d9403988d261ceee04239f",
-                "model": "Plug",
                 "name": "Work-PC",
                 "zigbee_mac_address": "ABCD012345670A02",
                 "vendor": "Plugwise",
