@@ -3721,6 +3721,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
+                "max_dhw_temperature": {
+                    "setpoint": 53.0,
+                    "lower_bound": 35.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
