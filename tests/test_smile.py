@@ -3738,7 +3738,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 29.1,
-                    "domestic_hot_water_setpoint": 60.0,
                     "dhw_temperature": 46.3,
                     "intended_boiler_temperature": 35.0,
                     "modulation_level": 52,
