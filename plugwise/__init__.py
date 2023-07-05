@@ -139,6 +139,25 @@ class SmileData(SmileHelper):
         # Collect data for each device via helper function
         self._all_device_data()
 
+        # Check for non-unique device names and append with model
+        names_dict: dict[str, str] = {}
+        for dev_id, data in self.gw_devices.items():
+            names_dict[dev_id] = data["name"]
+
+        dups: dict[str, list[str]] = {}
+        for key, value in names_dict.items():
+            if value not in dups:
+                dups[value] = [key]
+            else:
+                dups[value].append(key)
+
+        for name, dev_id_list in dups.items():
+            if len(dev_id_list) > 1:
+                for dev_id in dev_id_list:
+                    self.gw_devices[dev_id][
+                        "name"
+                    ] = f'{self.gw_devices[dev_id]["model"]} {name}'
+
     def _device_data_switching_group(
         self, details: ApplianceData, device_data: DeviceData
     ) -> DeviceData:
