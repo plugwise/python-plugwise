@@ -681,10 +681,9 @@ class Smile(SmileComm, SmileData):
         if "setpoint" in items:
             setpoint = items["setpoint"]
 
-        if self._cooling_present:
-            if "setpoint_high" in items:
-                tmp_setpoint_high = items["setpoint_high"]
-                tmp_setpoint_low = items["setpoint_low"]
+        if self._cooling_present and "setpoint_high" in items:
+            tmp_setpoint_high = items["setpoint_high"]
+            tmp_setpoint_low = items["setpoint_low"]
             if self._cooling_enabled:  # in cooling mode
                 setpoint = tmp_setpoint_high
                 if tmp_setpoint_low != MIN_SETPOINT:
