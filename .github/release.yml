@@ -1,0 +1,35 @@
+# Release drafter
+
+changelog:
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - Semver-Major
+        - breaking-change
+    - title: Exciting New Features 🎉
+      labels:
+        - Semver-Minor
+        - "feature"
+        - "enhancement"
+        - "quality"
+        - "smile"
+    - title: Bug Fixes 🐛
+      labels:
+        - "fix"
+        - "bugfix"
+        - "bug"
+    - title: Maintenance 🧰
+      labels:
+        - "chore"
+        - "dashboard"
+        - "auto-merge"
+        - "dependencies"
+        - "python"
+        - "documentation"
+        - "github-actions"
+        - "userdata"
+        - "pre-commit"
+        - "manual-merge"
+    - title: Other Changes
+      labels:
+        - "*"
