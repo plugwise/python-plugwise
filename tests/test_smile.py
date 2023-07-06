@@ -434,7 +434,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         tests += 1
                         if (
                             measure_key in bsw_list
-                            or measure_key in pw_constants.ACTUATOR_CLASSES
+                            or measure_key in pw_constants.ACTIVE_ACTUATORS
                         ):
                             tests -= 1
                             for key_1, val_1 in measure_assert.items():
@@ -3721,6 +3721,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 100.0,
                     "resolution": 1.0,
                 },
+                "max_dhw_temperature": {
+                    "setpoint": 53.0,
+                    "lower_bound": 35.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
                 "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
@@ -3732,7 +3738,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 29.1,
-                    "domestic_hot_water_setpoint": 60.0,
                     "dhw_temperature": 46.3,
                     "intended_boiler_temperature": 35.0,
                     "modulation_level": 52,
@@ -3798,7 +3803,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.device_items == 57
+        assert self.device_items == 60
         assert not self.cooling_present
         assert not self.notifications
 
