@@ -596,7 +596,7 @@
 		</actuator_functionalities>
 	</appliance>
 	<appliance id='833de10f269c4deab58fb9df69901b4e'>
-		<name>Woonkamer</name>
+		<name>Tom Woonkamer</name>
 		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
 		<type>thermostatic_radiator_valve</type>
 		<created_date>2021-03-28T18:03:01.125+02:00</created_date>
@@ -885,7 +885,7 @@
 		</actuator_functionalities>
 	</appliance>
 	<appliance id='d4496250d0e942cfa7aea3476e9070d5'>
-		<name>Kinderkamer</name>
+		<name>Tom Kinderkamer</name>
 		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
 		<type>thermostatic_radiator_valve</type>
 		<created_date>2021-01-16T18:54:43.437+01:00</created_date>
@@ -981,7 +981,7 @@
 		</actuator_functionalities>
 	</appliance>
 	<appliance id='356b65335e274d769c338223e7af9c33'>
-		<name>Slaapkamer</name>
+		<name>Tom Slaapkamer</name>
 		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
 		<type>thermostatic_radiator_valve</type>
 		<created_date>2021-01-16T14:06:34.242+01:00</created_date>
@@ -1202,7 +1202,7 @@
 		</actuator_functionalities>
 	</appliance>
 	<appliance id='1da4d325838e4ad8aac12177214505c9'>
-		<name>Logeerkamer</name>
+		<name>Tom Logeerkamer</name>
 		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
 		<type>thermostatic_radiator_valve</type>
 		<created_date>2021-01-16T15:56:14.990+01:00</created_date>

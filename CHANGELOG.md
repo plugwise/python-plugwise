@@ -3,6 +3,7 @@
 ## Ongoing
 
 - Repair coverage/fix testing - #294
+- Correct non-unique device names in adam_jip userdata
 
 ## V0.31.6: Fix domestic_hot_water_setpoint-related bug for Anna + Elga
 
