@@ -354,8 +354,8 @@ class Smile(SmileComm, SmileData):
         dsmrmain = result.find("./module/protocols/dsmrmain")
         if "Plugwise" not in names and dsmrmain is None:  # pragma: no cover
             LOGGER.error(
-                "Connected but expected text not returned, we got %s. Please create \
-                an issue on http://github.com/plugwise/python-plugwise",
+                "Connected but expected text not returned, we got %s. Please create"
+                " an issue on http://github.com/plugwise/python-plugwise",
                 result,
             )
             raise ResponseError
@@ -416,8 +416,8 @@ class Smile(SmileComm, SmileData):
             else:  # pragma: no cover
                 # No cornercase, just end of the line
                 LOGGER.error(
-                    "Connected but no gateway device information found, please create \
-                     an issue on http://github.com/plugwise/python-plugwise"
+                    "Connected but no gateway device information found, please create"
+                    " an issue on http://github.com/plugwise/python-plugwise"
                 )
                 raise ResponseError
 
@@ -442,8 +442,8 @@ class Smile(SmileComm, SmileData):
         if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
             LOGGER.error(
-                "Unable to find model or version information, please create \
-                 an issue on http://github.com/plugwise/python-plugwise"
+                "Unable to find model or version information, please create"
+                " an issue on http://github.com/plugwise/python-plugwise"
             )
             raise UnsupportedDeviceError
 
@@ -452,8 +452,8 @@ class Smile(SmileComm, SmileData):
         LOGGER.debug("Plugwise identified as %s", target_smile)
         if target_smile not in SMILES:
             LOGGER.error(
-                'Your version Smile identified as "%s" seems unsupported by our plugin, please \
-                create an issue on http://github.com/plugwise/python-plugwise',
+                "Your version Smile identified as %s seems unsupported by our plugin, please"
+                " create an issue on http://github.com/plugwise/python-plugwise",
                 target_smile,
             )
             raise UnsupportedDeviceError
@@ -687,8 +687,8 @@ class Smile(SmileComm, SmileData):
                 tmp_setpoint_low = items["setpoint_low"]
             else:
                 raise PlugwiseError(
-                    "Plugwise: wrong target-temperature provided, provide values for \
-                    both target-temperature-low and target-temperature-high."
+                    "Plugwise: wrong target-temperature provided, provide values for"
+                    " both target-temperature-low and target-temperature-high."
                 )
             if self._cooling_enabled:  # in cooling mode
                 setpoint = tmp_setpoint_high
