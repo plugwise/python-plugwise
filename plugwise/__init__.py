@@ -682,14 +682,14 @@ class Smile(SmileComm, SmileData):
             setpoint = items["setpoint"]
 
         if self._cooling_present:
-            if "setpoint_high" in items:
-                tmp_setpoint_high = items["setpoint_high"]
-                tmp_setpoint_low = items["setpoint_low"]
-            else:
+            if "setpoint_high" not in items:
                 raise PlugwiseError(
                     "Plugwise: wrong target-temperature provided, provide values for"
                     " both target-temperature-low and target-temperature-high."
                 )
+
+            tmp_setpoint_high = items["setpoint_high"]
+            tmp_setpoint_low = items["setpoint_low"]
             if self._cooling_enabled:  # in cooling mode
                 setpoint = tmp_setpoint_high
                 if tmp_setpoint_low != MIN_SETPOINT:
