@@ -486,11 +486,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_switch_passed
 
     @pytest.mark.asyncio
-    async def tinker_thermostat_temp(self, smile, loc_id, special=True, unhappy=False):
+    async def tinker_thermostat_temp(
+        self, smile, loc_id, block_cooling=False, unhappy=False
+    ):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         test_temp = {"setpoint": 22.9}
-        if smile._cooling_present and special:
+        if smile._cooling_present and not block_cooling:
             test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
@@ -584,14 +586,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         schedule_on=True,
         good_schedules=None,
         single=False,
-        special=True,
+        block_cooling=False,
         unhappy=False,
     ):
         """Toggle various climate settings to test functionality."""
         if good_schedules is None:  # pragma: no cover
             good_schedules = ["Weekschema"]
 
-        result_1 = await self.tinker_thermostat_temp(smile, loc_id, special, unhappy)
+        result_1 = await self.tinker_thermostat_temp(
+            smile, loc_id, block_cooling, unhappy
+        )
         result_2 = await self.tinker_thermostat_preset(smile, loc_id, unhappy)
         if smile._schedule_old_states != {}:
             for item in smile._schedule_old_states[loc_id]:
@@ -4392,7 +4396,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.tinker_thermostat_temp(
                 smile,
                 "15da035090b847e7a21f93e08c015ebc",
-                special=False,
+                block_cooling=True,
             )
         _LOGGER.debug("ERROR raised: %s", exc.value)
 
