@@ -98,12 +98,6 @@ HW_MODELS: Final[dict[str, str]] = {
     "070051": "Switch",
     "080029": "Switch",
 }
-LEGACY_SMILES: Final[tuple[str, ...]] = (
-    "smile_thermo_v1",
-    "smile_v2",
-    "stretch_v2",
-    "stretch_v3",
-)
 LIMITS: Final[tuple[str, ...]] = (
     "setpoint",
     "lower_bound",
