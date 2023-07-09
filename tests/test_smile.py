@@ -486,11 +486,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_switch_passed
 
     @pytest.mark.asyncio
-    async def tinker_thermostat_temp(self, smile, loc_id, unhappy=False):
+    async def tinker_thermostat_temp(
+        self, smile, loc_id, block_cooling=False, unhappy=False
+    ):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         test_temp = {"setpoint": 22.9}
-        if smile._cooling_present:
+        if smile._cooling_present and not block_cooling:
             test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
@@ -584,13 +586,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         schedule_on=True,
         good_schedules=None,
         single=False,
+        block_cooling=False,
         unhappy=False,
     ):
         """Toggle various climate settings to test functionality."""
         if good_schedules is None:  # pragma: no cover
             good_schedules = ["Weekschema"]
 
-        result_1 = await self.tinker_thermostat_temp(smile, loc_id, unhappy)
+        result_1 = await self.tinker_thermostat_temp(
+            smile, loc_id, block_cooling, unhappy
+        )
         result_2 = await self.tinker_thermostat_preset(smile, loc_id, unhappy)
         if smile._schedule_old_states != {}:
             for item in smile._schedule_old_states[loc_id]:
@@ -3928,7 +3933,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._cooling_enabled
         assert smile._cooling_active
 
-        with pytest.raises(pw_exceptions.PlugwiseError):
+        with pytest.raises(pw_exceptions.PlugwiseError) as exc:
             await self.tinker_thermostat(
                 smile,
                 "c784ee9fdab44e1395b8dee7d7a497d5",
@@ -3936,6 +3941,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "standaard",
                 ],
             )
+        _LOGGER.debug("ERROR raised: %s", exc.value)
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4376,7 +4382,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert switch_change
 
-        with pytest.raises(pw_exceptions.PlugwiseError):
+        with pytest.raises(pw_exceptions.PlugwiseError) as exc:
             await self.tinker_thermostat(
                 smile,
                 "15da035090b847e7a21f93e08c015ebc",
@@ -4384,6 +4390,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "Winter",
                 ],
             )
+        _LOGGER.debug("ERROR raised: %s", exc.value)
+
+        with pytest.raises(pw_exceptions.PlugwiseError) as exc:
+            await self.tinker_thermostat_temp(
+                smile,
+                "15da035090b847e7a21f93e08c015ebc",
+                block_cooling=True,
+            )
+        _LOGGER.debug("ERROR raised: %s", exc.value)
 
         await self.tinker_dhw_mode(smile)
 
