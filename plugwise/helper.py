@@ -395,27 +395,12 @@ class SmileHelper:
         self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
 
-    def _locations_specials(self, loc: Munch, location: str) -> Munch:
-        """Helper-function for _all_locations().
-
-        Correct location info in special cases.
-        """
-        if loc.name == "Home":
-            self._home_location = loc.loc_id
-
-        # Replace location-name for P1 legacy, can contain privacy-related info
-        if self._smile_legacy and self.smile_type == "power":
-            loc.name = "Home"
-            self._home_location = loc.loc_id
-
-        return loc
-
     def _all_locations(self) -> None:
         """Collect all locations."""
         loc = Munch()
 
-        # Legacy Anna without outdoor_temp and Stretches have no locations, create one containing all appliances
         locations = self._locations.findall("./location")
+        # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
         if not locations and self._smile_legacy:
             self._home_location = FAKE_LOC
             self._loc_data[FAKE_LOC] = {"name": "Home"}
@@ -433,8 +418,12 @@ class SmileHelper:
             ):
                 continue
 
-            # Specials
-            loc = self._locations_specials(loc, location)
+            if loc.name == "Home":
+                self._home_location = loc.loc_id
+            # Replace location-name for P1 legacy, can contain privacy-related info
+            if self._smile_legacy and self.smile_type == "power":
+                loc.name = "Home"
+                self._home_location = loc.loc_id
 
             self._loc_data[loc.loc_id] = {"name": loc.name}
 
