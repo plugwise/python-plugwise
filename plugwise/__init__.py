@@ -19,7 +19,6 @@ from .constants import (
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
-    LEGACY_SMILES,
     LOCATIONS,
     LOGGER,
     MAX_SETPOINT,
@@ -389,7 +388,6 @@ class Smile(SmileComm, SmileData):
                     network = zb_network.find("./master_controller")
                     self.smile_zigbee_mac_address = network.find("mac_address").text
 
-        self._smile_legacy = True
         # Legacy Anna or Stretch:
         if (
             result.find('./appliance[type="thermostat"]') is not None
@@ -421,6 +419,7 @@ class Smile(SmileComm, SmileData):
                 )
                 raise ResponseError
 
+        self._smile_legacy = True
         return model
 
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
@@ -462,9 +461,6 @@ class Smile(SmileComm, SmileData):
         self.smile_name = SMILES[target_smile].smile_name
         self.smile_type = SMILES[target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
-
-        if target_smile in LEGACY_SMILES:
-            self._smile_legacy = True
 
         if self.smile_type == "stretch":
             self._stretch_v2 = self.smile_version[1].major == 2
