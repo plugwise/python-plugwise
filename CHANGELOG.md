@@ -6,6 +6,8 @@
 - Correct non-unique device names in adam_jip userdata
 - Add domestic_hot_water_setpoint data to anna_heatpump_heating userdata, update relevant test-cases
 - Add raising an error when providing the wrong type of temperature input to set_temperature() with cooling active
+- Add preliminary support for python 3.12 by updating build system requirements
+- Code improvements
 
 ## V0.31.6: Fix domestic_hot_water_setpoint-related bug for Anna + Elga
 
