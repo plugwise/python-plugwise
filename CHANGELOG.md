@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improve typing as per Core PR 96915
+
 ## v0.31.7: Various small updates
 
 - Repair coverage/fix testing - #294

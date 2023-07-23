@@ -5,7 +5,7 @@ from collections import namedtuple
 from dataclasses import dataclass
 import datetime as dt
 import logging
-from typing import Final, TypedDict
+from typing import Final, Literal, TypedDict, get_args
 
 LOGGER = logging.getLogger(__name__)
 
@@ -246,7 +246,7 @@ SMILES: Final[dict[str, SMILE]] = {
 
 # All available Binary Sensor, Sensor, and Switch Types
 
-BINARY_SENSORS: Final[tuple[str, ...]] = (
+BinarySensorType = Literal[
     "cooling_enabled",
     "compressor_state",
     "cooling_state",
@@ -255,9 +255,10 @@ BINARY_SENSORS: Final[tuple[str, ...]] = (
     "heating_state",
     "plugwise_notification",
     "slave_boiler_state",
-)
+]
+BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
-SENSORS: Final[tuple[str, ...]] = (
+SensorType = Literal[
     "battery",
     "cooling_activation_outdoor_temperature",
     "cooling_deactivation_threshold",
@@ -309,14 +310,16 @@ SENSORS: Final[tuple[str, ...]] = (
     "voltage_phase_three",
     "water_pressure",
     "water_temperature",
-)
+]
+SENSORS: Final[tuple[str, ...]] = get_args(SensorType)
 
-SWITCHES: Final[tuple[str, ...]] = (
+SwitchType = Literal[
     "cooling_ena_switch",
     "dhw_cm_switch",
     "lock",
     "relay",
-)
+]
+SWITCHES: Final[tuple[str, ...]] = get_args(SwitchType)
 
 
 class ApplianceData(TypedDict, total=False):
