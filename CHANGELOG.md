@@ -1,10 +1,11 @@
 # Changelog
 
-## v0.31.9: Add NumberType and SelectType constants to improve typing further
+## v0.31.9: Further typing improvements
+
+- Add NumberType and SelectType constants to improve typing further
+- Code quality housekeeping
 
 ## v0.31.8: Improve typing as per Core PR #96915
-
-- Code quality housekeeping
 
 ## v0.31.8: Improve typing
 
