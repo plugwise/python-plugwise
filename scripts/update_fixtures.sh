@@ -2,7 +2,7 @@
 set -eu
 
 # Fixtures consumed by plugwise-beta
-test_fixtures="adam_multiple_devices_per_zone m_adam_cooling m_anna_heatpump_cooling p1v3_full_option stretch_v31 anna_heatpump_heating m_adam_heating m_anna_heatpump_idle p1v4_442_triple"
+test_fixtures="adam_multiple_devices_per_zone m_adam_cooling adam_jip m_anna_heatpump_cooling p1v3_full_option stretch_v31 anna_heatpump_heating m_adam_heating m_anna_heatpump_idle p1v4_442_triple"
 
 target="../plugwise-beta"
 if [ $# -eq 1 ]; then
