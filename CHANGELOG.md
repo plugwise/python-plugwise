@@ -1,5 +1,7 @@
 # Changelog
 
+## v0.31.9: Add NumberType and SelectType constants to improve typing further
+
 ## v0.31.8: Improve typing as per Core PR #96915
 
 ## v0.31.7: Various small updates
