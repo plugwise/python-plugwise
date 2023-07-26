@@ -269,6 +269,12 @@ SelectType = Literal[
     "select_schedule",
 ]
 
+SelectOptionsType = Literal[
+    "dhw_modes",
+    "regulation_modes",
+    "available_schedules",
+]
+
 SensorType = Literal[
     "battery",
     "cooling_activation_outdoor_temperature",
