@@ -884,7 +884,7 @@ class SmileHelper:
 
                 data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
-                if measurement not in ("dhw_mode"):
+                if measurement not in ("select_dhw_mode"):
                     data[measurement] = format_measure(  # type: ignore [literal-required]
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
@@ -929,7 +929,7 @@ class SmileHelper:
         """
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
-            data["regulation_mode"] = search.find("mode").text
+            data["select_regulation_mode"] = search.find("mode").text
             self._cooling_enabled = search.find("mode").text == "cooling"
 
     def _cleanup_data(self, data: DeviceData) -> None:

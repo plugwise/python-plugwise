@@ -190,7 +190,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 # Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
-    "domestic_hot_water_mode": DATA("dhw_mode", NONE),
+    "domestic_hot_water_mode": DATA("select_dhw_mode", NONE),
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
     "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
@@ -480,11 +480,11 @@ class DeviceData(
     """The Device Data class, covering the collected and ordered output-data per device."""
 
     # Loria
-    dhw_mode: str
+    select_dhw_mode: str
     dhw_modes: list[str]
 
     # Gateway
-    regulation_mode: str
+    select_regulation_mode: str
     regulation_modes: list[str]
 
     # Master Thermostats
@@ -492,7 +492,7 @@ class DeviceData(
     active_preset: str | None
 
     available_schedules: list[str]
-    selected_schedule: str
+    select_schedule: str
     last_used: str | None
 
     mode: str
