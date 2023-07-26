@@ -52,7 +52,7 @@
       "model": "Lisa",
       "name": "Thermostaat BK",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "battery": 55,
         "setpoint_high": 18.0,
@@ -159,7 +159,7 @@
       "model": "Lisa",
       "name": "Thermostaat DB",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "setpoint_high": 18.0,
         "setpoint_low": 4.0,
@@ -205,7 +205,6 @@
       "mac_address": "012345670001",
       "model": "Gateway",
       "name": "Adam",
-      "regulation_mode": "cooling",
       "regulation_modes": [
         "heating",
         "off",
@@ -213,6 +212,7 @@
         "bleeding_hot",
         "cooling"
       ],
+      "select_regulation_mode": "cooling",
       "sensors": {
         "outdoor_temperature": 13.4
       },
@@ -233,7 +233,7 @@
       "model": "Lisa",
       "name": "Thermostaat JM",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "setpoint_high": 18.0,
         "setpoint_low": 4.0,
@@ -358,7 +358,7 @@
       "model": "Lisa",
       "name": "Thermostaat SQ",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "setpoint_high": 18.5,
         "setpoint_low": 4.0,
@@ -388,7 +388,7 @@
       "model": "Lisa",
       "name": "Thermostaat RB",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "setpoint_high": 17.0,
         "setpoint_low": 4.0,
@@ -415,7 +415,7 @@
       "model": "ThermoTouch",
       "name": "Thermostaat WK",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "Werkdag schema",
+      "select_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 21.5,
         "setpoint_low": 4.0,
@@ -444,7 +444,7 @@
       "model": "Lisa",
       "name": "Thermostaat SJ",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "setpoint_high": 20.5,
         "setpoint_low": 4.0,
@@ -474,7 +474,7 @@
       "model": "Lisa",
       "name": "Thermostaat KK",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "Werkdag schema",
+      "select_schedule": "Werkdag schema",
       "sensors": {
         "battery": 53,
         "setpoint_high": 21.5,
@@ -505,7 +505,7 @@
       "model": "Lisa",
       "name": "Thermostaat BK1",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "Werkdag schema",
+      "select_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 20.5,
         "setpoint_low": 4.0,
@@ -535,7 +535,7 @@
       "model": "Lisa",
       "name": "Thermostaat  BK2",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-      "selected_schedule": "Werkdag schema",
+      "select_schedule": "Werkdag schema",
       "sensors": {
         "setpoint_high": 20.5,
         "setpoint_low": 4.0,

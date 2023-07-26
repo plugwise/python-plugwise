@@ -12,7 +12,7 @@
       "model": "ThermoTouch",
       "name": "Anna",
       "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "illuminance": 19.5,
         "setpoint": 15.0,

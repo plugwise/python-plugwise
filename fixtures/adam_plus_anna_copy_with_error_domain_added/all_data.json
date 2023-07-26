@@ -56,7 +56,7 @@
       "mac_address": "0123456789AB",
       "model": "Gateway",
       "name": "Adam",
-      "regulation_mode": "heating",
+      "select_regulation_mode": "heating",
       "vendor": "Plugwise",
       "zigbee_mac_address": "0123456789AB"
     },
@@ -70,7 +70,7 @@
       "model": "ThermoTouch",
       "name": "Anna",
       "preset_modes": ["home", "away", "no_frost", "asleep", "vacation"],
-      "selected_schedule": "None",
+      "select_schedule": "None",
       "sensors": {
         "setpoint": 20.5,
         "temperature": 20.5

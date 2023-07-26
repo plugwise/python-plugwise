@@ -129,7 +129,7 @@
       "model": "ThermoTouch",
       "name": "Anna",
       "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-      "selected_schedule": "Weekschema",
+      "select_schedule": "Weekschema",
       "sensors": {
         "setpoint": 18.5,
         "temperature": 18.1
@@ -153,8 +153,8 @@
       "mac_address": "012345670001",
       "model": "Gateway",
       "name": "Adam",
-      "regulation_mode": "heating",
       "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
+      "select_regulation_mode": "heating",
       "sensors": {
         "outdoor_temperature": -1.25
       },
@@ -175,7 +175,7 @@
       "model": "Lisa",
       "name": "Lisa Badkamer",
       "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-      "selected_schedule": "Badkamer",
+      "select_schedule": "Badkamer",
       "sensors": {
         "battery": 56,
         "setpoint": 15.0,

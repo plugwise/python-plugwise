@@ -56,7 +56,7 @@
       "mac_address": "012345670001",
       "model": "Gateway",
       "name": "Adam",
-      "regulation_mode": "heating",
+      "select_regulation_mode": "heating",
       "sensors": {
         "outdoor_temperature": 11.9
       },
@@ -73,7 +73,7 @@
       "model": "ThermoTouch",
       "name": "Anna",
       "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
-      "selected_schedule": "Weekschema",
+      "select_schedule": "Weekschema",
       "sensors": {
         "setpoint": 20.5,
         "temperature": 20.5
