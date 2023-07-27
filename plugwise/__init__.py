@@ -199,7 +199,7 @@ class SmileData(SmileHelper):
             last_active,
         ) = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
-        device_data["selected_schedule"] = sel_schedule
+        device_data["select_schedule"] = sel_schedule
         if self._smile_legacy:
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:

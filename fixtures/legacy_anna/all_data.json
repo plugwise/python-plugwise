@@ -49,7 +49,7 @@
       "model": "ThermoTouch",
       "name": "Anna",
       "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
-      "selected_schedule": "Thermostat schedule",
+      "select_schedule": "Thermostat schedule",
       "sensors": {
         "illuminance": 151,
         "setpoint": 20.5,

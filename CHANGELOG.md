@@ -1,6 +1,15 @@
 # Changelog
 
+## v0.31.9: Further typing improvements
+
+- Add NumberType, SelectType and SelectOptionsType constants to improve typing further
+- Code quality housekeeping
+
 ## v0.31.8: Improve typing as per Core PR #96915
+
+## v0.31.8: Improve typing
+
+- Add BinarySensorType, SensorType, SwitchType as per HA Core PR 96915
 
 ## v0.31.7: Various small updates
 
