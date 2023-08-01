@@ -519,6 +519,7 @@ class DeviceData(
     binary_sensors: SmileBinarySensors
     max_dhw_temperature: ActuatorData
     maximum_boiler_temperature: ActuatorData
+    temperature_offset: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData
