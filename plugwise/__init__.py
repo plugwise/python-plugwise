@@ -823,6 +823,14 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
+    async def set_temperature_offset(self, offset: float) -> None:
+        """Set the temperature offset for thermostats that support this feature."""
+
+        uri = f"{APPLIANCES}???????????"
+        data = f"<offset_functionality><offset>{offset}</offset></offset_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
         await self._request(NOTIFICATIONS, method="delete")
