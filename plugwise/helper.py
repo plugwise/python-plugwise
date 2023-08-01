@@ -906,46 +906,45 @@ class SmileHelper:
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
 
-
-def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
-    """Helper-function for _get_appliance_data()."""
-    for item in ACTIVE_ACTUATORS:
-        if item == "max_dhw_temperature":
-            continue
-
-        temp_dict: ActuatorData = {}
-        functionality = "thermostat_functionality"
-        if item == "temperature_offset":
-            # Don't support temperature_offset for legacy Anna
-            if self._smile_legacy:
+    def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
+        """Helper-function for _get_appliance_data()."""
+        for item in ACTIVE_ACTUATORS:
+            if item == "max_dhw_temperature":
                 continue
 
-            functionality = "offset_functionality"
-            # Add limits and resolution for temperature_offset,
-            # not provided by Plugwise
-            temp_dict["lower_bound"] = -5.0
-            temp_dict["resolution"] = 0.1
-            temp_dict["upper_bound"] = 5.0
+            temp_dict: ActuatorData = {}
+            functionality = "thermostat_functionality"
+            if item == "temperature_offset":
+                # Don't support temperature_offset for legacy Anna
+                if self._smile_legacy:
+                    continue
 
-        for key in LIMITS:
-            locator = (
-                f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
-            )
-            if (function := xml.find(locator)) is not None:
-                if function.text == "nil":
-                    break
+                functionality = "offset_functionality"
+                # Add limits and resolution for temperature_offset,
+                # not provided by Plugwise
+                temp_dict["lower_bound"] = -5.0
+                temp_dict["resolution"] = 0.1
+                temp_dict["upper_bound"] = 5.0
 
-                temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
+            for key in LIMITS:
+                locator = (
+                    f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
+                )
+                if (function := xml.find(locator)) is not None:
+                    if function.text == "nil":
+                        break
 
-        if temp_dict:
-            # If domestic_hot_water_setpoint is present as actuator,
-            # rename and remove as sensor
-            if item == DHW_SETPOINT:
-                item = "max_dhw_temperature"
-                if DHW_SETPOINT in data:
-                    data.pop(DHW_SETPOINT)
+                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
 
-            data[item] = temp_dict  # type: ignore [literal-required]
+            if temp_dict:
+                # If domestic_hot_water_setpoint is present as actuator,
+                # rename and remove as sensor
+                if item == DHW_SETPOINT:
+                    item = "max_dhw_temperature"
+                    if DHW_SETPOINT in data:
+                        data.pop(DHW_SETPOINT)
+
+                data[item] = temp_dict  # type: ignore [literal-required]
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
