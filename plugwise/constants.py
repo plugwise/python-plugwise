@@ -100,10 +100,10 @@ HW_MODELS: Final[dict[str, str]] = {
     "080029": "Switch",
 }
 LIMITS: Final[tuple[str, ...]] = (
-    "lower_bound",
     "offset",
-    "resolution",
     "setpoint",
+    "resolution",
+    "lower_bound",
     "upper_bound",
 )
 MAX_SETPOINT: Final[float] = 30.0
