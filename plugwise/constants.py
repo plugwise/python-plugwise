@@ -263,6 +263,7 @@ BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 NumberType = Literal[
     "maximum_boiler_temperature",
     "max_dhw_temperature",
+    "temperature_offset",
 ]
 
 SelectType = Literal[
