@@ -42,8 +42,8 @@
       },
       "temperature_offset": {
         "lower_bound": -2.0,
-        "offset": 0.1,
         "resolution": 0.1,
+        "setpoint": 0.1,
         "upper_bound": 2.0
       },
       "vendor": "Plugwise",
@@ -126,8 +126,8 @@
       },
       "temperature_offset": {
         "lower_bound": -2.0,
-        "offset": 0.0,
         "resolution": 0.1,
+        "setpoint": 0.0,
         "upper_bound": 2.0
       },
       "thermostat": {
