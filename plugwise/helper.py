@@ -906,6 +906,7 @@ class SmileHelper:
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
 
+
 def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
     """Helper-function for _get_appliance_data()."""
     for item in ACTIVE_ACTUATORS:
