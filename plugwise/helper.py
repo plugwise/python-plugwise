@@ -119,13 +119,15 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
     for item in ACTIVE_ACTUATORS:
         if item == "max_dhw_temperature":
             continue
-        
+
         functionality = "thermostat_functionality"
         if item == "temperature_offset":
             functionality = "offset_functionality"
         temp_dict: ActuatorData = {}
         for key in LIMITS:
-            locator = f'.//actuator_functionalities/"{functionality}"[type="{item}"]/{key}'
+            locator = (
+                f'.//actuator_functionalities/"{functionality}"[type="{item}"]/{key}'
+            )
             if (function := xml.find(locator)) is not None:
                 if function.text == "nil":
                     break
