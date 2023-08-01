@@ -127,7 +127,7 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
             # Add limits and resolution for temperature_offset,
             # not provided by Plugwise
             temp_dict["lower_bound"] = -5.0
-            temp_dict["resoltion"] = 0.1
+            temp_dict["resolution"] = 0.1
             temp_dict["upper_bound"] = 5.0
 
         for key in LIMITS:
