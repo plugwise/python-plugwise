@@ -1022,7 +1022,7 @@ class SmileHelper:
                 self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                _get_actuator_functionalities(appliance, data)
+                self._get_actuator_functionalities(appliance, data)
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
