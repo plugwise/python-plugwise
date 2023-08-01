@@ -470,10 +470,11 @@ class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
     lower_bound: float
+    offset: float
+    resolution: float
     setpoint: float
     setpoint_high: float
     setpoint_low: float
-    resolution: float
     upper_bound: float
 
 
