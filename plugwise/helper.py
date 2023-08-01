@@ -1019,7 +1019,7 @@ class SmileHelper:
                 self._get_toggle_state(appliance, toggle, name, data)
 
             if (
-                not self._smile_legacy 
+                not self._smile_legacy
                 and appliance.find("type").text in ACTUATOR_CLASSES
             ):
                 _get_actuator_functionalities(appliance, data)
