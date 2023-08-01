@@ -126,7 +126,7 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
         temp_dict: ActuatorData = {}
         for key in LIMITS:
             locator = (
-                f'.//actuator_functionalities/"{functionality}"[type="{item}"]/{key}'
+                f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
             )
             if (function := xml.find(locator)) is not None:
                 if function.text == "nil":
