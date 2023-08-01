@@ -823,10 +823,10 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature_offset(self, offset: float) -> None:
+    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the temperature offset for thermostats that support this feature."""
 
-        uri = f"{APPLIANCES}???????????"
+        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset
         data = f"<offset_functionality><offset>{offset}</offset></offset_functionality>"
 
         await self._request(uri, method="put", data=data)
