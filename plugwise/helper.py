@@ -928,13 +928,16 @@ class SmileHelper:
                     if function.text == "nil":
                         break
 
-                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
                     if key == "offset":
                         # Add limits and resolution for temperature_offset,
                         # not provided by Plugwise in the XML data
                         temp_dict["lower_bound"] = -2.0
                         temp_dict["resolution"] = 0.1
                         temp_dict["upper_bound"] = 2.0
+                        # Rename offset to setpoint
+                        key = "setpoint"
+
+                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
