@@ -933,8 +933,9 @@ class SmileHelper:
                 if (function := xml.find(locator)) is not None:
                     if function.text == "nil":
                         break
-
                     temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
+                else:
+                    temp_dict = {}
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
