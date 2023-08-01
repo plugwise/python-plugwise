@@ -915,16 +915,10 @@ class SmileHelper:
             temp_dict: ActuatorData = {}
             functionality = "thermostat_functionality"
             if item == "temperature_offset":
+                functionality = "offset_functionality"
                 # Don't support temperature_offset for legacy Anna
                 if self._smile_legacy:
                     continue
-
-                functionality = "offset_functionality"
-                # Add limits and resolution for temperature_offset,
-                # not provided by Plugwise
-                temp_dict["lower_bound"] = -5.0
-                temp_dict["resolution"] = 0.1
-                temp_dict["upper_bound"] = 5.0
 
             for key in LIMITS:
                 locator = (
@@ -933,9 +927,15 @@ class SmileHelper:
                 if (function := xml.find(locator)) is not None:
                     if function.text == "nil":
                         break
+
+                    if key == "offset":
+                        # Add limits and resolution for temperature_offset,
+                        # not provided by Plugwise in the XML data
+                        temp_dict["lower_bound"] = -5.0
+                        temp_dict["resolution"] = 0.1
+                        temp_dict["upper_bound"] = 5.0
+
                     temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
-                else:
-                    temp_dict = {}
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
