@@ -120,10 +120,16 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
         if item == "max_dhw_temperature":
             continue
 
+        temp_dict: ActuatorData = {}
         functionality = "thermostat_functionality"
         if item == "temperature_offset":
             functionality = "offset_functionality"
-        temp_dict: ActuatorData = {}
+            # Add limits and resolution for temperature_offset,
+            # not provided by Plugwise
+            temp_dict["lower_bound"] = -5.0
+            temp_dict["resoltion"] = 0.1
+            temp_dict["upper_bound"] = 5.0
+ 
         for key in LIMITS:
             locator = (
                 f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
