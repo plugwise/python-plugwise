@@ -1018,7 +1018,10 @@ class SmileHelper:
             for toggle, name in TOGGLES.items():
                 self._get_toggle_state(appliance, toggle, name, data)
 
-            if appliance.find("type").text in ACTUATOR_CLASSES:
+            if (
+                not self._smile_legacy 
+                and appliance.find("type").text in ACTUATOR_CLASSES
+            ):
                 _get_actuator_functionalities(appliance, data)
 
             # Collect availability-status for wireless connected devices to Adam
