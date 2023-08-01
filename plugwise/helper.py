@@ -123,6 +123,10 @@ def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
         temp_dict: ActuatorData = {}
         functionality = "thermostat_functionality"
         if item == "temperature_offset":
+            # Don't support temperature_offset for legacy Anna
+            if self._smile_legacy:
+                continue
+
             functionality = "offset_functionality"
             # Add limits and resolution for temperature_offset,
             # not provided by Plugwise
@@ -1018,10 +1022,7 @@ class SmileHelper:
             for toggle, name in TOGGLES.items():
                 self._get_toggle_state(appliance, toggle, name, data)
 
-            if (
-                not self._smile_legacy
-                and appliance.find("type").text in ACTUATOR_CLASSES
-            ):
+            if appliance.find("type").text in ACTUATOR_CLASSES:
                 _get_actuator_functionalities(appliance, data)
 
             # Collect availability-status for wireless connected devices to Adam
