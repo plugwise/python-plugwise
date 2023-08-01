@@ -42,6 +42,7 @@ ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
     "maximum_boiler_temperature",
+    "temperature_offset",
     "thermostat",
 )
 DAYS: Final[dict[str, int]] = {
@@ -99,10 +100,11 @@ HW_MODELS: Final[dict[str, str]] = {
     "080029": "Switch",
 }
 LIMITS: Final[tuple[str, ...]] = (
-    "setpoint",
     "lower_bound",
-    "upper_bound",
+    "offset",
     "resolution",
+    "setpoint",
+    "upper_bound",
 )
 MAX_SETPOINT: Final[float] = 30.0
 MIN_SETPOINT: Final[float] = 4.0
