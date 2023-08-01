@@ -1066,7 +1066,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
-        assert self.device_items == 53
+        assert self.device_items == 57
         assert not self.notifications
 
         assert not smile._cooling_present
@@ -1182,7 +1182,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 53
+        assert self.device_items == 57
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1217,7 +1217,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 53
+        assert self.device_items == 57
 
         result = await self.tinker_thermostat(
             smile,
@@ -1290,7 +1290,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "a270735e4ccd45239424badc0578a2b1"
-        assert self.device_items == 35
+        assert self.device_items == 39
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1360,7 +1360,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 35
+        assert self.device_items == 39
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1430,7 +1430,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 35
+        assert self.device_items == 39
         assert not self.notifications
 
         result = await self.tinker_thermostat(
