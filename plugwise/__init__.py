@@ -711,7 +711,9 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_number_setpoint(self, key: str, temperature: float) -> None:
+    async def set_number_setpoint(
+        self, key: str, dummy: str, temperature: float
+    ) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
         temp = str(temperature)
         thermostat_id: str | None = None
@@ -726,6 +728,16 @@ class Smile(SmileComm, SmileData):
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
+        await self._request(uri, method="put", data=data)
+
+    async def set_temperature_offset(
+        self, dummy: str, dev_id: str, offset: float
+    ) -> None:
+        """Set the Temperature offset for thermostats that support this feature."""
+        value = str(offset)
+        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
+        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
+
         await self._request(uri, method="put", data=data)
 
     async def _set_groupswitch_member_state(
@@ -820,14 +832,6 @@ class Smile(SmileComm, SmileData):
 
         uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
         data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
-
-    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
-        """Set the temperature offset for thermostats that support this feature."""
-
-        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
-        data = f"<offset_functionality><offset>{offset}</offset></offset_functionality>"
 
         await self._request(uri, method="put", data=data)
 
