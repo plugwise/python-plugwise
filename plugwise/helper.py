@@ -1304,7 +1304,7 @@ class SmileHelper:
         locator = "./rule[active='true']/directives/when/then"
         if (
             active_rule := self._domain_objects.find(locator)
-        ) is None or "icon" not in active_rule.keys():
+        ) is None or "icon" not in active_rule:
             return None
         return str(active_rule.attrib["icon"])
 
