@@ -76,7 +76,7 @@ from .util import (
 # from typing import cast
 
 
-def etree_to_dict(element):
+def etree_to_dict(element: etree) -> dict[str, str]:
     """Helper-function translating xml Element to dict."""
     node: dict[str, str] = {}
 
