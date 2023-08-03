@@ -80,7 +80,7 @@ def etree_to_dict(element: etree) -> dict[str, str]:
     """Helper-function translating xml Element to dict."""
     node: dict[str, str] = {}
 
-    text = getattr(element, "text", None)
+    getattr(element, "text", None)
     if element is not None:
         node.update(element.items())
 
