@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Fix issue introduced by ruff: replace using .keys() in xml-find result
+
 ## v0.31.9: Further typing improvements
 
 - Add NumberType, SelectType and SelectOptionsType constants to improve typing further
