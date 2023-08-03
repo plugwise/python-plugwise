@@ -76,6 +76,19 @@ from .util import (
 # from typing import cast
 
 
+def etree_to_dict(element):
+    """Helper-function translating xml Element to dict."""
+    node: dict[str, str] = {}
+
+    if (text := getattr(element, "text", None)) is not None:
+        node["text"] = text
+
+    if element is not None:
+        node.update(element.items())
+
+    return node
+
+
 def update_helper(
     data: DeviceData,
     devices: dict[str, DeviceData],
@@ -1303,10 +1316,12 @@ class SmileHelper:
 
         locator = "./rule[active='true']/directives/when/then"
         if (
-            active_rule := self._domain_objects.find(locator)
-        ) is None or "icon" not in active_rule.keys():  # noqa: SIM118
+            not (active_rule := etree_to_dict(self._domain_objects.find(locator)))
+            or "icon" not in active_rule
+        ):
             return None
-        return str(active_rule.attrib["icon"])
+
+        return active_rule["icon"]
 
     def _schedules_legacy(
         self, avail: list[str], sel: str
