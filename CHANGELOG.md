@@ -1,6 +1,6 @@
 # Changelog
 
-### Ongoing
+## Ongoing
 
 - Fix issue introduced by ruff: replace using .keys() in xml-find result
 
