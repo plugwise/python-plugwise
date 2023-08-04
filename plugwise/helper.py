@@ -79,7 +79,6 @@ from .util import (
 def etree_to_dict(element: etree) -> dict[str, str]:
     """Helper-function translating xml Element to dict."""
     node: dict[str, str] = {}
-    getattr(element, "text", None)
     if element is not None:
         node.update(element.items())
 
