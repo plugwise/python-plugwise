@@ -1,7 +1,8 @@
 # Changelog
 
-## Ongoing
+## v0.32.0: New Feature - change the temperature offset on a supported thermostat device
 
+- Add support for changing the temperature-offset on Jip, Lisa, Tom, Floor and on Anna (in some configurations)
 - Fix issue introduced by ruff: replace using .keys() in xml-find result
 
 ## v0.31.9: Further typing improvements
