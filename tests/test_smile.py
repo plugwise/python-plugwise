@@ -656,6 +656,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as intended")
 
+    @staticmethod
+    async def tinker_temp_offset(smile, dev_id):
+        """Change temperature_offset to test functionality."""
+        new_offset = 1.0
+        _LOGGER.info("- Adjusting temperature offset to %s", new_offset)
+        await smile.set_temperature_offset("dummy", dev_id, new_offset)
+        _LOGGER.info("  + worked as intended")
+
     @pytest.mark.asyncio
     async def test_connect_legacy_anna(self):
         """Test a legacy Anna device."""
@@ -1438,6 +1446,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Normal"]
         )
         assert result
+        await self.tinker_temp_offset(smile, "7ffbb3ab4b6c4ab2915d7510f7bf8fe9")
         await smile.close_connection()
         await self.disconnect(server, client)
 
