@@ -1094,6 +1094,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Standaard", "Thuiswerken"],
         )
         assert result
+        result = await self.tinker_temp_offset(
+            smile, "01b85360fdd243d0aaad4d6ac2a5ba7e"
+        )
+        assert result
+        result = await self.tinker_temp_offset(
+            smile, "0466eae8520144c78afb29628384edeb"
+        )
+        assert not result
         await smile.close_connection()
         await self.disconnect(server, client)
 
