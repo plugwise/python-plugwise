@@ -911,7 +911,7 @@ class SmileHelper:
         """Helper-function collecting all appliance that have offset_functionality."""
         therm_list: list[str] = []
         offset_appls = self._appliances.findall(
-            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/..'
+            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
         )
         for item in offset_appls:
             therm_list.append(item.attrib["id"])
