@@ -734,6 +734,11 @@ class Smile(SmileComm, SmileData):
 
     async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
+        if dev_id not in self.therms_with_offset_func:
+            raise PlugwiseError(
+                "Plugwise: this device does not have temperature-offset capability."
+            )
+
         value = str(offset)
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
         data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
