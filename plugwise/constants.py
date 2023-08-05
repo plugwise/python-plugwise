@@ -42,6 +42,7 @@ ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
     "maximum_boiler_temperature",
+    "temperature_offset",
     "thermostat",
 )
 DAYS: Final[dict[str, int]] = {
@@ -99,10 +100,11 @@ HW_MODELS: Final[dict[str, str]] = {
     "080029": "Switch",
 }
 LIMITS: Final[tuple[str, ...]] = (
+    "offset",
     "setpoint",
+    "resolution",
     "lower_bound",
     "upper_bound",
-    "resolution",
 )
 MAX_SETPOINT: Final[float] = 30.0
 MIN_SETPOINT: Final[float] = 4.0
@@ -261,6 +263,7 @@ BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 NumberType = Literal[
     "maximum_boiler_temperature",
     "max_dhw_temperature",
+    "temperature_offset",
 ]
 
 SelectType = Literal[
@@ -468,10 +471,10 @@ class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
     lower_bound: float
+    resolution: float
     setpoint: float
     setpoint_high: float
     setpoint_low: float
-    resolution: float
     upper_bound: float
 
 
@@ -516,6 +519,7 @@ class DeviceData(
     binary_sensors: SmileBinarySensors
     max_dhw_temperature: ActuatorData
     maximum_boiler_temperature: ActuatorData
+    temperature_offset: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
     thermostat: ActuatorData

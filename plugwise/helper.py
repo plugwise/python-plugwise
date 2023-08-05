@@ -114,31 +114,6 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
-def _get_actuator_functionalities(xml: etree, data: DeviceData) -> None:
-    """Helper-function for _get_appliance_data()."""
-    for item in ACTIVE_ACTUATORS:
-        if item == "max_dhw_temperature":
-            continue
-        temp_dict: ActuatorData = {}
-        for key in LIMITS:
-            locator = f'.//actuator_functionalities/thermostat_functionality[type="{item}"]/{key}'
-            if (function := xml.find(locator)) is not None:
-                if function.text == "nil":
-                    break
-
-                temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
-
-        if temp_dict:
-            # If domestic_hot_water_setpoint is present as actuator,
-            # rename and remove as sensor
-            if item == DHW_SETPOINT:
-                item = "max_dhw_temperature"
-                if DHW_SETPOINT in data:
-                    data.pop(DHW_SETPOINT)
-
-            data[item] = temp_dict  # type: ignore [literal-required]
-
-
 def schedules_temps(
     schedules: dict[str, dict[str, list[float]]], name: str
 ) -> list[float]:
@@ -403,6 +378,7 @@ class SmileHelper:
         self.smile_type: str
         self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
+        self.therms_with_offset_func: list[str] = []
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -931,6 +907,60 @@ class SmileHelper:
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
 
+    def _get_appliances_with_offset_functionality(self) -> list[str]:
+        """Helper-function collecting all appliance that have offset_functionality."""
+        therm_list: list[str] = []
+        offset_appls = self._appliances.findall(
+            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
+        )
+        for item in offset_appls:
+            therm_list.append(item.attrib["id"])
+
+        return therm_list
+
+    def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
+        """Helper-function for _get_appliance_data()."""
+        for item in ACTIVE_ACTUATORS:
+            if item == "max_dhw_temperature":
+                continue
+
+            temp_dict: ActuatorData = {}
+            functionality = "thermostat_functionality"
+            if item == "temperature_offset":
+                functionality = "offset_functionality"
+                # Don't support temperature_offset for legacy Anna
+                if self._smile_legacy:
+                    continue
+
+            for key in LIMITS:
+                locator = (
+                    f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
+                )
+                if (function := xml.find(locator)) is not None:
+                    if function.text == "nil":
+                        break
+
+                    if key == "offset":
+                        # Add limits and resolution for temperature_offset,
+                        # not provided by Plugwise in the XML data
+                        temp_dict["lower_bound"] = -2.0
+                        temp_dict["resolution"] = 0.1
+                        temp_dict["upper_bound"] = 2.0
+                        # Rename offset to setpoint
+                        key = "setpoint"
+
+                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
+
+            if temp_dict:
+                # If domestic_hot_water_setpoint is present as actuator,
+                # rename and remove as sensor
+                if item == DHW_SETPOINT:
+                    item = "max_dhw_temperature"
+                    if DHW_SETPOINT in data:
+                        data.pop(DHW_SETPOINT)
+
+                data[item] = temp_dict  # type: ignore [literal-required]
+
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
 
@@ -1007,7 +1037,7 @@ class SmileHelper:
                 self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                _get_actuator_functionalities(appliance, data)
+                self._get_actuator_functionalities(appliance, data)
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)

@@ -59,6 +59,12 @@
         "setpoint_low": 4.0,
         "temperature": 18.8
       },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
+      },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
@@ -165,6 +171,12 @@
         "setpoint_low": 4.0,
         "temperature": 22.0
       },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
+      },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
@@ -238,6 +250,12 @@
         "setpoint_high": 18.0,
         "setpoint_low": 4.0,
         "temperature": 20.0
+      },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
       },
       "thermostat": {
         "lower_bound": 0.0,
@@ -364,6 +382,12 @@
         "setpoint_low": 4.0,
         "temperature": 21.4
       },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
+      },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
@@ -393,6 +417,12 @@
         "setpoint_high": 17.0,
         "setpoint_low": 4.0,
         "temperature": 20.7
+      },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
       },
       "thermostat": {
         "lower_bound": 0.0,
@@ -450,6 +480,12 @@
         "setpoint_low": 4.0,
         "temperature": 22.6
       },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
+      },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
@@ -481,6 +517,12 @@
         "setpoint_low": 4.0,
         "temperature": 22.5
       },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
+      },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
@@ -511,6 +553,12 @@
         "setpoint_low": 4.0,
         "temperature": 21.5
       },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
+      },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
@@ -540,6 +588,12 @@
         "setpoint_high": 20.5,
         "setpoint_low": 4.0,
         "temperature": 21.9
+      },
+      "temperature_offset": {
+        "lower_bound": -2.0,
+        "resolution": 0.1,
+        "setpoint": 0.0,
+        "upper_bound": 2.0
       },
       "thermostat": {
         "lower_bound": 0.0,
