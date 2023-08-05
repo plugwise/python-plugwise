@@ -916,8 +916,7 @@ class SmileHelper:
         for item in offset_appls:
             therm_list.append(item.attrib["id"])
 
-        if therm_list:
-            return therm_list
+        return therm_list
 
     def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data()."""
