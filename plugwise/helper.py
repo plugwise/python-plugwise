@@ -378,6 +378,7 @@ class SmileHelper:
         self.smile_type: str
         self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
+        self.therms_with_offset_func: list[str] = []
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -905,6 +906,18 @@ class SmileHelper:
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
+
+    def _get_appliances_with_offset_functionality(self) -> list[str]:
+        """Helper-function collecting all appliance that have offset_functionality."""
+        therm_list: list[str] = []
+        offset_appls = self._appliances.findall(
+            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/..'
+        )
+        for item in offset_appls:
+            therm_list.append(item.attrib["id"])
+
+        if therm_list:
+            return therm_list
 
     def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data()."""

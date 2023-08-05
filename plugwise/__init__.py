@@ -129,6 +129,10 @@ class SmileData(SmileHelper):
             if search.find(locator_2) is not None:
                 self._elga = True
 
+            self.therms_with_offset_func = (
+                self._get_appliances_with_offset_functionality()
+            )
+
         # Gather all the device and initial data
         self._scan_thermostats()
 
