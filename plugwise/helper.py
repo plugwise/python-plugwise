@@ -867,26 +867,35 @@ class SmileHelper:
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
-                data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
                 # measurements with states "on" or "off" that need to be passed directly
-                if measurement not in ("select_dhw_mode"):
-                    data[measurement] = format_measure(  # type: ignore [literal-required]
+                if measurement == "select_dhw_mode":
+                    data["select_dhw_mode"] = appl_p_loc.text
+                elif measurement in BINARY_SENSORS:
+                    data["binary_sensors"][measurement] = format_measure(
+                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    )
+                elif measurement in SENSORS:
+                    data["sensors"][measurement] = format_measure(
+                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    )
+                elif measurement in SWITCHES:
+                    data["switches"][measurement] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
-                    self._cooling_activation_outdoor_temp = data[measurement]  # type: ignore [literal-required]
+                    self._cooling_activation_outdoor_temp = data["cooling_activation_outdoor_temperature"]
                 if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data[measurement]  # type: ignore [literal-required]
+                    self._cooling_deactivation_threshold = data["cooling_deactivation_threshold"]
                 if measurement == "outdoor_air_temperature":
-                    self._outdoor_temp = data[measurement]  # type: ignore [literal-required]
+                    self._outdoor_temp = data["sensors"]["outdoor_air_temperature"]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
-                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
+                data["sensors"][name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
@@ -1018,7 +1027,7 @@ class SmileHelper:
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: DeviceData = {}
+        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
