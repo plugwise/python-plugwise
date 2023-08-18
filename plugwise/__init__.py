@@ -82,7 +82,7 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._appl_data.items():
-            for key, value in device:
+            for key, value in device.items():
                 self.gw_devices[device_id][key] = value
             self.gw_devices[device_id] = self._get_device_data(device_id)
             # Add plugwise notification binary_sensor to the relevant gateway
