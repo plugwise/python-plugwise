@@ -87,6 +87,7 @@ class SmileData(SmileHelper):
             if device_id == self.gateway_id and (self._is_thermostat or (not self._smile_legacy and self.smile_type == "power")):
                 self.gw_devices[device_id]["plugwise_notification"] = False
 
+            LOGGER.debug("HOI gw_devices: %s", self.gw_devices)
             # Update for cooling
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(self.gw_devices[device_id])
