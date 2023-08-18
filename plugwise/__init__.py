@@ -81,8 +81,8 @@ class SmileData(SmileHelper):
 
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
-        LOGGER.debug("HOI 2a _appl_data: %s", self._appl_data.items())
         for device_id, device in self._appl_data.items():
+            LOGGER.debug("HOI 2a dev_id, device: %s, %s", device_id, device)
             for key, value in device.items():
                 self.gw_devices.update({device_id: {key: value}})  # type: ignore [misc]
             self.gw_devices[device_id] = self._get_device_data(device_id)
