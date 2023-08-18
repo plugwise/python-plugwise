@@ -82,13 +82,7 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._appl_data.items():
-            bs_dict: SmileBinarySensors = {}
-            s_dict: SmileSensors = {}
-            sw_dict: SmileSwitches = {}
-            data = self._get_device_data(device_id)
-            self.gw_devices[device_id] = self._update_device_with_dicts(
-                device_id, data, device, bs_dict, s_dict, sw_dict
-            )
+            self.gw_devices[device_id] = self._get_device_data(device_id)
 
             # Update for cooling
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
@@ -529,17 +523,17 @@ class Smile(SmileComm, SmileData):
                 notifs: dict[str, dict[str, str]] = {}
                 if item == "binary_sensors":
                     notifs = self._notifications
-                if item in dev_dict:
-                    for key in data:
-                        update_helper(
-                            data,
-                            self.gw_devices,
-                            dev_dict,
-                            dev_id,
-                            item,
-                            key,
-                            notifs,
-                        )
+                # if item in dev_dict:
+                #     for key in data:
+                #        update_helper(
+                #            data,
+                #            self.gw_devices,
+                #            dev_dict,
+                #            dev_id,
+                #            item,
+                #            key,
+                #            notifs,
+                #        )
 
             # Update for cooling
             if dev_dict["dev_class"] in ZONE_THERMOSTATS:
