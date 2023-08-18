@@ -83,6 +83,9 @@ class SmileData(SmileHelper):
         """
         for device_id, device in self._appl_data.items():
             self.gw_devices[device_id] = self._get_device_data(device_id)
+            # Add plugwise notification binary_sensor to the relevant gateway
+            if device_id == self.gateway_id and (self._is_thermostat or (not self._smile_legacy and self.smile_type == "power")):
+                self.gw_devices[device_id]["plugwise_notification"] = False
 
             # Update for cooling
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
