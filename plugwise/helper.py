@@ -1520,14 +1520,14 @@ class SmileHelper:
         if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
-                data["lock"] = found.text == "true"
+                data["switches"]["lock"] = found.text == "true"
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: str, data: DeviceData
     ) -> None:
         """Helper-function for _get_appliance_data().
 
-        Obtain the toggle state of 'toggle'.
+        Obtain the toggle state of a 'toggle' = switch.
         """
         if xml.find("type").text == "heater_central":
             locator = "./actuator_functionalities/toggle_functionality"
@@ -1535,11 +1535,11 @@ class SmileHelper:
                 for item in found:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
-                            data[name] = item.find("state").text == "on"  # type: ignore [literal-required]
-                            # Remove the cooling_enabled key when the corresponding toggle is present
+                            data["binary_sensors"][name] = item.find("state").text == "on"  # type: ignore [literal-required]
+                            # Remove the cooling_enabled binary_sensor when the corresponding switch is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
-                                data.pop("cooling_enabled")
+                                data["binary_sensor"].pop("cooling_enabled")
 
     def _update_device_with_dicts(
         self,
