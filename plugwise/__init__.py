@@ -87,7 +87,7 @@ class SmileData(SmileHelper):
             self.gw_devices[device_id].update(self._get_device_data(device_id))
             # Add plugwise notification binary_sensor to the relevant gateway
             if device_id == self.gateway_id and (self._is_thermostat or (not self._smile_legacy and self.smile_type == "power")):
-                self.gw_devices[device_id]["plugwise_notification"] = False
+                self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"] = False
 
             LOGGER.debug("HOI 2b gw_devices: %s", self.gw_devices)
             # Update for cooling
