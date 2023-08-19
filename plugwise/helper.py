@@ -1549,5 +1549,5 @@ class SmileHelper:
                             # Remove the cooling_enabled binary_sensor when the corresponding switch is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
-                                data["binary_sensor"].pop("cooling_enabled")
+                                data["binary_sensors"].pop("cooling_enabled")
 
