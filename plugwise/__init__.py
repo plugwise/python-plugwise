@@ -527,30 +527,30 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data["notifications"] = self._notifications
 
-        for device_id, _ in self.gw_devices.items():
+        for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             LOGGER.debug("HOI 3 data: %s", data)
-            if "binary_sensors" in self.gw_devices[device_id]:
+            if "binary_sensors" in device:
                 if (
                     "plugwise_notification"
-                    in self.gw_devices[device_id]["binary_sensors"]
+                    in device["binary_sensors"]
                 ):
-                    data["binary_sensors"]["plugwise_notification"] = (
-                        bool(self._notifications)
+                    data["binary_sensors"]["plugwise_notification"] = bool(
+                        self._notifications
                     )
 
-            self.gw_devices[device_id].update(data)
+            device.update(data)
 
             # Update for cooling
-            if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(self.gw_devices[device_id])
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(device)
 
-            if not self.gw_devices[device_id]["binary_sensors"]:
-                self.gw_devices[device_id].pop("binary_sensors")
-            if not self.gw_devices[device_id]["sensors"]:
-                self.gw_devices[device_id].pop("sensors")
-            if not self.gw_devices[device_id]["switches"]:
-                self.gw_devices[device_id].pop("switches")
+            if not device["binary_sensors"]:
+                device.pop("binary_sensors")
+            if not device["sensors"]:
+                device.pop("sensors")
+            if not device["switches"]:
+                device.pop("switches")
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
