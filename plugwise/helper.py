@@ -55,9 +55,6 @@ from .constants import (
     DeviceData,
     GatewayData,
     ModelData,
-    SmileBinarySensors,
-    SmileSensors,
-    SmileSwitches,
     ThermoLoc,
 )
 from .exceptions import (
