@@ -993,8 +993,10 @@ class SmileHelper:
         # but, keep cooling_enabled for Elga
         if not self._cooling_present:
             for item in ("cooling_state", "cooling_ena_switch"):
-                if item in data:
-                    data.pop(item)  # type: ignore [misc]
+                if item in data["binary_sensors"]:
+                    data.["binary_sensors"]pop(item)  # type: ignore [misc]
+                if item in data["switches"]:
+                    data.["switches"]pop(item)  # type: ignore [misc]
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
 
