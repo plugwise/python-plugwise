@@ -1074,27 +1074,27 @@ class SmileHelper:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
-                if "cooling_enabled" in data and data["cooling_enabled"]:
+                if "cooling_enabled" in data["binary_sensors"] and data["binary_sensors"]["cooling_enabled"]:
                     self._cooling_present = self._cooling_enabled = True
                     data["model"] = "Generic heater/cooler"
-                    data["cooling_state"] = self._cooling_active = (
+                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                         data["elga_status_code"] == 8
                     )
                 data.pop("elga_status_code", None)
                 # Elga has no cooling-switch
-                if "cooling_ena_switch" in data:
-                    data.pop("cooling_ena_switch")
+                if "cooling_ena_switch" in data["switches"]:
+                    data["switches"].pop("cooling_ena_switch")
 
             # Loria/Thermastage: cooling-related is based on cooling_state
             # and modulation_level
             else:
-                if self._cooling_present and "cooling_state" in data:
-                    self._cooling_enabled = data["cooling_state"]
-                    self._cooling_active = data["modulation_level"] == 100
+                if self._cooling_present and "cooling_state" in data["binary_sensors"]:
+                    self._cooling_enabled = data["binary_sensors"]["cooling_state"]
+                    self._cooling_active = data["sensors"]["modulation_level"] == 100
                     # For Loria the above does not work (pw-beta issue #301)
-                    if "cooling_ena_switch" in data:
-                        self._cooling_enabled = data["cooling_ena_switch"]
-                        self._cooling_active = data["cooling_state"]
+                    if "cooling_ena_switch" in data["switches"]:
+                        self._cooling_enabled = data["switches"]["cooling_ena_switch"]
+                        self._cooling_active = data["binary_sensors"]["cooling_state"]
 
         self._cleanup_data(data)
 
