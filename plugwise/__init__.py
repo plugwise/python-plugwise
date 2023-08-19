@@ -531,8 +531,8 @@ class Smile(SmileComm, SmileData):
                 self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"] = self._notifications != {}
 
             # Update for cooling
-            if dev_dict["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(dev_dict)
+            if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(self.gw_devices[device_id])
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
