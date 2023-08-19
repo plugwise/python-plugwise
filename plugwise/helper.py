@@ -191,7 +191,7 @@ def power_data_energy_diff(
         diff = 1
         if "produced" in measurement:
             diff = -1
-        if net_string not in direct_data:
+        if net_string not in direct_data["sensors"]:
             tmp_val: float | int = 0
         else:
             tmp_val = direct_data["sensors"][net_string]  # type: ignore [literal-required]
