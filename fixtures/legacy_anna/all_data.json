@@ -1,15 +1,15 @@
 {
   "devices": {
     "0000aaaa0000aaaa0000aaaa0000aa00": {
-      "binary_sensors": {},
+      "binary_sensors": {
+        "plugwise_notification": false
+      },
       "dev_class": "gateway",
       "firmware": "1.8.22",
       "location": "0000aaaa0000aaaa0000aaaa0000aa00",
       "mac_address": "01:23:45:67:89:AB",
       "model": "Gateway",
       "name": "Smile Anna",
-      "sensors": {},
-      "switches": {},
       "vendor": "Plugwise"
     },
     "04e4cbfe7f4340f090f85ec3b9e6a950": {
@@ -35,7 +35,6 @@
         "water_pressure": 1.2,
         "water_temperature": 23.6
       },
-      "switches": {},
       "vendor": "Bosch Thermotechniek B.V."
     },
     "0d266432d64443e283b5d708ae98b455": {
@@ -43,7 +42,6 @@
       "available_schedules": [
         "Thermostat schedule"
       ],
-      "binary_sensors": {},
       "dev_class": "thermostat",
       "firmware": "2017-03-13T11:54:58+01:00",
       "hardware": "6539-1301-500",
@@ -65,7 +63,6 @@
         "setpoint": 20.5,
         "temperature": 20.4
       },
-      "switches": {},
       "thermostat": {
         "lower_bound": 4.0,
         "resolution": 0.1,
