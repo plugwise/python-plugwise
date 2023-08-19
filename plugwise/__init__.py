@@ -282,7 +282,7 @@ class SmileData(SmileHelper):
                 self._home_location, "outdoor_temperature"
             )
             if outdoor_temperature is not None:
-                device_data["outdoor_temperature"] = outdoor_temperature
+                device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
 
             # Show the allowed regulation modes
             if self._reg_allowed_modes:
