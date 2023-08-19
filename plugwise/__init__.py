@@ -525,34 +525,10 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data["notifications"] = self._notifications
 
-        # for device_id, device in self._appl_data.items():
-        #     self.gw_devices.update({device_id: device})  # type: ignore [misc]
-        #     LOGGER.debug("HOI 2a gw_devices: %s", self.gw_devices)
-        #     self.gw_devices[device_id].update(self._get_device_data(device_id))
-
-
-        for dev_id, dev_dict in self.gw_devices.items():
-            data = self._get_device_data(dev_id)
-            LOGGER.debug("HOI 3 data: %s", data)
-            for key, value in data.items():
-                if key in dev_dict:
-                    dev_dict[key] = value  # type: ignore [literal-required]
-
-            for item in ("binary_sensors", "sensors", "switches"):
-                notifs: dict[str, dict[str, str]] = {}
-                if item == "binary_sensors":
-                    notifs = self._notifications
-                # if item in dev_dict:
-                #     for key in data:
-                #        update_helper(
-                #            data,
-                #            self.gw_devices,
-                #            dev_dict,
-                #            dev_id,
-                #            item,
-                #            key,
-                #            notifs,
-                #        )
+        for device_id in self.gw_devices:
+            self.gw_devices[device_id].update(self._get_device_data(device_id))
+            if self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"]:
+                self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"] = self._notifications != {}
 
             # Update for cooling
             if dev_dict["dev_class"] in ZONE_THERMOSTATS:
