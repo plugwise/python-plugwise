@@ -202,7 +202,7 @@ def power_data_energy_diff(
             tmp_val += float(f_val * diff)
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
-        direct_data[net_string] = tmp_val  # type: ignore [literal-required]
+        direct_data["sensors"][net_string] = tmp_val  # type: ignore [literal-required]
 
     return direct_data
 
