@@ -99,7 +99,7 @@ class SmileData(SmileHelper):
             if not self.gw_devices[device_id]["sensors"]:
                 self.gw_devices[device_id].pop("sensors")
             if not self.gw_devices[device_id]["switches"]:
-                self.gw_devices[device_id].pop("switche")
+                self.gw_devices[device_id].pop("switches")
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
