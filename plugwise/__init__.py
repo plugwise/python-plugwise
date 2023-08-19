@@ -527,7 +527,7 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data["notifications"] = self._notifications
 
-        for device_id in self.gw_devices:
+        for device_id in self.gw_devices.items():
             data = self._get_device_data(device_id)
             LOGGER.debug("HOI 3 data: %s", data)
             if "binary_sensors" in self.gw_devices[device_id]:
@@ -536,7 +536,7 @@ class Smile(SmileComm, SmileData):
                     in self.gw_devices[device_id]["binary_sensors"]
                 ):
                     data["binary_sensors"]["plugwise_notification"] = (
-                        self._notifications != {}
+                        bool(self._notifications)
                     )
 
             self.gw_devices[device_id].update(data)
