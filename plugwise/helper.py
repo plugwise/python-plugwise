@@ -1087,7 +1087,6 @@ class SmileHelper:
 
         self._cleanup_data(data)
 
-        LOGGER.debug("HOI 0 data: %s", data)
         return data
 
     def _rank_thermostat(

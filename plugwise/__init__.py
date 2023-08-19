@@ -269,7 +269,6 @@ class SmileData(SmileHelper):
         """
         details = self._appl_data[dev_id]
         device_data = self._get_appliance_data(dev_id)
-        LOGGER.debug("HOI 1 device_data: %s", device_data)
         # Remove thermostat-dict for thermo_sensors
         if details["dev_class"] == "thermo_sensor":
             device_data.pop("thermostat")
