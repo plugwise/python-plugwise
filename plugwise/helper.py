@@ -866,9 +866,13 @@ class SmileHelper:
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
                 if measurement == "cooling_activation_outdoor_temperature":
-                    self._cooling_activation_outdoor_temp = data["sensors"]["cooling_activation_outdoor_temperature"]
+                    self._cooling_activation_outdoor_temp = data["sensors"][
+                        "cooling_activation_outdoor_temperature"
+                    ]
                 if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data["sensors"]["cooling_deactivation_threshold"]
+                    self._cooling_deactivation_threshold = data["sensors"][
+                        "cooling_deactivation_threshold"
+                    ]
                 if measurement == "outdoor_air_temperature":
                     self._outdoor_temp = data["sensors"]["outdoor_air_temperature"]
 
@@ -876,8 +880,6 @@ class SmileHelper:
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
                 data["sensors"][name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
-
-        
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
@@ -996,7 +998,9 @@ class SmileHelper:
 
             # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
             if self.smile_name == "Adam":
-                data["binary_sensors"]["cooling_state"] = data["binary_sensors"]["heating_state"] = False
+                data["binary_sensors"]["cooling_state"] = data["binary_sensors"][
+                    "heating_state"
+                ] = False
                 if self._cooling_enabled:
                     data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
                 else:
@@ -1050,7 +1054,10 @@ class SmileHelper:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
-                if "cooling_enabled" in data["binary_sensors"] and data["binary_sensors"]["cooling_enabled"]:
+                if (
+                    "cooling_enabled" in data["binary_sensors"]
+                    and data["binary_sensors"]["cooling_enabled"]
+                ):
                     self._cooling_present = self._cooling_enabled = True
                     data["model"] = "Generic heater/cooler"
                     data["binary_sensors"]["cooling_state"] = self._cooling_active = (
@@ -1265,7 +1272,7 @@ class SmileHelper:
 
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceData = {"sensors":{}}
+        direct_data: DeviceData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
@@ -1297,7 +1304,7 @@ class SmileHelper:
 
         Collect the power-data from MODULES (P1 legacy only).
         """
-        direct_data: DeviceData = {"sensors":{}}
+        direct_data: DeviceData = {"sensors": {}}
         loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
@@ -1526,4 +1533,3 @@ class SmileHelper:
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
                                 data["binary_sensors"].pop("cooling_enabled")
-
