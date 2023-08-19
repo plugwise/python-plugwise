@@ -1535,7 +1535,7 @@ class SmileHelper:
                 for item in found:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
-                            data["binary_sensors"][name] = item.find("state").text == "on"  # type: ignore [literal-required]
+                            data["switches"][name] = item.find("state").text == "on"  # type: ignore [literal-required]
                             # Remove the cooling_enabled binary_sensor when the corresponding switch is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
