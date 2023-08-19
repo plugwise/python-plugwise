@@ -182,9 +182,7 @@ class SmileData(SmileHelper):
             and self._on_off_device
             and self._heating_valves() is not None
         ):
-            device_data["binary_sensors"]["heating_state"] = (
-                self._heating_valves() != 0
-            )
+            device_data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
@@ -533,7 +531,10 @@ class Smile(SmileComm, SmileData):
             data = self._get_device_data(device_id)
             LOGGER.debug("HOI 3 data: %s", data)
             if "binary_sensors" in self.gw_devices[device_id]:
-                if "plugwise_notification" in self.gw_devices[device_id]["binary_sensors"]:
+                if (
+                    "plugwise_notification"
+                    in self.gw_devices[device_id]["binary_sensors"]
+                ):
                     data["binary_sensors"]["plugwise_notification"] = (
                         self._notifications != {}
                     )
