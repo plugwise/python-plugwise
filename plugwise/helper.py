@@ -882,6 +882,10 @@ class SmileHelper:
                     data["switches"][measurement] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
+                else:
+                    data[measurement] = format_measure(
+                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    )
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
@@ -896,6 +900,8 @@ class SmileHelper:
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
                 data["sensors"][name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
+
+        
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
