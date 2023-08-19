@@ -94,6 +94,13 @@ class SmileData(SmileHelper):
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(self.gw_devices[device_id])
 
+            if not self.gw_devices[device_id]["binary_sensors"]:
+                self.gw_devices[device_id].pop("binary_sensors")
+            if not self.gw_devices[device_id]["sensors"]:
+                self.gw_devices[device_id].pop("sensors")
+            if not self.gw_devices[device_id]["switches"]:
+                self.gw_devices[device_id].pop("switche")
+
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
         )
@@ -519,6 +526,12 @@ class Smile(SmileComm, SmileData):
             self._appliances = await self._request(APPLIANCES)
 
         self.gw_data["notifications"] = self._notifications
+
+        # for device_id, device in self._appl_data.items():
+        #     self.gw_devices.update({device_id: device})  # type: ignore [misc]
+        #     LOGGER.debug("HOI 2a gw_devices: %s", self.gw_devices)
+        #     self.gw_devices[device_id].update(self._get_device_data(device_id))
+
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
