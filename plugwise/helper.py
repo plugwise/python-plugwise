@@ -76,6 +76,14 @@ from .util import (
 # from typing import cast
 
 
+def check_model(name: str | None, vendor_name: str | None) -> str | None:
+    """Model checking before using version_to_model."""
+    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
+        return model
+
+    return name
+
+
 def etree_to_dict(element: etree) -> dict[str, str]:
     """Helper-function translating xml Element to dict."""
     node: dict[str, str] = {}
