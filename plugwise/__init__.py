@@ -160,7 +160,7 @@ class SmileData(SmileHelper):
             for member in details["members"]:
                 member_data = self._get_appliance_data(member)
                 LOGGER.debug("HOI %s", member_data)
-                if member_data.get("relay"):
+                if member_data["switches"].get("relay"):
                     counter += 1
 
             device_data["switches"]["relay"] = counter != 0
