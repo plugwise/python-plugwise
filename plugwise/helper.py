@@ -1057,6 +1057,8 @@ class SmileHelper:
         if d_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
+        LOGGER.debug("HOI 1 elga: %s", self._elga)
+        LOGGER.debug("HOI 1 data: %s", data)
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
             # Remove c_heating_state after processing
