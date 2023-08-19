@@ -929,7 +929,6 @@ class SmileHelper:
 
     def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data()."""
-        LOGGER.debug("HOI A %s", data)
         for item in ACTIVE_ACTUATORS:
             if item == "max_dhw_temperature":
                 continue
@@ -966,8 +965,8 @@ class SmileHelper:
                 # rename and remove as sensor
                 if item == DHW_SETPOINT:
                     item = "max_dhw_temperature"
-                    if DHW_SETPOINT in data:
-                        data.pop(DHW_SETPOINT)
+                    if DHW_SETPOINT in data["sensors"]:
+                        data["sensors"].pop(DHW_SETPOINT)
 
                 data[item] = temp_dict  # type: ignore [literal-required]
 
