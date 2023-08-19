@@ -1009,19 +1009,19 @@ class SmileHelper:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
             if self.smile_name == "Smile Anna":
-                data["heating_state"] = data["c_heating_state"]
+                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
             # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
             if self.smile_name == "Adam":
-                data["cooling_state"] = data["heating_state"] = False
+                data["binary_sensors"]["cooling_state"] = data["binary_sensors"]["heating_state"] = False
                 if self._cooling_enabled:
-                    data["cooling_state"] = data["c_heating_state"]
+                    data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
                 else:
-                    data["heating_state"] = data["c_heating_state"]
+                    data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
         # Anna + Elga: use central_heating_state to show heating_state
         if self._elga:
-            data["heating_state"] = data["c_heating_state"]
+            data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
