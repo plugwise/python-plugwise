@@ -531,10 +531,7 @@ class Smile(SmileComm, SmileData):
             data = self._get_device_data(device_id)
             LOGGER.debug("HOI 3 data: %s", data)
             if "binary_sensors" in device:
-                if (
-                    "plugwise_notification"
-                    in device["binary_sensors"]
-                ):
+                if "plugwise_notification" in device["binary_sensors"]:
                     data["binary_sensors"]["plugwise_notification"] = bool(
                         self._notifications
                     )
