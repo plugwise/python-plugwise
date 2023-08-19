@@ -527,7 +527,7 @@ class Smile(SmileComm, SmileData):
 
         for device_id in self.gw_devices:
             self.gw_devices[device_id].update(self._get_device_data(device_id))
-            if self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"]:
+            if " plugwise_notification" in self.gw_devices[device_id]["binary_sensors"]
                 self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"] = self._notifications != {}
 
             # Update for cooling
