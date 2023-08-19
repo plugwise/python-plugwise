@@ -35,9 +35,6 @@ from .constants import (
     ApplianceData,
     DeviceData,
     PlugwiseData,
-    SmileBinarySensors,
-    SmileSensors,
-    SmileSwitches,
 )
 from .exceptions import (
     InvalidSetupError,
@@ -45,7 +42,7 @@ from .exceptions import (
     ResponseError,
     UnsupportedDeviceError,
 )
-from .helper import SmileComm, SmileHelper, update_helper
+from .helper import SmileComm, SmileHelper
 
 
 class SmileData(SmileHelper):
@@ -83,10 +80,14 @@ class SmileData(SmileHelper):
         """
         for device_id, device in self._appl_data.items():
             self.gw_devices.update({device_id: device})  # type: ignore [misc]
-            self.gw_devices[device_id].update(self._get_device_data(device_id))
+            data = self._get_device_data(device_id)
             # Add plugwise notification binary_sensor to the relevant gateway
-            if device_id == self.gateway_id and (self._is_thermostat or (not self._smile_legacy and self.smile_type == "power")):
-                self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"] = False
+            if device_id == self.gateway_id and (
+                self._is_thermostat
+                or (not self._smile_legacy and self.smile_type == "power")
+            ):
+                data["binary_sensors"]["plugwise_notification"] = False
+            self.gw_devices[device_id].update(data)
 
             # Update for cooling
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
@@ -526,9 +527,12 @@ class Smile(SmileComm, SmileData):
         self.gw_data["notifications"] = self._notifications
 
         for device_id in self.gw_devices:
-            self.gw_devices[device_id].update(self._get_device_data(device_id))
-            if " plugwise_notification" in self.gw_devices[device_id]["binary_sensors"]:
-                self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"] = self._notifications != {}
+            data = self._get_device_data(device_id)
+            if "plugwise_notification" in self.gw_devices[device_id]["binary_sensors"]:
+                data["binary_sensors"]["plugwise_notification"] = (
+                    self._notifications != {}
+                )
+            self.gw_devices[device_id].update(data)
 
             # Update for cooling
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
