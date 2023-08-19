@@ -966,6 +966,7 @@ class SmileHelper:
                 if item == DHW_SETPOINT:
                     item = "max_dhw_temperature"
                     if DHW_SETPOINT in data:
+                        LOGGER.debug("HOI A %s", data)
                         data.pop(DHW_SETPOINT)
 
                 data[item] = temp_dict  # type: ignore [literal-required]
