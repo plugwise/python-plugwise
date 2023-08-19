@@ -146,6 +146,7 @@ class SmileData(SmileHelper):
             self._appl_data.update(group_data)
 
         # Collect data for each device via helper function
+        LOGGER.debug("HOI 0 elga: %s", self._elga)
         self._all_device_data()
 
     def _device_data_switching_group(
