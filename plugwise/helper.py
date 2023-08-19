@@ -194,7 +194,7 @@ def power_data_energy_diff(
         if net_string not in direct_data:
             tmp_val: float | int = 0
         else:
-            tmp_val = direct_data[net_string]  # type: ignore [literal-required]
+            tmp_val = direct_data["sensors"][net_string]  # type: ignore [literal-required]
 
         if isinstance(f_val, int):
             tmp_val += f_val * diff
