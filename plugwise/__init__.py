@@ -534,6 +534,13 @@ class Smile(SmileComm, SmileData):
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(self.gw_devices[device_id])
 
+            if not self.gw_devices[device_id]["binary_sensors"]:
+                self.gw_devices[device_id].pop("binary_sensors")
+            if not self.gw_devices[device_id]["sensors"]:
+                self.gw_devices[device_id].pop("sensors")
+            if not self.gw_devices[device_id]["switches"]:
+                self.gw_devices[device_id].pop("switches")
+
         return PlugwiseData(self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
