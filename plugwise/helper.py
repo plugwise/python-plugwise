@@ -1279,7 +1279,7 @@ class SmileHelper:
 
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceData = {}
+        direct_data: DeviceData = {"sensors":{}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
@@ -1311,7 +1311,7 @@ class SmileHelper:
 
         Collect the power-data from MODULES (P1 legacy only).
         """
-        direct_data: DeviceData = {}
+        direct_data: DeviceData = {"sensors":{}}
         loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
