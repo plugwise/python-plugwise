@@ -83,13 +83,11 @@ class SmileData(SmileHelper):
         """
         for device_id, device in self._appl_data.items():
             self.gw_devices.update({device_id: device})  # type: ignore [misc]
-            LOGGER.debug("HOI 2a gw_devices: %s", self.gw_devices)
             self.gw_devices[device_id].update(self._get_device_data(device_id))
             # Add plugwise notification binary_sensor to the relevant gateway
             if device_id == self.gateway_id and (self._is_thermostat or (not self._smile_legacy and self.smile_type == "power")):
                 self.gw_devices[device_id]["binary_sensors"]["plugwise_notification"] = False
 
-            LOGGER.debug("HOI 2b gw_devices: %s", self.gw_devices)
             # Update for cooling
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(self.gw_devices[device_id])
@@ -535,6 +533,7 @@ class Smile(SmileComm, SmileData):
 
         for dev_id, dev_dict in self.gw_devices.items():
             data = self._get_device_data(dev_id)
+            LOGGER.debug("HOI 3 data: %s", data)
             for key, value in data.items():
                 if key in dev_dict:
                     dev_dict[key] = value  # type: ignore [literal-required]
