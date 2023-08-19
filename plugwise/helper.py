@@ -85,35 +85,6 @@ def etree_to_dict(element: etree) -> dict[str, str]:
     return node
 
 
-def update_helper(
-    data: DeviceData,
-    devices: dict[str, DeviceData],
-    device_dict: DeviceData,
-    device_id: str,
-    bsssw_type: str,
-    key: str,
-    notifs: dict[str, dict[str, str]],
-) -> None:
-    """Helper-function for async_update()."""
-    for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
-        # Update the PW_Notification binary_sensor state
-        if bsssw_type == "binary_sensors" and item == "plugwise_notification":
-            devices[device_id][bsssw_type]["plugwise_notification"] = notifs != {}  # type: ignore [literal-required]
-
-        if item == key:
-            for device in devices[device_id][bsssw_type]:  # type: ignore [literal-required]
-                if device == key:
-                    devices[device_id][bsssw_type][device] = data[key]  # type: ignore [literal-required]
-
-
-def check_model(name: str | None, vendor_name: str | None) -> str | None:
-    """Model checking before using version_to_model."""
-    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
-        return model
-
-    return name
-
-
 def schedules_temps(
     schedules: dict[str, dict[str, list[float]]], name: str
 ) -> list[float]:
