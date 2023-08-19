@@ -1005,6 +1005,7 @@ class SmileHelper:
 
         Process the central_heating_state value.
         """
+        LOGGER.debug("HOI data: %s", data)
         if self._on_off_device:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
