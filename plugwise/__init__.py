@@ -93,9 +93,12 @@ class SmileData(SmileHelper):
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(self.gw_devices[device_id])
 
-            for platform in ("binary_sensors", "sensors", "switches"):
-                if not self.gw_devices[device_id][platform]:
-                    self.gw_devices[device_id].pop(platform)
+            if not self.gw_devices[device_id]["binary_sensors"]:
+                self.gw_devices[device_id].pop("binary_sensors")
+            if not self.gw_devices[device_id]["sensors"]:
+                self.gw_devices[device_id].pop("sensors")
+            if not self.gw_devices[device_id]["switches"]:
+                self.gw_devices[device_id].pop("switches")
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -536,9 +539,12 @@ class Smile(SmileComm, SmileData):
             if device["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(device)
 
-            for platform in ("binary_sensors", "sensors", "switches"):
-                if not device[platform]:
-                    device.pop(platform)
+            if not device["binary_sensors"]:
+                device.pop("binary_sensors")
+            if not device["sensors"]:
+                device.pop("sensors")
+            if not device["switches"]:
+                device.pop("switches")
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
