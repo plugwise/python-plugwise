@@ -846,9 +846,18 @@ class SmileHelper:
                 ):
                     continue
 
-                meas_2: MeasurementType | BinarySensorType | SelectType | SensorType | SwitchType = measurement
+                meas_2: MeasurementType | BinarySensorType | SelectType | SensorType | SwitchType = (
+                    measurement
+                )
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    meas_2 = cast(MeasurementType | BinarySensorType | SelectType | SensorType | SwitchType, new_name)
+                    meas_2 = cast(
+                        MeasurementType
+                        | BinarySensorType
+                        | SelectType
+                        | SensorType
+                        | SwitchType,
+                        new_name,
+                    )
                 LOGGER.debug("HOI old, new: %s, %s", measurement, meas_2)
 
                 # measurements with states "on" or "off" that need to be passed directly
