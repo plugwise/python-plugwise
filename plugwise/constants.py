@@ -261,6 +261,8 @@ BinarySensorType = Literal[
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
 MeasurementType = Literal[
+    "electricity_consumed",
+    "electricity_produced",
     "temperature",
     "thermostat",
     "illuminance",
