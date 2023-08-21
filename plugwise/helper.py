@@ -52,10 +52,13 @@ from .constants import (
     UOM,
     ActuatorData,
     ApplianceData,
+    BinarySensorType,
     DeviceData,
     GatewayData,
     MeasurementType,
     ModelData,
+    SensorType,
+    SwitchType
     ThermoLoc,
 )
 from .exceptions import (
@@ -824,7 +827,7 @@ class SmileHelper:
         self,
         appliance: etree,
         data: DeviceData,
-        measurements: dict[MeasurementType, DATA | UOM],
+        measurements: dict[MeasurementType | BinarySensorType | SensorType | SwitchType, DATA | UOM],
     ) -> None:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
