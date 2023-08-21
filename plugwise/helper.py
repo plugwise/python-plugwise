@@ -54,6 +54,7 @@ from .constants import (
     ApplianceData,
     DeviceData,
     GatewayData,
+    MeasurementType,
     ModelData,
     ThermoLoc,
 )
@@ -826,6 +827,7 @@ class SmileHelper:
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
+        measurement: MeasurementType
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
