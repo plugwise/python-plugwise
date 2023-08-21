@@ -845,9 +845,8 @@ class SmileHelper:
                     continue
 
                 meas_2: MeasurementType | BinarySensorType | SensorType | SwitchType = measurement
-                new_name: MeasurementType | BinarySensorType | SensorType | SwitchType
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    meas_2 = new_name
+                    cast(MeasurementType | BinarySensorType | SensorType | SwitchType, meas_2) = new_name
 
                 # measurements with states "on" or "off" that need to be passed directly
                 if meas_2 == "select_dhw_mode":
