@@ -844,14 +844,15 @@ class SmileHelper:
                 ):
                     continue
 
+                meas_2: MeasurementType | BinarySensorType | SensorType | SwitchTyp = measurement
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    measurement: BinarySensorType | SensorType | SwitchType = new_name
+                    meas_2: MeasurementType | BinarySensorType | SensorType | SwitchType = new_name
 
                 # measurements with states "on" or "off" that need to be passed directly
-                if measurement == "select_dhw_mode":
+                if meas_2 == "select_dhw_mode":
                     data["select_dhw_mode"] = appl_p_loc.text
-                elif measurement in BINARY_SENSORS:
-                    data["binary_sensors"][measurement] = format_measure(
+                elif meas_2 in BINARY_SENSORS:
+                    data["binary_sensors"][meas_2] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
                 elif measurement in SENSORS:
