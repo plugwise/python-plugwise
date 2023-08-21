@@ -143,7 +143,7 @@ STATUS: Final = "/system/status.xml"
 UOM = namedtuple("UOM", "unit_of_measurement")
 DATA = namedtuple("DATA", "name unit_of_measurement")
 # P1 related measurements:
-P1_MEASUREMENTS: Final[dict[MeasurementType, UOM]] = {
+P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "electricity_phase_one_consumed": UOM(POWER_WATT),
@@ -157,7 +157,7 @@ P1_MEASUREMENTS: Final[dict[MeasurementType, UOM]] = {
     "voltage_phase_two": UOM(ELECTRIC_POTENTIAL_VOLT),
     "voltage_phase_three": UOM(ELECTRIC_POTENTIAL_VOLT),
 }
-P1_LEGACY_MEASUREMENTS: Final[dict[MeasurementType, UOM]] = {
+P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "gas_consumed": UOM(VOLUME_CUBIC_METERS),
