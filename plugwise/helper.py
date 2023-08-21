@@ -58,7 +58,7 @@ from .constants import (
     MeasurementType,
     ModelData,
     SensorType,
-    SwitchType
+    SwitchType,
     ThermoLoc,
 )
 from .exceptions import (
