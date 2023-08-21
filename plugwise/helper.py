@@ -827,7 +827,7 @@ class SmileHelper:
         self,
         appliance: etree,
         data: DeviceData,
-        measurements: dict[MeasurementType | BinarySensorType | SensorType | SwitchType, DATA | UOM],
+        measurements: dict[MeasurementType, DATA | UOM],
     ) -> None:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
@@ -845,7 +845,7 @@ class SmileHelper:
                     continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    measurement = new_name
+                    measurement: BinarySensorType | SensorType | SwitchType = new_name
 
                 # measurements with states "on" or "off" that need to be passed directly
                 if measurement == "select_dhw_mode":
