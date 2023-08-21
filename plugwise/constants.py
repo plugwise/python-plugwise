@@ -143,7 +143,7 @@ STATUS: Final = "/system/status.xml"
 UOM = namedtuple("UOM", "unit_of_measurement")
 DATA = namedtuple("DATA", "name unit_of_measurement")
 # P1 related measurements:
-P1_MEASUREMENTS: Final[dict[str, UOM]] = {
+P1_MEASUREMENTS: Final[dict[MeasurementType, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "electricity_phase_one_consumed": UOM(POWER_WATT),
@@ -157,7 +157,7 @@ P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "voltage_phase_two": UOM(ELECTRIC_POTENTIAL_VOLT),
     "voltage_phase_three": UOM(ELECTRIC_POTENTIAL_VOLT),
 }
-P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
+P1_LEGACY_MEASUREMENTS: Final[dict[MeasurementType, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "gas_consumed": UOM(VOLUME_CUBIC_METERS),
@@ -167,7 +167,7 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 # zone_thermosstat: 'temperature_offset'
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
-DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
+DEVICE_MEASUREMENTS: Final[dict[MeasurementType, DATA | UOM]] = {
     # HA Core thermostat current_temperature
     "temperature": UOM(TEMP_CELSIUS),
     # HA Core thermostat setpoint
@@ -190,7 +190,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 }
 
 # Heater Central related measurements
-HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
+HEATER_CENTRAL_MEASUREMENTS: Final[dict[MeasurementType, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
     "domestic_hot_water_mode": DATA("select_dhw_mode", NONE),
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
