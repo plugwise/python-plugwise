@@ -58,6 +58,7 @@ from .constants import (
     GatewayData,
     MeasurementType,
     ModelData,
+    SelectType,
     SensorType,
     SwitchType,
     ThermoLoc,
@@ -845,9 +846,9 @@ class SmileHelper:
                 ):
                     continue
 
-                meas_2: MeasurementType | BinarySensorType | SensorType | SwitchType = measurement
+                meas_2: MeasurementType | BinarySensorType | SelectType |SensorType | SwitchType = measurement
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    meas_2 = cast(MeasurementType | BinarySensorType | SensorType | SwitchType, new_name)
+                    meas_2 = cast(MeasurementType | BinarySensorType | SelectType | SensorType | SwitchType, new_name)
 
                 # measurements with states "on" or "off" that need to be passed directly
                 if meas_2 == "select_dhw_mode":
