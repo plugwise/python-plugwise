@@ -57,7 +57,7 @@ from .constants import (
     BinarySensorType,
     DeviceData,
     GatewayData,
-    MeasurementType,
+    NoPlatformType,
     ModelData,
     SelectType,
     SensorType,
@@ -878,7 +878,7 @@ class SmileHelper:
                     )
                     data["switches"][sw_key] = sw_value
                 else:
-                    rm_key = cast(SelectType, meas_rn)
+                    rm_key = cast(NoPlatformType, meas_rn)
                     LOGGER.debug("HOI meas_rn: %s", meas_rn)
                     data[rm_key] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)

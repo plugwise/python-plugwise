@@ -259,40 +259,9 @@ BinarySensorType = Literal[
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
-MeasurementType = Literal[
-    "electricity_consumed",
-    "electricity_produced",
-    "temperature",
-    "thermostat",
-    "illuminance",
-    "cooling_activation_outdoor_temperature",
-    "cooling_deactivation_threshold",
-    "battery",
-    "temperature_difference",
-    "valve_position",
-    "humidity",
-    "select_dhw_mode",
-    "relay",
-    "domestic_hot_water_setpoint",
-    "domestic_hot_water_state",
-    "domestic_hot_water_temperature",
+NoPlatformType = Literal[
     "elga_status_code",
-    "intended_boiler_temperature",
-    "central_heating_state",
-    "intended_central_heating_state",
     "c_heating_state",
-    "maximum_boiler_temperature",
-    "modulation_level",
-    "return_water_temperature",
-    "compressor_state",
-    "cooling_state",
-    "cooling_enabled",
-    "slave_boiler_state",
-    "flame_state",
-    "central_heater_water_pressure",
-    "boiler_state",
-    "intended_boiler_state",
-    "outdoor_temperature",
 ]
 
 NumberType = Literal[
