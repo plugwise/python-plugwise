@@ -866,7 +866,7 @@ class SmileHelper:
                     sw_value = cast(bool, format_measure(appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)))
                     data["switches"][sw_key] = sw_value
                 else:
-                    rm_key = meas_rn
+                    rm_key = cast(MeasurementType, meas_rn)
                     data[rm_key] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
