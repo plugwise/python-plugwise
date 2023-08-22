@@ -858,12 +858,12 @@ class SmileHelper:
                         | SwitchType,
                         new_name,
                     )
-                LOGGER.debug("HOI old, new: %s, %s", measurement, meas_2)
 
                 # measurements with states "on" or "off" that need to be passed directly
                 if meas_2 in ("select_dhw_mode"):
                     data["select_dhw_mode"] = appl_p_loc.text
                 elif meas_2 in BINARY_SENSORS:
+                    LOGGER.debug("HOI type meas_2: %s", type(meas_2))
                     data["binary_sensors"][meas_2] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
