@@ -846,52 +846,53 @@ class SmileHelper:
                 ):
                     continue
 
-                meas_2: MeasurementType | BinarySensorType | SelectType | SensorType | SwitchType = (
-                    measurement
-                )
+                # meas_2: MeasurementType | BinarySensorType | SelectType | SensorType | SwitchType = (
+                #     measurement
+                # )
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    meas_2 = cast(
-                        MeasurementType
-                        | BinarySensorType
-                        | SelectType
-                        | SensorType
-                        | SwitchType,
-                        new_name,
-                    )
+                    measurement = new_name
+                #    meas_2 = cast(
+                #        MeasurementType
+                #        | BinarySensorType
+                #        | SelectType
+                #        | SensorType
+                #        | SwitchType,
+                #        new_name,
+                #    )
 
                 # measurements with states "on" or "off" that need to be passed directly
-                LOGGER.debug("HOI0 type meas_2: %s", type(meas_2))
-                if meas_2 in ("select_dhw_mode"):
+                LOGGER.debug("HOI0 type meas_2: %s", type(measurement))
+                if measurement in ("select_dhw_mode"):
                     data["select_dhw_mode"] = appl_p_loc.text
-                elif meas_2 in BINARY_SENSORS:
-                    LOGGER.debug("HOI1 type meas_2: %s", type(meas_2))
-                    data["binary_sensors"][meas_2] = format_measure(
+                elif measurement in BINARY_SENSORS:
+                    LOGGER.debug("HOI1 type meas_2: %s", type(measurement))
+                    data["binary_sensors"][measurement] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
-                elif meas_2 in SENSORS:
-                    data["sensors"][meas_2] = format_measure(
+                elif measurement in SENSORS:
+                    data["sensors"][measurement] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
-                elif meas_2 in SWITCHES:
-                    data["switches"][meas_2] = format_measure(
+                elif measurement in SWITCHES:
+                    data["switches"][measurement] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
                 else:
-                    data[meas_2] = format_measure(
+                    data[measurement] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
-                if meas_2 == "cooling_activation_outdoor_temperature":
+                if measurement == "cooling_activation_outdoor_temperature":
                     self._cooling_activation_outdoor_temp = data["sensors"][
                         "cooling_activation_outdoor_temperature"
                     ]
-                if meas_2 == "cooling_deactivation_threshold":
+                if measurement == "cooling_deactivation_threshold":
                     self._cooling_deactivation_threshold = data["sensors"][
                         "cooling_deactivation_threshold"
                     ]
-                if meas_2 == "outdoor_air_temperature":
+                if measurement == "outdoor_air_temperature":
                     self._outdoor_temp = data["sensors"]["outdoor_air_temperature"]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
