@@ -281,6 +281,7 @@ MeasurementType = Literal[
     "intended_boiler_temperature",
     "central_heating_state",
     "intended_central_heating_state",
+    "c_heating_state",
     "maximum_boiler_temperature",
     "modulation_level",
     "return_water_temperature",
