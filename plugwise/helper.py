@@ -865,8 +865,9 @@ class SmileHelper:
                 if measurement in ("select_dhw_mode"):
                     data["select_dhw_mode"] = appl_p_loc.text
                 elif measurement in BINARY_SENSORS:
-                    LOGGER.debug("HOI1 type meas_2: %s", type(measurement))
-                    data["binary_sensors"][measurement] = format_measure(
+                    key = cast(BinarySensorType, measurement)
+                    LOGGER.debug("HOI1 type meas_2: %s", type(key))
+                    data["binary_sensors"][key] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
                 elif measurement in SENSORS:
