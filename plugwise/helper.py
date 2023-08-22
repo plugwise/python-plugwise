@@ -851,7 +851,7 @@ class SmileHelper:
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     meas_rn = new_name
                 # measurements with states "on" or "off" that need to be passed directly
-                if meas_rn in ("select_dhw_mode"):
+                if meas_rn == "select_dhw_mode":
                     data["select_dhw_mode"] = appl_p_loc.text
                 elif meas_rn in BINARY_SENSORS:
                     bs_key = cast(BinarySensorType, meas_rn)
@@ -877,10 +877,12 @@ class SmileHelper:
                         ),
                     )
                     data["switches"][sw_key] = sw_value
-                else:
-                    rm_key = cast(NoPlatformType, meas_rn)
-                    LOGGER.debug("HOI meas_rn: %s", meas_rn)
-                    data[rm_key] = format_measure(
+                elif meas_rn == "c_heating_state":
+                    data["c_heating_state"] = format_measure(
+                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    )
+                elif meas_rn == "elga_status_code":
+                    data["elga_status_code"] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
 
