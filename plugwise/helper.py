@@ -860,10 +860,11 @@ class SmileHelper:
                     )
 
                 # measurements with states "on" or "off" that need to be passed directly
+                LOGGER.debug("HOI0 type meas_2: %s", type(meas_2))
                 if meas_2 in ("select_dhw_mode"):
                     data["select_dhw_mode"] = appl_p_loc.text
                 elif meas_2 in BINARY_SENSORS:
-                    LOGGER.debug("HOI type meas_2: %s", type(meas_2))
+                    LOGGER.debug("HOI1 type meas_2: %s", type(meas_2))
                     data["binary_sensors"][meas_2] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
@@ -1006,7 +1007,6 @@ class SmileHelper:
 
         Process the central_heating_state value.
         """
-        LOGGER.debug("HOI data: %s", data)
         if self._on_off_device:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
@@ -1060,8 +1060,6 @@ class SmileHelper:
         if d_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
-        LOGGER.debug("HOI 1 elga: %s", self._elga)
-        LOGGER.debug("HOI 1 data: %s", data)
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
             # Remove c_heating_state after processing
