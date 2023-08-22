@@ -846,22 +846,9 @@ class SmileHelper:
                 ):
                     continue
 
-                # meas_2: MeasurementType | BinarySensorType | SelectType | SensorType | SwitchType = (
-                #     measurement
-                # )
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
-                #    meas_2 = cast(
-                #        MeasurementType
-                #        | BinarySensorType
-                #        | SelectType
-                #        | SensorType
-                #        | SwitchType,
-                #        new_name,
-                #    )
-
                 # measurements with states "on" or "off" that need to be passed directly
-                LOGGER.debug("HOI0 type meas_2: %s", type(measurement))
                 if measurement in ("select_dhw_mode"):
                     data["select_dhw_mode"] = appl_p_loc.text
                 elif measurement in BINARY_SENSORS:
@@ -877,7 +864,8 @@ class SmileHelper:
                     sw_value = cast(bool, format_measure(appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)))
                     data["switches"][sw_key] = sw_value
                 else:
-                    data[measurement] = format_measure(
+                    rm_key = cast(MeasurementType, measurement)
+                    data[rm_key] = format_measure(
                         appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
 
