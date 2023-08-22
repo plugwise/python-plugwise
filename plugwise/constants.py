@@ -273,7 +273,6 @@ MeasurementType = Literal[
     "valve_position",
     "humidity",
     "relay",
-    "boiler_temperature",
     "domestic_hot_water_mode",
     "domestic_hot_water_setpoint",
     "domestic_hot_water_state",
