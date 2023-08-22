@@ -274,7 +274,6 @@ MeasurementType = Literal[
     "humidity",
     "select_dhw_mode",
     "relay",
-    "domestic_hot_water_mode",
     "domestic_hot_water_setpoint",
     "domestic_hot_water_state",
     "domestic_hot_water_temperature",
