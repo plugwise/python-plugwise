@@ -878,13 +878,14 @@ class SmileHelper:
                     )
                     data["switches"][sw_key] = sw_value
                 elif meas_rn == "c_heating_state":
-                    data["c_heating_state"] = format_measure(
-                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    data["c_heating_state"] = cast(
+                        bool,
+                        format_measure(
+                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                        ),
                     )
                 elif meas_rn == "elga_status_code":
-                    data["elga_status_code"] = format_measure(
-                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                    )
+                    data["elga_status_code"] = int(appl_p_loc.text)
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
