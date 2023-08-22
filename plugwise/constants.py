@@ -167,7 +167,7 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 # zone_thermosstat: 'temperature_offset'
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
-DEVICE_MEASUREMENTS: Final[dict[MeasurementType, DATA | UOM]] = {
+DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # HA Core thermostat current_temperature
     "temperature": UOM(TEMP_CELSIUS),
     # HA Core thermostat setpoint
@@ -190,7 +190,7 @@ DEVICE_MEASUREMENTS: Final[dict[MeasurementType, DATA | UOM]] = {
 }
 
 # Heater Central related measurements
-HEATER_CENTRAL_MEASUREMENTS: Final[dict[MeasurementType, DATA | UOM]] = {
+HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
     "domestic_hot_water_mode": DATA("select_dhw_mode", NONE),
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
