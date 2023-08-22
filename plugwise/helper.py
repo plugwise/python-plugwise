@@ -829,7 +829,7 @@ class SmileHelper:
         self,
         appliance: etree,
         data: DeviceData,
-        measurements: dict[MeasurementType, DATA | UOM],
+        measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_appliance_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
