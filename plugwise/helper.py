@@ -3,7 +3,7 @@
 Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
-from typing import Literal
+
 
 import asyncio
 import datetime as dt
@@ -57,9 +57,7 @@ from .constants import (
     BinarySensorType,
     DeviceData,
     GatewayData,
-    NoPlatformType,
     ModelData,
-    SelectType,
     SensorType,
     SwitchType,
     ThermoLoc,
