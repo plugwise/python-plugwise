@@ -272,6 +272,7 @@ MeasurementType = Literal[
     "temperature_difference",
     "valve_position",
     "humidity",
+    "select_dhw_mode",
     "relay",
     "domestic_hot_water_mode",
     "domestic_hot_water_setpoint",
