@@ -605,7 +605,7 @@ class SmileHelper:
         }.items():
             if value is not None or key == "location":
                 p1_key = cast(ApplianceType, key)
-                self._appl_data[appl.dev_id].update({p1_key: value})
+                self._appl_data[appl.dev_id][p1_key] = value
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
