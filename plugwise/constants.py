@@ -247,6 +247,19 @@ SMILES: Final[dict[str, SMILE]] = {
 
 # All available Binary Sensor, Sensor, and Switch Types
 
+ApplianceType = Literal[
+    "dev_class",
+    "firmware",
+    "hardware",
+    "location",
+    "mac_address",
+    "members",
+    "model",
+    "name",
+    "vendor",
+    "zigbee_mac_address",
+]
+
 BinarySensorType = Literal[
     "cooling_enabled",
     "compressor_state",
