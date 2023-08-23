@@ -1317,7 +1317,8 @@ class SmileHelper:
                     direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
-                    direct_data["sensors"][loc.key_string] = loc.f_val
+                    key = cast(SensorType, loc.key_string)
+                    direct_data["sensors"][key] = loc.f_val
 
         return direct_data
 
@@ -1350,7 +1351,8 @@ class SmileHelper:
                         direct_data = power_data_energy_diff(
                             loc.measurement, loc.net_string, loc.f_val, direct_data
                         )
-                        direct_data["sensors"][loc.key_string] = loc.f_val
+                        key = cast(SensorType, loc.key_string)
+                        direct_data["sensors"][key] = loc.f_val
 
         return direct_data
 
