@@ -603,8 +603,8 @@ class SmileHelper:
             "vendor": appl.vendor_name,
         }.items():
             if value is not None or key == "location":
-                key = cast(ApplianceData, key)
-                self._appl_data[appl.dev_id].update({key: value})
+                p1_key = cast(ApplianceData, key)
+                self._appl_data[appl.dev_id].update({p1_key: value})
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
@@ -626,8 +626,8 @@ class SmileHelper:
             "vendor": "Plugwise",
         }.items():
             if value is not None:
-                key = cast(ApplianceData, key)
-                self._appl_data[self.gateway_id].update({key: value})
+                gw_key = cast(ApplianceData, key)
+                self._appl_data[self.gateway_id].update({gw_key: value})
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
