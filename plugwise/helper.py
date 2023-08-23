@@ -175,7 +175,7 @@ def power_data_energy_diff(
         if net_string not in direct_data["sensors"]:
             tmp_val: float | int = 0
         else:
-            tmp_val = direct_data["sensors"][net_string]  # type: ignore [literal-required]
+            tmp_val = direct_data["sensors"][net_string]
 
         if isinstance(f_val, int):
             tmp_val += f_val * diff
@@ -183,7 +183,7 @@ def power_data_energy_diff(
             tmp_val += float(f_val * diff)
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
-        direct_data["sensors"][net_string] = tmp_val  # type: ignore [literal-required]
+        direct_data["sensors"][net_string] = tmp_val
 
     return direct_data
 
@@ -603,7 +603,7 @@ class SmileHelper:
             "vendor": appl.vendor_name,
         }.items():
             if value is not None or key == "location":
-                self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+                self._appl_data[appl.dev_id].update({key: value})
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
@@ -625,7 +625,7 @@ class SmileHelper:
             "vendor": "Plugwise",
         }.items():
             if value is not None:
-                self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
+                self._appl_data[self.gateway_id].update({key: value})
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -699,7 +699,7 @@ class SmileHelper:
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
-                    self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+                    self._appl_data[appl.dev_id].update({key: value})
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
@@ -964,7 +964,7 @@ class SmileHelper:
                         # Rename offset to setpoint
                         key = "setpoint"
 
-                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
+                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
@@ -974,7 +974,7 @@ class SmileHelper:
                     if DHW_SETPOINT in data["sensors"]:
                         data["sensors"].pop(DHW_SETPOINT)
 
-                data[item] = temp_dict  # type: ignore [literal-required]
+                data[item] = temp_dict
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
@@ -1000,9 +1000,9 @@ class SmileHelper:
         if not self._cooling_present:
             for item in ("cooling_state", "cooling_ena_switch"):
                 if item in data["binary_sensors"]:
-                    data["binary_sensors"].pop(item)  # type: ignore [misc]
+                    data["binary_sensors"].pop(item)
                 if item in data["switches"]:
-                    data["switches"].pop(item)  # type: ignore [misc]
+                    data["switches"].pop(item)
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
 
@@ -1314,7 +1314,7 @@ class SmileHelper:
                     direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
-                    direct_data["sensors"][loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                    direct_data["sensors"][loc.key_string] = loc.f_val
 
         return direct_data
 
@@ -1347,7 +1347,7 @@ class SmileHelper:
                         direct_data = power_data_energy_diff(
                             loc.measurement, loc.net_string, loc.f_val, direct_data
                         )
-                        direct_data["sensors"][loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                        direct_data["sensors"][loc.key_string] = loc.f_val
 
         return direct_data
 
@@ -1547,7 +1547,7 @@ class SmileHelper:
                 for item in found:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
-                            data["switches"][name] = item.find("state").text == "on"  # type: ignore [literal-required]
+                            data["switches"][name] = item.find("state").text == "on"
                             # Remove the cooling_enabled binary_sensor when the corresponding switch is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
