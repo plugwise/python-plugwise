@@ -62,6 +62,7 @@ from .constants import (
     SensorType,
     SwitchType,
     ThermoLoc,
+    ToggleNameType,
 )
 from .exceptions import (
     ConnectionFailedError,
@@ -1540,7 +1541,7 @@ class SmileHelper:
                 data["switches"]["lock"] = found.text == "true"
 
     def _get_toggle_state(
-        self, xml: etree, toggle: str, name: str, data: DeviceData
+        self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
     ) -> None:
         """Helper-function for _get_appliance_data().
 
