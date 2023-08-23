@@ -161,7 +161,7 @@ def power_data_local_format(
 
 
 def power_data_energy_diff(
-    measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
+    measurement: str, net_string: SensorType, f_val: float | int, direct_data: DeviceData
 ) -> DeviceData:
     """Calculate differential energy."""
     if (
