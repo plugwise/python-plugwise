@@ -901,7 +901,7 @@ class SmileHelper:
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = f"{measurement}_interval"
-                data["sensors"][name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
+                data["sensors"][name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
