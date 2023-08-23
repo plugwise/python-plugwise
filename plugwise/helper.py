@@ -628,7 +628,7 @@ class SmileHelper:
         }.items():
             if value is not None:
                 gw_key = cast(ApplianceType, key)
-                self._appl_data[self.gateway_id].update({gw_key: value})
+                self._appl_data[self.gateway_id][gw_key] = value
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -702,7 +702,8 @@ class SmileHelper:
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
-                    self._appl_data[appl.dev_id].update({key: value})
+                    appl_key = cast(ApplianceType, key)
+                    self._appl_data[appl.dev_id][appl_key] = value
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
