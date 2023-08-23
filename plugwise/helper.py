@@ -603,6 +603,7 @@ class SmileHelper:
             "vendor": appl.vendor_name,
         }.items():
             if value is not None or key == "location":
+                key = cast(ApplianceData, key)
                 self._appl_data[appl.dev_id].update({key: value})
 
     def _create_legacy_gateway(self) -> None:
@@ -625,6 +626,7 @@ class SmileHelper:
             "vendor": "Plugwise",
         }.items():
             if value is not None:
+                key = cast(ApplianceData, key)
                 self._appl_data[self.gateway_id].update({key: value})
 
     def _all_appliances(self) -> None:
