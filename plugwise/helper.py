@@ -979,7 +979,8 @@ class SmileHelper:
                     if DHW_SETPOINT in data["sensors"]:
                         data["sensors"].pop(DHW_SETPOINT)
 
-                data[item] = temp_dict
+                act_item = cast(ActuatorType, item)
+                data[act_item] = temp_dict
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
