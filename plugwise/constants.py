@@ -38,7 +38,6 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "zone_thermometer",
     "zone_thermostat",
 )
-
 ActuatorType = Literal[
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
@@ -239,7 +238,6 @@ ToggleNameType = Literal[
     "cooling_ena_switch",
     "dhw_cm_switch",
 ]
-
 TOGGLES: Final[dict[str, ToggleNameType]] = {
     "cooling_enabled": "cooling_ena_switch",
     "domestic_hot_water_comfort_mode": "dhw_cm_switch",
@@ -287,11 +285,6 @@ BinarySensorType = Literal[
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
-NoPlatformType = Literal[
-    "elga_status_code",
-    "c_heating_state",
-]
-
 NumberType = Literal[
     "maximum_boiler_temperature",
     "max_dhw_temperature",
@@ -303,7 +296,6 @@ SelectType = Literal[
     "select_regulation_mode",
     "select_schedule",
 ]
-
 SelectOptionsType = Literal[
     "dhw_modes",
     "regulation_modes",
