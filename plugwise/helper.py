@@ -4,7 +4,6 @@ Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
 
-
 import asyncio
 import datetime as dt
 from typing import cast
@@ -165,7 +164,10 @@ def power_data_local_format(
 
 
 def power_data_energy_diff(
-    measurement: str, net_string: SensorType, f_val: float | int, direct_data: DeviceData
+    measurement: str,
+    net_string: SensorType,
+    f_val: float | int,
+    direct_data: DeviceData,
 ) -> DeviceData:
     """Calculate differential energy."""
     if (
@@ -908,7 +910,9 @@ class SmileHelper:
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
                 name = cast(SensorType, f"{measurement}_interval")
-                data["sensors"][name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)
+                data["sensors"][name] = format_measure(
+                    appl_i_loc.text, ENERGY_WATT_HOUR
+                )
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
@@ -1010,7 +1014,7 @@ class SmileHelper:
             if "cooling_state" in data["binary_sensors"]:
                 data["binary_sensors"].pop("cooling_state")
             if "cooling_ena_switch" in data["switches"]:
-                    data["switches"].pop("cooling_ena_switch")
+                data["switches"].pop("cooling_ena_switch")
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
 
