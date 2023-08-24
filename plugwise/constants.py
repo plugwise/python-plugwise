@@ -47,7 +47,14 @@ ActuatorType = Literal[
     "thermostat",
 ]
 ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
-
+ActuatorDataType = Literal[
+    "lower_bound",
+    "resolution",
+    "setpoint",
+    "setpoint_high",
+    "setpoint_low",
+    "upper_bound",
+]
 DAYS: Final[dict[str, int]] = {
     "mo": 0,
     "tu": 1,
