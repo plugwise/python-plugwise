@@ -53,6 +53,7 @@ from .constants import (
     TOGGLES,
     UOM,
     ActuatorData,
+    ActuatorType,
     ApplianceData,
     ApplianceType,
     BinarySensorType,
