@@ -39,7 +39,7 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "zone_thermostat",
 )
 
-ActuatorType: Literal[
+ActuatorType = Literal[
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
     "maximum_boiler_temperature",
