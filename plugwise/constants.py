@@ -38,13 +38,16 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "zone_thermometer",
     "zone_thermostat",
 )
-ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
+
+ActuatorType: Literal[
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
     "maximum_boiler_temperature",
     "temperature_offset",
     "thermostat",
-)
+]
+ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
+
 DAYS: Final[dict[str, int]] = {
     "mo": 0,
     "tu": 1,
