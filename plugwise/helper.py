@@ -53,6 +53,7 @@ from .constants import (
     TOGGLES,
     UOM,
     ActuatorData,
+    ActuatorDataType,
     ActuatorType,
     ApplianceData,
     ApplianceType,
@@ -970,7 +971,8 @@ class SmileHelper:
                         # Rename offset to setpoint
                         key = "setpoint"
 
-                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)
+                    act_key = cast(ActuatorDataType, key)
+                    temp_dict[act_key] = format_measure(function.text, TEMP_CELSIUS)
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
