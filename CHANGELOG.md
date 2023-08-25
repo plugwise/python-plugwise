@@ -1,6 +1,7 @@
 # Changelog
 
 ## v0.32.1 Improve typing, bugfix
+
 - Integrate the process of creating binary_sensors, sensors, and switches dicts. Should make typing simpler.
 - Fix an apparent notification-bug for p1v4.
 - Improve typing: fix all type-ignores.
