@@ -82,6 +82,7 @@ class SmileData(SmileHelper):
         """
         for device_id, device in self._appl_data.items():
             self.gw_devices.update({device_id: cast(DeviceData, device)})
+
             data = self._get_device_data(device_id)
             # Add plugwise notification binary_sensor to the relevant gateway
             if device_id == self.gateway_id and (
@@ -89,6 +90,7 @@ class SmileData(SmileHelper):
                 or (not self._smile_legacy and self.smile_type == "power")
             ):
                 data["binary_sensors"]["plugwise_notification"] = False
+
             self.gw_devices[device_id].update(data)
 
             # Update for cooling
