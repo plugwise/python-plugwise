@@ -1004,13 +1004,6 @@ class SmileHelper:
 
         Clean up the data dict.
         """
-        # Fix for Adam + Anna: heating_state also present under Anna, remove
-        if (
-            "temperature" in data["sensors"]
-            and "heating_state" in data["binary_sensors"]
-        ):
-            data["binary_sensors"].pop("heating_state", None)
-
         # Don't show cooling-related when no cooling present,
         # but, keep cooling_enabled for Elga
         if not self._cooling_present:
