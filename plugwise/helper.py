@@ -857,42 +857,46 @@ class SmileHelper:
                 meas_rn = measurement
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     meas_rn = new_name
-                # measurements with states "on" or "off" that need to be passed directly
-                if meas_rn == "select_dhw_mode":
-                    data["select_dhw_mode"] = appl_p_loc.text
-                elif meas_rn in BINARY_SENSORS:
-                    bs_key = cast(BinarySensorType, meas_rn)
-                    bs_value = cast(
-                        bool,
-                        format_measure(
+                match meas_rn:
+                    # measurements with states "on" or "off" that need to be passed directly
+                    case "select_dhw_mode":
+                        data["select_dhw_mode"] = appl_p_loc.text
+                    case _ as meas_rn if meas_rn in BINARY_SENSORS:
+                        bs_key = cast(BinarySensorType, meas_rn)
+                        bs_value = cast(
+                            bool,
+                            format_measure(
+                                appl_p_loc.text,
+                                getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
+                            ),
+                        )
+                        data["binary_sensors"][bs_key] = bs_value
+                    case _ as meas_rn if meas_rn in SENSORS:
+                        s_key = cast(SensorType, meas_rn)
+                        s_value = format_measure(
                             appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        ),
-                    )
-                    data["binary_sensors"][bs_key] = bs_value
-                elif meas_rn in SENSORS:
-                    s_key = cast(SensorType, meas_rn)
-                    s_value = format_measure(
-                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                    )
-                    data["sensors"][s_key] = s_value
-                elif meas_rn in SWITCHES:
-                    sw_key = cast(SwitchType, meas_rn)
-                    sw_value = cast(
-                        bool,
-                        format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        ),
-                    )
-                    data["switches"][sw_key] = sw_value
-                elif meas_rn == "c_heating_state":
-                    data["c_heating_state"] = cast(
-                        bool,
-                        format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        ),
-                    )
-                elif meas_rn == "elga_status_code":
-                    data["elga_status_code"] = int(appl_p_loc.text)
+                        )
+                        data["sensors"][s_key] = s_value
+                    case _ as meas_rn if meas_rn in SWITCHES:
+                        sw_key = cast(SwitchType, meas_rn)
+                        sw_value = cast(
+                            bool,
+                            format_measure(
+                                appl_p_loc.text,
+                                getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
+                            ),
+                        )
+                        data["switches"][sw_key] = sw_value
+                    case "c_heating_state":
+                        data["c_heating_state"] = cast(
+                            bool,
+                            format_measure(
+                                appl_p_loc.text,
+                                getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
+                            ),
+                        )
+                    case "elga_status_code":
+                        data["elga_status_code"] = int(appl_p_loc.text)
 
                 # Anna: save cooling-related measurements for later use
                 # Use the local outdoor temperature as reference for turning cooling on/off
