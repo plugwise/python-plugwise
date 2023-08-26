@@ -531,11 +531,13 @@ class Smile(SmileComm, SmileData):
 
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            if "binary_sensors" in device:
-                if "plugwise_notification" in device["binary_sensors"]:
-                    data["binary_sensors"]["plugwise_notification"] = bool(
-                        self._notifications
-                    )
+            if (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
+            ):
+                data["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
 
             device.update(data)
 
