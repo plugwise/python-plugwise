@@ -862,13 +862,13 @@ class SmileHelper:
                     data["select_dhw_mode"] = appl_p_loc.text
                 elif meas_rn in BINARY_SENSORS:
                     bs_key = cast(BinarySensorType, meas_rn)
-                    bs_value_ = cast(
+                    bs_value = cast(
                         bool,
                         format_measure(
                             appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                         ),
                     )
-                    data["binary_sensors"][bs_key] = bs_value_
+                    data["binary_sensors"][bs_key] = bs_value
                 elif meas_rn in SENSORS:
                     s_key = cast(SensorType, meas_rn)
                     s_value = format_measure(
