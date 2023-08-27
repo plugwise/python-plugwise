@@ -22,9 +22,6 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
 
 def format_measure(measure: str, unit: str) -> bool | float | int:
     """Format measure to correct type."""
-    # TODO: handle with appropriate care 20220405
-    # continuously reassigning the same value with different type isn't
-    # to typings liking
     result: bool | float | int = False
     try:
         result = int(measure)
