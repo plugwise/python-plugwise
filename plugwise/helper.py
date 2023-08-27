@@ -877,6 +877,20 @@ class SmileHelper:
                             appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                         )
                         data["sensors"][s_key] = s_value
+                        # Anna: save cooling-related measurements for later use
+                        # Use the local outdoor temperature as reference for turning cooling on/off
+                        if meas_rn == "cooling_activation_outdoor_temperature":
+                            self._cooling_activation_outdoor_temp = data["sensors"][
+                                "cooling_activation_outdoor_temperature"
+                            ]
+                        if meas_rn == "cooling_deactivation_threshold":
+                            self._cooling_deactivation_threshold = data["sensors"][
+                                "cooling_deactivation_threshold"
+                            ]
+                        if meas_rn == "outdoor_air_temperature":
+                            self._outdoor_temp = data["sensors"][
+                                "outdoor_air_temperature"
+                            ]
                     case _ as meas_rn if meas_rn in SWITCHES:
                         sw_key = cast(SwitchType, meas_rn)
                         sw_value = cast(
@@ -897,19 +911,6 @@ class SmileHelper:
                         )
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
-
-                # Anna: save cooling-related measurements for later use
-                # Use the local outdoor temperature as reference for turning cooling on/off
-                if meas_rn == "cooling_activation_outdoor_temperature":
-                    self._cooling_activation_outdoor_temp = data["sensors"][
-                        "cooling_activation_outdoor_temperature"
-                    ]
-                if meas_rn == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data["sensors"][
-                        "cooling_deactivation_threshold"
-                    ]
-                if meas_rn == "outdoor_air_temperature":
-                    self._outdoor_temp = data["sensors"]["outdoor_air_temperature"]
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
