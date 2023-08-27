@@ -20,12 +20,12 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure: str, unit: str) -> float | int | bool:
+def format_measure(measure: str, unit: str) -> bool | float | int:
     """Format measure to correct type."""
     # TODO: handle with appropriate care 20220405
     # continuously reassigning the same value with different type isn't
     # to typings liking
-    result: int | float | bool = False
+    result: bool | float | int = False
     try:
         result = int(measure)
         if unit == TEMP_CELSIUS:
@@ -52,10 +52,8 @@ def format_measure(measure: str, unit: str) -> float | int | bool:
                 elif abs(float_measure) >= 100:
                     result = int(round(float_measure))
         except ValueError:
-            if measure in ["on", "true"]:
-                result = True
-            if measure in ["off", "false"]:
-                result = False
+            result = measure in ["on", "true"]
+
     return result
 
 
