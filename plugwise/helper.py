@@ -852,39 +852,39 @@ class SmileHelper:
                 ):
                     continue
 
-                meas_rn = measurement
                 if new_name := getattr(attrs, ATTR_NAME, None):
-                    meas_rn = new_name
-                match meas_rn:
+                    measurement = new_name
+
+                match measurement:
                     # measurements with states "on" or "off" that need to be passed directly
                     case "select_dhw_mode":
                         data["select_dhw_mode"] = appl_p_loc.text
-                    case _ as meas_rn if meas_rn in BINARY_SENSORS:
-                        bs_key = cast(BinarySensorType, meas_rn)
+                    case _ as measurement if measurement in BINARY_SENSORS:
+                        bs_key = cast(BinarySensorType, measurement)
                         bs_value = appl_p_loc.text in ["on", "true"]
                         data["binary_sensors"][bs_key] = bs_value
-                    case _ as meas_rn if meas_rn in SENSORS:
-                        s_key = cast(SensorType, meas_rn)
+                    case _ as measurement if measurement in SENSORS:
+                        s_key = cast(SensorType, measurement)
                         s_value = format_measure(
                             appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                         )
                         data["sensors"][s_key] = s_value
                         # Anna: save cooling-related measurements for later use
                         # Use the local outdoor temperature as reference for turning cooling on/off
-                        if meas_rn == "cooling_activation_outdoor_temperature":
+                        if measurement == "cooling_activation_outdoor_temperature":
                             self._cooling_activation_outdoor_temp = data["sensors"][
                                 "cooling_activation_outdoor_temperature"
                             ]
-                        if meas_rn == "cooling_deactivation_threshold":
+                        if measurement == "cooling_deactivation_threshold":
                             self._cooling_deactivation_threshold = data["sensors"][
                                 "cooling_deactivation_threshold"
                             ]
-                        if meas_rn == "outdoor_air_temperature":
+                        if measurement == "outdoor_air_temperature":
                             self._outdoor_temp = data["sensors"][
                                 "outdoor_air_temperature"
                             ]
-                    case _ as meas_rn if meas_rn in SWITCHES:
-                        sw_key = cast(SwitchType, meas_rn)
+                    case _ as measurement if measurement in SWITCHES:
+                        sw_key = cast(SwitchType, measurement)
                         sw_value = appl_p_loc.text in ["on", "true"]
                         data["switches"][sw_key] = sw_value
                     case "c_heating_state":
