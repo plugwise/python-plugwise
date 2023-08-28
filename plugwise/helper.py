@@ -861,10 +861,9 @@ class SmileHelper:
                         data["select_dhw_mode"] = appl_p_loc.text
                     case _ as meas_rn if meas_rn in BINARY_SENSORS:
                         bs_key = cast(BinarySensorType, meas_rn)
-                        bs_value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                        bs_value = appl_p_loc.text in ["on", "true"]
                         )
-                        assert isinstance(bs_value, bool)
+                        # assert isinstance(bs_value, bool)
                         data["binary_sensors"][bs_key] = bs_value
                     case _ as meas_rn if meas_rn in SENSORS:
                         s_key = cast(SensorType, meas_rn)
@@ -888,16 +887,11 @@ class SmileHelper:
                             ]
                     case _ as meas_rn if meas_rn in SWITCHES:
                         sw_key = cast(SwitchType, meas_rn)
-                        value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        )
-                        sw_value = cast(bool, value)
+                        sw_value = appl_p_loc.text in ["on", "true"]
                         data["switches"][sw_key] = sw_value
                     case "c_heating_state":
-                        value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        )
-                        assert isinstance(value, bool)
+                        value = appl_p_loc.text in ["on", "true"]
+                        # assert isinstance(value, bool)
                         data["c_heating_state"] = value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
