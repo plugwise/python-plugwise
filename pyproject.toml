@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "plugwise"
-version         = "0.32.0"
+version         = "0.32.1"
 license         = {file = "LICENSE"}
 description     = "Plugwise Smile (Adam/Anna/P1) and Stretch module for Python 3."
 readme          = "README.md"
@@ -14,7 +14,6 @@ classifiers     = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Home Automation",
@@ -26,7 +25,7 @@ maintainers = [
         { name = "bouwew"},
         { name = "CoMPaTech" }
 ]
-requires-python = ">=3.9.0"
+requires-python = ">=3.10.0"
 dependencies    = [
         "aiohttp",
         "async_timeout",

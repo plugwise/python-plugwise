@@ -38,13 +38,22 @@ ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
     "zone_thermometer",
     "zone_thermostat",
 )
-ACTIVE_ACTUATORS: Final[tuple[str, ...]] = (
+ActuatorType = Literal[
     "domestic_hot_water_setpoint",
     "max_dhw_temperature",
     "maximum_boiler_temperature",
     "temperature_offset",
     "thermostat",
-)
+]
+ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
+ActuatorDataType = Literal[
+    "lower_bound",
+    "resolution",
+    "setpoint",
+    "setpoint_high",
+    "setpoint_low",
+    "upper_bound",
+]
 DAYS: Final[dict[str, int]] = {
     "mo": 0,
     "tu": 1,
@@ -206,7 +215,6 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "intended_central_heating_state": DATA(
         "heating_state", NONE
     ),  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
-    "maximum_boiler_temperature": UOM(TEMP_CELSIUS),
     "modulation_level": UOM(PERCENTAGE),
     "return_water_temperature": DATA("return_temperature", TEMP_CELSIUS),
     # Used with the Elga heatpump - marcelveldt
@@ -226,7 +234,11 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
 }
 
-TOGGLES: Final[dict[str, str]] = {
+ToggleNameType = Literal[
+    "cooling_ena_switch",
+    "dhw_cm_switch",
+]
+TOGGLES: Final[dict[str, ToggleNameType]] = {
     "cooling_enabled": "cooling_ena_switch",
     "domestic_hot_water_comfort_mode": "dhw_cm_switch",
 }
@@ -247,6 +259,19 @@ SMILES: Final[dict[str, SMILE]] = {
 }
 
 # All available Binary Sensor, Sensor, and Switch Types
+
+ApplianceType = Literal[
+    "dev_class",
+    "firmware",
+    "hardware",
+    "location",
+    "mac_address",
+    "members",
+    "model",
+    "name",
+    "vendor",
+    "zigbee_mac_address",
+]
 
 BinarySensorType = Literal[
     "cooling_enabled",
@@ -271,7 +296,6 @@ SelectType = Literal[
     "select_regulation_mode",
     "select_schedule",
 ]
-
 SelectOptionsType = Literal[
     "dhw_modes",
     "regulation_modes",

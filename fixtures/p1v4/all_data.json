@@ -2,7 +2,7 @@
   "devices": {
     "a455b61e52394b2db5081ce025a430f3": {
       "binary_sensors": {
-        "plugwise_notification": false
+        "plugwise_notification": true
       },
       "dev_class": "gateway",
       "firmware": "4.1.1",

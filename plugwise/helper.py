@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+from typing import cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -51,14 +52,18 @@ from .constants import (
     TOGGLES,
     UOM,
     ActuatorData,
+    ActuatorDataType,
+    ActuatorType,
     ApplianceData,
+    ApplianceType,
+    BinarySensorType,
     DeviceData,
     GatewayData,
     ModelData,
-    SmileBinarySensors,
-    SmileSensors,
-    SmileSwitches,
+    SensorType,
+    SwitchType,
     ThermoLoc,
+    ToggleNameType,
 )
 from .exceptions import (
     ConnectionFailedError,
@@ -73,7 +78,13 @@ from .util import (
     version_to_model,
 )
 
-# from typing import cast
+
+def check_model(name: str | None, vendor_name: str | None) -> str | None:
+    """Model checking before using version_to_model."""
+    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
+        return model
+
+    return name
 
 
 def etree_to_dict(element: etree) -> dict[str, str]:
@@ -83,35 +94,6 @@ def etree_to_dict(element: etree) -> dict[str, str]:
         node.update(element.items())
 
     return node
-
-
-def update_helper(
-    data: DeviceData,
-    devices: dict[str, DeviceData],
-    device_dict: DeviceData,
-    device_id: str,
-    bsssw_type: str,
-    key: str,
-    notifs: dict[str, dict[str, str]],
-) -> None:
-    """Helper-function for async_update()."""
-    for item in device_dict[bsssw_type]:  # type: ignore [literal-required]
-        # Update the PW_Notification binary_sensor state
-        if bsssw_type == "binary_sensors" and item == "plugwise_notification":
-            devices[device_id][bsssw_type]["plugwise_notification"] = notifs != {}  # type: ignore [literal-required]
-
-        if item == key:
-            for device in devices[device_id][bsssw_type]:  # type: ignore [literal-required]
-                if device == key:
-                    devices[device_id][bsssw_type][device] = data[key]  # type: ignore [literal-required]
-
-
-def check_model(name: str | None, vendor_name: str | None) -> str | None:
-    """Model checking before using version_to_model."""
-    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
-        return model
-
-    return name
 
 
 def schedules_temps(
@@ -180,7 +162,10 @@ def power_data_local_format(
 
 
 def power_data_energy_diff(
-    measurement: str, net_string: str, f_val: float | int, direct_data: DeviceData
+    measurement: str,
+    net_string: SensorType,
+    f_val: float | int,
+    direct_data: DeviceData,
 ) -> DeviceData:
     """Calculate differential energy."""
     if (
@@ -191,10 +176,10 @@ def power_data_energy_diff(
         diff = 1
         if "produced" in measurement:
             diff = -1
-        if net_string not in direct_data:
+        if net_string not in direct_data["sensors"]:
             tmp_val: float | int = 0
         else:
-            tmp_val = direct_data[net_string]  # type: ignore [literal-required]
+            tmp_val = direct_data["sensors"][net_string]
 
         if isinstance(f_val, int):
             tmp_val += f_val * diff
@@ -202,7 +187,7 @@ def power_data_energy_diff(
             tmp_val += float(f_val * diff)
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
-        direct_data[net_string] = tmp_val  # type: ignore [literal-required]
+        direct_data["sensors"][net_string] = tmp_val
 
     return direct_data
 
@@ -622,7 +607,8 @@ class SmileHelper:
             "vendor": appl.vendor_name,
         }.items():
             if value is not None or key == "location":
-                self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+                p1_key = cast(ApplianceType, key)
+                self._appl_data[appl.dev_id][p1_key] = value
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
@@ -644,7 +630,8 @@ class SmileHelper:
             "vendor": "Plugwise",
         }.items():
             if value is not None:
-                self._appl_data[self.gateway_id].update({key: value})  # type: ignore[misc]
+                gw_key = cast(ApplianceType, key)
+                self._appl_data[self.gateway_id][gw_key] = value
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -718,7 +705,8 @@ class SmileHelper:
                 "vendor": appl.vendor_name,
             }.items():
                 if value is not None or key == "location":
-                    self._appl_data[appl.dev_id].update({key: value})  # type: ignore[misc]
+                    appl_key = cast(ApplianceType, key)
+                    self._appl_data[appl.dev_id][appl_key] = value
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
@@ -867,26 +855,50 @@ class SmileHelper:
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
-                data[measurement] = appl_p_loc.text  # type: ignore [literal-required]
-                # measurements with states "on" or "off" that need to be passed directly
-                if measurement not in ("select_dhw_mode"):
-                    data[measurement] = format_measure(  # type: ignore [literal-required]
-                        appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                    )
-
-                # Anna: save cooling-related measurements for later use
-                # Use the local outdoor temperature as reference for turning cooling on/off
-                if measurement == "cooling_activation_outdoor_temperature":
-                    self._cooling_activation_outdoor_temp = data[measurement]  # type: ignore [literal-required]
-                if measurement == "cooling_deactivation_threshold":
-                    self._cooling_deactivation_threshold = data[measurement]  # type: ignore [literal-required]
-                if measurement == "outdoor_air_temperature":
-                    self._outdoor_temp = data[measurement]  # type: ignore [literal-required]
+                match measurement:
+                    # measurements with states "on" or "off" that need to be passed directly
+                    case "select_dhw_mode":
+                        data["select_dhw_mode"] = appl_p_loc.text
+                    case _ as measurement if measurement in BINARY_SENSORS:
+                        bs_key = cast(BinarySensorType, measurement)
+                        bs_value = appl_p_loc.text in ["on", "true"]
+                        data["binary_sensors"][bs_key] = bs_value
+                    case _ as measurement if measurement in SENSORS:
+                        s_key = cast(SensorType, measurement)
+                        s_value = format_measure(
+                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                        )
+                        data["sensors"][s_key] = s_value
+                        # Anna: save cooling-related measurements for later use
+                        # Use the local outdoor temperature as reference for turning cooling on/off
+                        if measurement == "cooling_activation_outdoor_temperature":
+                            self._cooling_activation_outdoor_temp = data["sensors"][
+                                "cooling_activation_outdoor_temperature"
+                            ]
+                        if measurement == "cooling_deactivation_threshold":
+                            self._cooling_deactivation_threshold = data["sensors"][
+                                "cooling_deactivation_threshold"
+                            ]
+                        if measurement == "outdoor_air_temperature":
+                            self._outdoor_temp = data["sensors"][
+                                "outdoor_air_temperature"
+                            ]
+                    case _ as measurement if measurement in SWITCHES:
+                        sw_key = cast(SwitchType, measurement)
+                        sw_value = appl_p_loc.text in ["on", "true"]
+                        data["switches"][sw_key] = sw_value
+                    case "c_heating_state":
+                        value = appl_p_loc.text in ["on", "true"]
+                        data["c_heating_state"] = value
+                    case "elga_status_code":
+                        data["elga_status_code"] = int(appl_p_loc.text)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
-                name = f"{measurement}_interval"
-                data[name] = format_measure(appl_i_loc.text, ENERGY_WATT_HOUR)  # type: ignore [literal-required]
+                name = cast(SensorType, f"{measurement}_interval")
+                data["sensors"][name] = format_measure(
+                    appl_i_loc.text, ENERGY_WATT_HOUR
+                )
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
@@ -949,17 +961,19 @@ class SmileHelper:
                         # Rename offset to setpoint
                         key = "setpoint"
 
-                    temp_dict[key] = format_measure(function.text, TEMP_CELSIUS)  # type: ignore [literal-required]
+                    act_key = cast(ActuatorDataType, key)
+                    temp_dict[act_key] = format_measure(function.text, TEMP_CELSIUS)
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
                 # rename and remove as sensor
                 if item == DHW_SETPOINT:
                     item = "max_dhw_temperature"
-                    if DHW_SETPOINT in data:
-                        data.pop(DHW_SETPOINT)
+                    if DHW_SETPOINT in data["sensors"]:
+                        data["sensors"].pop(DHW_SETPOINT)
 
-                data[item] = temp_dict  # type: ignore [literal-required]
+                act_item = cast(ActuatorType, item)
+                data[act_item] = temp_dict
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_appliance_data().
@@ -976,16 +990,13 @@ class SmileHelper:
 
         Clean up the data dict.
         """
-        # Fix for Adam + Anna: heating_state also present under Anna, remove
-        if "temperature" in data:
-            data.pop("heating_state", None)
-
         # Don't show cooling-related when no cooling present,
         # but, keep cooling_enabled for Elga
         if not self._cooling_present:
-            for item in ("cooling_state", "cooling_ena_switch"):
-                if item in data:
-                    data.pop(item)  # type: ignore [misc]
+            if "cooling_state" in data["binary_sensors"]:
+                data["binary_sensors"].pop("cooling_state")
+            if "cooling_ena_switch" in data["switches"]:
+                data["switches"].pop("cooling_ena_switch")  # pragma: no cover
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
 
@@ -998,19 +1009,21 @@ class SmileHelper:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
             if self.smile_name == "Smile Anna":
-                data["heating_state"] = data["c_heating_state"]
+                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
             # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
             if self.smile_name == "Adam":
-                data["cooling_state"] = data["heating_state"] = False
+                data["binary_sensors"]["cooling_state"] = data["binary_sensors"][
+                    "heating_state"
+                ] = False
                 if self._cooling_enabled:
-                    data["cooling_state"] = data["c_heating_state"]
+                    data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
                 else:
-                    data["heating_state"] = data["c_heating_state"]
+                    data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
         # Anna + Elga: use central_heating_state to show heating_state
         if self._elga:
-            data["heating_state"] = data["c_heating_state"]
+            data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
     def _get_appliance_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
@@ -1018,7 +1031,7 @@ class SmileHelper:
         Collect the appliance-data based on device id.
         Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
-        data: DeviceData = {}
+        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
         if self._smile_legacy and self.smile_type == "power":
             return data
@@ -1054,27 +1067,30 @@ class SmileHelper:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
-                if "cooling_enabled" in data and data["cooling_enabled"]:
+                if (
+                    "cooling_enabled" in data["binary_sensors"]
+                    and data["binary_sensors"]["cooling_enabled"]
+                ):
                     self._cooling_present = self._cooling_enabled = True
                     data["model"] = "Generic heater/cooler"
-                    data["cooling_state"] = self._cooling_active = (
+                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                         data["elga_status_code"] == 8
                     )
                 data.pop("elga_status_code", None)
                 # Elga has no cooling-switch
-                if "cooling_ena_switch" in data:
-                    data.pop("cooling_ena_switch")
+                if "cooling_ena_switch" in data["switches"]:
+                    data["switches"].pop("cooling_ena_switch")
 
             # Loria/Thermastage: cooling-related is based on cooling_state
             # and modulation_level
             else:
-                if self._cooling_present and "cooling_state" in data:
-                    self._cooling_enabled = data["cooling_state"]
-                    self._cooling_active = data["modulation_level"] == 100
+                if self._cooling_present and "cooling_state" in data["binary_sensors"]:
+                    self._cooling_enabled = data["binary_sensors"]["cooling_state"]
+                    self._cooling_active = data["sensors"]["modulation_level"] == 100
                     # For Loria the above does not work (pw-beta issue #301)
-                    if "cooling_ena_switch" in data:
-                        self._cooling_enabled = data["cooling_ena_switch"]
-                        self._cooling_active = data["cooling_state"]
+                    if "cooling_ena_switch" in data["switches"]:
+                        self._cooling_enabled = data["switches"]["cooling_ena_switch"]
+                        self._cooling_active = data["binary_sensors"]["cooling_state"]
 
         self._cleanup_data(data)
 
@@ -1269,7 +1285,7 @@ class SmileHelper:
 
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceData = {}
+        direct_data: DeviceData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
@@ -1292,7 +1308,8 @@ class SmileHelper:
                     direct_data = power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
-                    direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                    key = cast(SensorType, loc.key_string)
+                    direct_data["sensors"][key] = loc.f_val
 
         return direct_data
 
@@ -1301,7 +1318,7 @@ class SmileHelper:
 
         Collect the power-data from MODULES (P1 legacy only).
         """
-        direct_data: DeviceData = {}
+        direct_data: DeviceData = {"sensors": {}}
         loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         peak_list: list[str] = ["nl_peak", "nl_offpeak"]
@@ -1325,7 +1342,8 @@ class SmileHelper:
                         direct_data = power_data_energy_diff(
                             loc.measurement, loc.net_string, loc.f_val, direct_data
                         )
-                        direct_data[loc.key_string] = loc.f_val  # type: ignore [literal-required]
+                        key = cast(SensorType, loc.key_string)
+                        direct_data["sensors"][key] = loc.f_val
 
         return direct_data
 
@@ -1510,14 +1528,14 @@ class SmileHelper:
         if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
-                data["lock"] = found.text == "true"
+                data["switches"]["lock"] = found.text == "true"
 
     def _get_toggle_state(
-        self, xml: etree, toggle: str, name: str, data: DeviceData
+        self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
     ) -> None:
         """Helper-function for _get_appliance_data().
 
-        Obtain the toggle state of 'toggle'.
+        Obtain the toggle state of a 'toggle' = switch.
         """
         if xml.find("type").text == "heater_central":
             locator = "./actuator_functionalities/toggle_functionality"
@@ -1525,58 +1543,8 @@ class SmileHelper:
                 for item in found:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
-                            data[name] = item.find("state").text == "on"  # type: ignore [literal-required]
-                            # Remove the cooling_enabled key when the corresponding toggle is present
+                            data["switches"][name] = item.find("state").text == "on"
+                            # Remove the cooling_enabled binary_sensor when the corresponding switch is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
-                                data.pop("cooling_enabled")
-
-    def _update_device_with_dicts(
-        self,
-        d_id: str,
-        data: DeviceData,
-        device_in: ApplianceData,
-        bs_dict: SmileBinarySensors,
-        s_dict: SmileSensors,
-        sw_dict: SmileSwitches,
-    ) -> DeviceData:
-        """Helper-function for smile.py: _all_device_data().
-
-        Move relevant data into dicts of binary_sensors, sensors, switches,
-        and add these to the output.
-        """
-        device_out: DeviceData = {}
-        for d_key, d_value in device_in.items():
-            device_out.update({d_key: d_value})  # type: ignore [misc]
-        for key, value in list(data.items()):
-            for item in BINARY_SENSORS:
-                if item == key:
-                    data.pop(key)  # type: ignore [misc]
-                    if self._opentherm_device or self._on_off_device:
-                        bs_dict[key] = value  # type: ignore[literal-required]
-            for item in SENSORS:
-                # Filter for actuator_functionalities, they are not sensors
-                if item == key and not isinstance(value, dict):
-                    data.pop(key)  # type: ignore [misc]
-                    s_dict[key] = value  # type: ignore[literal-required]
-            for item in SWITCHES:
-                if item == key:
-                    data.pop(key)  # type: ignore [misc]
-                    sw_dict[key] = value  # type: ignore[literal-required]
-
-        # Add plugwise notification binary_sensor to the relevant gateway
-        if d_id == self.gateway_id:
-            if self._is_thermostat or (
-                not self._smile_legacy and self.smile_type == "power"
-            ):
-                bs_dict["plugwise_notification"] = False
-
-        device_out.update(data)
-        if bs_dict:
-            device_out["binary_sensors"] = bs_dict
-        if s_dict:
-            device_out["sensors"] = s_dict
-        if sw_dict:
-            device_out["switches"] = sw_dict
-
-        return device_out
+                                data["binary_sensors"].pop("cooling_enabled")

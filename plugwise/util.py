@@ -20,42 +20,34 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure: str, unit: str) -> float | int | bool:
+def format_measure(measure: str, unit: str) -> float | int:
     """Format measure to correct type."""
-    # TODO: handle with appropriate care 20220405
-    # continuously reassigning the same value with different type isn't
-    # to typings liking
-    result: int | float | bool = False
+    result: float | int = 0
     try:
         result = int(measure)
         if unit == TEMP_CELSIUS:
             result = float(measure)
     except ValueError:
-        try:
-            float_measure = float(measure)
-            if unit == PERCENTAGE:
-                if 0 < float_measure <= 1:
-                    return int(float_measure * 100)
+        float_measure = float(measure)
+        if unit == PERCENTAGE:
+            if 0 < float_measure <= 1:
+                return int(float_measure * 100)
 
-            if unit == ENERGY_KILO_WATT_HOUR:
-                float_measure = float_measure / 1000
+        if unit == ENERGY_KILO_WATT_HOUR:
+            float_measure = float_measure / 1000
 
-            if unit in SPECIAL_FORMAT:
-                result = float(f"{round(float_measure, 3):.3f}")
-            elif unit == ELECTRIC_POTENTIAL_VOLT:
+        if unit in SPECIAL_FORMAT:
+            result = float(f"{round(float_measure, 3):.3f}")
+        elif unit == ELECTRIC_POTENTIAL_VOLT:
+            result = float(f"{round(float_measure, 1):.1f}")
+        else:
+            if abs(float_measure) < 10:
+                result = float(f"{round(float_measure, 2):.2f}")
+            elif abs(float_measure) >= 10 and abs(float_measure) < 100:
                 result = float(f"{round(float_measure, 1):.1f}")
-            else:
-                if abs(float_measure) < 10:
-                    result = float(f"{round(float_measure, 2):.2f}")
-                elif abs(float_measure) >= 10 and abs(float_measure) < 100:
-                    result = float(f"{round(float_measure, 1):.1f}")
-                elif abs(float_measure) >= 100:
-                    result = int(round(float_measure))
-        except ValueError:
-            if measure in ["on", "true"]:
-                result = True
-            if measure in ["off", "false"]:
-                result = False
+            elif abs(float_measure) >= 100:
+                result = int(round(float_measure))
+
     return result
 
 

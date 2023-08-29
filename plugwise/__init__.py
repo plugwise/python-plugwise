@@ -4,6 +4,8 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
+from typing import cast
+
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -35,9 +37,6 @@ from .constants import (
     ApplianceData,
     DeviceData,
     PlugwiseData,
-    SmileBinarySensors,
-    SmileSensors,
-    SmileSwitches,
 )
 from .exceptions import (
     InvalidSetupError,
@@ -45,7 +44,19 @@ from .exceptions import (
     ResponseError,
     UnsupportedDeviceError,
 )
-from .helper import SmileComm, SmileHelper, update_helper
+from .helper import SmileComm, SmileHelper
+
+
+def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
+    """Helper-function for removing any empty platform dicts."""
+    if not data["binary_sensors"]:
+        data.pop("binary_sensors")
+    if not data["sensors"]:
+        data.pop("sensors")
+    if not data["switches"]:
+        data.pop("switches")
+
+    return data
 
 
 class SmileData(SmileHelper):
@@ -82,17 +93,23 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._appl_data.items():
-            bs_dict: SmileBinarySensors = {}
-            s_dict: SmileSensors = {}
-            sw_dict: SmileSwitches = {}
+            self.gw_devices.update({device_id: cast(DeviceData, device)})
+
             data = self._get_device_data(device_id)
-            self.gw_devices[device_id] = self._update_device_with_dicts(
-                device_id, data, device, bs_dict, s_dict, sw_dict
-            )
+            # Add plugwise notification binary_sensor to the relevant gateway
+            if device_id == self.gateway_id and (
+                self._is_thermostat
+                or (not self._smile_legacy and self.smile_type == "power")
+            ):
+                data["binary_sensors"]["plugwise_notification"] = False
+
+            self.gw_devices[device_id].update(data)
 
             # Update for cooling
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(self.gw_devices[device_id])
+
+            remove_empty_platform_dicts(self.gw_devices[device_id])
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -153,10 +170,10 @@ class SmileData(SmileHelper):
             counter = 0
             for member in details["members"]:
                 member_data = self._get_appliance_data(member)
-                if member_data.get("relay"):
+                if member_data["switches"].get("relay"):
                     counter += 1
 
-            device_data["relay"] = counter != 0
+            device_data["switches"]["relay"] = counter != 0
 
         return device_data
 
@@ -174,7 +191,7 @@ class SmileData(SmileHelper):
             and self._on_off_device
             and self._heating_valves() is not None
         ):
-            device_data["heating_state"] = self._heating_valves() != 0
+            device_data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
         return device_data
 
@@ -275,7 +292,7 @@ class SmileData(SmileHelper):
                 self._home_location, "outdoor_temperature"
             )
             if outdoor_temperature is not None:
-                device_data["outdoor_temperature"] = outdoor_temperature
+                device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
 
             # Show the allowed regulation modes
             if self._reg_allowed_modes:
@@ -519,31 +536,23 @@ class Smile(SmileComm, SmileData):
 
         self.gw_data["notifications"] = self._notifications
 
-        for dev_id, dev_dict in self.gw_devices.items():
-            data = self._get_device_data(dev_id)
-            for key, value in data.items():
-                if key in dev_dict:
-                    dev_dict[key] = value  # type: ignore [literal-required]
+        for device_id, device in self.gw_devices.items():
+            data = self._get_device_data(device_id)
+            if (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
+            ):
+                data["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
 
-            for item in ("binary_sensors", "sensors", "switches"):
-                notifs: dict[str, dict[str, str]] = {}
-                if item == "binary_sensors":
-                    notifs = self._notifications
-                if item in dev_dict:
-                    for key in data:
-                        update_helper(
-                            data,
-                            self.gw_devices,
-                            dev_dict,
-                            dev_id,
-                            item,
-                            key,
-                            notifs,
-                        )
+            device.update(data)
 
             # Update for cooling
-            if dev_dict["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(dev_dict)
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(device)
+
+            remove_empty_platform_dicts(device)
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
