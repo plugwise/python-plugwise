@@ -47,6 +47,18 @@ from .exceptions import (
 from .helper import SmileComm, SmileHelper
 
 
+def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
+    """Helper-function for removing any empty platform dicts."""
+    if not data["binary_sensors"]:
+        data.pop("binary_sensors")
+    if not data["sensors"]:
+        data.pop("sensors")
+    if not data["switches"]:
+        data.pop("switches")
+
+    return data
+
+
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
@@ -97,12 +109,7 @@ class SmileData(SmileHelper):
             if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(self.gw_devices[device_id])
 
-            if not self.gw_devices[device_id]["binary_sensors"]:
-                self.gw_devices[device_id].pop("binary_sensors")
-            if not self.gw_devices[device_id]["sensors"]:
-                self.gw_devices[device_id].pop("sensors")
-            if not self.gw_devices[device_id]["switches"]:
-                self.gw_devices[device_id].pop("switches")
+            remove_empty_platform_dicts(self.gw_devices[device_id])
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -545,12 +552,7 @@ class Smile(SmileComm, SmileData):
             if device["dev_class"] in ZONE_THERMOSTATS:
                 self.update_for_cooling(device)
 
-            if not device["binary_sensors"]:
-                device.pop("binary_sensors")
-            if not device["sensors"]:
-                device.pop("sensors")
-            if not device["switches"]:
-                device.pop("switches")
+            remove_empty_platform_dicts(device)
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
