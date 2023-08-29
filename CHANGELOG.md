@@ -6,6 +6,7 @@
 - Fix an apparent notification-bug for p1v4.
 - Improve typing: fix all type-ignores.
 - Clean up no longer used code.
+- Remove support for python3.9.
 
 ## v0.32.0: New Feature: add support for changing the temperature offset on a supported thermostat device
 
