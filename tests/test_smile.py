@@ -1754,7 +1754,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": 15.0,
                     "battery": 99,
                     "temperature_difference": 2.3,
-                    "uncorrected_temperature": 19.3,
+                    "uncorrected_temperature": 21.6,
                     "valve_position": 0.0,
                 },
             },
@@ -1845,7 +1845,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.device_items == 147
+        assert self.device_items == 148
 
         result = await self.tinker_thermostat(
             smile,
@@ -1957,7 +1957,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 26.2,
                     "setpoint": 21.5,
                     "temperature_difference": 3.7,
-                    "uncorrected_temperature": 22.5,
+                    "uncorrected_temperature": 26.0,
                     "valve_position": 0.0,
                 },
             },
@@ -1976,7 +1976,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": 13.0,
                     "battery": 62,
                     "temperature_difference": -0.1,
-                    "uncorrected_temperature": 17.2,
+                    "uncorrected_temperature": 17.1,
                     "valve_position": 0.0,
                 },
             },
@@ -2201,7 +2201,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": 14.0,
                     "battery": 51,
                     "temperature_difference": -0.3,
-                    "uncorrected_temperature": 19.4,
+                    "uncorrected_temperature": 19.1,
                     "valve_position": 0.0,
                 },
             },
@@ -2285,7 +2285,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": 5.5,
                     "battery": 68,
                     "temperature_difference": 0.1,
-                    "uncorrected_temperature": 15.7,
+                    "uncorrected_temperature": 15.6,
                     "valve_position": 0.0,
                 },
             },
@@ -2305,7 +2305,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        assert self.device_items == 320
+        assert self.device_items == 325
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -2399,7 +2399,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 26.0,
                     "setpoint": 21.5,
                     "temperature_difference": 3.5,
-                    "uncorrected_temperature": 22.5,
+                    "uncorrected_temperature": 25.9,
                     "valve_position": 100,
                 },
             },
@@ -2418,7 +2418,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": 13.0,
                     "battery": 62,
                     "temperature_difference": -0.2,
-                    "uncorrected_temperature": 17.4,
+                    "uncorrected_temperature": 17.2,
                     "valve_position": 0.0,
                 },
             },
@@ -2481,7 +2481,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": 15.0,
                     "battery": 62,
                     "temperature_difference": 0.1,
-                    "uncorrected_temperature": 17.0,
+                    "uncorrected_temperature": 17.1,
                     "valve_position": 0.0,
                 },
             },
@@ -2644,7 +2644,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": 14.0,
                     "battery": 51,
                     "temperature_difference": -0.4,
-                    "uncorrected_temperature": 19.5,
+                    "uncorrected_temperature": 19.1,
                     "valve_position": 0.0,
                 },
             },
@@ -2747,7 +2747,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, testdata)
-        assert self.device_items == 320
+        assert self.device_items == 325
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -3407,7 +3407,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 24.0,
                     "setpoint": 9.0,
                     "temperature_difference": 1.8,
-                    "uncorrected_temperature": 22.2,
+                    "uncorrected_temperature": 24.0,
                     "valve_position": 100,
                 },
             },
@@ -3480,7 +3480,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 28.7,
                     "setpoint": 13.0,
                     "temperature_difference": 1.9,
-                    "uncorrected_temperature": 26.8,
+                    "uncorrected_temperature": 28.7,
                     "valve_position": 0.0,
                 },
             },
@@ -3498,7 +3498,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 24.3,
                     "setpoint": 13.0,
                     "temperature_difference": 1.7,
-                    "uncorrected_temperature": 22.6,
+                    "uncorrected_temperature": 24.3,
                     "valve_position": 0.0,
                 },
             },
@@ -3531,7 +3531,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "temperature": 28.8,
                     "setpoint": 13.0,
                     "temperature_difference": 2.0,
-                    "uncorrected_temperature": 26.0,
+                    "uncorrected_temperature": 28.8,
                     "valve_position": 0.0,
                 },
             },
@@ -3553,7 +3553,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert self.device_items == 223
+        assert self.device_items == 227
 
         # Negative test
         result = await self.tinker_thermostat(
