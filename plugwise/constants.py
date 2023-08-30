@@ -189,6 +189,7 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # Specific for a Lisa a Tom/Floor
     "battery": UOM(PERCENTAGE),
     "temperature_difference": UOM(DEGREE),
+    "uncorrected_temperature": UOM(DEGREE),
     "valve_position": UOM(PERCENTAGE),
     # Specific for a Jip
     "humidity": UOM(PERCENTAGE),
@@ -348,6 +349,7 @@ SensorType = Literal[
     "setpoint_high",
     "setpoint_low",
     "temperature_difference",
+    "uncorrected_temperature",
     "valve_position",
     "voltage_phase_one",
     "voltage_phase_two",
@@ -465,6 +467,7 @@ class SmileSensors(TypedDict, total=False):
     setpoint_high: float
     setpoint_low: float
     temperature_difference: float
+    uncorrected_temperature: float
     valve_position: float
     voltage_phase_one: float
     voltage_phase_two: float
