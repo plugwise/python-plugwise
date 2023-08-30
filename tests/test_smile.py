@@ -5190,7 +5190,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Gateway",
                 "name": "Smile P1",
                 "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
+                "binary_sensors": {"plugwise_notification": True},
             },
             "b82b6b3322484f2ea4e25e0bd5f3d61f": {
                 "dev_class": "smartmeter",
@@ -5198,7 +5198,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "XMX5LGF0010453051839",
                 "name": "P1",
                 "vendor": "XEMEX NV",
-                "available": True,
+                "available": False,
                 "sensors": {
                     "net_electricity_point": 5553,
                     "electricity_consumed_peak_point": 0,
@@ -5244,7 +5244,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"
         assert self.device_items == 40
-        assert not self.notifications
+        assert self.notifications
 
         await smile.close_connection()
         await self.disconnect(server, client)
