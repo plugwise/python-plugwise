@@ -366,21 +366,6 @@ SwitchType = Literal[
 SWITCHES: Final[tuple[str, ...]] = get_args(SwitchType)
 
 
-class ApplianceData(TypedDict, total=False):
-    """The Appliance Data class."""
-
-    dev_class: str
-    firmware: str | None
-    hardware: str
-    location: str
-    mac_address: str | None
-    members: list[str]
-    model: str
-    name: str
-    vendor: str
-    zigbee_mac_address: str | None
-
-
 class GatewayData(TypedDict, total=False):
     """The Gateway Data class."""
 
@@ -503,7 +488,6 @@ class ActuatorData(TypedDict, total=False):
 
 
 class DeviceData(
-    ApplianceData,
     SmileBinarySensors,
     SmileSensors,
     SmileSwitches,
@@ -511,6 +495,18 @@ class DeviceData(
     total=False,
 ):
     """The Device Data class, covering the collected and ordered output-data per device."""
+
+    # Appliance base data
+    dev_class: str
+    firmware: str | None
+    hardware: str
+    location: str
+    mac_address: str | None
+    members: list[str]
+    model: str
+    name: str
+    vendor: str
+    zigbee_mac_address: str | None
 
     # Loria
     select_dhw_mode: str
