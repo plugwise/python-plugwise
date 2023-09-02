@@ -3,6 +3,7 @@
 ## Ongoing
 
 - Extend p1v4_442_triple userdata to include a Plugwise notification, extending the related fixture which is used in PW-beta and Core Plugwise.
+- Optimize and rearrange typing-related constants, implement and cleanup.
 
 ## v0.32.1 Improve typing, bugfix
 
