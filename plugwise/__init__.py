@@ -4,8 +4,6 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-from typing import cast
-
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -34,7 +32,6 @@ from .constants import (
     SYSTEM,
     ZONE_THERMOSTATS,
     ActuatorData,
-    ApplianceData,
     DeviceData,
     PlugwiseData,
 )
@@ -93,7 +90,7 @@ class SmileData(SmileHelper):
         Collect initial data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._appl_data.items():
-            self.gw_devices.update({device_id: cast(DeviceData, device)})
+            self.gw_devices.update({device_id: device})
 
             data = self._get_device_data(device_id)
             # Add plugwise notification binary_sensor to the relevant gateway
@@ -160,7 +157,7 @@ class SmileData(SmileHelper):
         self._all_device_data()
 
     def _device_data_switching_group(
-        self, details: ApplianceData, device_data: DeviceData
+        self, details: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
@@ -178,7 +175,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_adam(
-        self, details: ApplianceData, device_data: DeviceData
+        self, details: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
@@ -196,7 +193,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_climate(
-        self, details: ApplianceData, device_data: DeviceData
+        self, details: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
@@ -249,7 +246,7 @@ class SmileData(SmileHelper):
         return device_data
 
     def _check_availability(
-        self, details: ApplianceData, device_data: DeviceData
+        self, details: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 

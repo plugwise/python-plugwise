@@ -54,7 +54,6 @@ from .constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    ApplianceData,
     ApplianceType,
     BinarySensorType,
     DeviceData,
@@ -309,7 +308,7 @@ class SmileHelper:
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._appliances: etree
-        self._appl_data: dict[str, ApplianceData] = {}
+        self._appl_data: dict[str, DeviceData] = {}
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
@@ -1101,7 +1100,7 @@ class SmileHelper:
         thermo_matching: dict[str, int],
         loc_id: str,
         appliance_id: str,
-        appliance_details: ApplianceData,
+        appliance_details: DeviceData,
     ) -> None:
         """Helper-function for _scan_thermostats().
 
@@ -1176,12 +1175,12 @@ class SmileHelper:
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self) -> dict[str, ApplianceData]:
+    def _group_switches(self) -> dict[str, DeviceData]:
         """Helper-function for smile.py: get_all_devices().
 
         Collect switching- or pump-group info.
         """
-        switch_groups: dict[str, ApplianceData] = {}
+        switch_groups: dict[str, DeviceData] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile_name == "Smile Anna":
             return switch_groups
