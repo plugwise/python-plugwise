@@ -517,31 +517,31 @@ class DeviceData(
     regulation_modes: list[str]
 
     # Master Thermostats
-    preset_modes: list[str] | None
+    # Presets:
     active_preset: str | None
-
+    preset_modes: list[str] | None
+    # Schedules:
     available_schedules: list[str]
-    select_schedule: str
     last_used: str | None
+    select_schedule: str
 
     mode: str
-
     # Extra for Adam Master Thermostats
     control_state: str | bool
 
     # For temporary use
     c_heating_state: bool
-    modified: str
 
     # Device availability
     available: bool | None
 
+    # Dict-types
     binary_sensors: SmileBinarySensors
     max_dhw_temperature: ActuatorData
     maximum_boiler_temperature: ActuatorData
-    temperature_offset: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
+    temperature_offset: ActuatorData
     thermostat: ActuatorData
 
 
