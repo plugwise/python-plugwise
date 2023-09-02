@@ -487,13 +487,7 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class DeviceData(
-    SmileBinarySensors,
-    SmileSensors,
-    SmileSwitches,
-    TypedDict,
-    total=False,
-):
+class DeviceData(TypedDict, total=False):
     """The Device Data class, covering the collected and ordered output-data per device."""
 
     # Appliance base data
@@ -507,6 +501,12 @@ class DeviceData(
     name: str
     vendor: str
     zigbee_mac_address: str | None
+
+    # For temporary use
+    c_heating_state: bool
+
+    # Device availability
+    available: bool | None
 
     # Loria
     select_dhw_mode: str
@@ -528,12 +528,6 @@ class DeviceData(
     mode: str
     # Extra for Adam Master Thermostats
     control_state: str | bool
-
-    # For temporary use
-    c_heating_state: bool
-
-    # Device availability
-    available: bool | None
 
     # Dict-types
     binary_sensors: SmileBinarySensors
