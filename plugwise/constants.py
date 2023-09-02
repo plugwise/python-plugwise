@@ -503,6 +503,9 @@ class DeviceData(TypedDict, total=False):
     zigbee_mac_address: str | None
 
     # For temporary use
+    cooling_enabled: bool
+    domestic_hot_water_setpoint: float
+    elga_status_code: int
     c_heating_state: bool
 
     # Device availability
