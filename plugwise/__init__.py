@@ -148,7 +148,7 @@ class SmileData(SmileHelper):
         if details["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in details["members"]:
-                member_data = self._get_appliance_data(member)
+                member_data = self._get_measurement_data(member)
                 if member_data["switches"].get("relay"):
                     counter += 1
 
