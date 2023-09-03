@@ -87,7 +87,7 @@ class SmileData(SmileHelper):
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
 
-        Collect initial data for each device and add to self.gw_data and self.gw_devices.
+        Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         for device_id, device in self._appl_data.items():
             self.gw_devices.update({device_id: device})
@@ -122,38 +122,20 @@ class SmileData(SmileHelper):
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
         """
-        # Start by determining the system capabilities:
-        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
+        # Gather all the devices and their initial data
+        self._all_appliances()
         if self.smile_type == "thermostat":
-            onoff_boiler: etree = self._domain_objects.find(
-                "./module/protocols/onoff_boiler"
-            )
-            open_therm_boiler: etree = self._domain_objects.find(
-                "./module/protocols/open_therm_boiler"
-            )
-            self._on_off_device = onoff_boiler is not None
-            self._opentherm_device = open_therm_boiler is not None
-
-            # Determine the presence of special features
-            locator_1 = "./gateway/features/cooling"
-            locator_2 = "./gateway/features/elga_support"
-            search = self._domain_objects
-            if search.find(locator_1) is not None:
-                self._cooling_present = True
-            if search.find(locator_2) is not None:
-                self._elga = True
-
+            self._scan_thermostats()
+            # Collect a list of thermostats with offset-capability
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
 
-        # Gather all the device and initial data
-        self._scan_thermostats()
-
+        # Collect switching- or pump-group data
         if group_data := self._group_switches():
             self._appl_data.update(group_data)
 
-        # Collect data for each device via helper function
+        # Collect the remaining data for all device
         self._all_device_data()
 
     def _device_data_switching_group(
@@ -484,7 +466,25 @@ class Smile(SmileComm, SmileData):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-        self._is_thermostat = self.smile_type == "thermostat"
+        if self.smile_type == "thermostat":
+            self._is_thermostat = True
+            # For Adam, Anna, determine the system capabilities:
+            # Find the connected heating/cooling device (heater_central),
+            # e.g. heat-pump or gas-fired heater
+            onoff_boiler: etree = result.find("./module/protocols/onoff_boiler")
+            open_therm_boiler: etree = result.find(
+                "./module/protocols/open_therm_boiler"
+            )
+            self._on_off_device = onoff_boiler is not None
+            self._opentherm_device = open_therm_boiler is not None
+
+            # Determine the presence of special features
+            locator_1 = "./gateway/features/cooling"
+            locator_2 = "./gateway/features/elga_support"
+            if result.find(locator_1) is not None:
+                self._cooling_present = True
+            if result.find(locator_2) is not None:
+                self._elga = True
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""

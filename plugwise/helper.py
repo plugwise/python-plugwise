@@ -1128,10 +1128,6 @@ class SmileHelper:
         Update locations with thermostat ranking results and use
         the result to update the device_class of slave thermostats.
         """
-        self._all_appliances()
-        if self.smile_type != "thermostat":
-            return
-
         self._thermo_locs = self._match_locations()
 
         thermo_matching: dict[str, int] = {
