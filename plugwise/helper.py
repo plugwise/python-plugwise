@@ -836,7 +836,7 @@ class SmileHelper:
         data: DeviceData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
-        """Helper-function for _get_appliance_data() - collect appliance measurement data."""
+        """Helper-function for _get_measurement_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
@@ -900,7 +900,7 @@ class SmileHelper:
                 )
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Collect the availablity-status for wireless connected devices.
         """
@@ -930,7 +930,7 @@ class SmileHelper:
         return therm_list
 
     def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data()."""
+        """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             if item == "max_dhw_temperature":
                 continue
@@ -975,7 +975,7 @@ class SmileHelper:
                 data[act_item] = temp_dict
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Collect the gateway regulation_mode.
         """
@@ -985,7 +985,7 @@ class SmileHelper:
             self._cooling_enabled = search.find("mode").text == "cooling"
 
     def _cleanup_data(self, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Clean up the data dict.
         """
@@ -1000,7 +1000,7 @@ class SmileHelper:
                 data.pop("cooling_enabled")  # pragma: no cover
 
     def _process_c_heating_state(self, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Process the central_heating_state value.
         """
@@ -1024,7 +1024,7 @@ class SmileHelper:
         if self._elga:
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
-    def _get_appliance_data(self, d_id: str) -> DeviceData:
+    def _get_measurement_data(self, d_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the appliance-data based on device id.
@@ -1518,7 +1518,7 @@ class SmileHelper:
         return val
 
     def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Adam & Stretches: obtain the relay-switch lock state.
         """
@@ -1535,7 +1535,7 @@ class SmileHelper:
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
     ) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Obtain the toggle state of a 'toggle' = switch.
         """

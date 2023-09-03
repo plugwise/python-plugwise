@@ -258,7 +258,7 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         details = self._appl_data[dev_id]
-        device_data = self._get_appliance_data(dev_id)
+        device_data = self._get_measurement_data(dev_id)
         # Remove thermostat-dict for thermo_sensors
         if details["dev_class"] == "thermo_sensor":
             device_data.pop("thermostat")
