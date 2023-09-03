@@ -31,29 +31,6 @@ UNIT_LUMEN: Final = "lm"
 VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
-ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
-    "heater_central",
-    "thermostat",
-    "thermostatic_radiator_valve",
-    "zone_thermometer",
-    "zone_thermostat",
-)
-ActuatorType = Literal[
-    "domestic_hot_water_setpoint",
-    "max_dhw_temperature",
-    "maximum_boiler_temperature",
-    "temperature_offset",
-    "thermostat",
-]
-ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
-ActuatorDataType = Literal[
-    "lower_bound",
-    "resolution",
-    "setpoint",
-    "setpoint_high",
-    "setpoint_low",
-    "upper_bound",
-]
 DAYS: Final[dict[str, int]] = {
     "mo": 0,
     "tu": 1,
@@ -108,36 +85,10 @@ HW_MODELS: Final[dict[str, str]] = {
     "070051": "Switch",
     "080029": "Switch",
 }
-LIMITS: Final[tuple[str, ...]] = (
-    "offset",
-    "setpoint",
-    "resolution",
-    "lower_bound",
-    "upper_bound",
-)
+
 MAX_SETPOINT: Final[float] = 30.0
 MIN_SETPOINT: Final[float] = 4.0
 NONE: Final = "None"
-SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
-SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
-ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
-    "thermostat",
-    "thermostatic_radiator_valve",
-    "zone_thermometer",
-    "zone_thermostat",
-)
-THERMOSTAT_CLASSES: Final[tuple[str, ...]] = (
-    "thermostat",
-    "thermo_sensor",
-    "zone_thermometer",
-    "zone_thermostat",
-    "thermostatic_radiator_valve",
-)
-SPECIAL_PLUG_TYPES: Final[tuple[str, ...]] = (
-    "central_heating_pump",
-    "valve_actuator",
-    "heater_electric",
-)
 
 # XML data paths
 APPLIANCES: Final = "/core/appliances"
@@ -151,6 +102,7 @@ STATUS: Final = "/system/status.xml"
 
 UOM = namedtuple("UOM", "unit_of_measurement")
 DATA = namedtuple("DATA", "name unit_of_measurement")
+
 # P1 related measurements:
 P1_MEASUREMENTS: Final[dict[str, UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
@@ -234,15 +186,6 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
 }
 
-ToggleNameType = Literal[
-    "cooling_ena_switch",
-    "dhw_cm_switch",
-]
-TOGGLES: Final[dict[str, ToggleNameType]] = {
-    "cooling_enabled": "cooling_ena_switch",
-    "domestic_hot_water_comfort_mode": "dhw_cm_switch",
-}
-
 # Known types of Smiles and Stretches
 SMILE = namedtuple("SMILE", "smile_type smile_name")
 SMILES: Final[dict[str, SMILE]] = {
@@ -258,7 +201,32 @@ SMILES: Final[dict[str, SMILE]] = {
     "stretch_v3": SMILE("stretch", "Stretch"),
 }
 
-# All available Binary Sensor, Sensor, and Switch Types
+# Class, Literal and related tuple-definitions
+
+ACTUATOR_CLASSES: Final[tuple[str, ...]] = (
+    "heater_central",
+    "thermostat",
+    "thermostatic_radiator_valve",
+    "zone_thermometer",
+    "zone_thermostat",
+)
+ActuatorType = Literal[
+    "domestic_hot_water_setpoint",
+    "max_dhw_temperature",
+    "maximum_boiler_temperature",
+    "temperature_offset",
+    "thermostat",
+]
+ACTIVE_ACTUATORS: Final[tuple[str, ...]] = get_args(ActuatorType)
+
+ActuatorDataType = Literal[
+    "lower_bound",
+    "resolution",
+    "setpoint",
+    "setpoint_high",
+    "setpoint_low",
+    "upper_bound",
+]
 
 ApplianceType = Literal[
     "dev_class",
@@ -290,6 +258,14 @@ NumberType = Literal[
     "max_dhw_temperature",
     "temperature_offset",
 ]
+
+LIMITS: Final[tuple[str, ...]] = (
+    "offset",
+    "setpoint",
+    "resolution",
+    "lower_bound",
+    "upper_bound",
+)
 
 SelectType = Literal[
     "select_dhw_mode",
@@ -357,6 +333,14 @@ SensorType = Literal[
 ]
 SENSORS: Final[tuple[str, ...]] = get_args(SensorType)
 
+SPECIAL_PLUG_TYPES: Final[tuple[str, ...]] = (
+    "central_heating_pump",
+    "valve_actuator",
+    "heater_electric",
+)
+
+SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
+
 SwitchType = Literal[
     "cooling_ena_switch",
     "dhw_cm_switch",
@@ -365,20 +349,31 @@ SwitchType = Literal[
 ]
 SWITCHES: Final[tuple[str, ...]] = get_args(SwitchType)
 
+SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
 
-class ApplianceData(TypedDict, total=False):
-    """The Appliance Data class."""
+THERMOSTAT_CLASSES: Final[tuple[str, ...]] = (
+    "thermostat",
+    "thermo_sensor",
+    "zone_thermometer",
+    "zone_thermostat",
+    "thermostatic_radiator_valve",
+)
 
-    dev_class: str
-    firmware: str | None
-    hardware: str
-    location: str
-    mac_address: str | None
-    members: list[str]
-    model: str
-    name: str
-    vendor: str
-    zigbee_mac_address: str | None
+ToggleNameType = Literal[
+    "cooling_ena_switch",
+    "dhw_cm_switch",
+]
+TOGGLES: Final[dict[str, ToggleNameType]] = {
+    "cooling_enabled": "cooling_ena_switch",
+    "domestic_hot_water_comfort_mode": "dhw_cm_switch",
+}
+
+ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
+    "thermostat",
+    "thermostatic_radiator_valve",
+    "zone_thermometer",
+    "zone_thermostat",
+)
 
 
 class GatewayData(TypedDict, total=False):
@@ -449,7 +444,6 @@ class SmileSensors(TypedDict, total=False):
     electricity_produced_peak_interval: int
     electricity_produced_peak_point: int
     electricity_produced_point: float
-    elga_status_code: int
     gas_consumed_cumulative: float
     gas_consumed_interval: float
     humidity: float
@@ -502,15 +496,29 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class DeviceData(
-    ApplianceData,
-    SmileBinarySensors,
-    SmileSensors,
-    SmileSwitches,
-    TypedDict,
-    total=False,
-):
+class DeviceData(TypedDict, total=False):
     """The Device Data class, covering the collected and ordered output-data per device."""
+
+    # Appliance base data
+    dev_class: str
+    firmware: str | None
+    hardware: str
+    location: str
+    mac_address: str | None
+    members: list[str]
+    model: str
+    name: str
+    vendor: str
+    zigbee_mac_address: str | None
+
+    # For temporary use
+    cooling_enabled: bool
+    domestic_hot_water_setpoint: float
+    elga_status_code: int
+    c_heating_state: bool
+
+    # Device availability
+    available: bool | None
 
     # Loria
     select_dhw_mode: str
@@ -521,31 +529,25 @@ class DeviceData(
     regulation_modes: list[str]
 
     # Master Thermostats
-    preset_modes: list[str] | None
+    # Presets:
     active_preset: str | None
-
+    preset_modes: list[str] | None
+    # Schedules:
     available_schedules: list[str]
-    select_schedule: str
     last_used: str | None
+    select_schedule: str
 
     mode: str
-
     # Extra for Adam Master Thermostats
     control_state: str | bool
 
-    # For temporary use
-    c_heating_state: bool
-    modified: str
-
-    # Device availability
-    available: bool | None
-
+    # Dict-types
     binary_sensors: SmileBinarySensors
     max_dhw_temperature: ActuatorData
     maximum_boiler_temperature: ActuatorData
-    temperature_offset: ActuatorData
     sensors: SmileSensors
     switches: SmileSwitches
+    temperature_offset: ActuatorData
     thermostat: ActuatorData
 
 
