@@ -1028,13 +1028,20 @@ class SmileHelper:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the appliance-data based on device id.
-        Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
-        if self._smile_legacy and self.smile_type == "power":
+        # Get P1 smartmeter data from LOCATIONS or MODULES
+        if self.smile_type == "power":
+            details = self._appl_data[d_id]
+            if details["dev_class"] == "smartmeter":
+                if not self._smile_legacy:
+                    data.update(self._power_data_from_location(details["location"]))
+                else:
+                    data.update(self._power_data_from_modules())
+
             return data
 
+        # Get non-p1 data from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         measurements = DEVICE_MEASUREMENTS
         if d_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
