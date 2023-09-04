@@ -1031,10 +1031,10 @@ class SmileHelper:
         data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS or MODULES
         if self.smile_type == "power":
-            details = self.gw_devices[d_id]
-            if details["dev_class"] == "smartmeter":
+            device = self.gw_devices[d_id]
+            if device["dev_class"] == "smartmeter":
                 if not self._smile_legacy:
-                    data.update(self._power_data_from_location(details["location"]))
+                    data.update(self._power_data_from_location(device["location"]))
                 else:
                     data.update(self._power_data_from_modules())
 
@@ -1144,15 +1144,15 @@ class SmileHelper:
         }
 
         for loc_id in self._thermo_locs:
-            for appl_id, details in self.gw_devices.items():
-                self._rank_thermostat(thermo_matching, loc_id, appl_id, details)
+            for dev_id, device in self.gw_devices.items():
+                self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
 
         # Update slave thermostat class where needed
-        for appl_id, details in self.gw_devices.items():
-            if (loc_id := details["location"]) in self._thermo_locs:
+        for dev_id, device in self.gw_devices.items():
+            if (loc_id := device["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
-                if "slaves" in tl_loc_id and appl_id in tl_loc_id["slaves"]:
-                    details["dev_class"] = "thermo_sensor"
+                if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
+                    device["dev_class"] = "thermo_sensor"
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().
