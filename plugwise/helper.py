@@ -1023,7 +1023,7 @@ class SmileHelper:
         if self._elga:
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
-    def _get_measurement_data(self, d_id: str) -> DeviceData:
+    def _get_measurement_data(self, dev_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the appliance-data based on device id.
@@ -1031,7 +1031,7 @@ class SmileHelper:
         data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS or MODULES
         if self.smile_type == "power":
-            device = self.gw_devices[d_id]
+            device = self.gw_devices[dev_id]
             if device["dev_class"] == "smartmeter":
                 if not self._smile_legacy:
                     data.update(self._power_data_from_location(device["location"]))
@@ -1042,11 +1042,11 @@ class SmileHelper:
 
         # Get non-p1 data from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         measurements = DEVICE_MEASUREMENTS
-        if d_id == self._heater_id:
+        if dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
 
         if (
-            appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
+            appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
         ) is not None:
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
@@ -1060,7 +1060,7 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-        if d_id == self.gateway_id and self.smile_name == "Adam":
+        if dev_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
         if "c_heating_state" in data:
@@ -1068,7 +1068,7 @@ class SmileHelper:
             # Remove c_heating_state after processing
             data.pop("c_heating_state")
 
-        if d_id == self._heater_id and self.smile_name == "Smile Anna":
+        if dev_id == self._heater_id and self.smile_name == "Smile Anna":
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
