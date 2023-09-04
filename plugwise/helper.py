@@ -308,7 +308,6 @@ class SmileHelper:
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._appliances: etree
-        self._appl_data: dict[str, DeviceData] = {}
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
@@ -593,7 +592,7 @@ class SmileHelper:
         location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(location, appl)
 
-        self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
+        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
 
         for key, value in {
             "firmware": appl.firmware,
@@ -607,7 +606,7 @@ class SmileHelper:
         }.items():
             if value is not None or key == "location":
                 p1_key = cast(ApplianceType, key)
-                self._appl_data[appl.dev_id][p1_key] = value
+                self.gw_devices[appl.dev_id][p1_key] = value
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
@@ -618,7 +617,7 @@ class SmileHelper:
         if self.smile_type == "power":
             self.gateway_id = FAKE_APPL
 
-        self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
+        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
         for key, value in {
             "firmware": self.smile_fw_version,
             "location": self._home_location,
@@ -630,7 +629,7 @@ class SmileHelper:
         }.items():
             if value is not None:
                 gw_key = cast(ApplianceType, key)
-                self._appl_data[self.gateway_id][gw_key] = value
+                self.gw_devices[self.gateway_id][gw_key] = value
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -692,7 +691,7 @@ class SmileHelper:
             ):
                 continue
 
-            self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
+            self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
@@ -705,13 +704,13 @@ class SmileHelper:
             }.items():
                 if value is not None or key == "location":
                     appl_key = cast(ApplianceType, key)
-                    self._appl_data[appl.dev_id][appl_key] = value
+                    self.gw_devices[appl.dev_id][appl_key] = value
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder(appl)
             # P1: for gateway and smartmeter switch device_id - part 2
-            for item in self._appl_data:
+            for item in self.gw_devices:
                 if item != self.gateway_id:
                     self.gateway_id = item
                     # Leave for-loop to avoid a 2nd device_id switch
@@ -724,7 +723,7 @@ class SmileHelper:
         """
         matched_locations: dict[str, ThermoLoc] = {}
         for location_id, location_details in self._loc_data.items():
-            for appliance_details in self._appl_data.values():
+            for appliance_details in self.gw_devices.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
                         {"master": None, "master_prio": 0, "slaves": set()}
@@ -1032,7 +1031,7 @@ class SmileHelper:
         data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS or MODULES
         if self.smile_type == "power":
-            details = self._appl_data[d_id]
+            details = self.gw_devices[d_id]
             if details["dev_class"] == "smartmeter":
                 if not self._smile_legacy:
                     data.update(self._power_data_from_location(details["location"]))
@@ -1145,11 +1144,11 @@ class SmileHelper:
         }
 
         for loc_id in self._thermo_locs:
-            for appl_id, details in self._appl_data.items():
+            for appl_id, details in self.gw_devices.items():
                 self._rank_thermostat(thermo_matching, loc_id, appl_id, details)
 
         # Update slave thermostat class where needed
-        for appl_id, details in self._appl_data.items():
+        for appl_id, details in self.gw_devices.items():
             if (loc_id := details["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
                 if "slaves" in tl_loc_id and appl_id in tl_loc_id["slaves"]:

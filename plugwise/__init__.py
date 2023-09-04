@@ -89,9 +89,7 @@ class SmileData(SmileHelper):
 
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
-        for device_id, device in self._appl_data.items():
-            self.gw_devices.update({device_id: device})
-
+        for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             # Add plugwise notification binary_sensor to the relevant gateway
             if device_id == self.gateway_id and (
@@ -100,13 +98,13 @@ class SmileData(SmileHelper):
             ):
                 data["binary_sensors"]["plugwise_notification"] = False
 
-            self.gw_devices[device_id].update(data)
+            device.update(data)
 
             # Update for cooling
-            if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(self.gw_devices[device_id])
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(device)
 
-            remove_empty_platform_dicts(self.gw_devices[device_id])
+            remove_empty_platform_dicts(device)
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -133,7 +131,7 @@ class SmileData(SmileHelper):
 
         # Collect switching- or pump-group data
         if group_data := self._group_switches():
-            self._appl_data.update(group_data)
+            self.gw_devices.update(group_data)
 
         # Collect the remaining data for all device
         self._all_device_data()
@@ -257,7 +255,7 @@ class SmileData(SmileHelper):
 
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        details = self._appl_data[dev_id]
+        details = self.gw_devices[dev_id]
         device_data = self._get_measurement_data(dev_id)
         # Remove thermostat-dict for thermo_sensors
         if details["dev_class"] == "thermo_sensor":
