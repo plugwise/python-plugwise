@@ -161,7 +161,7 @@ class SmileData(SmileHelper):
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
-        Determine Adam device data.
+        Determine Adam heating-status for on-off heating via valves.
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
         if (
