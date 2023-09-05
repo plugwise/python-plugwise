@@ -143,15 +143,14 @@ class SmileData(SmileHelper):
 
         Determine switching group device data.
         """
-        if device["dev_class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in device["members"]:
-                member_data = self._get_measurement_data(member)
-                if member_data["switches"].get("relay"):
-                    counter += 1
-
-            device_data["switches"]["relay"] = counter != 0
-
+        if device["dev_class"] not in SWITCH_GROUP_TYPES:
+            return device_data
+        
+        counter = 0
+        for member in device["members"]:
+            if self.gw_devices[member]["switches"].get("relay"):
+                counter += 1
+        device_data["switches"]["relay"] = counter != 0
         return device_data
 
     def _device_data_adam(
