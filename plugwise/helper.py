@@ -928,10 +928,12 @@ class SmileHelper:
 
         return therm_list
 
-    def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
+    def _get_actuator_functionalities(self, xml: etree, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
-            if item == "max_dhw_temperature":
+            # Skip max_dhw_temperature, not initially valid, 
+            # kkip thermostat for thermo_sensors
+            if item == "max_dhw_temperature" or (item == "thermostat" and device["dev_class"] == "thermo_sensor"):
                 continue
 
             temp_dict: ActuatorData = {}
@@ -1056,10 +1058,7 @@ class SmileHelper:
                 self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, data)
-                # Remove thermostat-dict for thermo_sensors
-                if device["dev_class"] == "thermo_sensor":
-                    data.pop("thermostat")
+                self._get_actuator_functionalities(appliance, device, data)
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
