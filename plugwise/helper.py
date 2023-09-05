@@ -308,7 +308,6 @@ class SmileHelper:
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._appliances: etree
-        self._appl_data: dict[str, DeviceData] = {}
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
@@ -593,7 +592,7 @@ class SmileHelper:
         location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(location, appl)
 
-        self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
+        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
 
         for key, value in {
             "firmware": appl.firmware,
@@ -607,7 +606,7 @@ class SmileHelper:
         }.items():
             if value is not None or key == "location":
                 p1_key = cast(ApplianceType, key)
-                self._appl_data[appl.dev_id][p1_key] = value
+                self.gw_devices[appl.dev_id][p1_key] = value
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
@@ -618,7 +617,7 @@ class SmileHelper:
         if self.smile_type == "power":
             self.gateway_id = FAKE_APPL
 
-        self._appl_data[self.gateway_id] = {"dev_class": "gateway"}
+        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
         for key, value in {
             "firmware": self.smile_fw_version,
             "location": self._home_location,
@@ -630,7 +629,7 @@ class SmileHelper:
         }.items():
             if value is not None:
                 gw_key = cast(ApplianceType, key)
-                self._appl_data[self.gateway_id][gw_key] = value
+                self.gw_devices[self.gateway_id][gw_key] = value
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -692,7 +691,7 @@ class SmileHelper:
             ):
                 continue
 
-            self._appl_data[appl.dev_id] = {"dev_class": appl.pwclass}
+            self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
@@ -705,13 +704,13 @@ class SmileHelper:
             }.items():
                 if value is not None or key == "location":
                     appl_key = cast(ApplianceType, key)
-                    self._appl_data[appl.dev_id][appl_key] = value
+                    self.gw_devices[appl.dev_id][appl_key] = value
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder(appl)
             # P1: for gateway and smartmeter switch device_id - part 2
-            for item in self._appl_data:
+            for item in self.gw_devices:
                 if item != self.gateway_id:
                     self.gateway_id = item
                     # Leave for-loop to avoid a 2nd device_id switch
@@ -724,7 +723,7 @@ class SmileHelper:
         """
         matched_locations: dict[str, ThermoLoc] = {}
         for location_id, location_details in self._loc_data.items():
-            for appliance_details in self._appl_data.values():
+            for appliance_details in self.gw_devices.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
                         {"master": None, "master_prio": 0, "slaves": set()}
@@ -836,7 +835,7 @@ class SmileHelper:
         data: DeviceData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
-        """Helper-function for _get_appliance_data() - collect appliance measurement data."""
+        """Helper-function for _get_measurement_data() - collect appliance measurement data."""
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
@@ -900,7 +899,7 @@ class SmileHelper:
                 )
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Collect the availablity-status for wireless connected devices.
         """
@@ -929,10 +928,16 @@ class SmileHelper:
 
         return therm_list
 
-    def _get_actuator_functionalities(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data()."""
+    def _get_actuator_functionalities(
+        self, xml: etree, device: DeviceData, data: DeviceData
+    ) -> None:
+        """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
-            if item == "max_dhw_temperature":
+            # Skip max_dhw_temperature, not initially valid,
+            # skip thermostat for thermo_sensors
+            if item == "max_dhw_temperature" or (
+                item == "thermostat" and device["dev_class"] == "thermo_sensor"
+            ):
                 continue
 
             temp_dict: ActuatorData = {}
@@ -975,7 +980,7 @@ class SmileHelper:
                 data[act_item] = temp_dict
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Collect the gateway regulation_mode.
         """
@@ -985,7 +990,7 @@ class SmileHelper:
             self._cooling_enabled = search.find("mode").text == "cooling"
 
     def _cleanup_data(self, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Clean up the data dict.
         """
@@ -1000,7 +1005,7 @@ class SmileHelper:
                 data.pop("cooling_enabled")  # pragma: no cover
 
     def _process_c_heating_state(self, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Process the central_heating_state value.
         """
@@ -1024,23 +1029,31 @@ class SmileHelper:
         if self._elga:
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
-    def _get_appliance_data(self, d_id: str) -> DeviceData:
+    def _get_measurement_data(self, dev_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the appliance-data based on device id.
-        Determined from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         """
         data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        # P1 legacy has no APPLIANCES, also not present in DOMAIN_OBJECTS
-        if self._smile_legacy and self.smile_type == "power":
+        # Get P1 smartmeter data from LOCATIONS or MODULES
+        device = self.gw_devices[dev_id]
+        # !! DON'T CHANGE below two if-lines, will break stuff !!
+        if self.smile_type == "power":
+            if device["dev_class"] == "smartmeter":
+                if not self._smile_legacy:
+                    data.update(self._power_data_from_location(device["location"]))
+                else:
+                    data.update(self._power_data_from_modules())
+
             return data
 
+        # Get non-p1 data from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         measurements = DEVICE_MEASUREMENTS
-        if d_id == self._heater_id:
+        if dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
 
         if (
-            appliance := self._appliances.find(f'./appliance[@id="{d_id}"]')
+            appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
         ) is not None:
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
@@ -1049,12 +1062,12 @@ class SmileHelper:
                 self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, data)
+                self._get_actuator_functionalities(appliance, device, data)
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-        if d_id == self.gateway_id and self.smile_name == "Adam":
+        if dev_id == self.gateway_id and self.smile_name == "Adam":
             self._get_regulation_mode(appliance, data)
 
         if "c_heating_state" in data:
@@ -1062,7 +1075,7 @@ class SmileHelper:
             # Remove c_heating_state after processing
             data.pop("c_heating_state")
 
-        if d_id == self._heater_id and self.smile_name == "Smile Anna":
+        if dev_id == self._heater_id and self.smile_name == "Smile Anna":
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
@@ -1128,10 +1141,6 @@ class SmileHelper:
         Update locations with thermostat ranking results and use
         the result to update the device_class of slave thermostats.
         """
-        self._all_appliances()
-        if self.smile_type != "thermostat":
-            return
-
         self._thermo_locs = self._match_locations()
 
         thermo_matching: dict[str, int] = {
@@ -1142,15 +1151,15 @@ class SmileHelper:
         }
 
         for loc_id in self._thermo_locs:
-            for appl_id, details in self._appl_data.items():
-                self._rank_thermostat(thermo_matching, loc_id, appl_id, details)
+            for dev_id, device in self.gw_devices.items():
+                self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
 
         # Update slave thermostat class where needed
-        for appl_id, details in self._appl_data.items():
-            if (loc_id := details["location"]) in self._thermo_locs:
+        for dev_id, device in self.gw_devices.items():
+            if (loc_id := device["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
-                if "slaves" in tl_loc_id and appl_id in tl_loc_id["slaves"]:
-                    details["dev_class"] = "thermo_sensor"
+                if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
+                    device["dev_class"] = "thermo_sensor"
 
     def _thermostat_uri_legacy(self) -> str:
         """Helper-function for _thermostat_uri().
@@ -1175,7 +1184,7 @@ class SmileHelper:
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _group_switches(self) -> dict[str, DeviceData]:
+    def _get_group_switches(self) -> dict[str, DeviceData]:
         """Helper-function for smile.py: get_all_devices().
 
         Collect switching- or pump-group info.
@@ -1192,9 +1201,11 @@ class SmileHelper:
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
-                members.append(item.attrib["id"])
+                # Check if members are not orphaned - stretch
+                if item.attrib["id"] in self.gw_devices:
+                    members.append(item.attrib["id"])
 
-            if group_type in SWITCH_GROUP_TYPES:
+            if group_type in SWITCH_GROUP_TYPES and members:
                 switch_groups.update(
                     {
                         group_id: {
@@ -1515,7 +1526,7 @@ class SmileHelper:
         return val
 
     def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Adam & Stretches: obtain the relay-switch lock state.
         """
@@ -1532,7 +1543,7 @@ class SmileHelper:
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
     ) -> None:
-        """Helper-function for _get_appliance_data().
+        """Helper-function for _get_measurement_data().
 
         Obtain the toggle state of a 'toggle' = switch.
         """

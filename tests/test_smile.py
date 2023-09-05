@@ -4628,13 +4628,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "switches": {"relay": True, "lock": False},
             },
-            "71e1944f2a944b26ad73323e399efef0": {
-                "dev_class": "switching",
-                "model": "Switchgroup",
-                "name": "Test",
-                "members": ["5ca521ac179d468e91d772eeeb8a2117"],
-                "switches": {"relay": True},
-            },
             "d950b314e9d8499f968e6db8d82ef78c": {
                 "dev_class": "report",
                 "model": "Switchgroup",
@@ -4674,7 +4667,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert self.device_items == 88
+        assert self.device_items == 83
 
         await smile.close_connection()
         await self.disconnect(server, client)

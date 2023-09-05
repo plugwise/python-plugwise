@@ -87,26 +87,23 @@ class SmileData(SmileHelper):
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
 
-        Collect initial data for each device and add to self.gw_data and self.gw_devices.
+        Collect data for each device and add to self.gw_data and self.gw_devices.
         """
-        for device_id, device in self._appl_data.items():
-            self.gw_devices.update({device_id: device})
-
+        for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
+            device.update(data)
             # Add plugwise notification binary_sensor to the relevant gateway
             if device_id == self.gateway_id and (
                 self._is_thermostat
                 or (not self._smile_legacy and self.smile_type == "power")
             ):
-                data["binary_sensors"]["plugwise_notification"] = False
-
-            self.gw_devices[device_id].update(data)
+                device["binary_sensors"]["plugwise_notification"] = False
 
             # Update for cooling
-            if self.gw_devices[device_id]["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(self.gw_devices[device_id])
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                self.update_for_cooling(device)
 
-            remove_empty_platform_dicts(self.gw_devices[device_id])
+            remove_empty_platform_dicts(device)
 
         self.gw_data.update(
             {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
@@ -122,69 +119,50 @@ class SmileData(SmileHelper):
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
         """
-        # Start by determining the system capabilities:
-        # Find the connected heating/cooling device (heater_central), e.g. heat-pump or gas-fired heater
+        # Gather all the devices and their initial data
+        self._all_appliances()
         if self.smile_type == "thermostat":
-            onoff_boiler: etree = self._domain_objects.find(
-                "./module/protocols/onoff_boiler"
-            )
-            open_therm_boiler: etree = self._domain_objects.find(
-                "./module/protocols/open_therm_boiler"
-            )
-            self._on_off_device = onoff_boiler is not None
-            self._opentherm_device = open_therm_boiler is not None
-
-            # Determine the presence of special features
-            locator_1 = "./gateway/features/cooling"
-            locator_2 = "./gateway/features/elga_support"
-            search = self._domain_objects
-            if search.find(locator_1) is not None:
-                self._cooling_present = True
-            if search.find(locator_2) is not None:
-                self._elga = True
-
+            self._scan_thermostats()
+            # Collect a list of thermostats with offset-capability
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
 
-        # Gather all the device and initial data
-        self._scan_thermostats()
+        # Collect switching- or pump-group data
+        if group_data := self._get_group_switches():
+            self.gw_devices.update(group_data)
 
-        if group_data := self._group_switches():
-            self._appl_data.update(group_data)
-
-        # Collect data for each device via helper function
+        # Collect the remaining data for all device
         self._all_device_data()
 
     def _device_data_switching_group(
-        self, details: DeviceData, device_data: DeviceData
+        self, device: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
         Determine switching group device data.
         """
-        if details["dev_class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in details["members"]:
-                member_data = self._get_appliance_data(member)
-                if member_data["switches"].get("relay"):
-                    counter += 1
+        if device["dev_class"] not in SWITCH_GROUP_TYPES:
+            return device_data
 
-            device_data["switches"]["relay"] = counter != 0
-
+        counter = 0
+        for member in device["members"]:
+            if self.gw_devices[member]["switches"].get("relay"):
+                counter += 1
+        device_data["switches"]["relay"] = counter != 0
         return device_data
 
     def _device_data_adam(
-        self, details: DeviceData, device_data: DeviceData
+        self, device: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
-        Determine Adam device data.
+        Determine Adam heating-status for on-off heating via valves.
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
         if (
             self.smile_name == "Adam"
-            and details.get("dev_class") == "heater_central"
+            and device.get("dev_class") == "heater_central"
             and self._on_off_device
             and self._heating_valves() is not None
         ):
@@ -193,13 +171,13 @@ class SmileData(SmileHelper):
         return device_data
 
     def _device_data_climate(
-        self, details: DeviceData, device_data: DeviceData
+        self, device: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
         Determine climate-control device data.
         """
-        loc_id = details["location"]
+        loc_id = device["location"]
 
         # Presets
         device_data["preset_modes"] = None
@@ -246,14 +224,14 @@ class SmileData(SmileHelper):
         return device_data
 
     def _check_availability(
-        self, details: DeviceData, device_data: DeviceData
+        self, device: DeviceData, device_data: DeviceData
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
         Provide availability status for the wired-commected devices.
         """
         # OpenTherm device
-        if details["dev_class"] == "heater_central" and details["name"] != "OnOff":
+        if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
             device_data["available"] = True
             for data in self._notifications.values():
                 for msg in data.values():
@@ -261,7 +239,7 @@ class SmileData(SmileHelper):
                         device_data["available"] = False
 
         # Smartmeter
-        if details["dev_class"] == "smartmeter":
+        if device["dev_class"] == "smartmeter":
             device_data["available"] = True
             for data in self._notifications.values():
                 for msg in data.values():
@@ -275,14 +253,10 @@ class SmileData(SmileHelper):
 
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        details = self._appl_data[dev_id]
-        device_data = self._get_appliance_data(dev_id)
-        # Remove thermostat-dict for thermo_sensors
-        if details["dev_class"] == "thermo_sensor":
-            device_data.pop("thermostat")
-
+        device = self.gw_devices[dev_id]
+        device_data = self._get_measurement_data(dev_id)
         # Generic
-        if self.smile_type == "thermostat" and details["dev_class"] == "gateway":
+        if self.smile_type == "thermostat" and device["dev_class"] == "gateway":
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
             # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
             outdoor_temperature = self._object_value(
@@ -296,30 +270,23 @@ class SmileData(SmileHelper):
                 device_data["regulation_modes"] = self._reg_allowed_modes
 
         # Show the allowed dhw_modes
-        if details["dev_class"] == "heater_central" and self._dhw_allowed_modes:
+        if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device_data["dhw_modes"] = self._dhw_allowed_modes
-
-        # Get P1 smartmeter data from LOCATIONS or MODULES
-        if details["dev_class"] == "smartmeter":
-            if not self._smile_legacy:
-                device_data.update(self._power_data_from_location(details["location"]))
-            else:
-                device_data.update(self._power_data_from_modules())
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
-            self._check_availability(details, device_data)
+            self._check_availability(device, device_data)
 
         # Switching groups data
-        device_data = self._device_data_switching_group(details, device_data)
+        device_data = self._device_data_switching_group(device, device_data)
         # Specific, not generic Adam data
-        device_data = self._device_data_adam(details, device_data)
+        device_data = self._device_data_adam(device, device_data)
         # No need to obtain thermostat data when the device is not a thermostat
-        if details["dev_class"] not in ZONE_THERMOSTATS:
+        if device["dev_class"] not in ZONE_THERMOSTATS:
             return device_data
 
         # Thermostat data (presets, temperatures etc)
-        device_data = self._device_data_climate(details, device_data)
+        device_data = self._device_data_climate(device, device_data)
 
         return device_data
 
@@ -484,7 +451,25 @@ class Smile(SmileComm, SmileData):
             self._stretch_v2 = self.smile_version[1].major == 2
             self._stretch_v3 = self.smile_version[1].major == 3
 
-        self._is_thermostat = self.smile_type == "thermostat"
+        if self.smile_type == "thermostat":
+            self._is_thermostat = True
+            # For Adam, Anna, determine the system capabilities:
+            # Find the connected heating/cooling device (heater_central),
+            # e.g. heat-pump or gas-fired heater
+            onoff_boiler: etree = result.find("./module/protocols/onoff_boiler")
+            open_therm_boiler: etree = result.find(
+                "./module/protocols/open_therm_boiler"
+            )
+            self._on_off_device = onoff_boiler is not None
+            self._opentherm_device = open_therm_boiler is not None
+
+            # Determine the presence of special features
+            locator_1 = "./gateway/features/cooling"
+            locator_2 = "./gateway/features/elga_support"
+            if result.find(locator_1) is not None:
+                self._cooling_present = True
+            if result.find(locator_2) is not None:
+                self._elga = True
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
@@ -542,7 +527,6 @@ class Smile(SmileComm, SmileData):
                 data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
-
             device.update(data)
 
             # Update for cooling
