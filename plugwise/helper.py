@@ -934,7 +934,7 @@ class SmileHelper:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             # Skip max_dhw_temperature, not initially valid,
-            # kkip thermostat for thermo_sensors
+            # skip thermostat for thermo_sensors
             if item == "max_dhw_temperature" or (
                 item == "thermostat" and device["dev_class"] == "thermo_sensor"
             ):
