@@ -257,10 +257,6 @@ class SmileData(SmileHelper):
         """
         device = self.gw_devices[dev_id]
         device_data = self._get_measurement_data(dev_id)
-        # Remove thermostat-dict for thermo_sensors
-        if device["dev_class"] == "thermo_sensor":
-            device_data.pop("thermostat")
-
         # Generic
         if self.smile_type == "thermostat" and device["dev_class"] == "gateway":
             # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
