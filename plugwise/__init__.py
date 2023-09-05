@@ -145,7 +145,7 @@ class SmileData(SmileHelper):
         """
         if device["dev_class"] not in SWITCH_GROUP_TYPES:
             return device_data
-        
+
         counter = 0
         for member in device["members"]:
             if self.gw_devices[member]["switches"].get("relay"):
