@@ -1030,8 +1030,9 @@ class SmileHelper:
         """
         data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS or MODULES
+        device = self.gw_devices[dev_id]
+        # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
-            device = self.gw_devices[dev_id]
             if device["dev_class"] == "smartmeter":
                 if not self._smile_legacy:
                     data.update(self._power_data_from_location(device["location"]))
@@ -1056,6 +1057,9 @@ class SmileHelper:
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, data)
+                # Remove thermostat-dict for thermo_sensors
+                if device["dev_class"] == "thermo_sensor":
+                    data.pop("thermostat")
 
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
@@ -1194,9 +1198,11 @@ class SmileHelper:
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
-                members.append(item.attrib["id"])
+                # Check if members are not orphaned - stretch
+                if item.attrib["id"] in self.gw_devices:
+                    members.append(item.attrib["id"])
 
-            if group_type in SWITCH_GROUP_TYPES:
+            if group_type in SWITCH_GROUP_TYPES and members:
                 switch_groups.update(
                     {
                         group_id: {
