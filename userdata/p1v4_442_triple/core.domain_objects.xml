@@ -436,7 +436,7 @@
 		<type>warning</type>
 		<origin>local</origin>
 		<title>Smart meter not found.</title>
-		<message>The Smile P1 does not seem to be connected to a smart meter.</message>
+		<message>The Smile P1 is not connected to a smart meter.</message>
 		<valid_from></valid_from>
 		<valid_to></valid_to>
 		<read_date>2020-01-23T10:54:59.710+01:00</read_date>
