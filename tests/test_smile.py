@@ -5191,7 +5191,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "XMX5LGF0010453051839",
                 "name": "P1",
                 "vendor": "XEMEX NV",
-                "available": False,
+                "available": True,
                 "sensors": {
                     "net_electricity_point": 5553,
                     "electricity_consumed_peak_point": 0,
