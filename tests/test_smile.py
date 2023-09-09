@@ -5311,3 +5311,284 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     class UnexpectedError(PlugwiseTestError):
         """Raised when something went against logic."""
+
+    @pytest.mark.asyncio
+    async def test_adam_plus_jip_twice(self):
+        """Test Adam with Jip setup changing userdata."""
+        testdata = {
+            "e4684553153b44afbef2200885f379dc": {
+                "dev_class": "heater_central",
+                "location": "9e4433a9d69f40b3aefd15e74395eaec",
+                "model": "10.20",
+                "name": "OpenTherm",
+                "vendor": "Remeha B.V.",
+                "maximum_boiler_temperature": {
+                    "setpoint": 90.0,
+                    "lower_bound": 20.0,
+                    "upper_bound": 90.0,
+                    "resolution": 0.01,
+                },
+                "max_dhw_temperature": {
+                    "setpoint": 60.0,
+                    "lower_bound": 40.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 37.3,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 37.1,
+                    "water_pressure": 1.4,
+                },
+                "switches": {"dhw_cm_switch": False},
+            },
+            "a6abc6a129ee499c88a4d420cc413b47": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-27T02:00:00+02:00",
+                "hardware": "255",
+                "location": "d58fec52899f4f1c92e4f8fad6d8c48c",
+                "model": "Lisa",
+                "name": "Logeerkamer",
+                "zigbee_mac_address": "ABCD012345670A01",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                "active_preset": "home",
+                "available_schedules": ["None"],
+                "select_schedule": "None",
+                "last_used": None,
+                "control_state": "off",
+                "mode": "heat",
+                "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 80},
+            },
+            "1346fbd8498d4dbcab7e18d51b771f3d": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-27T02:00:00+02:00",
+                "hardware": "255",
+                "location": "06aecb3d00354375924f50c47af36bd2",
+                "model": "Lisa",
+                "name": "Slaapkamer",
+                "zigbee_mac_address": "ABCD012345670A03",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                "active_preset": "no_frost",
+                "available_schedules": ["None"],
+                "select_schedule": "None",
+                "last_used": None,
+                "control_state": "off",
+                "mode": "heat",
+                "sensors": {"temperature": 24.2, "setpoint": 13.0, "battery": 92},
+            },
+            "833de10f269c4deab58fb9df69901b4e": {
+                "dev_class": "thermo_sensor",
+                "firmware": "2020-11-04T01:00:00+01:00",
+                "hardware": "1",
+                "location": "13228dab8ce04617af318a2888b3c548",
+                "model": "Tom/Floor",
+                "name": "Tom Woonkamer",
+                "zigbee_mac_address": "ABCD012345670A09",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "temperature": 24.0,
+                    "setpoint": 9.0,
+                    "temperature_difference": 1.8,
+                    "valve_position": 100,
+                },
+            },
+            "6f3e9d7084214c21b9dfa46f6eeb8700": {
+                "dev_class": "zone_thermostat",
+                "firmware": "2016-10-27T02:00:00+02:00",
+                "hardware": "255",
+                "location": "d27aede973b54be484f6842d1b2802ad",
+                "model": "Lisa",
+                "name": "Kinderkamer",
+                "zigbee_mac_address": "ABCD012345670A02",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 13.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 99.9,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                "active_preset": "home",
+                "available_schedules": ["None"],
+                "select_schedule": "None",
+                "last_used": None,
+                "control_state": "off",
+                "mode": "heat",
+                "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 79},
+            },
+            "f61f1a2535f54f52ad006a3d18e459ca": {
+                "dev_class": "zone_thermometer",
+                "firmware": "2020-09-01T02:00:00+02:00",
+                "hardware": "1",
+                "location": "13228dab8ce04617af318a2888b3c548",
+                "model": "Jip",
+                "name": "Woonkamer",
+                "zigbee_mac_address": "ABCD012345670A08",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 9.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+                "active_preset": "home",
+                "available_schedules": ["None"],
+                "select_schedule": "None",
+                "last_used": None,
+                "control_state": "off",
+                "mode": "heat",
+                "sensors": {
+                    "temperature": 27.4,
+                    "setpoint": 9.0,
+                    "battery": 100,
+                    "humidity": 56.2,
+                },
+            },
+            "d4496250d0e942cfa7aea3476e9070d5": {
+                "dev_class": "thermo_sensor",
+                "firmware": "2020-11-04T01:00:00+01:00",
+                "hardware": "1",
+                "location": "d27aede973b54be484f6842d1b2802ad",
+                "model": "Tom/Floor",
+                "name": "Tom Kinderkamer",
+                "zigbee_mac_address": "ABCD012345670A04",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "temperature": 28.7,
+                    "setpoint": 13.0,
+                    "temperature_difference": 1.9,
+                    "valve_position": 0.0,
+                },
+            },
+            "356b65335e274d769c338223e7af9c33": {
+                "dev_class": "thermo_sensor",
+                "firmware": "2020-11-04T01:00:00+01:00",
+                "hardware": "1",
+                "location": "06aecb3d00354375924f50c47af36bd2",
+                "model": "Tom/Floor",
+                "name": "Tom Slaapkamer",
+                "zigbee_mac_address": "ABCD012345670A05",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "temperature": 24.3,
+                    "setpoint": 13.0,
+                    "temperature_difference": 1.7,
+                    "valve_position": 0.0,
+                },
+            },
+            "b5c2386c6f6342669e50fe49dd05b188": {
+                "dev_class": "gateway",
+                "firmware": "3.2.8",
+                "hardware": "AME Smile 2.0 board",
+                "location": "9e4433a9d69f40b3aefd15e74395eaec",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Adam",
+                "zigbee_mac_address": "ABCD012345670101",
+                "vendor": "Plugwise",
+                "select_regulation_mode": "heating",
+                "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 24.9},
+            },
+            "1da4d325838e4ad8aac12177214505c9": {
+                "dev_class": "thermo_sensor",
+                "firmware": "2020-11-04T01:00:00+01:00",
+                "hardware": "1",
+                "location": "d58fec52899f4f1c92e4f8fad6d8c48c",
+                "model": "Tom/Floor",
+                "name": "Tom Logeerkamer",
+                "zigbee_mac_address": "ABCD012345670A07",
+                "vendor": "Plugwise",
+                "available": True,
+                "sensors": {
+                    "temperature": 28.8,
+                    "setpoint": 13.0,
+                    "temperature_difference": 2.0,
+                    "valve_position": 0.0,
+                },
+            },
+            "457ce8414de24596a2d5e7dbc9c7682f": {
+                "dev_class": "zz_misc",
+                "location": "9e4433a9d69f40b3aefd15e74395eaec",
+                "model": "lumi.plug.maeu01",
+                "name": "Plug",
+                "zigbee_mac_address": "ABCD012345670A06",
+                "vendor": "LUMI",
+                "available": True,
+                "sensors": {"electricity_consumed_interval": 0.0},
+                "switches": {"relay": False, "lock": True},
+            },
+        }
+
+        self.smile_setup = "adam_jip"
+        server, smile, client = await self.connect_wrapper()
+
+        await self.device_test(smile, testdata)
+        assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
+        assert self.device_items == 223
+
+        result = await self.tinker_thermostat(
+            smile,
+            "13228dab8ce04617af318a2888b3c548",
+            schedule_on=False,
+            good_schedules=[None],
+            unhappy=True,
+        )
+        assert result
+
+        result = await self.tinker_thermostat_schedule(
+            smile,
+            "13228dab8ce04617af318a2888b3c548",
+            "off",
+            good_schedules=[None],
+        )
+        assert result
+
+        await self.device_test(smile, testdata)
+
+        self.smile_setup = "adam_jip_twice"
+
+        await self.device_test(smile, testdata)
+
+        result = await self.tinker_thermostat_schedule(
+            smile,
+            "x13228dab8ce04617af318a2888b3c548",
+            "off",
+            good_schedules=[None],
+        )
+        assert result
+
+        await self.device_test(smile, testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
