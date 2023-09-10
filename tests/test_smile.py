@@ -3560,7 +3560,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after x time
-        self.smile_setup = "adam_jip_twice"
+        self.smile_setup = "iterate2nd/adam_jip"
         testdata["e4684553153b44afbef2200885f379dc"]["vendor"] = "Test B.V."
         await self.device_test(smile, testdata)
 
