@@ -1066,6 +1066,75 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"outdoor_temperature": 7.44},
             },
         }
+        testdata_updated = {
+            "cd0e6156b1f04d5f952349ffbe397481": {
+                "dev_class": "heater_central",
+                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                "model": "2.32",
+                "name": "OpenTherm",
+                "vendor": "Bosch Thermotechniek B.V.",
+                "maximum_boiler_temperature": {
+                    "setpoint": 69.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
+                "max_dhw_temperature": {
+                    "setpoint": 59.0,
+                    "lower_bound": 30.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
+                "available": True,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 51.0,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 42.0,
+                    "water_pressure": 2.1,
+                },
+                "switches": {"dhw_cm_switch": False},
+            },
+            "01b85360fdd243d0aaad4d6ac2a5ba7e": {
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "eb5309212bf5407bb143e5bfa3b18aee",
+                "model": "ThermoTouch",
+                "name": "Anna",
+                "vendor": "Plugwise",
+                "thermostat": {
+                    "setpoint": 19.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
+                "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
+                "active_preset": "away",
+                "available_schedules": ["Standaard", "Thuiswerken"],
+                "select_schedule": "None",
+                "last_used": "Standaard",
+                "mode": "heat",
+                "sensors": {"temperature": 19.5, "setpoint": 19.5, "illuminance": 39.5},
+            },
+            "0466eae8520144c78afb29628384edeb": {
+                "dev_class": "gateway",
+                "firmware": "4.0.15",
+                "hardware": "AME Smile 2.0 board",
+                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 7.44},
+            },
+        }
 
         self.smile_setup = "anna_v4"
         server, smile, client = await self.connect_wrapper()
@@ -1103,6 +1172,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile, "0466eae8520144c78afb29628384edeb"
         )
         assert not result
+
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/anna_v4"
+        await self.device_test(smile, testdata_updated, initialize=False)
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
