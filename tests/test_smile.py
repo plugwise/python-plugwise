@@ -1184,6 +1184,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        # Reset self.smile_setup
+        self.smile_setup = "anna_v4"
         await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
