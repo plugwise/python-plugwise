@@ -1097,7 +1097,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "water_temperature": 51.0,
                     "intended_boiler_temperature": 0.0,
                     "modulation_level": 0.0,
-                    "return_temperature": 42.0,
+                    "return_temperature": 41.0,
                     "water_pressure": 2.1,
                 },
                 "switches": {"dhw_cm_switch": False},
