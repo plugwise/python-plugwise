@@ -377,13 +377,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def device_test(self, smile=pw_smile.Smile, testdata=None, initialize=True):
         """Perform basic device tests."""
-        _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
         with freeze_time("2022-05-16 00:00:01"):
             if initialize:
+                _LOGGER.info("Asserting testdata:")
                 await smile._full_update_device()
                 smile.get_all_devices()
+            else:
+                _LOGGER.info("Asserting updated testdata:")
             data = await smile.async_update()
 
         if "heater_id" in data.gateway:
