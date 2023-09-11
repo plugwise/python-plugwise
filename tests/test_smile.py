@@ -457,6 +457,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             asserts += 1
 
         assert tests == asserts
+        _LOGGER.debug("Number of test-assert: %s", asserts)
 
     @pytest.mark.asyncio
     async def tinker_switch(
