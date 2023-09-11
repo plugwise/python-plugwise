@@ -3963,6 +3963,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert result
 
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/anna_heatpump_heating"
+        await self.device_test(smile, testdata, initialize=False)
         await smile.close_connection()
         await self.disconnect(server, client)
 
