@@ -375,14 +375,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 assert False
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=pw_smile.Smile, testdata=None):
+    async def device_test(self, smile=pw_smile.Smile, testdata=None, initialize=True):
         """Perform basic device tests."""
         _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
         with freeze_time("2022-05-16 00:00:01"):
-            await smile._full_update_device()
-            smile.get_all_devices()
+            if initialize:
+                await smile._full_update_device()
+                smile.get_all_devices()
             data = await smile.async_update()
 
         if "heater_id" in data.gateway:
@@ -3561,8 +3562,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after x time
         self.smile_setup = "iterate2nd/adam_jip"
-        testdata["e4684553153b44afbef2200885f379dc"]["vendor"] = "Test B.V."
-        await self.device_test(smile, testdata)
+        # This does not work, i.e. on initialize=false the vendor is NOT re-read
+        # testdata["e4684553153b44afbef2200885f379dc"]["vendor"] = "Test B.V."
+        # This does work, i.e. consumed interval changed
+        testdata["457ce8414de24596a2d5e7dbc9c7682f"]["sensors"][
+            "electricity_consumed_interval"
+        ] = 8.0
+        await self.device_test(smile, testdata, initialize=False)
 
         await smile.close_connection()
         await self.disconnect(server, client)
