@@ -7,7 +7,7 @@
 		<created_date>2019-01-31T10:06:54.312+01:00</created_date>
 		<modified_date>2020-04-02T10:39:56.824+02:00</modified_date>
 		<deleted_date></deleted_date>
-		<preset>home</preset>
+		<preset>away</preset>
 		<clients/>
 		<appliances>
 			<appliance id='01b85360fdd243d0aaad4d6ac2a5ba7e'/>
@@ -71,7 +71,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-02T10:30:52+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-02T10:15:53+02:00" end_date="2020-04-02T10:15:53+02:00">
-					<measurement log_date="2020-04-02T10:15:53+02:00">7.44</measurement>
+					<measurement log_date="2020-04-02T10:15:53+02:00">6.44</measurement>
 				</period>
 				<thermo_meter id='44e85a52350b4ff2befe01f4856d7d9e'/>
 			</point_log>
