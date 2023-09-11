@@ -1070,11 +1070,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
         testdata_updated = {
             "cd0e6156b1f04d5f952349ffbe397481": {
-                "dev_class": "heater_central",
-                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
-                "model": "2.32",
-                "name": "OpenTherm",
-                "vendor": "Bosch Thermotechniek B.V.",
                 "maximum_boiler_temperature": {
                     "setpoint": 69.0,
                     "lower_bound": 0.0,
@@ -1087,7 +1082,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "upper_bound": 60.0,
                     "resolution": 0.01,
                 },
-                "available": True,
                 "binary_sensors": {
                     "dhw_state": False,
                     "heating_state": False,
@@ -1100,40 +1094,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 41.0,
                     "water_pressure": 2.1,
                 },
-                "switches": {"dhw_cm_switch": False},
             },
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "hardware": "6539-1301-5002",
-                "location": "eb5309212bf5407bb143e5bfa3b18aee",
-                "model": "ThermoTouch",
-                "name": "Anna",
-                "vendor": "Plugwise",
                 "thermostat": {
                     "setpoint": 19.5,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
                 },
-                "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
                 "active_preset": "away",
-                "available_schedules": ["Standaard", "Thuiswerken"],
-                "select_schedule": "None",
-                "last_used": "Standaard",
-                "mode": "heat",
                 "sensors": {"temperature": 19.5, "setpoint": 19.5, "illuminance": 39.5},
             },
             "0466eae8520144c78afb29628384edeb": {
-                "dev_class": "gateway",
-                "firmware": "4.0.15",
-                "hardware": "AME Smile 2.0 board",
-                "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile Anna",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
                 "sensors": {"outdoor_temperature": 6.44},
             },
         }
