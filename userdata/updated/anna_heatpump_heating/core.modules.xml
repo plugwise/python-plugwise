@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module id='e3204a14c278431a8890525dd83edf9d'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>ThermoTouch</vendor_model>
+		<hardware_version>6539-1301-5002</hardware_version>
+		<firmware_version>2018-02-08T11:15:53+01:00</firmware_version>
+		<created_date>2019-01-31T12:00:40.374+01:00</created_date>
+		<modified_date>2020-04-01T01:33:08.127+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<thermo_meter id='0961c99850a942319310d93d2074127b' log_type='temperature'>
+				<functionalities><point_log id='1668242a754d4e8aa93c65e8a0926094'/></functionalities>
+			</thermo_meter>
+			<temperature_offset id='1315b46680474e299ca0cd4e47647041' log_type='temperature_offset'>
+				<functionalities><point_log id='246a214ea1fc457fb6b5fc8d56ee01b9'/><offset_functionality id='f088eab03dca44e09b6aa2f664b07dff'/></functionalities>
+			</temperature_offset>
+			<coefficient id='16321ddc1b874a4e8eab808f4c611b15' log_type='derivative_coefficient'>
+				<functionalities><point_log id='406ba8b2a9ac43029550c72b86f59f69'/></functionalities>
+			</coefficient>
+			<thermo_meter id='255969e55b12428086b3b4a2f5927d78' log_type='target_temperature'>
+				<functionalities><point_log id='9b241537fbc6429ab136aaa34ed87408'/></functionalities>
+			</thermo_meter>
+			<button id='313c3bc3299e434f9beb17779dee411e' log_type='button_right' position='right'>
+				<functionalities><point_log id='3bb9609e13d64e4cb3627f82c6ea5eda'/></functionalities>
+			</button>
+			<boiler_state id='41edf622e07248d98241225cb924acb3' log_type='intended_domestic_hot_water_comfort_mode'>
+				<functionalities><point_log id='1590f7b3dadb4bb78e912b0b293fdad0'/></functionalities>
+			</boiler_state>
+			<temperature_offset_meter id='42610a352d3941f3bc35757b1e073421' log_type='decentral_heat_demand_offset'>
+				<functionalities><point_log id='7f07cde3023a4950aa19dbaf86684cb9'/></functionalities>
+			</temperature_offset_meter>
+			<temperature_offset_meter id='47078d8e14b24895bbb1641e56b769ed' log_type='open_therm_boiler_activation_threshold'>
+				<functionalities><point_log id='42961099b50b4e7fa2240a860cad7bde'/></functionalities>
+			</temperature_offset_meter>
+			<threshold id='508b9d08b6604e31aca154f6074ee316' log_type='cooling_deactivation_threshold'>
+				<functionalities><threshold_functionality id='2004753df59f4c86b6501a2f1f5dcdf5'/><point_log id='88d241c2e0954ebb90418770323dbcba'/></functionalities>
+			</threshold>
+			<boiler_state id='5126b3ed229b422a87a38ce4bb2b8678' log_type='intended_central_heating_state'>
+				<functionalities><point_log id='ace09635b85b485e99f44d594e350b12'/></functionalities>
+			</boiler_state>
+			<temperature_offset_meter id='5fb7cc79ac85471f8513e9d50bf70612' log_type='onoff_boiler_temperature_deadband'>
+				<functionalities><point_log id='897d0d90c2034983a4df12aff02afc65'/></functionalities>
+			</temperature_offset_meter>
+			<proximity_sensor id='7beff99f64dc43cb8c0a765a2e298f5f' log_type='proximity_detection'>
+				<functionalities><point_log id='faab874462694e00a2be2fbbb86b4487'/></functionalities>
+			</proximity_sensor>
+			<proximity_sensor_toggle id='8d4f34e530634072926692a2fe6bba53' log_type='proximity_sensor_state'>
+				<functionalities><toggle_functionality id='0d48c9ee117144edb28b137bac2edfd9'/><point_log id='63bb2daeb4e64e9797fa1b16d7aa9f41'/></functionalities>
+			</proximity_sensor_toggle>
+			<preset_state id='90fc238184fb4f7097b775c90f1f25bc' log_type='preset_state'>
+				<functionalities><point_log id='cfcf8ce75e25456dbd999c090efbace1'/></functionalities>
+			</preset_state>
+			<button id='9689771bb7de463a991f091449407742' log_type='button_left' position='left'>
+				<functionalities><point_log id='6a57ce8abe8e46d9b0280bd2ecd4c405'/></functionalities>
+			</button>
+			<temperature_rate id='a4b5cb2faa0e4058973917d0936ee78c' log_type='preheating_target_temperature_rate'>
+				<functionalities><point_log id='47f07e49dbbc460cb7f732865793a95e'/></functionalities>
+			</temperature_rate>
+			<thermostat id='ab4e7ff6693143fdb0d2a49f8defa74e' log_type='cooling_activation_outdoor_temperature'>
+				<functionalities><point_log id='6cf691c99c70417caf82d74cd12e2098'/><thermostat_functionality id='e098cf87032f4f6ea68a7c5375db0976'/></functionalities>
+			</thermostat>
+			<frequency_meter id='b99aa61d5f6d48e1bdc18f3be37c1a80' log_type='cpu_frequency'>
+				<functionalities><point_log id='c0d9565eb3f3451eaf42692a7f49864d'/></functionalities>
+			</frequency_meter>
+			<thermostat id='c796d632de2e452e80eebb079067b60a' log_type='thermostat'>
+				<functionalities><thermostat_functionality id='8fc0a6e427eb4274b90f5c66ce75d161'/><point_log id='d3f0961521164ce08b9fe1ca14bb3bb0'/></functionalities>
+			</thermostat>
+			<button id='dc6d8272488e48b19a8525f5b399ee9e' log_type='button_top' position='top'>
+				<functionalities><point_log id='9a5c25e8ccbe4523ab9ba0f422b494e6'/></functionalities>
+			</button>
+			<schedule_state id='e6106a2219884e8b84bdcf2849e1b974' log_type='schedule_state'>
+				<functionalities><point_log id='6576997e7d1b40d8ae7058d7a95a34d5'/></functionalities>
+			</schedule_state>
+			<illuminance_meter id='ed94a6e66f0d44d2b73713e8807bd2ed' log_type='illuminance'>
+				<functionalities><point_log id='c5850ac7d0be4ba5a323a90ecf07f06b'/></functionalities>
+			</illuminance_meter>
+		</services>
+		<protocols>
+			<thermo_touch id='f084bd96f9c34a56adbba88d2c2a0b48'><thermo_extension id='35df593e35494511a10a01ec29c69c8d'/></thermo_touch>
+		</protocols>
+	</module>
+	<module id='6b8e553be174495f9cad6a0a2c8f5b26'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>ThermoExtension</vendor_model>
+		<hardware_version>6539-1301-2304</hardware_version>
+		<firmware_version>2018-02-08T11:15:57+01:00</firmware_version>
+		<created_date>2019-01-31T12:00:35.226+01:00</created_date>
+		<modified_date>2019-01-31T12:03:29.884+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services/>
+		<protocols>
+			<thermo_extension id='35df593e35494511a10a01ec29c69c8d'><thermo_touch id='f084bd96f9c34a56adbba88d2c2a0b48'/><open_therm_boiler id='5b0f2190b3c6471080fd1e5f2f9e12cd'/></thermo_extension>
+		</protocols>
+	</module>
+	<module id='c3d70e23f76449a3b182543a07a1d08e'>
+		<vendor_name>Plugwise</vendor_name>
+		<vendor_model>Gateway</vendor_model>
+		<hardware_version>AME Smile 2.0 board</hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-01-31T12:00:30.328+01:00</created_date>
+		<modified_date>2019-08-29T19:42:34.068+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<link_quality id='084d57e991ab496082fa2ab98dcb47eb' log_type='link_quality'>
+				<functionalities><point_log id='136ab6e776184280845715d85def5820'/></functionalities>
+			</link_quality>
+			<network_address id='5ec66ed91aa64fd5a1638900130f89fc' log_type='wlan_ip_address'>
+				<functionalities><point_log id='f5fad4224a694ff8aab5df6371e8d36a'/></functionalities>
+			</network_address>
+			<network_state id='75ef4f4ac0904be5bd21c1efe3167f77' log_type='wlan_state'>
+				<functionalities><point_log id='071ddc7f191f432d88cebc5dd27a3e67'/></functionalities>
+			</network_state>
+			<signal_strength id='88731a17b7de4492a760ef8aad827989' log_type='signal_strength'>
+				<functionalities><point_log id='59e84ffdb9d54c0ab35128d26c07d0dd'/></functionalities>
+			</signal_strength>
+			<network_state id='8c761fe3028f406aa8193266cdbfaff6' log_type='lan_state'>
+				<functionalities><point_log id='27f8c0bfa79440f8b560dbbd320080fc'/></functionalities>
+			</network_state>
+			<network_address id='ce3f30588a614ecead65b75958ebe61f' log_type='lan_ip_address'>
+				<functionalities><point_log id='f9d7d7796c1343beb8d64185791c4893'/></functionalities>
+			</network_address>
+		</services>
+		<protocols>
+			<local_area_network id='a88f12adcc1443bd823411439667702e'/>
+			<wireless_local_area_network id='f86b65dbf77845d8bcd74b3e880589a4'/>
+		</protocols>
+	</module>
+	<module id='1d1f157265a74d2886af70eeac1a2da2'>
+		<vendor_name>Techneco</vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-08-29T20:18:23.942+02:00</created_date>
+		<modified_date>2020-04-06T10:56:42.505+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<dip_switch id='051efd81887246b1b659ce05a19a6f25' log_type='serial_boiler_installation'>
+				<functionalities><point_log id='5f9096331b7f4e139b973184b979b5d4'/></functionalities>
+			</dip_switch>
+			<thermostat id='09c976e41d1e4381a8b49838ecba5a03' log_type='maximum_heating_supply_temperature'>
+				<functionalities><point_log id='2c72b4ae96f94868aae988d6fa085d35'/><thermostat_functionality id='b94737b6eeac42a68397ee2716151148'/></functionalities>
+			</thermostat>
+			<timer id='0a0d8013cc6b4c72b89e4c9011f8b017' log_type='minimum_boiler_run_time'>
+				<functionalities><point_log id='4785c7ff3d624044b2945eaa00c68928'/><timer_functionality id='de3c1664cf1a453782b2af5cc379884b'/></functionalities>
+			</timer>
+			<boiler_state id='0a21a775306a4683898638cafa61718a' log_type='flame_state'>
+				<functionalities><point_log id='595b3c91e9874d8792a1d85a44f69df1'/></functionalities>
+			</boiler_state>
+			<dip_switch id='0dbfdc9c97f245009bf1fdda4aa691d7' log_type='boiler_installed'>
+				<functionalities><point_log id='36378af677b6488bba9cd825307dddf3'/></functionalities>
+			</dip_switch>
+			<thermostat id='0e40f9e4a2304522b6989d16111e06f2' log_type='minimum_cooling_supply_temperature'>
+				<functionalities><point_log id='7baa893800a048548e4343ff4b492bc4'/><thermostat_functionality id='cb884226353c46f6a5b9fdb3d394fe51'/></functionalities>
+			</thermostat>
+			<modulation_level id='0e4cec950a114073837ab83efd6cc5f6' log_type='modulation_level'>
+				<functionalities><point_log id='da4e1567104b4405a4d87736521331e9'/></functionalities>
+			</modulation_level>
+			<boiler_state id='1031c3731df8488b9bfbbb2631596adf' log_type='compressor_state'>
+				<functionalities><point_log id='6bbac5365eed49f584e8636d3c617371'/></functionalities>
+			</boiler_state>
+			<dip_switch id='146e678b4cc54f9aac78b875431fbe62' log_type='thermostat_enabled'>
+				<functionalities><point_log id='5e131c2c6de64675a611b89897012189'/></functionalities>
+			</dip_switch>
+			<thermo_meter id='175cd7ab5b354b5aa443e822bcdf3bb4' log_type='boiler_temperature'>
+				<functionalities><point_log id='2632daba5d0b41ef9ed4958666fc712b'/></functionalities>
+			</thermo_meter>
+			<dip_switch id='189a98e2f44a41a8aeeff76ee8878d80' log_type='underfloor_heating'>
+				<functionalities><point_log id='285fefc0542d476f9f86cedb6d13ab69'/></functionalities>
+			</dip_switch>
+			<timer id='18ac9fc3cc31465c973769dfdbdddfb0' log_type='minimum_boiler_off_time'>
+				<functionalities><timer_functionality id='a047871b00c14c0aa20a5f3c70c1f307'/><point_log id='ae5af13dacf84fe8a4c3a0cf2d0f1edb'/></functionalities>
+			</timer>
+			<fault_code id='208f320c07ca4ec3801de254972bc18e' log_type='elga_outdoor_unit_fault_code'>
+				<functionalities><point_log id='8e2f581de27a4143a24781639b72cded'/></functionalities>
+			</fault_code>
+			<temperature_offset id='218d5dadf1b748278d8ecfa335f6f2cc' log_type='cooling_lower_offset'>
+				<functionalities><offset_functionality id='0150ad6c0a2d47aba4c490e88205d026'/><point_log id='5e4a1554b0ba43bd9f575999622a9f4b'/></functionalities>
+			</temperature_offset>
+			<fault_code id='243195cd516842e5a83d1958e54c5d0b' log_type='open_therm_application_specific_fault_code'>
+				<functionalities><point_log id='7e8bab5d1c6a410b857f706e2e7a852f'/></functionalities>
+			</fault_code>
+			<timer id='297375888b614735a16457b6ebad0f07' log_type='hibernation_lead_time'>
+				<functionalities><point_log id='0d0633fb5347479d8713baf13e94bf4b'/><timer_functionality id='309d32b0ae0740afa6d029436be69a37'/></functionalities>
+			</timer>
+			<thermo_meter id='2ecae8536b9845ac8a24bb8aa00f0202' log_type='domestic_hot_water_temperature'>
+				<functionalities><point_log id='1761195800a74cd9b662910429e9f80e'/></functionalities>
+			</thermo_meter>
+			<dip_switch id='2ef60b8f0e604799ae8621f3adb2fc05' log_type='heating_curve'>
+				<functionalities><point_log id='c9050652569447908bb6585d9e247e1f'/></functionalities>
+			</dip_switch>
+			<thermostat id='3e69deb907724adc92461827bff4e33a' log_type='maximum_cooling_supply_temperature'>
+				<functionalities><thermostat_functionality id='561164f66eac497ab9de99a8c9d836da'/><point_log id='ed19951ad58b41e29b68e05b932fa247'/></functionalities>
+			</thermostat>
+			<status_code id='3e8f2ecf95e34aa7a8ce4427bc57561e' log_type='elga_status_code'>
+				<functionalities><point_log id='e17e8f8e64ca40289b3570f9678ebc67'/></functionalities>
+			</status_code>
+			<timer id='3ee79f555fa645beafcc072ae37f08a9' log_type='indoor_temperature_transition_time'>
+				<functionalities><timer_functionality id='4212b615caee48b786b61ba19bee64a9'/><point_log id='d210b6fa01d84830b48f9eca28e927bd'/></functionalities>
+			</timer>
+			<timer id='4260427e03c5478fabb01e15dff8ed1e' log_type='internal_pump_cooling_lead_time'>
+				<functionalities><point_log id='ce745c8e058141af8455de519f4493ff'/><timer_functionality id='ea3565f93ae64740923d35a7c4a47aa1'/></functionalities>
+			</timer>
+			<thermostat id='46061bfb15f94fbbae78f723ec8809d6' log_type='heatpump_minimum_outdoor_temperature'>
+				<functionalities><point_log id='8515540bd33a4152b7c44acded56cfe5'/><thermostat_functionality id='9b7cc80822ea4ab9ba6a5a0c6c94525c'/></functionalities>
+			</thermostat>
+			<thermostat id='4934bcb09ff340038a1b41033e8c8554' log_type='night_reduction_setpoint'>
+				<functionalities><point_log id='844f8cd23b244de3869063224ca1ae37'/><thermostat_functionality id='b8d6b3de4b80473089bb3bd7af44f173'/></functionalities>
+			</thermostat>
+			<timer id='4f2a750ebea3412583f7247b04162acb' log_type='internal_pump_heating_lead_time'>
+				<functionalities><point_log id='38a38be237ff40fba97dc20d0fd0a719'/><timer_functionality id='d12db80d89d24e2f9f4a8d63ab006cb9'/></functionalities>
+			</timer>
+			<temperature_offset id='5282885e7a7246798105d86877c7d05b' log_type='cooling_upper_offset'>
+				<functionalities><point_log id='8024e02d6a1549dc8f3ca27eefe1ab96'/><offset_functionality id='b74523d1839f49949313fd8d3623f3aa'/></functionalities>
+			</temperature_offset>
+			<thermostat id='5a7a400d13bb48309e37947709b99a7b' log_type='maximum_outdoor_unit_power_increase_temperature'>
+				<functionalities><point_log id='1d81ae485d7e43908adc4bc36230fc3a'/><thermostat_functionality id='7400227332344ce6976641db12753e80'/></functionalities>
+			</thermostat>
+			<boiler_state id='5bf08d5027e44fb389bc21b6d24f0ada' log_type='intended_central_heating_state'>
+				<functionalities><point_log id='f06b10330ba6478c82bee7220daf40f2'/></functionalities>
+			</boiler_state>
+			<thermostat id='5e49f223e7224c3f93552db2c63881f6' log_type='maximum_boiler_temperature'>
+				<functionalities><point_log id='75b84b89bb1044978ff5b885fe79172d'/><thermostat_functionality id='9fd0eeff79874681ac96fffa75a9e459'/></functionalities>
+			</thermostat>
+			<dip_switch id='6259ebdf2c9f4d81b2d62ecee8e0be9d' log_type='boiler_enabled'>
+				<functionalities><point_log id='0e874473f31d4248b565d973ff575889'/></functionalities>
+			</dip_switch>
+			<dip_switch id='66e63e3103494601b7969c6310c9282e' log_type='weather_dependent_regulation'>
+				<functionalities><point_log id='782035fe2bdb4ea69d39680cfd92f92e'/></functionalities>
+			</dip_switch>
+			<timer id='6756a5fb2e424f50891e4ddf10e7bf80' log_type='pump_lag_time'>
+				<functionalities><timer_functionality id='819c1a627ea64c21ad99676ab00cc20d'/><point_log id='d7bbef89ea69499f8ff13b0bcab97850'/></functionalities>
+			</timer>
+			<thermo_meter id='6a3b56382ef04a2db54c35c349a6521f' log_type='intended_boiler_temperature'>
+				<functionalities><point_log id='6a13055741754c52ae8e1ae7c078017b'/></functionalities>
+			</thermo_meter>
+			<thermo_meter id='6bd5f7b74da94e58a99e799df91cdc62' log_type='refrigerent_out_temperature'>
+				<functionalities><point_log id='7cfe6be73be247d9b13eb6e24bf568e2'/></functionalities>
+			</thermo_meter>
+			<thermostat id='6d992ab76124464b89c7bcfe99002582' log_type='maximum_outdoor_unit_steady_temperature'>
+				<functionalities><point_log id='83ddb7f4bf8f4230be4d29dd0222b9cc'/><thermostat_functionality id='d6173dbe96584deca8993f3bc23246b1'/></functionalities>
+			</thermostat>
+			<thermostat id='6e81f1e285c041849c2bde763108b996' log_type='maximum_outdoor_unit_temperature'>
+				<functionalities><point_log id='32fd8899d1564643a4f3c8b07b8f8f72'/><thermostat_functionality id='e5c47ada84924fdaad94430080ab7cb5'/></functionalities>
+			</thermostat>
+			<thermo_meter id='71b1d108384a49769ee4f47b1317cbc6' log_type='outdoor_temperature'>
+				<functionalities><point_log id='53b1f05b9fd540048516ab1db2ab7c18'/></functionalities>
+			</thermo_meter>
+			<thermo_meter id='7b763c70c9fa42a79c98a2556194937c' log_type='refrigerent_in_temperature'>
+				<functionalities><point_log id='b78f1f0104514780991614ece317e6cf'/></functionalities>
+			</thermo_meter>
+			<domestic_hot_water_toggle id='7e91d40baf6d4ef3bec0119269981e28' log_type='domestic_hot_water_comfort_mode'>
+				<functionalities><point_log id='e9a38c9fe3804996ac1c2e1b34eefc4b'/><toggle_functionality id='ea31c46e950f4c219517ab11db512073'/></functionalities>
+			</domestic_hot_water_toggle>
+			<dip_switch id='80c14a5d5b1a44b58e333d2609acdfb6' log_type='temperature_sensor_enabled'>
+				<functionalities><point_log id='401f4f77a1f84d65b8abb0efc086b236'/></functionalities>
+			</dip_switch>
+			<dip_switch id='81dd941165af41bab553a3b0cf3f570a' log_type='hibernation_enabled'>
+				<functionalities><point_log id='d5f36de0dc7e4e7bac12afe5fb391333'/></functionalities>
+			</dip_switch>
+			<dip_switch id='82a235c11bac4ee4bf7a0725d724d632' log_type='first_fan_enabled'>
+				<functionalities><point_log id='09b73012789f4c67bca107f34e0b5057'/></functionalities>
+			</dip_switch>
+			<thermostat id='864d474592a74e0890966d50c6057863' log_type='weather_dependent_maximum_supply_temperature'>
+				<functionalities><thermostat_functionality id='087d511aa2f7489ea948d5d6eaad49ef'/><point_log id='29ed8246df0948cc8e04b6727ce30ef0'/></functionalities>
+			</thermostat>
+			<timer id='8e9de43f1aff496697c86a17e36f573a' log_type='external_pump_cooling_lead_time'>
+				<functionalities><timer_functionality id='a629b9883ccf41089bd728fc5930b0a7'/><point_log id='be5fd557135045fc88af1d49867a06bf'/></functionalities>
+			</timer>
+			<timer id='91f8f121f3404f8ca935b147ac740209' log_type='external_pump_heating_lead_time'>
+				<functionalities><point_log id='ad69b7d7421e446da736eecd38b0ee69'/><timer_functionality id='ae0c7303230548b3986e7de4c0798be4'/></functionalities>
+			</timer>
+			<thermostat id='9249092674274f2b8fb4c5715bb3661e' log_type='minimum_heating_supply_temperature'>
+				<functionalities><thermostat_functionality id='c78eabd550494a80a7ba7db1a757e208'/><point_log id='ef3a7eeb0901445287e99851df7203ed'/></functionalities>
+			</thermostat>
+			<thermo_meter id='970589e0ddcf4113a6288de586951a79' log_type='domestic_hot_water_setpoint'>
+				<functionalities><point_log id='e18c1238dd8a439b83a3283cd61a70ce'/></functionalities>
+			</thermo_meter>
+			<dip_switch id='9708d5e6575e423797be3ffcd33f7e04' log_type='night_reduction'>
+				<functionalities><point_log id='0444503a231a49aabc7b0c5ad3ecf73c'/></functionalities>
+			</dip_switch>
+			<dip_switch id='9b2eca593c2340ab938ec75dd4febc74' log_type='input_contacts_installed'>
+				<functionalities><point_log id='20c2c2d22e254693977874b6ac38e294'/></functionalities>
+			</dip_switch>
+			<boiler_state id='9c2394fe50c7473aac67597e57076589' log_type='cooling_state'>
+				<functionalities><point_log id='49c057fbf17e4ddb83ab786acac33cb3'/></functionalities>
+			</boiler_state>
+			<interval_chrono_meter id='a64c82ee158446cdb2e6f3f10072481f' log_type='burner_operation_time'>
+				<functionalities><interval_log id='c90749ef40694f0888a177366ea10846'/></functionalities>
+			</interval_chrono_meter>
+			<dip_switch id='a8e96d432b8b4d01b236cee33a7f347c' log_type='second_fan_enabled'>
+				<functionalities><point_log id='42182ab8b0644ae2a6647ae4b24471d8'/></functionalities>
+			</dip_switch>
+			<threshold id='af7150b6834a4b45b577fca1afe0008f' log_type='boiler_activation_threshold'>
+				<functionalities><threshold_functionality id='07ecbcadde1746e6a38a750e0a408b78'/><point_log id='558541d33cf54fb5b3d3042dadd72df0'/></functionalities>
+			</threshold>
+			<dip_switch id='b4722110e97b4f05ba00b651368f57ca' log_type='outdoor_temperature_used'>
+				<functionalities><point_log id='b6caf7c833fb4a0e887506f4bf2a1efb'/></functionalities>
+			</dip_switch>
+			<fault_code id='b575e62013b0498b84f0459cbad9e7fa' log_type='open_therm_oem_fault_code'>
+				<functionalities><point_log id='dbd519e6829942fb8f6e9bdb5fc6c85f'/></functionalities>
+			</fault_code>
+			<pressure_gauge id='bd8c5315fb3041c9a8668969f6f23af6' log_type='central_heater_water_pressure'>
+				<functionalities><point_log id='bdf91a6c248a47f59f16817ba343d45b'/></functionalities>
+			</pressure_gauge>
+			<dip_switch id='bf99294333c14c6b8b15dc2cb3446e46' log_type='thermostat_supports_cooling'>
+				<functionalities><point_log id='1f5c3bfed64642e88667ad9828b1723b'/></functionalities>
+			</dip_switch>
+			<fault_code id='c2f0f2af06284c9999e1446431bb0438' log_type='open_therm_slave_oem_fault_code'>
+				<functionalities><point_log id='f4e3ff5afbd744ea9efdb24ab12af68e'/></functionalities>
+			</fault_code>
+			<boiler_state id='c52e9f30996d4d01bf820daae3ea9515' log_type='slave_boiler_state'>
+				<functionalities><point_log id='1624f1d97a544610a115ca3ee27fa3b4'/></functionalities>
+			</boiler_state>
+			<interval_chrono_meter id='cdb8e82b11cb4c3982e93ac5316734d9' log_type='burner_efficiency'>
+				<functionalities><interval_log id='deec94e43d8a4a4caad998afc47733c3'/></functionalities>
+			</interval_chrono_meter>
+			<point_chrono_meter id='e0d858eec1fa416a8d1e415f825a2f86' log_type='burner_efficiency'>
+				<functionalities><point_log id='471675c7dacc441592402660cea5943f'/></functionalities>
+			</point_chrono_meter>
+			<boiler_state id='e40b41617c2943e0b8b1c549f7ada839' log_type='domestic_hot_water_state'>
+				<functionalities><point_log id='6db92aca6f3a4729b645f603cfa9db04'/></functionalities>
+			</boiler_state>
+			<boiler_state id='e5094e2dc01f495888c5fc08e7a3fcd6' log_type='central_heating_state'>
+				<functionalities><point_log id='95c0381819854b34820a57bee027907f'/></functionalities>
+			</boiler_state>
+			<flow_meter id='ec95307ecd6040c5b43023a29000646d' log_type='domestic_hot_water_flow'>
+				<functionalities><point_log id='8ac94d4592b24ba68a856ab92c2842d6'/></functionalities>
+			</flow_meter>
+			<thermostat id='edbbd56fc5a44738bb24dcf6e6e78009' log_type='boiler_minimum_outdoor_temperature'>
+				<functionalities><thermostat_functionality id='04dd3b477fd241de8270dfc734a71e65'/><point_log id='b3ac2653a2bd4e0b8caffc8aacd4cd0e'/></functionalities>
+			</thermostat>
+			<thermo_meter id='eea21448cd534212bec31bcf909cdc46' log_type='temperature'>
+				<functionalities><point_log id='2c71c2d5ff5d40e499a4cd119e2f2107'/></functionalities>
+			</thermo_meter>
+			<dip_switch id='f835ab3960f943d2a70bf16aa6174003' log_type='simultaneous_boiler_operation'>
+				<functionalities><point_log id='b3145dfba4bb404792176bdc88f48375'/></functionalities>
+			</dip_switch>
+			<thermo_meter id='fb7e48d147c0411196c04f83c6315964' log_type='return_water_temperature'>
+				<functionalities><point_log id='1f06160a4e4b4f66ac15025fd2028635'/></functionalities>
+			</thermo_meter>
+		</services>
+		<protocols>
+			<open_therm_boiler id='5b0f2190b3c6471080fd1e5f2f9e12cd'>
+				<thermo_extension id='35df593e35494511a10a01ec29c69c8d'/>
+				<open_therm_version>0.0</open_therm_version>
+				<is_modulating>true</is_modulating>
+				<with_cooling>false</with_cooling>
+				<with_domestic_hot_water>false</with_domestic_hot_water>
+				<with_domestic_hot_water_storage>false</with_domestic_hot_water_storage>
+				<with_master_low_off_and_pump_control>true</with_master_low_off_and_pump_control>
+				<with_secondary_heating_circuit>false</with_secondary_heating_circuit>
+				<smartgrid_control>smart_grid_off</smartgrid_control>
+				<test_mode>circulation_heat</test_mode>
+			</open_therm_boiler>
+		</protocols>
+	</module>
+	<module id='051abe5262fe4a5bafaca64f1d2a544a'>
+		<vendor_name></vendor_name>
+		<vendor_model></vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<created_date>2019-01-31T12:00:30.650+01:00</created_date>
+		<modified_date>2020-04-01T01:33:46.562+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<irradiance_meter id='2779db419be4410588392bf6c0a59f62' log_type='solar_irradiance'>
+				<functionalities><point_log id='217dcb6bb1114acea5cb9c02eeebce93'/></functionalities>
+			</irradiance_meter>
+			<hygro_meter id='37958fc1ba4c4d49a2667084cb78cab3' log_type='humidity'>
+				<functionalities><point_log id='bd20af772cbd4112b5e67b66d23b9cf4'/></functionalities>
+			</hygro_meter>
+			<wind_vector id='53398d25518a4b258247ce01443f075b' log_type='wind_vector'>
+				<functionalities><point_log id='0977ec115e754e65ac849f36381e92d8'/></functionalities>
+			</wind_vector>
+			<thermo_meter id='a69da3a5a8504186b6773c95f79e641e' log_type='outdoor_temperature'>
+				<functionalities><point_log id='7f93a0e35a8941e0af5064efa04d78da'/></functionalities>
+			</thermo_meter>
+			<weather_descriptor id='e32cda35324644d6a3f306d809ba6dce' log_type='weather_description'>
+				<functionalities><point_log id='5a2cd3d47eb0459988325e819af6bcd2'/></functionalities>
+			</weather_descriptor>
+		</services>
+		<protocols>
+			<weather_feed id='1d6b8793ed5642cd8d461ade22050b8a'/>
+		</protocols>
+	</module>
+</modules>
