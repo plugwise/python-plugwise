@@ -2012,7 +2012,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
-        self.smile_setup = "updated/anna_v4"
+        self.smile_setup = "updated/adam_plus_anna_new"
         await self.device_test(smile, testdata_updated, initialize=False)
 
         await smile.close_connection()
