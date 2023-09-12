@@ -1890,7 +1890,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         testdata_updated = {
             "67d73d0bd469422db25a618a5fb8eeb0": {
                 "dev_class": "zz_misc",
-                "switches": {"lock": True}, !!!
+                "switches": {"lock": True},
             },
             "2568cc4b9c1e401495d4741a5f89bee1": {
                 "dev_class": "computer_desktop",
@@ -1901,7 +1901,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_produced": 0.0,
                     "electricity_produced_interval": 0.0,
                 },
-                "switches": {"relay": False, "lock": False}, !!!!
+                "switches": {"relay": False, "lock": False},
             },
             "1772a4ea304041adb83f357b751341ff": {
                 "dev_class": "thermo_sensor",
@@ -1912,7 +1912,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Tom Badkamer",
                 "zigbee_mac_address": "ABCD012345670A01",
                 "vendor": "Plugwise",
-                "available": False, !!!!
+                "available": False,
                 "sensors": {
                     "temperature": 21.6,
                     "setpoint": 15.0,
@@ -1923,7 +1923,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "da224107914542988a88561b4452b0f6": {
                 "dev_class": "gateway",
-                "binary_sensors": {"plugwise_notification": True}, !!!!
+                "binary_sensors": {"plugwise_notification": True},
             },
             "e8ef2a01ed3b4139a53bf749204fe6b4": {
                 "dev_class": "switching",
