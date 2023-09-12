@@ -2010,6 +2010,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.tinker_max_boiler_temp(smile)
 
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/anna_v4"
+        await self.device_test(smile, testdata_updated, initialize=False)
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
