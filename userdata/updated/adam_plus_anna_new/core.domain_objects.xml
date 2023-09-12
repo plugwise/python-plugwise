@@ -49,6 +49,18 @@
 			</zig_bee_node>
 		</protocols>
 	</module>
+	<notification id='af82e4ccf9c548528166d38e560662a4'>
+		<type>warning</type>
+		<origin>local</origin>
+		<title>Plug has been unreachable since 23:03 2020-01-18.</title>
+		<message>Node Plug (with MAC address 000D6F000D13CB01, in room &apos;n.a.&apos;) has been unreachable since 23:03 2020-01-18. Please check the connection and restart the device.</message>
+		<valid_from></valid_from>
+		<valid_to></valid_to>
+		<read_date>2020-01-23T10:54:59.710+01:00</read_date>
+		<created_date>2020-01-18T23:03:43.689+01:00</created_date>
+		<modified_date>2020-01-18T23:03:43.749+01:00</modified_date>
+		<deleted_date></deleted_date>
+	</notification>
 	<appliance id='2568cc4b9c1e401495d4741a5f89bee1'>
 		<name>Plug Werkplek</name>
 		<description>A smart plug that can be switched on/off and measure power usage.</description>
