@@ -1104,6 +1104,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "resolution": 0.1,
                 },
                 "active_preset": "away",
+                "select_schedule": "Standaard",
+                "mode": "auto",
                 "sensors": {"temperature": 19.5, "setpoint": 19.5, "illuminance": 39.5},
             },
             "0466eae8520144c78afb29628384edeb": {
