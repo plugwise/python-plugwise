@@ -86,7 +86,11 @@
 			<when time="[we 06:15,we 07:30)"><then preset="home"/></when>
 			<when time="[we 07:30,we 18:15)"><then preset="away"/></when>
 		</directives>
-		<contexts> </contexts>
+		<contexts>
+			<context>
+				<zone><location id="eb5309212bf5407bb143e5bfa3b18aee"/></zone>
+			</context>
+		</contexts>
 	</rule>
 	<template id='c51106a7df114f23871e621c49a639b1' tag="zone_preset_based_on_time_and_presence_with_override">
 		<name>Zone preset schedule template</name>
