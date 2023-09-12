@@ -19,4 +19,4 @@ requirements*.txt @plugwise/plugwise-smile
 /plugwise @bouwew @compatech
 
 # Generic
-/ @plugwise/plugwise-smile
+* @plugwise/plugwise-smile
