@@ -1095,6 +1095,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "return_temperature": 41.0,
                     "water_pressure": 2.1,
                 },
+                "switches": {"dhw_cm_switch": True},
             },
             "01b85360fdd243d0aaad4d6ac2a5ba7e": {
                 "thermostat": {

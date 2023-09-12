@@ -65,7 +65,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2019-05-17T09:11:06.126+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-01T09:58:10.130+02:00" end_date="2020-04-01T09:58:10.130+02:00">
-					<measurement log_date="2020-04-01T09:58:10.130+02:00">off</measurement>
+					<measurement log_date="2020-04-01T09:58:10.130+02:00">on</measurement>
 				</period>
 				<domestic_hot_water_toggle id='a9a769caed18433387e4df51b54727f4'/>
 			</point_log>
@@ -254,7 +254,7 @@
 				<domestic_hot_water_toggle id='a9a769caed18433387e4df51b54727f4'/>
 				<updated_date>2020-04-01T09:58:10.130+02:00</updated_date>
 				<type>domestic_hot_water_comfort_mode</type>
-				<state>off</state>
+				<state>on</state>
 			</toggle_functionality>
 			<thermostat_functionality id='b8b6121886d04f41bdb62585844d3b0e'>
 				<updated_date>2020-04-01T09:58:09.977+02:00</updated_date>
