@@ -2,14 +2,14 @@
 # Order is important. The last matching pattern has the most precedence.
 
 # Specific files
-setup.cfg @plugwise/devs
-setup.py @plugwise/devs
-pyproject.toml @plugwise/devs
-requirements*.txt @plugwise/devs
+setup.cfg @plugwise/plugwise-smile
+setup.py @plugwise/plugwise-smile
+pyproject.toml @plugwise/plugwise-smile
+requirements*.txt @plugwise/plugwise-smile
 
 # Main code
-/plugwise/ @plugwise/devs
-/userdata/ @plugwise/devs
+/plugwise/ @plugwise/plugwise-smile
+/userdata/ @plugwise/plugwise-smile
 
 # Tests and development support
 /tests/ @bouwew @compatech
@@ -17,3 +17,6 @@ requirements*.txt @plugwise/devs
 
 # Networked Plugwise components
 /plugwise @bouwew @compatech
+
+# Generic
+/ @plugwise/plugwise-smile
