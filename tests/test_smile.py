@@ -1889,46 +1889,25 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
         testdata_updated = {
             "67d73d0bd469422db25a618a5fb8eeb0": {
-                "dev_class": "zz_misc",
                 "switches": {"lock": True},
             },
+            "29542b2b6a6a4169acecc15c72a599b8": {
+                "switches": {"relay": False, "lock": False},
+            },
             "2568cc4b9c1e401495d4741a5f89bee1": {
-                "dev_class": "computer_desktop",
-                "firmware": "2020-11-10T01:00:00+01:00",
                 "sensors": {
                     "electricity_consumed": 0.0,
                     "electricity_consumed_interval": 0.0,
-                    "electricity_produced": 0.0,
-                    "electricity_produced_interval": 0.0,
                 },
                 "switches": {"relay": False, "lock": False},
             },
             "1772a4ea304041adb83f357b751341ff": {
-                "dev_class": "thermo_sensor",
-                "firmware": "2020-11-04T01:00:00+01:00",
-                "hardware": "1",
-                "location": "f871b8c4d63549319221e294e4f88074",
-                "model": "Tom/Floor",
-                "name": "Tom Badkamer",
-                "zigbee_mac_address": "ABCD012345670A01",
-                "vendor": "Plugwise",
                 "available": False,
-                "sensors": {
-                    "temperature": 21.6,
-                    "setpoint": 15.0,
-                    "battery": 99,
-                    "temperature_difference": 2.3,
-                    "valve_position": 0.0,
-                },
             },
             "da224107914542988a88561b4452b0f6": {
-                "dev_class": "gateway",
                 "binary_sensors": {"plugwise_notification": True},
             },
             "e8ef2a01ed3b4139a53bf749204fe6b4": {
-                "dev_class": "switching",
-                "model": "Switchgroup",
-                "name": "Test",
                 "members": [
                     "2568cc4b9c1e401495d4741a5f89bee1",
                     "29542b2b6a6a4169acecc15c72a599b8",
