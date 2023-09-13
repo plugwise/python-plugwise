@@ -317,6 +317,7 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
+        self._target_smile: str | None = None
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
@@ -432,19 +433,19 @@ class Smile(SmileComm, SmileData):
             raise UnsupportedDeviceError
 
         ver = semver.version.Version.parse(self.smile_fw_version)
-        target_smile = f"{model}_v{ver.major}"
-        LOGGER.debug("Plugwise identified as %s", target_smile)
-        if target_smile not in SMILES:
+        self._target_smile = f"{model}_v{ver.major}"
+        LOGGER.debug("Plugwise identified as %s", self._target_smile)
+        if self._target_smile not in SMILES:
             LOGGER.error(
                 "Your version Smile identified as %s seems unsupported by our plugin, please"
                 " create an issue on http://github.com/plugwise/python-plugwise",
-                target_smile,
+                self._target_smile,
             )
             raise UnsupportedDeviceError
 
         self.smile_model = "Gateway"
-        self.smile_name = SMILES[target_smile].smile_name
-        self.smile_type = SMILES[target_smile].smile_type
+        self.smile_name = SMILES[self._target_smile].smile_name
+        self.smile_type = SMILES[self._target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
 
         if self.smile_type == "stretch":
@@ -505,16 +506,20 @@ class Smile(SmileComm, SmileData):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        if self.smile_type != "power":
-            await self._update_domain_objects()
-        elif not self._smile_legacy:
-            self._locations = await self._request(LOCATIONS)
-        else:
-            self._modules = await self._request(MODULES)
-
-        # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
-            self._appliances = await self._request(APPLIANCES)
+        match self._target_smile:
+            case "smile_v2":
+                self._modules = await self._request(MODULES)
+            case "smile_v3" | "smile_v4":
+                self._locations = await self._request(LOCATIONS)
+            case "smile_thermo_v1" | "smile_thermo_v3" | "smile_thermo_v4":
+                self._appliances = await self._request(APPLIANCES)
+                await self._update_domain_objects()
+            case "smile_open_therm_v2" | "smile_open_therm_v3":
+                self._appliances = await self._request(APPLIANCES)
+                await self._update_domain_objects()
+                self._modules = await self._request(MODULES)
+            case "stretch_v2" | "stretch_v3":
+                self._appliances = await self._request(APPLIANCES)
 
         self.gw_data["notifications"] = self._notifications
 

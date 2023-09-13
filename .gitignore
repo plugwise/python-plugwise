@@ -16,3 +16,4 @@ tmp
 .mypy_cache
 node_modules/
 package-lock.json
+fixtures/updated/*/

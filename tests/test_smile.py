@@ -375,14 +375,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 assert False
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=pw_smile.Smile, testdata=None):
+    async def device_test(self, smile=pw_smile.Smile, testdata=None, initialize=True):
         """Perform basic device tests."""
-        _LOGGER.info("Asserting testdata:")
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
         with freeze_time("2022-05-16 00:00:01"):
-            await smile._full_update_device()
-            smile.get_all_devices()
+            if initialize:
+                _LOGGER.info("Asserting testdata:")
+                await smile._full_update_device()
+                smile.get_all_devices()
+            else:
+                _LOGGER.info("Asserting updated testdata:")
             data = await smile.async_update()
 
         if "heater_id" in data.gateway:
@@ -454,6 +457,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                             asserts += 1
 
         assert tests == asserts
+        _LOGGER.debug("Number of test-assert: %s", asserts)
 
     @pytest.mark.asyncio
     async def tinker_switch(
@@ -1065,6 +1069,50 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "sensors": {"outdoor_temperature": 7.44},
             },
         }
+        testdata_updated = {
+            "cd0e6156b1f04d5f952349ffbe397481": {
+                "maximum_boiler_temperature": {
+                    "setpoint": 69.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
+                "max_dhw_temperature": {
+                    "setpoint": 59.0,
+                    "lower_bound": 30.0,
+                    "upper_bound": 60.0,
+                    "resolution": 0.01,
+                },
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 51.0,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "return_temperature": 41.0,
+                    "water_pressure": 2.1,
+                },
+                "switches": {"dhw_cm_switch": True},
+            },
+            "01b85360fdd243d0aaad4d6ac2a5ba7e": {
+                "thermostat": {
+                    "setpoint": 19.5,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
+                "active_preset": "away",
+                "select_schedule": "Standaard",
+                "mode": "auto",
+                "sensors": {"temperature": 19.5, "setpoint": 19.5, "illuminance": 39.5},
+            },
+            "0466eae8520144c78afb29628384edeb": {
+                "sensors": {"outdoor_temperature": 6.44},
+            },
+        }
 
         self.smile_setup = "anna_v4"
         server, smile, client = await self.connect_wrapper()
@@ -1102,10 +1150,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile, "0466eae8520144c78afb29628384edeb"
         )
         assert not result
+
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/anna_v4"
+        await self.device_test(smile, testdata_updated, initialize=False)
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        # Reset self.smile_setup
+        self.smile_setup = "anna_v4"
         await self.device_test(smile, testdata)
         result = await self.tinker_thermostat(
             smile,
@@ -1831,6 +1887,34 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True},
             },
         }
+        testdata_updated = {
+            "67d73d0bd469422db25a618a5fb8eeb0": {
+                "switches": {"lock": True},
+            },
+            "29542b2b6a6a4169acecc15c72a599b8": {
+                "switches": {"relay": False, "lock": False},
+            },
+            "2568cc4b9c1e401495d4741a5f89bee1": {
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "1772a4ea304041adb83f357b751341ff": {
+                "available": False,
+            },
+            "da224107914542988a88561b4452b0f6": {
+                "binary_sensors": {"plugwise_notification": True},
+            },
+            "e8ef2a01ed3b4139a53bf749204fe6b4": {
+                "members": [
+                    "2568cc4b9c1e401495d4741a5f89bee1",
+                    "29542b2b6a6a4169acecc15c72a599b8",
+                ],
+                "switches": {"relay": False},
+            },
+        }
 
         self.smile_setup = "adam_plus_anna_new"
         server, smile, client = await self.connect_wrapper()
@@ -1904,6 +1988,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.tinker_regulation_mode(smile)
 
         await self.tinker_max_boiler_temp(smile)
+
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/adam_plus_anna_new"
+        await self.device_test(smile, testdata_updated, initialize=False)
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3557,7 +3646,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=[None],
         )
         assert result
-
         await smile.close_connection()
         await self.disconnect(server, client)
 
