@@ -207,7 +207,7 @@
 				<interval/>
 				<relay id='fda539a7d5834f6a8f2dc5f5b2f5ea56'/>
 				<period start_date="2022-01-11T08:03:16.606+01:00" end_date="2022-01-11T08:03:16.606+01:00">
-					<measurement log_date="2022-01-11T08:03:16.606+01:00">on</measurement>
+					<measurement log_date="2022-01-11T08:03:16.606+01:00">off</measurement>
 				</period>
 			</point_log>
 			<interval_log id='d7384d844896403fb85e5d6b530ce58a'>
@@ -218,7 +218,7 @@
 				<interval>PT15M</interval>
 				<electricity_interval_meter id='e926b32b38c549ba8e727f0577543211'/>
 				<period start_date="2022-01-11T07:45:00+01:00" end_date="2022-01-11T07:45:00+01:00" interval="PT15M">
-					<measurement log_date="2022-01-11T07:45:00+01:00">3.00</measurement>
+					<measurement log_date="2022-01-11T07:45:00+01:00">0.00</measurement>
 				</period>
 			</interval_log>
 			<point_log id='e99509c79fa44956ba2893896d4c5a02'>
@@ -237,7 +237,7 @@
 			<relay_functionality id='4d03be44b57447bd97797ef47c8e56e8'>
 				<updated_date>2022-01-11T08:03:16.606+01:00</updated_date>
 				<lock>false</lock>
-				<state>on</state>
+				<state>off</state>
 				<relay id='fda539a7d5834f6a8f2dc5f5b2f5ea56'/>
 			</relay_functionality>
 		</actuator_functionalities>
