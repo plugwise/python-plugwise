@@ -2,6 +2,8 @@
 
 ## Ongoing
 
+- Testing: make it possible to emulate binary_sensors, climates, numbers, sensors, switches, etc., updating.
+- Fix a bug which prevents the updating of the available-state of zigbee devices.
 - Modify the added P1 Plugwise notification so that it does not impact the device-availability
 
 ## v0.32.2 Continuous improvements, bugfix
