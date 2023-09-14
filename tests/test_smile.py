@@ -5295,7 +5295,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert self.device_items == 31
         assert not self.notifications
 
-
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/p1v4_442_single"
