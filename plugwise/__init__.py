@@ -505,6 +505,7 @@ class Smile(SmileComm, SmileData):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
+        await self._update_domain_objects()
         match self._target_smile:
             case "smile_v2":
                 self._modules = await self._request(MODULES)
@@ -512,10 +513,8 @@ class Smile(SmileComm, SmileData):
                 self._locations = await self._request(LOCATIONS)
             case "smile_thermo_v1" | "smile_thermo_v3" | "smile_thermo_v4":
                 self._appliances = await self._request(APPLIANCES)
-                await self._update_domain_objects()
             case "smile_open_therm_v2" | "smile_open_therm_v3":
                 self._appliances = await self._request(APPLIANCES)
-                await self._update_domain_objects()
                 self._modules = await self._request(MODULES)
             case "stretch_v2" | "stretch_v3":
                 self._appliances = await self._request(APPLIANCES)
