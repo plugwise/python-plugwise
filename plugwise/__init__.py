@@ -25,6 +25,7 @@ from .constants import (
     MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
+    REQUIRE_APPLIANCES,
     RULES,
     SMILES,
     STATUS,
@@ -511,12 +512,10 @@ class Smile(SmileComm, SmileData):
                 self._modules = await self._request(MODULES)
             case "smile_v3" | "smile_v4":
                 self._locations = await self._request(LOCATIONS)
-            case "smile_thermo_v1" | "smile_thermo_v3" | "smile_thermo_v4":
-                self._appliances = await self._request(APPLIANCES)
             case "smile_open_therm_v2" | "smile_open_therm_v3":
                 self._appliances = await self._request(APPLIANCES)
                 self._modules = await self._request(MODULES)
-            case "stretch_v2" | "stretch_v3":
+            case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
                 self._appliances = await self._request(APPLIANCES)
 
         self.gw_data["notifications"] = self._notifications
