@@ -5258,6 +5258,26 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
         }
+        testdata_updated = {
+            "ba4de7613517478da82dd9b6abea36af": {
+                "available": True,
+                "sensors": {
+                    "net_electricity_point": -2248,
+                    "electricity_consumed_peak_point": 0,
+                    "electricity_consumed_off_peak_point": 0,
+                    "electricity_consumed_peak_interval": 0,
+                    "electricity_consumed_off_peak_interval": 0,
+                    "electricity_produced_peak_point": 2248,
+                    "electricity_produced_off_peak_point": 0,
+                    "electricity_produced_peak_cumulative": 6543,
+                    "electricity_produced_off_peak_cumulative": 0.0,
+                    "electricity_produced_peak_interval": 1345,
+                    "electricity_produced_off_peak_interval": 0,
+                    "electricity_phase_one_consumed": 0,
+                    "electricity_phase_one_produced": 1998,
+                },
+            },
+        }
 
         self.smile_setup = "p1v4_442_single"
         server, smile, client = await self.connect_wrapper()
@@ -5275,6 +5295,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
         assert self.device_items == 31
         assert not self.notifications
+
+
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/p1v4_442_single"
+        await self.device_test(smile, testdata_updated, initialize=False)
 
         await smile.close_connection()
         await self.disconnect(server, client)

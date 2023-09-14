@@ -42,7 +42,7 @@
 				<interval/>
 				<electricity_cumulative_meter id='1fa5f5772e464e5cbcb595101adaf8e5'/>
 				<period start_date="2022-12-24T10:08:00+01:00" end_date="2022-12-24T10:08:00+01:00">
-					<measurement log_date="2022-12-24T10:08:00+01:00" tariff="nl_peak">2248.00</measurement>
+					<measurement log_date="2022-12-24T10:08:00+01:00" tariff="nl_peak">6543.00</measurement>
 					<measurement log_date="2022-12-24T10:08:00+01:00" tariff="nl_offpeak">0.00</measurement>
 				</period>
 			</cumulative_log>
@@ -65,7 +65,7 @@
 				<interval/>
 				<electricity_point_meter id='b0618815236d47a2b093a1a7ba83991d'/>
 				<period start_date="2022-12-24T10:08:05+01:00" end_date="2022-12-24T10:08:05+01:00">
-					<measurement log_date="2022-12-24T10:08:05+01:00" tariff="nl_peak">0.00</measurement>
+					<measurement log_date="2022-12-24T10:08:05+01:00" tariff="nl_peak">2248.00</measurement>
 					<measurement log_date="2022-12-24T10:08:05+01:00" tariff="nl_offpeak">0.00</measurement>
 				</period>
 			</point_log>
@@ -89,7 +89,7 @@
 				<interval>PT5M</interval>
 				<electricity_interval_meter id='b3e07d45b7354d189cd0d5d41a4f80d7'/>
 				<period start_date="2022-12-24T10:05:00+01:00" end_date="2022-12-24T10:05:00+01:00" interval="PT5M">
-					<measurement log_date="2022-12-24T10:05:00+01:00" tariff="nl_peak">6543.00</measurement>
+					<measurement log_date="2022-12-24T10:05:00+01:00" tariff="nl_peak">1345.00</measurement>
 					<measurement log_date="2022-12-24T10:05:00+01:00" tariff="nl_offpeak">0.00</measurement>
 				</period>
 			</interval_log>
