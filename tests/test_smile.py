@@ -5260,7 +5260,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         }
         testdata_updated = {
             "ba4de7613517478da82dd9b6abea36af": {
-                "available": True,
                 "sensors": {
                     "net_electricity_point": -2248,
                     "electricity_consumed_peak_point": 0,
@@ -5269,7 +5268,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "electricity_consumed_off_peak_interval": 0,
                     "electricity_produced_peak_point": 2248,
                     "electricity_produced_off_peak_point": 0,
-                    "electricity_produced_peak_cumulative": 6543,
+                    "electricity_produced_peak_cumulative": 6.543,
                     "electricity_produced_off_peak_cumulative": 0.0,
                     "electricity_produced_peak_interval": 1345,
                     "electricity_produced_off_peak_interval": 0,
