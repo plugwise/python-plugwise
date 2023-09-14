@@ -977,6 +977,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
         }
+        testdata_updated = {
+            "199aa40f126840f392983d171374ab0b": {
+                "sensors": {
+                    "net_electricity_point": -2248,
+                    "electricity_consumed_point": 0,
+                    "net_electricity_cumulative": 1019.101,
+                    "electricity_consumed_peak_cumulative": 1155.295,
+                    "electricity_consumed_off_peak_cumulative": 1642.84,
+                    "electricity_produced_point": 2248,
+                    "electricity_produced_peak_cumulative": 1296.336,
+                    "electricity_produced_off_peak_cumulative": 482.698,
+                    "gas_consumed_cumulative": 585.433,
+                    "gas_consumed_interval": 0,
+                },
+            },
+        }
 
         self.smile_setup = "smile_p1_v2_2"
         server, smile, client = await self.connect_wrapper()
@@ -993,6 +1009,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert self.device_items == 26
         assert not self.notifications
+
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/smile_p1_v2_2"
+        await self.device_test(smile, testdata_updated, initialize=False)
 
         await smile.close_connection()
         await self.disconnect(server, client)
