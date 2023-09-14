@@ -25,6 +25,7 @@ from .constants import (
     MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
+    REQUIRE_APPLIANCES,
     RULES,
     SMILES,
     STATUS,
@@ -474,13 +475,12 @@ class Smile(SmileComm, SmileData):
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
+        await self._update_domain_objects()
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
-
-        # P1 legacy has no appliances and nothing of interest in domain_objects
+        # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
-            await self._update_domain_objects()
 
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
@@ -506,19 +506,16 @@ class Smile(SmileComm, SmileData):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
+        await self._update_domain_objects()
         match self._target_smile:
             case "smile_v2":
                 self._modules = await self._request(MODULES)
             case "smile_v3" | "smile_v4":
                 self._locations = await self._request(LOCATIONS)
-            case "smile_thermo_v1" | "smile_thermo_v3" | "smile_thermo_v4":
-                self._appliances = await self._request(APPLIANCES)
-                await self._update_domain_objects()
             case "smile_open_therm_v2" | "smile_open_therm_v3":
                 self._appliances = await self._request(APPLIANCES)
-                await self._update_domain_objects()
                 self._modules = await self._request(MODULES)
-            case "stretch_v2" | "stretch_v3":
+            case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
                 self._appliances = await self._request(APPLIANCES)
 
         self.gw_data["notifications"] = self._notifications
