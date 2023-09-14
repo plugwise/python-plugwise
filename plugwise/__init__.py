@@ -474,14 +474,12 @@ class Smile(SmileComm, SmileData):
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
+        await self._update_domain_objects()
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
-        if self.smile_type == "power":
-            if not self._smile_legacy:
-                self._appliances = await self._request(APPLIANCES)
-        else:
+        # P1 legacy has no appliances
+        if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
-            await self._update_domain_objects()
 
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
