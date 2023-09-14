@@ -4761,6 +4761,39 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "switches": {"relay": True},
             },
         }
+        testdata_updated = {
+            "aac7b735042c4832ac9ff33aae4f453b": {
+                "sensors": {
+                    "electricity_consumed": 1000.0,
+                    "electricity_consumed_interval": 20.7,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": True, "lock": True},
+            },
+            "cfe95cf3de1948c0b8955125bf754614": {
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "059e4d03c7a34d278add5c7a4a781d19": {
+                "sensors": {
+                    "electricity_consumed": 0.0,
+                    "electricity_consumed_interval": 0.0,
+                    "electricity_produced": 0.0,
+                },
+                "switches": {"relay": False, "lock": False},
+            },
+            "d03738edfcc947f7b8f4573571d90d2d": {
+                "members": [
+                    "059e4d03c7a34d278add5c7a4a781d19",
+                    "cfe95cf3de1948c0b8955125bf754614",
+                ],
+                "switches": {"relay": False},
+            },
+        }
 
         self.smile_setup = "stretch_v31"
         server, smile, client = await self.connect_wrapper(stretch=True)
@@ -4777,6 +4810,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 83
+
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "updated/stretch_v31"
+        await self.device_test(smile, testdata_updated, initialize=False)
 
         await smile.close_connection()
         await self.disconnect(server, client)
