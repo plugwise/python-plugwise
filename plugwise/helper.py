@@ -957,7 +957,7 @@ class SmileHelper:
                 if (function := xml.find(locator)) is not None and xml.find(
                     upd_date_loc
                 ).text is not None:
-                    LOGGER.debug("HOI date: %s", xml.find(upd_date_loc).text)
+                    LOGGER.debug("HOI key, date: %s, %s", item, xml.find(upd_date_loc).text)
                     if function.text == "nil":
                         break
 
