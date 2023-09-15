@@ -956,7 +956,7 @@ class SmileHelper:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
-                if (function := xml.find(locator)) is not None and xml.find(upd_date_loc) is not None:
+                if (function := xml.find(locator)) is not None and xml.find(upd_date_loc).text is not None:
                     if function.text == "nil":
                         break
 
