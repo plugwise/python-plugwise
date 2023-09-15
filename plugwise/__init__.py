@@ -529,6 +529,7 @@ class Smile(SmileComm, SmileData):
                 data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
+            LOGGER.debug("HOI 2 data: %s", data)
             device.update(data)
 
             # Update for cooling
