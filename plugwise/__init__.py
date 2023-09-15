@@ -548,6 +548,7 @@ class Smile(SmileComm, SmileData):
             LOGGER.debug("HOI 3 tmp_dict: %s", tmp_dict)
 
             device.update(tmp_dict)
+            device.update(data)
 
             # Update for cooling
             if device["dev_class"] in ZONE_THERMOSTATS:
