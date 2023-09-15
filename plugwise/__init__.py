@@ -522,7 +522,6 @@ class Smile(SmileComm, SmileData):
         self.gw_data["notifications"] = self._notifications
 
         for device_id, device in self.gw_devices.items():
-            LOGGER.debug("HOI 0 device: %s", device)
             data = self._get_device_data(device_id)
             if (
                 "binary_sensors" in device
@@ -533,6 +532,8 @@ class Smile(SmileComm, SmileData):
                 )
 
             tmp_dict: DeviceData = {}
+            LOGGER.debug("HOI 0 device orig: %s", dict(device))
+            LOGGER.debug("HOI 0 data orig: %s", dict(data))
             for key, value in dict(device).items():
                 for data_key, data_value in dict(data).items():
                     if key == data_key:
@@ -544,8 +545,8 @@ class Smile(SmileComm, SmileData):
                         device.pop(item)
 
             LOGGER.debug("HOI 1 device: %s", device)
-            LOGGER.debug("HOI 2 data: %s", data)
-            LOGGER.debug("HOI 3 tmp_dict: %s", tmp_dict)
+            LOGGER.debug("HOI 1 data: %s", data)
+            LOGGER.debug("HOI 1 tmp_dict: %s", tmp_dict)
 
             device.update(tmp_dict)
             device.update(data)
