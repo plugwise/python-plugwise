@@ -954,10 +954,10 @@ class SmileHelper:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
-                LOGGER.debug("HOI date: %s", xml.find(upd_date_loc).text)
                 if (function := xml.find(locator)) is not None and xml.find(
                     upd_date_loc
                 ).text is not None:
+                    LOGGER.debug("HOI date: %s", xml.find(upd_date_loc).text)
                     if function.text == "nil":
                         break
 
