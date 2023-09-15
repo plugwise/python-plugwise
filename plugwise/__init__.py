@@ -540,6 +540,7 @@ class Smile(SmileComm, SmileData):
                         LOGGER.debug("HOI 1 key: %s", key)
                         LOGGER.debug("HOI 1 device interim: %s", device)
                         device.pop(key)
+                        LOGGER.debug("HOI 1 device popped: %s", device)
                         data.pop(key)
                         tmp_dict[key] = data_value
                 for item in ACTIVE_ACTUATORS:
