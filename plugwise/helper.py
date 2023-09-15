@@ -957,9 +957,6 @@ class SmileHelper:
                 if (function := xml.find(locator)) is not None and xml.find(
                     upd_date_loc
                 ).text is not None:
-                    LOGGER.debug(
-                        "HOI key, date: %s, %s", item, xml.find(upd_date_loc).text
-                    )
                     if function.text == "nil":
                         break
 
@@ -1113,7 +1110,6 @@ class SmileHelper:
 
         self._cleanup_data(data)
 
-        LOGGER.debug("HOI 1 data: %s", data)
         return data
 
     def _rank_thermostat(
