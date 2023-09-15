@@ -530,17 +530,20 @@ class Smile(SmileComm, SmileData):
                 data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
-            LOGGER.debug("HOI 2 data: %s", data)
 
             tmp_dict: DeviceData = {}
             for key, value in dict(device).items():
-                for data_key, data_value in data.items():
+                for data_key, data_value in dict(data).items():
                     if key == data_key:
                         device.pop(key)
+                        data.pop(key)
                         tmp_dict[key] = data_value
                 for item in ACTIVE_ACTUATORS:
                     if item in device:
                         device.pop(item)
+
+            LOGGER.debug("HOI 1 device: %s", device)
+            LOGGER.debug("HOI 2 data: %s", data)
 
             device.update(tmp_dict)
 
