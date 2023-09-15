@@ -14,6 +14,7 @@ from munch import Munch
 import semver
 
 from .constants import (
+    ACTIVE_ACTUATORS,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
