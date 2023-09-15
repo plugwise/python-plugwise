@@ -536,7 +536,7 @@ class Smile(SmileComm, SmileData):
                 for data_key, data_value in data:
                     if key == data_key:
                         device.pop(key)
-                        tmp_dict(key) = data_value
+                        tmp_dict[key] = data_value
                 for item in ACTIVE_ACTUATORS:
                     if item in device:
                         device.pop(item)
