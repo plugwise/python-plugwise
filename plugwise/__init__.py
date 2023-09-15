@@ -537,6 +537,7 @@ class Smile(SmileComm, SmileData):
             for key, value in dict(device).items():
                 for data_key, data_value in dict(data).items():
                     if key == data_key:
+                        LOGGER.debug("HOI 1 device interim: %s", device)
                         device.pop(key)
                         data.pop(key)
                         tmp_dict[key] = data_value
