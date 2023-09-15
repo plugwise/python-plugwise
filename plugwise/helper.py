@@ -949,7 +949,7 @@ class SmileHelper:
                     continue
 
             upd_date_loc = (
-                    f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_data'
+                    f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
                 )
 
             for key in LIMITS:
