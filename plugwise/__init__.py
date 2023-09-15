@@ -530,7 +530,18 @@ class Smile(SmileComm, SmileData):
                     self._notifications
                 )
             LOGGER.debug("HOI 2 data: %s", data)
-            device.update(data)
+
+            tmp_dict: DeviceData = {}
+            for key, value in device:
+                for data_key, data_value in data:
+                    if key == data_key:
+                        device.pop(key)
+                        tmp_dict(key) = data_value
+                for item in ACTIVE_ACTUATORS:
+                    if item in device:
+                        device.pop(item)
+
+            device.update(tmp_dict)
 
             # Update for cooling
             if device["dev_class"] in ZONE_THERMOSTATS:
