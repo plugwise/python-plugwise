@@ -386,7 +386,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 smile.get_all_devices()
             else:
                 _LOGGER.info("Asserting updated testdata:")
-            data = await smile.async_update()
+                data = await smile.async_update()
 
         if "heater_id" in data.gateway:
             self.cooling_present = data.gateway["cooling_present"]
