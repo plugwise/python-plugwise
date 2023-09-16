@@ -991,7 +991,7 @@ class SmileHelper:
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
             data["select_regulation_mode"] = search.find("mode").text
-            self._cooling_enabled = search.find("mode").text == "cooling"
+            self._cooling_enabled = data["select_regulation_mode"] == "cooling"
 
     def _cleanup_data(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
