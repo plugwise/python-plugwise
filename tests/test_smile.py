@@ -386,6 +386,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("Asserting testdata:")
                 await smile._full_update_device()
                 smile.get_all_devices()
+                data = pw_constants.PlugwiseData(smile.gw_data, smile.gw_devices)
             else:
                 _LOGGER.info("Asserting updated testdata:")
                 data = await smile.async_update()
