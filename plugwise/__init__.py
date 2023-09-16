@@ -110,7 +110,7 @@ class SmileData(SmileHelper):
             remove_empty_platform_dicts(device)
 
         self.gw_data.update(
-            {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
+            {"smile_name": self.smile_name, "gateway_id": self.gateway_id, "notifications": self._notifications}
         )
         if self._is_thermostat:
             self.gw_data.update(
