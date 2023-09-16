@@ -509,8 +509,8 @@ class Smile(SmileComm, SmileData):
 
     async def async_update(self) -> PlugwiseData:
         """Perform a full update for updating the various device states."""
-        _full_update_device()
-        get_all_devices()
+        self._full_update_device()
+        self.get_all_devices()
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
