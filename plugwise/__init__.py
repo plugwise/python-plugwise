@@ -99,7 +99,9 @@ class SmileData(SmileHelper):
                 self._is_thermostat
                 or (not self._smile_legacy and self.smile_type == "power")
             ):
-                device["binary_sensors"]["plugwise_notification"] = False
+                device["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
 
             # Update for cooling
             if device["dev_class"] in ZONE_THERMOSTATS:
@@ -474,15 +476,6 @@ class Smile(SmileComm, SmileData):
             if result.find(locator_2) is not None:
                 self._elga = True
 
-    async def _full_update_device(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
-        await self._update_domain_objects()
-        self._locations = await self._request(LOCATIONS)
-        self._modules = await self._request(MODULES)
-        # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
-            self._appliances = await self._request(APPLIANCES)
-
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
 
@@ -505,60 +498,19 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
-    async def async_update(self) -> PlugwiseData:
-        """Perform an incremental update for updating the various device states."""
+    async def _full_update_device(self) -> None:
+        """Perform a first fetch of all XML data, needed for initialization."""
         await self._update_domain_objects()
-        match self._target_smile:
-            case "smile_v2":
-                self._modules = await self._request(MODULES)
-            case "smile_v3" | "smile_v4":
-                self._locations = await self._request(LOCATIONS)
-            case "smile_open_therm_v2" | "smile_open_therm_v3":
-                self._appliances = await self._request(APPLIANCES)
-                self._modules = await self._request(MODULES)
-            case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
-                self._appliances = await self._request(APPLIANCES)
+        self._locations = await self._request(LOCATIONS)
+        self._modules = await self._request(MODULES)
+        # P1 legacy has no appliances
+        if not (self.smile_type == "power" and self._smile_legacy):
+            self._appliances = await self._request(APPLIANCES)
 
-        self.gw_data["notifications"] = self._notifications
-
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            if (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ):
-                data["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
-
-            tmp_dict: DeviceData = {}
-            LOGGER.debug("HOI 0 device orig: %s", dict(device))
-            LOGGER.debug("HOI 0 data orig: %s", dict(data))
-            for key, value in dict(device).items():
-                for data_key, data_value in dict(data).items():
-                    if key == data_key:
-                        LOGGER.debug("HOI 1 key: %s", key)
-                        LOGGER.debug("HOI 1 device interim: %s", device)
-                        device.pop(key)
-                        LOGGER.debug("HOI 1 device popped: %s", device)
-                        data.pop(key)
-                        tmp_dict[key] = data_value
-                for item in ACTIVE_ACTUATORS:
-                    if item in device:
-                        device.pop(item)
-
-            LOGGER.debug("HOI 1 device: %s", device)
-            LOGGER.debug("HOI 1 data: %s", data)
-            LOGGER.debug("HOI 1 tmp_dict: %s", tmp_dict)
-
-            device.update(tmp_dict)
-            device.update(data)
-
-            # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(device)
-
-            remove_empty_platform_dicts(device)
+    async def async_update(self) -> PlugwiseData:
+        """Perform a full update for updating the various device states."""
+        _full_update_device()
+        get_all_devices()
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
