@@ -978,8 +978,6 @@ class SmileHelper:
                 )
                 if (function := xml.find(locator)) is not None:
                     if key == "offset":
-                        # Add limits and resolution for temperature_offset,
-                        # not provided by Plugwise in the XML data
                         temp_dict["lower_bound"] = -2.0
                         temp_dict["resolution"] = 0.1
                         temp_dict["upper_bound"] = 2.0
