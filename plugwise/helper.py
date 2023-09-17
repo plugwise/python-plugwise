@@ -716,6 +716,15 @@ class SmileHelper:
                     # Leave for-loop to avoid a 2nd device_id switch
                     break
 
+        # Place the gateway and optional heater_central devices as 1st and 2nd
+        for dev_class in ("heater_central", "gateway"):
+            for dev_id, device in self.gw_devices:
+                tmp_device: DeviceData = {}
+                if device["dev_class"] == device_class:
+                    tmp_device = device
+                    self.gw_devices.pop(dev_id)
+                    self.gw_devices.update({dev_id: tmp_device})
+
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
 
