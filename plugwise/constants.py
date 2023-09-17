@@ -205,13 +205,6 @@ SMILES: Final[dict[str, SMILE]] = {
     "stretch_v2": SMILE("stretch", "Stretch"),
     "stretch_v3": SMILE("stretch", "Stretch"),
 }
-REQUIRE_APPLIANCES: Final[list[str]] = [
-    "smile_thermo_v1",
-    "smile_thermo_v3",
-    "smile_thermo_v4",
-    "stretch_v2",
-    "stretch_v3",
-]
 
 # Class, Literal and related tuple-definitions
 

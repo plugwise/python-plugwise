@@ -14,7 +14,6 @@ from munch import Munch
 import semver
 
 from .constants import (
-    ACTIVE_ACTUATORS,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -26,7 +25,6 @@ from .constants import (
     MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
-    REQUIRE_APPLIANCES,
     RULES,
     SMILES,
     STATUS,
@@ -35,6 +33,7 @@ from .constants import (
     ZONE_THERMOSTATS,
     ActuatorData,
     DeviceData,
+    GatewayData,
     PlugwiseData,
 )
 from .exceptions import (
