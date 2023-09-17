@@ -719,7 +719,6 @@ class SmileHelper:
         # Place the gateway and optional heater_central devices as 1st and 2nd
         for dev_class in ("heater_central", "gateway"):
             for dev_id, device in dict(self.gw_devices).items():
-                tmp_device: DeviceData = {}
                 if device["dev_class"] == dev_class:
                     tmp_device = device
                     self.gw_devices.pop(dev_id)
