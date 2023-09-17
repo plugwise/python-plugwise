@@ -3934,7 +3934,40 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
             },
         }
-
+        testdata_updated = {
+            "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "dev_class": "heater_central",
+                "location": "a57efe5f145f498c9be62a9b63626fbf",
+                "model": "Generic heater",
+                "name": "OpenTherm",
+                "vendor": "Techneco",
+                "maximum_boiler_temperature": {
+                    "setpoint": 60.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
+                "available": True,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": True,
+                    "compressor_state": True,
+                    "cooling_enabled": False,
+                    "slave_boiler_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 29.1,
+                    "dhw_temperature": 46.3,
+                    "intended_boiler_temperature": 35.0,
+                    "modulation_level": 52,
+                    "return_temperature": 25.1,
+                    "water_pressure": 1.57,
+                    "outdoor_air_temperature": 3.0,
+                },
+                "switches": {"dhw_cm_switch": False},
+            },
+        }
         self.smile_setup = "anna_heatpump_heating"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
@@ -3968,7 +4001,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/anna_heatpump_heating"
-        await self.device_test(smile, testdata, initialize=False)
+        await self.device_test(smile, testdata_updated, initialize=False)
         await smile.close_connection()
         await self.disconnect(server, client)
 
