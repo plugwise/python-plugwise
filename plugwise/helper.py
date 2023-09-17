@@ -722,7 +722,8 @@ class SmileHelper:
                 tmp_device: DeviceData = {}
                 if device["dev_class"] == dev_class:
                     tmp_device = device
-                    cleared_dict = self.gw_devices.pop(dev_id)
+                    self.gw_devices.pop(dev_id)
+                    cleared_dict = self.gw_devices
                     add_to_front = {dev_id: tmp_device}
                     self.gw_devices = {**add_to_front, **cleared_dict}
 
