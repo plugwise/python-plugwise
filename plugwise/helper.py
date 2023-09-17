@@ -959,10 +959,10 @@ class SmileHelper:
                     continue
 
             # When there is no updated_date-text the actuator is not present
-            upd_date_loc = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
+            updated_date_location = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
             if (
-                upd_date := xml.find(upd_date_loc)
-            ) is not None and upd_date.text is None:
+                updated_date_key := xml.find(updated_date_location)
+            ) is not None and updated_date_key.text is None:
                 continue
 
             for key in LIMITS:
@@ -970,12 +970,9 @@ class SmileHelper:
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
                 if (function := xml.find(locator)) is not None:
-                    if function.text == "nil":
-                        break
-
+                    # Add limits and resolution for temperature_offset,
+                    # not provided by Plugwise in the XML data
                     if key == "offset":
-                        # Add limits and resolution for temperature_offset,
-                        # not provided by Plugwise in the XML data
                         temp_dict["lower_bound"] = -2.0
                         temp_dict["resolution"] = 0.1
                         temp_dict["upper_bound"] = 2.0
