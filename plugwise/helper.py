@@ -722,8 +722,9 @@ class SmileHelper:
                 tmp_device: DeviceData = {}
                 if device["dev_class"] == dev_class:
                     tmp_device = device
-                    self.gw_devices.pop(dev_id)
-                    self.gw_devices.update({dev_id: tmp_device})
+                    cleared_dict = self.gw_devices.pop(dev_id)
+                    add_to_front = {dev_id: tmp_device}
+                    self.gw_devices = {**add_to_front, **cleared_dict}
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
