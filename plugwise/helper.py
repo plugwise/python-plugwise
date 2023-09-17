@@ -958,15 +958,18 @@ class SmileHelper:
                 if self._smile_legacy:
                     continue
 
+            # When there is no updated_date-text the actuator is not present
             upd_date_loc = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
+            if (
+                upd_date := xml.find(upd_date_loc)
+            ) is not None and upd_date.text is None:
+                continue
 
             for key in LIMITS:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
-                if (function := xml.find(locator)) is not None and xml.find(
-                    upd_date_loc
-                ).text is not None:
+                if (function := xml.find(locator)) is not None:
                     if function.text == "nil":
                         break
 
