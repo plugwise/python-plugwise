@@ -844,14 +844,17 @@ class SmileHelper:
                     continue
 
                 # Skip known obsolete measurements
-                updated_date_locator = f'.//logs/point_log[type="{measurement}"]/updated_date'
-                if (updated_date_key := appliance.find(updated_date_locator) is not None:
+                updated_date_locator = (
+                    f'.//logs/point_log[type="{measurement}"]/updated_date'
+                )
+                if (
+                    updated_date_key := appliance.find(updated_date_locator)
+                ) is not None:
                     if measurement in OBSOLETE_MEASUREMENTS:
-                        updated_date = updated_date_key.text.strip("T")
-                        t1 = dt.strptime(updated_date, "%Y-%m-%d")
-                        t2 = dt.datetime.now().strftime("%Y-%m-%d")
-                        difference = (t2 -t1).days
-                        if difference > 30:
+                        updated_date = updated_date_key.text.split("T")[0]
+                        date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
+                        date_2 = dt.datetime.now()
+                        if int((date_2 - date_1).days) > 30:
                             continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
