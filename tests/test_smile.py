@@ -746,7 +746,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 45
         assert not self.notifications
@@ -763,7 +763,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         result = await self.tinker_thermostat(
             smile,
             "0000aaaa0000aaaa0000aaaa0000aa00",
@@ -847,7 +847,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-05-03 00:00:01", testdata)
 
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
         assert self.device_items == 45
@@ -1151,7 +1151,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
         assert self.device_items == 57
         assert not self.notifications
@@ -1180,7 +1180,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/anna_v4"
         await self.device_test(
-            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+            smile, "2020-04-05 00:00:01", testdata_updated, initialize=False
         )
 
         await smile.close_connection()
@@ -1189,7 +1189,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
         # Reset self.smile_setup
         self.smile_setup = "anna_v4"
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         result = await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -1286,7 +1286,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert self.device_items == 57
         assert not self.notifications
 
@@ -1321,7 +1321,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert self.device_items == 57
 
         result = await self.tinker_thermostat(
@@ -1673,7 +1673,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert self.device_items == 71
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
@@ -1690,7 +1690,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         result = await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
@@ -1727,7 +1727,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert self.device_items == 71
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
@@ -1953,7 +1953,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-01-23 00:00:01", testdata)
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
         assert self.device_items == 147
 
@@ -2020,7 +2020,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/adam_plus_anna_new"
         await self.device_test(
-            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+            smile, "2022-01-23 00:00:01", testdata_updated, initialize=False
         )
 
         await smile.close_connection()
@@ -3408,7 +3408,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "adam_heatpump_cooling"
         server, smile, client = await self.connect_wrapper()
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-01-02 00:00:01", testdata)
         assert self.device_items == 443
 
         await smile.close_connection()
@@ -3655,7 +3655,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.smile_setup = "adam_jip"
         server, smile, client = await self.connect_wrapper()
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2021-06-20 00:00:01", testdata)
         assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
         assert self.device_items == 223
 
@@ -3953,7 +3953,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert self.device_items == 64
         assert not self.cooling_present
@@ -4072,7 +4072,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-19 00:00:01", testdata)
         assert self.device_items == 64
         assert self.cooling_present
         assert not self.notifications
@@ -4132,7 +4132,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert version")
         assert smile.smile_version[0] == "4.10.10"
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-19 00:00:01", testdata)
         assert self.device_items == 64
         assert smile._cooling_present
         assert smile._cooling_enabled
@@ -4166,7 +4166,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert type = thermostat")
         assert smile.smile_type == "thermostat"
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-01-02 00:00:01", testdata)
         assert self.device_items == 57
         assert smile._cooling_present
         assert smile._cooling_enabled
@@ -4264,7 +4264,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-03-13 00:00:01", testdata)
         assert self.device_items == 60
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert not self.cooling_present
@@ -4311,7 +4311,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-03-13 00:00:01", testdata)
         assert not smile._cooling_present
         assert self.device_items == 60
 
@@ -4415,7 +4415,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-03-10 00:00:01", testdata)
         assert self.device_items == 63
         assert self.cooling_present
         assert not self.notifications
