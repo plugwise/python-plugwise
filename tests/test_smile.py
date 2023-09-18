@@ -375,7 +375,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 assert False
 
     @pytest.mark.asyncio
-    async def device_test(self, smile=pw_smile.Smile, test_time=None, testdata=None, initialize=True):
+    async def device_test(
+        self, smile=pw_smile.Smile, test_time=None, testdata=None, initialize=True
+    ):
         """Perform basic device tests."""
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
         # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
@@ -1013,7 +1015,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/smile_p1_v2_2"
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata_updated, initialize=False)
+        await self.device_test(
+            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+        )
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -1175,7 +1179,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/anna_v4"
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata_updated, initialize=False)
+        await self.device_test(
+            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+        )
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -2013,7 +2019,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/adam_plus_anna_new"
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata_updated, initialize=False)
+        await self.device_test(
+            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+        )
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4814,7 +4822,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/stretch_v31"
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata_updated, initialize=False)
+        await self.device_test(
+            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+        )
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -5336,7 +5346,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/p1v4_442_single"
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata_updated, initialize=False)
+        await self.device_test(
+            smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
+        )
 
         await smile.close_connection()
         await self.disconnect(server, client)
