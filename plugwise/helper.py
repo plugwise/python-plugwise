@@ -854,7 +854,7 @@ class SmileHelper:
                         updated_date = updated_date_key.text.split("T")[0]
                         date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
                         date_2 = dt.datetime.now()
-                        if int((date_2 - date_1).days) > 30:
+                        if int((date_2 - date_1).days) > 7:
                             continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):

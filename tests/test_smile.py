@@ -1673,7 +1673,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert self.device_items == 71
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
@@ -1690,7 +1690,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         result = await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
@@ -1727,7 +1727,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert self.device_items == 71
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
@@ -1953,7 +1953,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert legacy")
         assert not smile._smile_legacy
 
-        await self.device_test(smile, "2022-01-23 00:00:01", testdata)
+        await self.device_test(smile, "2022-01-16 00:00:01", testdata)
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
         assert self.device_items == 147
 
@@ -2020,7 +2020,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # emulating reading newer dataset after an update_interval
         self.smile_setup = "updated/adam_plus_anna_new"
         await self.device_test(
-            smile, "2022-01-23 00:00:01", testdata_updated, initialize=False
+            smile, "2022-01-16 00:00:01", testdata_updated, initialize=False
         )
 
         await smile.close_connection()
