@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Improve handling of invalid actuator xml-data (partial solution for [HA Core issue #99372](https://github.com/home-assistant/core/issues/99372)
+
 ## v0.32.3 Improve quality by extended testing, bugfix
 
 - Testing: make it possible to emulate binary_sensors, climates, numbers, sensors, switches, etc., updating.

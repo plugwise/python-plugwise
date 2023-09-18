@@ -948,14 +948,18 @@ class SmileHelper:
                 if self._smile_legacy:
                     continue
 
+            # When there is no updated_date-text, skip the actuator
+            updated_date_location = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
+            if (
+                updated_date_key := xml.find(updated_date_location)
+            ) is not None and updated_date_key.text is None:
+                continue
+
             for key in LIMITS:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
                 if (function := xml.find(locator)) is not None:
-                    if function.text == "nil":
-                        break
-
                     if key == "offset":
                         # Add limits and resolution for temperature_offset,
                         # not provided by Plugwise in the XML data
