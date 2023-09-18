@@ -847,10 +847,10 @@ class SmileHelper:
                 updated_date_locator = (
                     f'.//logs/point_log[type="{measurement}"]/updated_date'
                 )
-                if (
-                    updated_date_key := appliance.find(updated_date_locator)
-                ) is not None:
-                    if measurement in OBSOLETE_MEASUREMENTS:
+                if measurement in OBSOLETE_MEASUREMENTS:
+                    if (
+                        updated_date_key := appliance.find(updated_date_locator)
+                    ) is not None:
                         updated_date = updated_date_key.text.split("T")[0]
                         date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
                         date_2 = dt.datetime.now()
