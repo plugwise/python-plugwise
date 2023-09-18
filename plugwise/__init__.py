@@ -5,6 +5,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import aiohttp
+import datetime as dt
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -318,6 +319,7 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
+        self._previous: str = "0"
         self._target_smile: str | None = None
 
     async def connect(self) -> bool:
@@ -506,36 +508,44 @@ class Smile(SmileComm, SmileData):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        await self._update_domain_objects()
-        match self._target_smile:
-            case "smile_v2":
-                self._modules = await self._request(MODULES)
-            case "smile_v3" | "smile_v4":
-                self._locations = await self._request(LOCATIONS)
-            case "smile_open_therm_v2" | "smile_open_therm_v3":
-                self._appliances = await self._request(APPLIANCES)
-                self._modules = await self._request(MODULES)
-            case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
-                self._appliances = await self._request(APPLIANCES)
+        new = dt.datetime.now().strftime("%w")
+        # Perform a full update at day-change
+        if new != self._previous:
+            self._previous = new
+            await self._full_update_device()
+            self.get_all_devices()
+        # Otherwise perform an incremental update
+        else:
+            await self._update_domain_objects()
+            match self._target_smile:
+                case "smile_v2":
+                    self._modules = await self._request(MODULES)
+                case "smile_v3" | "smile_v4":
+                    self._locations = await self._request(LOCATIONS)
+                case "smile_open_therm_v2" | "smile_open_therm_v3":
+                    self._appliances = await self._request(APPLIANCES)
+                    self._modules = await self._request(MODULES)
+                case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
+                    self._appliances = await self._request(APPLIANCES)
 
-        self.gw_data["notifications"] = self._notifications
+            self.gw_data["notifications"] = self._notifications
 
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            if (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ):
-                data["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
-            device.update(data)
+            for device_id, device in self.gw_devices.items():
+                data = self._get_device_data(device_id)
+                if (
+                    "binary_sensors" in device
+                    and "plugwise_notification" in device["binary_sensors"]
+                ):
+                    data["binary_sensors"]["plugwise_notification"] = bool(
+                        self._notifications
+                    )
+                device.update(data)
 
-            # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(device)
+                # Update for cooling
+                if device["dev_class"] in ZONE_THERMOSTATS:
+                    self.update_for_cooling(device)
 
-            remove_empty_platform_dicts(device)
+                remove_empty_platform_dicts(device)
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
