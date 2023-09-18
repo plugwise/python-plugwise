@@ -40,6 +40,7 @@ from .constants import (
     LOCATIONS,
     LOGGER,
     NONE,
+    OBSOLETE_MEASUREMENTS,
     P1_LEGACY_MEASUREMENTS,
     P1_MEASUREMENTS,
     POWER_WATT,
@@ -842,13 +843,19 @@ class SmileHelper:
                 if self._smile_legacy and measurement == "domestic_hot_water_state":
                     continue
 
-                # Fix for Adam + Anna: there is a pressure-measurement with an unrealistic value,
-                # this measurement appears at power-on and is never updated, therefore remove.
-                if (
-                    measurement == "central_heater_water_pressure"
-                    and float(appl_p_loc.text) > 3.5
-                ):
-                    continue
+                # Skip known obsolete measurements
+                updated_date_locator = (
+                    f'.//logs/point_log[type="{measurement}"]/updated_date'
+                )
+                if measurement in OBSOLETE_MEASUREMENTS:
+                    if (
+                        updated_date_key := appliance.find(updated_date_locator)
+                    ) is not None:
+                        updated_date = updated_date_key.text.split("T")[0]
+                        date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
+                        date_2 = dt.datetime.now()
+                        if int((date_2 - date_1).days) > 7:
+                            continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name

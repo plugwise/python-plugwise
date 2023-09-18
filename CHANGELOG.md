@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Improve handling of obsolete sensors (solution for [HA Core issue #100306](https://github.com/home-assistant/core/issues/100306)
 - Improve handling of invalid actuator xml-data (partial solution for [HA Core issue #99372](https://github.com/home-assistant/core/issues/99372)
 
 ## v0.32.3 Improve quality by extended testing, bugfix
