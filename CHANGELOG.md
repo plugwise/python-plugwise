@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Reorder device-dicts: gateway first, optionally heater_central second
 - Improve handling of obsolete sensors (solution for [HA Core issue #100306](https://github.com/home-assistant/core/issues/100306)
 - Improve handling of invalid actuator xml-data (partial solution for [HA Core issue #99372](https://github.com/home-assistant/core/issues/99372)
 
