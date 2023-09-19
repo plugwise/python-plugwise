@@ -3998,7 +3998,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.device_items == 61
+        assert self.device_items == 64
         assert not self.cooling_present
         assert not self.notifications
 
@@ -4019,7 +4019,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # set testday to Monday to force an incremental update
         self.smile_setup = "updated/anna_heatpump_heating"
         await self.device_test(smile, "2020-04-13 00:00:01", testdata_updated, initialize=False)
-        assert self.device_items == 64
+        assert self.device_items == 61
         await smile.close_connection()
         await self.disconnect(server, client)
 
