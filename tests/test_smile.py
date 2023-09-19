@@ -3863,6 +3863,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_anna_heatpump_heating(self):
         """Test an Anna with Elga, cooling-mode off, in heating mode."""
         testdata = {
+            "015ae9ea3f964e668e490fa39da3870b": {
+                "dev_class": "gateway",
+                "firmware": "4.0.15",
+                "hardware": "AME Smile 2.0 board",
+                "location": "a57efe5f145f498c9be62a9b63626fbf",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 20.2},
+            },
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
@@ -3901,18 +3913,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "switches": {"dhw_cm_switch": False},
             },
-            "015ae9ea3f964e668e490fa39da3870b": {
-                "dev_class": "gateway",
-                "firmware": "4.0.15",
-                "hardware": "AME Smile 2.0 board",
-                "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile Anna",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 20.2},
-            },
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "dev_class": "thermostat",
                 "firmware": "2018-02-08T11:15:53+01:00",
@@ -3921,6 +3921,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
+                "temperature_offset": {
+                    'lower_bound': -2.0,
+                    'resolution': 0.1,
+                    'upper_bound': 2.0,
+                    'setpoint': -0.5
+                },
                 "thermostat": {
                     "setpoint": 20.5,
                     "lower_bound": 4.0,
@@ -3966,6 +3972,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "sensors": {
                     "water_temperature": 29.1,
+                    "domestic_hot_water_setpoint": 60.0,
                     "dhw_temperature": 46.3,
                     "intended_boiler_temperature": 35.0,
                     "modulation_level": 52,
@@ -3991,7 +3998,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self.device_items == 64
+        assert self.device_items == 61
         assert not self.cooling_present
         assert not self.notifications
 
