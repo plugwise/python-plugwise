@@ -36,6 +36,7 @@ from .constants import (
     ZONE_THERMOSTATS,
     ActuatorData,
     DeviceData,
+    GatewayData,
     PlugwiseData,
 )
 from .exceptions import (
