@@ -88,15 +88,23 @@ class SmileData(SmileHelper):
 
         return device
 
-
     def _update_gw_devices(self) -> None:
         """Helper-function for _all_device_data() and async_update().
 
         Collect data for each device and add to self.gw_devices.
-        """        
+        """
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            if ("binary_sensors" in device and "plugwise_notification" in device["binary_sensors"]) or (device_id == self.gateway_id and (self._is_thermostat or (self.smile_type == "power" and not self._smile_legacy))):
+            if (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
+            ) or (
+                device_id == self.gateway_id
+                and (
+                    self._is_thermostat
+                    or (self.smile_type == "power" and not self._smile_legacy)
+                )
+            ):
                 data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
@@ -107,7 +115,6 @@ class SmileData(SmileHelper):
                 self.update_for_cooling(device)
 
             remove_empty_platform_dicts(device)
-
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
