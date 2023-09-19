@@ -515,7 +515,7 @@ class Smile(SmileComm, SmileData):
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         # Perform a full update at day-change
-        if (new := dt.datetime.now().strftime('%w')) != self._previous:
+        if (new := dt.datetime.now().strftime("%w")) != self._previous:
             self._previous = new
             await self._full_update_device()
             self.get_all_devices()
