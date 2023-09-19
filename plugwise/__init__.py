@@ -88,22 +88,21 @@ class SmileData(SmileHelper):
 
         return device
 
-    def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
 
-        Collect data for each device and add to self.gw_data and self.gw_devices.
-        """
+    def _update_gw_devices(self) -> None:
+        """Helper-function for _all_device_data() and async_update().
+
+        Collect data for each device and add to self.gw_devices.
+        """        
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            device.update(data)
-            # Add plugwise notification binary_sensor to the relevant gateway
-            if device_id == self.gateway_id and (
-                self._is_thermostat
-                or (not self._smile_legacy and self.smile_type == "power")
+            if ("binary_sensors" in device and "plugwise_notification" in device["binary_sensors"]) 
+                or (device_id == self.gateway_id and (self._is_thermostator or (self.smile_type == "power" and not self._smile_legacy))
             ):
-                device["binary_sensors"]["plugwise_notification"] = bool(
+                data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
+            device.update(data)
 
             # Update for cooling
             if device["dev_class"] in ZONE_THERMOSTATS:
@@ -111,6 +110,13 @@ class SmileData(SmileHelper):
 
             remove_empty_platform_dicts(device)
 
+
+    def _all_device_data(self) -> None:
+        """Helper-function for get_all_devices().
+
+        Collect data for each device and add to self.gw_data and self.gw_devices.
+        """
+        self._update_gw_devices()
         self.gw_data.update(
             {
                 "smile_name": self.smile_name,
@@ -537,24 +543,8 @@ class Smile(SmileComm, SmileData):
                 case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
                     self._appliances = await self._request(APPLIANCES)
 
+            self._update_gw_devices()
             self.gw_data["notifications"] = self._notifications
-
-            for device_id, device in self.gw_devices.items():
-                data = self._get_device_data(device_id)
-                if (
-                    "binary_sensors" in device
-                    and "plugwise_notification" in device["binary_sensors"]
-                ):
-                    data["binary_sensors"]["plugwise_notification"] = bool(
-                        self._notifications
-                    )
-                device.update(data)
-
-                # Update for cooling
-                if device["dev_class"] in ZONE_THERMOSTATS:
-                    self.update_for_cooling(device)
-
-                remove_empty_platform_dicts(device)
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
