@@ -3922,10 +3922,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "temperature_offset": {
-                    'lower_bound': -2.0,
-                    'resolution': 0.1,
-                    'upper_bound': 2.0,
-                    'setpoint': -0.5
+                    "lower_bound": -2.0,
+                    "resolution": 0.1,
+                    "upper_bound": 2.0,
+                    "setpoint": -0.5,
                 },
                 "thermostat": {
                     "setpoint": 20.5,
@@ -4018,7 +4018,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # emulating reading newer dataset after an update_interval,
         # set testday to Monday to force an incremental update
         self.smile_setup = "updated/anna_heatpump_heating"
-        await self.device_test(smile, "2020-04-13 00:00:01", testdata_updated, initialize=False)
+        await self.device_test(
+            smile, "2020-04-13 00:00:01", testdata_updated, initialize=False
+        )
         assert self.device_items == 61
         await smile.close_connection()
         await self.disconnect(server, client)
