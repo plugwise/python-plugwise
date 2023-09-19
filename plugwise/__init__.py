@@ -518,6 +518,8 @@ class Smile(SmileComm, SmileData):
         # Perform a full update at day-change
         if (new := dt.datetime.now().strftime("%w")) != self._previous:
             self._previous = new
+            self.gw_data: GatewayData = {}
+            self.gw_devices: dict[str, DeviceData] = {}
             await self._full_update_device()
             self.get_all_devices()
         # Otherwise perform an incremental update
