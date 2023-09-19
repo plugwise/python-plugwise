@@ -99,7 +99,9 @@ class SmileData(SmileHelper):
                 self._is_thermostat
                 or (not self._smile_legacy and self.smile_type == "power")
             ):
-                device["binary_sensors"]["plugwise_notification"] = False
+                device["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
 
             # Update for cooling
             if device["dev_class"] in ZONE_THERMOSTATS:
@@ -108,7 +110,11 @@ class SmileData(SmileHelper):
             remove_empty_platform_dicts(device)
 
         self.gw_data.update(
-            {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
+            {
+                "smile_name": self.smile_name,
+                "gateway_id": self.gateway_id,
+                "notifications": self._notifications,
+            }
         )
         if self._is_thermostat:
             self.gw_data.update(
@@ -508,9 +514,8 @@ class Smile(SmileComm, SmileData):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        new = dt.datetime.now().strftime("%w")
         # Perform a full update at day-change
-        if new != self._previous:
+        if (new := dt.datetime.now().strftime('%w')) != self._previous:
             self._previous = new
             await self._full_update_device()
             self.get_all_devices()
