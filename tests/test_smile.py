@@ -380,7 +380,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Perform basic device tests."""
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
-        # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
+        # Make sure to test thermostats with the day set to Monday, needed for full testcoverage of schedules_temps()
+        # Otherwise set the day to Sunday.
         with freeze_time(test_time):
             if initialize:
                 _LOGGER.info("Asserting testdata:")
