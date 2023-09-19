@@ -4,8 +4,9 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-import aiohttp
 import datetime as dt
+
+import aiohttp
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -481,15 +482,6 @@ class Smile(SmileComm, SmileData):
             if result.find(locator_2) is not None:
                 self._elga = True
 
-    async def _full_update_device(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
-        await self._update_domain_objects()
-        self._locations = await self._request(LOCATIONS)
-        self._modules = await self._request(MODULES)
-        # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
-            self._appliances = await self._request(APPLIANCES)
-
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
 
@@ -511,6 +503,15 @@ class Smile(SmileComm, SmileData):
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
+
+    async def _full_update_device(self) -> None:
+        """Perform a first fetch of all XML data, needed for initialization."""
+        await self._update_domain_objects()
+        self._locations = await self._request(LOCATIONS)
+        self._modules = await self._request(MODULES)
+        # P1 legacy has no appliances
+        if not (self.smile_type == "power" and self._smile_legacy):
+            self._appliances = await self._request(APPLIANCES)
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
