@@ -338,7 +338,7 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
-        self._previous: str = "0"
+        self._previous_day_number: str = "0"
         self._target_smile: str | None = None
 
     async def connect(self) -> bool:
@@ -528,12 +528,11 @@ class Smile(SmileComm, SmileData):
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         # Perform a full update at day-change
-        new = dt.datetime.now().strftime("%w")
-        if new != self._previous:  # pylint: disable=consider-using-assignment-expr
+        day_number = dt.datetime.now().strftime("%w")
+        if day_number != self._previous_day_number:  # pylint: disable=consider-using-assignment-expr
             LOGGER.debug(
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
-            self._previous = new
             self.gw_data: GatewayData = {}
             self.gw_devices: dict[str, DeviceData] = {}
             await self._full_update_device()
@@ -555,6 +554,7 @@ class Smile(SmileComm, SmileData):
             self._update_gw_devices()
             self.gw_data["notifications"] = self._notifications
 
+        self._previous_day_number = day_number
         return PlugwiseData(self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
