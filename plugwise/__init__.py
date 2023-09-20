@@ -529,7 +529,7 @@ class Smile(SmileComm, SmileData):
         """Perform an incremental update for updating the various device states."""
         # Perform a full update at day-change
         new = dt.datetime.now().strftime("%w")
-        if new != self._previous:
+        if new != self._previous:  # pylint: disable=consider-using-assignment-expr
             LOGGER.debug(
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
