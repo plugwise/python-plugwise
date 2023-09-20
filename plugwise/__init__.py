@@ -530,8 +530,8 @@ class Smile(SmileComm, SmileData):
         # Perform a full update at day-change
         day_number = dt.datetime.now().strftime("%w")
         if (
-            day_number != self._previous_day_number
-        ):  # pylint: disable=consider-using-assignment-expr
+            day_number != self._previous_day_number  # pylint: disable=consider-using-assignment-expr
+        ):
             LOGGER.debug(
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
