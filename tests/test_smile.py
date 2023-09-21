@@ -380,15 +380,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Perform basic device tests."""
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
-        # Make sure to test with the day set to Sunday, needed for full testcoverage of schedules_temps()
+        # Make sure to test thermostats with the day set to Monday, needed for full testcoverage of schedules_temps()
+        # Otherwise set the day to Sunday.
         with freeze_time(test_time):
             if initialize:
                 _LOGGER.info("Asserting testdata:")
                 await smile._full_update_device()
                 smile.get_all_devices()
+                data = await smile.async_update()
             else:
                 _LOGGER.info("Asserting updated testdata:")
-            data = await smile.async_update()
+                data = await smile.async_update()
 
         if "heater_id" in data.gateway:
             self.cooling_present = data.gateway["cooling_present"]
@@ -3861,6 +3863,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_anna_heatpump_heating(self):
         """Test an Anna with Elga, cooling-mode off, in heating mode."""
         testdata = {
+            "015ae9ea3f964e668e490fa39da3870b": {
+                "dev_class": "gateway",
+                "firmware": "4.0.15",
+                "hardware": "AME Smile 2.0 board",
+                "location": "a57efe5f145f498c9be62a9b63626fbf",
+                "mac_address": "012345670001",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 20.2},
+            },
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
@@ -3899,18 +3913,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "switches": {"dhw_cm_switch": False},
             },
-            "015ae9ea3f964e668e490fa39da3870b": {
-                "dev_class": "gateway",
-                "firmware": "4.0.15",
-                "hardware": "AME Smile 2.0 board",
-                "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile Anna",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 20.2},
-            },
             "3cb70739631c4d17a86b8b12e8a5161b": {
                 "dev_class": "thermostat",
                 "firmware": "2018-02-08T11:15:53+01:00",
@@ -3919,6 +3921,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "ThermoTouch",
                 "name": "Anna",
                 "vendor": "Plugwise",
+                "temperature_offset": {
+                    "lower_bound": -2.0,
+                    "resolution": 0.1,
+                    "upper_bound": 2.0,
+                    "setpoint": -0.5,
+                },
                 "thermostat": {
                     "setpoint": 20.5,
                     "lower_bound": 4.0,
@@ -3938,6 +3946,41 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
                 },
+            },
+        }
+        testdata_updated = {
+            "1cbf783bb11e4a7c8a6843dee3a86927": {
+                "dev_class": "heater_central",
+                "location": "a57efe5f145f498c9be62a9b63626fbf",
+                "model": "Generic heater",
+                "name": "OpenTherm",
+                "vendor": "Techneco",
+                "maximum_boiler_temperature": {
+                    "setpoint": 60.0,
+                    "lower_bound": 0.0,
+                    "upper_bound": 100.0,
+                    "resolution": 1.0,
+                },
+                "available": True,
+                "binary_sensors": {
+                    "dhw_state": False,
+                    "heating_state": True,
+                    "compressor_state": True,
+                    "cooling_enabled": False,
+                    "slave_boiler_state": False,
+                    "flame_state": False,
+                },
+                "sensors": {
+                    "water_temperature": 29.1,
+                    "domestic_hot_water_setpoint": 60.0,
+                    "dhw_temperature": 46.3,
+                    "intended_boiler_temperature": 35.0,
+                    "modulation_level": 52,
+                    "return_temperature": 25.1,
+                    "water_pressure": 1.57,
+                    "outdoor_air_temperature": 3.0,
+                },
+                "switches": {"dhw_cm_switch": False},
             },
         }
 
@@ -3971,6 +4014,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert result
 
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval,
+        # set testday to Monday to force an incremental update
+        self.smile_setup = "updated/anna_heatpump_heating"
+        await self.device_test(
+            smile, "2020-04-13 00:00:01", testdata_updated, initialize=False
+        )
+        assert self.device_items == 61
         await smile.close_connection()
         await self.disconnect(server, client)
 

@@ -456,7 +456,7 @@
 			<when time="[sa 07:30,sa 23:15)"><then preset="home"/></when>
 			<when time="[sa 23:15,su 07:30)"><then preset="asleep"/></when>
 			<when time="[su 07:30,su 23:15)"><then preset="home"/></when>
-			<when time="[mo 06:00,mo 23:15)"><then preset="home"/></when>
+			<when time="[mo 06:00,mo 23:15)"><then setpoint="17.5"/></when>
 			<when time="[su 23:15,mo 06:00)"><then preset="asleep"/></when>
 			<when time="[mo 23:15,tu 06:00)"><then preset="asleep"/></when>
 			<when time="[tu 06:00,tu 23:15)"><then preset="home"/></when>

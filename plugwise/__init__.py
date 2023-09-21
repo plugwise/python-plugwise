@@ -4,6 +4,8 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
+import datetime as dt
+
 import aiohttp
 from defusedxml import ElementTree as etree
 
@@ -34,6 +36,7 @@ from .constants import (
     ZONE_THERMOSTATS,
     ActuatorData,
     DeviceData,
+    GatewayData,
     PlugwiseData,
 )
 from .exceptions import (
@@ -85,20 +88,27 @@ class SmileData(SmileHelper):
 
         return device
 
-    def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
+    def _update_gw_devices(self) -> None:
+        """Helper-function for _all_device_data() and async_update().
 
-        Collect data for each device and add to self.gw_data and self.gw_devices.
+        Collect data for each device and add to self.gw_devices.
         """
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            device.update(data)
-            # Add plugwise notification binary_sensor to the relevant gateway
-            if device_id == self.gateway_id and (
-                self._is_thermostat
-                or (not self._smile_legacy and self.smile_type == "power")
+            if (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
+            ) or (
+                device_id == self.gateway_id
+                and (
+                    self._is_thermostat
+                    or (self.smile_type == "power" and not self._smile_legacy)
+                )
             ):
-                device["binary_sensors"]["plugwise_notification"] = False
+                data["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
+            device.update(data)
 
             # Update for cooling
             if device["dev_class"] in ZONE_THERMOSTATS:
@@ -106,8 +116,18 @@ class SmileData(SmileHelper):
 
             remove_empty_platform_dicts(device)
 
+    def _all_device_data(self) -> None:
+        """Helper-function for get_all_devices().
+
+        Collect data for each device and add to self.gw_data and self.gw_devices.
+        """
+        self._update_gw_devices()
         self.gw_data.update(
-            {"smile_name": self.smile_name, "gateway_id": self.gateway_id}
+            {
+                "smile_name": self.smile_name,
+                "gateway_id": self.gateway_id,
+                "notifications": self._notifications,
+            }
         )
         if self._is_thermostat:
             self.gw_data.update(
@@ -318,6 +338,7 @@ class Smile(SmileComm, SmileData):
         SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
+        self._previous_day_number: str = "0"
         self._target_smile: str | None = None
 
     async def connect(self) -> bool:
@@ -473,15 +494,6 @@ class Smile(SmileComm, SmileData):
             if result.find(locator_2) is not None:
                 self._elga = True
 
-    async def _full_update_device(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
-        await self._update_domain_objects()
-        self._locations = await self._request(LOCATIONS)
-        self._modules = await self._request(MODULES)
-        # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
-            self._appliances = await self._request(APPLIANCES)
-
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
 
@@ -504,39 +516,48 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
+    async def _full_update_device(self) -> None:
+        """Perform a first fetch of all XML data, needed for initialization."""
+        await self._update_domain_objects()
+        self._locations = await self._request(LOCATIONS)
+        self._modules = await self._request(MODULES)
+        # P1 legacy has no appliances
+        if not (self.smile_type == "power" and self._smile_legacy):
+            self._appliances = await self._request(APPLIANCES)
+
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        await self._update_domain_objects()
-        match self._target_smile:
-            case "smile_v2":
-                self._modules = await self._request(MODULES)
-            case "smile_v3" | "smile_v4":
-                self._locations = await self._request(LOCATIONS)
-            case "smile_open_therm_v2" | "smile_open_therm_v3":
-                self._appliances = await self._request(APPLIANCES)
-                self._modules = await self._request(MODULES)
-            case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
-                self._appliances = await self._request(APPLIANCES)
+        # Perform a full update at day-change
+        day_number = dt.datetime.now().strftime("%w")
+        if (
+            day_number  # pylint: disable=consider-using-assignment-expr
+            != self._previous_day_number
+        ):
+            LOGGER.debug(
+                "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
+            )
+            self.gw_data: GatewayData = {}
+            self.gw_devices: dict[str, DeviceData] = {}
+            await self._full_update_device()
+            self.get_all_devices()
+        # Otherwise perform an incremental update
+        else:
+            await self._update_domain_objects()
+            match self._target_smile:
+                case "smile_v2":
+                    self._modules = await self._request(MODULES)
+                case "smile_v3" | "smile_v4":
+                    self._locations = await self._request(LOCATIONS)
+                case "smile_open_therm_v2" | "smile_open_therm_v3":
+                    self._appliances = await self._request(APPLIANCES)
+                    self._modules = await self._request(MODULES)
+                case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
+                    self._appliances = await self._request(APPLIANCES)
 
-        self.gw_data["notifications"] = self._notifications
+            self._update_gw_devices()
+            self.gw_data["notifications"] = self._notifications
 
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            if (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ):
-                data["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
-            device.update(data)
-
-            # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS:
-                self.update_for_cooling(device)
-
-            remove_empty_platform_dicts(device)
-
+        self._previous_day_number = day_number
         return PlugwiseData(self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
