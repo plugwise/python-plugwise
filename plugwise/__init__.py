@@ -529,9 +529,6 @@ class Smile(SmileComm, SmileData):
         """Perform an incremental update for updating the various device states."""
         # Perform a full update at day-change
         day_number = dt.datetime.now().strftime("%w")
-        LOGGER.debug(
-            "Day-number, Previous-number: %s, %s", day_number, self._previous_day_number
-        )
         if (
             day_number  # pylint: disable=consider-using-assignment-expr
             != self._previous_day_number
