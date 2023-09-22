@@ -33,6 +33,26 @@ def json_writer(manual_name: str, all_data: dict, notifications: dict):
         f.write(data + "\n")
 
 
+print("... Modifying adam_multiple_devices_per_zone fixture ...")  # noqa: T201
+
+base_adam_manual = "adam_multiple_devices_per_zone"
+basefile = f"./fixtures/{base_adam_manual}/all_data.json"
+basefile_n = f"./fixtures/{base_adam_manual}/notifications.json"
+
+io = open(basefile)
+base = json.load(io)
+io_n = open(basefile_n)
+base_n = json.load(io_n)
+
+adam_multiple_devices_per_zone = base.copy()
+
+# Remove mode=auto for "6a3bf693d05e48e0b460c815a4fdd09d"
+adam_multiple_devices_per_zone["devices"]["6a3bf693d05e48e0b460c815a4fdd09d"].pop(
+    "mode"
+)
+
+json_writer("adam_multiple_devices_per_zone", adam_multiple_devices_per_zone, base_n)
+
 print("... Crafting m_* fixtures from userdata ...")  # noqa: T201
 
 ### ADAM
