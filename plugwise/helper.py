@@ -263,7 +263,7 @@ class SmileHelper:
         self._cooling_enabled = False
 
         self.device_items: int = 0
-        self.gateway_id: str | None = None
+        self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.smile_fw_version: str | None = None
