@@ -228,8 +228,8 @@ class SmileData(SmileHelper):
             if self._cooling_present:
                 device_data["mode"] = "heat_cool"
         if (
-            "select_regulation_mode" in device_data
-            and device_data["select_regulation_mode"] == "off"
+            "select_regulation_mode" in self.gw_devices[self.gateway_id]
+            and self.gw_devices[self.gateway_id]["select_regulation_mode"] == "off"
         ):
             device_data["mode"] = "off"
 
