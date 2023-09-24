@@ -227,6 +227,8 @@ class SmileData(SmileHelper):
             device_data["mode"] = "heat"
             if self._cooling_present:
                 device_data["mode"] = "heat_cool"
+        if "regulation_mode" in device_data and device_data["regulation_mode"] == "off":
+            device_data["mode"] = "off"
 
         if "None" not in avail_schedules:
             loc_schedule_states = {}
