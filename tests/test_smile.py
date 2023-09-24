@@ -1911,6 +1911,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "67d73d0bd469422db25a618a5fb8eeb0": {
                 "switches": {"lock": True},
             },
+            "ad4838d7d35c4d6ea796ee12ae5aedf8": {
+                "mode": "off",
+            },
             "29542b2b6a6a4169acecc15c72a599b8": {
                 "switches": {"relay": False, "lock": False},
             },
@@ -1923,6 +1926,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "1772a4ea304041adb83f357b751341ff": {
                 "available": False,
+            },
+            "e2f4322d57924fa090fbbc48b3a140dc": {
+                "mode": "off",
             },
             "da224107914542988a88561b4452b0f6": {
                 "binary_sensors": {"plugwise_notification": True},
