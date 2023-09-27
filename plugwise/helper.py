@@ -1020,7 +1020,7 @@ class SmileHelper:
 
         if (
             self._is_thermostat
-            and self.smile_name == "Smile Anna")
+            and self.smile_name == "Smile Anna"
             and dev_id == self._heater_id
         ):
             # Anna+Elga: base cooling_state on the elga-status-code
