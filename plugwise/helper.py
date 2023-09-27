@@ -1019,9 +1019,9 @@ class SmileHelper:
             self._count -= 1
 
         if (
-            self._is_thermostat 
+            self._is_thermostat
             and self.smile_name == "Smile Anna")
-            and dev_id == self._heater_id 
+            and dev_id == self._heater_id
         ):
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
