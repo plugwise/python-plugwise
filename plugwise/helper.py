@@ -227,7 +227,7 @@ class SmileHelper:
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._elga = False
-        self._heater_id: str | None = None
+        self._heater_id: str
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
@@ -991,7 +991,7 @@ class SmileHelper:
 
         # Get non-p1 data from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         measurements = DEVICE_MEASUREMENTS
-        if dev_id == self._heater_id:
+        if self._is_thermostat and dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
 
         if (
@@ -1018,7 +1018,11 @@ class SmileHelper:
             data.pop("c_heating_state")
             self._count -= 1
 
-        if dev_id == self._heater_id and self.smile_name == "Smile Anna":
+        if (
+            self._is_thermostat 
+            and self.smile_name == "Smile Anna")
+            and dev_id == self._heater_id 
+        ):
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
