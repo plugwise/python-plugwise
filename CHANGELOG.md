@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Fix error in manual fixture creation
+
 ## v0.33.0 Bugfixes, implement daily full-update
 
 - New feature: implement a daily full-update (other part of solution for [HA Core issue #99372](https://github.com/home-assistant/core/issues/99372))
