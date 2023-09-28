@@ -131,7 +131,7 @@ m_adam_cooling["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
 
 # Go for da22
 m_adam_cooling["devices"]["da224107914542988a88561b4452b0f6"][
-    "regulation_mode"
+    "select_regulation_mode"
 ] = "cooling"
 m_adam_cooling["devices"]["da224107914542988a88561b4452b0f6"][
     "regulation_modes"
@@ -226,7 +226,7 @@ m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"].pop(
 
 # Go for da22
 m_adam_heating["devices"]["da224107914542988a88561b4452b0f6"][
-    "regulation_mode"
+    "select_regulation_mode"
 ] = "heating"
 m_adam_heating["devices"]["da224107914542988a88561b4452b0f6"][
     "regulation_modes"
