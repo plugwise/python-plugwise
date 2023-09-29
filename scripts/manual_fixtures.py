@@ -51,7 +51,7 @@ adam_jip = base.copy()
 # Change mode to off for "1346fbd8498d4dbcab7e18d51b771f3d"
 adam_jip["devices"]["1346fbd8498d4dbcab7e18d51b771f3d"]["mode"] = "off"
 
-json_writer("adam_multiple_devices_per_zone", adam_multiple_devices_per_zone, base_n)
+json_writer("adam_jip", adam_jip, base_n)
 
 ### Manual Adam fixtures
 
