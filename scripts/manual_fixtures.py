@@ -161,6 +161,9 @@ m_adam_heating = m_adam_cooling.copy()
 m_adam_cooling["gateway"]["cooling_present"] = False
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
+m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
+    "mode"
+] = "heat"
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
     "setpoint"
 ] = 20.0
