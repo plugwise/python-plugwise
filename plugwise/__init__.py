@@ -710,7 +710,7 @@ class Smile(SmileComm, SmileData):
         if "setpoint" in items:
             setpoint = items["setpoint"]
 
-        if self._cooling_present:
+        if self._cooling_present and self.smile_name != "Adam":
             if "setpoint_high" not in items:
                 raise PlugwiseError(
                     "Plugwise: failed setting temperature: no valid input provided"
