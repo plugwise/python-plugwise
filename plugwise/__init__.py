@@ -227,12 +227,15 @@ class SmileData(SmileHelper):
             device_data["mode"] = "heat"
             if self._cooling_present:
                 device_data["mode"] = "heat_cool"
+                    
         # Adam: add off-mode based on regulation_mode = off
-        if (
-            "select_regulation_mode" in self.gw_devices[self.gateway_id]
-            and self.gw_devices[self.gateway_id]["select_regulation_mode"] == "off"
-        ):
-            device_data["mode"] = "off"
+        # or cool-mode for regulation_mode = cooling
+        gateway = self.gw_devices[self.gateway_id]
+        if "regulation_modes" in gateway:
+            if gateway["select_regulation_mode"] == "off":
+                device_data["mode"] = "off"
+            if gateway["select_regulation_mode"] == "cooling":
+                device_data["mode"] = "cool"
 
         if "None" not in avail_schedules:
             loc_schedule_states = {}
