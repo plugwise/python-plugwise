@@ -74,9 +74,6 @@ m_adam_cooling["devices"].pop("67d73d0bd469422db25a618a5fb8eeb0")
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
-    "mode"
-] = "cool"
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
     "setpoint"
 ] = 23.5
 
@@ -89,7 +86,7 @@ m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
 ] = "cooling"
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "heat_cool"
+m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "cool"
 
 # (following diff, now 2954 is removed)
 # Remove device "29542b2b6a6a4169acecc15c72a599b8" from anywhere
@@ -161,9 +158,6 @@ m_adam_heating = m_adam_cooling.copy()
 m_adam_cooling["gateway"]["cooling_present"] = False
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
-    "mode"
-] = "heat"
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
     "setpoint"
 ] = 20.0
