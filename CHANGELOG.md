@@ -13,6 +13,8 @@
 - Adam: remove use of control_state, xml-key no longer present.
 - Fix error in manual fixture creation.
 - New feature: for Adam, add the mode off-option to the output, connected to regulation_mode off.
+  Also, for Adam, return to providing a single setpoint for both heating and cooling (in HA there
+  will be HVACMode.HEAT and HVACMode.COOL instead of HVACMode.HEAT_COOL).
 - Fix error in manual fixture creation.
 
 ## v0.33.0 Bugfixes, implement daily full-update
