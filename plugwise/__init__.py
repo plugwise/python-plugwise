@@ -230,7 +230,7 @@ class SmileData(SmileHelper):
                 device_data["mode"] = "heat_cool"
                 if "regulation_modes" in gateway:
                     if gateway["select_regulation_mode"] == "cooling":
-                        device_data["mode"] = "cool"                    
+                        device_data["mode"] = "cool"
 
         if "regulation_modes" in gateway:
             if gateway["select_regulation_mode"] == "off":
