@@ -74,6 +74,9 @@ m_adam_cooling["devices"].pop("67d73d0bd469422db25a618a5fb8eeb0")
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
+    "mode"
+] = "cool"
+m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
     "setpoint"
 ] = 23.5
 
