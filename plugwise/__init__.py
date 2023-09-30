@@ -113,7 +113,7 @@ class SmileData(SmileHelper):
             device.update(data)
 
             # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS:
+            if device["dev_class"] in ZONE_THERMOSTATS and self.smile_name != "Adam":
                 self.update_for_cooling(device)
 
             remove_empty_platform_dicts(device)
