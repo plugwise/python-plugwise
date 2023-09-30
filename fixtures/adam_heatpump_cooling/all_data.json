@@ -53,8 +53,7 @@
       "select_schedule": "None",
       "sensors": {
         "battery": 55,
-        "setpoint_high": 18.0,
-        "setpoint_low": 4.0,
+        "setpoint": 18.0,
         "temperature": 18.8
       },
       "temperature_offset": {
@@ -66,8 +65,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 18.0,
-        "setpoint_low": 4.0,
+        "setpoint": 18.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -163,8 +161,7 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "None",
       "sensors": {
-        "setpoint_high": 18.0,
-        "setpoint_low": 4.0,
+        "setpoint": 18.0,
         "temperature": 22.0
       },
       "temperature_offset": {
@@ -176,8 +173,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 18.0,
-        "setpoint_low": 4.0,
+        "setpoint": 18.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -241,8 +237,7 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "None",
       "sensors": {
-        "setpoint_high": 18.0,
-        "setpoint_low": 4.0,
+        "setpoint": 18.0,
         "temperature": 20.0
       },
       "temperature_offset": {
@@ -254,8 +249,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 18.0,
-        "setpoint_low": 4.0,
+        "setpoint": 18.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -370,8 +364,7 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "None",
       "sensors": {
-        "setpoint_high": 18.5,
-        "setpoint_low": 4.0,
+        "setpoint": 18.5,
         "temperature": 21.4
       },
       "temperature_offset": {
@@ -383,8 +376,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 18.5,
-        "setpoint_low": 4.0,
+        "setpoint": 18.5,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -404,8 +396,7 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "None",
       "sensors": {
-        "setpoint_high": 17.0,
-        "setpoint_low": 4.0,
+        "setpoint": 17.0,
         "temperature": 20.7
       },
       "temperature_offset": {
@@ -417,8 +408,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 17.0,
-        "setpoint_low": 4.0,
+        "setpoint": 17.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -435,15 +425,13 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
       "sensors": {
-        "setpoint_high": 21.5,
-        "setpoint_low": 4.0,
+        "setpoint": 21.5,
         "temperature": 22.5
       },
       "thermostat": {
         "lower_bound": 1.0,
         "resolution": 0.01,
-        "setpoint_high": 21.5,
-        "setpoint_low": 4.0,
+        "setpoint": 21.5,
         "upper_bound": 35.0
       },
       "vendor": "Plugwise"
@@ -462,8 +450,7 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "None",
       "sensors": {
-        "setpoint_high": 20.5,
-        "setpoint_low": 4.0,
+        "setpoint": 20.5,
         "temperature": 22.6
       },
       "temperature_offset": {
@@ -475,8 +462,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 20.5,
-        "setpoint_low": 4.0,
+        "setpoint": 20.5,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -497,8 +483,7 @@
       "select_schedule": "Werkdag schema",
       "sensors": {
         "battery": 53,
-        "setpoint_high": 21.5,
-        "setpoint_low": 4.0,
+        "setpoint": 21.5,
         "temperature": 22.5
       },
       "temperature_offset": {
@@ -510,8 +495,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 21.5,
-        "setpoint_low": 4.0,
+        "setpoint": 21.5,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -531,8 +515,7 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
       "sensors": {
-        "setpoint_high": 20.5,
-        "setpoint_low": 4.0,
+        "setpoint": 20.5,
         "temperature": 21.5
       },
       "temperature_offset": {
@@ -544,8 +527,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 20.5,
-        "setpoint_low": 4.0,
+        "setpoint": 20.5,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
@@ -565,8 +547,7 @@
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
       "sensors": {
-        "setpoint_high": 20.5,
-        "setpoint_low": 4.0,
+        "setpoint": 20.5,
         "temperature": 21.9
       },
       "temperature_offset": {
@@ -578,8 +559,7 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint_high": 20.5,
-        "setpoint_low": 4.0,
+        "setpoint": 20.5,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
