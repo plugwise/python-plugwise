@@ -222,10 +222,6 @@ class SmileData(SmileHelper):
         else:
             device_data["last_used"] = last_active
 
-        # Control_state, only for Adam master thermostats
-        if ctrl_state := self._control_state(loc_id):
-            device_data["control_state"] = ctrl_state
-
         # Operation modes: auto, heat, heat_cool
         device_data["mode"] = "auto"
         if sel_schedule == "None":
