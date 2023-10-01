@@ -1,8 +1,9 @@
 # Changelog
 
-## Ongoing
+## v0.33.1 Bugfix for Adam
 
-- Fix error in manual fixture creation
+- Adam: remove use of control_state, xml-key no longer present.
+- Fix error in manual fixture creation.
 
 ## v0.33.0 Bugfixes, implement daily full-update
 
