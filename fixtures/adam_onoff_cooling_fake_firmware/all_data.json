@@ -64,7 +64,6 @@
     "ca79d23ae0094120b877558734cff85c": {
       "active_preset": "away",
       "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-      "control_state": "off",
       "dev_class": "thermostat",
       "last_used": "Werkdag schema",
       "location": "fa5fa6b34f6b40a0972988b20e888ed4",
