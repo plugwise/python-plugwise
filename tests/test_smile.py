@@ -1769,7 +1769,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
                 "select_schedule": "Weekschema",
                 "last_used": "Weekschema",
-                "control_state": "heating",
                 "mode": "auto",
                 "sensors": {"temperature": 18.1, "setpoint": 18.5},
             },
@@ -1863,7 +1862,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["Weekschema", "Badkamer", "Test"],
                 "select_schedule": "Badkamer",
                 "last_used": "Badkamer",
-                "control_state": "off",
                 "mode": "auto",
                 "sensors": {"temperature": 17.9, "setpoint": 15.0, "battery": 56},
             },
@@ -1957,7 +1955,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2022-01-16 00:00:01", testdata)
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self.device_items == 147
+        assert self.device_items == 145
 
         result = await self.tinker_thermostat(
             smile,
@@ -2920,7 +2918,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3019,7 +3016,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3087,7 +3083,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3202,7 +3197,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3232,7 +3226,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3261,7 +3254,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ca79d23ae0094120b877558734cff85c": {
                 "active_preset": "away",
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "thermostat",
                 "last_used": "Werkdag schema",
                 "location": "fa5fa6b34f6b40a0972988b20e888ed4",
@@ -3288,7 +3280,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3318,7 +3309,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3349,7 +3339,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3379,7 +3368,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available": True,
                 "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
-                "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
@@ -3411,7 +3399,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
-        assert self.device_items == 443
+        assert self.device_items == 433
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -3474,7 +3462,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "select_schedule": "None",
                 "last_used": None,
-                "control_state": "off",
                 "mode": "heat",
                 "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 80},
             },
@@ -3499,7 +3486,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "select_schedule": "None",
                 "last_used": None,
-                "control_state": "off",
                 "mode": "heat",
                 "sensors": {"temperature": 24.2, "setpoint": 13.0, "battery": 92},
             },
@@ -3541,7 +3527,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "select_schedule": "None",
                 "last_used": None,
-                "control_state": "off",
                 "mode": "heat",
                 "sensors": {"temperature": 30.0, "setpoint": 13.0, "battery": 79},
             },
@@ -3566,7 +3551,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available_schedules": ["None"],
                 "select_schedule": "None",
                 "last_used": None,
-                "control_state": "off",
                 "mode": "heat",
                 "sensors": {
                     "temperature": 27.4,
@@ -3659,7 +3643,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2021-06-20 00:00:01", testdata)
         assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert self.device_items == 223
+        assert self.device_items == 219
 
         # Negative test
         result = await self.tinker_thermostat(
