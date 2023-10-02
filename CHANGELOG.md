@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Add daily_update status to output
+
 ## v0.33.1 Bugfix for Adam
 
 - Adam: remove use of control_state, xml-key no longer present.
