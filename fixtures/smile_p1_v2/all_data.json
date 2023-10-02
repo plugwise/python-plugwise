@@ -34,6 +34,7 @@
     }
   },
   "gateway": {
+    "daily_update": true,
     "gateway_id": "aaaa0000aaaa0000aaaa0000aaaa00aa",
     "notifications": {},
     "smile_name": "Smile P1"

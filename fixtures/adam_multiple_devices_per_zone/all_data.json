@@ -471,6 +471,7 @@
   },
   "gateway": {
     "cooling_present": false,
+    "daily_update": true,
     "gateway_id": "fe799307f1624099878210aa0b9f1475",
     "heater_id": "90986d591dcd426cae3ec3e8111ff730",
     "notifications": {
