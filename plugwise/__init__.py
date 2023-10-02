@@ -127,6 +127,7 @@ class SmileData(SmileHelper):
                 "smile_name": self.smile_name,
                 "gateway_id": self.gateway_id,
                 "notifications": self._notifications,
+                "daily_update": True,
             }
         )
         if self._is_thermostat:
@@ -552,6 +553,7 @@ class Smile(SmileComm, SmileData):
 
             self._update_gw_devices()
             self.gw_data["notifications"] = self._notifications
+            self.gw_data["daily_update"] = False
 
         self._previous_day_number = day_number
         return PlugwiseData(self.gw_data, self.gw_devices)
