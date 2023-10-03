@@ -652,7 +652,7 @@ Changelogs below this line are separated in the former python-plugwise USB-only 
 
 ### 1.0.0 - Stable release
 
-- Just `black`ened code (Python `black`)
+- Just blacked code (Python `black`)
 
 ### 0.2.15 - Code cleanup
 
