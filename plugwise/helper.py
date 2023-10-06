@@ -312,6 +312,7 @@ class SmileHelper:
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
+        self._count: int = 0
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._elga = False
@@ -594,6 +595,7 @@ class SmileHelper:
         appl = self._energy_device_info_finder(location, appl)
 
         self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+        self._count += 1
 
         for key, value in {
             "firmware": appl.firmware,
@@ -608,6 +610,7 @@ class SmileHelper:
             if value is not None or key == "location":
                 p1_key = cast(ApplianceType, key)
                 self.gw_devices[appl.dev_id][p1_key] = value
+                self._count += 1
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
@@ -693,6 +696,7 @@ class SmileHelper:
                 continue
 
             self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+            self._count += 1
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
@@ -706,6 +710,7 @@ class SmileHelper:
                 if value is not None or key == "location":
                     appl_key = cast(ApplianceType, key)
                     self.gw_devices[appl.dev_id][appl_key] = value
+                    self._count += 1
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
@@ -1222,6 +1227,7 @@ class SmileHelper:
                         },
                     },
                 )
+                self._count += 4
 
         return switch_groups
 
