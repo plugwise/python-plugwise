@@ -108,6 +108,7 @@ class SmileData(SmileHelper):
                 data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
+                self._count += 1
             device.update(data)
 
             # Update for cooling
@@ -250,6 +251,7 @@ class SmileData(SmileHelper):
         """
         # OpenTherm device
         if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
+            self._count += 1
             device_data["available"] = True
             for data in self._notifications.values():
                 for msg in data.values():
@@ -258,6 +260,7 @@ class SmileData(SmileHelper):
 
         # Smartmeter
         if device["dev_class"] == "smartmeter":
+            self._count += 1
             device_data["available"] = True
             for data in self._notifications.values():
                 for msg in data.values():
