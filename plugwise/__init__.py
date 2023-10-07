@@ -125,7 +125,7 @@ class SmileData(SmileHelper):
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
-                "item_count": self._count
+                "item_count": self._count,
                 "notifications": self._notifications,
                 "smile_name": self.smile_name,
             }
