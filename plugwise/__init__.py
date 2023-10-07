@@ -50,13 +50,13 @@ from .helper import SmileComm, SmileHelper
 
 def count_items(prod, count=0):
     """# Function to calculate the Dictionary elements."""
-	for mykey in prod:
-		if isinstance(prod[mykey], dict):
-			# calls repeatedly
-			count = count_items(prod[mykey], count)
-		else:
-			count += 1
-	return count
+    for mykey in prod:
+        if isinstance(prod[mykey], dict):
+            # calls repeatedly
+            count = count_items(prod[mykey], count)
+        else:
+            count += 1
+    return count
 
 
 def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
