@@ -982,7 +982,6 @@ class SmileHelper:
             self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
 
-
     def _cleanup_data(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
 
