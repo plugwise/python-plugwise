@@ -877,6 +877,12 @@ class SmileHelper:
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
+            self._count += len(data["binary_sensors"])
+            self._count += len(data["sensors"])
+            self._count += len(data["switches"])
+            self._count += len(data) - 3
+            LOGGER.debug("HOI _appliance_measurements count: %s", self._count)
+
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
 
