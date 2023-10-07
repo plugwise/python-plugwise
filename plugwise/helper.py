@@ -593,6 +593,7 @@ class SmileHelper:
             self.gateway_id = FAKE_APPL
 
         self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
+        self._count += 1
         for key, value in {
             "firmware": self.smile_fw_version,
             "location": self._home_location,
@@ -605,6 +606,7 @@ class SmileHelper:
             if value is not None:
                 gw_key = cast(ApplianceType, key)
                 self.gw_devices[self.gateway_id][gw_key] = value
+                self._count += 1
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
