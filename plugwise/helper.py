@@ -1216,7 +1216,6 @@ class SmileHelper:
                 )
                 self._count += 4
 
-        LOGGER.debug("HOI groups count: %s", self._count)
         return switch_groups
 
     def _heating_valves(self) -> int | None:
