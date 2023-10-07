@@ -135,7 +135,8 @@ class SmileData(SmileHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
-        LOGGER.debug("HOI counted items: %s", count_items(self.gw_devices))
+        LOGGER.debug("HOI counted items 1: %s", self._count)
+        LOGGER.debug("HOI counted items 2: %s", count_items(self.gw_devices))
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
