@@ -180,6 +180,7 @@ def power_data_energy_diff(
             tmp_val: float | int = 0
         else:
             tmp_val = direct_data["sensors"][net_string]
+            self._count += 1
 
         if isinstance(f_val, int):
             tmp_val += f_val * diff
@@ -188,6 +189,7 @@ def power_data_energy_diff(
             tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
         direct_data["sensors"][net_string] = tmp_val
+        self._count += 1
 
     return direct_data
 
@@ -1338,6 +1340,7 @@ class SmileHelper:
                     )
                     key = cast(SensorType, loc.key_string)
                     direct_data["sensors"][key] = loc.f_val
+                    self._count += 1
 
         return direct_data
 
@@ -1372,6 +1375,7 @@ class SmileHelper:
                         )
                         key = cast(SensorType, loc.key_string)
                         direct_data["sensors"][key] = loc.f_val
+                        self._count += 1
 
         return direct_data
 
