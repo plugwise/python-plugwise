@@ -612,6 +612,8 @@ class SmileHelper:
                 self.gw_devices[appl.dev_id][p1_key] = value
                 self._count += 1
 
+        LOGGER.debug("HOI P1 count: %s", self._count)
+
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
 
@@ -711,6 +713,8 @@ class SmileHelper:
                     appl_key = cast(ApplianceType, key)
                     self.gw_devices[appl.dev_id][appl_key] = value
                     self._count += 1
+
+        LOGGER.debug("HOI others count: %s", self._count)
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
@@ -1229,6 +1233,7 @@ class SmileHelper:
                 )
                 self._count += 4
 
+        LOGGER.debug("HOI groups count: %s", self._count)
         return switch_groups
 
     def _heating_valves(self) -> int | None:
