@@ -1252,6 +1252,7 @@ class SmileHelper:
 
             direct_data["sensors"][net_string] = tmp_val
             self._count += 1
+            LOGGER.debug("HOI net_string, value: %s, %s", net_string, tmp_val)            
 
         LOGGER.debug("HOI energy-diffs count: %s", self._count)
         return direct_data
