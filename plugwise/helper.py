@@ -1243,7 +1243,6 @@ class SmileHelper:
                 tmp_val: float | int = 0
             else:
                 tmp_val = direct_data["sensors"][net_string]
-                self._count += 1
 
             if isinstance(f_val, int):
                 tmp_val += f_val * diff
