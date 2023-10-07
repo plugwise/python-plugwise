@@ -639,6 +639,7 @@ class SmileHelper:
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
+        self._count = 0
         self._all_locations()
 
         if self._smile_legacy:
