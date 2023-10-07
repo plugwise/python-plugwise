@@ -1339,7 +1339,7 @@ class SmileHelper:
                     key = cast(SensorType, loc.key_string)
                     direct_data["sensors"][key] = loc.f_val
 
-        self._count += len(direct_data)
+        self._count += len(direct_data["sensors"])
         LOGGER.debug("HOI P1 sensor count: %s", self._count)
         return direct_data
 
@@ -1375,7 +1375,7 @@ class SmileHelper:
                         key = cast(SensorType, loc.key_string)
                         direct_data["sensors"][key] = loc.f_val
 
-        self._count += len(direct_data)
+        self._count += len(direct_data["sensors"])
         LOGGER.debug("HOI P1 legacy sensor count: %s", self._count)
         return direct_data
 
