@@ -901,6 +901,7 @@ class SmileHelper:
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
+                self._count += 1
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
@@ -964,9 +965,11 @@ class SmileHelper:
                     item = "max_dhw_temperature"
                     if DHW_SETPOINT in data["sensors"]:
                         data["sensors"].pop(DHW_SETPOINT)
+                        self._count -= 1
 
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
+                self._count += len(data[act_item])
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
@@ -976,7 +979,9 @@ class SmileHelper:
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
             data["select_regulation_mode"] = search.find("mode").text
+            self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
+
 
     def _cleanup_data(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
@@ -988,10 +993,13 @@ class SmileHelper:
         if not self._cooling_present:
             if "cooling_state" in data["binary_sensors"]:
                 data["binary_sensors"].pop("cooling_state")
+                self._count -= 1
             if "cooling_ena_switch" in data["switches"]:
                 data["switches"].pop("cooling_ena_switch")  # pragma: no cover
+                self._count -= 1
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
+                self._count -= 1
 
     def _process_c_heating_state(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
@@ -1063,6 +1071,7 @@ class SmileHelper:
             self._process_c_heating_state(data)
             # Remove c_heating_state after processing
             data.pop("c_heating_state")
+            self._count -= 1
 
         if dev_id == self._heater_id and self.smile_name == "Smile Anna":
             # Anna+Elga: base cooling_state on the elga-status-code
@@ -1078,9 +1087,11 @@ class SmileHelper:
                         data["elga_status_code"] == 8
                     )
                 data.pop("elga_status_code", None)
+                self._count -= 1
                 # Elga has no cooling-switch
                 if "cooling_ena_switch" in data["switches"]:
                     data["switches"].pop("cooling_ena_switch")
+                    self._count -= 1
 
             # Loria/Thermastage: cooling-related is based on cooling_state
             # and modulation_level
@@ -1563,6 +1574,7 @@ class SmileHelper:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
                 data["switches"]["lock"] = found.text == "true"
+                self._count += 1
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
@@ -1578,7 +1590,9 @@ class SmileHelper:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
                             data["switches"][name] = item.find("state").text == "on"
+                            self._count += 1
                             # Remove the cooling_enabled binary_sensor when the corresponding switch is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
                                 data["binary_sensors"].pop("cooling_enabled")
+                                self._count -= 1
