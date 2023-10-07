@@ -1251,10 +1251,7 @@ class SmileHelper:
                 tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
             direct_data["sensors"][net_string] = tmp_val
-            self._count += 1
-            LOGGER.debug("HOI net_string, value: %s, %s", net_string, tmp_val)
 
-        LOGGER.debug("HOI energy-diffs count: %s", self._count)
         return direct_data
 
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
