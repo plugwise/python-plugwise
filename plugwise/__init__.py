@@ -187,6 +187,7 @@ class SmileData(SmileHelper):
             if self.gw_devices[member]["switches"].get("relay"):
                 counter += 1
         device_data["switches"]["relay"] = counter != 0
+        self._count += 1
         return device_data
 
     def _device_data_adam(
@@ -219,10 +220,12 @@ class SmileData(SmileHelper):
         # Presets
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
+        self._count += 2
         if presets := self._presets(loc_id):
             presets_list = list(presets)
             device_data["preset_modes"] = presets_list
             device_data["active_preset"] = self._preset(loc_id)
+
 
         # Schedule
         (
@@ -237,9 +240,11 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
+        self._count += 3
 
         # Operation modes: auto, heat, heat_cool
         device_data["mode"] = "auto"
+        self._count += 1
         if sel_schedule == "None":
             device_data["mode"] = "heat"
             if self._cooling_present:
@@ -299,14 +304,17 @@ class SmileData(SmileHelper):
             )
             if outdoor_temperature is not None:
                 device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
+                self._count += 1
 
             # Show the allowed regulation modes
             if self._reg_allowed_modes:
                 device_data["regulation_modes"] = self._reg_allowed_modes
+                self._count += 1
 
         # Show the allowed dhw_modes
         if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device_data["dhw_modes"] = self._dhw_allowed_modes
+            self._count += 1
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
