@@ -48,6 +48,17 @@ from .exceptions import (
 from .helper import SmileComm, SmileHelper
 
 
+def count_items(prod, count=0):
+    """# Function to calculate the Dictionary elements."""
+	for mykey in prod:
+		if isinstance(prod[mykey], dict):
+			# calls repeatedly
+			count = count_items(prod[mykey], count)
+		else:
+			count += 1
+	return count
+
+
 def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
     """Helper-function for removing any empty platform dicts."""
     if not data["binary_sensors"]:
@@ -124,6 +135,7 @@ class SmileData(SmileHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
+        LOGGER.debug("HOI counted items: %s", count_items(self.gw_devices))
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
