@@ -226,7 +226,6 @@ class SmileData(SmileHelper):
             device_data["preset_modes"] = presets_list
             device_data["active_preset"] = self._preset(loc_id)
 
-
         # Schedule
         (
             avail_schedules,
