@@ -161,39 +161,6 @@ def power_data_local_format(
     return format_measure(val, attrs_uom)
 
 
-def power_data_energy_diff(
-    measurement: str,
-    net_string: SensorType,
-    f_val: float | int,
-    direct_data: DeviceData,
-) -> DeviceData:
-    """Calculate differential energy."""
-    if (
-        "electricity" in measurement
-        and "phase" not in measurement
-        and "interval" not in net_string
-    ):
-        diff = 1
-        if "produced" in measurement:
-            diff = -1
-        if net_string not in direct_data["sensors"]:
-            tmp_val: float | int = 0
-        else:
-            tmp_val = direct_data["sensors"][net_string]
-            self._count += 1
-
-        if isinstance(f_val, int):
-            tmp_val += f_val * diff
-        else:
-            tmp_val += float(f_val * diff)
-            tmp_val = float(f"{round(tmp_val, 3):.3f}")
-
-        direct_data["sensors"][net_string] = tmp_val
-        self._count += 1
-
-    return direct_data
-
-
 class SmileComm:
     """The SmileComm class."""
 
@@ -1255,6 +1222,39 @@ class SmileHelper:
                     open_valve_count += 1
 
         return None if loc_found == 0 else open_valve_count
+
+def power_data_energy_diff(
+    self,
+    measurement: str,
+    net_string: SensorType,
+    f_val: float | int,
+    direct_data: DeviceData,
+) -> DeviceData:
+    """Calculate differential energy."""
+    if (
+        "electricity" in measurement
+        and "phase" not in measurement
+        and "interval" not in net_string
+    ):
+        diff = 1
+        if "produced" in measurement:
+            diff = -1
+        if net_string not in direct_data["sensors"]:
+            tmp_val: float | int = 0
+        else:
+            tmp_val = direct_data["sensors"][net_string]
+            self._count += 1
+
+        if isinstance(f_val, int):
+            tmp_val += f_val * diff
+        else:
+            tmp_val += float(f_val * diff)
+            tmp_val = float(f"{round(tmp_val, 3):.3f}")
+
+        direct_data["sensors"][net_string] = tmp_val
+        self._count += 1
+
+    return direct_data
 
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
