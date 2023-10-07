@@ -124,9 +124,10 @@ class SmileData(SmileHelper):
         self._update_gw_devices()
         self.gw_data.update(
             {
-                "smile_name": self.smile_name,
                 "gateway_id": self.gateway_id,
+                "item_count": self._count
                 "notifications": self._notifications,
+                "smile_name": self.smile_name,
             }
         )
         if self._is_thermostat:
