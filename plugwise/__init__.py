@@ -346,7 +346,6 @@ class Smile(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
-        self.device_items: int = 0
         self.smile_hostname: str | None = None
         self._previous_day_number: str = "0"
         self._target_smile: str | None = None
