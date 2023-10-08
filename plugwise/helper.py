@@ -1008,14 +1008,18 @@ class SmileHelper:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
             if self.smile_name == "Smile Anna":
+                if "heating_state" not in data["binary_sensors"]:
+                    self._count += 1
                 data["binary_sensors"]["heating_state"] = data["c_heating_state"]
-                self._count += 1
+
             # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
             if self.smile_name == "Adam":
-                data["binary_sensors"]["cooling_state"] = data["binary_sensors"][
-                    "heating_state"
-                ] = False
-                self._count += 2
+                if "heating_state" not in data["binary_sensors"]:
+                    self._count += 1
+                data["binary_sensors"]["heating_state"] = False
+                if "cooling_state" not in data["binary_sensors"]:
+                    self._count += 1
+                data["binary_sensors"]["cooling_state"] = False
                 if self._cooling_enabled:
                     data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
                 else:
