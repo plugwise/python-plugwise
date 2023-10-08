@@ -273,8 +273,8 @@ class SmileData(SmileHelper):
         """
         # OpenTherm device
         if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
-            self._count += 1
             device_data["available"] = True
+            self._count += 1
             for data in self._notifications.values():
                 for msg in data.values():
                     if "no OpenTherm communication" in msg:
@@ -282,8 +282,8 @@ class SmileData(SmileHelper):
 
         # Smartmeter
         if device["dev_class"] == "smartmeter":
-            self._count += 1
             device_data["available"] = True
+            self._count += 1
             for data in self._notifications.values():
                 for msg in data.values():
                     if "P1 does not seem to be connected to a smart meter" in msg:
