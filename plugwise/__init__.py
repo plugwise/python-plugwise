@@ -208,7 +208,6 @@ class SmileData(SmileHelper):
             and self._heating_valves() is not None
         ):
             device_data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
-            self._count += 1
 
         return device_data
 
