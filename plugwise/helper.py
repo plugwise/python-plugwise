@@ -953,9 +953,11 @@ class SmileHelper:
                         temp_dict["upper_bound"] = 2.0
                         # Rename offset to setpoint
                         key = "setpoint"
+                        self._count += 3
 
                     act_key = cast(ActuatorDataType, key)
                     temp_dict[act_key] = format_measure(function.text, TEMP_CELSIUS)
+                    self._count +=1
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
@@ -968,7 +970,6 @@ class SmileHelper:
 
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
-                self._count += len(data[act_item])
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
