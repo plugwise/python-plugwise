@@ -996,10 +996,10 @@ class SmileHelper:
                 self._count -= 1
             if "cooling_ena_switch" in data["switches"]:
                 data["switches"].pop("cooling_ena_switch")  # pragma: no cover
-                self._count -= 1
+                self._count -= 1  # pragma: no cover
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
-                self._count -= 1
+                self._count -= 1  # pragma: no cover
 
     def _process_c_heating_state(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
