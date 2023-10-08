@@ -548,6 +548,7 @@ class Smile(SmileComm, SmileData):
             self.gw_devices: dict[str, DeviceData] = {}
             await self._full_update_device()
             self.get_all_devices()
+            LOGGER.debug("HOI full item-count: %s", self._count)
         # Otherwise perform an incremental update
         else:
             await self._update_domain_objects()
@@ -566,6 +567,7 @@ class Smile(SmileComm, SmileData):
             self.gw_data["notifications"] = self._notifications
 
         self._previous_day_number = day_number
+        LOGGER.debug("HOI update item-count: %s", self._count)
         return PlugwiseData(self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
