@@ -957,7 +957,7 @@ class SmileHelper:
 
                     act_key = cast(ActuatorDataType, key)
                     temp_dict[act_key] = format_measure(function.text, TEMP_CELSIUS)
-                    self._count +=1
+                    self._count += 1
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
