@@ -124,6 +124,7 @@ class SmileData(SmileHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
+        self.device_items = self._count
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
@@ -345,6 +346,7 @@ class Smile(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
+        self.device_items: int = 0
         self.smile_hostname: str | None = None
         self._previous_day_number: str = "0"
         self._target_smile: str | None = None
@@ -548,7 +550,6 @@ class Smile(SmileComm, SmileData):
             self.gw_devices: dict[str, DeviceData] = {}
             await self._full_update_device()
             self.get_all_devices()
-            LOGGER.debug("HOI full item-count: %s", self._count)
         # Otherwise perform an incremental update
         else:
             await self._update_domain_objects()
@@ -567,7 +568,6 @@ class Smile(SmileComm, SmileData):
             self.gw_data["notifications"] = self._notifications
 
         self._previous_day_number = day_number
-        LOGGER.debug("HOI update item-count: %s", self._count)
         return PlugwiseData(self.gw_data, self.gw_devices)
 
     async def _set_schedule_state_legacy(
