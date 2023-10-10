@@ -10,10 +10,13 @@
 ## v0.33.1 Bugfix for Adam
 ## v0.34.0
 ## Ongoing (v0.34.0)
+## v0.34.0
 
-- New feature: for Adam, add the mode off-option to the output, connected to regulation_mode off.
-  Also, for Adam, return to providing a single setpoint for both heating and cooling (in HA there
-  will be HVACMode.HEAT and HVACMode.COOL instead of HVACMode.HEAT_COOL).
+- New feature: for Adam, provide mode = off, related to the regulation_mode = off, and mode = cool, for regulation_mode = cooling.
+  Also, for Adam, return to providing a single setpoint for both heating and cooling.
+- Update userdata, manual-fixture-creation, and tests related to the added modes.
+- A few small Typing updates
+- Manually change the adam_jip fixture, for testing in pw-beta/Core plugwise
 
 ## v0.33.1 Bugfix for Adam
 
