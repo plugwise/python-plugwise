@@ -389,7 +389,12 @@ ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
 class GatewayData(TypedDict, total=False):
     """The Gateway Data class."""
 
-
+    cooling_present: bool
+    gateway_id: str
+    heater_id: str
+    item_count: int
+    notifications: dict[str, dict[str, str]]
+    smile_name: str
 
 class ModelData(TypedDict):
     """The ModelData class."""
