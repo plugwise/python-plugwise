@@ -567,10 +567,3 @@ class PlugwiseData:
 
     gateway: GatewayData
     devices: dict[str, DeviceData]
-
-    cooling_present: bool
-    item_count: int
-    notifications: dict[str, dict[str, str]]
-    smile_name: str
-    gateway_id: str
-    heater_id: str
