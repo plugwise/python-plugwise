@@ -881,6 +881,7 @@ class SmileHelper:
         self._count += len(data["binary_sensors"])
         self._count += len(data["sensors"])
         self._count += len(data["switches"])
+        # Don't count the above top-level dicts, only the remaining single items
         self._count += len(data) - 3
 
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
@@ -952,9 +953,9 @@ class SmileHelper:
                         temp_dict["lower_bound"] = -2.0
                         temp_dict["resolution"] = 0.1
                         temp_dict["upper_bound"] = 2.0
+                        self._count += 3
                         # Rename offset to setpoint
                         key = "setpoint"
-                        self._count += 3
 
                     act_key = cast(ActuatorDataType, key)
                     temp_dict[act_key] = format_measure(function.text, TEMP_CELSIUS)
