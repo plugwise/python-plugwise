@@ -161,37 +161,6 @@ def power_data_local_format(
     return format_measure(val, attrs_uom)
 
 
-def power_data_energy_diff(
-    measurement: str,
-    net_string: SensorType,
-    f_val: float | int,
-    direct_data: DeviceData,
-) -> DeviceData:
-    """Calculate differential energy."""
-    if (
-        "electricity" in measurement
-        and "phase" not in measurement
-        and "interval" not in net_string
-    ):
-        diff = 1
-        if "produced" in measurement:
-            diff = -1
-        if net_string not in direct_data["sensors"]:
-            tmp_val: float | int = 0
-        else:
-            tmp_val = direct_data["sensors"][net_string]
-
-        if isinstance(f_val, int):
-            tmp_val += f_val * diff
-        else:
-            tmp_val += float(f_val * diff)
-            tmp_val = float(f"{round(tmp_val, 3):.3f}")
-
-        direct_data["sensors"][net_string] = tmp_val
-
-    return direct_data
-
-
 class SmileComm:
     """The SmileComm class."""
 
@@ -312,6 +281,7 @@ class SmileHelper:
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
         self._cooling_present = False
+        self._count: int
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._elga = False
@@ -351,6 +321,7 @@ class SmileHelper:
         self._cooling_active = False
         self._cooling_enabled = False
 
+        self.device_items: int = 0
         self.gateway_id: str | None = None
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -594,6 +565,7 @@ class SmileHelper:
         appl = self._energy_device_info_finder(location, appl)
 
         self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+        self._count += 1
 
         for key, value in {
             "firmware": appl.firmware,
@@ -608,6 +580,7 @@ class SmileHelper:
             if value is not None or key == "location":
                 p1_key = cast(ApplianceType, key)
                 self.gw_devices[appl.dev_id][p1_key] = value
+                self._count += 1
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
@@ -619,6 +592,7 @@ class SmileHelper:
             self.gateway_id = FAKE_APPL
 
         self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
+        self._count += 1
         for key, value in {
             "firmware": self.smile_fw_version,
             "location": self._home_location,
@@ -631,9 +605,11 @@ class SmileHelper:
             if value is not None:
                 gw_key = cast(ApplianceType, key)
                 self.gw_devices[self.gateway_id][gw_key] = value
+                self._count += 1
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
+        self._count = 0
         self._all_locations()
 
         if self._smile_legacy:
@@ -693,6 +669,7 @@ class SmileHelper:
                 continue
 
             self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+            self._count += 1
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
@@ -706,6 +683,7 @@ class SmileHelper:
                 if value is not None or key == "location":
                     appl_key = cast(ApplianceType, key)
                     self.gw_devices[appl.dev_id][appl_key] = value
+                    self._count += 1
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
@@ -900,6 +878,12 @@ class SmileHelper:
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
+        self._count += len(data["binary_sensors"])
+        self._count += len(data["sensors"])
+        self._count += len(data["switches"])
+        # Don't count the above top-level dicts, only the remaining single items
+        self._count += len(data) - 3
+
     def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -918,6 +902,7 @@ class SmileHelper:
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
+                self._count += 1
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
@@ -968,11 +953,13 @@ class SmileHelper:
                         temp_dict["lower_bound"] = -2.0
                         temp_dict["resolution"] = 0.1
                         temp_dict["upper_bound"] = 2.0
+                        self._count += 3
                         # Rename offset to setpoint
                         key = "setpoint"
 
                     act_key = cast(ActuatorDataType, key)
                     temp_dict[act_key] = format_measure(function.text, TEMP_CELSIUS)
+                    self._count += 1
 
             if temp_dict:
                 # If domestic_hot_water_setpoint is present as actuator,
@@ -981,6 +968,7 @@ class SmileHelper:
                     item = "max_dhw_temperature"
                     if DHW_SETPOINT in data["sensors"]:
                         data["sensors"].pop(DHW_SETPOINT)
+                        self._count -= 1
 
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
@@ -993,6 +981,7 @@ class SmileHelper:
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
             data["select_regulation_mode"] = search.find("mode").text
+            self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
 
     def _cleanup_data(self, data: DeviceData) -> None:
@@ -1005,10 +994,13 @@ class SmileHelper:
         if not self._cooling_present:
             if "cooling_state" in data["binary_sensors"]:
                 data["binary_sensors"].pop("cooling_state")
+                self._count -= 1
             if "cooling_ena_switch" in data["switches"]:
                 data["switches"].pop("cooling_ena_switch")  # pragma: no cover
+                self._count -= 1  # pragma: no cover
             if not self._elga and "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
+                self._count -= 1  # pragma: no cover
 
     def _process_c_heating_state(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
@@ -1023,9 +1015,12 @@ class SmileHelper:
 
             # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
             if self.smile_name == "Adam":
-                data["binary_sensors"]["cooling_state"] = data["binary_sensors"][
-                    "heating_state"
-                ] = False
+                if "heating_state" not in data["binary_sensors"]:
+                    self._count += 1
+                data["binary_sensors"]["heating_state"] = False
+                if "cooling_state" not in data["binary_sensors"]:
+                    self._count += 1
+                data["binary_sensors"]["cooling_state"] = False
                 if self._cooling_enabled:
                     data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
                 else:
@@ -1080,6 +1075,7 @@ class SmileHelper:
             self._process_c_heating_state(data)
             # Remove c_heating_state after processing
             data.pop("c_heating_state")
+            self._count -= 1
 
         if dev_id == self._heater_id and self.smile_name == "Smile Anna":
             # Anna+Elga: base cooling_state on the elga-status-code
@@ -1095,9 +1091,11 @@ class SmileHelper:
                         data["elga_status_code"] == 8
                     )
                 data.pop("elga_status_code", None)
+                self._count -= 1
                 # Elga has no cooling-switch
                 if "cooling_ena_switch" in data["switches"]:
                     data["switches"].pop("cooling_ena_switch")
+                    self._count -= 1
 
             # Loria/Thermastage: cooling-related is based on cooling_state
             # and modulation_level
@@ -1222,6 +1220,7 @@ class SmileHelper:
                         },
                     },
                 )
+                self._count += 4
 
         return switch_groups
 
@@ -1241,6 +1240,37 @@ class SmileHelper:
                     open_valve_count += 1
 
         return None if loc_found == 0 else open_valve_count
+
+    def power_data_energy_diff(
+        self,
+        measurement: str,
+        net_string: SensorType,
+        f_val: float | int,
+        direct_data: DeviceData,
+    ) -> DeviceData:
+        """Calculate differential energy."""
+        if (
+            "electricity" in measurement
+            and "phase" not in measurement
+            and "interval" not in net_string
+        ):
+            diff = 1
+            if "produced" in measurement:
+                diff = -1
+            if net_string not in direct_data["sensors"]:
+                tmp_val: float | int = 0
+            else:
+                tmp_val = direct_data["sensors"][net_string]
+
+            if isinstance(f_val, int):
+                tmp_val += f_val * diff
+            else:
+                tmp_val += float(f_val * diff)
+                tmp_val = float(f"{round(tmp_val, 3):.3f}")
+
+            direct_data["sensors"][net_string] = tmp_val
+
+        return direct_data
 
     def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
@@ -1321,12 +1351,13 @@ class SmileHelper:
                     if not loc.found:
                         continue
 
-                    direct_data = power_data_energy_diff(
+                    direct_data = self.power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
                     key = cast(SensorType, loc.key_string)
                     direct_data["sensors"][key] = loc.f_val
 
+        self._count += len(direct_data["sensors"])
         return direct_data
 
     def _power_data_from_modules(self) -> DeviceData:
@@ -1355,12 +1386,13 @@ class SmileHelper:
                         if not loc.found:
                             continue
 
-                        direct_data = power_data_energy_diff(
+                        direct_data = self.power_data_energy_diff(
                             loc.measurement, loc.net_string, loc.f_val, direct_data
                         )
                         key = cast(SensorType, loc.key_string)
                         direct_data["sensors"][key] = loc.f_val
 
+        self._count += len(direct_data["sensors"])
         return direct_data
 
     def _preset(self, loc_id: str) -> str | None:
@@ -1545,6 +1577,7 @@ class SmileHelper:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
                 data["switches"]["lock"] = found.text == "true"
+                self._count += 1
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
@@ -1560,7 +1593,9 @@ class SmileHelper:
                     if (toggle_type := item.find("type")) is not None:
                         if toggle_type.text == toggle:
                             data["switches"][name] = item.find("state").text == "on"
+                            self._count += 1
                             # Remove the cooling_enabled binary_sensor when the corresponding switch is present
                             # Except for Elga
                             if toggle == "cooling_enabled" and not self._elga:
                                 data["binary_sensors"].pop("cooling_enabled")
+                                self._count -= 1

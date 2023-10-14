@@ -85,6 +85,7 @@ class SmileData(SmileHelper):
                 sensors.pop("setpoint")
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
+            self._count += 2
 
         return device
 
@@ -108,6 +109,7 @@ class SmileData(SmileHelper):
                 data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
+                self._count += 1
             device.update(data)
 
             # Update for cooling
@@ -122,11 +124,13 @@ class SmileData(SmileHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
+        self.device_items = self._count
         self.gw_data.update(
             {
-                "smile_name": self.smile_name,
                 "gateway_id": self.gateway_id,
+                "item_count": self._count,
                 "notifications": self._notifications,
+                "smile_name": self.smile_name,
             }
         )
         if self._is_thermostat:
@@ -171,6 +175,7 @@ class SmileData(SmileHelper):
             if self.gw_devices[member]["switches"].get("relay"):
                 counter += 1
         device_data["switches"]["relay"] = counter != 0
+        self._count += 1
         return device_data
 
     def _device_data_adam(
@@ -203,6 +208,7 @@ class SmileData(SmileHelper):
         # Presets
         device_data["preset_modes"] = None
         device_data["active_preset"] = None
+        self._count += 2
         if presets := self._presets(loc_id):
             presets_list = list(presets)
             device_data["preset_modes"] = presets_list
@@ -221,9 +227,11 @@ class SmileData(SmileHelper):
             device_data["last_used"] = "".join(map(str, avail_schedules))
         else:
             device_data["last_used"] = last_active
+        self._count += 3
 
         # Operation modes: auto, heat, heat_cool
         device_data["mode"] = "auto"
+        self._count += 1
         if sel_schedule == "None":
             device_data["mode"] = "heat"
             if self._cooling_present:
@@ -250,6 +258,7 @@ class SmileData(SmileHelper):
         # OpenTherm device
         if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
             device_data["available"] = True
+            self._count += 1
             for data in self._notifications.values():
                 for msg in data.values():
                     if "no OpenTherm communication" in msg:
@@ -258,6 +267,7 @@ class SmileData(SmileHelper):
         # Smartmeter
         if device["dev_class"] == "smartmeter":
             device_data["available"] = True
+            self._count += 1
             for data in self._notifications.values():
                 for msg in data.values():
                     if "P1 does not seem to be connected to a smart meter" in msg:
@@ -281,14 +291,17 @@ class SmileData(SmileHelper):
             )
             if outdoor_temperature is not None:
                 device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
+                self._count += 1
 
             # Show the allowed regulation modes
             if self._reg_allowed_modes:
                 device_data["regulation_modes"] = self._reg_allowed_modes
+                self._count += 1
 
         # Show the allowed dhw_modes
         if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device_data["dhw_modes"] = self._dhw_allowed_modes
+            self._count += 1
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
