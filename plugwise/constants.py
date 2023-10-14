@@ -396,6 +396,7 @@ class GatewayData(TypedDict, total=False):
     notifications: dict[str, dict[str, str]]
     smile_name: str
 
+
 class ModelData(TypedDict):
     """The ModelData class."""
 
