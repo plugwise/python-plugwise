@@ -16,6 +16,7 @@ classifiers     = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Topic :: Home Automation",
 ]
 authors = [
@@ -52,7 +53,7 @@ include-package-data = true
 include = ["plugwise*"]
 
 [tool.black]
-target-version = ["py39", "py310", "py311"]
+target-version = ["py310", "py311", "py312"]
 exclude = 'generated'
 
 [tool.isort]
