@@ -167,7 +167,7 @@ jobs:
     needs: commitcheck
     strategy:
       matrix:
-        python-version: ["3.11", "3.10"]
+        python-version: ["3.12", "3.11", "3.10"]
     steps:
       - name: Check out committed code
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
@@ -206,7 +206,7 @@ jobs:
     needs: prepare-test-cache
     strategy:
       matrix:
-        python-version: ["3.11", "3.10"]
+        python-version: ["3.12", "3.11", "3.10"]
 
     steps:
       - name: Check out committed code

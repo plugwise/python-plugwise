@@ -3,6 +3,7 @@
 ## Ongoing
 
 - Add item-count to output
+- Support python 3.12
 
 ## v0.33.1 Bugfix for Adam
 
