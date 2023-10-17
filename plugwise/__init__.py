@@ -210,8 +210,7 @@ class SmileData(SmileHelper):
         device_data["active_preset"] = None
         self._count += 2
         if presets := self._presets(loc_id):
-            presets_list = list(presets)
-            device_data["preset_modes"] = presets_list
+            device_data["preset_modes"] = list(presets)
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
@@ -228,13 +227,17 @@ class SmileData(SmileHelper):
             device_data["mode"] = "heat"
             if self._cooling_present:
                 device_data["mode"] = "heat_cool"
-                if "regulation_modes" in gateway:
-                    if gateway["select_regulation_mode"] == "cooling":
-                        device_data["mode"] = "cool"
+                if (
+                    "regulation_modes" in gateway
+                    and gateway["select_regulation_mode"] == "cooling"
+                ):
+                    device_data["mode"] = "cool"
 
-        if "regulation_modes" in gateway:
-            if gateway["select_regulation_mode"] == "off":
-                device_data["mode"] = "off"
+        if (
+            "regulation_modes" in gateway
+            and gateway["select_regulation_mode"] == "off"
+        ):
+            device_data["mode"] = "off"
 
         if "None" not in avail_schedules:
             loc_schedule_states = {}
