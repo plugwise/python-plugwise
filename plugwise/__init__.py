@@ -239,9 +239,9 @@ class SmileData(SmileHelper):
         if "None" not in avail_schedules:
             loc_schedule_states = {}
             for schedule in avail_schedules:
-                loc_schedule_states[schedule] = "off"
-                if device_data["mode"] == "auto":
-                    loc_schedule_states[sel_schedule] = "on"
+                loc_schedule_states[schedule] = (
+                    "off" if device_data["mode"] == "auto" else "on"
+                )
 
             self._schedule_old_states[loc_id] = loc_schedule_states
 
