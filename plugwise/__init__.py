@@ -196,6 +196,13 @@ class SmileData(SmileHelper):
 
         return device_data
 
+    def check_reg_mode(self, mode: str) -> bool:
+        """Helper-function for device_data_climate()."""
+        gateway = self.gw_devices[self.gateway_id]
+        return (
+            "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
+        )
+
     def _device_data_climate(
         self, device: DeviceData, device_data: DeviceData
     ) -> DeviceData:
@@ -220,20 +227,16 @@ class SmileData(SmileHelper):
         self._count += 2
 
         # Operation modes: auto, heat, heat_cool, cool and off
-        gateway = self.gw_devices[self.gateway_id]
         device_data["mode"] = "auto"
         self._count += 1
         if sel_schedule == "None":
             device_data["mode"] = "heat"
             if self._cooling_present:
-                device_data["mode"] = "heat_cool"
-                if (
-                    "regulation_modes" in gateway
-                    and gateway["select_regulation_mode"] == "cooling"
-                ):
-                    device_data["mode"] = "cool"
+                device_data["mode"] = (
+                    "cool" if self.check_reg_mode("cooling") else "heat_cool"
+                )
 
-        if "regulation_modes" in gateway and gateway["select_regulation_mode"] == "off":
+        if self.check_reg_mode("off"):
             device_data["mode"] = "off"
 
         if "None" not in avail_schedules:
