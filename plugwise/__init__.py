@@ -233,10 +233,7 @@ class SmileData(SmileHelper):
                 ):
                     device_data["mode"] = "cool"
 
-        if (
-            "regulation_modes" in gateway
-            and gateway["select_regulation_mode"] == "off"
-        ):
+        if "regulation_modes" in gateway and gateway["select_regulation_mode"] == "off":
             device_data["mode"] = "off"
 
         if "None" not in avail_schedules:
