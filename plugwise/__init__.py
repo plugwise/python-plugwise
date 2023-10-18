@@ -617,8 +617,7 @@ class Smile(SmileComm, SmileData):
         if state == "on":
             contexts.append(subject)
 
-        contexts = etree.tostring(contexts, encoding="unicode").rstrip()
-        return contexts
+        return etree.tostring(contexts, encoding="unicode").rstrip()
 
     async def set_schedule_state(
         self,
@@ -665,7 +664,7 @@ class Smile(SmileComm, SmileData):
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
 
-        self.determine_contexts(loc_id, new_state, schedule_rule_id)
+        contexts = self.determine_contexts(loc_id, new_state, schedule_rule_id)
         uri = f"{RULES};id={schedule_rule_id}"
         data = (
             f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
