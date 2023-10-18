@@ -557,7 +557,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     tinker_schedule_passed = True
                     _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
-                    _LOGGER.info("  + failed as expected")te
+                    _LOGGER.info("  + failed as expected")
                     tinker_schedule_passed = True
                 except (
                     pw_exceptions.ErrorSendingCommandError,
