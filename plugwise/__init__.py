@@ -617,7 +617,7 @@ class Smile(SmileComm, SmileData):
         if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
         if name is None:
-            for device in self.gw_devices:
+            for device in self.gw_devices.values():
                 if device["location"] == loc_id and device["last_used"]:
                     name = device["last_used"]
                 else:
