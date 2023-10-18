@@ -553,7 +553,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    await smile.set_schedule_state(loc_id, new_schedule, state)
+                    await smile.set_schedule_state(loc_id, state, new_schedule)
                     tinker_schedule_passed = True
                     _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
@@ -1952,6 +1952,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=["Weekschema", "Badkamer", "Test"],
         )
         assert result
+
+        # special test-case for turning a schedule back on based on the last_used schedule
+        await smile.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", "off")
 
         # bad schedule-state test
         result = await self.tinker_thermostat_schedule(

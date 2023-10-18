@@ -602,22 +602,47 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
 
+    def determine_contexts(
+        self, loc_id: str, name: str, state: str, sched_id: str
+    ) -> etree:
+        """Helper-function for set_schedule_state()."""
+        locator = f'.//*[@id="{sched_id}"]/contexts'
+        contexts = self._domain_objects.find(locator)
+        locator = f'.//*[@id="{loc_id}"].../...'
+        if (subject := contexts.find(locator)) is None:
+            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+            subject = etree.fromstring(subject)
+
+        if state == "off":
+            self._last_active[loc_id] = name
+            contexts.remove(subject)
+        if state == "on":
+            contexts.append(subject)
+
+        return etree.tostring(contexts, encoding="unicode").rstrip()
+
     async def set_schedule_state(
-        self, loc_id: str, name: str | None, new_state: str
+        self,
+        loc_id: str,
+        new_state: str,
+        name: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
         Determined from - DOMAIN_OBJECTS.
-        In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
+        Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Input checking
         if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
         if name is None:
-            raise PlugwiseError(
-                "Plugwise: cannot change schedule-state: no schedule name provided"
-            )
+            for device in self.gw_devices.values():
+                if device["location"] == loc_id and device["last_used"]:
+                    name = device["last_used"]
+                else:
+                    return
 
+        assert isinstance(name, str)
         if self._smile_legacy:
             await self._set_schedule_state_legacy(loc_id, name, new_state)
             return
@@ -641,21 +666,7 @@ class Smile(SmileComm, SmileData):
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
 
-        locator = f'.//*[@id="{schedule_rule_id}"]/contexts'
-        contexts = self._domain_objects.find(locator)
-        locator = f'.//*[@id="{loc_id}"].../...'
-        if (subject := contexts.find(locator)) is None:
-            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
-            subject = etree.fromstring(subject)
-
-        if new_state == "off":
-            self._last_active[loc_id] = name
-            contexts.remove(subject)
-        if new_state == "on":
-            contexts.append(subject)
-
-        contexts = etree.tostring(contexts, encoding="unicode").rstrip()
-
+        contexts = self.determine_contexts(loc_id, name, new_state, schedule_rule_id)
         uri = f"{RULES};id={schedule_rule_id}"
         data = (
             f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
