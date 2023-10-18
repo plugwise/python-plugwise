@@ -602,19 +602,19 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
 
-    def determine_contexts(self, loc_id: str, schedule_rule_id: str) -> etree:
+    def determine_contexts(self, loc_id: str, state: str, sched_id: str) -> etree:
         """Helper function for set_schedule_state()."""
-        locator = f'.//*[@id="{schedule_rule_id}"]/contexts'
+        locator = f'.//*[@id="{sched_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
         locator = f'.//*[@id="{loc_id}"].../...'
         if (subject := contexts.find(locator)) is None:
             subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
             subject = etree.fromstring(subject)
 
-        if new_state == "off":
+        if state == "off":
             self._last_active[loc_id] = name
             contexts.remove(subject)
-        if new_state == "on":
+        if state == "on":
             contexts.append(subject)
 
         contexts = etree.tostring(contexts, encoding="unicode").rstrip()
@@ -665,7 +665,7 @@ class Smile(SmileComm, SmileData):
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
 
-        self.determine_contexts(loc_id, schedule_rule_id)
+        self.determine_contexts(loc_id, new_state, schedule_rule_id)
         uri = f"{RULES};id={schedule_rule_id}"
         data = (
             f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
