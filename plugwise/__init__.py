@@ -603,7 +603,7 @@ class Smile(SmileComm, SmileData):
         self._schedule_old_states[loc_id][name] = new_state
 
     async def set_schedule_state(
-        self, loc_id: str, name: str | None, new_state: str
+        self, loc_id: str, new_state: str, name: str | None = None, 
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
@@ -614,9 +614,9 @@ class Smile(SmileComm, SmileData):
         if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
         if name is None:
-            raise PlugwiseError(
-                "Plugwise: cannot change schedule-state: no schedule name provided"
-            )
+            for device in self.gw_devices:
+                if device["location"] == loc_id:
+                    name = device["last_used"]
 
         if self._smile_legacy:
             await self._set_schedule_state_legacy(loc_id, name, new_state)
