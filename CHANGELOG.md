@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Bugfix for [Core Issue #102204](https://github.com/home-assistant/core/issues/102204)
 - Add item-count to output
 - Support python 3.12
 
