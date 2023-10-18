@@ -1953,7 +1953,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert result
 
-        # special test-case for turning a schedule back on based onthe  last_used schedule
+        # special test-case for turning a schedule back on based on the last_used schedule
         await smile.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", "off")
 
         # bad schedule-state test
