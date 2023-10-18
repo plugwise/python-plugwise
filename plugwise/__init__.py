@@ -602,7 +602,7 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
 
-    def determine_contexts(self, loc_id: str, schedule_rule_id: str) -> etree
+    def determine_contexts(self, loc_id: str, schedule_rule_id: str) -> etree:
         """Helper function for set_schedule_state()."""
         locator = f'.//*[@id="{schedule_rule_id}"]/contexts'
         contexts = self._domain_objects.find(locator)
