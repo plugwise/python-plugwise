@@ -611,15 +611,17 @@ class Smile(SmileComm, SmileData):
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
         Determined from - DOMAIN_OBJECTS.
-        In HA Core used to set the hvac_mode: in practice switch between schedule on - off.
+        Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Input checking
         if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
         if name is None:
             for device in self.gw_devices:
-                if device["location"] == loc_id:
+                if device["location"] == loc_id and device["last_used"]:
                     name = device["last_used"]
+                else:
+                    return
 
         if self._smile_legacy:
             await self._set_schedule_state_legacy(loc_id, name, new_state)
