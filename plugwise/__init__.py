@@ -623,6 +623,7 @@ class Smile(SmileComm, SmileData):
                 else:
                     return
 
+        assert isinstance(name, str)
         if self._smile_legacy:
             await self._set_schedule_state_legacy(loc_id, name, new_state)
             return
