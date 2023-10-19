@@ -3673,10 +3673,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2021-06-20 00:00:01", testdata)
         assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert smile._last_active["d58fec52899f4f1c92e4f8fad6d8c48c"] == None
-        assert smile._last_active["06aecb3d00354375924f50c47af36bd2"] == None
-        assert smile._last_active["d27aede973b54be484f6842d1b2802ad"] == None
-        assert smile._last_active["13228dab8ce04617af318a2888b3c548"] == None
+        assert smile._last_active["d58fec52899f4f1c92e4f8fad6d8c48c"] is None
+        assert smile._last_active["06aecb3d00354375924f50c47af36bd2"] is None
+        assert smile._last_active["d27aede973b54be484f6842d1b2802ad"] is None
+        assert smile._last_active["13228dab8ce04617af318a2888b3c548"] is None
         assert smile.device_items == 215
 
         # Negative test
