@@ -218,7 +218,7 @@ class SmileData(SmileHelper):
         avail_schedules, sel_schedule = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["select_schedule"] = sel_schedule
-        self._count += 3 # TODO change to 2
+        self._count += 2
 
         # Operation modes: auto, heat, heat_cool
         device_data["mode"] = "auto"
