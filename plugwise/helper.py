@@ -1467,7 +1467,7 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
-            return available, selected, schedule_temperatures, None
+            return available, selected
 
         schedules: dict[str, dict[str, list[float]]] = {}
         for rule_id, loc_id in rule_ids.items():
