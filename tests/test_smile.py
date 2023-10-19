@@ -3997,7 +3997,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(
             smile, "2020-04-13 00:00:01", testdata_updated, initialize=False
         )
-        assert smile.device_items == 61
+        assert smile.device_items == 60
         await smile.close_connection()
         await self.disconnect(server, client)
 
