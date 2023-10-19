@@ -638,8 +638,8 @@ class Smile(SmileComm, SmileData):
         if name is None:
             if schedule_name := self._last_active[loc_id]:
                     name = schedule_name
-                else:
-                    return
+            else:
+                return
 
         assert isinstance(name, str)
         if self._smile_legacy:
