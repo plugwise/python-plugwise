@@ -26,7 +26,6 @@ from .constants import (
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
     DATA,
-    DAYS,
     DEFAULT_PW_MAX,
     DEFAULT_PW_MIN,
     DEVICE_MEASUREMENTS,
@@ -74,7 +73,6 @@ from .exceptions import (
 from .util import (
     escape_illegal_xml_characters,
     format_measure,
-    # in_between,
     version_to_model,
 )
 
@@ -1422,7 +1420,7 @@ class SmileHelper:
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
-            if not (directives := self._domain_objects.find(locator)):
+            if not self._domain_objects.find(locator):
                 continue
 
             available.append(name)
