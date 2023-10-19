@@ -1363,7 +1363,10 @@ class SmileHelper:
         return active_rule["icon"]
 
     def _schedules_legacy(
-        self, avail: list[str], location: str, sel: str,
+        self,
+        avail: list[str],
+        location: str,
+        sel: str,
     ) -> tuple[list[str], str]:
         """Helper-function for _schedules().
 
@@ -1387,13 +1390,11 @@ class SmileHelper:
             avail = [name]
             if active:
                 sel = name
-    
+
         self._last_active[location] = "".join(map(str, avail))
         return avail, sel
 
-    def _schedules(
-        self, location: str
-    ) -> tuple[list[str], str]:
+    def _schedules(self, location: str) -> tuple[list[str], str]:
         """Helper-function for smile.py: _device_data_climate().
 
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
@@ -1452,7 +1453,6 @@ class SmileHelper:
             schedules_dates[name] = (schedule_time - epoch).total_seconds()
 
         return sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
-
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
