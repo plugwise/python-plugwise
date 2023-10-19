@@ -1,11 +1,9 @@
 """Plugwise protocol helpers."""
 from __future__ import annotations
 
-import datetime
 import re
 
 from .constants import (
-    ARBITRARY_DATE,
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
