@@ -4160,7 +4160,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_version[0] == "4.10.10"
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
-        assert smile.device_items == 64
+        assert smile.device_items == 63
         assert smile._cooling_present
         assert smile._cooling_enabled
         assert smile._cooling_active
