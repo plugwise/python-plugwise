@@ -1525,7 +1525,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self._last_active["c34c6864216446528e95d88985e714cc"] == "Test"
+        assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Test"
         assert smile.device_items == 38
         assert not self.notifications
 
@@ -1665,7 +1665,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
-        assert self._last_active["009490cc2f674ce6b576863fbb64f867"] == "Weekschema"
+        assert smile._last_active["009490cc2f674ce6b576863fbb64f867"] == "Weekschema"
         assert smile.device_items == 70
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
@@ -1942,8 +1942,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2022-01-16 00:00:01", testdata)
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
-        assert self._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
-        assert self._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
+        assert smile._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
+        assert smile._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
         assert smile.device_items == 143
 
         result = await self.tinker_thermostat(
@@ -2405,11 +2405,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "fe799307f1624099878210aa0b9f1475"
-        assert self._last_active["12493538af164a409c6a1c79e38afe1c"] == "Badkamer Schema"
-        assert self._last_active["c50f167537524366a5af7aa3942feb1e"] == "GF7  Woonkamer"
-        assert self._last_active["82fa13f017d240daa0d0ea1775420f24"] == "CV Jessie"
-        assert self._last_active["08963fec7c53423ca5680aa4cb502c63"] == "Badkamer Schema"
-        assert self._last_active["446ac08dd04d4eff8ac57489757b7314"] == "Badkamer Schema"
+        assert smile._last_active["12493538af164a409c6a1c79e38afe1c"] == "Badkamer Schema"
+        assert smile._last_active["c50f167537524366a5af7aa3942feb1e"] == "GF7  Woonkamer"
+        assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == "CV Jessie"
+        assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == "Badkamer Schema"
+        assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == "Badkamer Schema"
         assert smile.device_items == 315
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -2842,11 +2842,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self._last_active["12493538af164a409c6a1c79e38afe1c"] == "Badkamer Schema"
-        assert self._last_active["c50f167537524366a5af7aa3942feb1e"] == "GF7  Woonkamer"
-        assert self._last_active["82fa13f017d240daa0d0ea1775420f24"] == "CV Jessie"
-        assert self._last_active["08963fec7c53423ca5680aa4cb502c63"] == "Badkamer Schema"
-        assert self._last_active["446ac08dd04d4eff8ac57489757b7314"] == "Badkamer Schema"
+        assert smile._last_active["12493538af164a409c6a1c79e38afe1c"] == "Badkamer Schema"
+        assert smile._last_active["c50f167537524366a5af7aa3942feb1e"] == "GF7  Woonkamer"
+        assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == "CV Jessie"
+        assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == "Badkamer Schema"
+        assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == "Badkamer Schema"
         assert smile.device_items == 315
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
@@ -3381,16 +3381,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
-        assert self._last_active["b52908550469425b812c87f766fe5303"] == "Werkdag schema"
-        assert self._last_active["20e735858f8146cead98b873177a4f99"] == "Werkdag schema"
-        assert self._last_active["e39529c79ab54fda9bed26cfc0447546"] == "Werkdag schema"
-        assert self._last_active["9a27714b970547ee9a6bdadc2b815ad5"] == "Werkdag schema"
-        assert self._last_active["93ac3f7bf25342f58cbb77c4a99ac0b3"] == "Werkdag schema"
-        assert self._last_active["fa5fa6b34f6b40a0972988b20e888ed4"] == "Werkdag schema"
-        assert self._last_active["04b15f6e884448288f811d29fb7b1b30"] == "Werkdag schema"
-        assert self._last_active["a562019b0b1f47a4bde8ebe3dbe3e8a9"] == "Werkdag schema"
-        assert self._last_active["8cf650a4c10c44819e426bed406aec34"] == "Werkdag schema"
-        assert self._last_active["5cc21042f87f4b4c94ccb5537c47a53f"] == "Werkdag schema"
+        assert smile._last_active["b52908550469425b812c87f766fe5303"] == "Werkdag schema"
+        assert smile._last_active["20e735858f8146cead98b873177a4f99"] == "Werkdag schema"
+        assert smile._last_active["e39529c79ab54fda9bed26cfc0447546"] == "Werkdag schema"
+        assert smile._last_active["9a27714b970547ee9a6bdadc2b815ad5"] == "Werkdag schema"
+        assert smile._last_active["93ac3f7bf25342f58cbb77c4a99ac0b3"] == "Werkdag schema"
+        assert smile._last_active["fa5fa6b34f6b40a0972988b20e888ed4"] == "Werkdag schema"
+        assert smile._last_active["04b15f6e884448288f811d29fb7b1b30"] == "Werkdag schema"
+        assert smile._last_active["a562019b0b1f47a4bde8ebe3dbe3e8a9"] == "Werkdag schema"
+        assert smile._last_active["8cf650a4c10c44819e426bed406aec34"] == "Werkdag schema"
+        assert smile._last_active["5cc21042f87f4b4c94ccb5537c47a53f"] == "Werkdag schema"
         assert smile.device_items == 423
 
         await smile.close_connection()
@@ -3631,10 +3631,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2021-06-20 00:00:01", testdata)
         assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
-        assert self._last_active["d58fec52899f4f1c92e4f8fad6d8c48c"] == None
-        assert self._last_active["06aecb3d00354375924f50c47af36bd2"] == None
-        assert self._last_active["d27aede973b54be484f6842d1b2802ad"] == None
-        assert self._last_active["13228dab8ce04617af318a2888b3c548"] == None
+        assert smile._last_active["d58fec52899f4f1c92e4f8fad6d8c48c"] == None
+        assert smile._last_active["06aecb3d00354375924f50c47af36bd2"] == None
+        assert smile._last_active["d27aede973b54be484f6842d1b2802ad"] == None
+        assert smile._last_active["13228dab8ce04617af318a2888b3c548"] == None
         assert smile.device_items == 215
 
         # Negative test
@@ -3973,7 +3973,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
-        assert self._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
+        assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert smile.device_items == 63
         assert not self.cooling_present
         assert not self.notifications
@@ -4099,7 +4099,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
-        assert self._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
+        assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert smile.device_items == 63
         assert self.cooling_present
         assert not self.notifications
@@ -4291,7 +4291,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-03-13 00:00:01", testdata)
-        assert self._last_active["d3ce834534114348be628b61b26d9220"] == "Thermostat schedule"
+        assert smile._last_active["d3ce834534114348be628b61b26d9220"] == "Thermostat schedule"
         assert smile.device_items == 59
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert not self.cooling_present
@@ -4338,7 +4338,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_hostname == "smile000000"
 
         await self.device_test(smile, "2022-03-13 00:00:01", testdata)
-        assert self._last_active["d3ce834534114348be628b61b26d9220"] == "Thermostat schedule"
+        assert smile._last_active["d3ce834534114348be628b61b26d9220"] == "Thermostat schedule"
         assert not smile._cooling_present
         assert smile.device_items == 59
 
@@ -4442,7 +4442,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-03-10 00:00:01", testdata)
-        assert self._last_active["d3ce834534114348be628b61b26d9220"] == "Thermostat schedule"
+        assert smile._last_active["d3ce834534114348be628b61b26d9220"] == "Thermostat schedule"
         assert smile.device_items == 62
         assert self.cooling_present
         assert not self.notifications
@@ -4544,7 +4544,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
+        assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert smile.device_items == 63
         assert smile._cooling_present
         assert not smile._cooling_enabled
@@ -4670,7 +4670,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
+        assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert smile.device_items == 63
         assert smile._cooling_present
         assert smile._cooling_enabled
