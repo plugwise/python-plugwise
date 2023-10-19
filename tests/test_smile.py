@@ -739,7 +739,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert smile._last_active["0000aaaa0000aaaa0000aaaa0000aa00"] == "Thermostat schedule"
-        assert smile.device_items == 45
+        assert smile.device_items == 44
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -800,7 +800,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": None,
                 "available_schedules": ["Thermostat schedule"],
                 "select_schedule": "None",
-                "last_used": "Thermostat schedule",
                 "mode": "heat",
                 "sensors": {"temperature": 21.4, "illuminance": 19.5, "setpoint": 15.0},
             },
@@ -841,7 +840,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, "2020-05-03 00:00:01", testdata)
 
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
-        assert smile.device_items == 45
+        assert smile._last_active["be81e3f8275b4129852c4d8d550ae2eb"] == "Thermostat schedule"
+        assert smile.device_items == 44
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1068,7 +1068,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "available_schedules": ["Standaard", "Thuiswerken"],
                 "select_schedule": "None",
-                "last_used": "Standaard",
                 "mode": "heat",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
@@ -1144,7 +1143,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
-        assert smile.device_items == 57
+        assert smile._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
+        assert smile.device_items == 56
         assert not self.notifications
 
         assert not smile._cooling_present
@@ -1247,7 +1247,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "available_schedules": ["Standaard", "Thuiswerken"],
                 "select_schedule": "None",
-                "last_used": "Standaard",
                 "mode": "heat",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
@@ -1278,7 +1277,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
-        assert smile.device_items == 57
+        assert smile._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
+        assert smile.device_items == 56
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1347,7 +1347,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "away",
                 "available_schedules": ["Test", "Normal"],
                 "select_schedule": "Normal",
-                "last_used": "Normal",
                 "mode": "auto",
                 "sensors": {"temperature": 20.6, "setpoint": 16.0, "illuminance": 35.0},
             },
@@ -1386,7 +1385,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "a270735e4ccd45239424badc0578a2b1"
-        assert smile.device_items == 39
+        assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Normal"
+        assert smile.device_items == 38
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -1430,7 +1430,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "available_schedules": ["Normal"],
                 "select_schedule": "Normal",
-                "last_used": "Normal",
                 "mode": "auto",
                 "sensors": {"temperature": 20.4, "setpoint": 21.0, "illuminance": 44.8},
             },
@@ -1456,7 +1455,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.device_items == 39
+        assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Normal"
+        assert smile.device_items == 38
         assert not self.notifications
 
         result = await self.tinker_thermostat(
