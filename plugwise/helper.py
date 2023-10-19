@@ -1416,7 +1416,7 @@ class SmileHelper:
 
     def _schedules_legacy(
         self, avail: list[str], sel: str
-    ) -> tuple[list[str], str, list[float], None]:
+    ) -> tuple[list[str], str:
         """Helper-function for _schedules().
 
         Collect available schedules/schedules for the legacy thermostat.
@@ -1444,7 +1444,7 @@ class SmileHelper:
 
     def _schedules(
         self, location: str
-    ) -> tuple[list[str], str, list[float], str | None]:
+    ) -> tuple[list[str], str]:
         """Helper-function for smile.py: _device_data_climate().
 
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
