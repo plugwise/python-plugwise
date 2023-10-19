@@ -51,28 +51,6 @@ def format_measure(measure: str, unit: str) -> float | int:
     return result
 
 
-def in_between(
-    today: int,
-    day_0: int,
-    day_1: int,
-    now: datetime.time,
-    time_0: datetime.time,
-    time_1: datetime.time,
-) -> bool:
-    """Determine timing for schedules."""
-    time_now = datetime.timedelta(days=today, hours=now.hour, minutes=now.minute)
-    time_start = datetime.timedelta(
-        days=day_0, hours=time_0.hour, minutes=time_0.minute
-    )
-    time_end = datetime.timedelta(days=day_1, hours=time_1.hour, minutes=time_1.minute)
-
-    now_point = ARBITRARY_DATE + time_now
-    start_point = ARBITRARY_DATE + time_start
-    end_point = ARBITRARY_DATE + time_end
-
-    return start_point <= now_point <= end_point
-
-
 # NOTE: this function version_to_model is shared between Smile and USB
 def version_to_model(version: str | None) -> str | None:
     """Translate hardware_version to device type."""
