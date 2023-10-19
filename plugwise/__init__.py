@@ -637,7 +637,7 @@ class Smile(SmileComm, SmileData):
             raise PlugwiseError("Plugwise: invalid schedule state.")
         if name is None:
             if schedule_name := self._last_active[loc_id]:
-                    name = schedule_name
+                name = schedule_name
             else:
                 return
 
