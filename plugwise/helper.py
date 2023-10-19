@@ -70,11 +70,7 @@ from .exceptions import (
     InvalidXMLError,
     ResponseError,
 )
-from .util import (
-    escape_illegal_xml_characters,
-    format_measure,
-    version_to_model,
-)
+from .util import escape_illegal_xml_characters, format_measure, version_to_model
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
