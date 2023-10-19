@@ -215,19 +215,10 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        (
-            avail_schedules,
-            sel_schedule,
-            self._sched_setpoints,
-            last_active,
-        ) = self._schedules(loc_id)
+        avail_schedules, sel_schedule = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["select_schedule"] = sel_schedule
-        if self._smile_legacy:
-            device_data["last_used"] = "".join(map(str, avail_schedules))
-        else:
-            device_data["last_used"] = last_active
-        self._count += 3
+        self._count += 3 # TODO change to 2
 
         # Operation modes: auto, heat, heat_cool
         device_data["mode"] = "auto"

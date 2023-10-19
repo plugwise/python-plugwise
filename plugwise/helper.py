@@ -74,7 +74,7 @@ from .exceptions import (
 from .util import (
     escape_illegal_xml_characters,
     format_measure,
-    in_between,
+    # in_between,
     version_to_model,
 )
 
@@ -96,56 +96,56 @@ def etree_to_dict(element: etree) -> dict[str, str]:
     return node
 
 
-def schedules_temps(
-    schedules: dict[str, dict[str, list[float]]], name: str
-) -> list[float]:
-    """Helper-function for schedules().
-
-    Obtain the temperature-setpoints of the schedule.
-    """
-    if name == NONE:
-        return []  # pragma: no cover
-
-    schedule_list: list[tuple[int, dt.time, list[float]]] = []
-    for period, temp in schedules[name].items():
-        moment, dummy = period.split(",")
-        moment_cleaned = moment.replace("[", "").split(" ")
-        day_nr = DAYS[moment_cleaned[0]]
-        start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
-        tmp_list: tuple[int, dt.time, list[float]] = (
-            day_nr,
-            start_time,
-            [temp[0], temp[1]],
-        )
-        schedule_list.append(tmp_list)
-
-    length = len(schedule_list)
-    schedule_list = sorted(schedule_list)
-    before_first: bool = False
-    first_schedule_day: int = 0
-    for i in range(length):
-        j = (i + 1) % (length)
-        now = dt.datetime.now().time()
-        today = dt.datetime.now().weekday()
-        day_0 = schedule_list[i][0]
-        time_0 = schedule_list[i][1]
-        day_1 = schedule_list[j][0]
-        time_1 = schedule_list[j][1]
-        # Handle Monday-now is before first schedule point
-        if i == 0 and now < time_0:
-            before_first = True
-            first_schedule_day = day_0
-        # Roll over from end to beginning of schedule = next Monday
-        if j < i:
-            day_1 = first_schedule_day + 7  # day_7 = day_0, day_8 = day_1 etc.
-            # Roll over to next Monday when now is before first schedule point
-            if today == 0 and before_first:
-                today = 7
-
-        if in_between(today, day_0, day_1, now, time_0, time_1):
-            return schedule_list[i][2]
-
-    return []  # pragma: no cover
+# def schedules_temps(
+#    schedules: dict[str, dict[str, list[float]]], name: str
+# ) -> list[float]:
+#    """Helper-function for schedules().
+#
+#    Obtain the temperature-setpoints of the schedule.
+#    """
+#    if name == NONE:
+#        return []  # pragma: no cover
+#
+#    schedule_list: list[tuple[int, dt.time, list[float]]] = []
+#    for period, temp in schedules[name].items():
+#        moment, dummy = period.split(",")
+#        moment_cleaned = moment.replace("[", "").split(" ")
+#        day_nr = DAYS[moment_cleaned[0]]
+#        start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
+#        tmp_list: tuple[int, dt.time, list[float]] = (
+#            day_nr,
+#            start_time,
+#            [temp[0], temp[1]],
+#        )
+#        schedule_list.append(tmp_list)
+#
+#    length = len(schedule_list)
+#    schedule_list = sorted(schedule_list)
+#    before_first: bool = False
+#    first_schedule_day: int = 0
+#    for i in range(length):
+#        j = (i + 1) % (length)
+#        now = dt.datetime.now().time()
+#        today = dt.datetime.now().weekday()
+#        day_0 = schedule_list[i][0]
+#        time_0 = schedule_list[i][1]
+#        day_1 = schedule_list[j][0]
+#        time_1 = schedule_list[j][1]
+#        # Handle Monday-now is before first schedule point
+#        if i == 0 and now < time_0:
+#            before_first = True
+#            first_schedule_day = day_0
+#        # Roll over from end to beginning of schedule = next Monday
+#        if j < i:
+#            day_1 = first_schedule_day + 7  # day_7 = day_0, day_8 = day_1 etc.
+#            # Roll over to next Monday when now is before first schedule point
+#            if today == 0 and before_first:
+#                today = 7
+#
+#        if in_between(today, day_0, day_1, now, time_0, time_1):
+#            return schedule_list[i][2]
+#
+#    return []  # pragma: no cover
 
 
 def power_data_local_format(
@@ -299,7 +299,6 @@ class SmileHelper:
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
-        self._sched_setpoints: list[float] = []
         self._smile_legacy = False
         self._status: etree
         self._stretch_v2 = False
@@ -1512,11 +1511,11 @@ class SmileHelper:
 
         if schedules:
             available.remove(NONE)
-            last_used = self._last_used_schedule(location, schedules)
-            if self._cooling_present and last_used in schedules:
-                schedule_temperatures = schedules_temps(schedules, last_used)
+            # last_used = self._last_used_schedule(location, schedules)
+            # if self._cooling_present and last_used in schedules:
+            #     schedule_temperatures = schedules_temps(schedules, last_used)
 
-        return available, selected, schedule_temperatures, last_used
+        return available, selected
 
     def _last_used_schedule(
         self, loc_id: str, schedules: dict[str, dict[str, list[float]]]
