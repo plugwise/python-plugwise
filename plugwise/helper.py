@@ -1416,7 +1416,7 @@ class SmileHelper:
 
     def _schedules_legacy(
         self, avail: list[str], sel: str
-    ) -> tuple[list[str], str:
+    ) -> tuple[list[str], str]:
         """Helper-function for _schedules().
 
         Collect available schedules/schedules for the legacy thermostat.
