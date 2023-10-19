@@ -6,7 +6,6 @@
       "dev_class": "thermostat",
       "firmware": "2018-02-08T11:15:53+01:00",
       "hardware": "6539-1301-5002",
-      "last_used": "Thuiswerken",
       "location": "eb5309212bf5407bb143e5bfa3b18aee",
       "mode": "auto",
       "model": "ThermoTouch",
@@ -88,7 +87,7 @@
     "cooling_present": false,
     "gateway_id": "0466eae8520144c78afb29628384edeb",
     "heater_id": "cd0e6156b1f04d5f952349ffbe397481",
-    "item_count": 57,
+    "item_count": 56,
     "notifications": {},
     "smile_name": "Smile Anna"
   }

@@ -40,7 +40,6 @@
       "dev_class": "thermostat",
       "firmware": "2018-02-08T11:15:53+01:00",
       "hardware": "6539-1301-5002",
-      "last_used": "Thermostat schedule",
       "location": "d3ce834534114348be628b61b26d9220",
       "mode": "auto",
       "model": "ThermoTouch",
@@ -89,7 +88,7 @@
     "cooling_present": false,
     "gateway_id": "fb49af122f6e4b0f91267e1cf7666d6f",
     "heater_id": "573c152e7d4f4720878222bd75638f5b",
-    "item_count": 60,
+    "item_count": 59,
     "notifications": {},
     "smile_name": "Smile Anna"
   }
