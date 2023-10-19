@@ -698,7 +698,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "available_schedules": ["Thermostat schedule"],
                 "select_schedule": "Thermostat schedule",
-                "last_used": "Thermostat schedule",
                 "mode": "auto",
                 "sensors": {"temperature": 20.4, "illuminance": 151, "setpoint": 20.5},
             },
@@ -739,6 +738,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
+        assert.smile._last_active["0000aaaa0000aaaa0000aaaa0000aa00"] = "Thermostat schedule",
         assert smile.device_items == 45
         assert not self.notifications
 
