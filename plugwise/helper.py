@@ -1433,11 +1433,11 @@ class SmileHelper:
         if schedules:
             available.remove(NONE)
             if self._last_active.get(location) is None:
-                self._last_active[location] = self._last_used_schedule(location, schedules)
+                self._last_active[location] = self._last_used_schedule(schedules)
 
         return available, selected
 
-    def _last_used_schedule(self, loc_id: str, schedules: list[str]) -> str:
+    def _last_used_schedule(self, schedules: list[str]) -> str:
         """Helper-function for _schedules().
 
         Determine the last-used schedule based on the modified date.
