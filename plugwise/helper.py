@@ -1363,7 +1363,7 @@ class SmileHelper:
         return active_rule["icon"]
 
     def _schedules_legacy(
-        self, avail: list[str], sel: str
+        self, avail: list[str], location: str, sel: str,
     ) -> tuple[list[str], str]:
         """Helper-function for _schedules().
 
@@ -1387,7 +1387,8 @@ class SmileHelper:
             avail = [name]
             if active:
                 sel = name
-
+    
+        self._last_active[location] = "".join(map(str, avail))
         return avail, sel
 
     def _schedules(
@@ -1404,7 +1405,7 @@ class SmileHelper:
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
-            return self._schedules_legacy(available, selected)
+            return self._schedules_legacy(available, location, selected)
 
         # Adam schedules, one schedule can be linked to various locations
         # self._last_active contains the locations and the active schedule name per location, or None
