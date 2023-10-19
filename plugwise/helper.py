@@ -1440,7 +1440,7 @@ class SmileHelper:
             if active:
                 sel = name
 
-        return avail, sel, [], None
+        return avail, sel
 
     def _schedules(
         self, location: str
