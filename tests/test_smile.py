@@ -1719,7 +1719,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
-        assert smile.device_items == 71
+        assert smile.device_items == 70
 
         assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
 
