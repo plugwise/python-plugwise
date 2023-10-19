@@ -2048,7 +2048,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "CV Jessie",
                 ],
                 "select_schedule": "None",
-                assert self._last_active["12493538af164a409c6a1c79e38afe1c"] == "Badkamer Schema"
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
@@ -2113,7 +2112,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "CV Jessie",
                 ],
                 "select_schedule": "GF7  Woonkamer",
-                assert self._last_active["c50f167537524366a5af7aa3942feb1e"] == "GF7  Woonkamer"
                 "mode": "auto",
                 "sensors": {"temperature": 21.1, "setpoint": 21.5, "battery": 34},
             },
@@ -2407,10 +2405,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "fe799307f1624099878210aa0b9f1475"
+        assert self._last_active["12493538af164a409c6a1c79e38afe1c"] == "Badkamer Schema"
+        assert self._last_active["c50f167537524366a5af7aa3942feb1e"] == "GF7  Woonkamer"
         assert self._last_active["82fa13f017d240daa0d0ea1775420f24"] == "CV Jessie"
         assert self._last_active["08963fec7c53423ca5680aa4cb502c63"] == "Badkamer Schema"
         assert self._last_active["446ac08dd04d4eff8ac57489757b7314"] == "Badkamer Schema"
-        assert smile.device_items == 317
+        assert smile.device_items == 315
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
