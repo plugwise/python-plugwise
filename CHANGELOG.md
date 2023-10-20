@@ -1,13 +1,5 @@
 # Changelog
 
-## v0.33.2 Bugfix for HA climate
-
-- Remove last_used (schedule) from output.
-- Bugfix for [Core Issue #102204](https://github.com/home-assistant/core/issues/102204)
-- Add item-count to output
-- Support python 3.12
-
-## v0.33.1 Bugfix for Adam
 ## v0.34.0
 
 - New feature: for Adam, provide mode = off, related to the regulation_mode = off, and mode = cool, for regulation_mode = cooling.
@@ -15,6 +7,11 @@
 - Update userdata, manual-fixture-creation, and tests related to the added modes.
 - A few small Typing updates
 - Manually change the adam_jip fixture, for testing in pw-beta/Core plugwise
+
+## v0.33.2 Bugfix for HA climate
+
+- Remove last_used (schedule) from output.
+- Bugfix for [Core Issue #102204](https://github.com/home-assistant/core/issues/102204)
 - Add item-count to output
 - Support python 3.12
 
