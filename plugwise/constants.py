@@ -3,14 +3,12 @@ from __future__ import annotations
 
 from collections import namedtuple
 from dataclasses import dataclass
-import datetime as dt
 import logging
 from typing import Final, Literal, TypedDict, get_args
 
 LOGGER = logging.getLogger(__name__)
 
 # Copied homeassistant.consts
-ARBITRARY_DATE: Final = dt.datetime(2022, 5, 14)
 ATTR_NAME: Final = "name"
 ATTR_STATE: Final = "state"
 ATTR_STATE_CLASS: Final = "state_class"

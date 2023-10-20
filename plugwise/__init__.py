@@ -215,19 +215,10 @@ class SmileData(SmileHelper):
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
-        (
-            avail_schedules,
-            sel_schedule,
-            self._sched_setpoints,
-            last_active,
-        ) = self._schedules(loc_id)
+        avail_schedules, sel_schedule = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["select_schedule"] = sel_schedule
-        if self._smile_legacy:
-            device_data["last_used"] = "".join(map(str, avail_schedules))
-        else:
-            device_data["last_used"] = last_active
-        self._count += 3
+        self._count += 2
 
         # Operation modes: auto, heat, heat_cool
         device_data["mode"] = "auto"
@@ -636,11 +627,10 @@ class Smile(SmileComm, SmileData):
         if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
         if name is None:
-            for device in self.gw_devices.values():
-                if device["location"] == loc_id and device["last_used"]:
-                    name = device["last_used"]
-                else:
-                    return
+            if schedule_name := self._last_active[loc_id]:
+                name = schedule_name
+            else:
+                return
 
         assert isinstance(name, str)
         if self._smile_legacy:

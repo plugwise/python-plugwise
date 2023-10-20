@@ -65,7 +65,6 @@
       "active_preset": "away",
       "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
       "dev_class": "thermostat",
-      "last_used": "Werkdag schema",
       "location": "fa5fa6b34f6b40a0972988b20e888ed4",
       "mode": "auto",
       "model": "ThermoTouch",
@@ -91,7 +90,7 @@
     "cooling_present": true,
     "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
     "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
-    "item_count": 56,
+    "item_count": 55,
     "notifications": {},
     "smile_name": "Adam"
   }

@@ -67,7 +67,6 @@
       "active_preset": "home",
       "available_schedules": ["Weekschema"],
       "dev_class": "thermostat",
-      "last_used": "Weekschema",
       "location": "009490cc2f674ce6b576863fbb64f867",
       "mode": "auto",
       "model": "ThermoTouch",
@@ -110,7 +109,7 @@
     "cooling_present": false,
     "gateway_id": "b128b4bbbd1f47e9bf4d756e8fb5ee94",
     "heater_id": "2743216f626f43948deec1f7ab3b3d70",
-    "item_count": 71,
+    "item_count": 70,
     "notifications": {
       "6fb89e35caeb4b1cb275184895202d84": {
         "error": "There is no OpenTherm communication with the boiler."

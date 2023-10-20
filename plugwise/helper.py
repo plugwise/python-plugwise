@@ -26,7 +26,6 @@ from .constants import (
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
     DATA,
-    DAYS,
     DEFAULT_PW_MAX,
     DEFAULT_PW_MIN,
     DEVICE_MEASUREMENTS,
@@ -71,12 +70,7 @@ from .exceptions import (
     InvalidXMLError,
     ResponseError,
 )
-from .util import (
-    escape_illegal_xml_characters,
-    format_measure,
-    in_between,
-    version_to_model,
-)
+from .util import escape_illegal_xml_characters, format_measure, version_to_model
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
@@ -94,58 +88,6 @@ def etree_to_dict(element: etree) -> dict[str, str]:
         node.update(element.items())
 
     return node
-
-
-def schedules_temps(
-    schedules: dict[str, dict[str, list[float]]], name: str
-) -> list[float]:
-    """Helper-function for schedules().
-
-    Obtain the temperature-setpoints of the schedule.
-    """
-    if name == NONE:
-        return []  # pragma: no cover
-
-    schedule_list: list[tuple[int, dt.time, list[float]]] = []
-    for period, temp in schedules[name].items():
-        moment, dummy = period.split(",")
-        moment_cleaned = moment.replace("[", "").split(" ")
-        day_nr = DAYS[moment_cleaned[0]]
-        start_time = dt.datetime.strptime(moment_cleaned[1], "%H:%M").time()
-        tmp_list: tuple[int, dt.time, list[float]] = (
-            day_nr,
-            start_time,
-            [temp[0], temp[1]],
-        )
-        schedule_list.append(tmp_list)
-
-    length = len(schedule_list)
-    schedule_list = sorted(schedule_list)
-    before_first: bool = False
-    first_schedule_day: int = 0
-    for i in range(length):
-        j = (i + 1) % (length)
-        now = dt.datetime.now().time()
-        today = dt.datetime.now().weekday()
-        day_0 = schedule_list[i][0]
-        time_0 = schedule_list[i][1]
-        day_1 = schedule_list[j][0]
-        time_1 = schedule_list[j][1]
-        # Handle Monday-now is before first schedule point
-        if i == 0 and now < time_0:
-            before_first = True
-            first_schedule_day = day_0
-        # Roll over from end to beginning of schedule = next Monday
-        if j < i:
-            day_1 = first_schedule_day + 7  # day_7 = day_0, day_8 = day_1 etc.
-            # Roll over to next Monday when now is before first schedule point
-            if today == 0 and before_first:
-                today = 7
-
-        if in_between(today, day_0, day_1, now, time_0, time_1):
-            return schedule_list[i][2]
-
-    return []  # pragma: no cover
 
 
 def power_data_local_format(
@@ -299,7 +241,6 @@ class SmileHelper:
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
-        self._sched_setpoints: list[float] = []
         self._smile_legacy = False
         self._status: etree
         self._stretch_v2 = False
@@ -1416,8 +1357,11 @@ class SmileHelper:
         return active_rule["icon"]
 
     def _schedules_legacy(
-        self, avail: list[str], sel: str
-    ) -> tuple[list[str], str, list[float], None]:
+        self,
+        avail: list[str],
+        location: str,
+        sel: str,
+    ) -> tuple[list[str], str]:
         """Helper-function for _schedules().
 
         Collect available schedules/schedules for the legacy thermostat.
@@ -1441,25 +1385,22 @@ class SmileHelper:
             if active:
                 sel = name
 
-        return avail, sel, [], None
+        self._last_active[location] = "".join(map(str, avail))
+        return avail, sel
 
-    def _schedules(
-        self, location: str
-    ) -> tuple[list[str], str, list[float], str | None]:
+    def _schedules(self, location: str) -> tuple[list[str], str]:
         """Helper-function for smile.py: _device_data_climate().
 
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available: list[str] = [NONE]
-        last_used: str | None = None
         rule_ids: dict[str, str] = {}
-        schedule_temperatures: list[float] = []
         selected = NONE
 
         # Legacy Anna schedule, only one schedule allowed
         if self._smile_legacy:
-            return self._schedules_legacy(available, selected)
+            return self._schedules_legacy(available, location, selected)
 
         # Adam schedules, one schedule can be linked to various locations
         # self._last_active contains the locations and the active schedule name per location, or None
@@ -1468,73 +1409,34 @@ class SmileHelper:
 
         tag = "zone_preset_based_on_time_and_presence_with_override"
         if not (rule_ids := self._rule_ids_by_tag(tag, location)):
-            return available, selected, schedule_temperatures, None
+            return available, selected
 
-        schedules: dict[str, dict[str, list[float]]] = {}
+        schedules: list[str] = []
         for rule_id, loc_id in rule_ids.items():
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
-            schedule: dict[str, list[float]] = {}
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
-            if not (directives := self._domain_objects.find(locator)):
+            if not self._domain_objects.find(locator):
                 continue
-
-            # Only process the active schedule in detail for Adam or Anna with cooling
-            if self._cooling_present and loc_id != NONE:
-                for directive in directives:
-                    entry = directive.find("then").attrib
-                    if "setpoint" in entry:
-                        schedule[directive.attrib["time"]] = [
-                            DEFAULT_PW_MIN,
-                            float(entry["setpoint"]),
-                        ]
-                        if not self._cooling_enabled:
-                            schedule[directive.attrib["time"]] = [
-                                float(entry["setpoint"]),
-                                DEFAULT_PW_MAX,
-                            ]
-                    elif "preset" in entry:
-                        schedule[directive.attrib["time"]] = [
-                            float(self._presets(loc_id)[entry["preset"]][0]),
-                            float(self._presets(loc_id)[entry["preset"]][1]),
-                        ]
-                    else:
-                        schedule[directive.attrib["time"]] = [
-                            float(entry["heating_setpoint"]),
-                            float(entry["cooling_setpoint"]),
-                        ]
 
             available.append(name)
             if location == loc_id:
                 selected = name
                 self._last_active[location] = selected
-            schedules[name] = schedule
+            schedules.append(name)
 
         if schedules:
             available.remove(NONE)
-            last_used = self._last_used_schedule(location, schedules)
-            if self._cooling_present and last_used in schedules:
-                schedule_temperatures = schedules_temps(schedules, last_used)
+            if self._last_active.get(location) is None:
+                self._last_active[location] = self._last_used_schedule(schedules)
 
-        return available, selected, schedule_temperatures, last_used
+        return available, selected
 
-    def _last_used_schedule(
-        self, loc_id: str, schedules: dict[str, dict[str, list[float]]]
-    ) -> str | None:
-        """Helper-function for smile.py: _device_data_climate().
+    def _last_used_schedule(self, schedules: list[str]) -> str:
+        """Helper-function for _schedules().
 
-        Determine the last-used schedule based on the location or the modified date.
+        Determine the last-used schedule based on the modified date.
         """
-        # First, find last_used == selected
-
-        if (last_used := self._last_active.get(loc_id)) is not None:
-            return last_used
-
-        # Alternatively, find last_used by finding the most recent modified_date
-        last_used = None
-        if not schedules:
-            return last_used  # pragma: no cover
-
         epoch = dt.datetime(1970, 1, 1, tzinfo=tz.tzutc())
         schedules_dates: dict[str, float] = {}
 
@@ -1544,10 +1446,7 @@ class SmileHelper:
             schedule_time = parse(schedule_date)
             schedules_dates[name] = (schedule_time - epoch).total_seconds()
 
-        if schedules:
-            last_used = sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
-
-        return last_used
+        return sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_device_data() and _device_data_anna().
