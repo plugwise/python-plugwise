@@ -3419,7 +3419,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert (
             smile._last_active["5cc21042f87f4b4c94ccb5537c47a53f"] == "Werkdag schema"
         )
-        assert smile.device_items == 423
+        assert smile.device_items == 403
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4222,7 +4222,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
-        assert smile.device_items == 54
+        assert smile.device_items == 53
         assert smile._cooling_present
         assert smile._cooling_enabled
 
