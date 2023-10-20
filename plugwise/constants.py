@@ -29,15 +29,8 @@ UNIT_LUMEN: Final = "lm"
 VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
-DAYS: Final[dict[str, int]] = {
-    "mo": 0,
-    "tu": 1,
-    "we": 2,
-    "th": 3,
-    "fr": 4,
-    "sa": 5,
-    "su": 6,
-}
+ADAM: Final = "Adam"
+ANNA: Final = "Smile Anna"
 DEFAULT_TIMEOUT: Final = 30
 DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
