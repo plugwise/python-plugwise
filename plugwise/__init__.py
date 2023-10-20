@@ -16,6 +16,7 @@ from munch import Munch
 import semver
 
 from .constants import (
+    ADAM,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -113,7 +114,7 @@ class SmileData(SmileHelper):
             device.update(data)
 
             # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS and self.smile_name != "Adam":
+            if device["dev_class"] in ZONE_THERMOSTATS and self.smile_name != ADAM:
                 self.update_for_cooling(device)
 
             remove_empty_platform_dicts(device)
@@ -187,7 +188,7 @@ class SmileData(SmileHelper):
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
         if (
-            self.smile_name == "Adam"
+            self.smile_name == ADAM
             and device.get("dev_class") == "heater_central"
             and self._on_off_device
             and self._heating_valves() is not None
@@ -662,7 +663,7 @@ class Smile(SmileComm, SmileData):
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
-        if self.smile_name != "Adam":
+        if self.smile_name != ADAM:
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
@@ -715,7 +716,7 @@ class Smile(SmileComm, SmileData):
         if "setpoint" in items:
             setpoint = items["setpoint"]
 
-        if self._cooling_present and self.smile_name != "Adam":
+        if self._cooling_present and self.smile_name != ADAM:
             if "setpoint_high" not in items:
                 raise PlugwiseError(
                     "Plugwise: failed setting temperature: no valid input provided"
