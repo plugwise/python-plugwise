@@ -1911,6 +1911,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "67d73d0bd469422db25a618a5fb8eeb0": {
                 "switches": {"lock": True},
             },
+            "ad4838d7d35c4d6ea796ee12ae5aedf8": {
+                "mode": "off",
+            },
             "29542b2b6a6a4169acecc15c72a599b8": {
                 "switches": {"relay": False, "lock": False},
             },
@@ -1923,6 +1926,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "1772a4ea304041adb83f357b751341ff": {
                 "available": False,
+            },
+            "e2f4322d57924fa090fbbc48b3a140dc": {
+                "mode": "off",
             },
             "da224107914542988a88561b4452b0f6": {
                 "binary_sensors": {"plugwise_notification": True},
@@ -2936,22 +2942,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
                 "location": "b52908550469425b812c87f766fe5303",
-                "mode": "heat_cool",
+                "mode": "cool",
                 "model": "Lisa",
                 "name": "Thermostaat BK",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "None",
                 "sensors": {
                     "battery": 55,
-                    "setpoint_high": 18.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.0,
                     "temperature": 18.8,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 18.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.0,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3033,21 +3037,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
                 "location": "20e735858f8146cead98b873177a4f99",
-                "mode": "heat_cool",
+                "mode": "cool",
                 "model": "Lisa",
                 "name": "Thermostaat DB",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "None",
                 "sensors": {
-                    "setpoint_high": 18.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.0,
                     "temperature": 22.0,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 18.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.0,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3099,21 +3101,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
                 "location": "e39529c79ab54fda9bed26cfc0447546",
-                "mode": "heat_cool",
+                "mode": "cool",
                 "model": "Lisa",
                 "name": "Thermostaat JM",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "None",
                 "sensors": {
-                    "setpoint_high": 18.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.0,
                     "temperature": 20.0,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 18.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.0,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3212,21 +3212,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
                 "location": "9a27714b970547ee9a6bdadc2b815ad5",
-                "mode": "heat_cool",
+                "mode": "cool",
                 "model": "Lisa",
                 "name": "Thermostaat SQ",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "None",
                 "sensors": {
-                    "setpoint_high": 18.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.5,
                     "temperature": 21.4,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 18.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 18.5,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3240,21 +3238,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
                 "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
-                "mode": "heat_cool",
+                "mode": "cool",
                 "model": "Lisa",
                 "name": "Thermostaat RB",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "None",
                 "sensors": {
-                    "setpoint_high": 17.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 17.0,
                     "temperature": 20.7,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 17.0,
-                    "setpoint_low": 4.0,
+                    "setpoint": 17.0,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3271,15 +3267,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "Werkdag schema",
                 "sensors": {
-                    "setpoint_high": 21.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 21.5,
                     "temperature": 22.5,
                 },
                 "thermostat": {
                     "lower_bound": 1.0,
                     "resolution": 0.01,
-                    "setpoint_high": 21.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 21.5,
                     "upper_bound": 35.0,
                 },
                 "vendor": "Plugwise",
@@ -3292,21 +3286,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "firmware": "2016-10-10T02:00:00+02:00",
                 "hardware": "255",
                 "location": "04b15f6e884448288f811d29fb7b1b30",
-                "mode": "heat_cool",
+                "mode": "cool",
                 "model": "Lisa",
                 "name": "Thermostaat SJ",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "None",
                 "sensors": {
-                    "setpoint_high": 20.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 20.5,
                     "temperature": 22.6,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 20.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 20.5,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3327,15 +3319,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "select_schedule": "Werkdag schema",
                 "sensors": {
                     "battery": 53,
-                    "setpoint_high": 21.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 21.5,
                     "temperature": 22.5,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 21.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 21.5,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3355,15 +3345,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "Werkdag schema",
                 "sensors": {
-                    "setpoint_high": 20.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 20.5,
                     "temperature": 21.5,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 20.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 20.5,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3383,15 +3371,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
                 "select_schedule": "Werkdag schema",
                 "sensors": {
-                    "setpoint_high": 20.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 20.5,
                     "temperature": 21.9,
                 },
                 "thermostat": {
                     "lower_bound": 0.0,
                     "resolution": 0.01,
-                    "setpoint_high": 20.5,
-                    "setpoint_low": 4.0,
+                    "setpoint": 20.5,
                     "upper_bound": 99.9,
                 },
                 "vendor": "Plugwise",
@@ -3433,7 +3419,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert (
             smile._last_active["5cc21042f87f4b4c94ccb5537c47a53f"] == "Werkdag schema"
         )
-        assert smile.device_items == 423
+        assert smile.device_items == 403
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4236,7 +4222,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.smile_type == "thermostat"
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
-        assert smile.device_items == 55
+        assert smile.device_items == 53
         assert smile._cooling_present
         assert smile._cooling_enabled
 

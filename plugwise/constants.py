@@ -29,15 +29,8 @@ UNIT_LUMEN: Final = "lm"
 VOLUME_CUBIC_METERS: Final = "m³"
 VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
-DAYS: Final[dict[str, int]] = {
-    "mo": 0,
-    "tu": 1,
-    "we": 2,
-    "th": 3,
-    "fr": 4,
-    "sa": 5,
-    "su": 6,
-}
+ADAM: Final = "Adam"
+ANNA: Final = "Smile Anna"
 DEFAULT_TIMEOUT: Final = 30
 DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
@@ -195,11 +188,11 @@ SMILES: Final[dict[str, SMILE]] = {
     "smile_v2": SMILE("power", "Smile P1"),
     "smile_v3": SMILE("power", "Smile P1"),
     "smile_v4": SMILE("power", "Smile P1"),
-    "smile_open_therm_v2": SMILE("thermostat", "Adam"),
-    "smile_open_therm_v3": SMILE("thermostat", "Adam"),
-    "smile_thermo_v1": SMILE("thermostat", "Smile Anna"),
-    "smile_thermo_v3": SMILE("thermostat", "Smile Anna"),
-    "smile_thermo_v4": SMILE("thermostat", "Smile Anna"),
+    "smile_open_therm_v2": SMILE("thermostat", ADAM),
+    "smile_open_therm_v3": SMILE("thermostat", ADAM),
+    "smile_thermo_v1": SMILE("thermostat", ANNA),
+    "smile_thermo_v3": SMILE("thermostat", ANNA),
+    "smile_thermo_v4": SMILE("thermostat", ANNA),
     "stretch_v2": SMILE("stretch", "Stretch"),
     "stretch_v3": SMILE("stretch", "Stretch"),
 }
@@ -390,8 +383,8 @@ class GatewayData(TypedDict, total=False):
     """The Gateway Data class."""
 
     cooling_present: bool
-    gateway_id: str | None
-    heater_id: str | None
+    gateway_id: str
+    heater_id: str
     item_count: int
     notifications: dict[str, dict[str, str]]
     smile_name: str

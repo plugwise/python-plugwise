@@ -21,6 +21,8 @@ import semver
 from .constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
+    ADAM,
+    ANNA,
     APPLIANCES,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -227,7 +229,7 @@ class SmileHelper:
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._elga = False
-        self._heater_id: str | None = None
+        self._heater_id: str
         self._home_location: str
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
@@ -263,7 +265,7 @@ class SmileHelper:
         self._cooling_enabled = False
 
         self.device_items: int = 0
-        self.gateway_id: str | None = None
+        self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.smile_fw_version: str | None = None
@@ -275,6 +277,10 @@ class SmileHelper:
         self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
         self.therms_with_offset_func: list[str] = []
+
+    def smile(self, name: str) -> bool:
+        """Helper-function checking the smile-name."""
+        return self.smile_name == name
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -380,7 +386,7 @@ class SmileHelper:
 
             return appl
 
-        if self.smile_name == "Adam":
+        if self.smile(ADAM):
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
@@ -411,7 +417,7 @@ class SmileHelper:
             appl.vendor_name = "Plugwise"
 
             # Adam: look for the ZigBee MAC address of the Smile
-            if self.smile_name == "Adam" and (
+            if self.smile(ADAM) and (
                 found := self._modules.find(".//protocols/zig_bee_coordinator")
             ):
                 appl.zigbee_mac = found.find("mac_address").text
@@ -830,7 +836,7 @@ class SmileHelper:
 
         Collect the availablity-status for wireless connected devices.
         """
-        if self.smile_name == "Adam":
+        if self.smile(ADAM):
             # Collect for Plugs
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
@@ -951,11 +957,11 @@ class SmileHelper:
         if self._on_off_device:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
-            if self.smile_name == "Smile Anna":
+            if self.smile(ANNA):
                 data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
             # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
-            if self.smile_name == "Adam":
+            if self.smile(ADAM):
                 if "heating_state" not in data["binary_sensors"]:
                     self._count += 1
                 data["binary_sensors"]["heating_state"] = False
@@ -991,7 +997,7 @@ class SmileHelper:
 
         # Get non-p1 data from APPLIANCES, for legacy from DOMAIN_OBJECTS.
         measurements = DEVICE_MEASUREMENTS
-        if dev_id == self._heater_id:
+        if self._is_thermostat and dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
 
         if (
@@ -1009,7 +1015,7 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-        if dev_id == self.gateway_id and self.smile_name == "Adam":
+        if dev_id == self.gateway_id and self.smile(ADAM):
             self._get_regulation_mode(appliance, data)
 
         if "c_heating_state" in data:
@@ -1018,7 +1024,7 @@ class SmileHelper:
             data.pop("c_heating_state")
             self._count -= 1
 
-        if dev_id == self._heater_id and self.smile_name == "Smile Anna":
+        if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
@@ -1136,7 +1142,7 @@ class SmileHelper:
         """
         switch_groups: dict[str, DeviceData] = {}
         # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile_name == "Smile Anna":
+        if self.smile_type == "power" or self.smile(ANNA):
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):

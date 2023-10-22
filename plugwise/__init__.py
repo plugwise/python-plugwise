@@ -16,6 +16,7 @@ from munch import Munch
 import semver
 
 from .constants import (
+    ADAM,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -113,7 +114,7 @@ class SmileData(SmileHelper):
             device.update(data)
 
             # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS:
+            if device["dev_class"] in ZONE_THERMOSTATS and not self.smile(ADAM):
                 self.update_for_cooling(device)
 
             remove_empty_platform_dicts(device)
@@ -187,7 +188,7 @@ class SmileData(SmileHelper):
         """
         # Indicate heating_state based on valves being open in case of city-provided heating
         if (
-            self.smile_name == "Adam"
+            self.smile(ADAM)
             and device.get("dev_class") == "heater_central"
             and self._on_off_device
             and self._heating_valves() is not None
@@ -195,6 +196,13 @@ class SmileData(SmileHelper):
             device_data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
         return device_data
+
+    def check_reg_mode(self, mode: str) -> bool:
+        """Helper-function for device_data_climate()."""
+        gateway = self.gw_devices[self.gateway_id]
+        return (
+            "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
+        )
 
     def _device_data_climate(
         self, device: DeviceData, device_data: DeviceData
@@ -210,8 +218,7 @@ class SmileData(SmileHelper):
         device_data["active_preset"] = None
         self._count += 2
         if presets := self._presets(loc_id):
-            presets_list = list(presets)
-            device_data["preset_modes"] = presets_list
+            device_data["preset_modes"] = list(presets)
             device_data["active_preset"] = self._preset(loc_id)
 
         # Schedule
@@ -220,20 +227,25 @@ class SmileData(SmileHelper):
         device_data["select_schedule"] = sel_schedule
         self._count += 2
 
-        # Operation modes: auto, heat, heat_cool
+        # Operation modes: auto, heat, heat_cool, cool and off
         device_data["mode"] = "auto"
         self._count += 1
         if sel_schedule == "None":
             device_data["mode"] = "heat"
             if self._cooling_present:
-                device_data["mode"] = "heat_cool"
+                device_data["mode"] = (
+                    "cool" if self.check_reg_mode("cooling") else "heat_cool"
+                )
+
+        if self.check_reg_mode("off"):
+            device_data["mode"] = "off"
 
         if "None" not in avail_schedules:
             loc_schedule_states = {}
             for schedule in avail_schedules:
-                loc_schedule_states[schedule] = "off"
-                if device_data["mode"] == "auto":
-                    loc_schedule_states[sel_schedule] = "on"
+                loc_schedule_states[schedule] = (
+                    "off" if device_data["mode"] == "auto" else "on"
+                )
 
             self._schedule_old_states[loc_id] = loc_schedule_states
 
@@ -651,7 +663,7 @@ class Smile(SmileComm, SmileData):
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
-        if self.smile_name != "Adam":
+        if not self.smile(ADAM):
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
@@ -704,7 +716,7 @@ class Smile(SmileComm, SmileData):
         if "setpoint" in items:
             setpoint = items["setpoint"]
 
-        if self._cooling_present:
+        if self._cooling_present and not self.smile(ADAM):
             if "setpoint_high" not in items:
                 raise PlugwiseError(
                     "Plugwise: failed setting temperature: no valid input provided"
