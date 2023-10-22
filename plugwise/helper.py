@@ -279,8 +279,8 @@ class SmileHelper:
         self.therms_with_offset_func: list[str] = []
 
     def smile(self, name: str) -> bool:
-         """Helper-function checking the smile-name."""
-         return self.smile_name == name
+        """Helper-function checking the smile-name."""
+        return self.smile_name == name
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -1024,11 +1024,7 @@ class SmileHelper:
             data.pop("c_heating_state")
             self._count -= 1
 
-        if (
-            self._is_thermostat
-            and self.smile(ANNA)
-            and dev_id == self._heater_id
-        ):
+        if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
