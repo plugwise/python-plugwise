@@ -278,6 +278,10 @@ class SmileHelper:
         self.smile_zigbee_mac_address: str | None = None
         self.therms_with_offset_func: list[str] = []
 
+    def smile(self, name: str) -> bool:
+         """Helper-function checking the smile-name."""
+         return self.smile_name == name
+
     def _all_locations(self) -> None:
         """Collect all locations."""
         loc = Munch()
@@ -382,7 +386,7 @@ class SmileHelper:
 
             return appl
 
-        if self.smile_name == ADAM:
+        if self.smile(ADAM):
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
@@ -413,7 +417,7 @@ class SmileHelper:
             appl.vendor_name = "Plugwise"
 
             # Adam: look for the ZigBee MAC address of the Smile
-            if self.smile_name == ADAM and (
+            if self.smile(ADAM) and (
                 found := self._modules.find(".//protocols/zig_bee_coordinator")
             ):
                 appl.zigbee_mac = found.find("mac_address").text
@@ -832,7 +836,7 @@ class SmileHelper:
 
         Collect the availablity-status for wireless connected devices.
         """
-        if self.smile_name == ADAM:
+        if self.smile(ADAM):
             # Collect for Plugs
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
@@ -953,11 +957,11 @@ class SmileHelper:
         if self._on_off_device:
             # Anna + OnOff heater: use central_heating_state to show heating_state
             # Solution for Core issue #81839
-            if self.smile_name == ANNA:
+            if self.smile(ANNA):
                 data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
             # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
-            if self.smile_name == ADAM:
+            if self.smile(ADAM):
                 if "heating_state" not in data["binary_sensors"]:
                     self._count += 1
                 data["binary_sensors"]["heating_state"] = False
@@ -1011,7 +1015,7 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-        if dev_id == self.gateway_id and self.smile_name == ADAM:
+        if dev_id == self.gateway_id and self.smile(ADAM):
             self._get_regulation_mode(appliance, data)
 
         if "c_heating_state" in data:
@@ -1022,7 +1026,7 @@ class SmileHelper:
 
         if (
             self._is_thermostat
-            and self.smile_name == ANNA
+            and self.smile(ANNA)
             and dev_id == self._heater_id
         ):
             # Anna+Elga: base cooling_state on the elga-status-code
@@ -1142,7 +1146,7 @@ class SmileHelper:
         """
         switch_groups: dict[str, DeviceData] = {}
         # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile_name == ANNA:
+        if self.smile_type == "power" or self.smile(ANNA):
             return switch_groups
 
         for group in self._domain_objects.findall("./group"):
