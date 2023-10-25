@@ -1028,12 +1028,13 @@ class SmileHelper:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
                 # Determine _cooling_present and _cooling_enabled
-                if (
-                    "cooling_enabled" in data["binary_sensors"]
-                    and data["binary_sensors"]["cooling_enabled"]
-                ):
-                    self._cooling_present = self._cooling_enabled = True
+                  if "cooling_enabled" in data["binary_sensors"]:
+                    self._cooling_present = True
                     data["model"] = "Generic heater/cooler"
+                    self._cooling_enabled = False
+                    if data["binary_sensors"]["cooling_enabled"]:
+                        self._cooling_enabled = True
+                    
                     data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                         data["elga_status_code"] == 8
                     )
