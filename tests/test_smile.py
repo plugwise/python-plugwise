@@ -490,7 +490,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         test_temp = {"setpoint": 22.9}
         if smile._cooling_present and not block_cooling:
-            test_temp = {"setpoint_low": 19.5, "setpoint_high": 30.0}
+            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
