@@ -1034,7 +1034,7 @@ class SmileHelper:
                     self._cooling_enabled = False
                     if data["binary_sensors"]["cooling_enabled"]:
                         self._cooling_enabled = True
-                    
+
                     data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                         data["elga_status_code"] == 8
                     )
