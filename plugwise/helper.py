@@ -1027,17 +1027,13 @@ class SmileHelper:
         if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
-                # Determine _cooling_present and _cooling_enabled
-                if "cooling_enabled" in data["binary_sensors"]:
-                    self._cooling_present = True
-                    data["model"] = "Generic heater/cooler"
-                    self._cooling_enabled = False
-                    if data["binary_sensors"]["cooling_enabled"]:
-                        self._cooling_enabled = True
-
-                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
-                        data["elga_status_code"] == 8
-                    )
+                #Techneco Elga has cooling-capability
+                self._cooling_present = True
+                data["model"] = "Generic heater/cooler"
+                self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                data["binary_sensors"]["cooling_state"] = self._cooling_active = (
+                    data["elga_status_code"] == 8
+                )
                 data.pop("elga_status_code", None)
                 self._count -= 1
                 # Elga has no cooling-switch
