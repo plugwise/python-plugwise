@@ -3894,7 +3894,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
@@ -4015,9 +4015,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert smile.device_items == 63
-        assert not self.cooling_present
         assert not self.notifications
-
+        assert self.cooling_present
         assert not smile._cooling_enabled
         assert not smile._cooling_active
 
