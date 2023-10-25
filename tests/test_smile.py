@@ -490,7 +490,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         test_temp = {"setpoint": 22.9}
         if smile._cooling_present and not block_cooling:
-            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
+            test_temp = {"setpoint_low": 19.5, "setpoint_high": 30.0}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
@@ -3914,6 +3914,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "dhw_state": False,
                     "heating_state": True,
                     "compressor_state": True,
+                    "cooling_state": False,
                     "cooling_enabled": False,
                     "slave_boiler_state": False,
                     "flame_state": False,
@@ -3944,7 +3945,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": -0.5,
                 },
                 "thermostat": {
-                    "setpoint": 20.5,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 30.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3956,10 +3958,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
-                    "setpoint": 20.5,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 30.0,
                 },
             },
         }
@@ -3967,7 +3970,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
@@ -3981,6 +3984,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "dhw_state": False,
                     "heating_state": True,
                     "compressor_state": True,
+                    "cooling_state": False,
                     "cooling_enabled": False,
                     "slave_boiler_state": False,
                     "flame_state": False,
@@ -4014,7 +4018,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
-        assert smile.device_items == 63
+        assert smile.device_items == 66
         assert not self.notifications
         assert self.cooling_present
         assert not smile._cooling_enabled
@@ -4036,7 +4040,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(
             smile, "2020-04-13 00:00:01", testdata_updated, initialize=False
         )
-        assert smile.device_items == 60
+        assert smile.device_items == 63
         await smile.close_connection()
         await self.disconnect(server, client)
 
