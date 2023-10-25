@@ -4603,15 +4603,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert switch_change
 
-        with pytest.raises(pw_exceptions.PlugwiseError) as exc:
-            await self.tinker_thermostat(
+        await self.tinker_thermostat(
                 smile,
                 "15da035090b847e7a21f93e08c015ebc",
                 good_schedules=[
                     "Winter",
                 ],
             )
-        _LOGGER.debug("ERROR raised: %s", exc.value)
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
             await self.tinker_thermostat_temp(
