@@ -4025,7 +4025,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert not smile._cooling_active
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
-            result = await self.tinker_thermostat(
+            await self.tinker_thermostat(
                 smile,
                 "c784ee9fdab44e1395b8dee7d7a497d5",
                 good_schedules=[
