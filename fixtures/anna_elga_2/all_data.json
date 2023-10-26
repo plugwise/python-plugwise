@@ -45,13 +45,7 @@
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": [
-        "away",
-        "no_frost",
-        "vacation",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
       "select_schedule": "Thermostat schedule",
       "sensors": {
         "cooling_activation_outdoor_temperature": 26.0,
