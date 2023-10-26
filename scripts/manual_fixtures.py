@@ -287,7 +287,7 @@ m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["thermost
 ] = 20.5
 m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"][
     "setpoint_high"
-] = 24.0
+] = 30.0
 
 m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
     "temperature"
@@ -297,7 +297,7 @@ m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"
 ] = 20.5
 m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
     "setpoint_high"
-] = 24.0
+] = 30.0
 
 json_writer("m_anna_heatpump_cooling", m_anna_heatpump_cooling, base_n)
 
