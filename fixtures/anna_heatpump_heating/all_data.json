@@ -67,13 +67,20 @@
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
+      "preset_modes": [
+        "no_frost",
+        "home",
+        "away",
+        "asleep",
+        "vacation"
+      ],
       "select_schedule": "standaard",
       "sensors": {
         "cooling_activation_outdoor_temperature": 21.0,
         "cooling_deactivation_threshold": 4.0,
         "illuminance": 86.0,
-        "setpoint": 20.5,
+        "setpoint_high": 30.0,
+        "setpoint_low": 20.5,
         "temperature": 19.3
       },
       "temperature_offset": {
