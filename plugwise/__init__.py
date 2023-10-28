@@ -126,6 +126,7 @@ class SmileData(SmileHelper):
         """
         self._update_gw_devices()
         self.device_items = self._count
+        self.device_list = []
         for device in self.gw_devices:
             self.device_list.append(device)
 
