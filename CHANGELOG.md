@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.34.4
+
+- Bugfix: avoid device_list growing at every full-update, add device_list to fixtures
+
 ## v0.34.3
 
 - Anna+Elga now always has `cooling_present` set to `True`: the Elga (always) has cooling-capability.
