@@ -396,6 +396,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             self.cooling_present = data.gateway["cooling_present"]
         self.notifications = data.gateway["notifications"]
         self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
+        self._write_json("device_list", smile.device_list)
         self._write_json("notifications", data.gateway["notifications"])
 
         location_list = smile._thermo_locs
