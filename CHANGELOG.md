@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.34.2
+
+- Add a list of Plugwise devices to the API.
+
+## v0.34.1 - Skipped
+
 ## v0.34.0
 
 - New feature: for Adam, provide mode = off, related to the regulation_mode = off, and mode = cool, for regulation_mode = cooling.
