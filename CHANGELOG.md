@@ -1,10 +1,5 @@
 # Changelog
 
-## v0.34.1
-
-- Anna+Elga now always has `cooling_present` set to `True`: the Elga (always) has cooling-capability.
-- Cooling-mode on/off is determined from specific Elga status-codes
-
 ## v0.34.0
 
 - New feature: for Adam, provide mode = off, related to the regulation_mode = off, and mode = cool, for regulation_mode = cooling.
