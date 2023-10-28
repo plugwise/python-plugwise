@@ -265,6 +265,7 @@ class SmileHelper:
         self._cooling_enabled = False
 
         self.device_items: int = 0
+        self.device_list: list[str] = []
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
