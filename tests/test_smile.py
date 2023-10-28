@@ -1957,6 +1957,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert smile._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
         assert smile._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
         assert smile.device_items == 143
+        assert smile.device_list == [
+            "da224107914542988a88561b4452b0f6",
+            "056ee145a816487eaa69243c3280f8bf",
+            "67d73d0bd469422db25a618a5fb8eeb0",
+            "ad4838d7d35c4d6ea796ee12ae5aedf8",
+            "29542b2b6a6a4169acecc15c72a599b8",
+            "2568cc4b9c1e401495d4741a5f89bee1",
+            "854f8a9b0e7e425db97f1f110e1ce4b3",
+            "1772a4ea304041adb83f357b751341ff",
+            "e2f4322d57924fa090fbbc48b3a140dc",
+            "e8ef2a01ed3b4139a53bf749204fe6b4",
+        ]
 
         result = await self.tinker_thermostat(
             smile,
