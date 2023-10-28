@@ -1028,7 +1028,7 @@ class SmileHelper:
         if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
-                #Techneco Elga has cooling-capability
+                # Techneco Elga has cooling-capability
                 self._cooling_present = True
                 data["model"] = "Generic heater/cooler"
                 self._cooling_enabled = data["elga_status_code"] in [8, 9]
