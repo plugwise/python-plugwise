@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.34.3
+
+- Anna+Elga now always has `cooling_present` set to `True`: the Elga (always) has cooling-capability.
+- Cooling-mode on/off is determined from specific Elga status-codes
+
 ## v0.34.2
 
 - Add a list of Plugwise devices to the API.

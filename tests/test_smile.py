@@ -3894,7 +3894,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
@@ -3914,6 +3914,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "dhw_state": False,
                     "heating_state": True,
                     "compressor_state": True,
+                    "cooling_state": False,
                     "cooling_enabled": False,
                     "slave_boiler_state": False,
                     "flame_state": False,
@@ -3944,7 +3945,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "setpoint": -0.5,
                 },
                 "thermostat": {
-                    "setpoint": 20.5,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 30.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -3956,10 +3958,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "mode": "auto",
                 "sensors": {
                     "temperature": 19.3,
-                    "setpoint": 20.5,
                     "illuminance": 86.0,
                     "cooling_activation_outdoor_temperature": 21.0,
                     "cooling_deactivation_threshold": 4.0,
+                    "setpoint_low": 20.5,
+                    "setpoint_high": 30.0,
                 },
             },
         }
@@ -3967,7 +3970,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1cbf783bb11e4a7c8a6843dee3a86927": {
                 "dev_class": "heater_central",
                 "location": "a57efe5f145f498c9be62a9b63626fbf",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
@@ -3981,6 +3984,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "dhw_state": False,
                     "heating_state": True,
                     "compressor_state": True,
+                    "cooling_state": False,
                     "cooling_enabled": False,
                     "slave_boiler_state": False,
                     "flame_state": False,
@@ -4014,21 +4018,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
-        assert smile.device_items == 63
-        assert not self.cooling_present
+        assert smile.device_items == 66
         assert not self.notifications
-
+        assert self.cooling_present
         assert not smile._cooling_enabled
         assert not smile._cooling_active
 
-        result = await self.tinker_thermostat(
-            smile,
-            "c784ee9fdab44e1395b8dee7d7a497d5",
-            good_schedules=[
-                "standaard",
-            ],
-        )
-        assert result
+        with pytest.raises(pw_exceptions.PlugwiseError) as exc:
+            await self.tinker_thermostat(
+                smile,
+                "c784ee9fdab44e1395b8dee7d7a497d5",
+                good_schedules=[
+                    "standaard",
+                ],
+            )
+        _LOGGER.debug("ERROR raised: %s", exc.value)
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval,
@@ -4037,7 +4041,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.device_test(
             smile, "2020-04-13 00:00:01", testdata_updated, initialize=False
         )
-        assert smile.device_items == 60
+        assert smile.device_items == 63
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -4245,37 +4249,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_anna_elga_2(self):
         """Test a 2nd Anna with Elga setup, cooling off, in idle mode (with missing outdoor temperature - solved)."""
         testdata = {
-            "ebd90df1ab334565b5895f37590ccff4": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "hardware": "6539-1301-5002",
-                "location": "d3ce834534114348be628b61b26d9220",
-                "model": "ThermoTouch",
-                "name": "Anna",
+            "fb49af122f6e4b0f91267e1cf7666d6f": {
+                "dev_class": "gateway",
+                "firmware": "4.2.1",
+                "hardware": "AME Smile 2.0 board",
+                "location": "d34dfe6ab90b410c98068e75de3eb631",
+                "mac_address": "C4930002FE76",
+                "model": "Gateway",
+                "name": "Smile Anna",
                 "vendor": "Plugwise",
-                "thermostat": {
-                    "setpoint": 19.5,
-                    "lower_bound": 4.0,
-                    "upper_bound": 30.0,
-                    "resolution": 0.1,
-                },
-                "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
-                "active_preset": "home",
-                "available_schedules": ["Thermostat schedule"],
-                "select_schedule": "Thermostat schedule",
-                "mode": "auto",
-                "sensors": {
-                    "temperature": 20.9,
-                    "setpoint": 19.5,
-                    "illuminance": 0.5,
-                    "cooling_activation_outdoor_temperature": 26.0,
-                    "cooling_deactivation_threshold": 3.0,
-                },
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 13.0},
             },
             "573c152e7d4f4720878222bd75638f5b": {
                 "dev_class": "heater_central",
                 "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "model": "Generic heater",
+                "model": "Generic heater/cooler",
                 "name": "OpenTherm",
                 "vendor": "Techneco",
                 "maximum_boiler_temperature": {
@@ -4289,6 +4278,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "dhw_state": False,
                     "heating_state": False,
                     "compressor_state": False,
+                    "cooling_state": False,
                     "cooling_enabled": False,
                     "slave_boiler_state": False,
                     "flame_state": False,
@@ -4304,17 +4294,34 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "switches": {"dhw_cm_switch": True},
             },
-            "fb49af122f6e4b0f91267e1cf7666d6f": {
-                "dev_class": "gateway",
-                "firmware": "4.2.1",
-                "hardware": "AME Smile 2.0 board",
-                "location": "d34dfe6ab90b410c98068e75de3eb631",
-                "mac_address": "C4930002FE76",
-                "model": "Gateway",
-                "name": "Smile Anna",
+            "ebd90df1ab334565b5895f37590ccff4": {
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "d3ce834534114348be628b61b26d9220",
+                "model": "ThermoTouch",
+                "name": "Anna",
                 "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 13.0},
+                "thermostat": {
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 30.0,
+                    "lower_bound": 4.0,
+                    "upper_bound": 30.0,
+                    "resolution": 0.1,
+                },
+                "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
+                "active_preset": "home",
+                "available_schedules": ["Thermostat schedule"],
+                "select_schedule": "Thermostat schedule",
+                "mode": "auto",
+                "sensors": {
+                    "temperature": 20.9,
+                    "illuminance": 0.5,
+                    "cooling_activation_outdoor_temperature": 26.0,
+                    "cooling_deactivation_threshold": 3.0,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 30.0,
+                },
             },
         }
 
@@ -4335,9 +4342,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile._last_active["d3ce834534114348be628b61b26d9220"]
             == "Thermostat schedule"
         )
-        assert smile.device_items == 59
+        assert smile.device_items == 62
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
-        assert not self.cooling_present
+        assert self.cooling_present
+        assert not smile._cooling_enabled
         assert not self.notifications
 
         await smile.close_connection()
@@ -4356,7 +4364,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 19.5,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 30.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
@@ -4365,13 +4374,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "active_preset": "home",
                 "available_schedules": ["Thermostat schedule"],
                 "select_schedule": "None",
-                "mode": "heat",
+                "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.9,
-                    "setpoint": 19.5,
                     "illuminance": 0.5,
                     "cooling_activation_outdoor_temperature": 26.0,
                     "cooling_deactivation_threshold": 3.0,
+                    "setpoint_low": 19.5,
+                    "setpoint_high": 30.0,
                 },
             }
         }
@@ -4385,8 +4395,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             smile._last_active["d3ce834534114348be628b61b26d9220"]
             == "Thermostat schedule"
         )
-        assert not smile._cooling_present
-        assert smile.device_items == 59
+        assert smile._cooling_present
+        assert not smile._cooling_enabled
+        assert smile.device_items == 62
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -4493,9 +4504,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             == "Thermostat schedule"
         )
         assert smile.device_items == 62
-        assert self.cooling_present
         assert not self.notifications
 
+        assert self.cooling_present
         assert smile._cooling_enabled
         assert smile._cooling_active
 
