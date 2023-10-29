@@ -84,12 +84,14 @@ io_n = open(basefile_n)
 base_n = json.load(io_n)
 
 m_adam_cooling = base.copy()
+m_adam_cooling_device_list = base_d.copy()
 
 # Set cooling_present to true
 m_adam_cooling["gateway"]["cooling_present"] = True
 
 # Remove device "67d73d0bd469422db25a618a5fb8eeb0" from anywhere
 m_adam_cooling["devices"].pop("67d73d0bd469422db25a618a5fb8eeb0")
+m_adam_cooling_device_list.remove("67d73d0bd469422db25a618a5fb8eeb0")
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
@@ -110,6 +112,7 @@ m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "cool"
 # (following diff, now 2954 is removed)
 # Remove device "29542b2b6a6a4169acecc15c72a599b8" from anywhere
 m_adam_cooling["devices"].pop("29542b2b6a6a4169acecc15c72a599b8")
+m_adam_cooling_device_list.remove("29542b2b6a6a4169acecc15c72a599b8")
 
 # Back at ad48
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"][
@@ -122,8 +125,11 @@ m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"][
 # (again, following diff)
 # Remove device "2568cc4b9c1e401495d4741a5f89bee1" from anywhere
 m_adam_cooling["devices"].pop("2568cc4b9c1e401495d4741a5f89bee1")
+m_adam_cooling_device_list.remove("2568cc4b9c1e401495d4741a5f89bee1")
+
 # Remove device "854f8a9b0e7e425db97f1f110e1ce4b3" from anywhere
 m_adam_cooling["devices"].pop("854f8a9b0e7e425db97f1f110e1ce4b3")
+m_adam_cooling_device_list.remove("854f8a9b0e7e425db97f1f110e1ce4b3")
 
 # Go for 1772
 m_adam_cooling["devices"]["1772a4ea304041adb83f357b751341ff"]["sensors"].pop("setpoint")
@@ -167,7 +173,7 @@ m_adam_cooling["devices"]["056ee145a816487eaa69243c3280f8bf"]["sensors"][
     "intended_boiler_temperature"
 ] = 17.5
 
-json_writer("m_adam_cooling", m_adam_cooling, base_d, base_n)
+json_writer("m_adam_cooling", m_adam_cooling, m_adam_cooling_device_list, base_n)
 
 ### FROM ABOVE
 
@@ -271,7 +277,7 @@ m_adam_heating["devices"].update(
     }
 )
 
-json_writer("m_adam_heating", m_adam_heating, base_d, base_n)
+json_writer("m_adam_heating", m_adam_heating, m_adam_cooling_device_list, base_n)
 
 ### ANNA
 
