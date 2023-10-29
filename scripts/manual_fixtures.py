@@ -5,7 +5,12 @@ import json
 import os
 
 
-def json_writer(manual_name: str, all_data: dict, notifications: dict):
+def json_writer(
+    manual_name: str,
+    all_data: dict,
+    device_list: list[str],
+    notifications: dict
+) -> None:
     """Standardized writing json files."""
     if not os.path.exists(f"./fixtures/{manual_name}"):
         os.makedirs(f"./fixtures/{manual_name}")
@@ -16,6 +21,17 @@ def json_writer(manual_name: str, all_data: dict, notifications: dict):
         indent=2,
         separators=(",", ": "),
         sort_keys=True,
+        default=lambda x: list(x) if isinstance(x, set) else x,
+    )
+    with open(outfile, "w") as f:
+        f.write(data + "\n")
+
+    outfile = f"./fixtures/{manual_name}/device_list.json"
+    data = json.dumps(
+        device_list,
+        indent=2,
+        separators=(",", ": "),
+        sort_keys=False,
         default=lambda x: list(x) if isinstance(x, set) else x,
     )
     with open(outfile, "w") as f:
