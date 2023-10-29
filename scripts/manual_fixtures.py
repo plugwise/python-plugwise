@@ -263,16 +263,16 @@ m_adam_heating["devices"].update(
                 "battery": 99,
                 "temperature": 18.6,
                 "temperature_difference": 2.3,
-                "valve_position": 0.0
+                "valve_position": 0.0,
             },
             "temperature_offset": {
                 "lower_bound": -2.0,
                 "resolution": 0.1,
                 "setpoint": 0.1,
-                "upper_bound": 2.0
+                "upper_bound": 2.0,
             },
             "vendor": "Plugwise",
-            "zigbee_mac_address": "ABCD012345670A01"
+            "zigbee_mac_address": "ABCD012345670A01",
         }
     }
 )
