@@ -6,10 +6,7 @@ import os
 
 
 def json_writer(
-    manual_name: str,
-    all_data: dict,
-    device_list: list[str],
-    notifications: dict
+    manual_name: str, all_data: dict, device_list: list[str], notifications: dict
 ) -> None:
     """Standardized writing json files."""
     if not os.path.exists(f"./fixtures/{manual_name}"):
