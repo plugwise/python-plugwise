@@ -179,7 +179,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 
 OBSOLETE_MEASUREMENTS: Final[tuple[str, ...]] = (
     "central_heater_water_pressure",
-    "outdoor_air_temperature",
+    "outdoor_temperature",
 )
 
 # Known types of Smiles and Stretches
