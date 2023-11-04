@@ -2,7 +2,7 @@
 
 ## v0.34.5
 
-- Return the control_state for each thermostat/location.
+- Adam: return the control_state for each thermostat/location.
 - Bugfix: correct removal of obsolete `outdoor_air_temperature` sensor.
 
 ## v0.34.4
