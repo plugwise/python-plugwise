@@ -1,13 +1,17 @@
 # Changelog
 
+## Ongoing
+
+- Bugfix: correct removal of obsolete `outdoor_air_temperature` sensor.
+
 ## v0.34.4
 
-- Bugfix: avoid device_list growing at every full-update, add device_list to fixtures
+- Bugfix: avoid device_list growing at every full-update, add device_list to fixtures.
 
 ## v0.34.3
 
 - Anna+Elga now always has `cooling_present` set to `True`: the Elga (always) has cooling-capability.
-- Cooling-mode on/off is determined from specific Elga status-codes
+- Cooling-mode on/off is determined from specific Elga status-codes.
 
 ## v0.34.2
 
@@ -20,14 +24,14 @@
 - New feature: for Adam, provide mode = off, related to the regulation_mode = off, and mode = cool, for regulation_mode = cooling.
   Also, for Adam, return to providing a single setpoint for both heating and cooling.
 - Update userdata, manual-fixture-creation, and tests related to the added modes.
-- A few small Typing updates
-- Manually change the adam_jip fixture, for testing in pw-beta/Core plugwise
+- A few small Typing updates.
+- Manually change the adam_jip fixture, for testing in pw-beta/Core plugwise.
 
 ## v0.33.2 Bugfix for HA climate
 
 - Remove last_used (schedule) from output.
 - Bugfix for [Core Issue #102204](https://github.com/home-assistant/core/issues/102204)
-- Add item-count to output
+- Add item-count to output.
 - Support python 3.12
 
 ## v0.33.1 Bugfix for Adam
