@@ -21,6 +21,11 @@ else
     exit 2
 fi
 
+# Install/update dependencies
+pre-commit install
+pre-commit install-hooks
+pip install -r requirements_test.txt -r requirements_commit.txt
+
 set +u
 
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "test_and_coverage" ] ; then
