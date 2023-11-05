@@ -94,7 +94,7 @@ def etree_to_dict(element: etree) -> dict[str, str]:
 
 def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
-) -> float | int | bool:
+) -> float | int:
     """Format power data."""
     # Special formatting of P1_MEASUREMENT POWER_WATT values, do not move to util-format_measure() function!
     if all(item in key_string for item in ("electricity", "cumulative")):
@@ -116,7 +116,7 @@ class SmileComm:
         port: int,
         timeout: float,
         websession: ClientSession | None,
-    ):
+    ) -> None:
         """Set the constructor for this class."""
         if not websession:
             aio_timeout = ClientTimeout(total=timeout)
@@ -360,7 +360,7 @@ class SmileHelper:
 
         return model_data
 
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch | None:
+    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
@@ -600,7 +600,7 @@ class SmileHelper:
 
             # Determine class for this appliance
             # Skip on heater_central when no active device present or on orphaned stretch devices
-            if (appl := self._appliance_info_finder(appliance, appl)) is None:
+            if not (appl := self._appliance_info_finder(appliance, appl)):
                 continue
 
             # P1: for gateway and smartmeter switch device_id - part 1
@@ -1184,7 +1184,7 @@ class SmileHelper:
 
         return switch_groups
 
-    def _heating_valves(self) -> int | None:
+    def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _device_data_adam().
 
         Collect amount of open valves indicating active direct heating.
@@ -1199,7 +1199,7 @@ class SmileHelper:
                 if float(appl_loc.text) > 0.0:
                     open_valve_count += 1
 
-        return None if loc_found == 0 else open_valve_count
+        return False if loc_found == 0 else open_valve_count
 
     def power_data_energy_diff(
         self,
