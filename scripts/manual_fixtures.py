@@ -179,8 +179,8 @@ json_writer("m_adam_cooling", m_adam_cooling, m_adam_cooling_device_list, base_n
 
 m_adam_heating = m_adam_cooling.copy()
 
-# Set cooling_present to true
-m_adam_cooling["gateway"]["cooling_present"] = False
+# Set cooling_present to false
+m_adam_heating["gateway"]["cooling_present"] = False
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
@@ -189,7 +189,7 @@ m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
 
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
-] = "heating"
+] = "preheating"
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "heat"
 
 # Back at ad48

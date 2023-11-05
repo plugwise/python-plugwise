@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Update fixture to create a testcase for HVACAction.PREHEATING
+
 ## v0.34.5
 
 - Adam: return the control_state for each thermostat/location.
