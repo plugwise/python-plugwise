@@ -195,7 +195,7 @@ class SmileData(SmileHelper):
             self.smile(ADAM)
             and device.get("dev_class") == "heater_central"
             and self._on_off_device
-            and self._heating_valves() is not None
+            and isinstance(self._heating_valves(), int)
         ):
             device_data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 

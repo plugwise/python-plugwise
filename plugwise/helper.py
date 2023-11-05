@@ -1184,7 +1184,7 @@ class SmileHelper:
 
         return switch_groups
 
-    def _heating_valves(self) -> int | None:
+    def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _device_data_adam().
 
         Collect amount of open valves indicating active direct heating.
@@ -1199,7 +1199,7 @@ class SmileHelper:
                 if float(appl_loc.text) > 0.0:
                     open_valve_count += 1
 
-        return None if loc_found == 0 else open_valve_count
+        return False if loc_found == 0 else open_valve_count
 
     def power_data_energy_diff(
         self,
