@@ -116,7 +116,7 @@ class SmileComm:
         port: int,
         timeout: float,
         websession: ClientSession | None,
-    ):
+    ) -> None:
         """Set the constructor for this class."""
         if not websession:
             aio_timeout = ClientTimeout(total=timeout)
