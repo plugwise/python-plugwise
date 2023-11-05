@@ -94,7 +94,7 @@ def etree_to_dict(element: etree) -> dict[str, str]:
 
 def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
-) -> float | int | bool:
+) -> float | int:
     """Format power data."""
     # Special formatting of P1_MEASUREMENT POWER_WATT values, do not move to util-format_measure() function!
     if all(item in key_string for item in ("electricity", "cumulative")):
