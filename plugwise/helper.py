@@ -360,7 +360,7 @@ class SmileHelper:
 
         return model_data
 
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch | None:
+    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
@@ -600,7 +600,7 @@ class SmileHelper:
 
             # Determine class for this appliance
             # Skip on heater_central when no active device present or on orphaned stretch devices
-            if (appl := self._appliance_info_finder(appliance, appl)) is None:
+            if not (appl := self._appliance_info_finder(appliance, appl)):
                 continue
 
             # P1: for gateway and smartmeter switch device_id - part 1
