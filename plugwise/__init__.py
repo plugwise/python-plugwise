@@ -66,10 +66,84 @@ def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
+    def get_all_devices(self) -> None:
+        """Determine the evices present from the obtained XML-data.
+
+        Run this functions once to gather the initial device configuration,
+        then regularly run async_update() to refresh the device data.
+        """
+        # Gather all the devices and their initial data
+        self._all_appliances()
+        if self.smile_type == "thermostat":
+            self._scan_thermostats()
+            # Collect a list of thermostats with offset-capability
+            self.therms_with_offset_func = (
+                self._get_appliances_with_offset_functionality()
+            )
+
+        # Collect switching- or pump-group data
+        if group_data := self._get_group_switches():
+            self.gw_devices.update(group_data)
+
+        # Collect the remaining data for all device
+        self._all_device_data()
+
+    def _all_device_data(self) -> None:
+        """Helper-function for get_all_devices().
+
+        Collect data for each device and add to self.gw_data and self.gw_devices.
+        """
+        self._update_gw_devices()
+        self.gw_data.update(
+            {
+                "gateway_id": self.gateway_id,
+                "item_count": self._count,
+                "notifications": self._notifications,
+                "smile_name": self.smile_name,
+            }
+        )
+        if self._is_thermostat:
+            self.gw_data.update(
+                {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
+            )
+
+        self.device_items = self._count
+        self.device_list = []
+        for device in self.gw_devices:
+            self.device_list.append(device)
+
+    def _update_gw_devices(self) -> None:
+        """Helper-function for _all_device_data() and async_update().
+
+        Collect data for each device and add to self.gw_devices.
+        """
+        for device_id, device in self.gw_devices.items():
+            data = self._get_device_data(device_id)
+            if (
+                device_id == self.gateway_id
+                and (
+                    self._is_thermostat
+                    or (self.smile_type == "power" and not self._smile_legacy)
+                )
+            ) or (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
+            ):
+                data["binary_sensors"]["plugwise_notification"] = bool(
+                    self._notifications
+                )
+                self._count += 1
+            device.update(data)
+
+            # Update for cooling
+            self.update_for_cooling(device)
+
+            remove_empty_platform_dicts(device)
+
     def update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
         # For heating + cooling, replace setpoint with setpoint_high/_low
-        if self._cooling_present:
+        if self.smile(ANNA) and device["dev_class"] in ZONE_THERMOSTATS and self._cooling_present:
             thermostat = device["thermostat"]
             sensors = device["sensors"]
             temp_dict: ActuatorData = {
@@ -92,80 +166,77 @@ class SmileData(SmileHelper):
 
         return device
 
-    def _update_gw_devices(self) -> None:
+    def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
 
-        Collect data for each device and add to self.gw_devices.
+        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            if (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ) or (
-                device_id == self.gateway_id
-                and (
-                    self._is_thermostat
-                    or (self.smile_type == "power" and not self._smile_legacy)
-                )
-            ):
-                data["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
+        device = self.gw_devices[dev_id]
+        device_data = self._get_measurement_data(dev_id)
+        # Generic
+        if self.smile_type == "thermostat" and device["dev_class"] == "gateway":
+            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
                 self._count += 1
-            device.update(data)
 
-            # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS and not self.smile(ADAM):
-                self.update_for_cooling(device)
+            # Show the allowed regulation modes
+            if self._reg_allowed_modes:
+                device_data["regulation_modes"] = self._reg_allowed_modes
+                self._count += 1
 
-            remove_empty_platform_dicts(device)
+        # Show the allowed dhw_modes
+        if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
+            device_data["dhw_modes"] = self._dhw_allowed_modes
+            self._count += 1
 
-    def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
+        # Check availability of non-legacy wired-connected devices
+        if not self._smile_legacy:
+            self._check_availability(device, device_data)
 
-        Collect data for each device and add to self.gw_data and self.gw_devices.
+        # Switching groups data
+        device_data = self._device_data_switching_group(device, device_data)
+        # Specific, not generic Adam data
+        device_data = self._device_data_adam(device, device_data)
+        # No need to obtain thermostat data when the device is not a thermostat
+        if device["dev_class"] not in ZONE_THERMOSTATS:
+            return device_data
+
+        # Thermostat data (presets, temperatures etc)
+        device_data = self._device_data_climate(device, device_data)
+
+        return device_data
+
+    def _check_availability(
+        self, device: DeviceData, device_data: DeviceData
+    ) -> DeviceData:
+        """Helper-function for _get_device_data().
+
+        Provide availability status for the wired-commected devices.
         """
-        self._update_gw_devices()
-        self.device_items = self._count
-        self.device_list = []
-        for device in self.gw_devices:
-            self.device_list.append(device)
+        # OpenTherm device
+        if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
+            device_data["available"] = True
+            self._count += 1
+            for data in self._notifications.values():
+                for msg in data.values():
+                    if "no OpenTherm communication" in msg:
+                        device_data["available"] = False
 
-        self.gw_data.update(
-            {
-                "gateway_id": self.gateway_id,
-                "item_count": self._count,
-                "notifications": self._notifications,
-                "smile_name": self.smile_name,
-            }
-        )
-        if self._is_thermostat:
-            self.gw_data.update(
-                {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
-            )
+        # Smartmeter
+        if device["dev_class"] == "smartmeter":
+            device_data["available"] = True
+            self._count += 1
+            for data in self._notifications.values():
+                for msg in data.values():
+                    if "P1 does not seem to be connected to a smart meter" in msg:
+                        device_data["available"] = False
 
-    def get_all_devices(self) -> None:
-        """Determine the evices present from the obtained XML-data.
-
-        Run this functions once to gather the initial device configuration,
-        then regularly run async_update() to refresh the device data.
-        """
-        # Gather all the devices and their initial data
-        self._all_appliances()
-        if self.smile_type == "thermostat":
-            self._scan_thermostats()
-            # Collect a list of thermostats with offset-capability
-            self.therms_with_offset_func = (
-                self._get_appliances_with_offset_functionality()
-            )
-
-        # Collect switching- or pump-group data
-        if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
-
-        # Collect the remaining data for all device
-        self._all_device_data()
+        return device_data
 
     def _device_data_switching_group(
         self, device: DeviceData, device_data: DeviceData
@@ -289,74 +360,6 @@ class SmileData(SmileHelper):
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
-        Provide availability status for the wired-commected devices.
-        """
-        # OpenTherm device
-        if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
-            device_data["available"] = True
-            self._count += 1
-            for data in self._notifications.values():
-                for msg in data.values():
-                    if "no OpenTherm communication" in msg:
-                        device_data["available"] = False
-
-        # Smartmeter
-        if device["dev_class"] == "smartmeter":
-            device_data["available"] = True
-            self._count += 1
-            for data in self._notifications.values():
-                for msg in data.values():
-                    if "P1 does not seem to be connected to a smart meter" in msg:
-                        device_data["available"] = False
-
-        return device_data
-
-    def _get_device_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for _all_device_data() and async_update().
-
-        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
-        """
-        device = self.gw_devices[dev_id]
-        device_data = self._get_measurement_data(dev_id)
-        # Generic
-        if self.smile_type == "thermostat" and device["dev_class"] == "gateway":
-            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
-                self._count += 1
-
-            # Show the allowed regulation modes
-            if self._reg_allowed_modes:
-                device_data["regulation_modes"] = self._reg_allowed_modes
-                self._count += 1
-
-        # Show the allowed dhw_modes
-        if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
-            device_data["dhw_modes"] = self._dhw_allowed_modes
-            self._count += 1
-
-        # Check availability of non-legacy wired-connected devices
-        if not self._smile_legacy:
-            self._check_availability(device, device_data)
-
-        # Switching groups data
-        device_data = self._device_data_switching_group(device, device_data)
-        # Specific, not generic Adam data
-        device_data = self._device_data_adam(device, device_data)
-        # No need to obtain thermostat data when the device is not a thermostat
-        if device["dev_class"] not in ZONE_THERMOSTATS:
-            return device_data
-
-        # Thermostat data (presets, temperatures etc)
-        device_data = self._device_data_climate(device, device_data)
-
-        return device_data
-
-
 class Smile(SmileComm, SmileData):
     """The Plugwise SmileConnect class."""
 
@@ -427,54 +430,6 @@ class Smile(SmileComm, SmileData):
 
         return True
 
-    async def _smile_detect_legacy(
-        self, result: etree, dsmrmain: etree, model: str
-    ) -> str:
-        """Helper-function for _smile_detect()."""
-        # Stretch: find the MAC of the zigbee master_controller (= Stick)
-        if network := result.find("./module/protocols/master_controller"):
-            self.smile_zigbee_mac_address = network.find("mac_address").text
-        # Find the active MAC in case there is an orphaned Stick
-        if zb_networks := result.findall("./network"):
-            for zb_network in zb_networks:
-                if zb_network.find("./nodes/network_router"):
-                    network = zb_network.find("./master_controller")
-                    self.smile_zigbee_mac_address = network.find("mac_address").text
-
-        # Legacy Anna or Stretch:
-        if (
-            result.find('./appliance[type="thermostat"]') is not None
-            or network is not None
-        ):
-            self._system = await self._request(SYSTEM)
-            self.smile_fw_version = self._system.find("./gateway/firmware").text
-            model = self._system.find("./gateway/product").text
-            self.smile_hostname = self._system.find("./gateway/hostname").text
-            # If wlan0 contains data it's active, so eth0 should be checked last
-            for network in ("wlan0", "eth0"):
-                locator = f"./{network}/mac"
-                if (net_locator := self._system.find(locator)) is not None:
-                    self.smile_mac_address = net_locator.text
-        else:
-            # P1 legacy:
-            if dsmrmain is not None:
-                self._status = await self._request(STATUS)
-                self.smile_fw_version = self._status.find("./system/version").text
-                model = self._status.find("./system/product").text
-                self.smile_hostname = self._status.find("./network/hostname").text
-                self.smile_mac_address = self._status.find("./network/mac_address").text
-
-            else:  # pragma: no cover
-                # No cornercase, just end of the line
-                LOGGER.error(
-                    "Connected but no gateway device information found, please create"
-                    " an issue on http://github.com/plugwise/python-plugwise"
-                )
-                raise ResponseError
-
-        self._smile_legacy = True
-        return model
-
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
 
@@ -539,6 +494,63 @@ class Smile(SmileComm, SmileData):
             if result.find(locator_2) is not None:
                 self._elga = True
 
+    async def _smile_detect_legacy(
+        self, result: etree, dsmrmain: etree, model: str
+    ) -> str:
+        """Helper-function for _smile_detect()."""
+        # Stretch: find the MAC of the zigbee master_controller (= Stick)
+        if network := result.find("./module/protocols/master_controller"):
+            self.smile_zigbee_mac_address = network.find("mac_address").text
+        # Find the active MAC in case there is an orphaned Stick
+        if zb_networks := result.findall("./network"):
+            for zb_network in zb_networks:
+                if zb_network.find("./nodes/network_router"):
+                    network = zb_network.find("./master_controller")
+                    self.smile_zigbee_mac_address = network.find("mac_address").text
+
+        # Legacy Anna or Stretch:
+        if (
+            result.find('./appliance[type="thermostat"]') is not None
+            or network is not None
+        ):
+            self._system = await self._request(SYSTEM)
+            self.smile_fw_version = self._system.find("./gateway/firmware").text
+            model = self._system.find("./gateway/product").text
+            self.smile_hostname = self._system.find("./gateway/hostname").text
+            # If wlan0 contains data it's active, so eth0 should be checked last
+            for network in ("wlan0", "eth0"):
+                locator = f"./{network}/mac"
+                if (net_locator := self._system.find(locator)) is not None:
+                    self.smile_mac_address = net_locator.text
+        else:
+            # P1 legacy:
+            if dsmrmain is not None:
+                self._status = await self._request(STATUS)
+                self.smile_fw_version = self._status.find("./system/version").text
+                model = self._status.find("./system/product").text
+                self.smile_hostname = self._status.find("./network/hostname").text
+                self.smile_mac_address = self._status.find("./network/mac_address").text
+
+            else:  # pragma: no cover
+                # No cornercase, just end of the line
+                LOGGER.error(
+                    "Connected but no gateway device information found, please create"
+                    " an issue on http://github.com/plugwise/python-plugwise"
+                )
+                raise ResponseError
+
+        self._smile_legacy = True
+        return model
+
+    async def _full_update_device(self) -> None:
+        """Perform a first fetch of all XML data, needed for initialization."""
+        await self._update_domain_objects()
+        self._locations = await self._request(LOCATIONS)
+        self._modules = await self._request(MODULES)
+        # P1 legacy has no appliances
+        if not (self.smile_type == "power" and self._smile_legacy):
+            self._appliances = await self._request(APPLIANCES)
+
     async def _update_domain_objects(self) -> None:
         """Helper-function for smile.py: full_update_device() and async_update().
 
@@ -560,15 +572,6 @@ class Smile(SmileComm, SmileData):
                     "Plugwise notification present but unable to process, manually investigate: %s",
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
-
-    async def _full_update_device(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
-        await self._update_domain_objects()
-        self._locations = await self._request(LOCATIONS)
-        self._modules = await self._request(MODULES)
-        # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
-            self._appliances = await self._request(APPLIANCES)
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
@@ -604,58 +607,6 @@ class Smile(SmileComm, SmileData):
 
         self._previous_day_number = day_number
         return PlugwiseData(self.gw_data, self.gw_devices)
-
-    async def _set_schedule_state_legacy(
-        self, loc_id: str, name: str, status: str
-    ) -> None:
-        """Helper-function for set_schedule_state()."""
-        schedule_rule_id: str | None = None
-        for rule in self._domain_objects.findall("rule"):
-            if rule.find("name").text == name:
-                schedule_rule_id = rule.attrib["id"]
-
-        if schedule_rule_id is None:
-            raise PlugwiseError("Plugwise: no schedule with this name available.")
-
-        new_state = "false"
-        if status == "on":
-            new_state = "true"
-        # If no state change is requested, do nothing
-        if new_state == self._schedule_old_states[loc_id][name]:
-            return
-
-        locator = f'.//*[@id="{schedule_rule_id}"]/template'
-        for rule in self._domain_objects.findall(locator):
-            template_id = rule.attrib["id"]
-
-        uri = f"{RULES};id={schedule_rule_id}"
-        data = (
-            "<rules><rule"
-            f' id="{schedule_rule_id}"><name><![CDATA[{name}]]></name><template'
-            f' id="{template_id}" /><active>{new_state}</active></rule></rules>'
-        )
-
-        await self._request(uri, method="put", data=data)
-        self._schedule_old_states[loc_id][name] = new_state
-
-    def determine_contexts(
-        self, loc_id: str, name: str, state: str, sched_id: str
-    ) -> etree:
-        """Helper-function for set_schedule_state()."""
-        locator = f'.//*[@id="{sched_id}"]/contexts'
-        contexts = self._domain_objects.find(locator)
-        locator = f'.//*[@id="{loc_id}"].../...'
-        if (subject := contexts.find(locator)) is None:
-            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
-            subject = etree.fromstring(subject)
-
-        if state == "off":
-            self._last_active[loc_id] = name
-            contexts.remove(subject)
-        if state == "on":
-            contexts.append(subject)
-
-        return etree.tostring(contexts, encoding="unicode").rstrip()
 
     async def set_schedule_state(
         self,
@@ -716,13 +667,57 @@ class Smile(SmileComm, SmileData):
         await self._request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
 
-    async def _set_preset_legacy(self, preset: str) -> None:
-        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = self._domain_objects.find(locator)
-        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
+    async def _set_schedule_state_legacy(
+        self, loc_id: str, name: str, status: str
+    ) -> None:
+        """Helper-function for set_schedule_state()."""
+        schedule_rule_id: str | None = None
+        for rule in self._domain_objects.findall("rule"):
+            if rule.find("name").text == name:
+                schedule_rule_id = rule.attrib["id"]
 
-        await self._request(RULES, method="put", data=data)
+        if schedule_rule_id is None:
+            raise PlugwiseError("Plugwise: no schedule with this name available.")
+
+        new_state = "false"
+        if status == "on":
+            new_state = "true"
+        # If no state change is requested, do nothing
+        if new_state == self._schedule_old_states[loc_id][name]:
+            return
+
+        locator = f'.//*[@id="{schedule_rule_id}"]/template'
+        for rule in self._domain_objects.findall(locator):
+            template_id = rule.attrib["id"]
+
+        uri = f"{RULES};id={schedule_rule_id}"
+        data = (
+            "<rules><rule"
+            f' id="{schedule_rule_id}"><name><![CDATA[{name}]]></name><template'
+            f' id="{template_id}" /><active>{new_state}</active></rule></rules>'
+        )
+
+        await self._request(uri, method="put", data=data)
+        self._schedule_old_states[loc_id][name] = new_state
+
+    def determine_contexts(
+        self, loc_id: str, name: str, state: str, sched_id: str
+    ) -> etree:
+        """Helper-function for set_schedule_state()."""
+        locator = f'.//*[@id="{sched_id}"]/contexts'
+        contexts = self._domain_objects.find(locator)
+        locator = f'.//*[@id="{loc_id}"].../...'
+        if (subject := contexts.find(locator)) is None:
+            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+            subject = etree.fromstring(subject)
+
+        if state == "off":
+            self._last_active[loc_id] = name
+            contexts.remove(subject)
+        if state == "on":
+            contexts.append(subject)
+
+        return etree.tostring(contexts, encoding="unicode").rstrip()
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
@@ -747,6 +742,14 @@ class Smile(SmileComm, SmileData):
         )
 
         await self._request(uri, method="put", data=data)
+
+    async def _set_preset_legacy(self, preset: str) -> None:
+        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
+        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
+        rule = self._domain_objects.find(locator)
+        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
+
+        await self._request(RULES, method="put", data=data)
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
@@ -819,23 +822,6 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def _set_groupswitch_member_state(
-        self, members: list[str], state: str, switch: Munch
-    ) -> None:
-        """Helper-function for set_switch_state().
-
-        Set the given State of the relevant Switch within a group of members.
-        """
-        for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._appliances.find(locator).attrib["id"]
-            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            if self._stretch_v2:
-                uri = f"{APPLIANCES};id={member}/{switch.device}"
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
-            await self._request(uri, method="put", data=data)
-
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
@@ -890,6 +876,23 @@ class Smile(SmileComm, SmileData):
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
+
+    async def _set_groupswitch_member_state(
+        self, members: list[str], state: str, switch: Munch
+    ) -> None:
+        """Helper-function for set_switch_state().
+
+        Set the given State of the relevant Switch within a group of members.
+        """
+        for member in members:
+            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
+            switch_id = self._appliances.find(locator).attrib["id"]
+            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
+            if self._stretch_v2:
+                uri = f"{APPLIANCES};id={member}/{switch.device}"
+            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
+
+            await self._request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
