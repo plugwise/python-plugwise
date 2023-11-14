@@ -549,21 +549,16 @@ class Smile(SmileComm, SmileData):
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
-        await self._update_domain_objects()
+        self._domain_objects = await self._request(DOMAIN_OBJECTS)
+        self._get_plugwise_notifications()
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
         if not (self.smile_type == "power" and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
-    async def _update_domain_objects(self) -> None:
-        """Helper-function for smile.py: full_update_device() and async_update().
-
-        Request domain_objects data.
-        """
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-
-        # If Plugwise notifications present:
+    def _get_plugwise_notifications(self) -> None:
+        """Collect the Plugwise notifications."""
         self._notifications = {}
         for notification in self._domain_objects.findall("./notification"):
             try:
@@ -595,7 +590,8 @@ class Smile(SmileComm, SmileData):
             self.get_all_devices()
         # Otherwise perform an incremental update
         else:
-            await self._update_domain_objects()
+            self._domain_objects = await self._request(DOMAIN_OBJECTS)
+            self._get_plugwise_notifications()
             match self._target_smile:
                 case "smile_v2":
                     self._modules = await self._request(MODULES)
