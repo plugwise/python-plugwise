@@ -144,7 +144,11 @@ class SmileData(SmileHelper):
     def update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
         # For heating + cooling, replace setpoint with setpoint_high/_low
-        if self.smile(ANNA) and device["dev_class"] in ZONE_THERMOSTATS and self._cooling_present:
+        if (
+            self.smile(ANNA)
+            and device["dev_class"] in ZONE_THERMOSTATS
+            and self._cooling_present
+        ):
             thermostat = device["thermostat"]
             sensors = device["sensors"]
             temp_dict: ActuatorData = {
