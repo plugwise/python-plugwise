@@ -634,6 +634,13 @@ class SmileHelper:
                     self.gw_devices[appl.dev_id][appl_key] = value
                     self._count += 1
 
+        if self._is_thermostat:
+            self._scan_thermostats()
+            # Collect a list of thermostats with offset-capability
+            self.therms_with_offset_func = (
+                self._get_appliances_with_offset_functionality()
+            )
+
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder(appl)
