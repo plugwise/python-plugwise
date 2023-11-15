@@ -70,8 +70,8 @@ class SmileData(SmileHelper):
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if (
             self.smile(ANNA)
-            and device["dev_class"] in ZONE_THERMOSTATS
             and self._cooling_present
+            and device["dev_class"] == "thermostat"
         ):
             thermostat = device["thermostat"]
             sensors = device["sensors"]
