@@ -75,11 +75,6 @@ class SmileData(SmileHelper):
         """
         # Gather all the devices and their initial data
         self._all_appliances()
-
-        # Collect switching- or pump-group data
-        if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
-
         # Collect the remaining data for all device
         self._all_device_data()
 

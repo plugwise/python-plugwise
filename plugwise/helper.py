@@ -651,6 +651,10 @@ class SmileHelper:
                     # Leave for-loop to avoid a 2nd device_id switch
                     break
 
+        # Collect switching- or pump-group data
+        if group_data := self._get_group_switches():
+            self.gw_devices.update(group_data)
+
         # Place the gateway and optional heater_central devices as 1st and 2nd
         for dev_class in ("heater_central", "gateway"):
             for dev_id, device in dict(self.gw_devices).items():
