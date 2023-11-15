@@ -120,28 +120,29 @@ class SmileData(SmileHelper):
         """
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            if (
-                device_id == self.gateway_id
-                and (
-                    self._is_thermostat
-                    or (self.smile_type == "power" and not self._smile_legacy)
-                )
-            ) or (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ):
-                data["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
-                self._count += 1
+            self._add_or_update_notifications(data, device_id, device)
             device.update(data)
-
-            # Update for cooling
-            self.update_for_cooling(device)
-
+            self._update_for_cooling(device)
             remove_empty_platform_dicts(device)
 
-    def update_for_cooling(self, device: DeviceData) -> DeviceData:
+    def _add_or_update_notifications(
+        self, data: DeviceData, device_id: str, device: DeviceData
+    ) -> None:
+        """Helper-function adding or updating the Plugwise notifications."""
+        if (
+            device_id == self.gateway_id
+            and (
+                self._is_thermostat
+                or (self.smile_type == "power" and not self._smile_legacy)
+            )
+        ) or (
+            "binary_sensors" in device
+            and "plugwise_notification" in device["binary_sensors"]
+        ):
+            data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
+            self._count += 1
+
+    def _update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if (
