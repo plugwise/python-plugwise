@@ -73,9 +73,7 @@ class SmileData(SmileHelper):
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
         """
-        # Gather all the devices and their initial data
         self._all_appliances()
-        # Collect the remaining data for all device
         self._all_device_data()
 
     def _all_device_data(self) -> None:
