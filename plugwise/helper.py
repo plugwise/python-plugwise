@@ -1032,8 +1032,8 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-        if dev_id == self.gateway_id and self.smile(ADAM):
-            self._get_regulation_mode(appliance, data)
+            if dev_id == self.gateway_id and self.smile(ADAM):
+                self._get_regulation_mode(appliance, data)
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
