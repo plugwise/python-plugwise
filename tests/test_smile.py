@@ -2962,7 +2962,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1053c8bbf8be43c6921742b146a625f1": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3058,7 +3063,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "47e2c550a33846b680725aa3fb229473": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3123,7 +3133,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "7fda9f84f01342f8afe9ebbbbff30c0f": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3235,7 +3250,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "beb32da072274e698146db8b022f3c36": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3262,7 +3282,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "c4ed311d54e341f58b4cdd201d1fde7e": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3288,7 +3313,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "ca79d23ae0094120b877558734cff85c": {
                 "active_preset": "away",
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "thermostat",
                 "location": "fa5fa6b34f6b40a0972988b20e888ed4",
@@ -3312,7 +3342,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "d3a276aeb3114a509bab1e4bf8c40348": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3339,7 +3374,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ea8372c0e3ad4622ad45a041d02425f5": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3367,7 +3407,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "eac5db95d97241f6b17790897847ccf5": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3394,7 +3439,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "f04c985c11ad4848b8fcd710343f9dcf": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend", "Off"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
