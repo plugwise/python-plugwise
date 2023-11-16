@@ -678,8 +678,8 @@ class Smile(SmileComm, SmileData):
             return
 
         LOGGER.debug("HOI changing schedule %s to %s", name, new_state)
+        self._schedule_old_states[loc_id][name] = new_state
         schedule_rule_id: str = next(iter(schedule_rule))
-
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
@@ -694,8 +694,8 @@ class Smile(SmileComm, SmileData):
             f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
             f"{template}{contexts}</rule></rules>"
         )
+
         await self._request(uri, method="put", data=data)
-        self._schedule_old_states[loc_id][name] = new_state
 
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
