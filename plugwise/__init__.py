@@ -660,6 +660,7 @@ class Smile(SmileComm, SmileData):
             else:
                 return
 
+        LOGGER.debug("HOI-0 name, state: %s, %s", name, new_state)
         assert isinstance(name, str)
         if self._smile_legacy:
             await self._set_schedule_state_legacy(loc_id, name, new_state)
@@ -670,6 +671,7 @@ class Smile(SmileComm, SmileData):
         if not schedule_rule or schedule_rule is None:
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
+        LOGGER.debug("HOI-1 name, state: %s, %s", name, new_state)
         # If no state change is requested, do nothing
         if new_state == self._schedule_old_states[loc_id][name]:
             return
