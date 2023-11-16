@@ -674,6 +674,7 @@ class Smile(SmileComm, SmileData):
         if new_state == self._schedule_old_states[loc_id][name]:
             return
 
+        LOGGER.debug("HOI changing schedule %s to %s", name, new_state)
         schedule_rule_id: str = next(iter(schedule_rule))
 
         template = (
