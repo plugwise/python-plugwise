@@ -673,6 +673,7 @@ class Smile(SmileComm, SmileData):
 
         LOGGER.debug("HOI-1 name, state: %s, %s", name, new_state)
         # If no state change is requested, do nothing
+        LOGGER.debug("HOI-2 old state: %s", self._schedule_old_states[loc_id][name])
         if new_state == self._schedule_old_states[loc_id][name]:
             return
 
