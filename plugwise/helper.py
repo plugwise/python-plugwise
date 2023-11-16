@@ -42,6 +42,7 @@ from .constants import (
     LOGGER,
     NONE,
     OBSOLETE_MEASUREMENTS,
+    OFF,
     P1_LEGACY_MEASUREMENTS,
     P1_MEASUREMENTS,
     POWER_WATT,

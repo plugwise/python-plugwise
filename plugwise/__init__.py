@@ -28,6 +28,7 @@ from .constants import (
     MIN_SETPOINT,
     MODULES,
     NOTIFICATIONS,
+    OFF,
     REQUIRE_APPLIANCES,
     RULES,
     SMILES,
@@ -649,11 +650,11 @@ class Smile(SmileComm, SmileData):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Translate selection of Off-schedule to set present schedule to off
-        if name == "Off":
+        if name == OFF:
             new_state = "off"
 
         # Handle no schedule-name / Off-schedule provided
-        if name is None or name == "Off":
+        if name is None or name == OFF:
             if schedule_name := self._last_active[loc_id]:
                 name = schedule_name
             else:
