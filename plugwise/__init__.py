@@ -649,7 +649,7 @@ class Smile(SmileComm, SmileData):
         if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
-        # Translate selection of Off-schedule to set present schedule to off
+        # Translate selection of Off-schedule-option to disabling the active schedule
         if name == OFF:
             new_state = "off"
 
