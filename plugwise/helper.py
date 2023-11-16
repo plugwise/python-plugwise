@@ -1446,6 +1446,8 @@ class SmileHelper:
 
         if schedules:
             available.remove(NONE)
+            available.append(OFF)
+            schedules.append(OFF)
             if self._last_active.get(location) is None:
                 self._last_active[location] = self._last_used_schedule(schedules)
 
