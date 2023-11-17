@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.35.1
+
+- Update OFF-constant, removal capital begin-letter
+
 ## v0.35.0
 
 - Feature: add "Off" as option in available_schedules, selecting this option will disable the active schedule for a thermostat.
