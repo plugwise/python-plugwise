@@ -231,14 +231,6 @@ class SmileData(SmileHelper):
         avail_schedules, sel_schedule = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["select_schedule"] = sel_schedule
-        # Replace NONE by OFF when none of the schedules are active
-        all_off = True
-        if avail_schedules != NONE:
-            for schedule in self._schedule_old_states[loc_id]:
-                if schedule == "on":
-                    all_off = False
-            if all_off:
-                device_data["select_schedule"] = OFF
         self._count += 2
 
         # Control_state, only for Adam master thermostats
@@ -249,7 +241,7 @@ class SmileData(SmileHelper):
         # Operation modes: auto, heat, heat_cool, cool and off
         device_data["mode"] = "auto"
         self._count += 1
-        if sel_schedule == "None":
+        if sel_schedule == NONE:
             device_data["mode"] = "heat"
             if self._cooling_present:
                 device_data["mode"] = (
@@ -259,7 +251,8 @@ class SmileData(SmileHelper):
         if self.check_reg_mode("off"):
             device_data["mode"] = "off"
 
-        if "None" not in avail_schedules:
+        # Collect schedules with states for each thermostat
+        if NONE not in avail_schedules:
             loc_schedule_states: dict[str, str] = {}
             for schedule in avail_schedules:
                 loc_schedule_states[schedule] = "off"
@@ -267,6 +260,16 @@ class SmileData(SmileHelper):
                     loc_schedule_states[schedule] = "on"
 
             self._schedule_old_states[loc_id] = loc_schedule_states
+
+        # Replace NONE by OFF when none of the schedules are active,
+        # only for non-legacy thermostats.
+        all_off = True
+        if not self._smile_legacy and avail_schedules != NONE:
+            for schedule in self._schedule_old_states[loc_id]:
+                if schedule == "on":
+                    all_off = False
+            if all_off:
+                device_data["select_schedule"] = OFF
 
         return device_data
 
