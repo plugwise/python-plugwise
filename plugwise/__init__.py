@@ -254,7 +254,7 @@ class SmileData(SmileHelper):
             loc_schedule_states = {}
             for schedule in avail_schedules:
                 loc_schedule_states[schedule] = (
-                    "off" if device_data["mode"] == "auto" else "on"
+                    "on" if device_data["mode"] == "auto" else "off"
                 )
 
             self._schedule_old_states[loc_id] = loc_schedule_states
@@ -677,8 +677,6 @@ class Smile(SmileComm, SmileData):
         if new_state == self._schedule_old_states[loc_id][name]:
             return
 
-        LOGGER.debug("HOI changing schedule %s to %s", name, new_state)
-        self._schedule_old_states[loc_id][name] = new_state
         schedule_rule_id: str = next(iter(schedule_rule))
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
@@ -696,6 +694,8 @@ class Smile(SmileComm, SmileData):
         )
 
         await self._request(uri, method="put", data=data)
+        LOGGER.debug("HOI changing schedule %s to %s", name, new_state)
+        self._schedule_old_states[loc_id][name] = new_state
 
     async def _set_preset_legacy(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
