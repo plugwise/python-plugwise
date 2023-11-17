@@ -203,13 +203,6 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def check_reg_mode(self, mode: str) -> bool:
-        """Helper-function for device_data_climate()."""
-        gateway = self.gw_devices[self.gateway_id]
-        return (
-            "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
-        )
-
     def _device_data_climate(
         self, device: DeviceData, device_data: DeviceData
     ) -> DeviceData:
@@ -251,27 +244,45 @@ class SmileData(SmileHelper):
         if self.check_reg_mode("off"):
             device_data["mode"] = "off"
 
-        # Collect schedules with states for each thermostat
-        if NONE not in avail_schedules:
+        device_data = self._get_schedule_states_with_off(
+            loc_id, avail_schedules, sel_schedule, device_data
+        )
+
+        return device_data
+
+    def check_reg_mode(self, mode: str) -> bool:
+        """Helper-function for device_data_climate()."""
+        gateway = self.gw_devices[self.gateway_id]
+        return (
+            "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
+        )
+
+    def _get_schedule_states_with_off(
+        self, location: str, schedules: list[str], selected: str, data: DeviceData
+    ) -> DeviceData:
+        """Collect schedules with states for each thermostat.
+
+        Also, replace NONE by OFF when none of the schedules are active,
+        only for non-legacy thermostats.
+        """
+        if NONE not in schedules:
             loc_schedule_states: dict[str, str] = {}
-            for schedule in avail_schedules:
+            for schedule in schedules:
                 loc_schedule_states[schedule] = "off"
-                if schedule == sel_schedule and device_data["mode"] == "auto":
+                if schedule == selected and data["mode"] == "auto":
                     loc_schedule_states[schedule] = "on"
 
-            self._schedule_old_states[loc_id] = loc_schedule_states
+            self._schedule_old_states[location] = loc_schedule_states
 
-            # Replace NONE by OFF when none of the schedules are active,
-            # only for non-legacy thermostats.
             all_off = True
             if not self._smile_legacy:
-                for state in self._schedule_old_states[loc_id].values():
+                for state in self._schedule_old_states[location].values():
                     if state == "on":
                         all_off = False
                 if all_off:
-                    device_data["select_schedule"] = OFF
+                    data["select_schedule"] = OFF
 
-        return device_data
+        return data
 
     def _check_availability(
         self, device: DeviceData, device_data: DeviceData
