@@ -27,7 +27,9 @@ from .constants import (
     MAX_SETPOINT,
     MIN_SETPOINT,
     MODULES,
+    NONE,
     NOTIFICATIONS,
+    OFF,
     REQUIRE_APPLIANCES,
     RULES,
     SMILES,
@@ -201,13 +203,6 @@ class SmileData(SmileHelper):
 
         return device_data
 
-    def check_reg_mode(self, mode: str) -> bool:
-        """Helper-function for device_data_climate()."""
-        gateway = self.gw_devices[self.gateway_id]
-        return (
-            "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
-        )
-
     def _device_data_climate(
         self, device: DeviceData, device_data: DeviceData
     ) -> DeviceData:
@@ -239,7 +234,7 @@ class SmileData(SmileHelper):
         # Operation modes: auto, heat, heat_cool, cool and off
         device_data["mode"] = "auto"
         self._count += 1
-        if sel_schedule == "None":
+        if sel_schedule == NONE:
             device_data["mode"] = "heat"
             if self._cooling_present:
                 device_data["mode"] = (
@@ -249,16 +244,45 @@ class SmileData(SmileHelper):
         if self.check_reg_mode("off"):
             device_data["mode"] = "off"
 
-        if "None" not in avail_schedules:
-            loc_schedule_states = {}
-            for schedule in avail_schedules:
-                loc_schedule_states[schedule] = (
-                    "off" if device_data["mode"] == "auto" else "on"
-                )
+        if NONE in avail_schedules:
+            return device_data
 
-            self._schedule_old_states[loc_id] = loc_schedule_states
-
+        device_data = self._get_schedule_states_with_off(
+            loc_id, avail_schedules, sel_schedule, device_data
+        )
         return device_data
+
+    def check_reg_mode(self, mode: str) -> bool:
+        """Helper-function for device_data_climate()."""
+        gateway = self.gw_devices[self.gateway_id]
+        return (
+            "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
+        )
+
+    def _get_schedule_states_with_off(
+        self, location: str, schedules: list[str], selected: str, data: DeviceData
+    ) -> DeviceData:
+        """Collect schedules with states for each thermostat.
+
+        Also, replace NONE by OFF when none of the schedules are active,
+        only for non-legacy thermostats.
+        """
+        loc_schedule_states: dict[str, str] = {}
+        for schedule in schedules:
+            loc_schedule_states[schedule] = "off"
+            if schedule == selected and data["mode"] == "auto":
+                loc_schedule_states[schedule] = "on"
+        self._schedule_old_states[location] = loc_schedule_states
+
+        all_off = True
+        if not self._smile_legacy:
+            for state in self._schedule_old_states[location].values():
+                if state == "on":
+                    all_off = False
+            if all_off:
+                data["select_schedule"] = OFF
+
+        return data
 
     def _check_availability(
         self, device: DeviceData, device_data: DeviceData
@@ -647,7 +671,13 @@ class Smile(SmileComm, SmileData):
         # Input checking
         if new_state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
-        if name is None:
+
+        # Translate selection of Off-schedule-option to disabling the active schedule
+        if name == OFF:
+            new_state = "off"
+
+        # Handle no schedule-name / Off-schedule provided
+        if name is None or name == OFF:
             if schedule_name := self._last_active[loc_id]:
                 name = schedule_name
             else:
@@ -668,7 +698,6 @@ class Smile(SmileComm, SmileData):
             return
 
         schedule_rule_id: str = next(iter(schedule_rule))
-
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
@@ -683,6 +712,7 @@ class Smile(SmileComm, SmileData):
             f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
             f"{template}{contexts}</rule></rules>"
         )
+
         await self._request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
 

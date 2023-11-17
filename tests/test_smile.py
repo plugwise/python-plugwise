@@ -1073,8 +1073,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
                 "active_preset": "home",
-                "available_schedules": ["Standaard", "Thuiswerken"],
-                "select_schedule": "None",
+                "available_schedules": ["Standaard", "Thuiswerken", "Off"],
+                "select_schedule": "Off",
                 "mode": "heat",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
@@ -1252,8 +1252,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
                 "active_preset": "home",
-                "available_schedules": ["Standaard", "Thuiswerken"],
-                "select_schedule": "None",
+                "available_schedules": ["Standaard", "Thuiswerken", "Off"],
+                "select_schedule": "Off",
                 "mode": "heat",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5, "illuminance": 40.5},
             },
@@ -1352,7 +1352,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "away",
-                "available_schedules": ["Test", "Normal"],
+                "available_schedules": ["Test", "Normal", "Off"],
                 "select_schedule": "Normal",
                 "mode": "auto",
                 "sensors": {"temperature": 20.6, "setpoint": 16.0, "illuminance": 35.0},
@@ -1435,7 +1435,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
                 "active_preset": "home",
-                "available_schedules": ["Normal"],
+                "available_schedules": ["Normal", "Off"],
                 "select_schedule": "Normal",
                 "mode": "auto",
                 "sensors": {"temperature": 20.4, "setpoint": 21.0, "illuminance": 44.8},
@@ -1500,7 +1500,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["no_frost", "asleep", "away", "home", "vacation"],
                 "active_preset": "home",
-                "available_schedules": ["Test", "Normal"],
+                "available_schedules": ["Test", "Normal", "Off"],
                 "select_schedule": "Test",
                 "mode": "auto",
                 "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
@@ -1635,7 +1635,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "home",
-                "available_schedules": ["Weekschema"],
+                "available_schedules": ["Weekschema", "Off"],
                 "select_schedule": "Weekschema",
                 "mode": "auto",
                 "sensors": {"temperature": 20.5, "setpoint": 20.5},
@@ -1762,7 +1762,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "asleep",
-                "available_schedules": ["Weekschema", "Badkamer", "Test"],
+                "available_schedules": ["Weekschema", "Badkamer", "Test", "Off"],
                 "select_schedule": "Weekschema",
                 "control_state": "heating",
                 "mode": "auto",
@@ -1855,7 +1855,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "available": True,
                 "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
                 "active_preset": "home",
-                "available_schedules": ["Weekschema", "Badkamer", "Test"],
+                "available_schedules": ["Weekschema", "Badkamer", "Test", "Off"],
                 "select_schedule": "Badkamer",
                 "control_state": "off",
                 "mode": "auto",
@@ -1980,8 +1980,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert result
 
-        # special test-case for turning a schedule back on based on the last_active schedule
+        # Special test-case for turning a schedule off based on only the location id.
         await smile.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", "off")
+
+        # Special test-case for turning a schedule off for a location via the option "off".
+        await smile.set_schedule_state("f2bf9048bef64cc5b6d5110154e33c81", "on", "Off")
 
         # bad schedule-state test
         result = await self.tinker_thermostat_schedule(
@@ -2073,8 +2076,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
@@ -2137,6 +2141,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
                 "select_schedule": "GF7  Woonkamer",
                 "mode": "auto",
@@ -2312,6 +2317,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
                 "select_schedule": "CV Jessie",
                 "mode": "auto",
@@ -2359,6 +2365,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
                 "select_schedule": "Badkamer Schema",
                 "mode": "auto",
@@ -2405,8 +2412,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
@@ -2519,8 +2527,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "mode": "heat",
                 "sensors": {"temperature": 16.5, "setpoint": 13.0, "battery": 67},
             },
@@ -2583,6 +2592,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
                 "select_schedule": "GF7  Woonkamer",
                 "mode": "auto",
@@ -2758,6 +2768,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
                 "select_schedule": "CV Jessie",
                 "mode": "auto",
@@ -2805,6 +2816,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
                 "select_schedule": "Badkamer Schema",
                 "mode": "auto",
@@ -2851,8 +2863,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "GF7  Woonkamer",
                     "Badkamer Schema",
                     "CV Jessie",
+                    "Off",
                 ],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "mode": "heat",
                 "sensors": {
                     "temperature": 15.6,
@@ -2952,7 +2965,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "1053c8bbf8be43c6921742b146a625f1": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -2962,7 +2980,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Lisa",
                 "name": "Thermostaat BK",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "sensors": {
                     "battery": 55,
                     "setpoint": 18.0,
@@ -3048,7 +3066,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "47e2c550a33846b680725aa3fb229473": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3058,7 +3081,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Lisa",
                 "name": "Thermostaat DB",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "sensors": {
                     "setpoint": 18.0,
                     "temperature": 22.0,
@@ -3113,7 +3136,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "7fda9f84f01342f8afe9ebbbbff30c0f": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3123,7 +3151,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Lisa",
                 "name": "Thermostaat JM",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "sensors": {
                     "setpoint": 18.0,
                     "temperature": 20.0,
@@ -3225,7 +3253,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "beb32da072274e698146db8b022f3c36": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3235,7 +3268,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Lisa",
                 "name": "Thermostaat SQ",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "sensors": {
                     "setpoint": 18.5,
                     "temperature": 21.4,
@@ -3252,7 +3285,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "c4ed311d54e341f58b4cdd201d1fde7e": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3262,7 +3300,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Lisa",
                 "name": "Thermostaat RB",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "sensors": {
                     "setpoint": 17.0,
                     "temperature": 20.7,
@@ -3278,7 +3316,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "ca79d23ae0094120b877558734cff85c": {
                 "active_preset": "away",
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "thermostat",
                 "location": "fa5fa6b34f6b40a0972988b20e888ed4",
@@ -3302,7 +3345,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "d3a276aeb3114a509bab1e4bf8c40348": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3312,7 +3360,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "model": "Lisa",
                 "name": "Thermostaat SJ",
                 "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
-                "select_schedule": "None",
+                "select_schedule": "Off",
                 "sensors": {
                     "setpoint": 20.5,
                     "temperature": 22.6,
@@ -3329,7 +3377,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "ea8372c0e3ad4622ad45a041d02425f5": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3357,7 +3410,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "eac5db95d97241f6b17790897847ccf5": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3384,7 +3442,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             "f04c985c11ad4848b8fcd710343f9dcf": {
                 "active_preset": "away",
                 "available": True,
-                "available_schedules": ["Opstaan weekdag", "Werkdag schema", "Weekend"],
+                "available_schedules": [
+                    "Opstaan weekdag",
+                    "Werkdag schema",
+                    "Weekend",
+                    "Off",
+                ],
                 "control_state": "off",
                 "dev_class": "zone_thermostat",
                 "firmware": "2016-10-10T02:00:00+02:00",
@@ -3970,7 +4033,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
                 "active_preset": "home",
-                "available_schedules": ["standaard"],
+                "available_schedules": ["standaard", "Off"],
                 "select_schedule": "standaard",
                 "mode": "auto",
                 "sensors": {
@@ -4133,8 +4196,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
                 "active_preset": "home",
-                "available_schedules": ["standaard"],
-                "select_schedule": "None",
+                "available_schedules": ["standaard", "Off"],
+                "select_schedule": "Off",
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 22.3,
@@ -4328,7 +4391,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
                 "active_preset": "home",
-                "available_schedules": ["Thermostat schedule"],
+                "available_schedules": ["Thermostat schedule", "Off"],
                 "select_schedule": "Thermostat schedule",
                 "mode": "auto",
                 "sensors": {
@@ -4389,8 +4452,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["away", "no_frost", "vacation", "home", "asleep"],
                 "active_preset": "home",
-                "available_schedules": ["Thermostat schedule"],
-                "select_schedule": "None",
+                "available_schedules": ["Thermostat schedule", "Off"],
+                "select_schedule": "Off",
                 "mode": "heat_cool",
                 "sensors": {
                     "temperature": 20.9,
@@ -4462,7 +4525,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
             "ebd90df1ab334565b5895f37590ccff4": {
                 "active_preset": "home",
-                "available_schedules": ["Thermostat schedule"],
+                "available_schedules": ["Thermostat schedule", "Off"],
                 "dev_class": "thermostat",
                 "firmware": "2018-02-08T11:15:53+01:00",
                 "hardware": "6539-1301-5002",
@@ -4551,7 +4614,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["away", "vacation", "no_frost", "home", "asleep"],
                 "active_preset": "home",
-                "available_schedules": ["Winter", "Test "],
+                "available_schedules": ["Winter", "Test ", "Off"],
                 "select_schedule": "Winter",
                 "mode": "auto",
                 "sensors": {
@@ -4677,7 +4740,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 },
                 "preset_modes": ["away", "vacation", "no_frost", "home", "asleep"],
                 "active_preset": "home",
-                "available_schedules": ["Winter", "Test "],
+                "available_schedules": ["Winter", "Test ", "Off"],
                 "select_schedule": "Winter",
                 "mode": "auto",
                 "sensors": {

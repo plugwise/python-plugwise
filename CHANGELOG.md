@@ -1,7 +1,9 @@
 # Changelog
 
-## Ongoing
+## v0.35.0
 
+- Feature: add "Off" as option in available_schedules, selecting this option will disable the active schedule for a thermostat.
+- Fix not being able to turn off a schedule.
 - Update fixture to create a testcase for HVACAction.PREHEATING
 
 ## v0.34.5

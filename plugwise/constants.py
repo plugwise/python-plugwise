@@ -80,6 +80,7 @@ HW_MODELS: Final[dict[str, str]] = {
 MAX_SETPOINT: Final[float] = 30.0
 MIN_SETPOINT: Final[float] = 4.0
 NONE: Final = "None"
+OFF: Final = "Off"
 
 # XML data paths
 APPLIANCES: Final = "/core/appliances"
