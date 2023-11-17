@@ -244,10 +244,12 @@ class SmileData(SmileHelper):
         if self.check_reg_mode("off"):
             device_data["mode"] = "off"
 
+        if NONE in avail_schedules:
+            return device_data
+
         device_data = self._get_schedule_states_with_off(
             loc_id, avail_schedules, sel_schedule, device_data
         )
-
         return device_data
 
     def check_reg_mode(self, mode: str) -> bool:
@@ -265,22 +267,20 @@ class SmileData(SmileHelper):
         Also, replace NONE by OFF when none of the schedules are active,
         only for non-legacy thermostats.
         """
-        if NONE not in schedules:
-            loc_schedule_states: dict[str, str] = {}
-            for schedule in schedules:
-                loc_schedule_states[schedule] = "off"
-                if schedule == selected and data["mode"] == "auto":
-                    loc_schedule_states[schedule] = "on"
+        loc_schedule_states: dict[str, str] = {}
+        for schedule in schedules:
+            loc_schedule_states[schedule] = "off"
+            if schedule == selected and data["mode"] == "auto":
+                loc_schedule_states[schedule] = "on"
+        self._schedule_old_states[location] = loc_schedule_states
 
-            self._schedule_old_states[location] = loc_schedule_states
-
-            all_off = True
-            if not self._smile_legacy:
-                for state in self._schedule_old_states[location].values():
-                    if state == "on":
-                        all_off = False
-                if all_off:
-                    data["select_schedule"] = OFF
+        all_off = True
+        if not self._smile_legacy:
+            for state in self._schedule_old_states[location].values():
+                if state == "on":
+                    all_off = False
+            if all_off:
+                data["select_schedule"] = OFF
 
         return data
 
