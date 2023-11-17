@@ -1442,13 +1442,6 @@ class SmileHelper:
             available.append(name)
             if location == loc_id:
                 selected = name
-                all_off = True
-                for schedule in self._schedule_old_states[location]:
-                    if schedule == "on":
-                        all_off = False
-                if all_off:
-                    selected = OFF
-
                 self._last_active[location] = selected
             schedules.append(name)
 

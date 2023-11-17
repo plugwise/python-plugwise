@@ -27,6 +27,7 @@ from .constants import (
     MAX_SETPOINT,
     MIN_SETPOINT,
     MODULES,
+    NONE,
     NOTIFICATIONS,
     OFF,
     REQUIRE_APPLIANCES,
@@ -230,6 +231,14 @@ class SmileData(SmileHelper):
         avail_schedules, sel_schedule = self._schedules(loc_id)
         device_data["available_schedules"] = avail_schedules
         device_data["select_schedule"] = sel_schedule
+        # Replace NONE by OFF when none of the schedules are active
+        all_off = True
+        if avail_schedules != NONE:
+            for schedule in self._schedule_old_states[loc_id]:
+                if schedule == "on":
+                    all_off = False
+            if all_off:
+                device_data["select_schedule"] = OFF
         self._count += 2
 
         # Control_state, only for Adam master thermostats
