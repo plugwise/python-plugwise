@@ -672,7 +672,6 @@ class Smile(SmileComm, SmileData):
             else:
                 return
 
-        LOGGER.debug("HOI-0 name, state: %s, %s", name, new_state)
         assert isinstance(name, str)
         if self._smile_legacy:
             await self._set_schedule_state_legacy(loc_id, name, new_state)
@@ -683,9 +682,7 @@ class Smile(SmileComm, SmileData):
         if not schedule_rule or schedule_rule is None:
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
-        LOGGER.debug("HOI-1 name, state: %s, %s", name, new_state)
         # If no state change is requested, do nothing
-        LOGGER.debug("HOI-2 old state: %s", self._schedule_old_states[loc_id][name])
         if new_state == self._schedule_old_states[loc_id][name]:
             return
 
@@ -706,7 +703,6 @@ class Smile(SmileComm, SmileData):
         )
 
         await self._request(uri, method="put", data=data)
-        LOGGER.debug("HOI changing schedule %s to %s", name, new_state)
         self._schedule_old_states[loc_id][name] = new_state
 
     async def _set_preset_legacy(self, preset: str) -> None:
