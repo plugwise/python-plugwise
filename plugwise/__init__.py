@@ -265,8 +265,8 @@ class SmileData(SmileHelper):
         # only for non-legacy thermostats.
         all_off = True
         if not self._smile_legacy and avail_schedules != NONE:
-            for schedule in self._schedule_old_states[loc_id]:
-                if schedule == "on":
+            for state in self._schedule_old_states[loc_id].values():
+                if state == "on":
                     all_off = False
             if all_off:
                 device_data["select_schedule"] = OFF
