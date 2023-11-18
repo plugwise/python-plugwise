@@ -866,6 +866,16 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
+    async def set_gateway_mode(self, mode: str) -> None:
+        """Set the gateway mode."""
+        if mode not in self._gw_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid gateway mode.")
+
+        uri = f"{APPLIANCES};type=gateway/gateway_mode_control"
+        data = f"<gateway_mode_control_functionality><mode>{mode}</mode></gateway_mode_control_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._reg_allowed_modes:
