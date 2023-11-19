@@ -65,7 +65,7 @@ def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
 
 
 class SmileData(SmileHelper):
-    """The Plugwise Smile main class."""
+    """The Plugwise SmileData class."""
 
     def get_all_devices(self) -> None:
         """Determine the evices present from the obtained XML-data.
@@ -355,8 +355,30 @@ class SmileData(SmileHelper):
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
+        Provide availability status for the wired-commected devices.
+        """
+        # OpenTherm device
+        if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
+            device_data["available"] = True
+            self._count += 1
+            for data in self._notifications.values():
+                for msg in data.values():
+                    if "no OpenTherm communication" in msg:
+                        device_data["available"] = False
+
+        # Smartmeter
+        if device["dev_class"] == "smartmeter":
+            device_data["available"] = True
+            self._count += 1
+            for data in self._notifications.values():
+                for msg in data.values():
+                    if "P1 does not seem to be connected to a smart meter" in msg:
+                        device_data["available"] = False
+
+        return device_data
+
 class Smile(SmileComm, SmileData):
-    """The Plugwise SmileConnect class."""
+    """The Plugwise Smile main class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 
