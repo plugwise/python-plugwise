@@ -1030,7 +1030,7 @@ class SmileHelper:
             # Show the allowed dhw_modes (Loria only?)
             if self._dhw_allowed_modes:
                 data["dhw_modes"] = self._dhw_allowed_modes
-                self._count += 1
+                # Counting of this item is done in _appliance_measurements()
 
         if (
             appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
