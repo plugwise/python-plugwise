@@ -1027,6 +1027,10 @@ class SmileHelper:
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
+            # Show the allowed dhw_modes (Loria only?)
+            if self._dhw_allowed_modes:
+                data["dhw_modes"] = self._dhw_allowed_modes
+                self._count += 1
 
         if (
             appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
