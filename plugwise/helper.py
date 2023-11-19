@@ -783,9 +783,8 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-            if dev_id == self.gateway_id:
-                if self.smile(ADAM):
-                    self._get_regulation_mode(appliance, data)
+            if dev_id == self.gateway_id and self.smile(ADAM):
+                self._get_regulation_mode(appliance, data)
 
         # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
         # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
