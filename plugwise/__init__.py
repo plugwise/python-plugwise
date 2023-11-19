@@ -113,7 +113,7 @@ class SmileData(SmileHelper):
 
     def _add_or_update_notifications(
         self, data: DeviceData, device_id: str, device: DeviceData
-    ) -> DeviceData:
+    ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
             device_id == self.gateway_id
@@ -130,9 +130,7 @@ class SmileData(SmileHelper):
 
         device.update(data)
 
-        return device
-
-    def _update_for_cooling(self, device: DeviceData) -> DeviceData:
+    def _update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         # For Anna and heating + cooling, replace setpoint with setpoint_high/_low
         if (
@@ -159,8 +157,6 @@ class SmileData(SmileHelper):
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             self._count += 2
-
-        return device
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
