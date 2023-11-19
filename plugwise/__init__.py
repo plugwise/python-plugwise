@@ -108,13 +108,12 @@ class SmileData(SmileHelper):
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             self._add_or_update_notifications(data, device_id, device)
-            device.update(data)
             self._update_for_cooling(device)
             remove_empty_platform_dicts(device)
 
     def _add_or_update_notifications(
         self, data: DeviceData, device_id: str, device: DeviceData
-    ) -> None:
+    ) -> DeviceData:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
             device_id == self.gateway_id
@@ -128,6 +127,10 @@ class SmileData(SmileHelper):
         ):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             self._count += 1
+
+        device.update(data)
+
+        return device
 
     def _update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
