@@ -377,6 +377,7 @@ class SmileData(SmileHelper):
 
         return device_data
 
+
 class Smile(SmileComm, SmileData):
     """The Plugwise Smile main class."""
 
