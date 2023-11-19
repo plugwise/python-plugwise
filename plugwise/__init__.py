@@ -131,7 +131,7 @@ class SmileData(SmileHelper):
 
     def _update_for_cooling(self, device: DeviceData) -> DeviceData:
         """Helper-function for adding/updating various cooling-related values."""
-        # For heating + cooling, replace setpoint with setpoint_high/_low
+        # For Anna and heating + cooling, replace setpoint with setpoint_high/_low
         if (
             self.smile(ANNA)
             and self._cooling_present
@@ -169,15 +169,13 @@ class SmileData(SmileHelper):
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
             device_data = self._check_availability(device, device_data)
-
         # Switching groups data
         device_data = self._device_data_switching_group(device, device_data)
-        # Specific, not generic Adam data
+        # Adam data
         device_data = self._device_data_adam(device, device_data)
-        # No need to obtain thermostat data when the device is not a thermostat
+        # Skip obtaining data for non master-thermostats
         if device["dev_class"] not in ZONE_THERMOSTATS:
             return device_data
-
         # Thermostat data (presets, temperatures etc)
         device_data = self._device_data_climate(device, device_data)
 
