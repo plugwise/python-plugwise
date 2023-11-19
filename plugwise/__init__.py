@@ -177,11 +177,6 @@ class SmileData(SmileHelper):
                 device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
                 self._count += 1
 
-            # Show the allowed regulation modes for Adam
-            if self._reg_allowed_modes:
-                device_data["regulation_modes"] = self._reg_allowed_modes
-                self._count += 1
-
         # Show the allowed dhw_modes
         if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device_data["dhw_modes"] = self._dhw_allowed_modes
@@ -254,16 +249,24 @@ class SmileData(SmileHelper):
     ) -> DeviceData:
         """Helper-function for _get_device_data().
 
-        Determine Adam heating-status for on-off heating via valves.
+        Determine Adam heating-status for on-off heating via valves,
+        and available regulations_modes.
         """
+        if not self.smile(ADAM):
+            return device_data
+
         # Indicate heating_state based on valves being open in case of city-provided heating
         if (
-            self.smile(ADAM)
-            and device.get("dev_class") == "heater_central"
+            device["dev_class"] == "heater_central"
             and self._on_off_device
             and isinstance(self._heating_valves(), int)
         ):
             device_data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
+
+        # Show the allowed regulation modes for Adam
+        if device["dev_class"] == "gateway" and self._reg_allowed_modes:
+            device_data["regulation_modes"] = self._reg_allowed_modes
+            self._count += 1
 
         return device_data
 
