@@ -168,7 +168,7 @@ class SmileData(SmileHelper):
         device_data = self._get_measurement_data(dev_id)
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
-            self._check_availability(device, device_data)
+            device_data = self._check_availability(device, device_data)
 
         # Switching groups data
         device_data = self._device_data_switching_group(device, device_data)
