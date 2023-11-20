@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Typing-constants clean-up
+
 ## v0.35.1
 
 - Update OFF-constant, removal capital begin-letter
