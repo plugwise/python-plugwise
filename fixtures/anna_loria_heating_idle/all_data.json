@@ -2,7 +2,7 @@
   "devices": {
     "582dfbdace4d4aeb832923ce7d1ddda0": {
       "active_preset": "home",
-      "available_schedules": ["Winter", "Test "],
+      "available_schedules": ["Winter", "Test ", "off"],
       "dev_class": "thermostat",
       "firmware": "2018-02-08T11:15:53+01:00",
       "hardware": "6539-1301-5002",

@@ -65,7 +65,7 @@
     },
     "ee62cad889f94e8ca3d09021f03a660b": {
       "active_preset": "home",
-      "available_schedules": ["Weekschema"],
+      "available_schedules": ["Weekschema", "off"],
       "dev_class": "thermostat",
       "location": "009490cc2f674ce6b576863fbb64f867",
       "mode": "auto",
