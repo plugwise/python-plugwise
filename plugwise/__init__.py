@@ -192,7 +192,7 @@ class SmileData(SmileHelper):
         """Helper-function for _get_device_data().
 
         Determine Adam heating-status for on-off heating via valves,
-        and available regulations_modes.
+        available regulations_modes and thermostat control_states.
         """
         if not self.smile(ADAM):
             return device_data
@@ -209,6 +209,13 @@ class SmileData(SmileHelper):
         if device["dev_class"] == "gateway" and self._reg_allowed_modes:
             device_data["regulation_modes"] = self._reg_allowed_modes
             self._count += 1
+
+        # Control_state, only for Adam master thermostats
+        if device["dev_class"] in ZONE_THERMOSTATS:
+            loc_id = device["location"]
+            if ctrl_state := self._control_state(loc_id):
+                device_data["control_state"] = ctrl_state
+                self._count += 1
 
         return device_data
 
@@ -234,11 +241,6 @@ class SmileData(SmileHelper):
         device_data["available_schedules"] = avail_schedules
         device_data["select_schedule"] = sel_schedule
         self._count += 2
-
-        # Control_state, only for Adam master thermostats
-        if ctrl_state := self._control_state(loc_id):
-            device_data["control_state"] = ctrl_state
-            self._count += 1
 
         # Operation modes: auto, heat, heat_cool, cool and off
         device_data["mode"] = "auto"
@@ -338,7 +340,7 @@ class SmileData(SmileHelper):
                 device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
                 self._count += 1
 
-        # Show the allowed dhw_modes
+        # Show the allowed dhw_modes (Loria only)
         if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
             device_data["dhw_modes"] = self._dhw_allowed_modes
             self._count += 1
