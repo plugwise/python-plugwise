@@ -151,7 +151,7 @@ class SmileData(SmileHelper):
         """
         # Gather all the devices and their initial data
         self._all_appliances()
-        if self.smile_type == "thermostat":
+        if self._is_thermostat:
             self._scan_thermostats()
             # Collect a list of thermostats with offset-capability
             self.therms_with_offset_func = (
