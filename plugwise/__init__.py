@@ -16,6 +16,7 @@ from munch import Munch
 import semver
 
 from .constants import (
+    ANNA,
     ADAM,
     APPLIANCES,
     DEFAULT_PORT,
@@ -51,7 +52,7 @@ from .exceptions import (
 from .helper import SmileComm, SmileHelper
 
 
-def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
+def remove_empty_platform_dicts(data: DeviceData) -> None:
     """Helper-function for removing any empty platform dicts."""
     if not data["binary_sensors"]:
         data.pop("binary_sensors")
@@ -60,16 +61,18 @@ def remove_empty_platform_dicts(data: DeviceData) -> DeviceData:
     if not data["switches"]:
         data.pop("switches")
 
-    return data
-
 
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def update_for_cooling(self, device: DeviceData) -> DeviceData:
+    def update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         # For heating + cooling, replace setpoint with setpoint_high/_low
-        if self._cooling_present:
+        if (
+            self.smile(ANNA)
+            and device["dev_class"] in ZONE_THERMOSTATS
+            and self._cooling_present
+        ):
             thermostat = device["thermostat"]
             sensors = device["sensors"]
             temp_dict: ActuatorData = {
@@ -90,8 +93,6 @@ class SmileData(SmileHelper):
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             self._count += 2
 
-        return device
-
     def _update_gw_devices(self) -> None:
         """Helper-function for _all_device_data() and async_update().
 
@@ -100,25 +101,22 @@ class SmileData(SmileHelper):
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             if (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ) or (
                 device_id == self.gateway_id
                 and (
                     self._is_thermostat
                     or (self.smile_type == "power" and not self._smile_legacy)
                 )
+            ) or (
+                "binary_sensors" in device
+                and "plugwise_notification" in device["binary_sensors"]
             ):
                 data["binary_sensors"]["plugwise_notification"] = bool(
                     self._notifications
                 )
                 self._count += 1
+
             device.update(data)
-
-            # Update for cooling
-            if device["dev_class"] in ZONE_THERMOSTATS and not self.smile(ADAM):
-                self.update_for_cooling(device)
-
+            self.update_for_cooling(device)
             remove_empty_platform_dicts(device)
 
     def _all_device_data(self) -> None:
