@@ -330,7 +330,7 @@ class SmileData(SmileHelper):
                 device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
                 self._count += 1
 
-            # Show the allowed regulation modes
+            # Show the allowed regulation modes for Adam
             if self._reg_allowed_modes:
                 device_data["regulation_modes"] = self._reg_allowed_modes
                 self._count += 1
