@@ -161,11 +161,11 @@ class SmileData(SmileHelper):
                 self._get_appliances_with_offset_functionality()
             )
 
-        # Collect switching- or pump-group data
+        # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
             self.gw_devices.update(group_data)
 
-        # Collect the remaining data for all device
+        # Collect the remaining data for all devices
         self._all_device_data()
 
     def _device_data_switching_group(
