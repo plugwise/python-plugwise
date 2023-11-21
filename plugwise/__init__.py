@@ -699,7 +699,7 @@ class Smile(SmileComm, SmileData):
         template = (
             '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
         )
-        if not self.smile(ADAM):
+        if self.smile(ANNA):
             locator = f'.//*[@id="{schedule_rule_id}"]/template'
             template_id = self._domain_objects.find(locator).attrib["id"]
             template = f'<template id="{template_id}" />'
@@ -753,7 +753,7 @@ class Smile(SmileComm, SmileData):
         if "setpoint" in items:
             setpoint = items["setpoint"]
 
-        if self._cooling_present and not self.smile(ADAM):
+        if self.smile(ANNA) and self._cooling_present:
             if "setpoint_high" not in items:
                 raise PlugwiseError(
                     "Plugwise: failed setting temperature: no valid input provided"
