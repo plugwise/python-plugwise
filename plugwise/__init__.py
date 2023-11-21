@@ -340,11 +340,6 @@ class SmileData(SmileHelper):
                 device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
                 self._count += 1
 
-        # Show the allowed dhw_modes (Loria only)
-        if device["dev_class"] == "heater_central" and self._dhw_allowed_modes:
-            device_data["dhw_modes"] = self._dhw_allowed_modes
-            self._count += 1
-
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
             self._check_availability(device, device_data)
