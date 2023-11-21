@@ -65,7 +65,36 @@ def remove_empty_platform_dicts(data: DeviceData) -> None:
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
-    def update_for_cooling(self, device: DeviceData) -> None:
+    def _update_gw_devices(self) -> None:
+        """Helper-function for _all_device_data() and async_update().
+
+        Collect data for each device and add to self.gw_devices.
+        """
+        for device_id, device in self.gw_devices.items():
+            data = self._get_device_data(device_id)
+            self._add_or_update_notifications(data, device_id, device)
+            device.update(data)
+            self._update_for_cooling(device)
+            remove_empty_platform_dicts(device)
+
+    def _add_or_update_notifications(
+        self, data: DeviceData, device_id: str, device: DeviceData
+    ) -> None:
+        """Helper-function adding or updating the Plugwise notifications."""
+        if (
+            device_id == self.gateway_id
+            and (
+                self._is_thermostat
+                or (self.smile_type == "power" and not self._smile_legacy)
+            )
+        ) or (
+            "binary_sensors" in device
+            and "plugwise_notification" in device["binary_sensors"]
+        ):
+            data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
+            self._count += 1
+
+    def _update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         # For heating + cooling, replace setpoint with setpoint_high/_low
         if (
@@ -92,32 +121,6 @@ class SmileData(SmileHelper):
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             self._count += 2
-
-    def _update_gw_devices(self) -> None:
-        """Helper-function for _all_device_data() and async_update().
-
-        Collect data for each device and add to self.gw_devices.
-        """
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            if (
-                device_id == self.gateway_id
-                and (
-                    self._is_thermostat
-                    or (self.smile_type == "power" and not self._smile_legacy)
-                )
-            ) or (
-                "binary_sensors" in device
-                and "plugwise_notification" in device["binary_sensors"]
-            ):
-                data["binary_sensors"]["plugwise_notification"] = bool(
-                    self._notifications
-                )
-                self._count += 1
-
-            device.update(data)
-            self.update_for_cooling(device)
-            remove_empty_platform_dicts(device)
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
