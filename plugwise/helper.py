@@ -1016,6 +1016,10 @@ class SmileHelper:
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
+            # Show the allowed dhw_modes (Loria only)
+            if self._dhw_allowed_modes:
+                data["dhw_modes"] = self._dhw_allowed_modes
+                # Counting of this item is done in _appliance_measurements()
 
         if (
             appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
@@ -1032,8 +1036,18 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-        if dev_id == self.gateway_id and self.smile(ADAM):
-            self._get_regulation_mode(appliance, data)
+            if dev_id == self.gateway_id and self.smile(ADAM):
+                self._get_regulation_mode(appliance, data)
+
+        # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+        # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+        if self._is_thermostat and dev_id == self.gateway_id:
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+                self._count += 1
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
