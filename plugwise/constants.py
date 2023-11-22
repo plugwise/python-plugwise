@@ -257,12 +257,6 @@ BinarySensorType = Literal[
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
-NumberType = Literal[
-    "maximum_boiler_temperature",
-    "max_dhw_temperature",
-    "temperature_offset",
-]
-
 LIMITS: Final[tuple[str, ...]] = (
     "offset",
     "setpoint",
@@ -270,17 +264,6 @@ LIMITS: Final[tuple[str, ...]] = (
     "lower_bound",
     "upper_bound",
 )
-
-SelectType = Literal[
-    "select_dhw_mode",
-    "select_regulation_mode",
-    "select_schedule",
-]
-SelectOptionsType = Literal[
-    "dhw_modes",
-    "regulation_modes",
-    "available_schedules",
-]
 
 SensorType = Literal[
     "battery",
