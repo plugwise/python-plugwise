@@ -1039,6 +1039,16 @@ class SmileHelper:
             if dev_id == self.gateway_id and self.smile(ADAM):
                 self._get_regulation_mode(appliance, data)
 
+        # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+        # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+        if self._is_thermostat and dev_id == self.gateway_id:
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+                self._count += 1
+
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
             # Remove c_heating_state after processing

@@ -329,16 +329,6 @@ class SmileData(SmileHelper):
         """
         device = self.gw_devices[dev_id]
         device_data = self._get_measurement_data(dev_id)
-        # Generic
-        if self.smile_type == "thermostat" and device["dev_class"] == "gateway":
-            # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-            # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                device_data["sensors"]["outdoor_temperature"] = outdoor_temperature
-                self._count += 1
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
