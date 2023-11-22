@@ -16,8 +16,8 @@ from munch import Munch
 import semver
 
 from .constants import (
-    ANNA,
     ADAM,
+    ANNA,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
