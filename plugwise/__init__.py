@@ -258,7 +258,7 @@ class SmileData(SmileHelper):
         if NONE in avail_schedules:
             return device_data
 
-        device_data = self._get_schedule_states_with_off(
+        self._get_schedule_states_with_off(
             loc_id, avail_schedules, sel_schedule, device_data
         )
         return device_data
@@ -272,7 +272,7 @@ class SmileData(SmileHelper):
 
     def _get_schedule_states_with_off(
         self, location: str, schedules: list[str], selected: str, data: DeviceData
-    ) -> DeviceData:
+    ) -> None:
         """Collect schedules with states for each thermostat.
 
         Also, replace NONE by OFF when none of the schedules are active,
@@ -293,11 +293,7 @@ class SmileData(SmileHelper):
             if all_off:
                 data["select_schedule"] = OFF
 
-        return data
-
-    def _check_availability(
-        self, device: DeviceData, device_data: DeviceData
-    ) -> DeviceData:
+    def _check_availability(self, device: DeviceData, device_data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
         Provide availability status for the wired-commected devices.
@@ -319,8 +315,6 @@ class SmileData(SmileHelper):
                 for msg in data.values():
                     if "P1 does not seem to be connected to a smart meter" in msg:
                         device_data["available"] = False
-
-        return device_data
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
