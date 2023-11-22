@@ -3,6 +3,7 @@
 ## Ongoing
 
 - Typing-constants clean-up
+- Improve/optimize/reorder
 
 ## v0.35.1
 
