@@ -293,28 +293,20 @@ class SmileData(SmileHelper):
             if all_off:
                 data["select_schedule"] = OFF
 
-    def _check_availability(self, device: DeviceData, device_data: DeviceData) -> None:
+    def _check_availability(
+        self, device: DeviceData, data: DeviceData, dev_class: str, message: str
+    ) -> None:
         """Helper-function for _get_device_data().
 
         Provide availability status for the wired-commected devices.
         """
-        # OpenTherm device
-        if device["dev_class"] == "heater_central" and device["name"] != "OnOff":
-            device_data["available"] = True
+        if device["dev_class"] == dev_class:
+            data["available"] = True
             self._count += 1
-            for data in self._notifications.values():
-                for msg in data.values():
-                    if "no OpenTherm communication" in msg:
-                        device_data["available"] = False
-
-        # Smartmeter
-        if device["dev_class"] == "smartmeter":
-            device_data["available"] = True
-            self._count += 1
-            for data in self._notifications.values():
-                for msg in data.values():
-                    if "P1 does not seem to be connected to a smart meter" in msg:
-                        device_data["available"] = False
+            for item in self._notifications.values():
+                for msg in item.values():
+                    if message in msg:
+                        data["available"] = False
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
@@ -322,24 +314,32 @@ class SmileData(SmileHelper):
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
         device = self.gw_devices[dev_id]
-        device_data = self._get_measurement_data(dev_id)
+        data = self._get_measurement_data(dev_id)
 
         # Check availability of non-legacy wired-connected devices
         if not self._smile_legacy:
-            self._check_availability(device, device_data)
+            # Smartmeter
+            self._check_availability(
+                device, data, "smartmeter", "P1 does not seem to be connected"
+            )
+            # OpenTherm device
+            if device["name"] != "OnOff":
+                self._check_availability(
+                    device, data, "heater_central", "no OpenTherm communication"
+                )
 
         # Switching groups data
-        device_data = self._device_data_switching_group(device, device_data)
+        data = self._device_data_switching_group(device, data)
         # Adam data
-        device_data = self._device_data_adam(device, device_data)
+        data = self._device_data_adam(device, data)
         # Skip obtaining data for non master-thermostats
         if device["dev_class"] not in ZONE_THERMOSTATS:
-            return device_data
+            return data
 
         # Thermostat data (presets, temperatures etc)
-        device_data = self._device_data_climate(device, device_data)
+        data = self._device_data_climate(device, data)
 
-        return device_data
+        return data
 
 
 class Smile(SmileComm, SmileData):
