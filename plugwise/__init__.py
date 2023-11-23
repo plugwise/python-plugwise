@@ -169,59 +169,48 @@ class SmileData(SmileHelper):
             )
 
     def _device_data_switching_group(
-        self, device: DeviceData, device_data: DeviceData
-    ) -> DeviceData:
+        self, device: DeviceData, data: DeviceData
+    ) -> None:
         """Helper-function for _get_device_data().
 
         Determine switching group device data.
         """
-        if device["dev_class"] not in SWITCH_GROUP_TYPES:
-            return device_data
+        if device["dev_class"] in SWITCH_GROUP_TYPES:
+            counter = 0
+            for member in device["members"]:
+                if self.gw_devices[member]["switches"].get("relay"):
+                    counter += 1
+            data["switches"]["relay"] = counter != 0
+            self._count += 1
 
-        counter = 0
-        for member in device["members"]:
-            if self.gw_devices[member]["switches"].get("relay"):
-                counter += 1
-        device_data["switches"]["relay"] = counter != 0
-        self._count += 1
-        return device_data
-
-    def _device_data_adam(
-        self, device: DeviceData, device_data: DeviceData
-    ) -> DeviceData:
+    def _device_data_adam(self, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
         Determine Adam heating-status for on-off heating via valves,
         available regulations_modes and thermostat control_states.
         """
-        if not self.smile(ADAM):
-            return device_data
+        if self.smile(ADAM):
+            # Indicate heating_state based on valves being open in case of city-provided heating
+            if (
+                device["dev_class"] == "heater_central"
+                and self._on_off_device
+                and isinstance(self._heating_valves(), int)
+            ):
+                data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
-        # Indicate heating_state based on valves being open in case of city-provided heating
-        if (
-            device["dev_class"] == "heater_central"
-            and self._on_off_device
-            and isinstance(self._heating_valves(), int)
-        ):
-            device_data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
-
-        # Show the allowed regulation modes for Adam
-        if device["dev_class"] == "gateway" and self._reg_allowed_modes:
-            device_data["regulation_modes"] = self._reg_allowed_modes
-            self._count += 1
-
-        # Control_state, only for Adam master thermostats
-        if device["dev_class"] in ZONE_THERMOSTATS:
-            loc_id = device["location"]
-            if ctrl_state := self._control_state(loc_id):
-                device_data["control_state"] = ctrl_state
+            # Show the allowed regulation modes for Adam
+            if device["dev_class"] == "gateway" and self._reg_allowed_modes:
+                data["regulation_modes"] = self._reg_allowed_modes
                 self._count += 1
 
-        return device_data
+            # Control_state, only for Adam master thermostats
+            if device["dev_class"] in ZONE_THERMOSTATS:
+                loc_id = device["location"]
+                if ctrl_state := self._control_state(loc_id):
+                    data["control_state"] = ctrl_state
+                    self._count += 1
 
-    def _device_data_climate(
-        self, device: DeviceData, device_data: DeviceData
-    ) -> DeviceData:
+    def _device_data_climate(self, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
         Determine climate-control device data.
@@ -229,39 +218,34 @@ class SmileData(SmileHelper):
         loc_id = device["location"]
 
         # Presets
-        device_data["preset_modes"] = None
-        device_data["active_preset"] = None
+        data["preset_modes"] = None
+        data["active_preset"] = None
         self._count += 2
         if presets := self._presets(loc_id):
-            device_data["preset_modes"] = list(presets)
-            device_data["active_preset"] = self._preset(loc_id)
+            data["preset_modes"] = list(presets)
+            data["active_preset"] = self._preset(loc_id)
 
         # Schedule
         avail_schedules, sel_schedule = self._schedules(loc_id)
-        device_data["available_schedules"] = avail_schedules
-        device_data["select_schedule"] = sel_schedule
+        data["available_schedules"] = avail_schedules
+        data["select_schedule"] = sel_schedule
         self._count += 2
 
         # Operation modes: auto, heat, heat_cool, cool and off
-        device_data["mode"] = "auto"
+        data["mode"] = "auto"
         self._count += 1
         if sel_schedule == NONE:
-            device_data["mode"] = "heat"
+            data["mode"] = "heat"
             if self._cooling_present:
-                device_data["mode"] = (
-                    "cool" if self.check_reg_mode("cooling") else "heat_cool"
-                )
+                data["mode"] = "cool" if self.check_reg_mode("cooling") else "heat_cool"
 
         if self.check_reg_mode("off"):
-            device_data["mode"] = "off"
+            data["mode"] = "off"
 
-        if NONE in avail_schedules:
-            return device_data
-
-        self._get_schedule_states_with_off(
-            loc_id, avail_schedules, sel_schedule, device_data
-        )
-        return device_data
+        if NONE not in avail_schedules:
+            self._get_schedule_states_with_off(
+                loc_id, avail_schedules, sel_schedule, data
+            )
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""
@@ -329,15 +313,15 @@ class SmileData(SmileHelper):
                 )
 
         # Switching groups data
-        data = self._device_data_switching_group(device, data)
+        self._device_data_switching_group(device, data)
         # Adam data
-        data = self._device_data_adam(device, data)
+        self._device_data_adam(device, data)
         # Skip obtaining data for non master-thermostats
         if device["dev_class"] not in ZONE_THERMOSTATS:
             return data
 
         # Thermostat data (presets, temperatures etc)
-        data = self._device_data_climate(device, data)
+        self._device_data_climate(device, data)
 
         return data
 
