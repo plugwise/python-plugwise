@@ -72,13 +72,13 @@ class SmileData(SmileHelper):
         """
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            self._add_or_update_notifications(data, device_id, device)
+            self._add_or_update_notifications(device_id, device, data)
             device.update(data)
             self._update_for_cooling(device)
             remove_empty_platform_dicts(device)
 
     def _add_or_update_notifications(
-        self, data: DeviceData, device_id: str, device: DeviceData
+        self, device_id: str, device: DeviceData, data: DeviceData
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
@@ -278,7 +278,7 @@ class SmileData(SmileHelper):
                 data["select_schedule"] = OFF
 
     def _check_availability(
-        self, device: DeviceData, data: DeviceData, dev_class: str, message: str
+        self, device: DeviceData, dev_class: str, data: DeviceData, message: str
     ) -> None:
         """Helper-function for _get_device_data().
 
@@ -304,12 +304,12 @@ class SmileData(SmileHelper):
         if not self._smile_legacy:
             # Smartmeter
             self._check_availability(
-                device, data, "smartmeter", "P1 does not seem to be connected"
+                device, "smartmeter", data, "P1 does not seem to be connected"
             )
             # OpenTherm device
             if device["name"] != "OnOff":
                 self._check_availability(
-                    device, data, "heater_central", "no OpenTherm communication"
+                    device, "heater_central", data, "no OpenTherm communication"
                 )
 
         # Switching groups data
