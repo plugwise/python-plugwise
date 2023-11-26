@@ -245,6 +245,71 @@
 			</offset_functionality>
 		</actuator_functionalities>
 	</appliance>
+	<appliance id='7eedf0882c76441894f0c6e6d4e2e0b1'>
+		<name>Central heating boiler</name>
+		<description></description>
+		<type>heater_central</type>
+		<created_date>2020-09-04T16:00:31.445+02:00</created_date>
+		<modified_date>2023-04-24T22:10:45.198+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<groups/>
+		<logs>
+			<point_log id='06d5ac3dab7a496994b9e86aaed5f327'>
+				<type>burner_efficiency</type>
+				<unit>s</unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval/>
+			</point_log>
+			<point_log id='5af30fdb36644525a54a09e11a37c93c'>
+				<type>central_heating_state</type>
+				<unit></unit>
+				<updated_date>2020-10-14T12:01:24.963+02:00</updated_date>
+				<last_consecutive_log_date>2020-10-14T12:01:24.963+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2020-10-14T12:01:24.963+02:00" end_date="2020-10-14T12:01:24.963+02:00">
+					<measurement log_date="2020-10-14T12:01:24.963+02:00">off</measurement>
+				</period>
+			</point_log>
+			<point_log id='6bb8ca7751c24ec781b3d5e2d81a685a'>
+				<type>boiler_temperature</type>
+				<unit>C</unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<thermo_meter id='731ea93df60a40fba8fb01e2a240a98a'/>
+			</point_log>
+			<interval_log id='728a0285b9574514aa0d37e9d4e29b5a'>
+				<type>burner_operation_time</type>
+				<unit>s</unit>
+				<updated_date>2023-04-24T22:00:00+02:00</updated_date>
+				<last_consecutive_log_date>2023-04-24T21:00:00+02:00</last_consecutive_log_date>
+				<interval>PT1H</interval>
+				<interval_chrono_meter id='e243d6ab066749669f1c60560dc761a9'/>
+				<period start_date="2023-04-24T22:00:00+02:00" end_date="2023-04-24T22:00:00+02:00" interval="PT1H">
+					<measurement log_date="2023-04-24T22:00:00+02:00">0</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='c3dab94782644d2e82827b2a85c01dd0'>
+				<type>burner_efficiency</type>
+				<unit>s</unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT1H</interval>
+			</interval_log>
+			<point_log id='cf65631d2523484b94037b2bb578ab0e'>
+				<type>intended_central_heating_state</type>
+				<unit></unit>
+				<updated_date>2020-10-14T11:57:27.823+02:00</updated_date>
+				<last_consecutive_log_date>2020-10-14T11:57:27.823+02:00</last_consecutive_log_date>
+				<interval/>
+				<period start_date="2020-10-14T11:57:27.823+02:00" end_date="2020-10-14T11:57:27.823+02:00">
+					<measurement log_date="2020-10-14T11:57:27.823+02:00">off</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
 	<appliance id='bfb5ee0a88e14e5f97bfa725a760cc49'>
 		<name>Central heating boiler</name>
 		<description></description>
