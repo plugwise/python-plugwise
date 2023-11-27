@@ -570,15 +570,21 @@ class SmileHelper:
                 # Legacy P1 has no more devices
                 return
 
+        hc_count = 0
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
-            # Skip thermostats that have this key, should be an orphaned device (Core #81712)
+            # Count amount of heater_central's
+            if appl.pwclass == "heater_central":
+                hc_count += 1
+            # Mark heater_central and thermostat that have this key,
+            # could be an orphaned device (Core #81712, #104433)
+            appl.has_actuators = True
             if (
-                appl.pwclass == "thermostat"
+                appl.pwclass in ["heater_central", "thermostat"]
                 and appliance.find("actuator_functionalities/") is None
             ):
-                continue
+                appl.has_actuators = False
 
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
@@ -622,6 +628,7 @@ class SmileHelper:
             for key, value in {
                 "firmware": appl.firmware,
                 "hardware": appl.hardware,
+                "has_actuators": appl.has_actuators,
                 "location": appl.location,
                 "mac_address": appl.mac,
                 "model": appl.model,
@@ -633,6 +640,27 @@ class SmileHelper:
                     appl_key = cast(ApplianceType, key)
                     self.gw_devices[appl.dev_id][appl_key] = value
                     self._count += 1
+
+        # Remove thermostat with empty actuator_functionalities (Core #81712), remove heater_central
+        # with empty actuator_functionalities but only when there are more than one (Core #104433).
+        for dev_id, device in dict(self.gw_devices).items():
+            if device["dev_class"] == "thermostat":
+                if not self.gw_devices[dev_id]["has_actuators"]:
+                    self._count -= len(self.gw_devices[dev_id])
+                    self.gw_devices.pop(dev_id)
+                else:
+                    self.gw_devices[dev_id].pop("has_actuators")
+                    self._count -= 1
+            elif device["dev_class"] == "heater_central" and hc_count > 1:
+                if not self.gw_devices[dev_id]["has_actuators"]:
+                    self._count -= len(self.gw_devices[dev_id])
+                    self.gw_devices.pop(dev_id)
+                else:
+                    self.gw_devices[dev_id].pop("has_actuators")
+                    self._count -= 1
+            elif "has_actuators" in self.gw_devices[dev_id]:
+                self.gw_devices[dev_id].pop("has_actuators")
+                self._count -= 1
 
         # For non-legacy P1 collect the connected SmartMeter info
         if self.smile_type == "power":
