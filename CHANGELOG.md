@@ -1,9 +1,10 @@
 # Changelog
 
-## Ongoing
+## v0.35.2
 
-- Typing-constants clean-up
+- Bugfix for [Core Issue #104433](https://github.com/home-assistant/core/issues/104433)
 - Improve/optimize/reorder
+- Typing-constants clean-up
 
 ## v0.35.1
 
