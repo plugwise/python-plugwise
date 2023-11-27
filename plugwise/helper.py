@@ -577,7 +577,7 @@ class SmileHelper:
             # Count amount of heater_central's
             if appl.pwclass == "heater_central":
                 hc_count += 1
-            # Mark heater_central and thermostat that have this key,
+            # Mark heater_central and thermostat that don't have actuator_functionalities,
             # could be an orphaned device (Core #81712, #104433)
             appl.has_actuators = True
             if (
