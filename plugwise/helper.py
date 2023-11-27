@@ -644,14 +644,9 @@ class SmileHelper:
         # Remove thermostat with empty actuator_functionalities (Core #81712), remove heater_central
         # with empty actuator_functionalities but only when there are more than one (Core #104433).
         for dev_id, device in dict(self.gw_devices).items():
-            if device["dev_class"] == "thermostat":
-                if not self.gw_devices[dev_id]["has_actuators"]:
-                    self._count -= len(self.gw_devices[dev_id])
-                    self.gw_devices.pop(dev_id)
-                else:
-                    self.gw_devices[dev_id].pop("has_actuators")
-                    self._count -= 1
-            elif device["dev_class"] == "heater_central" and hc_count > 1:
+            if device["dev_class"] == "thermostat" or (
+                device["dev_class"] == "heater_central" and hc_count > 1
+            ):
                 if not self.gw_devices[dev_id]["has_actuators"]:
                     self._count -= len(self.gw_devices[dev_id])
                     self.gw_devices.pop(dev_id)
