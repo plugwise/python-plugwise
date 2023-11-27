@@ -1544,15 +1544,12 @@ class SmileHelper:
         Obtain the toggle state of a 'toggle' = switch.
         """
         if xml.find("type").text == "heater_central":
-            locator = "./actuator_functionalities/toggle_functionality"
-            if found := xml.findall(locator):
-                for item in found:
-                    if (toggle_type := item.find("type")) is not None:
-                        if toggle_type.text == toggle:
-                            data["switches"][name] = item.find("state").text == "on"
-                            self._count += 1
-                            # Remove the cooling_enabled binary_sensor when the corresponding switch is present
-                            # Except for Elga
-                            if toggle == "cooling_enabled" and not self._elga:
-                                data["binary_sensors"].pop("cooling_enabled")
-                                self._count -= 1
+            locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
+            if (state := xml.find(locator)) is not None:
+                data["switches"][name] = state.text == "on"
+                self._count += 1
+                # Remove the cooling_enabled binary_sensor when the corresponding switch is present
+                # Except for Elga
+                if toggle == "cooling_enabled" and not self._elga:
+                    data["binary_sensors"].pop("cooling_enabled")
+                    self._count -= 1
