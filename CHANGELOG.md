@@ -1,13 +1,15 @@
 # Changelog
 
-## Ongoing
+## v0.35.2
 
-- Typing-constants clean-up
-- Improve/optimize/reorder
+- Add detection & removal of orphaned heater_central.
+- Bugfix for [Core Issue #104433](https://github.com/home-assistant/core/issues/104433)
+- Improve/optimize/reorder.
+- Typing-constants clean-up.
 
 ## v0.35.1
 
-- Update OFF-constant, removal capital begin-letter
+- Update OFF-constant, removal capital begin-letter.
 
 ## v0.35.0
 
