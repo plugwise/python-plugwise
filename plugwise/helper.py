@@ -228,7 +228,7 @@ class SmileHelper:
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._elga = False
-        self._gw_allowed_modes: list[str] = []
+        self._gw_allowed_modes: list[str]
         self._heater_id: str
         self._home_location: str
         self._is_thermostat = False
@@ -434,14 +434,13 @@ class SmileHelper:
                             self._cooling_present = True
                     self._reg_allowed_modes = reg_mode_list
 
-            # Adam: collect gateway_modes
-            gw_mode_list: list[str] = []
+            # Adam and Anna: check for presence of gateway_modes
+            self._gw_allowed_modes = []
             locator = "./actuator_functionalities/gateway_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
                 if search.find("allowed_modes") is not None:
-                    for mode in search.find("allowed_modes"):
-                        gw_mode_list.append(mode.text)
-                    self._gw_allowed_modes = gw_mode_list
+                    # Limit the possible gateway-modes
+                    self._gw_allowed_modes =  ["away", "full", "vacation"]
 
             return appl
 
