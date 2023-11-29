@@ -872,12 +872,29 @@ class Smile(SmileComm, SmileData):
         if mode not in self._gw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid gateway mode.")
 
+        time_1 = dt.datetime.utcnow()
+        away_time = time_1.isoformat(timespec="milliseconds") + "Z"
+        time_2 = str(dt.date.today() - dt.timedelta(1))
+        vacation_time = time_2 + "T23:00:00.000Z"
+        end_time = "2037-04-21T08:00:53.000Z"
+        if mode == "away":
+            valid = (
+                f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
+            )
+        if mode == "full":
+            valid = ""
+        if mode == "vacation":
+            valid = (
+                "<valid_from>{vacation_time}</valid_from><valid_to>end_time</valid_to>"
+            )
+
         uri = f"{APPLIANCES};type=gateway/gateway_mode_control"
-        data = f"<gateway_mode_control_functionality><mode>{mode}</mode></gateway_mode_control_functionality>"
+        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
+        LOGGER.debug("HOI data: %s", data)
 
         """
         Captured data:
-        Set at 18:49 local time
+        Set at 2023-11-18 18:49 local time
         <gateway_mode_control_functionality>
             <mode>
                 away
@@ -896,7 +913,7 @@ class Smile(SmileComm, SmileData):
             </mode>
         </gateway_mode_control_functionality>
 
-        Set at 19:00 local time
+        Set at 2023-11-18 19:00 local time
         <gateway_mode_control_functionality>
             <mode>
                 vacation
@@ -908,10 +925,9 @@ class Smile(SmileComm, SmileData):
                 2037-04-21T08:00:53.000Z
             </valid_to>
         </gateway_mode_control_functionality>
-
         """
 
-        await self._request(uri, method="put", data=data)
+        # await self._request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""

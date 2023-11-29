@@ -635,6 +635,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("  + found invalid mode, as expected")
 
     @staticmethod
+    async def tinker_gateway_mode(smile):
+        """Toggle gateway_mode to test functionality."""
+        for mode in ["away"]: # , "full", "vacation", "!bogus"]:
+            warning = ""
+            if mode[0] == "!":
+                warning = " Negative test"
+                mode = mode[1:]
+            _LOGGER.info("%s", f"- Adjusting gateway mode to {mode}{warning}")
+            try:
+                await smile.set_gateway_mode(mode)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + found invalid mode, as expected")
+
+    @staticmethod
     async def tinker_regulation_mode(smile):
         """Toggle regulation_mode to test functionality."""
         for mode in ["off", "heating", "bleeding_cold", "!bogus"]:
@@ -1883,8 +1898,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
         assert not switch_change
 
+        await self.tinker_gateway_mode(smile)
         await self.tinker_regulation_mode(smile)
-
         await self.tinker_max_boiler_temp(smile)
 
         # Now change some data and change directory reading xml from
