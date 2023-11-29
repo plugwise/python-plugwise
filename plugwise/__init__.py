@@ -884,50 +884,12 @@ class Smile(SmileComm, SmileData):
         if mode == "full":
             valid = ""
         if mode == "vacation":
-            valid = (
-                "<valid_from>{vacation_time}</valid_from><valid_to>end_time</valid_to>"
-            )
+            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
         uri = f"{APPLIANCES};type=gateway/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
-        LOGGER.debug("HOI data: %s", data)
 
-        """
-        Captured data:
-        Set at 2023-11-18 18:49 local time
-        <gateway_mode_control_functionality>
-            <mode>
-                away
-            </mode>
-            <valid_from>
-                2023-11-18T17:49:29.965Z
-            </valid_from>
-            <valid_to>
-                2037-04-21T08:00:53.000Z
-            </valid_to>
-        </gateway_mode_control_functionality>
-
-        <gateway_mode_control_functionality>
-            <mode>
-                full
-            </mode>
-        </gateway_mode_control_functionality>
-
-        Set at 2023-11-18 19:00 local time
-        <gateway_mode_control_functionality>
-            <mode>
-                vacation
-            </mode>
-            <valid_from>
-                2023-11-17T23:00:00.000Z
-            </valid_from>
-            <valid_to>
-                2037-04-21T08:00:53.000Z
-            </valid_to>
-        </gateway_mode_control_functionality>
-        """
-
-        # await self._request(uri, method="put", data=data)
+        await self._request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""

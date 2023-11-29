@@ -637,7 +637,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     async def tinker_gateway_mode(smile):
         """Toggle gateway_mode to test functionality."""
-        for mode in ["away"]: # , "full", "vacation", "!bogus"]:
+        for mode in ["away", "full", "vacation", "!bogus"]:
             warning = ""
             if mode[0] == "!":
                 warning = " Negative test"
