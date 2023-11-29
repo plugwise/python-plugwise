@@ -204,7 +204,7 @@ class SmileData(SmileHelper):
                     data["regulation_modes"] = self._reg_allowed_modes
                     self._count += 1
                 if self._gw_allowed_modes:
-                    device_data["gateway_modes"] = self._gw_allowed_modes
+                    data["gateway_modes"] = self._gw_allowed_modes
                     self._count += 1
 
             # Control_state, only for Adam master thermostats

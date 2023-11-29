@@ -228,7 +228,7 @@ class SmileHelper:
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._elga = False
-        self._gw_allowed_modes: list[str]
+        self._gw_allowed_modes: list[str] = []
         self._heater_id: str
         self._home_location: str
         self._is_thermostat = False
@@ -436,11 +436,10 @@ class SmileHelper:
 
             # Adam and Anna: check for presence of gateway_modes
             self._gw_allowed_modes = []
-            locator = "./actuator_functionalities/gateway_mode_control_functionality"
-            if (search := appliance.find(locator)) is not None:
-                if search.find("allowed_modes") is not None:
-                    # Limit the possible gateway-modes
-                    self._gw_allowed_modes =  ["away", "full", "vacation"]
+            locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
+            if appliance.find(locator) is not None:
+                # Limit the possible gateway-modes
+                self._gw_allowed_modes = ["away", "full", "vacation"]
 
             return appl
 
@@ -1076,8 +1075,10 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-            if dev_id == self.gateway_id and self.smile(ADAM):
+        if dev_id == self.gateway_id:
+            if self.smile(ADAM):
                 self._get_regulation_mode(appliance, data)
+            if self._is_thermostat and not self._smile_legacy:
                 self._get_gateway_mode(appliance, data)
 
         # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
