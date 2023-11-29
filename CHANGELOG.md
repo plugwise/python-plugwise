@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- New Feature: For Adam, implement access gateway-modes.
+
 ## v0.35.4
 
 - Remove support for Adam with fw 2.x and Anna with fw 3.x
