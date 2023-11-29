@@ -519,8 +519,10 @@ class DeviceData(TypedDict, total=False):
     dhw_modes: list[str]
 
     # Gateway
-    select_regulation_mode: str
+    gateway_modes: list[str]
     regulation_modes: list[str]
+    select_gateway_mode: str
+    select_regulation_mode: str
 
     # Master Thermostats
     # Presets:
