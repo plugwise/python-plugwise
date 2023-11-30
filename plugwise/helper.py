@@ -457,9 +457,7 @@ class SmileHelper:
                 return None
 
             # Find the valid heater_central
-            if (result := self._check_heater_central()) is None:
-                return None
-            self._heater_id = result
+            self._heater_id = self._check_heater_central()
 
             #  Info for On-Off device
             if self._on_off_device:
@@ -502,7 +500,7 @@ class SmileHelper:
 
         return appl
 
-    def _check_heater_central(self) -> str | None:
+    def _check_heater_central(self) -> str:
         """Find the valid heater_central, helper-function for _appliance_info_finder().
 
         Solution for Core Issue #104433,
@@ -523,7 +521,6 @@ class SmileHelper:
         if hc_count > 1:
             for item in hc_list:
                 for key, value in item.items():
-                    heater_central_id = None
                     if value:
                         heater_central_id = key
                 # Stop when a valid id is found
