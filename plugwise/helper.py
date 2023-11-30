@@ -508,7 +508,7 @@ class SmileHelper:
         """
         locator = "./appliance[type='heater_central']"
         hc_count = 0
-        hc_list: list[dict[str, str]] = []
+        hc_list: list[dict[str, bool]] = []
         for heater_central in self._appliances.findall(locator):
             hc_count += 1
             hc_id: str = heater_central.attrib["id"]
