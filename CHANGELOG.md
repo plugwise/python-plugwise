@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.35.3
+
+- Working solution for [Core Issue #104433](https://github.com/home-assistant/core/issues/104433)
+
 ## v0.35.2
 
 - Add detection & removal of orphaned heater_central.
