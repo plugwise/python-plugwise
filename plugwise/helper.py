@@ -604,15 +604,11 @@ class SmileHelper:
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
-            appl.dev_id = appliance.attrib["id"]
             # Skip thermostats that have this key, should be an orphaned device (Core #81712)
             if (
                 appl.pwclass in ["heater_central", "thermostat"]
                 and appliance.find("actuator_functionalities/") is None
             ):
-                continue
-            # Skip orphaned heater_central (Core Issue #104433)
-            if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
                 continue
 
             appl.location = None
@@ -625,6 +621,7 @@ class SmileHelper:
             ) or appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_location
 
+            appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.firmware = None
@@ -636,6 +633,10 @@ class SmileHelper:
             # Determine class for this appliance
             # Skip on heater_central when no active device present or on orphaned stretch devices
             if not (appl := self._appliance_info_finder(appliance, appl)):
+                continue
+
+            # Skip orphaned heater_central (Core Issue #104433)
+            if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
                 continue
 
             # P1: for gateway and smartmeter switch device_id - part 1
