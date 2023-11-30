@@ -523,8 +523,8 @@ class SmileHelper:
                 for key, value in item.items():
                     if value:
                         heater_central_id = key
-                # Stop when a valid id is found
-                break
+                        # Stop when a valid id is found
+                        break
 
         return heater_central_id
 
