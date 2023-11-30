@@ -456,7 +456,11 @@ class SmileHelper:
             if not self._opentherm_device and not self._on_off_device:
                 return None
 
-            self._heater_id = appliance.attrib["id"]
+            # Find the valid heater_central
+            if (result := self._check_heater_central()) is None:
+                return None
+            self._heater_id = result
+
             #  Info for On-Off device
             if self._on_off_device:
                 appl.name = "OnOff"
@@ -497,6 +501,33 @@ class SmileHelper:
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
+
+    def _check_heater_central(self) -> str | None:
+        """Helper finding the valid heater_central.
+
+        Solution for Core Issue #104433,
+        for a system that has two heater_central appliances.
+        """
+        locator = "./appliance[type='heater_central']"
+        hc_count = 0
+        hc_list: list[dict[str, str]] = []
+        for heater_central in self._appliances.findall(locator):
+            hc_count += 1
+            hc_id: str = heater_central.attrib["id"]
+            has_actuators: bool = (
+                heater_central.find("actuator_functionalities/") is not None
+            )
+            hc_list.append({hc_id: has_actuators})
+
+        heater_central_id = list(hc_list[0].keys())[0]
+        if hc_count > 1:
+            for item in hc_list:
+                for key, value in item.items():
+                    heater_central_id = None
+                    if value:
+                        heater_central_id = key
+
+        return heater_central_id
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
