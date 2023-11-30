@@ -4822,9 +4822,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def test_connect_anna_loria_driessens(self):
         """Test an Anna with a Loria in heating mode - state idle."""
         testdata = {}
-        self.smile_setup = "Driessens"
+        self.smile_setup = "anna_loria_driessens"
         server, smile, client = await self.connect_wrapper()
-        # assert smile.smile_hostname == "smile000000"
+        assert smile.smile_hostname == "smile000000"
 
         _LOGGER.info("Basics:")
         _LOGGER.info(" # Assert type = thermostat")
