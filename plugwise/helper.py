@@ -604,17 +604,16 @@ class SmileHelper:
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
-            # Count amount of heater_central's
-            if appl.pwclass == "heater_central":
-                hc_count += 1
-            # Mark heater_central and thermostat that don't have actuator_functionalities,
-            # could be an orphaned device (Core #81712, #104433)
-            appl.has_actuators = True
+            appl.dev_id = appliance.attrib["id"]
+            # Skip thermostats that have this key, should be an orphaned device (Core #81712)
             if (
                 appl.pwclass in ["heater_central", "thermostat"]
                 and appliance.find("actuator_functionalities/") is None
             ):
-                appl.has_actuators = False
+                continue
+            # Skip orphaned heater_central (Core Issue #104433)
+            if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
+                continue
 
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
@@ -626,7 +625,6 @@ class SmileHelper:
             ) or appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_location
 
-            appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.firmware = None
