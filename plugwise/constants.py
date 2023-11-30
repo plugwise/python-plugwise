@@ -488,7 +488,6 @@ class DeviceData(TypedDict, total=False):
     """The Device Data class, covering the collected and ordered output-data per device."""
 
     # Appliance base data
-    has_actuators: bool
     dev_class: str
     firmware: str | None
     hardware: str
