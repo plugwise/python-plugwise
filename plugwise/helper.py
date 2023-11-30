@@ -503,7 +503,7 @@ class SmileHelper:
         return appl
 
     def _check_heater_central(self) -> str | None:
-        """Helper finding the valid heater_central.
+        """Find the valid heater_central, helper-function for _appliance_info_finder().
 
         Solution for Core Issue #104433,
         for a system that has two heater_central appliances.
