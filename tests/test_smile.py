@@ -4819,6 +4819,27 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_loria_driessens(self):
+        """Test an Anna with a Loria in heating mode - state idle."""
+        testdata = {}
+        self.smile_setup = "Driessens"
+        server, smile, client = await self.connect_wrapper()
+        # assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+
+        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        # assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
+        # assert smile.device_items == 63
+        assert smile._cooling_present
+        assert not smile._cooling_enabled
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_stretch_v31(self):
         """Test a legacy Stretch with firmware 3.1 setup."""
         testdata = {
