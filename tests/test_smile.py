@@ -4819,6 +4819,115 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_loria_driessens(self):
+        """Test an Anna with a Loria in heating mode - state idle."""
+        testdata = {
+            "5c118b1842e943c0a5b6ef88a60bb17a": {
+                "binary_sensors": {"plugwise_notification": False},
+                "dev_class": "gateway",
+                "firmware": "4.4.1",
+                "hardware": "AME Smile 2.0 board",
+                "location": "82c15f65c9bf44c592d69e16139355e3",
+                "mac_address": "D40FB2011556",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "sensors": {"outdoor_temperature": 6.81},
+                "vendor": "Plugwise",
+            },
+            "9fb768d699e44c7fb5cc50309dc4e7d4": {
+                "active_preset": "home",
+                "available_schedules": [
+                    "Verwarmen@9-23u",
+                    "VAKANTIE (winter)",
+                    "VERWARMEN",
+                    "KOELEN",
+                    "off",
+                ],
+                "dev_class": "thermostat",
+                "firmware": "2018-02-08T11:15:53+01:00",
+                "hardware": "6539-1301-5002",
+                "location": "fa70e08550c94de3a34feb27ecf31421",
+                "mode": "auto",
+                "model": "ThermoTouch",
+                "name": "Anna",
+                "preset_modes": ["no_frost", "asleep", "vacation", "away", "home"],
+                "select_schedule": "Verwarmen@9-23u",
+                "sensors": {
+                    "illuminance": 5.5,
+                    "setpoint_high": 30.0,
+                    "setpoint_low": 20.0,
+                    "temperature": 21.2,
+                },
+                "temperature_offset": {
+                    "lower_bound": -2.0,
+                    "resolution": 0.1,
+                    "setpoint": 0.0,
+                    "upper_bound": 2.0,
+                },
+                "thermostat": {
+                    "lower_bound": 4.0,
+                    "resolution": 0.1,
+                    "setpoint_high": 30.0,
+                    "setpoint_low": 20.0,
+                    "upper_bound": 30.0,
+                },
+                "vendor": "Plugwise",
+            },
+            "a449cbc334ae4a5bb7f89064984b2906": {
+                "available": True,
+                "binary_sensors": {
+                    "cooling_state": False,
+                    "dhw_state": False,
+                    "flame_state": False,
+                    "heating_state": False,
+                },
+                "dev_class": "heater_central",
+                "dhw_modes": ["comfort", "eco", "off", "boost", "auto"],
+                "location": "82c15f65c9bf44c592d69e16139355e3",
+                "max_dhw_temperature": {
+                    "lower_bound": 35.0,
+                    "resolution": 0.01,
+                    "setpoint": 53.0,
+                    "upper_bound": 60.0,
+                },
+                "maximum_boiler_temperature": {
+                    "lower_bound": 25.0,
+                    "resolution": 0.01,
+                    "setpoint": 45.0,
+                    "upper_bound": 45.0,
+                },
+                "model": "173",
+                "name": "OpenTherm",
+                "select_dhw_mode": "auto",
+                "sensors": {
+                    "dhw_temperature": 49.5,
+                    "intended_boiler_temperature": 0.0,
+                    "modulation_level": 0.0,
+                    "outdoor_air_temperature": 7.63,
+                    "return_temperature": 23.0,
+                    "water_temperature": 23.3,
+                },
+                "switches": {"cooling_ena_switch": False, "dhw_cm_switch": True},
+                "vendor": "Atlantic",
+            },
+        }
+        self.smile_setup = "anna_loria_driessens"
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        _LOGGER.info("Basics:")
+        _LOGGER.info(" # Assert type = thermostat")
+        assert smile.smile_type == "thermostat"
+
+        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        assert smile.device_items == 63
+        assert smile._cooling_present
+        assert not smile._cooling_enabled
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_stretch_v31(self):
         """Test a legacy Stretch with firmware 3.1 setup."""
         testdata = {
