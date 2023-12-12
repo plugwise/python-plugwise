@@ -1472,7 +1472,7 @@ class SmileHelper:
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
             if not self._domain_objects.find(locator):
-                continue
+                continue  # pragma: no cover
 
             available.append(name)
             if location == loc_id:
