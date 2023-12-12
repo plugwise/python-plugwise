@@ -404,8 +404,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._write_json("notifications", data.gateway["notifications"])
 
         if "FIXTURES" in os.environ:
-            _LOGGER.info("Skipping tests: Requested fixtures only")
-            return
+            _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
+            return  # pragma: no cover
 
         location_list = smile._thermo_locs
 
