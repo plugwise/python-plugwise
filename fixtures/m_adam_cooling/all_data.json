@@ -52,25 +52,14 @@
     "ad4838d7d35c4d6ea796ee12ae5aedf8": {
       "active_preset": "asleep",
       "available": true,
-      "available_schedules": [
-        "Weekschema",
-        "Badkamer",
-        "Test",
-        "off"
-      ],
+      "available_schedules": ["Weekschema", "Badkamer", "Test", "off"],
       "control_state": "cooling",
       "dev_class": "thermostat",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "mode": "cool",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": [
-        "home",
-        "asleep",
-        "away",
-        "vacation",
-        "no_frost"
-      ],
+      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
       "select_schedule": "Weekschema",
       "selected_schedule": "None",
       "sensors": {
@@ -113,12 +102,7 @@
     "e2f4322d57924fa090fbbc48b3a140dc": {
       "active_preset": "home",
       "available": true,
-      "available_schedules": [
-        "Weekschema",
-        "Badkamer",
-        "Test",
-        "off"
-      ],
+      "available_schedules": ["Weekschema", "Badkamer", "Test", "off"],
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -127,13 +111,7 @@
       "mode": "auto",
       "model": "Lisa",
       "name": "Lisa Badkamer",
-      "preset_modes": [
-        "home",
-        "asleep",
-        "away",
-        "vacation",
-        "no_frost"
-      ],
+      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
       "select_schedule": "Badkamer",
       "sensors": {
         "battery": 56,
