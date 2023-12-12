@@ -751,21 +751,10 @@ class SmileHelper:
             )
             for directive in directives:
                 preset = directive.find("then").attrib
-                if "setpoint" in preset:
-                    presets[directive.attrib["preset"]] = [  # pragma: no cover
-                        DEFAULT_PW_MIN,
-                        float(preset["setpoint"]),
-                    ]
-                    if not self._cooling_present or not self._cooling_enabled:
-                        presets[directive.attrib["preset"]] = [
-                            float(preset["setpoint"]),
-                            DEFAULT_PW_MAX,
-                        ]
-                else:
-                    presets[directive.attrib["preset"]] = [
-                        float(preset["heating_setpoint"]),
-                        float(preset["cooling_setpoint"]),
-                    ]
+                presets[directive.attrib["preset"]] = [
+                    float(preset["heating_setpoint"]),
+                    float(preset["cooling_setpoint"]),
+                ]
 
         return presets
 
