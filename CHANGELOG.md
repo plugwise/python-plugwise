@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.35.4
+
+- Maintenance, archive older firmware and clean/update tests accordingly
+- Add 4.4.2 Anna testing (for now only the without boiler)
+- Introduce quick-fixture generation without testing
+- Fix `adam_jip` testcase
+
 ## v0.35.3
 
 - Working solution for [Core Issue #104433](https://github.com/home-assistant/core/issues/104433)
