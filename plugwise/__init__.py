@@ -483,8 +483,8 @@ class Smile(SmileComm, SmileData):
             LOGGER.error(
                 "Your Smile identified as %s needs a firmware update as it's firmware is severely outdated",
                 self._target_smile,
-            )
-            raise UnsupportedDeviceError
+            )  # pragma: no cover
+            raise UnsupportedDeviceError  # pragma: no cover
 
         self.smile_model = "Gateway"
         self.smile_name = SMILES[self._target_smile].smile_name
