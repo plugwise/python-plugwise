@@ -481,7 +481,7 @@ class Smile(SmileComm, SmileData):
 
         if self._target_smile in ("smile_open_therm_v2", "smile_thermo_v3"):
             LOGGER.error(
-                "Your Smile identified as %s needs a firmware update as it's firmware is severly outdated",
+                "Your Smile identified as %s needs a firmware update as it's firmware is severely outdated",
                 self._target_smile,
             )
             raise UnsupportedDeviceError
