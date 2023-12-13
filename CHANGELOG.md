@@ -3,7 +3,7 @@
 ## v0.35.4
 
 - Remove support for Adam with fw 2.x and Anna with fw 3.x
-- Add 4.4.2 Anna testing (`control_state` added to xml but not active)
+- Add 4.4.1 Anna testing (`control_state` added to xml but not active)
 - Maintenance, archive older firmware and clean/update tests accordingly
 - Introduce quick-fixture generation without testing
 - Fix `adam_jip` testcase
