@@ -376,7 +376,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def device_test(
-        self, smile=pw_smile.Smile, test_time=None, testdata=None, initialize=True
+        self,
+        smile=pw_smile.Smile,
+        test_time=None,
+        testdata=None,
+        initialize=True,
     ):
         """Perform basic device tests."""
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
@@ -398,6 +402,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
         self._write_json("device_list", smile.device_list)
         self._write_json("notifications", data.gateway["notifications"])
+
+        if "FIXTURES" in os.environ:
+            _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
+            return  # pragma: no cover
 
         location_list = smile._thermo_locs
 
@@ -1333,9 +1341,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_anna_without_boiler_fw3(self):
-        """Test an Anna with firmware 3, without a boiler."""
+    async def test_connect_anna_without_boiler_fw441(self):
+        """Test an Anna with firmware 4.4, without a boiler."""
         testdata = {
+            "a270735e4ccd45239424badc0578a2b1": {
+                "dev_class": "gateway",
+                "firmware": "4.4.1",
+                "hardware": "AME Smile 2.0 board",
+                "location": "0f4f2ada20734a339fe353348fe87b96",
+                "mac_address": "D40FB200FA1C",
+                "model": "Gateway",
+                "name": "Smile Anna",
+                "vendor": "Plugwise",
+                "binary_sensors": {"plugwise_notification": False},
+                "sensors": {"outdoor_temperature": 8.31},
+            },
             "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
                 "dev_class": "thermostat",
                 "firmware": "2018-02-08T11:15:53+01:00",
@@ -1345,29 +1365,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "name": "Anna",
                 "vendor": "Plugwise",
                 "thermostat": {
-                    "setpoint": 16.0,
+                    "setpoint": 19.0,
                     "lower_bound": 4.0,
                     "upper_bound": 30.0,
                     "resolution": 0.1,
                 },
-                "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
-                "active_preset": "away",
-                "available_schedules": ["Test", "Normal", "off"],
-                "select_schedule": "Normal",
+                "preset_modes": ["no_frost", "asleep", "away", "vacation", "home"],
+                "active_preset": "home",
+                "available_schedules": ["Test", "Normaal", "off"],
+                "select_schedule": "Normaal",
                 "mode": "auto",
-                "sensors": {"temperature": 20.6, "setpoint": 16.0, "illuminance": 35.0},
-            },
-            "a270735e4ccd45239424badc0578a2b1": {
-                "dev_class": "gateway",
-                "firmware": "3.1.11",
-                "hardware": "AME Smile 2.0 board",
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile Anna",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 10.8},
+                "sensors": {"temperature": 19.1, "setpoint": 19.0, "illuminance": 0.25},
             },
             "c46b4794d28149699eacf053deedd003": {
                 "dev_class": "heater_central",
@@ -1378,7 +1386,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             },
         }
 
-        self.smile_setup = "anna_without_boiler_fw3"
+        self.smile_setup = "anna_without_boiler_fw441"
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -1386,178 +1394,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info(" # Assert type = thermostat")
         assert smile.smile_type == "thermostat"
         _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.1.11"
+        assert smile.smile_version[0] == "4.4.1"
         _LOGGER.info(" # Assert no legacy")
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "a270735e4ccd45239424badc0578a2b1"
-        assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Normal"
+        assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Normaal"
         assert smile.device_items == 38
         assert not self.notifications
 
         result = await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Test", "Normal"]
-        )
-        assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_anna_without_boiler_fw4(self):
-        """Test an Anna with firmware 4.0, without a boiler."""
-        testdata = {
-            "a270735e4ccd45239424badc0578a2b1": {
-                "dev_class": "gateway",
-                "firmware": "4.0.15",
-                "hardware": "AME Smile 2.0 board",
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile Anna",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 16.6},
-            },
-            "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "hardware": "6539-1301-5002",
-                "location": "c34c6864216446528e95d88985e714cc",
-                "model": "ThermoTouch",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "thermostat": {
-                    "setpoint": 21.0,
-                    "lower_bound": 4.0,
-                    "upper_bound": 30.0,
-                    "resolution": 0.1,
-                },
-                "preset_modes": ["vacation", "no_frost", "asleep", "away", "home"],
-                "active_preset": "home",
-                "available_schedules": ["Normal", "off"],
-                "select_schedule": "Normal",
-                "mode": "auto",
-                "sensors": {"temperature": 20.4, "setpoint": 21.0, "illuminance": 44.8},
-            },
-            "c46b4794d28149699eacf053deedd003": {
-                "dev_class": "heater_central",
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "model": "Unknown",
-                "name": "OnOff",
-                "binary_sensors": {"heating_state": True},
-            },
-        }
-
-        self.smile_setup = "anna_without_boiler_fw4"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.0.15"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
-
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Normal"
-        assert smile.device_items == 38
-        assert not self.notifications
-
-        result = await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Normal"]
-        )
-        assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_anna_without_boiler_fw42(self):
-        """Test an Anna with firmware 4.2, without a boiler."""
-        testdata = {
-            "c46b4794d28149699eacf053deedd003": {
-                "dev_class": "heater_central",
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "model": "Unknown",
-                "name": "OnOff",
-                "binary_sensors": {"heating_state": True},
-            },
-            "7ffbb3ab4b6c4ab2915d7510f7bf8fe9": {
-                "dev_class": "thermostat",
-                "firmware": "2018-02-08T11:15:53+01:00",
-                "hardware": "6539-1301-5002",
-                "location": "c34c6864216446528e95d88985e714cc",
-                "model": "ThermoTouch",
-                "name": "Anna",
-                "vendor": "Plugwise",
-                "thermostat": {
-                    "setpoint": 21.0,
-                    "lower_bound": 4.0,
-                    "upper_bound": 30.0,
-                    "resolution": 0.1,
-                },
-                "preset_modes": ["no_frost", "asleep", "away", "home", "vacation"],
-                "active_preset": "home",
-                "available_schedules": ["Test", "Normal", "off"],
-                "select_schedule": "Test",
-                "mode": "auto",
-                "sensors": {"temperature": 20.6, "setpoint": 21.0, "illuminance": 0.25},
-            },
-            "a270735e4ccd45239424badc0578a2b1": {
-                "dev_class": "gateway",
-                "firmware": "4.2.1",
-                "hardware": "AME Smile 2.0 board",
-                "location": "0f4f2ada20734a339fe353348fe87b96",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile Anna",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-                "sensors": {"outdoor_temperature": 3.56},
-            },
-        }
-
-        self.smile_setup = "anna_without_boiler_fw42"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.2.1"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
-
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Test"
-        assert smile.device_items == 38
-        assert not self.notifications
-
-        result = await self.tinker_thermostat(
-            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Normal"]
-        )
-        assert result
-        result = await self.tinker_temp_offset(
-            smile, "7ffbb3ab4b6c4ab2915d7510f7bf8fe9"
-        )
-        assert result
-        result = await self.tinker_temp_offset(
-            smile, "a270735e4ccd45239424badc0578a2b1"
-        )
-        assert not result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        result = await self.tinker_thermostat(
-            smile,
-            "c34c6864216446528e95d88985e714cc",
-            good_schedules=["Normal"],
-            unhappy=True,
+            smile, "c34c6864216446528e95d88985e714cc", good_schedules=["Normaal"]
         )
         assert result
         await smile.close_connection()
@@ -3773,185 +3620,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules=[None],
         )
         assert result
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_p1v3(self):
-        """Test a P1 firmware 3 with only electricity setup."""
-        testdata = {
-            "a455b61e52394b2db5081ce025a430f3": {
-                "dev_class": "gateway",
-                "firmware": "3.3.6",
-                "hardware": "AME Smile 2.0 board",
-                "location": "a455b61e52394b2db5081ce025a430f3",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile P1",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-            },
-            "ba4de7613517478da82dd9b6abea36af": {
-                "dev_class": "smartmeter",
-                "location": "a455b61e52394b2db5081ce025a430f3",
-                "model": "KFM5KAIFA-METER",
-                "name": "P1",
-                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
-                "available": True,
-                "sensors": {
-                    "net_electricity_point": 636,
-                    "electricity_consumed_peak_point": 636,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 17965.326,
-                    "electricity_consumed_peak_cumulative": 7702.167,
-                    "electricity_consumed_off_peak_cumulative": 10263.159,
-                    "electricity_consumed_peak_interval": 179,
-                    "electricity_produced_off_peak_point": 0,
-                    "electricity_produced_peak_cumulative": 0.0,
-                    "electricity_produced_off_peak_cumulative": 0.0,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
-                },
-            },
-        }
-
-        self.smile_setup = "p1v3"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.3.6"
-        assert not smile._smile_legacy
-
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        assert smile.device_items == 27
-        assert not self.notifications
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_p1v3solarfake(self):
-        """Test a P1 firmware 3 with manually added solar setup."""
-        testdata = {
-            "a455b61e52394b2db5081ce025a430f3": {
-                "dev_class": "gateway",
-                "firmware": "3.3.6",
-                "hardware": "AME Smile 2.0 board",
-                "location": "a455b61e52394b2db5081ce025a430f3",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile P1",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-            },
-            "ba4de7613517478da82dd9b6abea36af": {
-                "dev_class": "smartmeter",
-                "location": "a455b61e52394b2db5081ce025a430f3",
-                "model": "KFM5KAIFA-METER",
-                "name": "P1",
-                "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
-                "available": True,
-                "sensors": {
-                    "net_electricity_point": 636,
-                    "electricity_consumed_peak_point": 636,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 17942.326,
-                    "electricity_consumed_peak_cumulative": 7702.167,
-                    "electricity_consumed_off_peak_cumulative": 10263.159,
-                    "electricity_consumed_peak_interval": 179,
-                    "electricity_produced_off_peak_point": 0,
-                    "electricity_produced_peak_cumulative": 20.0,
-                    "electricity_produced_off_peak_cumulative": 3.0,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 20,
-                },
-            },
-        }
-
-        self.smile_setup = "p1v3solarfake"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.3.6"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
-
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.device_items == 27
-        assert not self.notifications
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
-    async def test_connect_p1v3_full_option(self):
-        """Test a P1 firmware 3 full option (gas and solar) setup."""
-        testdata = {
-            "cd3e822288064775a7c4afcdd70bdda2": {
-                "dev_class": "gateway",
-                "firmware": "3.3.9",
-                "hardware": "AME Smile 2.0 board",
-                "location": "cd3e822288064775a7c4afcdd70bdda2",
-                "mac_address": "012345670001",
-                "model": "Gateway",
-                "name": "Smile P1",
-                "vendor": "Plugwise",
-                "binary_sensors": {"plugwise_notification": False},
-            },
-            "e950c7d5e1ee407a858e2a8b5016c8b3": {
-                "dev_class": "smartmeter",
-                "location": "cd3e822288064775a7c4afcdd70bdda2",
-                "model": "2M550E-1012",
-                "name": "P1",
-                "vendor": "ISKRAEMECO",
-                "available": True,
-                "sensors": {
-                    "net_electricity_point": -2816,
-                    "electricity_consumed_peak_point": 0,
-                    "electricity_consumed_off_peak_point": 0,
-                    "net_electricity_cumulative": 442.972,
-                    "electricity_consumed_peak_cumulative": 442.932,
-                    "electricity_consumed_off_peak_cumulative": 551.09,
-                    "electricity_consumed_peak_interval": 0,
-                    "electricity_consumed_off_peak_interval": 0,
-                    "electricity_produced_peak_point": 2816,
-                    "electricity_produced_off_peak_point": 0,
-                    "electricity_produced_peak_cumulative": 396.559,
-                    "electricity_produced_off_peak_cumulative": 154.491,
-                    "electricity_produced_peak_interval": 0,
-                    "electricity_produced_off_peak_interval": 0,
-                    "gas_consumed_cumulative": 584.85,
-                    "gas_consumed_interval": 0.0,
-                },
-            },
-        }
-
-        self.smile_setup = "p1v3_full_option"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.3.9"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
-
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "cd3e822288064775a7c4afcdd70bdda2"
-        assert smile.device_items == 31
-        assert not self.notifications
-
         await smile.close_connection()
         await self.disconnect(server, client)
 

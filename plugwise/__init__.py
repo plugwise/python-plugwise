@@ -473,11 +473,18 @@ class Smile(SmileComm, SmileData):
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
             LOGGER.error(
-                "Your version Smile identified as %s seems unsupported by our plugin, please"
+                "Your Smile identified as %s seems unsupported by our plugin, please"
                 " create an issue on http://github.com/plugwise/python-plugwise",
                 self._target_smile,
             )
             raise UnsupportedDeviceError
+
+        if self._target_smile in ("smile_open_therm_v2", "smile_thermo_v3"):
+            LOGGER.error(
+                "Your Smile identified as %s needs a firmware update as it's firmware is severely outdated",
+                self._target_smile,
+            )  # pragma: no cover
+            raise UnsupportedDeviceError  # pragma: no cover
 
         self.smile_model = "Gateway"
         self.smile_name = SMILES[self._target_smile].smile_name

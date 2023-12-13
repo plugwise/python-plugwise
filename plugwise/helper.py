@@ -28,8 +28,6 @@ from .constants import (
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
     DATA,
-    DEFAULT_PW_MAX,
-    DEFAULT_PW_MIN,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
     ENERGY_KILO_WATT_HOUR,
@@ -751,21 +749,10 @@ class SmileHelper:
             )
             for directive in directives:
                 preset = directive.find("then").attrib
-                if "setpoint" in preset:
-                    presets[directive.attrib["preset"]] = [  # pragma: no cover
-                        DEFAULT_PW_MIN,
-                        float(preset["setpoint"]),
-                    ]
-                    if not self._cooling_present or not self._cooling_enabled:
-                        presets[directive.attrib["preset"]] = [
-                            float(preset["setpoint"]),
-                            DEFAULT_PW_MAX,
-                        ]
-                else:
-                    presets[directive.attrib["preset"]] = [
-                        float(preset["heating_setpoint"]),
-                        float(preset["cooling_setpoint"]),
-                    ]
+                presets[directive.attrib["preset"]] = [
+                    float(preset["heating_setpoint"]),
+                    float(preset["cooling_setpoint"]),
+                ]
 
         return presets
 
@@ -1485,7 +1472,7 @@ class SmileHelper:
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
             if not self._domain_objects.find(locator):
-                continue
+                continue  # pragma: no cover
 
             available.append(name)
             if location == loc_id:

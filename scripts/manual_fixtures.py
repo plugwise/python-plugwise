@@ -48,8 +48,6 @@ def json_writer(
 
 print("... Crafting m_* fixtures from userdata ...")  # noqa: T201
 
-### ADAM
-
 base_adam_manual = "adam_jip"
 basefile = f"./fixtures/{base_adam_manual}/all_data.json"
 basefile_n = f"./fixtures/{base_adam_manual}/notifications.json"
@@ -67,7 +65,7 @@ adam_jip = base.copy()
 # Change mode to off for "1346fbd8498d4dbcab7e18d51b771f3d"
 adam_jip["devices"]["1346fbd8498d4dbcab7e18d51b771f3d"]["mode"] = "off"
 
-json_writer("adam_jip", adam_jip, base_d, base_n)
+json_writer("m_adam_jip", adam_jip, base_d, base_n)
 
 ### Manual Adam fixtures
 
