@@ -4,7 +4,7 @@
       "available": true,
       "binary_sensors": {
         "dhw_state": false,
-        "flame_state": false,
+        "flame_state": true,
         "heating_state": true
       },
       "dev_class": "heater_central",
@@ -12,14 +12,14 @@
       "maximum_boiler_temperature": {
         "lower_bound": 25.0,
         "resolution": 0.01,
-        "setpoint": 60.0,
+        "setpoint": 50.0,
         "upper_bound": 95.0
       },
       "model": "Generic heater",
       "name": "OpenTherm",
       "sensors": {
-        "intended_boiler_temperature": 38.1,
-        "water_temperature": 37.0
+        "intended_boiler_temperature": 20.0,
+        "water_temperature": 29.0
       },
       "switches": {
         "dhw_cm_switch": false
@@ -35,10 +35,10 @@
       "name": "Tom Badkamer",
       "sensors": {
         "battery": 99,
-        "setpoint": 15.0,
-        "temperature": 21.6,
-        "temperature_difference": 2.3,
-        "valve_position": 0.0
+        "setpoint": 18.0,
+        "temperature": 17.6,
+        "temperature_difference": -0.2,
+        "valve_position": 100
       },
       "temperature_offset": {
         "lower_bound": -2.0,
@@ -47,18 +47,18 @@
         "upper_bound": 2.0
       },
       "vendor": "Plugwise",
-      "zigbee_mac_address": "ABCD012345670A01"
+      "zigbee_mac_address": "000D6F000C8FF5EE"
     },
     "2568cc4b9c1e401495d4741a5f89bee1": {
       "available": true,
-      "dev_class": "computer_desktop",
+      "dev_class": "hometheater",
       "firmware": "2020-11-10T01:00:00+01:00",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "model": "Plug",
-      "name": "Plug Werkplek",
+      "name": "Plug MediaTV",
       "sensors": {
-        "electricity_consumed": 98.0,
-        "electricity_consumed_interval": 24.0,
+        "electricity_consumed": 14.8,
+        "electricity_consumed_interval": 3.0,
         "electricity_produced": 0.0,
         "electricity_produced_interval": 0.0
       },
@@ -67,18 +67,18 @@
         "relay": true
       },
       "vendor": "Plugwise",
-      "zigbee_mac_address": "ABCD012345670A03"
+      "zigbee_mac_address": "000D6F000D13CCFD"
     },
     "29542b2b6a6a4169acecc15c72a599b8": {
       "available": true,
-      "dev_class": "hometheater",
+      "dev_class": "computer_desktop",
       "firmware": "2020-11-10T01:00:00+01:00",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "model": "Plug",
-      "name": "Plug Mediacenter",
+      "name": "Plug Werkplek",
       "sensors": {
-        "electricity_consumed": 12.2,
-        "electricity_consumed_interval": 3.0,
+        "electricity_consumed": 87.6,
+        "electricity_consumed_interval": 23.0,
         "electricity_produced": 0.0,
         "electricity_produced_interval": 0.0
       },
@@ -87,7 +87,7 @@
         "relay": true
       },
       "vendor": "Plugwise",
-      "zigbee_mac_address": "ABCD012345670A02"
+      "zigbee_mac_address": "000D6F000D13CA9A"
     },
     "67d73d0bd469422db25a618a5fb8eeb0": {
       "available": true,
@@ -113,7 +113,7 @@
       "model": "Plug",
       "name": "Plug Vloerverwarming",
       "sensors": {
-        "electricity_consumed": 46.8,
+        "electricity_consumed": 43.8,
         "electricity_consumed_interval": 0.0,
         "electricity_produced": 0.0,
         "electricity_produced_interval": 0.0
@@ -122,22 +122,28 @@
         "relay": true
       },
       "vendor": "Plugwise",
-      "zigbee_mac_address": "ABCD012345670A05"
+      "zigbee_mac_address": "000D6F000D13CB6F"
     },
     "ad4838d7d35c4d6ea796ee12ae5aedf8": {
-      "active_preset": "asleep",
-      "available_schedules": ["Weekschema", "Badkamer", "Test", "off"],
+      "active_preset": "home",
+      "available_schedules": [
+        "Badkamer",
+        "Test",
+        "Vakantie",
+        "Weekschema",
+        "off"
+      ],
       "control_state": "heating",
       "dev_class": "thermostat",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
       "select_schedule": "Weekschema",
       "sensors": {
         "setpoint": 18.5,
-        "temperature": 18.1
+        "temperature": 18.4
       },
       "thermostat": {
         "lower_bound": 1.0,
@@ -152,25 +158,31 @@
         "plugwise_notification": false
       },
       "dev_class": "gateway",
-      "firmware": "3.6.4",
+      "firmware": "3.7.8",
       "hardware": "AME Smile 2.0 board",
       "location": "bc93488efab249e5bc54fd7e175a6f91",
-      "mac_address": "012345670001",
+      "mac_address": "D40FB2019891",
       "model": "Gateway",
       "name": "Adam",
-      "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
+      "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
       "select_regulation_mode": "heating",
       "sensors": {
-        "outdoor_temperature": -1.25
+        "outdoor_temperature": 9.19
       },
       "vendor": "Plugwise",
-      "zigbee_mac_address": "ABCD012345670101"
+      "zigbee_mac_address": "000D6F000D5A168D"
     },
     "e2f4322d57924fa090fbbc48b3a140dc": {
       "active_preset": "home",
       "available": true,
-      "available_schedules": ["Weekschema", "Badkamer", "Test", "off"],
-      "control_state": "off",
+      "available_schedules": [
+        "Badkamer",
+        "Test",
+        "Vakantie",
+        "Weekschema",
+        "off"
+      ],
+      "control_state": "preheating",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -178,12 +190,12 @@
       "mode": "auto",
       "model": "Lisa",
       "name": "Lisa Badkamer",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
       "select_schedule": "Badkamer",
       "sensors": {
-        "battery": 56,
-        "setpoint": 15.0,
-        "temperature": 17.9
+        "battery": 38,
+        "setpoint": 18.0,
+        "temperature": 16.5
       },
       "temperature_offset": {
         "lower_bound": -2.0,
@@ -194,11 +206,11 @@
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint": 15.0,
+        "setpoint": 18.0,
         "upper_bound": 99.9
       },
       "vendor": "Plugwise",
-      "zigbee_mac_address": "ABCD012345670A04"
+      "zigbee_mac_address": "000D6F000C869B61"
     },
     "e8ef2a01ed3b4139a53bf749204fe6b4": {
       "dev_class": "switching",
