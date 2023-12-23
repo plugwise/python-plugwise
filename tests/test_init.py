@@ -443,7 +443,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     for measure_key, measure_assert in measurements.items():
                         _LOGGER.info(
                             "%s",
-                            f"  + Testing {measure_key} (should be {measure_assert})",
+                            f"  + Testing {measure_key}/{type(measure_key)} with {details[measure_key]}/{type(details[measure_key])} (should be {measure_assert}/{type(measure_assert)} )",
                         )
                         tests += 1
                         if (
