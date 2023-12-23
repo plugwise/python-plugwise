@@ -26,6 +26,13 @@ pytestmark = pytest.mark.asyncio
 
 pp = PrettyPrinter(indent=8)
 
+CORE_LOCATIONS = "/core/locations"
+CORE_LOCATIONS_TAIL = "/core/locations{tail:.*}"
+CORE_APPLIANCES_TAIL = "/core/appliances{tail:.*}"
+CORE_NOTIFICATIONS_TAIL = "/core/notifications{tail:.*}"
+CORE_RULES_TAIL = "/core/rules{tail:.*}"
+EMPTY_XML = "<xml />"
+
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
 
@@ -93,37 +100,32 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         app.router.add_get("/system", self.smile_status)
 
         if broken:
-            app.router.add_get("/core/locations", self.smile_broken)
+            app.router.add_get(CORE_LOCATIONS, self.smile_broken)
         elif timeout:
-            app.router.add_get("/core/locations", self.smile_timeout)
+            app.router.add_get(CORE_LOCATIONS, self.smile_timeout)
         else:
-            app.router.add_get("/core/locations", self.smile_locations)
+            app.router.add_get(CORE_LOCATIONS, self.smile_locations)
 
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
         if not raise_timeout:
             app.router.add_route(
-                "PUT", "/core/locations{tail:.*}", self.smile_set_temp_or_preset
+                "PUT", CORE_LOCATIONS_TAIL, self.smile_set_temp_or_preset
             )
             app.router.add_route(
-                "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
+                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_del_notification
             )
-            app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_set_schedule)
-            app.router.add_route(
-                "DELETE", "/core/notifications{tail:.*}", self.smile_del_notification
-            )
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_set_schedule)
             if not stretch:
-                app.router.add_route(
-                    "PUT", "/core/appliances{tail:.*}", self.smile_set_relay
-                )
+                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_set_relay)
             else:
                 app.router.add_route(
-                    "PUT", "/core/appliances{tail:.*}", self.smile_set_relay_stretch
+                    "PUT", CORE_APPLIANCES_TAIL, self.smile_set_relay_stretch
                 )
         else:
-            app.router.add_route("PUT", "/core/locations{tail:.*}", self.smile_timeout)
-            app.router.add_route("PUT", "/core/rules{tail:.*}", self.smile_timeout)
-            app.router.add_route("PUT", "/core/appliances{tail:.*}", self.smile_timeout)
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route(
                 "DELETE", "/core/notifications{tail:.*}", self.smile_timeout
             )
@@ -187,31 +189,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @classmethod
     async def smile_set_temp_or_preset(cls, request):
         """Render generic API calling endpoint."""
-        text = "<xml />"
+        text = EMPTY_XML
         raise aiohttp.web.HTTPAccepted(text=text)
 
     @classmethod
     async def smile_set_schedule(cls, request):
         """Render generic API calling endpoint."""
-        text = "<xml />"
+        text = EMPTY_XML
         raise aiohttp.web.HTTPAccepted(text=text)
 
     @classmethod
     async def smile_set_relay(cls, request):
         """Render generic API calling endpoint."""
-        text = "<xml />"
+        text = EMPTY_XML
         raise aiohttp.web.HTTPAccepted(text=text)
 
     @classmethod
     async def smile_set_relay_stretch(cls, request):
         """Render generic API calling endpoint."""
-        text = "<xml />"
+        text = EMPTY_XML
         raise aiohttp.web.HTTPOk(text=text)
 
     @classmethod
     async def smile_del_notification(cls, request):
         """Render generic API calling endpoint."""
-        text = "<xml />"
+        text = EMPTY_XML
         raise aiohttp.web.HTTPAccepted(text=text)
 
     @classmethod
@@ -252,7 +254,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
         test_password = "".join(
-            secrets.choice(string.ascii_lowercase) for i in range(8)
+            secrets.choice(string.ascii_lowercase) for _ in range(8)
         )
 
         # Happy flow
@@ -266,15 +268,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         client = aiohttp.test_utils.TestClient(server)
         websession = client.session
 
-        url = f"{server.scheme}://{server.host}:{server.port}/core/locations"
+        url = f"{server.scheme}://{server.host}:{server.port}{CORE_LOCATIONS}"
 
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
             resp = await websession.get(url)
             assumed_status = self.connect_status(broken, timeout, fail_auth)
             assert resp.status == assumed_status
+            timeoutpass_result = False
+            assert timeoutpass_result
         except Exception:  # pylint: disable=broad-except
-            assert True
+            timeoutpass_result = True
+            assert timeoutpass_result
 
         if not broken and not timeout and not fail_auth:
             text = await resp.text()
@@ -289,9 +294,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 port=server.port,
                 websession=None,
             )
-            assert False
+            lack_of_websession = False
+            assert lack_of_websession
         except Exception:  # pylint: disable=broad-except
-            assert True
+            lack_of_websession = True
+            assert lack_of_websession
 
         smile = pw_smile.Smile(
             host=server.host,
@@ -385,6 +392,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("      ! no devices found in this location")
                 assert False
 
+    # pragma warning disable S3776
     @pytest.mark.asyncio
     async def device_test(
         self,
@@ -472,6 +480,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert tests == asserts
         _LOGGER.debug("Number of test-assert: %s", asserts)
 
+    # pragma warning restore S3776
+
     @pytest.mark.asyncio
     async def tinker_switch(
         self, smile, dev_id=None, members=None, model="relay", unhappy=False
@@ -485,7 +495,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
                 tinker_switch_passed = True
-                _LOGGER.info("  + worked as intended")
+                _LOGGER.info("  + tinker_switch worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
                 return False
@@ -514,17 +524,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
-            _LOGGER.info("  + worked as intended")
+            _LOGGER.info("  + tinker_thermostat_temp worked as intended")
             return True
         except (
             pw_exceptions.ErrorSendingCommandError,
             pw_exceptions.ResponseError,
         ):
             if unhappy:
-                _LOGGER.info("  + failed as expected")
+                _LOGGER.info("  + tinker_thermostat_temp failed as expected")
                 return True
             else:  # pragma: no cover
-                _LOGGER.info("  - failed unexpectedly")
+                _LOGGER.info("  - tinker_thermostat_temp failed unexpectedly")
                 return True
 
     @pytest.mark.asyncio
@@ -540,7 +550,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_preset(loc_id, new_preset)
                 tinker_preset_passed = True
-                _LOGGER.info("  + worked as intended")
+                _LOGGER.info("  + tinker_thermostat_preset worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid preset, as expected")
                 tinker_preset_passed = True
@@ -550,9 +560,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             ):
                 if unhappy:
                     tinker_preset_passed = True
-                    _LOGGER.info("  + failed as expected")
+                    _LOGGER.info("  + tinker_thermostat_preset failed as expected")
                 else:  # pragma: no cover
-                    _LOGGER.info("  - failed unexpectedly")
+                    _LOGGER.info("  - tinker_thermostat_preset failed unexpectedly")
                     return False
 
         return tinker_preset_passed
@@ -641,9 +651,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
                 await smile.set_dhw_mode(mode)
-                _LOGGER.info("  + worked as intended")
+                _LOGGER.info("  + tinker_dhw_mode worked as intended")
             except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + found invalid mode, as expected")
+                _LOGGER.info("  + tinker_dhw_mode found invalid mode, as expected")
 
     @staticmethod
     async def tinker_regulation_mode(smile):
@@ -656,9 +666,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
             try:
                 await smile.set_regulation_mode(mode)
-                _LOGGER.info("  + worked as intended")
+                _LOGGER.info("  + tinker_regulation_mode worked as intended")
             except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + found invalid mode, as expected")
+                _LOGGER.info(
+                    "  + tinker_regulation_mode found invalid mode, as expected"
+                )
 
     @staticmethod
     async def tinker_max_boiler_temp(smile):
@@ -669,9 +681,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         for test in ["maximum_boiler_temperature", "bogus_temperature"]:
             try:
                 await smile.set_number_setpoint(test, dev_id, new_temp)
-                _LOGGER.info("  + worked as intended")
+                _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
             except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + failed as intended")
+                _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
 
     @staticmethod
     async def tinker_temp_offset(smile, dev_id):
@@ -680,10 +692,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("- Adjusting temperature offset to %s", new_offset)
         try:
             await smile.set_temperature_offset("dummy", dev_id, new_offset)
-            _LOGGER.info("  + worked as intended")
+            _LOGGER.info("  + tinker_temp_offset worked as intended")
             return True
         except pw_exceptions.PlugwiseError:
-            _LOGGER.info("  + failed as intended")
+            _LOGGER.info("  + tinker_temp_offset failed as intended")
             return False
 
     @staticmethod
