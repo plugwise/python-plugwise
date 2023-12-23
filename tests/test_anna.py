@@ -313,7 +313,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                     "standaard",
                 ],
             )
-            _LOGGER.debug("ERROR raised setting good schedule standaard: %s", exc.value)
+            _LOGGER.debug(
+                "ERROR raised setting good schedule standaard: %s", exc.value
+            )  # pragma: no cover
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval,
@@ -367,7 +369,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                     "standaard",
                 ],
             )
-            _LOGGER.debug("ERROR raised good schedule to standaard: %s", exc.value)
+            _LOGGER.debug(
+                "ERROR raised good schedule to standaard: %s", exc.value
+            )  # pragma: no cover
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -526,7 +530,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                     "Winter",
                 ],
             )
-            _LOGGER.debug("ERROR raised setting to schedule Winter: %s", exc.value)
+            _LOGGER.debug(
+                "ERROR raised setting to schedule Winter: %s", exc.value
+            )  # pragma: no cover
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
             await self.tinker_thermostat_temp(
@@ -534,7 +540,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 "15da035090b847e7a21f93e08c015ebc",
                 block_cooling=True,
             )
-            _LOGGER.debug("ERROR raised setting block cooling: %s", exc.value)
+            _LOGGER.debug(
+                "ERROR raised setting block cooling: %s", exc.value
+            )  # pragma: no cover
 
         await self.tinker_dhw_mode(smile)
 
