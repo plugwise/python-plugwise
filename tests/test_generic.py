@@ -19,9 +19,10 @@ class TestPlugwiseGeneric(
         self.smile_setup = "faulty_stretch"
         try:
             _server, _smile, _client = await self.connect_wrapper()
-            assert False  # pragma: no cover
+            setup_result = False  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
-            assert True
+            setup_result = True
+        assert setup_result
 
     @pytest.mark.asyncio
     async def test_fail_anna_connected_to_adam(self):
@@ -29,9 +30,10 @@ class TestPlugwiseGeneric(
         self.smile_setup = "anna_connected_to_adam"
         try:
             _server, _smile, _client = await self.connect_wrapper()
-            assert False  # pragma: no cover
+            setup_result = False  # pragma: no cover
         except pw_exceptions.InvalidSetupError:
-            assert True
+            setup_result = True
+        assert setup_result
 
     @pytest.mark.asyncio
     async def test_invalid_credentials(self):
@@ -39,10 +41,11 @@ class TestPlugwiseGeneric(
         self.smile_setup = "p1v4"
         try:
             await self.connect_wrapper(fail_auth=True)
-            assert False  # pragma: no cover
+            setup_result = False  # pragma: no cover
         except pw_exceptions.InvalidAuthentication:
             _LOGGER.debug("InvalidAuthentication raised successfully")
-            assert True
+            setup_result = True
+        assert setup_result
 
     @pytest.mark.asyncio
     async def test_connect_fail_firmware(self):
@@ -50,9 +53,10 @@ class TestPlugwiseGeneric(
         self.smile_setup = "fail_firmware"
         try:
             await self.connect_wrapper()
-            assert False  # pragma: no cover
+            setup_result = False  # pragma: no cover
         except pw_exceptions.UnsupportedDeviceError:
-            assert True
+            setup_result = True
+        assert setup_result
 
     # Test connect for timeout
     @patch(
@@ -70,6 +74,7 @@ class TestPlugwiseGeneric(
                 smile,
                 client,
             ) = await self.connect_wrapper()
-            assert False  # pragma: no cover
+            setup_result = False  # pragma: no cover
         except pw_exceptions.PlugwiseException:
-            assert True
+            setup_result = True
+        assert setup_result
