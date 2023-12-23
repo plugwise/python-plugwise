@@ -116,7 +116,7 @@
       "firmware": "3.7.8",
       "hardware": "AME Smile 2.0 board",
       "location": "bc93488efab249e5bc54fd7e175a6f91",
-      "mac_address": "D40FB2019891",
+      "mac_address": "012345679891",
       "model": "Gateway",
       "name": "Adam",
       "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
