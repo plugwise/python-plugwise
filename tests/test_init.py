@@ -686,6 +686,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("  + failed as intended")
             return False
 
+    @staticmethod
+    def validate_test_basics(_LOGGER, smile, smile_type, smile_version, smile_legacy):
+        """Produce visual assertion of components base validation."""
+        _LOGGER.info("Basics:")
+        if smile_type:
+            _LOGGER.info(f" # Assert type matching {smile_type}")
+            assert smile.smile_type == smile_type
+        if smile_version:
+            _LOGGER.info(f" # Assert version matching '{smile_version}")
+            assert smile.smile_version[0] == smile_version
+        if smile_version:
+            _LOGGER.info(f" # Assert legacy {smile_legacy}")
+            if smile_legacy:
+                assert smile._smile_legacy
+            else:
+                assert not smile._smile_legacy
+
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""
 
