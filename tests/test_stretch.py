@@ -21,13 +21,13 @@ class TestPlugwiseStretch(
         server, smile, client = await self.connect_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "stretch"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.1.11"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="stretch",
+            smile_version="3.1.11",
+            smile_legacy=True,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
@@ -55,13 +55,13 @@ class TestPlugwiseStretch(
         server, smile, client = await self.connect_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "stretch"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.3.12"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="stretch",
+            smile_version="2.3.12",
+            smile_legacy=True,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.device_items == 229
@@ -90,13 +90,13 @@ class TestPlugwiseStretch(
         server, smile, client = await self.connect_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "stretch"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.7.18"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="stretch",
+            smile_version="2.7.18",
+            smile_legacy=True,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.device_items == 190

@@ -687,7 +687,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return False
 
     @staticmethod
-    def validate_test_basics(_LOGGER, smile, smile_type, smile_version, smile_legacy):
+    def validate_test_basics(
+        _LOGGER, smile, smile_type="thermostat", smile_version=None, smile_legacy=False
+    ):
         """Produce visual assertion of components base validation."""
         _LOGGER.info("Basics:")
         if smile_type:

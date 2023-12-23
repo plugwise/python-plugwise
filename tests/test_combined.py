@@ -21,13 +21,11 @@ class TestPlugwiseGeneric(
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.0.15"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="3.0.15",
+        )
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
@@ -76,13 +74,11 @@ class TestPlugwiseGeneric(
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.0.23"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="3.0.23",
+        )
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.device_items == 70
@@ -101,11 +97,12 @@ class TestPlugwiseGeneric(
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "3.7.8"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type=None,
+            smile_version="3.7.8",
+        )
 
         await self.device_test(smile, "2023-12-17 00:00:01", testdata)
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"

@@ -19,13 +19,13 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.5.9"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="power",
+            smile_version="2.5.9",
+            smile_legacy=True,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
@@ -44,13 +44,13 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "2.5.9"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="power",
+            smile_version="2.5.9",
+            smile_legacy=True,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.device_items == 26
@@ -78,13 +78,12 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.1.1"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="power",
+            smile_version="4.1.1",
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
@@ -103,13 +102,12 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.4.2"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="power",
+            smile_version="4.4.2",
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
@@ -138,13 +136,12 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = power")
-        assert smile.smile_type == "power"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.4.2"
-        _LOGGER.info(" # Assert legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_type="power",
+            smile_version="4.4.2",
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"

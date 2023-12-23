@@ -28,9 +28,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.validate_test_basics(
             _LOGGER,
             smile,
-            smile_type="thermostat",
             smile_version="3.0.15",
-            smile_legacy=False,
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
@@ -79,11 +77,11 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         try:
             await smile.delete_notification()
-            NotificationDeletion = False  # pragma: no cover
+            notification_deletion = False  # pragma: no cover
         except pw_exceptions.ResponseError:
-            NotificationDeletion = True
+            notification_deletion = True
 
-        assert NotificationDeletion
+        assert notification_deletion
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -100,9 +98,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.validate_test_basics(
             _LOGGER,
             smile,
-            smile_type="thermostat",
             smile_version="3.0.15",
-            smile_legacy=False,
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
@@ -166,7 +162,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.validate_test_basics(
             _LOGGER,
             smile,
-            smile_type="thermostat",
             smile_version=None,
             smile_legacy=None,
         )

@@ -19,13 +19,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "1.8.22"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="1.8.22",
+            smile_legacy=True,
+        )
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
@@ -72,13 +71,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "1.8.22"
-        _LOGGER.info(" # Assert legacy")
-        assert smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="1.8.22",
+            smile_legacy=True,
+        )
 
         await self.device_test(smile, "2020-05-03 00:00:01", testdata)
 
@@ -130,13 +128,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.0.15"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.0.15",
+        )
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
@@ -202,13 +198,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.0.15"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.0.15",
+        )
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert smile._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
@@ -238,13 +232,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.0.15"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.0.15",
+        )
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert smile.device_items == 56
@@ -268,13 +260,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.4.1"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.4.1",
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Normaal"
@@ -298,13 +288,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.0.15"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.0.15",
+        )
 
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
@@ -354,13 +342,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.0.15"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.0.15",
+        )
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
         assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
@@ -400,11 +386,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.10.10"
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.10.10",
+            smile_legacy=None,
+        )
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
         assert smile.device_items == 63
@@ -424,13 +411,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.2.1"
-        _LOGGER.info(" # Assert no legacy")
-        assert not smile._smile_legacy
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.2.1",
+        )
 
         await self.device_test(smile, "2022-03-13 00:00:01", testdata)
         assert (
@@ -480,12 +465,11 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
-        _LOGGER.info(" # Assert version")
-        assert smile.smile_version[0] == "4.2.1"
-        _LOGGER.info(" # Assert no legacy")
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.2.1",
+        )
         assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-03-10 00:00:01", testdata)
@@ -512,9 +496,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version=None,
+            smile_legacy=None,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
@@ -561,9 +548,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version=None,
+            smile_legacy=None,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
@@ -583,9 +573,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
-        _LOGGER.info("Basics:")
-        _LOGGER.info(" # Assert type = thermostat")
-        assert smile.smile_type == "thermostat"
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version=None,
+            smile_legacy=None,
+        )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.device_items == 63
