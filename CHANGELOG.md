@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Refresh adam_plus_anna_new userdata and adapt.
+
 ## v0.35.4
 
 - Remove support for Adam with fw 2.x and Anna with fw 3.x
