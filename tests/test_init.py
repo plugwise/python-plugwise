@@ -32,6 +32,7 @@ CORE_APPLIANCES_TAIL = "/core/appliances{tail:.*}"
 CORE_NOTIFICATIONS_TAIL = "/core/notifications{tail:.*}"
 CORE_RULES_TAIL = "/core/rules{tail:.*}"
 EMPTY_XML = "<xml />"
+BOGUS = "!bogus"
 
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.DEBUG)
@@ -109,19 +110,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
         if not raise_timeout:
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route(
-                "PUT", CORE_LOCATIONS_TAIL, self.smile_set_temp_or_preset
+                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
-            app.router.add_route(
-                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_del_notification
-            )
-            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_set_schedule)
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
             if not stretch:
-                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_set_relay)
-            else:
                 app.router.add_route(
-                    "PUT", CORE_APPLIANCES_TAIL, self.smile_set_relay_stretch
+                    "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
                 )
+            else:
+                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_ok)
         else:
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
@@ -187,34 +186,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             raise aiohttp.web.HTTPNotFound
 
     @classmethod
-    async def smile_set_temp_or_preset(cls, request):
+    async def smile_http_accept(cls, request):
         """Render generic API calling endpoint."""
         text = EMPTY_XML
         raise aiohttp.web.HTTPAccepted(text=text)
 
     @classmethod
-    async def smile_set_schedule(cls, request):
-        """Render generic API calling endpoint."""
-        text = EMPTY_XML
-        raise aiohttp.web.HTTPAccepted(text=text)
-
-    @classmethod
-    async def smile_set_relay(cls, request):
-        """Render generic API calling endpoint."""
-        text = EMPTY_XML
-        raise aiohttp.web.HTTPAccepted(text=text)
-
-    @classmethod
-    async def smile_set_relay_stretch(cls, request):
+    async def smile_http_ok(cls, request):
         """Render generic API calling endpoint."""
         text = EMPTY_XML
         raise aiohttp.web.HTTPOk(text=text)
-
-    @classmethod
-    async def smile_del_notification(cls, request):
-        """Render generic API calling endpoint."""
-        text = EMPTY_XML
-        raise aiohttp.web.HTTPAccepted(text=text)
 
     @classmethod
     async def smile_timeout(cls, request):
@@ -392,7 +373,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("      ! no devices found in this location")
                 assert False
 
-    # pragma warning disable S3776
     @pytest.mark.asyncio
     async def device_test(
         self,
@@ -403,6 +383,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Perform basic device tests."""
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
+
+        # pragma warning disable S3776
+
         # Make sure to test thermostats with the day set to Monday, needed for full testcoverage of schedules_temps()
         # Otherwise set the day to Sunday.
         with freeze_time(test_time):
@@ -480,7 +463,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         assert tests == asserts
         _LOGGER.debug("Number of test-assert: %s", asserts)
 
-    # pragma warning restore S3776
+        # pragma warning restore S3776
 
     @pytest.mark.asyncio
     async def tinker_switch(
@@ -540,11 +523,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
-        for new_preset in ["asleep", "home", "!bogus"]:
+        for new_preset in ["asleep", "home", BOGUS]:
             tinker_preset_passed = False
             warning = ""
             if new_preset[0] == "!":
-                warning = " Negative test"
+                warning = " TTP Negative test"
                 new_preset = new_preset[1:]
             _LOGGER.info("%s", f"- Adjusting preset to {new_preset}{warning}")
             try:
@@ -572,6 +555,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self, smile, loc_id, state, good_schedules=None, single=False, unhappy=False
     ):
         """Toggle schedules to test functionality."""
+        # pragma warning disable S3776
         if good_schedules != []:
             if not single and ("!VeryBogusSchedule" not in good_schedules):
                 good_schedules.append("!VeryBogusSchedule")
@@ -579,7 +563,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 tinker_schedule_passed = False
                 warning = ""
                 if new_schedule is not None and new_schedule[0] == "!":
-                    warning = " Negative test"
+                    warning = " TTS Negative test"
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
@@ -604,6 +588,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return tinker_schedule_passed
 
         _LOGGER.info("- Skipping schedule adjustments")  # pragma: no cover
+        # pragma warning restore S3776
 
     @pytest.mark.asyncio
     async def tinker_thermostat(
@@ -643,10 +628,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     async def tinker_dhw_mode(smile):
         """Toggle dhw to test functionality."""
-        for mode in ["auto", "boost", "!bogus"]:
+        for mode in ["auto", "boost", BOGUS]:
             warning = ""
             if mode[0] == "!":
-                warning = " Negative test"
+                warning = " TD Negative test"
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
@@ -658,10 +643,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     async def tinker_regulation_mode(smile):
         """Toggle regulation_mode to test functionality."""
-        for mode in ["off", "heating", "bleeding_cold", "!bogus"]:
+        for mode in ["off", "heating", "bleeding_cold", BOGUS]:
             warning = ""
             if mode[0] == "!":
-                warning = " Negative test"
+                warning = " TR Negative test"
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
             try:
@@ -700,18 +685,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @staticmethod
     def validate_test_basics(
-        _LOGGER, smile, smile_type="thermostat", smile_version=None, smile_legacy=False
+        parent_logger,
+        smile,
+        smile_type="thermostat",
+        smile_version=None,
+        smile_legacy=False,
     ):
         """Produce visual assertion of components base validation."""
-        _LOGGER.info("Basics:")
+        parent_logger.info("Basics:")
         if smile_type:
-            _LOGGER.info(f" # Assert type matching {smile_type}")
+            parent_logger.info(f" # Assert type matching {smile_type}")
             assert smile.smile_type == smile_type
         if smile_version:
-            _LOGGER.info(f" # Assert version matching '{smile_version}")
+            parent_logger.info(f" # Assert version matching '{smile_version}")
             assert smile.smile_version[0] == smile_version
         if smile_version:
-            _LOGGER.info(f" # Assert legacy {smile_legacy}")
+            parent_logger.info(f" # Assert legacy {smile_legacy}")
             if smile_legacy:
                 assert smile._smile_legacy
             else:
