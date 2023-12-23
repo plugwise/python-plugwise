@@ -10,7 +10,7 @@ import os
 from pprint import PrettyPrinter
 
 # String generation
-import random
+import secrets
 import string
 
 # Testing
@@ -251,7 +251,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
-        test_password = "".join(random.choice(string.ascii_lowercase) for i in range(8))
+        test_password = "".join(
+            secrets.choice(string.ascii_lowercase) for i in range(8)
+        )
 
         # Happy flow
         app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
