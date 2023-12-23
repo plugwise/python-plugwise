@@ -5,6 +5,8 @@ import pytest
 from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
 SMILE_TYPE = "anna"
+# Reoccuring constants
+THERMOSTAT_SCHEDULE = "Thermostat schedule"
 
 
 class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outside-init
@@ -30,7 +32,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert (
             smile._last_active["0000aaaa0000aaaa0000aaaa0000aa00"]
-            == "Thermostat schedule"
+            == THERMOSTAT_SCHEDULE
         )
         assert smile.device_items == 44
         assert not self.notifications
@@ -39,7 +41,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile,
             "0000aaaa0000aaaa0000aaaa0000aa00",
             good_schedules=[
-                "Thermostat schedule",
+                THERMOSTAT_SCHEDULE,
             ],
         )
         assert result
@@ -52,7 +54,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile,
             "0000aaaa0000aaaa0000aaaa0000aa00",
             good_schedules=[
-                "Thermostat schedule",
+                THERMOSTAT_SCHEDULE,
             ],
             unhappy=True,
         )
@@ -83,7 +85,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
         assert (
             smile._last_active["be81e3f8275b4129852c4d8d550ae2eb"]
-            == "Thermostat schedule"
+            == THERMOSTAT_SCHEDULE
         )
         assert smile.device_items == 44
         assert not self.notifications
@@ -92,26 +94,26 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile,
             "be81e3f8275b4129852c4d8d550ae2eb",
             good_schedules=[
-                "Thermostat schedule",
+                THERMOSTAT_SCHEDULE,
             ],
         )
         assert result
 
         smile._schedule_old_states["be81e3f8275b4129852c4d8d550ae2eb"][
-            "Thermostat schedule"
+            THERMOSTAT_SCHEDULE
         ] = "off"
         result_1 = await self.tinker_thermostat_schedule(
             smile,
             "be81e3f8275b4129852c4d8d550ae2eb",
             "on",
-            good_schedules=["Thermostat schedule"],
+            good_schedules=[THERMOSTAT_SCHEDULE],
             single=True,
         )
         result_2 = await self.tinker_thermostat_schedule(
             smile,
             "be81e3f8275b4129852c4d8d550ae2eb",
             "on",
-            good_schedules=["Thermostat schedule"],
+            good_schedules=[THERMOSTAT_SCHEDULE],
             single=True,
         )
         assert result_1 and result_2
@@ -311,7 +313,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                     "standaard",
                 ],
             )
-        _LOGGER.debug("ERROR raised: %s", exc.value)
+            _LOGGER.debug("ERROR raised: %s", exc.value)
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval,
@@ -365,7 +367,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                     "standaard",
                 ],
             )
-        _LOGGER.debug("ERROR raised: %s", exc.value)
+            _LOGGER.debug("ERROR raised: %s", exc.value)
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -420,7 +422,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2022-03-13 00:00:01", testdata)
         assert (
             smile._last_active["d3ce834534114348be628b61b26d9220"]
-            == "Thermostat schedule"
+            == THERMOSTAT_SCHEDULE
         )
         assert smile.device_items == 62
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
@@ -443,7 +445,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2022-03-13 00:00:01", testdata)
         assert (
             smile._last_active["d3ce834534114348be628b61b26d9220"]
-            == "Thermostat schedule"
+            == THERMOSTAT_SCHEDULE
         )
         assert smile._cooling_present
         assert not smile._cooling_enabled
@@ -475,7 +477,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2022-03-10 00:00:01", testdata)
         assert (
             smile._last_active["d3ce834534114348be628b61b26d9220"]
-            == "Thermostat schedule"
+            == THERMOSTAT_SCHEDULE
         )
         assert smile.device_items == 62
         assert not self.notifications
@@ -524,7 +526,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                     "Winter",
                 ],
             )
-        _LOGGER.debug("ERROR raised: %s", exc.value)
+            _LOGGER.debug("ERROR raised: %s", exc.value)
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
             await self.tinker_thermostat_temp(
@@ -532,7 +534,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 "15da035090b847e7a21f93e08c015ebc",
                 block_cooling=True,
             )
-        _LOGGER.debug("ERROR raised: %s", exc.value)
+            _LOGGER.debug("ERROR raised: %s", exc.value)
 
         await self.tinker_dhw_mode(smile)
 
