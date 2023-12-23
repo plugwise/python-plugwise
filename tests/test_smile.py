@@ -1582,7 +1582,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
-        """Test extended Adam (firmware 3.6) with Anna and a switch-group setup."""
+        """Test extended Adam (firmware 3.7) with Anna and a switch-group setup."""
         testdata = {
             "da224107914542988a88561b4452b0f6": {
                 "dev_class": "gateway",
