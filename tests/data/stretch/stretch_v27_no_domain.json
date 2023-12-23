@@ -1,0 +1,36 @@
+{
+  "9b9bfdb3c7ad4ca5817ccaa235f1e094": {
+    "dev_class": "zz_misc",
+    "firmware": "2011-06-27T10:47:37+02:00",
+    "hardware": "6539-0700-7326",
+    "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+    "model": "Circle+ type F",
+    "name": "25881A2",
+    "vendor": "Plugwise",
+    "zigbee_mac_address": "ABCD012345670A04",
+    "sensors": {
+      "electricity_consumed": 13.3,
+      "electricity_consumed_interval": 7.77,
+      "electricity_produced": 0,
+      "electricity_produced_interval": 0
+    },
+    "switches": {
+      "relay": true,
+      "lock": true
+    }
+  },
+  "8b8d14b242e24cd789743c828b9a2ea9": {
+    "sensors": {
+      "electricity_consumed": 1.69
+    },
+    "switches": {
+      "lock": false,
+      "relay": true
+    }
+  },
+  "d0122ac66eba47b99d8e5fbd1e2f5932": {
+    "sensors": {
+      "electricity_consumed_interval": 2.21
+    }
+  }
+}
