@@ -60,6 +60,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 + "\n"
             )
 
+    def load_testdata(
+        self, smile_type: str = "adam", smile_setup: str = "adam_zone_per_device"
+    ):
+        """Load JSON data from setup, return as object."""
+        path = os.path.join(
+            os.path.dirname(__file__), f"../tests/data/{smile_type}/{smile_setup}.json"
+        )
+        with open(path, encoding="utf-8") as testdata_file:
+            return json.load(testdata_file)
+
     async def setup_app(
         self,
         broken=False,

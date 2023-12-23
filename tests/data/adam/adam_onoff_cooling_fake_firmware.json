@@ -1,0 +1,12 @@
+{
+  "0ca13e8176204ca7bf6f09de59f81c83": {
+    "binary_sensors": {
+      "cooling_state": true,
+      "dhw_state": false,
+      "heating_state": false
+    },
+    "sensors": {
+      "modulation_level": 0
+    }
+  }
+}
