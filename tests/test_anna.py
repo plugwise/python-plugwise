@@ -67,7 +67,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.smile_setup = "legacy_anna_2"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        # TODO: figure out why None becomes str instead of nonetype on this particular one
+        # LEFT: figure out why None becomes str instead of nonetype on this particular one
         #       i.e. in JSON `9e7377867dc24e51b8098a5ba02bd89d`:select_schedule is now 'None' not null
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
