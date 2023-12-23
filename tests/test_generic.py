@@ -8,7 +8,9 @@ import pytest
 from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
 
-class PlugwiseGeneric(TestPlugwise):  # pylint: disable=attribute-defined-outside-init
+class TestPlugwiseGeneric(
+    TestPlugwise
+):  # pylint: disable=attribute-defined-outside-init
     """Tests for generic functionality."""
 
     @pytest.mark.asyncio
