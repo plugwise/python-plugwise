@@ -360,9 +360,14 @@ jobs:
         run: |
           echo "Failed to restore Python virtual environment from cache"
           exit 1
-      - name: Build a distribution
+      - name: Install pypa/build
         run: >-
-          python setup.py sdist
+          python3 -m
+          pip install
+          build
+          --user
+      - name: Build a binary wheel and a source tarball
+        run: python3 -m build
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         continue-on-error: true
