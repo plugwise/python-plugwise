@@ -179,19 +179,22 @@ class SmileComm:
         """Get/put/delete data from a give URL."""
         resp: ClientResponse
         url = f"{self._endpoint}{command}"
+        use_headers = headers
 
         try:
             if method == "delete":
                 resp = await self._websession.delete(url, auth=self._auth)
             if method == "get":
                 # Work-around for Stretchv2, should not hurt the other smiles
-                headers = {"Accept-Encoding": "gzip"}
-                resp = await self._websession.get(url, headers=headers, auth=self._auth)
+                use_headers = {"Accept-Encoding": "gzip"}
+                resp = await self._websession.get(
+                    url, headers=use_headers, auth=self._auth
+                )
             if method == "put":
-                headers = {"Content-type": "text/xml"}
+                use_headers = {"Content-type": "text/xml"}
                 resp = await self._websession.put(
                     url,
-                    headers=headers,
+                    headers=use_headers,
                     data=data,
                     auth=self._auth,
                 )
@@ -313,8 +316,6 @@ class SmileHelper:
                 self._home_location = loc.loc_id
 
             self._loc_data[loc.loc_id] = {"name": loc.name}
-
-        return
 
     def _get_module_data(
         self, appliance: etree, locator: str, mod_type: str
@@ -805,15 +806,16 @@ class SmileHelper:
                 updated_date_locator = (
                     f'.//logs/point_log[type="{measurement}"]/updated_date'
                 )
-                if measurement in OBSOLETE_MEASUREMENTS:
-                    if (
-                        updated_date_key := appliance.find(updated_date_locator)
-                    ) is not None:
-                        updated_date = updated_date_key.text.split("T")[0]
-                        date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
-                        date_2 = dt.datetime.now()
-                        if int((date_2 - date_1).days) > 7:
-                            continue
+                if (
+                    measurement in OBSOLETE_MEASUREMENTS
+                    and (updated_date_key := appliance.find(updated_date_locator))
+                    is not None
+                ):
+                    updated_date = updated_date_key.text.split("T")[0]
+                    date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
+                    date_2 = dt.datetime.now()
+                    if int((date_2 - date_1).days) > 7:
+                        continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
@@ -931,7 +933,7 @@ class SmileHelper:
                 locator = (
                     f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
                 )
-                if (function := xml.find(locator)) is not None:
+                if (pw_function := xml.find(locator)) is not None:
                     if key == "offset":
                         # Add limits and resolution for temperature_offset,
                         # not provided by Plugwise in the XML data
@@ -943,7 +945,7 @@ class SmileHelper:
                         key = "setpoint"
 
                     act_key = cast(ActuatorDataType, key)
-                    temp_dict[act_key] = format_measure(function.text, TEMP_CELSIUS)
+                    temp_dict[act_key] = format_measure(pw_function.text, TEMP_CELSIUS)
                     self._count += 1
 
             if temp_dict:
@@ -1267,7 +1269,7 @@ class SmileHelper:
 
         return direct_data
 
-    def _power_data_peak_value(self, direct_data: DeviceData, loc: Munch) -> Munch:
+    def _power_data_peak_value(self, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
         # If locator not found look for P1 gas_consumed or phase data (without tariff)
@@ -1337,12 +1339,11 @@ class SmileHelper:
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 for loc.peak_select in peak_list:
-                    # meter_string = ".//{}[type='{}']/"
                     loc.locator = (
                         f'./{loc.log_type}[type="{loc.measurement}"]/period/'
                         f'measurement[@{t_string}="{loc.peak_select}"]'
                     )
-                    loc = self._power_data_peak_value(direct_data, loc)
+                    loc = self._power_data_peak_value(loc)
                     if not loc.found:
                         continue
 
@@ -1377,7 +1378,7 @@ class SmileHelper:
                             f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
                             f'[@directionality="{loc.meas_list[1]}"][@{t_string}="{loc.peak_select}"]'
                         )
-                        loc = self._power_data_peak_value(direct_data, loc)
+                        loc = self._power_data_peak_value(loc)
                         if not loc.found:
                             continue
 

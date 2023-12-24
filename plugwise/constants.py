@@ -183,19 +183,25 @@ OBSOLETE_MEASUREMENTS: Final[tuple[str, ...]] = (
     "outdoor_temperature",
 )
 
+# Literals
+SMILE_P1 = "Smile P1"
+POWER = "power"
+STRETCH = "stretch"
+THERMOSTAT = "thermostat"
+
 # Known types of Smiles and Stretches
 SMILE = namedtuple("SMILE", "smile_type smile_name")
 SMILES: Final[dict[str, SMILE]] = {
-    "smile_v2": SMILE("power", "Smile P1"),
-    "smile_v3": SMILE("power", "Smile P1"),
-    "smile_v4": SMILE("power", "Smile P1"),
-    "smile_open_therm_v2": SMILE("thermostat", ADAM),
-    "smile_open_therm_v3": SMILE("thermostat", ADAM),
-    "smile_thermo_v1": SMILE("thermostat", ANNA),
-    "smile_thermo_v3": SMILE("thermostat", ANNA),
-    "smile_thermo_v4": SMILE("thermostat", ANNA),
-    "stretch_v2": SMILE("stretch", "Stretch"),
-    "stretch_v3": SMILE("stretch", "Stretch"),
+    "smile_v2": SMILE(POWER, SMILE_P1),
+    "smile_v3": SMILE(POWER, SMILE_P1),
+    "smile_v4": SMILE(POWER, SMILE_P1),
+    "smile_open_therm_v2": SMILE(THERMOSTAT, ADAM),
+    "smile_open_therm_v3": SMILE(THERMOSTAT, ADAM),
+    "smile_thermo_v1": SMILE(THERMOSTAT, ANNA),
+    "smile_thermo_v3": SMILE(THERMOSTAT, ANNA),
+    "smile_thermo_v4": SMILE(THERMOSTAT, ANNA),
+    "stretch_v2": SMILE(STRETCH, "Stretch"),
+    "stretch_v3": SMILE(STRETCH, "Stretch"),
 }
 REQUIRE_APPLIANCES: Final[list[str]] = [
     "smile_thermo_v1",

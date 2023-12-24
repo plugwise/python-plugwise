@@ -400,6 +400,7 @@ class Smile(SmileComm, SmileData):
         self, result: etree, dsmrmain: etree, model: str
     ) -> str:
         """Helper-function for _smile_detect()."""
+        return_model = model
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if network := result.find("./module/protocols/master_controller"):
             self.smile_zigbee_mac_address = network.find("mac_address").text
@@ -417,7 +418,7 @@ class Smile(SmileComm, SmileData):
         ):
             self._system = await self._request(SYSTEM)
             self.smile_fw_version = self._system.find("./gateway/firmware").text
-            model = self._system.find("./gateway/product").text
+            return_model = self._system.find("./gateway/product").text
             self.smile_hostname = self._system.find("./gateway/hostname").text
             # If wlan0 contains data it's active, so eth0 should be checked last
             for network in ("wlan0", "eth0"):
@@ -431,7 +432,6 @@ class Smile(SmileComm, SmileData):
             model = self._status.find("./system/product").text
             self.smile_hostname = self._status.find("./network/hostname").text
             self.smile_mac_address = self._status.find("./network/mac_address").text
-
         else:  # pragma: no cover
             # No cornercase, just end of the line
             LOGGER.error(
@@ -441,7 +441,7 @@ class Smile(SmileComm, SmileData):
             raise ResponseError
 
         self._smile_legacy = True
-        return model
+        return return_model
 
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
