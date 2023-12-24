@@ -13,10 +13,11 @@ from pprint import PrettyPrinter
 import secrets
 import string
 
+import pytest
+
 # Testing
 import aiohttp
 from freezegun import freeze_time
-import pytest
 
 pw_constants = importlib.import_module("plugwise.constants")
 pw_exceptions = importlib.import_module("plugwise.exceptions")
@@ -697,13 +698,16 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Produce visual assertion of components base validation."""
         parent_logger.info("Basics:")
         if smile_type:
-            parent_logger.info(f" # Assert type matching {smile_type}")
+            log_msg = f" # Assert type matching {smile_type}"
+            parent_logger.info(log_msg)
             assert smile.smile_type == smile_type
         if smile_version:
-            parent_logger.info(f" # Assert version matching '{smile_version}")
+            log_msg = f" # Assert version matching '{smile_version}"
+            parent_logger.info(log_msg)
             assert smile.smile_version[0] == smile_version
         if smile_version:
-            parent_logger.info(f" # Assert legacy {smile_legacy}")
+            log_msg = f" # Assert legacy {smile_legacy}"
+            parent_logger.info(log_msg)
             if smile_legacy:
                 assert smile._smile_legacy
             else:
