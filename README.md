@@ -14,10 +14,12 @@ Our main usage for this module is supporting [Home Assistant](https://www.home-a
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/plugwise/python-plugwise/main.svg)](https://results.pre-commit.ci/latest/github/plugwise/python-plugwise/main)
 [![renovate maintained](https://img.shields.io/badge/maintained%20with-renovate-blue?logo=renovatebot)](https://github.com/plugwise/python-plugwise/issues/291)
 
-The below scoring only applies to Plugwise Smile components:
-
 [![CodeFactor](https://www.codefactor.io/repository/github/plugwise/python-plugwise/badge)](https://www.codefactor.io/repository/github/plugwise/python-plugwise)
 [![codecov](https://codecov.io/gh/plugwise/python-plugwise/branch/main/graph/badge.svg)](https://codecov.io/gh/plugwise/python-plugwise)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=plugwise_python-plugwise&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=plugwise_python-plugwise)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=plugwise_python-plugwise&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=plugwise_python-plugwise)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=plugwise_python-plugwise&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=plugwise_python-plugwise)
 
 ## Integration
 

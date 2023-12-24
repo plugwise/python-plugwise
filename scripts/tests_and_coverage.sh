@@ -35,9 +35,6 @@ fi
 
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
     # Black first to ensure nothings roughing up ruff
-    echo "... black-ing ..." 
-    black plugwise/ tests/
-
     echo "... ruff-ing ..."
     ruff plugwise/ tests/
 

@@ -16,10 +16,6 @@ repos:
       - id: ruff
         args:
           - --fix
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
@@ -33,14 +29,6 @@ repos:
     hooks:
       - id: pyupgrade
         args: [--py39-plus]
-  - repo: https://github.com/psf/black
-    rev: 23.12.1
-    hooks:
-      - id: black
-        args:
-          - --safe
-          - --quiet
-        files: ^((plugwise|tests|scripts)/.+)?[^/]+\.py$
   #  Moved codespell configuration to setup.cfg as per 'all-files' issues not reading args
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
