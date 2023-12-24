@@ -1095,14 +1095,13 @@ class SmileHelper:
 
             # Loria/Thermastage: cooling-related is based on cooling_state
             # and modulation_level
-            else:
-                if self._cooling_present and "cooling_state" in data["binary_sensors"]:
-                    self._cooling_enabled = data["binary_sensors"]["cooling_state"]
-                    self._cooling_active = data["sensors"]["modulation_level"] == 100
-                    # For Loria the above does not work (pw-beta issue #301)
-                    if "cooling_ena_switch" in data["switches"]:
-                        self._cooling_enabled = data["switches"]["cooling_ena_switch"]
-                        self._cooling_active = data["binary_sensors"]["cooling_state"]
+            elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
+                self._cooling_enabled = data["binary_sensors"]["cooling_state"]
+                self._cooling_active = data["sensors"]["modulation_level"] == 100
+                # For Loria the above does not work (pw-beta issue #301)
+                if "cooling_ena_switch" in data["switches"]:
+                    self._cooling_enabled = data["switches"]["cooling_ena_switch"]
+                    self._cooling_active = data["binary_sensors"]["cooling_state"]
 
         self._cleanup_data(data)
 

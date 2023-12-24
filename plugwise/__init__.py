@@ -424,22 +424,21 @@ class Smile(SmileComm, SmileData):
                 locator = f"./{network}/mac"
                 if (net_locator := self._system.find(locator)) is not None:
                     self.smile_mac_address = net_locator.text
-        else:
-            # P1 legacy:
-            if dsmrmain is not None:
-                self._status = await self._request(STATUS)
-                self.smile_fw_version = self._status.find("./system/version").text
-                model = self._status.find("./system/product").text
-                self.smile_hostname = self._status.find("./network/hostname").text
-                self.smile_mac_address = self._status.find("./network/mac_address").text
+        # P1 legacy:
+        elif dsmrmain is not None:
+            self._status = await self._request(STATUS)
+            self.smile_fw_version = self._status.find("./system/version").text
+            model = self._status.find("./system/product").text
+            self.smile_hostname = self._status.find("./network/hostname").text
+            self.smile_mac_address = self._status.find("./network/mac_address").text
 
-            else:  # pragma: no cover
-                # No cornercase, just end of the line
-                LOGGER.error(
-                    "Connected but no gateway device information found, please create"
-                    " an issue on http://github.com/plugwise/python-plugwise"
-                )
-                raise ResponseError
+        else:  # pragma: no cover
+            # No cornercase, just end of the line
+            LOGGER.error(
+                "Connected but no gateway device information found, please create"
+                " an issue on http://github.com/plugwise/python-plugwise"
+            )
+            raise ResponseError
 
         self._smile_legacy = True
         return model

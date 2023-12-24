@@ -3,6 +3,8 @@
 ## Ongoing
 
 - Refresh adam_plus_anna_new userdata and adapt.
+- Bump actions and requirements to Python 3.12
+- Ruff as per #470 (defaulting black and isort to ruff)
 
 ## v0.35.4
 

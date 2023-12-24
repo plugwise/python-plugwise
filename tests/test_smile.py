@@ -14,10 +14,11 @@ import random
 import string
 from unittest.mock import patch
 
+import pytest
+
 # Testing
 import aiohttp
 from freezegun import freeze_time
-import pytest
 
 pw_constants = importlib.import_module("plugwise.constants")
 pw_exceptions = importlib.import_module("plugwise.exceptions")
