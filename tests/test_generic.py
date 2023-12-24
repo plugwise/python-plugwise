@@ -2,8 +2,9 @@
 
 from unittest.mock import patch
 
-import aiohttp
 import pytest
+
+import aiohttp
 
 from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
