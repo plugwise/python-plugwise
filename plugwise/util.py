@@ -27,9 +27,8 @@ def format_measure(measure: str, unit: str) -> float | int:
             result = float(measure)
     except ValueError:
         float_measure = float(measure)
-        if unit == PERCENTAGE:
-            if 0 < float_measure <= 1:
-                return int(float_measure * 100)
+        if unit == PERCENTAGE and 0 < float_measure <= 1:
+            return int(float_measure * 100)
 
         if unit == ENERGY_KILO_WATT_HOUR:
             float_measure = float_measure / 1000
