@@ -429,7 +429,7 @@ class Smile(SmileComm, SmileData):
         elif dsmrmain is not None:
             self._status = await self._request(STATUS)
             self.smile_fw_version = self._status.find("./system/version").text
-            model = self._status.find("./system/product").text
+            return_model = self._status.find("./system/product").text
             self.smile_hostname = self._status.find("./network/hostname").text
             self.smile_mac_address = self._status.find("./network/mac_address").text
         else:  # pragma: no cover
