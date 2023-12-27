@@ -333,6 +333,13 @@ SPECIAL_PLUG_TYPES: Final[tuple[str, ...]] = (
     "heater_electric",
 )
 
+SpecialType = Literal[
+    "c_heating_state",
+    "thermostat_supports_cooling",
+]
+
+SPECIALS: Final[tuple[str, ...]] = get_args(SpecialType)
+
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
 
 SwitchType = Literal[
@@ -511,6 +518,7 @@ class DeviceData(TypedDict, total=False):
     domestic_hot_water_setpoint: float
     elga_status_code: int
     c_heating_state: bool
+    thermostat_supports_cooling: bool
 
     # Device availability
     available: bool | None

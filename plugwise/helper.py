@@ -46,6 +46,7 @@ from .constants import (
     POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
+    SPECIALS,
     SWITCH_GROUP_TYPES,
     SWITCHES,
     TEMP_CELSIUS,
@@ -61,6 +62,7 @@ from .constants import (
     GatewayData,
     ModelData,
     SensorType,
+    SpecialType,
     SwitchType,
     ThermoLoc,
     ToggleNameType,
@@ -860,11 +862,10 @@ class SmileHelper:
                         sw_key = cast(SwitchType, measurement)
                         sw_value = appl_p_loc.text in ["on", "true"]
                         data["switches"][sw_key] = sw_value
-                    case _ as measurement if measurement in (
-                        "c_heating_state", "thermostat_supports_cooling"
-                    ):
-                        value = appl_p_loc.text in ["on", "true"]
-                        data[measurement] = value
+                    case _ as measurement if measurement in SPECIALS:
+                        sp_key = cast(SpecialType, measurement)
+                        sp_value = appl_p_loc.text in ["on", "true"]
+                        data[sp_key] = sp_value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
 
