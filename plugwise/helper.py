@@ -1006,7 +1006,7 @@ class SmileHelper:
             if "cooling_ena_switch" in data["switches"]:
                 data["switches"].pop("cooling_ena_switch")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
-            if (not self._elga and "cooling_enabled" in data) or (self._elga):
+            if "cooling_enabled" in data:
                 data.pop("cooling_enabled")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
 
