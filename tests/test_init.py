@@ -688,6 +688,21 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return False
 
     @staticmethod
+    async def tinker_gateway_mode(smile):
+        """Toggle gateway_mode to test functionality."""
+        for mode in ["away", "full", "vacation", "!bogus"]:
+            warning = ""
+            if mode[0] == "!":
+                warning = " Negative test"
+                mode = mode[1:]
+            _LOGGER.info("%s", f"- Adjusting gateway mode to {mode}{warning}")
+            try:
+                await smile.set_gateway_mode(mode)
+                _LOGGER.info("  + worked as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + found invalid mode, as expected")
+
+    @staticmethod
     def validate_test_basics(
         parent_logger,
         smile,

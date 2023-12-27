@@ -883,13 +883,10 @@ class Smile(SmileComm, SmileData):
         if mode == "full":
             valid = ""
         if mode == "vacation":
-            valid = (
-                "<valid_from>{vacation_time}</valid_from><valid_to>end_time</valid_to>"
-            )
+            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
         uri = f"{APPLIANCES};type=gateway/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
-        LOGGER.debug("HOI data: %s", data)
 
         await self._request(uri, method="put", data=data)
 

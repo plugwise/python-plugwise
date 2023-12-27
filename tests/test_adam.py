@@ -345,8 +345,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert not switch_change
 
+        await self.tinker_gateway_mode(smile)
         await self.tinker_regulation_mode(smile)
-
         await self.tinker_max_boiler_temp(smile)
 
         # Now change some data and change directory reading xml from
