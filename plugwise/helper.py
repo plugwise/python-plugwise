@@ -863,6 +863,9 @@ class SmileHelper:
                     case "c_heating_state":
                         value = appl_p_loc.text in ["on", "true"]
                         data["c_heating_state"] = value
+                    case "thermostat_supports_cooling":
+                        value = appl_p_loc.text in ["on", "true"]
+                        data["thermostat_supports_cooling"] = value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
 
@@ -1003,7 +1006,7 @@ class SmileHelper:
             if "cooling_ena_switch" in data["switches"]:
                 data["switches"].pop("cooling_ena_switch")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
-            if not self._elga and "cooling_enabled" in data:
+            if (not self._elga and "cooling_enabled" in data) or (self._elga):
                 data.pop("cooling_enabled")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
 
@@ -1099,7 +1102,7 @@ class SmileHelper:
 
         if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
             # Anna+Elga: base cooling_state on the elga-status-code
-            if "elga_status_code" in data:
+            if "elga_status_code" in data and data["thermostat_supports_cooling"]:
                 # Techneco Elga has cooling-capability
                 self._cooling_present = True
                 data["model"] = "Generic heater/cooler"
