@@ -860,12 +860,11 @@ class SmileHelper:
                         sw_key = cast(SwitchType, measurement)
                         sw_value = appl_p_loc.text in ["on", "true"]
                         data["switches"][sw_key] = sw_value
-                    case "c_heating_state":
+                    case _ as measurement if measurement in (
+                        "c_heating_state", "thermostat_supports_cooling"
+                    ):
                         value = appl_p_loc.text in ["on", "true"]
-                        data["c_heating_state"] = value
-                    case "thermostat_supports_cooling":
-                        value = appl_p_loc.text in ["on", "true"]
-                        data["thermostat_supports_cooling"] = value
+                        data[measurement] = value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
 
