@@ -203,11 +203,13 @@
     },
     "dev_class": "gateway",
     "firmware": "3.2.8",
+    "gateway_modes": ["away", "full", "vacation"],
     "hardware": "AME Smile 2.0 board",
     "location": "eedadcb297564f1483faa509179aebed",
     "mac_address": "012345670001",
     "model": "Gateway",
     "name": "Adam",
+    "select_gateway_mode": "full",
     "select_regulation_mode": "cooling",
     "regulation_modes": [
       "heating",
