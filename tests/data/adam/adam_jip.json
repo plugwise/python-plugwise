@@ -201,6 +201,7 @@
   "b5c2386c6f6342669e50fe49dd05b188": {
     "dev_class": "gateway",
     "firmware": "3.2.8",
+    "gateway_modes": ["away", "full", "vacation"],
     "hardware": "AME Smile 2.0 board",
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
     "mac_address": "012345670001",
@@ -208,6 +209,7 @@
     "name": "Adam",
     "zigbee_mac_address": "ABCD012345670101",
     "vendor": "Plugwise",
+    "select_gateway_mode": "full",
     "select_regulation_mode": "heating",
     "regulation_modes": ["heating", "off", "bleeding_cold", "bleeding_hot"],
     "binary_sensors": {

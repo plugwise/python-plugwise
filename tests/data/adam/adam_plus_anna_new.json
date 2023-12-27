@@ -16,7 +16,9 @@
       "outdoor_temperature": 9.19
     },
     "select_regulation_mode": "heating",
-    "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"]
+    "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
+    "gateway_modes": ["away", "full", "vacation"],
+    "select_gateway_mode": "full"
   },
   "056ee145a816487eaa69243c3280f8bf": {
     "dev_class": "heater_central",

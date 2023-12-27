@@ -198,10 +198,14 @@ class SmileData(SmileHelper):
             ):
                 data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
-            # Show the allowed regulation modes for Adam
-            if device["dev_class"] == "gateway" and self._reg_allowed_modes:
-                data["regulation_modes"] = self._reg_allowed_modes
-                self._count += 1
+            # Show the allowed regulation modes and gateway_modes
+            if device["dev_class"] == "gateway":
+                if self._reg_allowed_modes:
+                    data["regulation_modes"] = self._reg_allowed_modes
+                    self._count += 1
+                if self._gw_allowed_modes:
+                    data["gateway_modes"] = self._gw_allowed_modes
+                    self._count += 1
 
             # Control_state, only for Adam master thermostats
             if device["dev_class"] in ZONE_THERMOSTATS:
@@ -859,6 +863,29 @@ class Smile(SmileComm, SmileData):
             # Don't bother switching a relay when the corresponding lock-state is true
             if self._appliances.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
+
+        await self._request(uri, method="put", data=data)
+
+    async def set_gateway_mode(self, mode: str) -> None:
+        """Set the gateway mode."""
+        if mode not in self._gw_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid gateway mode.")
+
+        time_1 = dt.datetime.now(dt.UTC)
+        away_time = time_1.isoformat(timespec="milliseconds") + "Z"
+        time_2 = str(dt.date.today() - dt.timedelta(1))
+        vacation_time = time_2 + "T23:00:00.000Z"
+        end_time = "2037-04-21T08:00:53.000Z"
+        valid = ""
+        if mode == "away":
+            valid = (
+                f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
+            )
+        if mode == "vacation":
+            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
+
+        uri = f"{APPLIANCES};type=gateway/gateway_mode_control"
+        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)
 
