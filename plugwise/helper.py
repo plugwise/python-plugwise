@@ -1010,6 +1010,10 @@ class SmileHelper:
                 data.pop("cooling_enabled")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
 
+        if "thermostat_supports_cooling" in data:
+            data.pop("thermostat_supports_cooling", None)
+            self._count -= 1
+
     def _process_c_heating_state(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
 
