@@ -198,10 +198,14 @@ class SmileData(SmileHelper):
             ):
                 data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
-            # Show the allowed regulation modes for Adam
-            if device["dev_class"] == "gateway" and self._reg_allowed_modes:
-                data["regulation_modes"] = self._reg_allowed_modes
-                self._count += 1
+            # Show the allowed regulation modes and gateway_modes
+            if device["dev_class"] == "gateway":
+                if self._reg_allowed_modes:
+                    data["regulation_modes"] = self._reg_allowed_modes
+                    self._count += 1
+                if self._gw_allowed_modes:
+                    data["gateway_modes"] = self._gw_allowed_modes
+                    self._count += 1
 
             # Control_state, only for Adam master thermostats
             if device["dev_class"] in ZONE_THERMOSTATS:

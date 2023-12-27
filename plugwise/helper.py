@@ -231,6 +231,7 @@ class SmileHelper:
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._elga = False
+        self._gw_allowed_modes: list[str] = []
         self._heater_id: str
         self._home_location: str
         self._is_thermostat = False
@@ -423,7 +424,7 @@ class SmileHelper:
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
-            # Adam: collect modes and check for cooling, indicating cooling-mode is present
+            # Adam: collect regulation_modes and check for cooling, indicating cooling-mode is present
             reg_mode_list: list[str] = []
             locator = "./actuator_functionalities/regulation_mode_control_functionality"
             if (search := appliance.find(locator)) is not None:
@@ -433,6 +434,13 @@ class SmileHelper:
                         if mode.text == "cooling":
                             self._cooling_present = True
                     self._reg_allowed_modes = reg_mode_list
+
+            # Adam and Anna: check for presence of gateway_modes
+            self._gw_allowed_modes = []
+            locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
+            if appliance.find(locator) is not None:
+                # Limit the possible gateway-modes
+                self._gw_allowed_modes = ["away", "full", "vacation"]
 
             return appl
 
@@ -971,6 +979,16 @@ class SmileHelper:
             self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
 
+    def _get_gateway_mode(self, appliance: etree, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Collect the gateway mode.
+        """
+        locator = "./actuator_functionalities/gateway_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            data["select_gateway_mode"] = search.find("mode").text
+            self._count += 1
+
     def _cleanup_data(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -1059,8 +1077,11 @@ class SmileHelper:
             # Collect availability-status for wireless connected devices to Adam
             self._wireless_availablity(appliance, data)
 
-            if dev_id == self.gateway_id and self.smile(ADAM):
+        if dev_id == self.gateway_id:
+            if self.smile(ADAM):
                 self._get_regulation_mode(appliance, data)
+            if self._is_thermostat and not self._smile_legacy:
+                self._get_gateway_mode(appliance, data)
 
         # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
         # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
