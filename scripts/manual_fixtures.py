@@ -188,6 +188,7 @@ m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
 ] = "preheating"
+
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "heat"
 
 # Back at ad48
@@ -207,6 +208,10 @@ m_adam_heating["devices"]["1772a4ea304041adb83f357b751341ff"]["sensors"][
 m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["thermostat"][
     "setpoint"
 ] = 15.0
+
+m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
+    "control_state"
+] = "off"
 
 m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
     "setpoint"
