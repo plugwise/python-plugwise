@@ -164,6 +164,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # Used with the Elga heatpump - marcelveldt
     "compressor_state": UOM(NONE),
     "cooling_state": UOM(NONE),
+    "thermostat_supports_cooling": UOM(NONE),
     # Available with the Loria and Elga (newer Anna firmware) heatpumps
     "cooling_enabled": UOM(NONE),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
