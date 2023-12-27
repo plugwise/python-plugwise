@@ -876,12 +876,11 @@ class Smile(SmileComm, SmileData):
         time_2 = str(dt.date.today() - dt.timedelta(1))
         vacation_time = time_2 + "T23:00:00.000Z"
         end_time = "2037-04-21T08:00:53.000Z"
+        valid = ""
         if mode == "away":
             valid = (
                 f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
             )
-        if mode == "full":
-            valid = ""
         if mode == "vacation":
             valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
