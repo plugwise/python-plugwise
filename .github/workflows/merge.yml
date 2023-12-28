@@ -4,8 +4,8 @@
 name: Latest release
 
 env:
-  CACHE_VERSION: 8
-  DEFAULT_PYTHON: "3.12"
+  CACHE_VERSION: 9
+  DEFAULT_PYTHON: "3.11"
 
 # Only run on merges
 on:
