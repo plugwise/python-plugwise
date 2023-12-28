@@ -1,13 +1,14 @@
 # Changelog
 
-## v0.36.0
+## v0.36.1
 
 - New Feature: For Adam, implement limited access to the gateway-modes.
 - Refresh adam_plus_anna_new userdata and adapt.
-- Bump actions and requirements to Python 3.12.
 - Ruff as per #470 (defaulting black and isort to ruff).
 - Modularize/split testing, including separation of code and data.
 - Improve quality as indicated by SonarCloud.
+
+## v0.36.0 - retracted
 
 ## v0.35.4
 
