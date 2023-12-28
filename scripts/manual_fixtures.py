@@ -209,7 +209,7 @@ m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["thermostat"][
     "setpoint"
 ] = 15.0
 
-m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
+m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"][
     "control_state"
 ] = "off"
 
