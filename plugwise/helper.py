@@ -349,14 +349,14 @@ class SmileHelper:
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
                 # Adam
-                if zb_node := module.find("./protocols/zig_bee_node"):
+                if (zb_node := module.find("./protocols/zig_bee_node")) is not None:
                     model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
                     model_data["reachable"] = zb_node.find("reachable").text == "true"
                 # Stretches
-                if router := module.find("./protocols/network_router"):
+                if (router := module.find("./protocols/network_router")) is not None:
                     model_data["zigbee_mac_address"] = router.find("mac_address").text
                 # Also look for the Circle+/Stealth M+
-                if coord := module.find("./protocols/network_coordinator"):
+                if (coord := module.find("./protocols/network_coordinator")) is not None:
                     model_data["zigbee_mac_address"] = coord.find("mac_address").text
 
         return model_data
@@ -420,7 +420,7 @@ class SmileHelper:
 
             # Adam: look for the ZigBee MAC address of the Smile
             if self.smile(ADAM) and (
-                found := self._modules.find(".//protocols/zig_bee_coordinator")
+                (found := self._modules.find(".//protocols/zig_bee_coordinator")) is not None
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
@@ -1490,7 +1490,7 @@ class SmileHelper:
             name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
-            if not self._domain_objects.find(locator):
+            if self._domain_objects.find(locator) is None:
                 continue  # pragma: no cover
 
             available.append(name)
