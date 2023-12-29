@@ -1,7 +1,8 @@
 # Changelog
 
-## Ongoing
+## v0.36.2
 
+- Improve support for Anna+Elga systems that do not support cooling (fix for [#547](https://github.com/plugwise/plugwise-beta/issues/547)).
 - Update test-fixtures for Plugwise-beta/Core Plugwise.
 - Fix deprecation-warnings.
 

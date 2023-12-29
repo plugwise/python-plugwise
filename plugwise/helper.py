@@ -46,6 +46,7 @@ from .constants import (
     POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
+    SPECIALS,
     SWITCH_GROUP_TYPES,
     SWITCHES,
     TEMP_CELSIUS,
@@ -61,6 +62,7 @@ from .constants import (
     GatewayData,
     ModelData,
     SensorType,
+    SpecialType,
     SwitchType,
     ThermoLoc,
     ToggleNameType,
@@ -860,9 +862,10 @@ class SmileHelper:
                         sw_key = cast(SwitchType, measurement)
                         sw_value = appl_p_loc.text in ["on", "true"]
                         data["switches"][sw_key] = sw_value
-                    case "c_heating_state":
-                        value = appl_p_loc.text in ["on", "true"]
-                        data["c_heating_state"] = value
+                    case _ as measurement if measurement in SPECIALS:
+                        sp_key = cast(SpecialType, measurement)
+                        sp_value = appl_p_loc.text in ["on", "true"]
+                        data[sp_key] = sp_value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
 
@@ -1003,9 +1006,13 @@ class SmileHelper:
             if "cooling_ena_switch" in data["switches"]:
                 data["switches"].pop("cooling_ena_switch")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
-            if not self._elga and "cooling_enabled" in data:
-                data.pop("cooling_enabled")  # pragma: no cover
+            if "cooling_enabled" in data["binary_sensors"]:
+                data["binary_sensors"].pop("cooling_enabled")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
+
+        if "thermostat_supports_cooling" in data:
+            data.pop("thermostat_supports_cooling", None)
+            self._count -= 1
 
     def _process_c_heating_state(self, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
@@ -1100,19 +1107,21 @@ class SmileHelper:
         if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
             # Anna+Elga: base cooling_state on the elga-status-code
             if "elga_status_code" in data:
-                # Techneco Elga has cooling-capability
-                self._cooling_present = True
-                data["model"] = "Generic heater/cooler"
-                self._cooling_enabled = data["elga_status_code"] in [8, 9]
-                data["binary_sensors"]["cooling_state"] = self._cooling_active = (
-                    data["elga_status_code"] == 8
-                )
+                if data["thermostat_supports_cooling"]:
+                    # Techneco Elga has cooling-capability
+                    self._cooling_present = True
+                    data["model"] = "Generic heater/cooler"
+                    self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
+                        data["elga_status_code"] == 8
+                    )
+                    # Elga has no cooling-switch
+                    if "cooling_ena_switch" in data["switches"]:
+                        data["switches"].pop("cooling_ena_switch")
+                        self._count -= 1
+
                 data.pop("elga_status_code", None)
                 self._count -= 1
-                # Elga has no cooling-switch
-                if "cooling_ena_switch" in data["switches"]:
-                    data["switches"].pop("cooling_ena_switch")
-                    self._count -= 1
 
             # Loria/Thermastage: cooling-related is based on cooling_state
             # and modulation_level

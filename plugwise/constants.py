@@ -164,6 +164,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # Used with the Elga heatpump - marcelveldt
     "compressor_state": UOM(NONE),
     "cooling_state": UOM(NONE),
+    "thermostat_supports_cooling": UOM(NONE),
     # Available with the Loria and Elga (newer Anna firmware) heatpumps
     "cooling_enabled": UOM(NONE),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
@@ -331,6 +332,13 @@ SPECIAL_PLUG_TYPES: Final[tuple[str, ...]] = (
     "valve_actuator",
     "heater_electric",
 )
+
+SpecialType = Literal[
+    "c_heating_state",
+    "thermostat_supports_cooling",
+]
+
+SPECIALS: Final[tuple[str, ...]] = get_args(SpecialType)
 
 SPECIAL_FORMAT: Final[tuple[str, ...]] = (ENERGY_KILO_WATT_HOUR, VOLUME_CUBIC_METERS)
 
@@ -510,6 +518,7 @@ class DeviceData(TypedDict, total=False):
     domestic_hot_water_setpoint: float
     elga_status_code: int
     c_heating_state: bool
+    thermostat_supports_cooling: bool
 
     # Device availability
     available: bool | None
