@@ -427,7 +427,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
-        assert smile.device_items == 66
+        assert smile.device_items == 62
         assert not self.notifications
         assert not self.cooling_present
 
