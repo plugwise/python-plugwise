@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location id='a57efe5f145f498c9be62a9b63626fbf'>
+		<name>Home</name>
+		<description></description>
+		<type>building</type>
+		<created_date>2019-01-31T12:00:30.991+01:00</created_date>
+		<modified_date>2020-04-09T14:09:42.348+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+		<logs>
+			<point_log id='0977ec115e754e65ac849f36381e92d8'>
+				<updated_date>2020-04-09T14:09:41+02:00</updated_date>
+				<type>wind_vector</type>
+				<unit>m_s</unit>
+				<last_consecutive_log_date>2020-04-09T14:09:41+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-09T14:09:41+02:00" end_date="2020-04-09T14:09:41+02:00">
+					<measurement log_date="2020-04-09T14:09:41+02:00">(4.10,50.00)</measurement>
+				</period>
+				<wind_vector id='53398d25518a4b258247ce01443f075b'/>
+			</point_log>
+			<point_log id='217dcb6bb1114acea5cb9c02eeebce93'>
+				<updated_date>2020-04-09T14:09:41+02:00</updated_date>
+				<type>solar_irradiance</type>
+				<unit>W_m2</unit>
+				<last_consecutive_log_date>2020-04-09T14:09:41+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-09T14:09:41+02:00" end_date="2020-04-09T14:09:41+02:00">
+					<measurement log_date="2020-04-09T14:09:41+02:00">653.63</measurement>
+				</period>
+				<irradiance_meter id='2779db419be4410588392bf6c0a59f62'/>
+			</point_log>
+			<point_log id='5a2cd3d47eb0459988325e819af6bcd2'>
+				<updated_date>2020-04-09T14:09:41+02:00</updated_date>
+				<type>weather_description</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-09T14:09:41+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-09T14:09:41+02:00" end_date="2020-04-09T14:09:41+02:00">
+					<measurement log_date="2020-04-09T14:09:41+02:00">clear</measurement>
+				</period>
+				<weather_descriptor id='e32cda35324644d6a3f306d809ba6dce'/>
+			</point_log>
+			<point_log id='7f93a0e35a8941e0af5064efa04d78da'>
+				<updated_date>2020-04-09T14:09:41+02:00</updated_date>
+				<type>outdoor_temperature</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-04-09T14:09:41+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-09T14:09:41+02:00" end_date="2020-04-09T14:09:41+02:00">
+					<measurement log_date="2020-04-09T14:09:41+02:00">20.25</measurement>
+				</period>
+				<thermo_meter id='a69da3a5a8504186b6773c95f79e641e'/>
+			</point_log>
+			<point_log id='bd20af772cbd4112b5e67b66d23b9cf4'>
+				<updated_date>2020-04-09T14:09:41+02:00</updated_date>
+				<type>humidity</type>
+				<unit>RH</unit>
+				<last_consecutive_log_date>2020-04-09T14:09:41+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-09T14:09:41+02:00" end_date="2020-04-09T14:09:41+02:00">
+					<measurement log_date="2020-04-09T14:09:41+02:00">42.00</measurement>
+				</period>
+				<hygro_meter id='37958fc1ba4c4d49a2667084cb78cab3'/>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</location>
+	<location id='c784ee9fdab44e1395b8dee7d7a497d5'>
+		<name>Living room</name>
+		<description>The room containing the (central) home thermostat.</description>
+		<type>livingroom</type>
+		<created_date>2019-01-31T12:00:42.573+01:00</created_date>
+		<modified_date>2020-04-09T14:12:19.512+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances>
+			<appliance id='3cb70739631c4d17a86b8b12e8a5161b'/>
+		</appliances>
+		<logs>
+			<point_log id='20771e494544464d971e576353ed20b1'>
+				<updated_date>2020-04-09T14:12:19.497+02:00</updated_date>
+				<type>temperature</type>
+				<unit></unit>
+				<last_consecutive_log_date>2020-04-08T19:05:35.819+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-09T14:12:19.497+02:00" end_date="2020-04-09T14:12:19.497+02:00">
+					<measurement log_date="2020-04-09T14:12:19.497+02:00">23.30</measurement>
+				</period>
+			</point_log>
+			<point_log id='c962919ed1a449a0bb26fd7d97bff972'>
+				<updated_date></updated_date>
+				<type>cooling_activation_outdoor_temperature</type>
+				<unit></unit>
+				<last_consecutive_log_date></last_consecutive_log_date>
+			</point_log>
+			<point_log id='d33199e9d3d949a9b95d80e86a057ed2'>
+				<updated_date>2020-04-08T22:20:25.799+02:00</updated_date>
+				<type>thermostat</type>
+				<unit>C</unit>
+				<last_consecutive_log_date>2020-04-08T10:27:27.777+02:00</last_consecutive_log_date>
+				<period start_date="2020-04-08T22:20:25.799+02:00" end_date="2020-04-08T22:20:25.799+02:00">
+					<measurement log_date="2020-04-08T22:20:25.799+02:00">21.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<thermostat_functionality id='9b6287fc68a545019d2706e892506827'>
+				<updated_date>2020-04-08T22:20:25.012+02:00</updated_date>
+				<type>cooling_activation_outdoor_temperature</type>
+				<setpoint>21</setpoint>
+				<lower_bound>1</lower_bound>
+				<upper_bound>40</upper_bound>
+				<resolution>0.1</resolution>
+				<regulations/>
+			</thermostat_functionality>
+			<thermostat_functionality id='dbe0ce59091f4753a0a31b81c1e8cb2b'>
+				<updated_date>2020-04-08T22:20:25.800+02:00</updated_date>
+				<type>thermostat</type>
+				<setpoint>21</setpoint>
+				<lower_bound>4</lower_bound>
+				<upper_bound>30</upper_bound>
+				<resolution>0.1</resolution>
+				<regulations><ame_regulation id='b5f6056bf9844cac9d1700eb0d532f66'/></regulations>
+			</thermostat_functionality>
+		</actuator_functionalities>
+	</location>
+	<location id='1b3dd09c4ec94e73a77be6462be2d34f'>
+		<name>Kantoor</name>
+		<description></description>
+		<type>office</type>
+		<created_date>2019-11-21T11:46:42.496+01:00</created_date>
+		<modified_date>2019-11-21T11:46:42.570+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<preset>home</preset>
+		<clients/>
+		<appliances/>
+	</location>
+</locations>
