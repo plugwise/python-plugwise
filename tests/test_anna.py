@@ -409,6 +409,32 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_anna_elga_no_cooling(self):
+        """Test an Anna with Elga, cooling-mode not used, in heating mode."""
+
+        self.smile_setup = "anna_elga_no_cooling"
+
+        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="4.0.15",
+        )
+
+        await self.device_test(smile, "2020-04-12 00:00:01", testdata)
+        assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
+        assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
+        assert smile.device_items == 66
+        assert not self.notifications
+        assert not self.cooling_present
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_anna_elga_2(self):
         """Test a 2nd Anna with Elga setup, cooling off, in idle mode (with missing outdoor temperature - solved)."""
         self.smile_setup = "anna_elga_2"
