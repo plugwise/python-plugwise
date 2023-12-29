@@ -1,5 +1,10 @@
 # Changelog
 
+## Ongoing
+
+- Update test-fixtures for Plugwise-beta/Core Plugwise.
+- Fix deprecation-warnings.
+
 ## v0.36.1
 
 - New Feature: For Adam, implement limited access to the gateway-modes.

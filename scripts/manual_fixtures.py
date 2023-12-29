@@ -188,6 +188,7 @@ m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
 ] = "preheating"
+
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "heat"
 
 # Back at ad48
@@ -207,6 +208,10 @@ m_adam_heating["devices"]["1772a4ea304041adb83f357b751341ff"]["sensors"][
 m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["thermostat"][
     "setpoint"
 ] = 15.0
+
+m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"][
+    "control_state"
+] = "off"
 
 m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
     "setpoint"
@@ -245,35 +250,6 @@ m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"]["max_dhw_temperatu
     "upper_bound": 60.0,
     "resolution": 0.01,
 }
-
-# Add a non-existing device for testing device-removal
-m_adam_heating["devices"].update(
-    {
-        "01234567890abcdefghijklmnopqrstu": {
-            "available": False,
-            "dev_class": "thermo_sensor",
-            "firmware": "2020-11-04T01:00:00+01:00",
-            "hardware": "1",
-            "location": "f871b8c4d63549319221e294e4f88074",
-            "model": "Tom/Floor",
-            "name": "Tom Badkamer",
-            "sensors": {
-                "battery": 99,
-                "temperature": 18.6,
-                "temperature_difference": 2.3,
-                "valve_position": 0.0,
-            },
-            "temperature_offset": {
-                "lower_bound": -2.0,
-                "resolution": 0.1,
-                "setpoint": 0.1,
-                "upper_bound": 2.0,
-            },
-            "vendor": "Plugwise",
-            "zigbee_mac_address": "ABCD012345670A01",
-        }
-    }
-)
 
 json_writer("m_adam_heating", m_adam_heating, m_adam_cooling_device_list, base_n)
 
