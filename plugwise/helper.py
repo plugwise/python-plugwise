@@ -1006,8 +1006,8 @@ class SmileHelper:
             if "cooling_ena_switch" in data["switches"]:
                 data["switches"].pop("cooling_ena_switch")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
-            if "cooling_enabled" in data:
-                data.pop("cooling_enabled")  # pragma: no cover
+            if "cooling_enabled" in data["binary_sensors"]:
+                data["binary_sensors"].pop("cooling_enabled")  # pragma: no cover
                 self._count -= 1  # pragma: no cover
 
         if "thermostat_supports_cooling" in data:
@@ -1106,20 +1106,22 @@ class SmileHelper:
 
         if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
             # Anna+Elga: base cooling_state on the elga-status-code
-            if "elga_status_code" in data and data["thermostat_supports_cooling"]:
-                # Techneco Elga has cooling-capability
-                self._cooling_present = True
-                data["model"] = "Generic heater/cooler"
-                self._cooling_enabled = data["elga_status_code"] in [8, 9]
-                data["binary_sensors"]["cooling_state"] = self._cooling_active = (
-                    data["elga_status_code"] == 8
-                )
+            if "elga_status_code" in data:
+                if data["thermostat_supports_cooling"]:
+                    # Techneco Elga has cooling-capability
+                    self._cooling_present = True
+                    data["model"] = "Generic heater/cooler"
+                    self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
+                        data["elga_status_code"] == 8
+                    )
+                    # Elga has no cooling-switch
+                    if "cooling_ena_switch" in data["switches"]:
+                        data["switches"].pop("cooling_ena_switch")
+                        self._count -= 1
+
                 data.pop("elga_status_code", None)
                 self._count -= 1
-                # Elga has no cooling-switch
-                if "cooling_ena_switch" in data["switches"]:
-                    data["switches"].pop("cooling_ena_switch")
-                    self._count -= 1
 
             # Loria/Thermastage: cooling-related is based on cooling_state
             # and modulation_level
