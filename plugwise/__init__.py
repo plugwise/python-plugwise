@@ -84,8 +84,7 @@ class SmileData(SmileHelper):
         if (
             device_id == self.gateway_id
             and (
-                self._is_thermostat
-                or (self.smile_type == "power" and not self._smile_legacy)
+                self._is_thermostat or self.smile_type == "power"
             )
         ) or (
             "binary_sensors" in device
@@ -263,8 +262,7 @@ class SmileData(SmileHelper):
     ) -> None:
         """Collect schedules with states for each thermostat.
 
-        Also, replace NONE by OFF when none of the schedules are active,
-        only for non-legacy thermostats.
+        Also, replace NONE by OFF when none of the schedules are active.
         """
         loc_schedule_states: dict[str, str] = {}
         for schedule in schedules:
@@ -274,12 +272,11 @@ class SmileData(SmileHelper):
         self._schedule_old_states[location] = loc_schedule_states
 
         all_off = True
-        if not self._smile_legacy:
-            for state in self._schedule_old_states[location].values():
-                if state == "on":
-                    all_off = False
-            if all_off:
-                data["select_schedule"] = OFF
+        for state in self._schedule_old_states[location].values():
+            if state == "on":
+                all_off = False
+        if all_off:
+            data["select_schedule"] = OFF
 
     def _check_availability(
         self, device: DeviceData, dev_class: str, data: DeviceData, message: str
@@ -304,17 +301,16 @@ class SmileData(SmileHelper):
         device = self.gw_devices[dev_id]
         data = self._get_measurement_data(dev_id)
 
-        # Check availability of non-legacy wired-connected devices
-        if not self._smile_legacy:
-            # Smartmeter
+        # Check availability of wired-connected devices
+        # Smartmeter
+        self._check_availability(
+            device, "smartmeter", data, "P1 does not seem to be connected"
+        )
+        # OpenTherm device
+        if device["name"] != "OnOff":
             self._check_availability(
-                device, "smartmeter", data, "P1 does not seem to be connected"
+                device, "heater_central", data, "no OpenTherm communication"
             )
-            # OpenTherm device
-            if device["name"] != "OnOff":
-                self._check_availability(
-                    device, "heater_central", data, "no OpenTherm communication"
-                )
 
         # Switching groups data
         self._device_data_switching_group(device, data)
@@ -524,9 +520,9 @@ class Smile(SmileComm, SmileData):
         self._get_plugwise_notifications()
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
-        # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
-            self._appliances = await self._request(APPLIANCES)
+#        # P1 legacy has no appliances
+#        if not (self.smile_type == "power" and self._smile_legacy):
+#            self._appliances = await self._request(APPLIANCES)
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
