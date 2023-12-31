@@ -248,10 +248,10 @@ class SmileHelper:
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
-        self._smile_legacy = False
+#        self._smile_legacy = False
         self._status: etree
-        self._stretch_v2 = False
-        self._stretch_v3 = False
+#        self._stretch_v2 = False
+#        self._stretch_v3 = False
         self._system: etree
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
@@ -368,17 +368,18 @@ class SmileHelper:
 
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
-        if self.smile_type in ("power", "stretch"):
-            locator = "./services/electricity_point_meter"
-            if not self._smile_legacy:
-                locator = "./logs/point_log/electricity_point_meter"
+#        if self.smile_type in ("power", "stretch"):
+        if self.smile_type == "power":
+#            locator = "./services/electricity_point_meter"
+#            if not self._smile_legacy:
+            locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
             module_data = self._get_module_data(appliance, locator, mod_type)
-            # Filter appliance without zigbee_mac, it's an orphaned device - BOUWEW only Stretch-related?
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-            if appl.zigbee_mac is None and self.smile_type != "power":
-                return None
+#            # Filter appliance without zigbee_mac, it's an orphaned device
+#            if appl.zigbee_mac is None and self.smile_type != "power":
+#                return None
 
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
@@ -622,11 +623,9 @@ class SmileHelper:
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
-            # Provide a location for legacy_anna, also don't assign the _home_location
-            # to thermostat-devices without a location, they are not active
-            elif (
-                self._smile_legacy and self.smile_type == "thermostat"
-            ) or appl.pwclass not in THERMOSTAT_CLASSES:
+            # Don't assign the _home_location to thermostat-devices without a location,
+            # they are not active
+            elif appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_location
 
             appl.dev_id = appliance.attrib["id"]
@@ -639,7 +638,7 @@ class SmileHelper:
             appl.vendor_name = None
 
             # Determine class for this appliance
-            # Skip on heater_central when no active device present or on orphaned stretch devices
+            # Skip on heater_central when no active device present
             if not (appl := self._appliance_info_finder(appliance, appl)):
                 continue
 
@@ -652,12 +651,8 @@ class SmileHelper:
             if appl.pwclass == "gateway" and self.smile_type == "power":
                 appl.dev_id = appl.location
 
-            # Don't show orphaned non-legacy thermostat-types or the OpenTherm Gateway.
-            if (
-                not self._smile_legacy
-                and appl.pwclass in THERMOSTAT_CLASSES
-                and appl.location is None
-            ):
+            # Don't show orphaned thermostat-types or the OpenTherm Gateway.
+            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
             self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
@@ -677,7 +672,7 @@ class SmileHelper:
                     self.gw_devices[appl.dev_id][appl_key] = value
                     self._count += 1
 
-        # For non-legacy P1 collect the connected SmartMeter info
+        # For P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder(appl)
             # P1: for gateway and smartmeter switch device_id - part 2
@@ -1051,7 +1046,7 @@ class SmileHelper:
         Collect the appliance-data based on device id.
         """
         data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        # Get P1 smartmeter data from LOCATIONS or MODULES
+        # Get P1 smartmeter data from LOCATIONS
         device = self.gw_devices[dev_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
@@ -1063,7 +1058,7 @@ class SmileHelper:
 
             return data
 
-        # Get non-p1 data from APPLIANCES, for legacy from DOMAIN_OBJECTS.
+        # Get non-p1 data from APPLIANCES - BOUWEW what does this mean?
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
@@ -1232,8 +1227,8 @@ class SmileHelper:
             group_name = group.find("name").text
             group_type = group.find("type").text
             group_appliances = group.findall("appliances/appliance")
+            # Check if members are not orphaned
             for item in group_appliances:
-                # Check if members are not orphaned - stretch
                 if item.attrib["id"] in self.gw_devices:
                     members.append(item.attrib["id"])
 
@@ -1304,7 +1299,7 @@ class SmileHelper:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
         # If locator not found look for P1 gas_consumed or phase data (without tariff)
-        # or for P1 legacy electricity_point_meter or gas_*_meter data
+#        # or for P1 legacy electricity_point_meter or gas_*_meter data
         if loc.logs.find(loc.locator) is None:
             if "log" in loc.log_type and (
                 "gas" in loc.measurement or "phase" in loc.measurement
