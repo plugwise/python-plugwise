@@ -1058,7 +1058,7 @@ class SmileHelper:
 
             return data
 
-        # Get non-p1 data from APPLIANCES - BOUWEW what does this mean?
+        # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and dev_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
