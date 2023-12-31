@@ -294,7 +294,7 @@ class SmileHelper:
         }
         if (appl_search := appliance.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
-            loc = f".//{mod_type}[@id='{link_id}']...."
+            loc = f".//services/{mod_type}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
             module = self._domain_objects.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
