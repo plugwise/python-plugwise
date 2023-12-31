@@ -365,7 +365,7 @@ class Smile(SmileComm, SmileData):
 #        # Work-around for Stretch fv 2.7.18
 #        if not (vendor_names := result.findall("./module/vendor_name")):
 #            result = await self._request(MODULES)
-          vendor_names = result.findall("./module/vendor_name")
+        vendor_names = result.findall("./module/vendor_name")
 
         names: list[str] = []
         for name in vendor_names:
