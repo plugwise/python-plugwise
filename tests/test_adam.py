@@ -163,7 +163,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version=None,
-            smile_legacy=None,
         )
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
