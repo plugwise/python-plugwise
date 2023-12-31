@@ -23,7 +23,6 @@ from .constants import (
     ACTUATOR_CLASSES,
     ADAM,
     ANNA,
-#    APPLIANCES,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
     BINARY_SENSORS,
@@ -32,8 +31,6 @@ from .constants import (
     DHW_SETPOINT,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
-#    FAKE_APPL,
-#    FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
     LOCATIONS,
@@ -41,7 +38,6 @@ from .constants import (
     NONE,
     OBSOLETE_MEASUREMENTS,
     OFF,
-#    P1_LEGACY_MEASUREMENTS,
     P1_MEASUREMENTS,
     POWER_WATT,
     SENSORS,
@@ -82,15 +78,6 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
         return model
 
     return name
-
-
-# def etree_to_dict(element: etree) -> dict[str, str]:
-#    """Helper-function translating xml Element to dict."""
-#    node: dict[str, str] = {}
-#    if element is not None:
-#        node.update(element.items())
-#
-#    return node
 
 
 def power_data_local_format(
@@ -148,9 +135,6 @@ class SmileComm:
         # Command accepted gives empty body with status 202
         if resp.status == 202:
             return
-#        # Cornercase for stretch not responding with 202
-#        if method == "put" and resp.status == 200:
-#            return
 
         if resp.status == 401:
             msg = "Invalid Plugwise login, please retry with the correct credentials."
@@ -187,8 +171,6 @@ class SmileComm:
             if method == "delete":
                 resp = await self._websession.delete(url, auth=self._auth)
             if method == "get":
-#                # Work-around for Stretchv2, should not hurt the other smiles
-#                use_headers = {"Accept-Encoding": "gzip"}
                 resp = await self._websession.get(
                     url, headers=use_headers, auth=self._auth
                 )
@@ -248,10 +230,7 @@ class SmileHelper:
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
-#        self._smile_legacy = False
         self._status: etree
-#        self._stretch_v2 = False
-#        self._stretch_v3 = False
         self._system: etree
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
@@ -291,32 +270,12 @@ class SmileHelper:
     def _all_locations(self) -> None:
         """Collect all locations."""
         loc = Munch()
-
         locations = self._locations.findall("./location")
-#        # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
-#        if not locations and self._smile_legacy:
-#            self._home_location = FAKE_LOC
-#            self._loc_data[FAKE_LOC] = {"name": "Home"}
-#            return
-
         for location in locations:
             loc.name = location.find("name").text
             loc.loc_id = location.attrib["id"]
-#            # Filter the valid single location for P1 legacy: services not empty
-#            locator = "./services"
-#            if (
-#                self._smile_legacy
-#                and self.smile_type == "power"
-#                and len(location.find(locator)) == 0
-#            ):
-#                continue
-
             if loc.name == "Home":
                 self._home_location = loc.loc_id
-#            # Replace location-name for P1 legacy, can contain privacy-related info
-#            if self._smile_legacy and self.smile_type == "power":
-#                loc.name = "Home"
-#                self._home_location = loc.loc_id
 
             self._loc_data[loc.loc_id] = {"name": loc.name}
 
@@ -354,12 +313,6 @@ class SmileHelper:
                 if (zb_node := module.find("./protocols/zig_bee_node")) is not None:
                     model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
                     model_data["reachable"] = zb_node.find("reachable").text == "true"
-#                # Stretches
-#                if (router := module.find("./protocols/network_router")) is not None:
-#                    model_data["zigbee_mac_address"] = router.find("mac_address").text
-#                # Also look for the Circle+/Stealth M+
-#                if (coord := module.find("./protocols/network_coordinator")) is not None:
-#                    model_data["zigbee_mac_address"] = coord.find("mac_address").text
 
         return model_data
 
@@ -368,19 +321,12 @@ class SmileHelper:
 
         Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
         """
-#        if self.smile_type in ("power", "stretch"):
         if self.smile_type == "power":
-#            locator = "./services/electricity_point_meter"
-#            if not self._smile_legacy:
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.zigbee_mac = module_data["zigbee_mac_address"]
-#            # Filter appliance without zigbee_mac, it's an orphaned device
-#            if appl.zigbee_mac is None and self.smile_type != "power":
-#                return None
-
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
             appl.vendor_name = module_data["vendor_name"]
@@ -505,7 +451,7 @@ class SmileHelper:
 
             return appl
 
-        # Collect info from Stretches
+        # Collect info from Stretches - BOUWEW only needed for Stretches?
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
@@ -543,8 +489,6 @@ class SmileHelper:
         loc_id = next(iter(self._loc_data.keys()))
         appl.dev_id = self.gateway_id
         appl.location = loc_id
-#        if self._smile_legacy:
-#            appl.dev_id = loc_id
         appl.mac = None
         appl.model = self.smile_model
         appl.name = "P1"
@@ -571,44 +515,10 @@ class SmileHelper:
                 self.gw_devices[appl.dev_id][p1_key] = value
                 self._count += 1
 
-#    def _create_legacy_gateway(self) -> None:
-#        """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
-#
-#        Use the home_location or FAKE_APPL as device id.
-#        """
-#        self.gateway_id = self._home_location
-#        if self.smile_type == "power":
-#            self.gateway_id = FAKE_APPL
-#
-#        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
-#        self._count += 1
-#        for key, value in {
-#            "firmware": self.smile_fw_version,
-#            "location": self._home_location,
-#            "mac_address": self.smile_mac_address,
-#            "model": self.smile_model,
-#            "name": self.smile_name,
-#            "zigbee_mac_address": self.smile_zigbee_mac_address,
-#            "vendor": "Plugwise",
-#        }.items():
-#            if value is not None:
-#                gw_key = cast(ApplianceType, key)
-#                self.gw_devices[self.gateway_id][gw_key] = value
-#                self._count += 1
-
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._count = 0
         self._all_locations()
-
-#        if self._smile_legacy:
-#            self._create_legacy_gateway()
-#            # For legacy P1 collect the connected SmartMeter info
-#            if self.smile_type == "power":
-#                appl = Munch()
-#                self._p1_smartmeter_info_finder(appl)
-#                # Legacy P1 has no more devices
-#                return
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -723,28 +633,11 @@ class SmileHelper:
 
         return False
 
-#    def _presets_legacy(self) -> dict[str, list[float]]:
-#        """Helper-function for presets() - collect Presets for a legacy Anna."""
-#        presets: dict[str, list[float]] = {}
-#        for directive in self._domain_objects.findall("rule/directives/when/then"):
-#            if directive is not None and directive.get("icon") is not None:
-#                # Ensure list of heating_setpoint, cooling_setpoint
-#                presets[directive.attrib["icon"]] = [
-#                    float(directive.attrib["temperature"]),
-#                    0,
-#                ]
-#
-#        return presets
-
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
         presets: dict[str, list[float]] = {}
         tag_1 = "zone_setpoint_and_state_based_on_preset"
         tag_2 = "Thermostat presets"
-
-#        if self._smile_legacy:
-#            return self._presets_legacy()
-
         if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
             if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
                 return presets  # pragma: no cover
@@ -807,9 +700,6 @@ class SmileHelper:
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
-#                if self._smile_legacy and measurement == "domestic_hot_water_state":
-#                    continue
-
                 # Skip known obsolete measurements
                 updated_date_locator = (
                     f'.//logs/point_log[type="{measurement}"]/updated_date'
@@ -927,10 +817,6 @@ class SmileHelper:
             functionality = "thermostat_functionality"
             if item == "temperature_offset":
                 functionality = "offset_functionality"
-#                # Don't support temperature_offset for legacy Anna
-#                if self._smile_legacy:
-#                    continue
-
             # When there is no updated_date-text, skip the actuator
             updated_date_location = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
             if (
@@ -1051,10 +937,7 @@ class SmileHelper:
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
             if device["dev_class"] == "smartmeter":
-#                if not self._smile_legacy:
                  data.update(self._power_data_from_location(device["location"]))
-#                else:
-#                    data.update(self._power_data_from_modules())
 
             return data
 
@@ -1188,24 +1071,11 @@ class SmileHelper:
                 if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
                     device["dev_class"] = "thermo_sensor"
 
-#    def _thermostat_uri_legacy(self) -> str:
-#        """Helper-function for _thermostat_uri().
-#
-#        Determine the location-set_temperature uri - from APPLIANCES.
-#        """
-#        locator = "./appliance[type='thermostat']"
-#        appliance_id = self._appliances.find(locator).attrib["id"]
-#
-#        return f"{APPLIANCES};id={appliance_id}/thermostat"
-
     def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().
 
         Determine the location-set_temperature uri - from LOCATIONS.
         """
-#        if self._smile_legacy:
-#            return self._thermostat_uri_legacy()
-
         locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
 
@@ -1299,7 +1169,6 @@ class SmileHelper:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
         # If locator not found look for P1 gas_consumed or phase data (without tariff)
-#        # or for P1 legacy electricity_point_meter or gas_*_meter data
         if loc.logs.find(loc.locator) is None:
             if "log" in loc.log_type and (
                 "gas" in loc.measurement or "phase" in loc.measurement
@@ -1315,22 +1184,6 @@ class SmileHelper:
                 if loc.logs.find(loc.locator) is None:
                     loc.found = False
                     return loc
-#            # P1 legacy point_meter has no tariff_indicator
-#            elif "meter" in loc.log_type and (
-#                "point" in loc.log_type or "gas" in loc.measurement
-#            ):
-#                # Avoid double processing by skipping one peak-list option
-#                if loc.peak_select == "nl_offpeak":
-#                    loc.found = False
-#                    return loc
-#
-#                loc.locator = (
-#                    f"./{loc.meas_list[0]}_{loc.log_type}/"
-#                    f'measurement[@directionality="{loc.meas_list[1]}"]'
-#                )
-#                if loc.logs.find(loc.locator) is None:
-#                    loc.found = False
-#                    return loc
             else:
                 loc.found = False
                 return loc
@@ -1382,92 +1235,15 @@ class SmileHelper:
         self._count += len(direct_data["sensors"])
         return direct_data
 
-#    def _power_data_from_modules(self) -> DeviceData:
-#        """Helper-function for smile.py: _get_device_data().
-#
-#        Collect the power-data from MODULES (P1 legacy only).
-#        """
-#        direct_data: DeviceData = {"sensors": {}}
-#        loc = Munch()
-#        mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
-#        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
-#        t_string = "tariff_indicator"
-#
-#        search = self._modules
-#        mod_logs = search.findall("./module/services")
-#        for loc.measurement, loc.attrs in P1_LEGACY_MEASUREMENTS.items():
-#            loc.meas_list = loc.measurement.split("_")
-#            for loc.logs in mod_logs:
-#                for loc.log_type in mod_list:
-#                    for loc.peak_select in peak_list:
-#                        loc.locator = (
-#                            f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
-#                            f'[@directionality="{loc.meas_list[1]}"][@{t_string}="{loc.peak_select}"]'
-#                        )
-#                        loc = self._power_data_peak_value(loc)
-#                        if not loc.found:
-#                            continue
-#
-#                        direct_data = self.power_data_energy_diff(
-#                            loc.measurement, loc.net_string, loc.f_val, direct_data
-#                        )
-#                        key = cast(SensorType, loc.key_string)
-#                        direct_data["sensors"][key] = loc.f_val
-#
-#        self._count += len(direct_data["sensors"])
-#        return direct_data
-
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().
 
         Collect the active preset based on Location ID.
         """
-#        if not self._smile_legacy:
         locator = f'./location[@id="{loc_id}"]/preset'
         if (preset := self._domain_objects.find(locator)) is not None:
             return str(preset.text)
         return None
-
-#        locator = "./rule[active='true']/directives/when/then"
-#        if (
-#            not (active_rule := etree_to_dict(self._domain_objects.find(locator)))
-#            or "icon" not in active_rule
-#        ):
-#            return None
-#
-#        return active_rule["icon"]
-
-#    def _schedules_legacy(
-#        self,
-#        avail: list[str],
-#        location: str,
-#        sel: str,
-#    ) -> tuple[list[str], str]:
-#        """Helper-function for _schedules().
-#
-#        Collect available schedules/schedules for the legacy thermostat.
-#        """
-#        name: str | None = None
-#
-#        search = self._domain_objects
-#        for schedule in search.findall("./rule"):
-#            if rule_name := schedule.find("name").text:
-#                if "preset" not in rule_name:
-#                    name = rule_name
-#
-#        log_type = "schedule_state"
-#        locator = f"./appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
-#        active = False
-#        if (result := search.find(locator)) is not None:
-#            active = result.text == "on"
-#
-#        if name is not None:
-#            avail = [name]
-#            if active:
-#                sel = name
-#
-#        self._last_active[location] = "".join(map(str, avail))
-#        return avail, sel
 
     def _schedules(self, location: str) -> tuple[list[str], str]:
         """Helper-function for smile.py: _device_data_climate().
@@ -1478,11 +1254,6 @@ class SmileHelper:
         available: list[str] = [NONE]
         rule_ids: dict[str, dict[str, str]] = {}
         selected = NONE
-
-#        # Legacy Anna schedule, only one schedule allowed
-#        if self._smile_legacy:
-#            return self._schedules_legacy(available, location, selected)
-
         # Adam schedules, one schedule can be linked to various locations
         # self._last_active contains the locations and the active schedule name per location, or None
         if location not in self._last_active:
@@ -1552,9 +1323,6 @@ class SmileHelper:
         """
         actuator = "actuator_functionalities"
         func_type = "relay_functionality"
-#        if self._stretch_v2:
-#            actuator = "actuators"
-#            func_type = "relay"
         if xml.find("type").text not in SPECIAL_PLUG_TYPES:
             locator = f"./{actuator}/{func_type}/lock"
             if (found := xml.find(locator)) is not None:
