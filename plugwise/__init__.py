@@ -31,7 +31,7 @@ from .constants import (
     NONE,
     NOTIFICATIONS,
     OFF,
-    REQUIRE_APPLIANCES,
+#    REQUIRE_APPLIANCES,
     RULES,
     SMILES,
 #    STATUS,
@@ -566,12 +566,12 @@ class Smile(SmileComm, SmileData):
             match self._target_smile:
 #                case "smile_v2":
 #                    self._modules = await self._request(MODULES)
-                case "smile_v3" | "smile_v4":  # TODO remove v3
+                case "smile_v4":
                     self._locations = await self._request(LOCATIONS)
-                case "smile_open_therm_v2" | "smile_open_therm_v3":  # TODO remove v2
+                case "smile_open_therm_v3":
                     self._appliances = await self._request(APPLIANCES)
                     self._modules = await self._request(MODULES)
-                case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:  # TODO clean up REQUIRE_APPLIANCES
+                case "smile_thermo_v4":
                     self._appliances = await self._request(APPLIANCES)
 
             self._update_gw_devices()
