@@ -522,7 +522,7 @@ class Smile(SmileComm, SmileData):
         self._modules = await self._request(MODULES)
 #        # P1 legacy has no appliances
 #        if not (self.smile_type == "power" and self._smile_legacy):
-#            self._appliances = await self._request(APPLIANCES)
+        self._appliances = await self._request(APPLIANCES)
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
