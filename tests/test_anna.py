@@ -287,7 +287,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version="4.10.10",
-            smile_legacy=None,
         )
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
@@ -393,7 +392,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile,
             smile_version="4.2.1",
         )
-        assert not smile._smile_legacy
 
         await self.device_test(smile, "2022-03-10 00:00:01", testdata)
         assert (
@@ -423,7 +421,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version=None,
-            smile_legacy=None,
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
@@ -479,7 +476,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version=None,
-            smile_legacy=None,
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
@@ -504,7 +500,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version=None,
-            smile_legacy=None,
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
