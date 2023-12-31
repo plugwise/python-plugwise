@@ -458,9 +458,6 @@ class Smile(SmileComm, SmileData):
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
-        self._locations = await self._request(LOCATIONS)
-        self._modules = await self._request(MODULES)
-        self._appliances = await self._request(APPLIANCES)
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
@@ -481,35 +478,11 @@ class Smile(SmileComm, SmileData):
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         # Perform a full update at day-change
-        day_number = dt.datetime.now().strftime("%w")
-        if (
-            day_number  # pylint: disable=consider-using-assignment-expr
-            != self._previous_day_number
-        ):
-            LOGGER.debug(
-                "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
-            )
-            self.gw_data: GatewayData = {}
-            self.gw_devices: dict[str, DeviceData] = {}
-            await self._full_update_device()
-            self.get_all_devices()
-        # Otherwise perform an incremental update
-        else:
-            self._domain_objects = await self._request(DOMAIN_OBJECTS)
-            self._get_plugwise_notifications()
-            match self._target_smile:
-                case "smile_v4":
-                    self._locations = await self._request(LOCATIONS)
-                case "smile_open_therm_v3":
-                    self._appliances = await self._request(APPLIANCES)
-                    self._modules = await self._request(MODULES)
-                case "smile_thermo_v4":
-                    self._appliances = await self._request(APPLIANCES)
+        self.gw_data: GatewayData = {}
+        self.gw_devices: dict[str, DeviceData] = {}
+        await self._full_update_device()
+        self.get_all_devices()
 
-            self._update_gw_devices()
-            self.gw_data["notifications"] = self._notifications
-
-        self._previous_day_number = day_number
         return PlugwiseData(self.gw_data, self.gw_devices)
 
     def determine_contexts(
@@ -593,7 +566,7 @@ class Smile(SmileComm, SmileData):
         if preset not in list(presets):
             raise PlugwiseError("Plugwise: invalid preset.")
 
-        current_location = self._locations.find(f'location[@id="{loc_id}"]')
+        current_location = self._domain_objects.find(f'location[@id="{loc_id}"]')
         location_name = current_location.find("name").text
         location_type = current_location.find("type").text
 
@@ -652,7 +625,7 @@ class Smile(SmileComm, SmileData):
         temp = str(temperature)
         thermostat_id: str | None = None
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
-        if th_func_list := self._appliances.findall(locator):
+        if th_func_list := self._domain_objects.findall(locator):
             for th_func in th_func_list:
                 if th_func.find("type").text == key:
                     thermostat_id = th_func.attrib["id"]
@@ -719,7 +692,7 @@ class Smile(SmileComm, SmileData):
             return await self._set_groupswitch_member_state(members, state, switch)
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found: list[etree] = self._appliances.findall(locator)
+        found: list[etree] = self._domain_objects.findall(locator)
         for item in found:
             if (sw_type := item.find("type")) is not None:
                 if sw_type.text == switch.act_type:
