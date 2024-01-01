@@ -26,6 +26,8 @@ pytestmark = pytest.mark.asyncio
 
 pp = PrettyPrinter(indent=8)
 
+CORE_DOMAIN_OBJECTS = "/core/domain_objects"
+CORE_DOMAIN_OBJECTS_TAIL = "/core/domain_objects{tail:.*}"
 CORE_LOCATIONS = "/core/locations"
 CORE_LOCATIONS_TAIL = "/core/locations{tail:.*}"
 CORE_APPLIANCES_TAIL = "/core/appliances{tail:.*}"
@@ -94,18 +96,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
             return app
 
-        app.router.add_get("/core/appliances", self.smile_appliances)
-        app.router.add_get("/core/domain_objects", self.smile_domain_objects)
-        app.router.add_get("/core/modules", self.smile_modules)
-        app.router.add_get("/system/status.xml", self.smile_status)
-        app.router.add_get("/system", self.smile_status)
+        # app.router.add_get("/core/appliances", self.smile_appliances)
+        # app.router.add_get("/core/domain_objects", self.smile_domain_objects)
+        # app.router.add_get("/core/modules", self.smile_modules)
+        # app.router.add_get("/system/status.xml", self.smile_status)
+        # app.router.add_get("/system", self.smile_status)
 
         if broken:
-            app.router.add_get(CORE_LOCATIONS, self.smile_broken)
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_broken)
         elif timeout:
-            app.router.add_get(CORE_LOCATIONS, self.smile_timeout)
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_timeout)
         else:
-            app.router.add_get(CORE_LOCATIONS, self.smile_locations)
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_domain_objects)
 
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
@@ -132,15 +134,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return app
 
     # Wrapper for appliances uri
-    async def smile_appliances(self, request):
-        """Render setup specific appliances endpoint."""
-        userdata = os.path.join(
-            os.path.dirname(__file__),
-            f"../userdata/{self.smile_setup}/core.appliances.xml",
-        )
-        with open(userdata, encoding="utf-8") as filedata:
-            data = filedata.read()
-        return aiohttp.web.Response(text=data)
+#    async def smile_appliances(self, request):
+#        """Render setup specific appliances endpoint."""
+#        userdata = os.path.join(
+#            os.path.dirname(__file__),
+#            f"../userdata/{self.smile_setup}/core.appliances.xml",
+#        )
+#        with open(userdata, encoding="utf-8") as filedata:
+#            data = filedata.read()
+#        return aiohttp.web.Response(text=data)
 
     async def smile_domain_objects(self, request):
         """Render setup specific domain objects endpoint."""
@@ -152,38 +154,38 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             data = filedata.read()
         return aiohttp.web.Response(text=data)
 
-    async def smile_locations(self, request):
-        """Render setup specific locations endpoint."""
-        userdata = os.path.join(
-            os.path.dirname(__file__),
-            f"../userdata/{self.smile_setup}/core.locations.xml",
-        )
-        with open(userdata, encoding="utf-8") as filedata:
-            data = filedata.read()
-        return aiohttp.web.Response(text=data)
+#    async def smile_locations(self, request):
+#        """Render setup specific locations endpoint."""
+#        userdata = os.path.join(
+#            os.path.dirname(__file__),
+#            f"../userdata/{self.smile_setup}/core.locations.xml",
+#        )
+#        with open(userdata, encoding="utf-8") as filedata:
+#            data = filedata.read()
+#        return aiohttp.web.Response(text=data)
 
-    async def smile_modules(self, request):
-        """Render setup specific modules endpoint."""
-        userdata = os.path.join(
-            os.path.dirname(__file__),
-            f"../userdata/{self.smile_setup}/core.modules.xml",
-        )
-        with open(userdata, encoding="utf-8") as filedata:
-            data = filedata.read()
-        return aiohttp.web.Response(text=data)
+#    async def smile_modules(self, request):
+#        """Render setup specific modules endpoint."""
+#        userdata = os.path.join(
+#            os.path.dirname(__file__),
+#            f"../userdata/{self.smile_setup}/core.modules.xml",
+#        )
+#        with open(userdata, encoding="utf-8") as filedata:
+#            data = filedata.read()
+#        return aiohttp.web.Response(text=data)
 
-    async def smile_status(self, request):
-        """Render setup specific status endpoint."""
-        try:
-            userdata = os.path.join(
-                os.path.dirname(__file__),
-                f"../userdata/{self.smile_setup}/system_status_xml.xml",
-            )
-            with open(userdata, encoding="utf-8") as filedata:
-                data = filedata.read()
-            return aiohttp.web.Response(text=data)
-        except OSError as exc:
-            raise aiohttp.web.HTTPNotFound from exc
+#    async def smile_status(self, request):
+#        """Render setup specific status endpoint."""
+#        try:
+#            userdata = os.path.join(
+#                os.path.dirname(__file__),
+#                f"../userdata/{self.smile_setup}/system_status_xml.xml",
+#            )
+#            with open(userdata, encoding="utf-8") as filedata:
+#                data = filedata.read()
+#            return aiohttp.web.Response(text=data)
+#        except OSError:
+#            raise aiohttp.web.HTTPNotFound
 
     @classmethod
     async def smile_http_accept(cls, request):
@@ -249,7 +251,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         client = aiohttp.test_utils.TestClient(server)
         websession = client.session
 
-        url = f"{server.scheme}://{server.host}:{server.port}{CORE_LOCATIONS}"
+        url = f"{server.scheme}://{server.host}:{server.port}{CORE_DOMAIN_OBJECTS}"
 
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
