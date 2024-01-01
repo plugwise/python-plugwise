@@ -327,9 +327,6 @@ class SmileHelper:
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
             appl.vendor_name = module_data["vendor_name"]
-            if appl.hardware is not None:  # BOUWEW only Stretch-related?
-                hw_version = appl.hardware.replace("-", "")
-                appl.model = version_to_model(hw_version)
             appl.firmware = module_data["firmware_version"]
 
             return appl
