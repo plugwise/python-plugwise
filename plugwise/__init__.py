@@ -658,7 +658,7 @@ class Smile(SmileComm, SmileData):
         """
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._appliances.find(locator).attrib["id"]
+            switch_id = self._domain_objects.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
@@ -708,7 +708,7 @@ class Smile(SmileComm, SmileData):
                 f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
             )
             # Don't bother switching a relay when the corresponding lock-state is true
-            if self._appliances.find(locator).text == "true":
+            if self._domain_objects.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
