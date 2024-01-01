@@ -444,7 +444,7 @@ class SmileHelper:
 
             return appl
 
-        # Collect info from power-related devices (Plug, Aqara Smart Plug) 
+        # Collect info from power-related devices (Plug, Aqara Smart Plug)
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
