@@ -321,7 +321,6 @@ class SmileHelper:
         if self.smile_type == "power":
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
-
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             appl.hardware = module_data["hardware_version"]
@@ -445,7 +444,7 @@ class SmileHelper:
 
             return appl
 
-        # Collect info from power-related devices
+        # Collect info from power-related devices (Plug, Aqara Smart Plug) 
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
