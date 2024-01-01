@@ -448,7 +448,7 @@ class SmileHelper:
 
             return appl
 
-        # Collect info from Stretches - BOUWEW only needed for Stretches?
+        # Collect info from power-related devices
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
