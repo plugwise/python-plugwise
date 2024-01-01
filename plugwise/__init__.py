@@ -27,7 +27,6 @@ from .constants import (
     LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
-    MODULES,
     NONE,
     NOTIFICATIONS,
     OFF,
