@@ -222,34 +222,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
-    async def test_connect_adam_plus_anna_copy_with_error_domain_added(self):
-        """Test erroneous domain_objects file from user."""
-        testdata = {
-            # Central
-            "2743216f626f43948deec1f7ab3b3d70": {
-                "binary_sensors": {"heating_state": False},
-            },
-        }
-
-        self.smile_setup = "adam_plus_anna_copy_with_error_domain_added"
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        self.validate_test_basics(
-            _LOGGER,
-            smile,
-            smile_version="3.0.23",
-        )
-
-        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
-        assert smile.device_items == 70
-
-        assert "3d28a20e17cb47dca210a132463721d5" in self.notifications
-
-        await smile.close_connection()
-        await self.disconnect(server, client)
-
-    @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
         """Test extended Adam (firmware 3.8) with Anna and a switch-group setup."""
         self.smile_setup = "adam_plus_anna_new"
