@@ -2130,7 +2130,7 @@
 				<interval/>
 				<regulation_mode_control id='e6407bec0f4e45a39916ae9a8fd31f97'/>
 				<period start_date="2023-12-10T11:40:02.539+01:00" end_date="2023-12-10T11:40:02.539+01:00">
-					<measurement log_date="2023-12-10T11:40:02.539+01:00">heating</measurement>
+					<measurement log_date="2023-12-10T11:40:02.539+01:00">off</measurement>
 				</period>
 			</point_log>
 			<point_log id='a690b7a39bb64ce0865e7763be7bf44d'>
@@ -2172,7 +2172,7 @@
 				<regulation_mode_control id='e6407bec0f4e45a39916ae9a8fd31f97'/>
 				<updated_date>2023-12-10T11:40:02.539+01:00</updated_date>
 				<type>regulation_mode</type>
-				<mode>heating</mode>
+				<mode>off</mode>
 				<allowed_modes>
 					<mode>bleeding_hot</mode>
 					<mode>bleeding_cold</mode>
