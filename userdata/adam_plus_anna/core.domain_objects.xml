@@ -1138,7 +1138,7 @@
 		</zones>
 	</open_therm_regulation>
 	<appliance id='f2be121e4a9345ac83c6e99ed89a98be'>
-		<name>Bouwe-PC</name>
+		<name>Work-PC</name>
 		<description>A smart plug that can be switched on/off and measure power usage.</description>
 		<type>computer_desktop</type>
 		<created_date>2020-02-29T22:56:59.235+01:00</created_date>
