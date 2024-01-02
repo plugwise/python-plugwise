@@ -270,7 +270,7 @@
 				<interval/>
 				<relay id='fda539a7d5834f6a8f2dc5f5b2f5ea56'/>
 				<period start_date="2023-12-22T16:24:29.783+01:00" end_date="2023-12-22T16:24:29.783+01:00">
-					<measurement log_date="2023-12-22T16:24:29.783+01:00">on</measurement>
+					<measurement log_date="2023-12-22T16:24:29.783+01:00">off</measurement>
 				</period>
 			</point_log>
 			<interval_log id='d7384d844896403fb85e5d6b530ce58a'>
@@ -300,7 +300,7 @@
 			<relay_functionality id='4d03be44b57447bd97797ef47c8e56e8'>
 				<updated_date>2023-12-22T16:24:29.783+01:00</updated_date>
 				<lock>false</lock>
-				<state>on</state>
+				<state>off</state>
 				<relay id='fda539a7d5834f6a8f2dc5f5b2f5ea56'/>
 			</relay_functionality>
 		</actuator_functionalities>
