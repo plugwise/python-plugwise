@@ -19,7 +19,7 @@
       "name": "OpenTherm",
       "sensors": {
         "intended_boiler_temperature": 0.0,
-        "water_temperature": 47.0
+        "water_temperature": 48.0
       },
       "switches": {
         "dhw_cm_switch": false
@@ -65,13 +65,22 @@
     },
     "ee62cad889f94e8ca3d09021f03a660b": {
       "active_preset": "home",
-      "available_schedules": ["Weekschema", "off"],
+      "available_schedules": [
+        "Weekschema",
+        "off"
+      ],
       "dev_class": "thermostat",
       "location": "009490cc2f674ce6b576863fbb64f867",
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Anna",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "select_schedule": "Weekschema",
       "sensors": {
         "setpoint": 20.5,
@@ -92,7 +101,7 @@
       "location": "5ccb6c41a7d9403988d261ceee04239f",
       "name": "Work-PC",
       "sensors": {
-        "electricity_consumed": 79.8,
+        "electricity_consumed": 80.5,
         "electricity_consumed_interval": 7.03,
         "electricity_produced": 0.0,
         "electricity_produced_interval": 0.0

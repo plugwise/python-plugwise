@@ -32,7 +32,7 @@
     },
     "sensors": {
       "water_temperature": 30,
-      "intended_boiler_temperature": 20
+      "intended_boiler_temperature": 23.9
     },
     "switches": {
       "dhw_cm_switch": false
