@@ -31,7 +31,7 @@
       "flame_state": true
     },
     "sensors": {
-      "water_temperature": 29,
+      "water_temperature": 30,
       "intended_boiler_temperature": 20
     },
     "switches": {
