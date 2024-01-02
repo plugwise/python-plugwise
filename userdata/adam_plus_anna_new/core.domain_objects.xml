@@ -584,8 +584,8 @@
 			<thermostat_functionality id='130d8795df4041f3ad3540117a2bd5dc'>
 				<updated_date>2023-12-22T16:30:38.873+01:00</updated_date>
 				<type>thermostat</type>
-				<lower_bound>0</lower_bound>
-				<upper_bound>30</upper_bound>
+				<lower_bound>1</lower_bound>
+				<upper_bound>35</upper_bound>
 				<resolution>0.01</resolution>
 				<setpoint>18.5</setpoint>
 				<regulations><open_therm_regulation id='f47674d5b4fd44778d2e0c9df77e0186'/></regulations>
