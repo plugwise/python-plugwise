@@ -148,7 +148,7 @@
     "vendor": "Plugwise",
     "available": true,
     "sensors": {
-      "electricity_consumed": 82.6,
+      "electricity_consumed": 84.1,
       "electricity_consumed_interval": 8.6,
       "electricity_produced": 0,
       "electricity_produced_interval": 0
