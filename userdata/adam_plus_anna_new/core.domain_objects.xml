@@ -1954,7 +1954,7 @@
 		<actuator_functionalities>
 			<relay_functionality id='45cfd0a5759e45699ec6e653cb867981'>
 				<updated_date>2023-12-22T16:29:30.555+01:00</updated_date>
-				<lock>false</lock>
+				<lock>true</lock>
 				<state>on</state>
 				<relay id='35e7673305014654a4575f591ca6a01a'/>
 			</relay_functionality>
