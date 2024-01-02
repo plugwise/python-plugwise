@@ -47,7 +47,7 @@
       "temperature": 26.2,
       "setpoint": 21.5,
       "temperature_difference": 3.7,
-      "valve_position": 0
+      "valve_position": 100
     }
   },
   "a2c3583e0a6349358998b760cea82d2a": {
@@ -148,7 +148,7 @@
     "vendor": "Plugwise",
     "available": true,
     "sensors": {
-      "electricity_consumed": 81.2,
+      "electricity_consumed": 80.1,
       "electricity_consumed_interval": 12.7,
       "electricity_produced": 0,
       "electricity_produced_interval": 0
@@ -183,7 +183,7 @@
     "model": "Unknown",
     "name": "OnOff",
     "binary_sensors": {
-      "heating_state": false
+      "heating_state": true
     },
     "sensors": {
       "water_temperature": 70,
