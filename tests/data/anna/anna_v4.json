@@ -28,7 +28,7 @@
       "intended_boiler_temperature": 39.9,
       "modulation_level": 0,
       "return_temperature": 32,
-      "water_pressure": 2.1
+      "water_pressure": 2.2
     },
     "switches": {
       "dhw_cm_switch": false
