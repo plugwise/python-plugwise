@@ -63,7 +63,7 @@
         "electricity_produced_interval": 0.0
       },
       "switches": {
-        "lock": false,
+        "lock": true,
         "relay": true
       },
       "vendor": "Plugwise",
@@ -88,6 +88,22 @@
       },
       "vendor": "Plugwise",
       "zigbee_mac_address": "000D6F000D13CA9A"
+    },
+    "67d73d0bd469422db25a618a5fb8eeb0": {
+      "available": true,
+      "dev_class": "zz_misc",
+      "location": "b4f211175e124df59603412bafa77a34",
+      "model": "lumi.plug.maeu01",
+      "name": "SmartPlug Floor 0",
+      "sensors": {
+        "electricity_consumed_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "LUMI",
+      "zigbee_mac_address": "54EF4410002C97F2"
     },
     "854f8a9b0e7e425db97f1f110e1ce4b3": {
       "available": true,
@@ -136,10 +152,10 @@
         "temperature": 18.4
       },
       "thermostat": {
-        "lower_bound": 0.0,
+        "lower_bound": 1.0,
         "resolution": 0.01,
         "setpoint": 18.5,
-        "upper_bound": 30.0
+        "upper_bound": 35.0
       },
       "vendor": "Plugwise"
     },
@@ -236,7 +252,7 @@
     "cooling_present": false,
     "gateway_id": "da224107914542988a88561b4452b0f6",
     "heater_id": "056ee145a816487eaa69243c3280f8bf",
-    "item_count": 137,
+    "item_count": 147,
     "notifications": {},
     "smile_name": "Adam"
   }
