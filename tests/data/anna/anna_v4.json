@@ -24,7 +24,7 @@
       "flame_state": false
     },
     "sensors": {
-      "water_temperature": 52,
+      "water_temperature": 45,
       "intended_boiler_temperature": 48.6,
       "modulation_level": 0,
       "return_temperature": 42,
