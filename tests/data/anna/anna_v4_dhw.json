@@ -54,9 +54,9 @@
     "select_schedule": "off",
     "mode": "heat",
     "sensors": {
-      "temperature": 20.5,
+      "temperature": 20.6,
       "setpoint": 20.5,
-      "illuminance": 40.5
+      "illuminance": 60.0
     }
   },
   "0466eae8520144c78afb29628384edeb": {
