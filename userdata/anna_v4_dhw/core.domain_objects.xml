@@ -282,7 +282,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-02T08:33:57.421+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-02T10:34:19.582+02:00" end_date="2020-04-02T10:34:19.582+02:00">
-					<measurement log_date="2020-04-02T10:34:19.582+02:00">on</measurement>
+					<measurement log_date="2020-04-02T10:34:19.582+02:00">off</measurement>
 				</period>
 				<boiler_state id='15063ed7cdc04e1b9c7341d4090ccdbb'/>
 			</point_log>
@@ -693,7 +693,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-02T10:40:48.832+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-02T10:40:48.832+02:00" end_date="2020-04-02T10:40:48.832+02:00">
-					<measurement log_date="2020-04-02T10:40:48.832+02:00">off</measurement>
+					<measurement log_date="2020-04-02T10:40:48.832+02:00">on</measurement>
 				</period>
 				<boiler_state id='0e6517c9fed14e54867211caef4ba408'/>
 			</point_log>
@@ -791,7 +791,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-02T08:55:49.305+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-02T08:55:49.305+02:00" end_date="2020-04-02T08:55:49.305+02:00">
-					<measurement log_date="2020-04-02T08:55:49.305+02:00">off</measurement>
+					<measurement log_date="2020-04-02T08:55:49.305+02:00">on</measurement>
 				</period>
 				<boiler_state id='8bd0723823b14ce69ca622519f9434a6'/>
 			</point_log>
@@ -832,7 +832,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-02T08:33:57.435+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-02T08:33:57.435+02:00" end_date="2020-04-02T08:33:57.435+02:00">
-					<measurement log_date="2020-04-02T08:33:57.435+02:00">on</measurement>
+					<measurement log_date="2020-04-02T08:33:57.435+02:00">off</measurement>
 				</period>
 				<boiler_state id='e17eeb19153443c697863e5d10988275'/>
 			</point_log>
