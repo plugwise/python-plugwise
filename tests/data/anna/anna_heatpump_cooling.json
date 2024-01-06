@@ -72,7 +72,7 @@
     "mode": "heat_cool",
     "sensors": {
       "temperature": 22.3,
-      "illuminance": 25.5,
+      "illuminance": 24.5,
       "cooling_activation_outdoor_temperature": 21,
       "cooling_deactivation_threshold": 6,
       "setpoint_low": 4,
