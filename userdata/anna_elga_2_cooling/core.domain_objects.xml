@@ -401,7 +401,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='00426b5ea5584f91a1705c1baffde511'/>
 				<period start_date="2022-03-10T19:01:01.330+01:00" end_date="2022-03-10T19:01:01.330+01:00">
-					<measurement log_date="2022-03-10T19:01:01.330+01:00">20.93</measurement>
+					<measurement log_date="2022-03-10T19:01:01.330+01:00">24.93</measurement>
 				</period>
 			</point_log>
 			<point_log id='a1041c7b4a0544ce84870460f4f7624a'>
@@ -456,7 +456,7 @@
 				<interval/>
 				<thermostat id='52b5a053e83446e6a11fde60a6c9ed11'/>
 				<period start_date="2022-03-10T06:45:00.389+01:00" end_date="2022-03-10T06:45:00.389+01:00">
-					<measurement log_date="2022-03-10T06:45:00.389+01:00">19.50</measurement>
+					<measurement log_date="2022-03-10T06:45:00.389+01:00">23.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='cecd3059ab6d4ece9b419b7bf820b7f4'>
@@ -533,7 +533,7 @@
 			<thermostat_functionality id='9d718e17024446f296adecf2a1da9e18'>
 				<updated_date>2022-03-10T06:45:00.390+01:00</updated_date>
 				<type>thermostat</type>
-				<setpoint>19.5</setpoint>
+				<setpoint>23.0</setpoint>
 				<lower_bound>4</lower_bound>
 				<upper_bound>30</upper_bound>
 				<resolution>0.1</resolution>
@@ -1464,6 +1464,17 @@
 					<measurement log_date="2022-03-10T19:03:14.258+01:00">30.00</measurement>
 				</period>
 			</point_log>
+			<point_log id='9257714483e4423a8a3423072eda3d40'>
+				<type>cooling_enabled</type>
+				<unit></unit>
+				<updated_date>2022-11-02T03:57:23.207+01:00</updated_date>
+				<last_consecutive_log_date>2022-11-02T03:57:23.207+01:00</last_consecutive_log_date>
+				<interval/>
+				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
+				<period start_date="2022-11-02T03:57:23.207+01:00" end_date="2022-11-02T03:57:23.207+01:00">
+					<measurement log_date="2022-11-02T03:57:23.207+01:00">on</measurement>
+				</period>
+			</point_log>
 		</logs>
 		<actuator_functionalities>
 			<timer_functionality id='00a41642a7764d1d80fe37b0cd493730'>
@@ -1839,7 +1850,7 @@
 				<last_consecutive_log_date>2022-03-02T06:45:00.397+01:00</last_consecutive_log_date>
 				<interval/>
 				<period start_date="2022-03-10T06:45:00.389+01:00" end_date="2022-03-10T06:45:00.389+01:00">
-					<measurement log_date="2022-03-10T06:45:00.389+01:00">19.50</measurement>
+					<measurement log_date="2022-03-10T06:45:00.389+01:00">23.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='de702fce210440f488cc8269e3d10723'>
@@ -1849,7 +1860,7 @@
 				<last_consecutive_log_date>2022-03-02T17:29:58.913+01:00</last_consecutive_log_date>
 				<interval>PT3H</interval>
 				<period start_date="2022-03-10T19:01:01.330+01:00" end_date="2022-03-10T19:01:01.330+01:00">
-					<measurement log_date="2022-03-10T19:01:01.330+01:00">20.93</measurement>
+					<measurement log_date="2022-03-10T19:01:01.330+01:00">24.93</measurement>
 				</period>
 			</point_log>
 		</logs>
@@ -1857,7 +1868,7 @@
 			<thermostat_functionality id='913c4634ffce4cd8b2b921b148aae838'>
 				<updated_date>2022-03-10T06:45:00.348+01:00</updated_date>
 				<type>thermostat</type>
-				<setpoint>19.5</setpoint>
+				<setpoint>23.0</setpoint>
 				<lower_bound>4</lower_bound>
 				<upper_bound>30</upper_bound>
 				<resolution>0.1</resolution>
