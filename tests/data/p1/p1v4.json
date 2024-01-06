@@ -20,8 +20,8 @@
     "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO.",
     "available": false,
     "sensors": {
-      "net_electricity_point": 548,
-      "electricity_consumed_peak_point": 548,
+      "net_electricity_point": 571,
+      "electricity_consumed_peak_point": 571,
       "electricity_consumed_off_peak_point": 0,
       "net_electricity_cumulative": 20983.453,
       "electricity_consumed_peak_cumulative": 9067.554,
