@@ -1461,7 +1461,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='8609fbdcab4b46e387953184f9878c28'/>
 				<period start_date="2022-03-10T19:03:14.258+01:00" end_date="2022-03-10T19:03:14.258+01:00">
-					<measurement log_date="2022-03-10T19:03:14.258+01:00">13.00</measurement>
+					<measurement log_date="2022-03-10T19:03:14.258+01:00">14.00</measurement>
 				</period>
 			</point_log>
 		</logs>
