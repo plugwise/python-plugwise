@@ -34,7 +34,7 @@
       "electricity_produced_off_peak_cumulative": 0,
       "electricity_produced_peak_interval": 0,
       "electricity_produced_off_peak_interval": 0,
-      "electricity_phase_one_consumed": 414863,
+      "electricity_phase_one_consumed": 486,
       "electricity_phase_one_produced": 0
     }
   }
