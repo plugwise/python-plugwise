@@ -84,7 +84,7 @@
       "dhw_temperature": 49.5,
       "intended_boiler_temperature": 0,
       "modulation_level": 0,
-      "outdoor_air_temperature": 7.63,
+      "outdoor_air_temperature": 7.5,
       "return_temperature": 23,
       "water_temperature": 23.3
     },
