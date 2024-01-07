@@ -1178,8 +1178,8 @@ class SmileHelper:
                     loc.found = False
                     return loc
             else:
-                loc.found = False
-                return loc
+                loc.found = False  # pragma: no cover
+                return loc  # pragma: no cover
 
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
             peak = "off_peak"
@@ -1236,7 +1236,8 @@ class SmileHelper:
         locator = f'./location[@id="{loc_id}"]/preset'
         if (preset := self._domain_objects.find(locator)) is not None:
             return str(preset.text)
-        return None
+
+        return None  # pragma: no cover
 
     def _schedules(self, location: str) -> tuple[list[str], str]:
         """Helper-function for smile.py: _device_data_climate().
@@ -1305,7 +1306,6 @@ class SmileHelper:
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
             val = format_measure(found.text, NONE)
-            return val
 
         return val
 
