@@ -1205,9 +1205,6 @@ class SmileHelper:
 
         Determine the location-set_temperature uri - from LOCATIONS.
         """
-        if self._smile_legacy:
-            return self._thermostat_uri_legacy()
-
         locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
         thermostat_functionality_id = self._locations.find(locator).attrib["id"]
 

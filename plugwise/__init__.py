@@ -636,7 +636,7 @@ class Smile(SmileComm, SmileData):
             )  # pragma: no cover"
 
         temperature = str(setpoint)
-        uri = self._thermostat_uri()
+        uri = self._thermostat_uri_legacy()
         data = (
             "<thermostat_functionality><setpoint>"
             f"{temperature}</setpoint></thermostat_functionality>"
