@@ -778,6 +778,12 @@
 			</point_log>
 		</logs>
 		<actuator_functionalities>
+			<toggle_functionality id='7de76401da0249e1b9f13759d8938749'>
+				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
+				<updated_date>2022-11-02T03:57:23.207+01:00</updated_date>
+				<type>cooling_enabled</type>
+				<state>off</state>
+			</toggle_functionality>
 			<offset_functionality id='0150ad6c0a2d47aba4c490e88205d026'>
 				<temperature_offset id='218d5dadf1b748278d8ecfa335f6f2cc'/>
 				<updated_date>2020-04-09T13:25:31.144+02:00</updated_date>
