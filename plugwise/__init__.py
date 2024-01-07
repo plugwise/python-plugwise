@@ -31,7 +31,7 @@ from .constants import (
     NONE,
     NOTIFICATIONS,
     # OFF,
-    REQUIRE_APPLIANCES,
+    # REQUIRE_APPLIANCES,
     RULES,
     SMILES,
     STATUS,
@@ -44,7 +44,7 @@ from .constants import (
     PlugwiseData,
 )
 from .exceptions import (
-    InvalidSetupError,
+    # InvalidSetupError,
     PlugwiseError,
     ResponseError,
     UnsupportedDeviceError,
@@ -525,7 +525,7 @@ class Smile(SmileComm, SmileData):
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
-        if not self.smile_type == "power":  # and self._smile_legacy):
+        if self.smile_type != "power":  # and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
 #    def _get_plugwise_notifications(self) -> None:
