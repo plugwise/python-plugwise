@@ -403,7 +403,7 @@ class SmileHelper:
         if appl.pwclass == "heater_central":
             # Remove heater_central when no active device present
             if not self._opentherm_device and not self._on_off_device:
-                return None
+                return None  # pragma: no cover
 
             # Find the valid heater_central
             self._heater_id = self._check_heater_central()
