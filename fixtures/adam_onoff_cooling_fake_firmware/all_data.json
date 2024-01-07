@@ -42,11 +42,7 @@
       },
       "dev_class": "gateway",
       "firmware": "3.2.8",
-      "gateway_modes": [
-        "away",
-        "full",
-        "vacation"
-      ],
+      "gateway_modes": ["away", "full", "vacation"],
       "hardware": "AME Smile 2.0 board",
       "location": "eedadcb297564f1483faa509179aebed",
       "mac_address": "012345670001",
@@ -81,13 +77,7 @@
       "mode": "auto",
       "model": "ThermoTouch",
       "name": "Thermostaat WK",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
+      "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
       "sensors": {
         "setpoint": 21.5,

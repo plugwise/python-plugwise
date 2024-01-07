@@ -25,7 +25,7 @@
         "domestic_hot_water_setpoint": 60.0,
         "intended_boiler_temperature": 0.0,
         "modulation_level": 0.0,
-        "outdoor_air_temperature": 14.0,
+        "outdoor_air_temperature": 13.0,
         "return_temperature": 23.4,
         "water_pressure": 0.5,
         "water_temperature": 22.8

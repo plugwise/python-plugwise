@@ -13,9 +13,9 @@
       "preset_modes": ["vacation", "no_frost", "away", "asleep", "home"],
       "select_schedule": "off",
       "sensors": {
-        "illuminance": 40.5,
+        "illuminance": 60.0,
         "setpoint": 20.5,
-        "temperature": 20.5
+        "temperature": 20.6
       },
       "temperature_offset": {
         "lower_bound": -2.0,
@@ -71,11 +71,11 @@
       "model": "2.32",
       "name": "OpenTherm",
       "sensors": {
-        "intended_boiler_temperature": 48.6,
+        "intended_boiler_temperature": 39.9,
         "modulation_level": 0.0,
-        "return_temperature": 42.0,
-        "water_pressure": 2.1,
-        "water_temperature": 52.0
+        "return_temperature": 32.0,
+        "water_pressure": 2.2,
+        "water_temperature": 45.0
       },
       "switches": {
         "dhw_cm_switch": false
