@@ -385,12 +385,12 @@ class Smile(SmileComm, SmileData):
             )
             raise ResponseError
 
-        # Check if Anna is connected to an Adam
-        if "159.2" in models:
-            LOGGER.error(
-                "Your Anna is connected to an Adam, make sure to only add the Adam as integration."
-            )
-            raise InvalidSetupError
+#        # Check if Anna is connected to an Adam
+#        if "159.2" in models:
+#            LOGGER.error(
+#                "Your Anna is connected to an Adam, make sure to only add the Adam as integration."
+#            )
+#            raise InvalidSetupError
 
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
@@ -521,28 +521,28 @@ class Smile(SmileComm, SmileData):
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
-        self._get_plugwise_notifications()
+#        self._get_plugwise_notifications()
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
+        if not self.smile_type == "power":  # and self._smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
-    def _get_plugwise_notifications(self) -> None:
-        """Collect the Plugwise notifications."""
-        self._notifications = {}
-        for notification in self._domain_objects.findall("./notification"):
-            try:
-                msg_id = notification.attrib["id"]
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
-                self._notifications.update({msg_id: {msg_type: msg}})
-                LOGGER.debug("Plugwise notifications: %s", self._notifications)
-            except AttributeError:  # pragma: no cover
-                LOGGER.debug(
-                    "Plugwise notification present but unable to process, manually investigate: %s",
-                    f"{self._endpoint}{DOMAIN_OBJECTS}",
-                )
+#    def _get_plugwise_notifications(self) -> None:
+#        """Collect the Plugwise notifications."""
+#        self._notifications = {}
+#        for notification in self._domain_objects.findall("./notification"):
+#            try:
+#                msg_id = notification.attrib["id"]
+#                msg_type = notification.find("type").text
+#                msg = notification.find("message").text
+#                self._notifications.update({msg_id: {msg_type: msg}})
+#                LOGGER.debug("Plugwise notifications: %s", self._notifications)
+#            except AttributeError:  # pragma: no cover
+#                LOGGER.debug(
+#                    "Plugwise notification present but unable to process, manually investigate: %s",
+#                    f"{self._endpoint}{DOMAIN_OBJECTS}",
+#                )
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
@@ -562,16 +562,11 @@ class Smile(SmileComm, SmileData):
         # Otherwise perform an incremental update
         else:
             self._domain_objects = await self._request(DOMAIN_OBJECTS)
-            self._get_plugwise_notifications()
+#            self._get_plugwise_notifications()
             match self._target_smile:
                 case "smile_v2":
                     self._modules = await self._request(MODULES)
-                case "smile_v3" | "smile_v4":
-                    self._locations = await self._request(LOCATIONS)
-                case "smile_open_therm_v2" | "smile_open_therm_v3":
-                    self._appliances = await self._request(APPLIANCES)
-                    self._modules = await self._request(MODULES)
-                case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
+                case "smile_thermo_v1" | "stretch_v2" | "stretch_v3":
                     self._appliances = await self._request(APPLIANCES)
 
             self._update_gw_devices()
