@@ -16,8 +16,8 @@ from munch import Munch
 import semver
 
 from .constants import (
-    ADAM,
-    ANNA,
+    # ADAM,
+    # ANNA,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -25,12 +25,12 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
-    MAX_SETPOINT,
-    MIN_SETPOINT,
+    # MAX_SETPOINT,
+    # MIN_SETPOINT,
     MODULES,
     NONE,
     NOTIFICATIONS,
-    OFF,
+    # OFF,
     REQUIRE_APPLIANCES,
     RULES,
     SMILES,
@@ -38,7 +38,7 @@ from .constants import (
     SWITCH_GROUP_TYPES,
     SYSTEM,
     ZONE_THERMOSTATS,
-    ActuatorData,
+    # ActuatorData,
     DeviceData,
     GatewayData,
     PlugwiseData,
@@ -281,20 +281,20 @@ class SmileData(SmileHelper):
 #            if all_off:
 #                data["select_schedule"] = OFF
 
-    def _check_availability(
-        self, device: DeviceData, dev_class: str, data: DeviceData, message: str
-    ) -> None:
-        """Helper-function for _get_device_data().
-
-        Provide availability status for the wired-commected devices.
-        """
-        if device["dev_class"] == dev_class:
-            data["available"] = True
-            self._count += 1
-            for item in self._notifications.values():
-                for msg in item.values():
-                    if message in msg:
-                        data["available"] = False
+#    def _check_availability(
+#        self, device: DeviceData, dev_class: str, data: DeviceData, message: str
+#    ) -> None:
+#        """Helper-function for _get_device_data().
+#
+#        Provide availability status for the wired-commected devices.
+#        """
+#        if device["dev_class"] == dev_class:
+#            data["available"] = True
+#            self._count += 1
+#            for item in self._notifications.values():
+#                for msg in item.values():
+#                    if message in msg:
+#                        data["available"] = False
 
     def _get_device_data(self, dev_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
@@ -304,17 +304,17 @@ class SmileData(SmileHelper):
         device = self.gw_devices[dev_id]
         data = self._get_measurement_data(dev_id)
 
-        # Check availability of non-legacy wired-connected devices
-        if not self._smile_legacy:
-            # Smartmeter
-            self._check_availability(
-                device, "smartmeter", data, "P1 does not seem to be connected"
-            )
-            # OpenTherm device
-            if device["name"] != "OnOff":
-                self._check_availability(
-                    device, "heater_central", data, "no OpenTherm communication"
-                )
+#        # Check availability of non-legacy wired-connected devices
+#        if not self._smile_legacy:
+#            # Smartmeter
+#            self._check_availability(
+#                device, "smartmeter", data, "P1 does not seem to be connected"
+#            )
+#            # OpenTherm device
+#            if device["name"] != "OnOff":
+#                self._check_availability(
+#                    device, "heater_central", data, "no OpenTherm communication"
+#                )
 
         # Switching groups data
         self._device_data_switching_group(device, data)
@@ -661,12 +661,12 @@ class Smile(SmileComm, SmileData):
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
-        """Set the Temperature offset for thermostats that support this feature."""
-        if dev_id not in self.therms_with_offset_func:
-            raise PlugwiseError(
-                "Plugwise: this device does not have temperature-offset capability."
-            )
+#    async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
+#        """Set the Temperature offset for thermostats that support this feature."""
+#        if dev_id not in self.therms_with_offset_func:
+#            raise PlugwiseError(
+#                "Plugwise: this device does not have temperature-offset capability."
+#            )
 
         value = str(offset)
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
