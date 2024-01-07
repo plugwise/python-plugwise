@@ -727,7 +727,3 @@ class Smile(SmileComm, SmileData):
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
-
-    async def delete_notification(self) -> None:
-        """Delete the active Plugwise Notification."""
-        await self._request(NOTIFICATIONS, method="delete")
