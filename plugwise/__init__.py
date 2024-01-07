@@ -246,10 +246,10 @@ class SmileData(SmileHelper):
 #        if self.check_reg_mode("off"):
 #            data["mode"] = "off"
 
-        if NONE not in avail_schedules:
-            self._get_schedule_states_with_off(
-                loc_id, avail_schedules, sel_schedule, data
-            )
+#        if NONE not in avail_schedules:
+#            self._get_schedule_states_with_off(
+#                loc_id, avail_schedules, sel_schedule, data
+#            )
 
 #    def check_reg_mode(self, mode: str) -> bool:
 #        """Helper-function for device_data_climate()."""
