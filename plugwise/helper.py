@@ -746,10 +746,6 @@ class SmileHelper:
         presets: dict[str, list[float]] = {}
         tag_1 = "zone_setpoint_and_state_based_on_preset"
         tag_2 = "Thermostat presets"
-
-        if self._smile_legacy:
-            return self._presets_legacy()
-
         if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
             if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
                 return presets  # pragma: no cover
@@ -1421,12 +1417,6 @@ class SmileHelper:
 
         Collect the active preset based on Location ID.
         """
-        if not self._smile_legacy:
-            locator = f'./location[@id="{loc_id}"]/preset'
-            if (preset := self._domain_objects.find(locator)) is not None:
-                return str(preset.text)
-            return None
-
         locator = "./rule[active='true']/directives/when/then"
         if (
             not (active_rule := etree_to_dict(self._domain_objects.find(locator)))

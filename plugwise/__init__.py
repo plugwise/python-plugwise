@@ -225,9 +225,9 @@ class SmileData(SmileHelper):
         data["preset_modes"] = None
         data["active_preset"] = None
         self._count += 2
-        if presets := self._presets(loc_id):
+        if presets := self._presets_legacy(:
             data["preset_modes"] = list(presets)
-            data["active_preset"] = self._preset(loc_id)
+            data["active_preset"] = self._preset()
 
         # Schedule
         avail_schedules, sel_schedule = self._schedules(loc_id)
@@ -617,7 +617,7 @@ class Smile(SmileComm, SmileData):
 
     async def set_preset(self, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        if (presets := self._presets()) is None:
+        if (presets := self._presets_legacy()) is None:
             raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
         if preset not in list(presets):
             raise PlugwiseError("Plugwise: invalid preset.")
