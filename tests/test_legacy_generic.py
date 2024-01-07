@@ -1,12 +1,8 @@
 """Test Plugwise module generic functionality."""
 
-from unittest.mock import patch
-
 import pytest
 
-import aiohttp
-
-from .test_init import _LOGGER, TestPlugwise, pw_exceptions
+from .test_init import TestPlugwise, pw_exceptions
 
 
 class TestPlugwiseGeneric(
