@@ -1412,7 +1412,7 @@ class SmileHelper:
         self._count += len(direct_data["sensors"])
         return direct_data
 
-    def _preset(self, loc_id: str) -> str | None:
+    def _preset(self) -> str | None:
         """Helper-function for smile.py: device_data_climate().
 
         Collect the active preset based on Location ID.
