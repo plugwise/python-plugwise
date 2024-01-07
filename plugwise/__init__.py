@@ -695,7 +695,6 @@ class Smile(SmileComm, SmileData):
         switch.device = "relay"
         switch.func_type = "relay_functionality"
         switch.func = "state"
-
         if self._stretch_v2:
             switch.actuator = "actuators"
             switch.func_type = "relay"
