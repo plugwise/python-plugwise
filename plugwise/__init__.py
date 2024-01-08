@@ -82,11 +82,12 @@ class SmileData(SmileHelper):
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
-            device_id == self.gateway_id
-            and (
-                self._is_thermostat
-                or (self.smile_type == "power" and not self._smile_legacy)
-            )
+            device_id == self.gateway_id and self._is_thermostat
+#            device_id == self.gateway_id
+#            and (
+#                self._is_thermostat
+#                or (self.smile_type == "power" and not self._smile_legacy)
+#            )
         ) or (
             "binary_sensors" in device
             and "plugwise_notification" in device["binary_sensors"]
