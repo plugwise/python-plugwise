@@ -29,7 +29,7 @@ from .constants import (
     # MIN_SETPOINT,
     MODULES,
     NONE,
-    NOTIFICATIONS,
+    # NOTIFICATIONS,
     # OFF,
     # REQUIRE_APPLIANCES,
     RULES,
