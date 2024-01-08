@@ -703,14 +703,8 @@ class Smile(SmileComm, SmileData):
             return await self._set_groupswitch_member_state(members, state, switch)
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found: list[etree] = self._appliances.findall(locator)
-        for item in found:
-            if (sw_type := item.find("type")) is not None:
-                if sw_type.text == switch.act_type:
-                    switch_id = item.attrib["id"]
-            else:
-                switch_id = item.attrib["id"]
-                break
+        item = self._appliances.find(locator)
+        switch_id = item.attrib["id"]
 
         uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
         if self._stretch_v2:
