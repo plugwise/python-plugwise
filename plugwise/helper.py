@@ -136,6 +136,10 @@ class SmileComm:
         if resp.status == 202:
             return
 
+        # Cornercase for stretch not responding with 202
+        if method == "put" and resp.status == 200:
+            return
+
         if resp.status == 401:
             msg = "Invalid Plugwise login, please retry with the correct credentials."
             LOGGER.error("%s", msg)
@@ -171,6 +175,8 @@ class SmileComm:
             if method == "delete":
                 resp = await self._websession.delete(url, auth=self._auth)
             if method == "get":
+                # Work-around for Stretchv2, should not hurt the other smiles
+                use_headers = {"Accept-Encoding": "gzip"}
                 resp = await self._websession.get(
                     url, headers=use_headers, auth=self._auth
                 )
