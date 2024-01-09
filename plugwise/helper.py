@@ -1452,7 +1452,7 @@ class SmileHelper:
             if active:
                 selected = name
 
-        self._last_active[location] = "".join(map(str, avail))
+#        self._last_active[location] = "".join(map(str, available))
         return available, selected
 
 #    def _schedules(self, location: str) -> tuple[list[str], str]:
