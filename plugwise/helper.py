@@ -12,8 +12,8 @@ from typing import cast
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
 
 # Time related
-from dateutil import tz
-from dateutil.parser import parse
+# from dateutil import tz
+# from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
 import semver
@@ -21,7 +21,7 @@ import semver
 from .constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
-    ADAM,
+#    ADAM,
     ANNA,
     APPLIANCES,
     ATTR_NAME,
@@ -29,20 +29,20 @@ from .constants import (
     BINARY_SENSORS,
     DATA,
     DEVICE_MEASUREMENTS,
-    DHW_SETPOINT,
+#    DHW_SETPOINT,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     FAKE_APPL,
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
-    LOCATIONS,
+#    LOCATIONS,
     LOGGER,
     NONE,
     OBSOLETE_MEASUREMENTS,
-    OFF,
+#    OFF,
     P1_LEGACY_MEASUREMENTS,
-    P1_MEASUREMENTS,
+#    P1_MEASUREMENTS,
     POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
@@ -51,7 +51,7 @@ from .constants import (
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
-    TOGGLES,
+#    TOGGLES,
     UOM,
     ActuatorData,
     ActuatorDataType,
@@ -65,7 +65,7 @@ from .constants import (
     SpecialType,
     SwitchType,
     ThermoLoc,
-    ToggleNameType,
+#    ToggleNameType,
 )
 from .exceptions import (
     ConnectionFailedError,
@@ -1427,10 +1427,7 @@ class SmileHelper:
         return active_rule["icon"]
 
     def _schedules(self) -> tuple[list[str], str]:
-        """Helper-function for _schedules().
-
-        Collect available schedules/schedules for the legacy thermostat.
-        """
+        """Collect available schedules/schedules for the legacy thermostat."""
         available: list[str] = [NONE]
         selected = NONE
         name: str | None = None
