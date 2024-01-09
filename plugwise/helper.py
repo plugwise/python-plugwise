@@ -1426,16 +1426,13 @@ class SmileHelper:
 
         return active_rule["icon"]
 
-    def _schedules(
-        self,
-        avail: list[str],
-        location: str,
-        sel: str,
-    ) -> tuple[list[str], str]:
+    def _schedules(self) -> tuple[list[str], str]:
         """Helper-function for _schedules().
 
         Collect available schedules/schedules for the legacy thermostat.
         """
+        available: list[str] = [NONE]
+        selected = NONE
         name: str | None = None
 
         search = self._domain_objects
@@ -1451,12 +1448,12 @@ class SmileHelper:
             active = result.text == "on"
 
         if name is not None:
-            avail = [name]
+            available = [name]
             if active:
-                sel = name
+                selected = name
 
         self._last_active[location] = "".join(map(str, avail))
-        return avail, sel
+        return available, selected
 
 #    def _schedules(self, location: str) -> tuple[list[str], str]:
 #        """Helper-function for smile.py: _device_data_climate().
