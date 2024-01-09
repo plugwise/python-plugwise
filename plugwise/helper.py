@@ -1094,11 +1094,11 @@ class SmileHelper:
                 data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
                 self._count += 1
 
-#        if "c_heating_state" in data:
+        if "c_heating_state" in data:
 #            self._process_c_heating_state(data)
-#            # Remove c_heating_state after processing
-#            data.pop("c_heating_state")
-#            self._count -= 1
+            # Remove c_heating_state after processing
+            data.pop("c_heating_state")
+            self._count -= 1
 
 #        if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
 #            # Anna+Elga: base cooling_state on the elga-status-code
