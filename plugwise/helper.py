@@ -1426,7 +1426,7 @@ class SmileHelper:
 
         return active_rule["icon"]
 
-    def _schedules_legacy(
+    def _schedules(
         self,
         avail: list[str],
         location: str,
