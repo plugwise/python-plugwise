@@ -220,7 +220,7 @@ class SmileData(SmileHelper):
 
         Determine climate-control device data.
         """
-        loc_id = device["location"]
+#        loc_id = device["location"]
 
         # Presets
         data["preset_modes"] = None
