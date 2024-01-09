@@ -231,7 +231,7 @@ class SmileData(SmileHelper):
             data["active_preset"] = self._preset()
 
         # Schedule
-        avail_schedules, sel_schedule = self._schedules(loc_id)
+        avail_schedules, sel_schedule = self._schedules()  # (loc_id)
         data["available_schedules"] = avail_schedules
         data["select_schedule"] = sel_schedule
         self._count += 2
