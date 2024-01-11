@@ -882,10 +882,10 @@ class SmileHelper:
         # Don't count the above top-level dicts, only the remaining single items
         self._count += len(data) - 3
 
-    def _wireless_availablity(self, appliance: etree, data: DeviceData) -> None:
+    def _wireless_availability(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().
 
-        Collect the availablity-status for wireless connected devices.
+        Collect the availability-status for wireless connected devices.
         """
         if self.smile(ADAM):
             # Collect for Plugs
@@ -1082,7 +1082,7 @@ class SmileHelper:
                 self._get_actuator_functionalities(appliance, device, data)
 
             # Collect availability-status for wireless connected devices to Adam
-            self._wireless_availablity(appliance, data)
+            self._wireless_availability(appliance, data)
 
         if dev_id == self.gateway_id and self.smile(ADAM):
             self._get_regulation_mode(appliance, data)
