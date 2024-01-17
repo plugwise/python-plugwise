@@ -1496,14 +1496,21 @@ class SmileHelper:
 
         schedules: list[str] = []
         for rule_id, loc_id in rule_ids.items():
-            name = self._domain_objects.find(f'./rule[@id="{rule_id}"]/name').text
+            active = False
+            name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
+            if (
+                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
+                == "true"
+            ):
+                active = True
+
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
             if self._domain_objects.find(locator) is None:
                 continue  # pragma: no cover
 
             available.append(name)
-            if location == loc_id:
+            if location == loc_id and active:
                 selected = name
                 self._last_active[location] = selected
             schedules.append(name)
