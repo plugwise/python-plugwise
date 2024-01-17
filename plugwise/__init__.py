@@ -872,7 +872,7 @@ class Smile(SmileComm, SmileData):
             raise PlugwiseError("Plugwise: invalid gateway mode.")
 
         time_1 = dt.datetime.now()
-        away_time = time_1.isoformat(timespec="milliseconds") + "Z"
+        away_time = str(time_1.isoformat(timespec="milliseconds")) + "Z"
         time_2 = str(dt.date.today() - dt.timedelta(1))
         vacation_time = time_2 + "T23:00:00.000Z"
         end_time = "2037-04-21T08:00:53.000Z"
