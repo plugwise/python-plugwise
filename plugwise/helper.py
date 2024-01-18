@@ -751,6 +751,7 @@ class SmileHelper:
             return self._presets_legacy()
 
         if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
+            rule_ids = None
             if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
                 return presets  # pragma: no cover
 
@@ -767,18 +768,19 @@ class SmileHelper:
 
         return presets
 
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
         """Helper-function for _presets().
 
         Obtain the rule_id from the given name and and provide the location_id, when present.
         """
-        schedule_ids: dict[str, str] = {}
+        schedule_ids: dict[str, dict[str, str]] = {}
         locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
+            active = rule.find("active").text
             if rule.find(locator) is not None:
-                schedule_ids[rule.attrib["id"]] = loc_id
+                schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
             else:
-                schedule_ids[rule.attrib["id"]] = NONE
+                schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
 
         return schedule_ids
 
@@ -793,7 +795,7 @@ class SmileHelper:
         for rule in self._domain_objects.findall("./rule"):
             if rule.find(locator1) is not None:
                 name = rule.find("name").text
-                active = rule.find("active").text == "true"
+                active = rule.find("active").text
                 if rule.find(locator2) is not None:
                     schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
                 else:
@@ -1498,7 +1500,7 @@ class SmileHelper:
 
         schedules: list[str] = []
         for rule_id, data in rule_ids.items():
-            active = data["active"]
+            active = data["active"] == "true"
             name = data["name"]
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
