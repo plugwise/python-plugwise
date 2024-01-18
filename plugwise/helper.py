@@ -767,7 +767,7 @@ class SmileHelper:
 
         return presets
 
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
         """Helper-function for _presets().
 
         Obtain the rule_id from the given name and and provide the location_id, when present.
@@ -782,20 +782,22 @@ class SmileHelper:
 
         return schedule_ids
 
-    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str]:
+    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, dict[str, str]]:
         """Helper-function for _presets(), _schedules() and _last_active_schedule().
 
         Obtain the rule_id from the given template_tag and provide the location_id, when present.
         """
-        schedule_ids: dict[str, str] = {}
+        schedule_ids: dict[str, dict[str, str]] = {}
         locator1 = f'./template[@tag="{tag}"]'
         locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
         for rule in self._domain_objects.findall("./rule"):
             if rule.find(locator1) is not None:
+                name = rule.find("name").text
+                active = rule.find("active").text == "true"
                 if rule.find(locator2) is not None:
-                    schedule_ids[rule.attrib["id"]] = loc_id
+                    schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
                 else:
-                    schedule_ids[rule.attrib["id"]] = NONE
+                    schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
 
         return schedule_ids
 
@@ -1495,22 +1497,16 @@ class SmileHelper:
             return available, selected
 
         schedules: list[str] = []
-        for rule_id, loc_id in rule_ids.items():
-            active = False
-            name = self._domain_objects.find(f'rule[@id="{rule_id}"]/name').text
-            if (
-                self._domain_objects.find(f'rule[@id="{rule_id}"]/active').text
-                == "true"
-            ):
-                active = True
-
+        for rule_id, data in rule_ids.items():
+            active = data["active"]
+            name = data["name"]
             locator = f'./rule[@id="{rule_id}"]/directives'
             # Show an empty schedule as no schedule found
             if self._domain_objects.find(locator) is None:
                 continue  # pragma: no cover
 
             available.append(name)
-            if location == loc_id and active:
+            if location == data["location"] and active:
                 selected = name
                 self._last_active[location] = selected
             schedules.append(name)
