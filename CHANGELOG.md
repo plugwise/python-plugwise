@@ -2,7 +2,7 @@
 
 ## v0.36.3
 
-- Bugfixes for [#558](https://github.com/plugwise/plugwise-beta/issues/558) and [#559](https://github.com/plugwise/plugwise-beta/issues/559). 
+- Bugfixes for [#558](https://github.com/plugwise/plugwise-beta/issues/558) and [#559](https://github.com/plugwise/plugwise-beta/issues/559).
 
 ## v0.36.2
 
