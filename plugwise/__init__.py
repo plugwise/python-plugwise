@@ -875,7 +875,7 @@ class Smile(SmileComm, SmileData):
         valid = ""
         if mode == "away":
             time_1 = self._domain_objects("./gateway/time").text
-            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
             valid = (
                 f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
             )
