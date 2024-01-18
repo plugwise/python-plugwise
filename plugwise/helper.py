@@ -767,7 +767,7 @@ class SmileHelper:
 
         return presets
 
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
         """Helper-function for _presets().
 
         Obtain the rule_id from the given name and and provide the location_id, when present.
