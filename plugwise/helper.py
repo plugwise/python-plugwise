@@ -1482,7 +1482,7 @@ class SmileHelper:
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.
         """
         available: list[str] = [NONE]
-        rule_ids: dict[str, str] = {}
+        rule_ids: dict[str, dict[str, str]] = {}
         selected = NONE
 
         # Legacy Anna schedule, only one schedule allowed
