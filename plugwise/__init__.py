@@ -871,20 +871,20 @@ class Smile(SmileComm, SmileData):
         if mode not in self._gw_allowed_modes:
             raise PlugwiseError("Plugwise: invalid gateway mode.")
 
-        time_1 = dt.datetime.now(dt.UTC)
-        away_time = time_1.isoformat(timespec="milliseconds") + "Z"
-        time_2 = str(dt.date.today() - dt.timedelta(1))
-        vacation_time = time_2 + "T23:00:00.000Z"
         end_time = "2037-04-21T08:00:53.000Z"
         valid = ""
         if mode == "away":
+            time_1 = self._domain_objects.find("./gateway/time").text
+            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
             valid = (
                 f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
             )
         if mode == "vacation":
+            time_2 = str(dt.date.today() - dt.timedelta(1))
+            vacation_time = time_2 + "T23:00:00.000Z"
             valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
-        uri = f"{APPLIANCES};type=gateway/gateway_mode_control"
+        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)
