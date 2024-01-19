@@ -751,7 +751,6 @@ class SmileHelper:
             return self._presets_legacy()
 
         if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
-            rule_ids = None
             if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
                 return presets  # pragma: no cover
 
