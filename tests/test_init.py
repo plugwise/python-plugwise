@@ -117,12 +117,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
-            if not stretch:
-                app.router.add_route(
-                    "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
-                )
-            else:
-                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_ok)
+#            if not stretch:
+            app.router.add_route(
+                "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
+            )
+#            else:
+#                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_ok)
         else:
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
@@ -193,11 +193,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         text = EMPTY_XML
         raise aiohttp.web.HTTPAccepted(text=text)
 
-    @classmethod
-    async def smile_http_ok(cls, request):
-        """Render generic API calling endpoint."""
-        text = EMPTY_XML
-        raise aiohttp.web.HTTPOk(text=text)
+#    @classmethod
+#    async def smile_http_ok(cls, request):
+#        """Render generic API calling endpoint."""
+#        text = EMPTY_XML
+#        raise aiohttp.web.HTTPOk(text=text)
 
     @classmethod
     async def smile_timeout(cls, request):
