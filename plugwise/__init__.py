@@ -485,26 +485,9 @@ class Smile(SmileComm, SmileData):
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
-    def determine_contexts(
-        self, loc_id: str, name: str, state: str, sched_id: str
-    ) -> etree:
-        """Helper-function for set_schedule_state()."""
-        locator = f'.//*[@id="{sched_id}"]/contexts'
-        contexts = self._domain_objects.find(locator)
-        locator = f'.//*[@id="{loc_id}"].../...'
-        if (subject := contexts.find(locator)) is None:
-            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
-            subject = etree.fromstring(subject)
-
-        if state == "off":
-            self._last_active[loc_id] = name
-            contexts.remove(subject)
-        if state == "on":
-            contexts.append(subject)
-
-        return etree.tostring(contexts, encoding="unicode").rstrip()
-
-### API Set and HA Service-related Functions
+########################################################################################################
+###  API Set and HA Service-related Functions                                                        ###
+########################################################################################################
 
     async def set_schedule_state(
         self,
@@ -560,6 +543,25 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
+
+    def determine_contexts(
+        self, loc_id: str, name: str, state: str, sched_id: str
+    ) -> etree:
+        """Helper-function for set_schedule_state()."""
+        locator = f'.//*[@id="{sched_id}"]/contexts'
+        contexts = self._domain_objects.find(locator)
+        locator = f'.//*[@id="{loc_id}"].../...'
+        if (subject := contexts.find(locator)) is None:
+            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
+            subject = etree.fromstring(subject)
+
+        if state == "off":
+            self._last_active[loc_id] = name
+            contexts.remove(subject)
+        if state == "on":
+            contexts.append(subject)
+
+        return etree.tostring(contexts, encoding="unicode").rstrip()
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
@@ -652,21 +654,6 @@ class Smile(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def _set_groupswitch_member_state(
-        self, members: list[str], state: str, switch: Munch
-    ) -> None:
-        """Helper-function for set_switch_state().
-
-        Set the given State of the relevant Switch within a group of members.
-        """
-        for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._domain_objects.find(locator).attrib["id"]
-            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
-            await self._request(uri, method="put", data=data)
-
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
@@ -715,6 +702,21 @@ class Smile(SmileComm, SmileData):
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
+
+    async def _set_groupswitch_member_state(
+        self, members: list[str], state: str, switch: Munch
+    ) -> None:
+        """Helper-function for set_switch_state().
+
+        Set the given State of the relevant Switch within a group of members.
+        """
+        for member in members:
+            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
+            switch_id = self._domain_objects.find(locator).attrib["id"]
+            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
+            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
+
+            await self._request(uri, method="put", data=data)
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
