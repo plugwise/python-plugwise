@@ -379,6 +379,8 @@ class Smile(SmileComm, SmileData):
             self.smile_hw_version = gateway.find("hardware_version").text
             self.smile_hostname = gateway.find("hostname").text
             self.smile_mac_address = gateway.find("mac_address").text
+        else:
+            model = await self._smile_detect_legacy(result, dsmrmain, model)
 
         if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
@@ -411,6 +413,10 @@ class Smile(SmileComm, SmileData):
         self.smile_type = SMILES[self._target_smile].smile_type
         self.smile_version = (self.smile_fw_version, ver)
 
+        if self.smile_type == "stretch":
+            self._stretch_v2 = self.smile_version[1].major == 2
+            self._stretch_v3 = self.smile_version[1].major == 3
+
         if self.smile_type == "thermostat":
             self._is_thermostat = True
             # For Adam, Anna, determine the system capabilities:
@@ -430,6 +436,53 @@ class Smile(SmileComm, SmileData):
                 self._cooling_present = True
             if result.find(locator_2) is not None:
                 self._elga = True
+
+    async def _smile_detect_legacy(
+        self, result: etree, dsmrmain: etree, model: str
+    ) -> str:
+        """Helper-function for _smile_detect()."""
+        return_model = model
+        # Stretch: find the MAC of the zigbee master_controller (= Stick)
+        if (network := result.find("./module/protocols/master_controller")) is not None:
+            self.smile_zigbee_mac_address = network.find("mac_address").text
+        # Find the active MAC in case there is an orphaned Stick
+        if zb_networks := result.findall("./network"):
+            for zb_network in zb_networks:
+                if zb_network.find("./nodes/network_router") is not None:
+                    network = zb_network.find("./master_controller")
+                    self.smile_zigbee_mac_address = network.find("mac_address").text
+
+        # Legacy Anna or Stretch:
+        if (
+            result.find('./appliance[type="thermostat"]') is not None
+            or network is not None
+        ):
+            self._system = await self._request(SYSTEM)
+            self.smile_fw_version = self._system.find("./gateway/firmware").text
+            return_model = self._system.find("./gateway/product").text
+            self.smile_hostname = self._system.find("./gateway/hostname").text
+            # If wlan0 contains data it's active, so eth0 should be checked last
+            for network in ("wlan0", "eth0"):
+                locator = f"./{network}/mac"
+                if (net_locator := self._system.find(locator)) is not None:
+                    self.smile_mac_address = net_locator.text
+        # P1 legacy:
+        elif dsmrmain is not None:
+            self._status = await self._request(STATUS)
+            self.smile_fw_version = self._status.find("./system/version").text
+            return_model = self._status.find("./system/product").text
+            self.smile_hostname = self._status.find("./network/hostname").text
+            self.smile_mac_address = self._status.find("./network/mac_address").text
+        else:  # pragma: no cover
+            # No cornercase, just end of the line
+            LOGGER.error(
+                "Connected but no gateway device information found, please create"
+                " an issue on http://github.com/plugwise/python-plugwise"
+            )
+            raise ResponseError
+
+        self._smile_legacy = True
+        return return_model
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
