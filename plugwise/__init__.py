@@ -117,29 +117,6 @@ class SmileData(SmileHelper):
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             self._count += 2
 
-    def get_all_devices(self) -> None:
-        """Determine the evices present from the obtained XML-data.
-
-        Run this functions once to gather the initial device configuration,
-        then regularly run async_update() to refresh the device data.
-        """
-        # Gather all the devices and their initial data
-        self._all_appliances()
-        if self._is_thermostat:
-            if self.smile(ADAM):
-                self._scan_thermostats()
-            # Collect a list of thermostats with offset-capability
-            self.therms_with_offset_func = (
-                self._get_appliances_with_offset_functionality()
-            )
-
-        # Collect and add switching- and/or pump-group devices
-        if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
-
-        # Collect the remaining data for all devices
-        self._all_device_data()
-
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
 
@@ -475,6 +452,29 @@ class Smile(SmileComm, SmileData):
                     f"{self._endpoint}{DOMAIN_OBJECTS}",
                 )
 
+    def get_all_devices(self) -> None:
+        """Determine the evices present from the obtained XML-data.
+
+        Run this functions once to gather the initial device configuration,
+        then regularly run async_update() to refresh the device data.
+        """
+        # Gather all the devices and their initial data
+        self._all_appliances()
+        if self._is_thermostat:
+            if self.smile(ADAM):
+                self._scan_thermostats()
+            # Collect a list of thermostats with offset-capability
+            self.therms_with_offset_func = (
+                self._get_appliances_with_offset_functionality()
+            )
+
+        # Collect and add switching- and/or pump-group devices
+        if group_data := self._get_group_switches():
+            self.gw_devices.update(group_data)
+
+        # Collect the remaining data for all devices
+        self._all_device_data()
+
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         # Perform a full update at day-change
@@ -503,6 +503,8 @@ class Smile(SmileComm, SmileData):
             contexts.append(subject)
 
         return etree.tostring(contexts, encoding="unicode").rstrip()
+
+### API Set and HA Service-related Functions
 
     async def set_schedule_state(
         self,
