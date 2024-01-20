@@ -7,8 +7,8 @@ from __future__ import annotations
 from .data_legacy import SmileLegacyData
 from .helper import SmileComm, SmileHelper
 
-class SmileLegacy(SmileComm, SmileLegacyData):
-    """The Plugwise SmileLegacy class."""
+class SmileLegacyAPI(SmileComm, SmileLegacyData):
+    """The Plugwise SmileLegacyAPI class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 
@@ -79,7 +79,7 @@ class SmileLegacy(SmileComm, SmileLegacyData):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
-    async def set_schedule_state(self, state: str) -> None:
+    async def set_schedule_state(self, _: str, state: str, _:str | None = None) -> None:
         """Activate/deactivate the Schedule.
 
         Determined from - DOMAIN_OBJECTS.
@@ -114,7 +114,7 @@ class SmileLegacy(SmileComm, SmileLegacyData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_preset(self, preset: str) -> None:
+    async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         if (presets := self._presets()) is None:
             raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
@@ -127,7 +127,7 @@ class SmileLegacy(SmileComm, SmileLegacyData):
 
         await self._request(RULES, method="put", data=data)
 
-    async def set_temperature(self, setpoint: str) -> None:
+    async def set_temperature(self, setpoint: str, _: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         if setpoint is None:
             raise PlugwiseError(

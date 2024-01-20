@@ -108,8 +108,11 @@ class Smile(SmileComm, SmileData):
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
+        if self._smile_legacy:
+            SmileAPI = SmileLegacyAPI
+
         # Update all endpoints on first connect
-        await self._full_update_device()
+        await SmileAPI._full_update_device()
 
         return True
 
@@ -231,59 +234,9 @@ class Smile(SmileComm, SmileData):
         self._smile_legacy = True
         return return_model
 
-    async def _full_update_device(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-        self._get_plugwise_notifications()
-
-    def _get_plugwise_notifications(self) -> None:
-        """Collect the Plugwise notifications."""
-        self._notifications = {}
-        for notification in self._domain_objects.findall("./notification"):
-            try:
-                msg_id = notification.attrib["id"]
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
-                self._notifications.update({msg_id: {msg_type: msg}})
-                LOGGER.debug("Plugwise notifications: %s", self._notifications)
-            except AttributeError:  # pragma: no cover
-                LOGGER.debug(
-                    "Plugwise notification present but unable to process, manually investigate: %s",
-                    f"{self._endpoint}{DOMAIN_OBJECTS}",
-                )
-
-    def get_all_devices(self) -> None:
-        """Determine the evices present from the obtained XML-data.
-
-        Run this functions once to gather the initial device configuration,
-        then regularly run async_update() to refresh the device data.
-        """
-        # Gather all the devices and their initial data
-        self._all_appliances()
-        if self._is_thermostat:
-            if self.smile(ADAM):
-                self._scan_thermostats()
-            # Collect a list of thermostats with offset-capability
-            self.therms_with_offset_func = (
-                self._get_appliances_with_offset_functionality()
-            )
-
-        # Collect and add switching- and/or pump-group devices
-        if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
-
-        # Collect the remaining data for all devices
-        self._all_device_data()
-
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        # Perform a full update at day-change
-        self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceData] = {}
-        await self._full_update_device()
-        self.get_all_devices()
-
-        return PlugwiseData(self.gw_data, self.gw_devices)
+        SmileAPI.async_update()
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
@@ -300,129 +253,14 @@ class Smile(SmileComm, SmileData):
         Determined from - DOMAIN_OBJECTS.
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
-        # Input checking
-        if new_state not in ["on", "off"]:
-            raise PlugwiseError("Plugwise: invalid schedule state.")
-
-        # Translate selection of Off-schedule-option to disabling the active schedule
-        if name == OFF:
-            new_state = "off"
-
-        # Handle no schedule-name / Off-schedule provided
-        if name is None or name == OFF:
-            if schedule_name := self._last_active[loc_id]:
-                name = schedule_name
-            else:
-                return
-
-        assert isinstance(name, str)
-        schedule_rule = self._rule_ids_by_name(name, loc_id)
-        # Raise an error when the schedule name does not exist
-        if not schedule_rule or schedule_rule is None:
-            raise PlugwiseError("Plugwise: no schedule with this name available.")
-
-        # If no state change is requested, do nothing
-        if new_state == self._schedule_old_states[loc_id][name]:
-            return
-
-        schedule_rule_id: str = next(iter(schedule_rule))
-        template = (
-            '<template tag="zone_preset_based_on_time_and_presence_with_override" />'
-        )
-        if self.smile(ANNA):
-            locator = f'.//*[@id="{schedule_rule_id}"]/template'
-            template_id = self._domain_objects.find(locator).attrib["id"]
-            template = f'<template id="{template_id}" />'
-
-        contexts = self.determine_contexts(loc_id, name, new_state, schedule_rule_id)
-        uri = f"{RULES};id={schedule_rule_id}"
-        data = (
-            f'<rules><rule id="{schedule_rule_id}"><name><![CDATA[{name}]]></name>'
-            f"{template}{contexts}</rule></rules>"
-        )
-
-        await self._request(uri, method="put", data=data)
-        self._schedule_old_states[loc_id][name] = new_state
-
-    def determine_contexts(
-        self, loc_id: str, name: str, state: str, sched_id: str
-    ) -> etree:
-        """Helper-function for set_schedule_state()."""
-        locator = f'.//*[@id="{sched_id}"]/contexts'
-        contexts = self._domain_objects.find(locator)
-        locator = f'.//*[@id="{loc_id}"].../...'
-        if (subject := contexts.find(locator)) is None:
-            subject = f'<context><zone><location id="{loc_id}" /></zone></context>'
-            subject = etree.fromstring(subject)
-
-        if state == "off":
-            self._last_active[loc_id] = name
-            contexts.remove(subject)
-        if state == "on":
-            contexts.append(subject)
-
-        return etree.tostring(contexts, encoding="unicode").rstrip()
+        SmileAPI.set_schedule_state(loc_id, new_state, name)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
-        """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
-        if (presets := self._presets(loc_id)) is None:
-            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
-        if preset not in list(presets):
-            raise PlugwiseError("Plugwise: invalid preset.")
-
-        current_location = self._domain_objects.find(f'location[@id="{loc_id}"]')
-        location_name = current_location.find("name").text
-        location_type = current_location.find("type").text
-
-        uri = f"{LOCATIONS};id={loc_id}"
-        data = (
-            "<locations><location"
-            f' id="{loc_id}"><name>{location_name}</name><type>{location_type}'
-            f"</type><preset>{preset}</preset></location></locations>"
-        )
-
-        await self._request(uri, method="put", data=data)
+        """Set the given Preset on the relevant Thermostat."""
+        SmileAPI.set_preset(loc_id, preset)
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
-        """Set the given Temperature on the relevant Thermostat."""
-        setpoint: float | None = None
-
-        if "setpoint" in items:
-            setpoint = items["setpoint"]
-
-        if self.smile(ANNA) and self._cooling_present:
-            if "setpoint_high" not in items:
-                raise PlugwiseError(
-                    "Plugwise: failed setting temperature: no valid input provided"
-                )
-            tmp_setpoint_high = items["setpoint_high"]
-            tmp_setpoint_low = items["setpoint_low"]
-            if self._cooling_enabled:  # in cooling mode
-                setpoint = tmp_setpoint_high
-                if tmp_setpoint_low != MIN_SETPOINT:
-                    raise PlugwiseError(
-                        "Plugwise: heating setpoint cannot be changed when in cooling mode"
-                    )
-            else:  # in heating mode
-                setpoint = tmp_setpoint_low
-                if tmp_setpoint_high != MAX_SETPOINT:
-                    raise PlugwiseError(
-                        "Plugwise: cooling setpoint cannot be changed when in heating mode"
-                    )
-
-        if setpoint is None:
-            raise PlugwiseError(
-                "Plugwise: failed setting temperature: no valid input provided"
-            )  # pragma: no cover"
-
-        temperature = str(setpoint)
-        uri = self._thermostat_uri(loc_id)
-        data = (
-            "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
-        )
-
-        await self._request(uri, method="put", data=data)
+        SmileAPI.set_temperature(loc_id, items)
 
     async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
@@ -458,65 +296,7 @@ class Smile(SmileComm, SmileData):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
         """Set the given State of the relevant Switch."""
-        switch = Munch()
-        switch.actuator = "actuator_functionalities"
-        switch.device = "relay"
-        switch.func_type = "relay_functionality"
-        switch.func = "state"
-        if model == "dhw_cm_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
-            switch.act_type = "domestic_hot_water_comfort_mode"
-
-        if model == "cooling_ena_switch":
-            switch.device = "toggle"
-            switch.func_type = "toggle_functionality"
-            switch.act_type = "cooling_enabled"
-
-        if model == "lock":
-            switch.func = "lock"
-            state = "false" if state == "off" else "true"
-
-        if members is not None:
-            return await self._set_groupswitch_member_state(members, state, switch)
-
-        locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found: list[etree] = self._domain_objects.findall(locator)
-        for item in found:
-            if (sw_type := item.find("type")) is not None:
-                if sw_type.text == switch.act_type:
-                    switch_id = item.attrib["id"]
-            else:
-                switch_id = item.attrib["id"]
-                break
-
-        uri = f"{APPLIANCES};id={appl_id}/{switch.device};id={switch_id}"
-        data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
-        if model == "relay":
-            locator = (
-                f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}/lock'
-            )
-            # Don't bother switching a relay when the corresponding lock-state is true
-            if self._domain_objects.find(locator).text == "true":
-                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
-
-        await self._request(uri, method="put", data=data)
-
-    async def _set_groupswitch_member_state(
-        self, members: list[str], state: str, switch: Munch
-    ) -> None:
-        """Helper-function for set_switch_state().
-
-        Set the given State of the relevant Switch within a group of members.
-        """
-        for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._domain_objects.find(locator).attrib["id"]
-            uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
-            data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
-
-            await self._request(uri, method="put", data=data)
+        SmileAPI. set_switch_state(appl_id, members, model, state)
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""

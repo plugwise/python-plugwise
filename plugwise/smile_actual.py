@@ -48,8 +48,8 @@ from .data import SmileData
 from .helper import SmileComm, SmileHelper
 
 
-class SmileActual(SmileComm, SmileData):
-    """The Plugwise SmileActual helper class."""
+class SmileAPI(SmileComm, SmileData):
+    """The Plugwise SmileAPI helper class for actual Plugwise devices."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 
