@@ -233,7 +233,10 @@ class SmileHelper:
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
+        self._smile_legacy = False
         self._status: etree
+        self._stretch_v2 = False
+        self._stretch_v3 = False
         self._system: etree
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
