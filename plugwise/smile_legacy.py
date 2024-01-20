@@ -75,6 +75,10 @@ class SmileLegacy(SmileComm, SmileLegacyData):
         self._previous_day_number = day_number
         return PlugwiseData(self.gw_data, self.gw_devices)
 
+########################################################################################################
+###  API Set and HA Service-related Functions                                                        ###
+########################################################################################################
+
     async def set_schedule_state(self, state: str) -> None:
         """Activate/deactivate the Schedule.
 
