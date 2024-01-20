@@ -114,7 +114,7 @@ class Smile(SmileComm, SmileData):
             SmileAPI = SmileLegacyAPI
 
         # Update all endpoints on first connect
-        await SmileAPI._full_update_device()
+        await SmileAPI._full_update_device(self)
 
         return True
 
