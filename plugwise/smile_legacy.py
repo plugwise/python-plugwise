@@ -79,7 +79,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
-    async def set_schedule_state(self, _: str, state: str, _:str | None = None) -> None:
+    async def set_schedule_state(self, _: str, state: str, _: str | None) -> None:
         """Activate/deactivate the Schedule.
 
         Determined from - DOMAIN_OBJECTS.
