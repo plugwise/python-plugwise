@@ -73,6 +73,22 @@ class SmileAPI(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
+        self._smile_legacy: bool
+        self._cooling_present: bool
+        self._elga: bool
+        self._is_thermostat: bool
+        self._on_off_device: bool
+        self._opentherm_device: bool
+        self._target_smile: str | None
+        self.smile_fw_version: str | None
+        self.smile_hostname: str | None
+        self.smile_hw_version: str | None
+        self.smile_mac_address: str | None
+        self.smile_model: str
+        self.smile_name: str
+        self.smile_type: str
+        self.smile_version: tuple[str, semver.version.Version]
+
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
