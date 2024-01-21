@@ -110,11 +110,11 @@ class Smile(SmileComm, SmileData):
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
+        update = SmileAPI()
         if self._smile_legacy:
-            SmileAPI = SmileLegacyAPI
+            update = SmileLegacyAPI()
 
         # Update all endpoints on first connect
-        update = SmileAPI()
         await update._full_update_device()
 
         return True
