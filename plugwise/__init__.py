@@ -73,6 +73,8 @@ class Smile(SmileComm):
             websession,
         )
 
+        self._host = host
+        self._passwd = password
         self.smile_hostname: str | None = None
         self._previous_day_number: str = "0"
         self._target_smile: str | None = None
@@ -109,9 +111,9 @@ class Smile(SmileComm):
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
-        update = SmileAPI()
+        update = SmileAPI(self._host, self._passwd)
         if self._smile_legacy:
-            update = SmileLegacyAPI()
+            update = SmileLegacyAPI(self._host, self._passwd)
 
         # Update all endpoints on first connect
         await update._full_update_device()
