@@ -49,7 +49,7 @@ from .smile_actual import SmileAPI
 from .smile_legacy import SmileLegacyAPI
 
 
-class Smile(SmileComm, SmileData):
+class Smile(SmileComm):
     """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
@@ -72,7 +72,6 @@ class Smile(SmileComm, SmileData):
             timeout,
             websession,
         )
-        SmileData.__init__(self)
 
         self.smile_hostname: str | None = None
         self._previous_day_number: str = "0"
