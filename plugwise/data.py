@@ -33,7 +33,7 @@ class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
     def __init__(self) -> None:
-        super().__init__()
+        SmileData.__init__(self)
 
 
     def _update_gw_devices(self) -> None:
