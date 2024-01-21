@@ -57,7 +57,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
-        cooling_present: bool,
+        _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
         _on_off_device: bool,
