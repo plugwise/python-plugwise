@@ -82,7 +82,6 @@ class Smile(SmileComm, SmileHelper):
         self._timeout = timeout
         self._websession = websession
         self.smile_hostname: str | None = None
-        self._previous_day_number: str = "0"
         self._target_smile: str | None = None
 
     async def connect(self) -> bool:
