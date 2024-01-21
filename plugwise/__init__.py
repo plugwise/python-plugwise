@@ -44,12 +44,12 @@ from .exceptions import (
     ResponseError,
     UnsupportedDeviceError,
 )
-from .helper import SmileComm
+from .helper import SmileComm, SmileHelper
 from .smile_actual import SmileAPI
 from .smile_legacy import SmileLegacyAPI
 
 
-class Smile(SmileComm):
+class Smile(SmileComm, SmileHelper):
     """The Plugwise SmileConnect class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
@@ -72,6 +72,7 @@ class Smile(SmileComm):
             timeout,
             websession,
         )
+        SmileHelper.__init__(self)
 
         self._host = host
         self._passwd = password
