@@ -136,7 +136,7 @@ class Smile(SmileComm, SmileHelper):
             )
 
         # Update all endpoints on first connect
-        await update._full_update_device()
+        await self._api._full_update_device()
 
         return True
 
