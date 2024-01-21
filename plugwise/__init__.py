@@ -287,7 +287,7 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        await self._smile_api.async_update()
+        return await self._smile_api.async_update()
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
