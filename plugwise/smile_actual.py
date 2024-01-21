@@ -71,6 +71,7 @@ class SmileAPI(SmileComm, SmileData):
             timeout,
             websession,
         )
+        SmileData.__init__(self)
 
 
     async def _full_update_device(self) -> None:
