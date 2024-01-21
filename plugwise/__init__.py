@@ -80,10 +80,22 @@ class Smile(SmileComm):
         self._port = port
         self._timeout = timeout
         self._websession = websession
-        self.smile_hostname: str | None = None
-        self.smile_type: str
         self._smile_legacy = False
+
+        self._cooling_present = False
+        self._elga = False
+        self._is_thermostat = False
+        self._on_off_device = False
+        self._opentherm_device = False
         self._target_smile: str | None = None
+        self.smile_fw_version: str | None = None
+        self.smile_hostname: str | None = None
+        self.smile_hw_version: str | None = None
+        self.smile_mac_address: str | None = None
+        self.smile_model: str
+        self.smile_name: str
+        self.smile_type: str
+        self.smile_version: tuple[str, semver.version.Version]
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
