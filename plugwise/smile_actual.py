@@ -61,6 +61,22 @@ class SmileAPI(SmileComm, SmileData):
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
         websession: aiohttp.ClientSession | None = None,
+        cooling_present: bool,
+        _elga: bool,
+        _is_thermostat: bool,
+        _on_off_device: bool,
+        _opentherm_device: bool,
+        _smile_legacy: bool,
+        _target_smile: str | None,
+        smile_fw_version: str | None,
+        smile_hostname: str | None,
+        smile_hw_version: str | None,
+        smile_mac_address: str | None,
+        smile_model: str,
+        smile_name: str,
+        smile_type: str,
+        smile_version: tuple[str, semver.version.Version],
+
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
@@ -73,21 +89,21 @@ class SmileAPI(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
-        self._smile_legacy: bool
-        self._cooling_present: bool
-        self._elga: bool
-        self._is_thermostat: bool
-        self._on_off_device: bool
-        self._opentherm_device: bool
-        self._target_smile: str | None
-        self.smile_fw_version: str | None
-        self.smile_hostname: str | None
-        self.smile_hw_version: str | None
-        self.smile_mac_address: str | None
-        self.smile_model: str
-        self.smile_name: str
-        self.smile_type: str
-        self.smile_version: tuple[str, semver.version.Version]
+        self._cooling_present = _cooling_present
+        self._elga = _elga
+        self._is_thermostat = _is_thermostat
+        self._on_off_device = _on_off_device
+        self._opentherm_device = _opentherm_device
+        self._smile_legacy = _smile_legacy
+        self._target_smile = _target_smile
+        self.smile_fw_version = smile_fw_version
+        self.smile_hostname = smile_hostname
+        self.smile_hw_version = smile_hw_version
+        self.smile_mac_address = smile_mac_address
+        self.smile_model = smile_model
+        self.smile_name = smile_name
+        self.smile_type = smile_name
+        self.smile_version = smile_name
 
 
     async def _full_update_device(self) -> None:

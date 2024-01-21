@@ -80,13 +80,13 @@ class Smile(SmileComm):
         self._port = port
         self._timeout = timeout
         self._websession = websession
-        self._smile_legacy = False
 
         self._cooling_present = False
         self._elga = False
         self._is_thermostat = False
         self._on_off_device = False
         self._opentherm_device = False
+        self._smile_legacy = False
         self._target_smile: str | None = None
         self.smile_fw_version: str | None = None
         self.smile_hostname: str | None = None
@@ -136,6 +136,21 @@ class Smile(SmileComm):
             self._port,
             self._timeout,
             self._websession,
+            self._cooling_present,
+            self._elga,
+            self._is_thermostat,
+            self._on_off_device,
+            self._opentherm_device,
+            self._smile_legacy,
+            self._target_smile,
+            self.smile_fw_version,
+            self.smile_hostname,
+            self.smile_hw_version,
+            self.smile_mac_address,
+            self.smile_model,
+            self.smile_name,
+            self.smile_type,
+            self.smile_version,
          )
         if self._smile_legacy:
             self._smile_api = SmileLegacyAPI(
