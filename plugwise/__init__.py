@@ -74,6 +74,7 @@ class Smile(SmileComm, SmileHelper):
         )
         SmileHelper.__init__(self)
 
+        self._api = None
         self._host = host
         self._passwd = password
         self._user = username
@@ -116,7 +117,7 @@ class Smile(SmileComm, SmileHelper):
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
-        update = SmileAPI(
+        self._api = SmileAPI(
             self._host,
             self._passwd,
             self._user,
@@ -125,7 +126,7 @@ class Smile(SmileComm, SmileHelper):
             self._websession,
          )
         if self._smile_legacy:
-            update = SmileLegacyAPI(
+            self._api = SmileLegacyAPI(
                 self._host,
                 self._passwd,
                 self._user,
@@ -259,7 +260,7 @@ class Smile(SmileComm, SmileHelper):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        SmileAPI.async_update()
+        self._api.async_update()
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
