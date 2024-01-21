@@ -76,6 +76,10 @@ class Smile(SmileComm, SmileHelper):
 
         self._host = host
         self._passwd = password
+        self._user = username
+        self._port = port
+        self._timeout = timeout
+        self._websession = websession
         self.smile_hostname: str | None = None
         self._previous_day_number: str = "0"
         self._target_smile: str | None = None
@@ -112,9 +116,23 @@ class Smile(SmileComm, SmileHelper):
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
-        update = SmileAPI(self._host, self._passwd)
+        update = SmileAPI(
+            self._host,
+            self._passwd,
+            self._user,
+            self._port,
+            self._timeout,
+            self._websession,
+         )
         if self._smile_legacy:
-            update = SmileLegacyAPI(self._host, self._passwd)
+            update = SmileLegacyAPI(
+                self._host,
+                self._passwd,
+                self._user,
+                self._port,
+                self._timeout,
+                self._websession,
+            )
 
         # Update all endpoints on first connect
         await update._full_update_device()
