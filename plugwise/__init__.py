@@ -133,9 +133,6 @@ class Smile(SmileComm):
             self._host,
             self._passwd,
             self._user,
-            self._port,
-            self._timeout,
-            self._websession,
             self._cooling_present,
             self._elga,
             self._is_thermostat,
@@ -151,6 +148,9 @@ class Smile(SmileComm):
             self.smile_name,
             self.smile_type,
             self.smile_version,
+            self._port,
+            self._timeout,
+            self._websession,
          )
         if self._smile_legacy:
             self._smile_api = SmileLegacyAPI(

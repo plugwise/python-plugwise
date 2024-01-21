@@ -57,10 +57,6 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
-        username: str = DEFAULT_USERNAME,
-        port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_TIMEOUT,
-        websession: aiohttp.ClientSession | None = None,
         cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
@@ -76,6 +72,10 @@ class SmileAPI(SmileComm, SmileData):
         smile_name: str,
         smile_type: str,
         smile_version: tuple[str, semver.version.Version],
+        username: str = DEFAULT_USERNAME,
+        port: int = DEFAULT_PORT,
+        timeout: float = DEFAULT_TIMEOUT,
+        websession: aiohttp.ClientSession | None = None,
 
     ) -> None:
         """Set the constructor for this class."""
