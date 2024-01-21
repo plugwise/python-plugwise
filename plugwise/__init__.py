@@ -73,7 +73,7 @@ class Smile(SmileComm):
             websession,
         )
 
-        self._api = None
+        self._smile_api = None
         self._host = host
         self._passwd = password
         self._user = username
@@ -81,6 +81,7 @@ class Smile(SmileComm):
         self._timeout = timeout
         self._websession = websession
         self.smile_hostname: str | None = None
+        self.smile_type: str
         self._smile_legacy = False
         self._target_smile: str | None = None
 
@@ -116,7 +117,7 @@ class Smile(SmileComm):
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
-        self._api = SmileAPI(
+        self._smile_api = SmileAPI(
             self._host,
             self._passwd,
             self._user,
@@ -125,7 +126,7 @@ class Smile(SmileComm):
             self._websession,
          )
         if self._smile_legacy:
-            self._api = SmileLegacyAPI(
+            self._smile_api = SmileLegacyAPI(
                 self._host,
                 self._passwd,
                 self._user,
@@ -135,7 +136,7 @@ class Smile(SmileComm):
             )
 
         # Update all endpoints on first connect
-        await self._api._full_update_device()
+        await self._smile_api._full_update_device()
 
         return True
 
@@ -259,7 +260,7 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        await self._api.async_update()
+        await self._smile_api.async_update()
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
@@ -276,14 +277,14 @@ class Smile(SmileComm):
         Determined from - DOMAIN_OBJECTS.
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
-        SmileAPI.set_schedule_state(loc_id, new_state, name)
+        await self._smile_api.set_schedule_state(loc_id, new_state, name)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat."""
-        SmileAPI.set_preset(loc_id, preset)
+        await self._smile_api.set_preset(loc_id, preset)
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
-        SmileAPI.set_temperature(loc_id, items)
+        await self._smile_api.set_temperature(loc_id, items)
 
     async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
