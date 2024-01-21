@@ -73,9 +73,7 @@ class SmileAPI(SmileComm, SmileData):
         )
         SmileData.__init__(self)
 
-        self.smile_hostname: str | None = None
         self._previous_day_number: str = "0"
-        self._target_smile: str | None = None
 
     async def _full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
