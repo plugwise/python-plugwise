@@ -604,22 +604,6 @@ class SmileHelper:
                     add_to_front = {dev_id: tmp_device}
                     self.gw_devices = {**add_to_front, **cleared_dict}
 
-    def _match_locations(self) -> dict[str, ThermoLoc]:
-        """Helper-function for _scan_thermostats().
-
-        Match appliances with locations.
-        """
-        matched_locations: dict[str, ThermoLoc] = {}
-        for location_id, location_details in self._loc_data.items():
-            for appliance_details in self.gw_devices.values():
-                if appliance_details["location"] == location_id:
-                    location_details.update(
-                        {"master": None, "master_prio": 0, "slaves": set()}
-                    )
-                    matched_locations[location_id] = location_details
-
-        return matched_locations
-
     def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _device_data_adam().
 
@@ -1020,6 +1004,48 @@ class SmileHelper:
 
         return data
 
+    def _scan_thermostats(self) -> None:
+        """Helper-function for smile.py: get_all_devices().
+
+        Update locations with thermostat ranking results and use
+        the result to update the device_class of slave thermostats.
+        """
+        self._thermo_locs = self._match_locations()
+
+        thermo_matching: dict[str, int] = {
+            "thermostat": 3,
+            "zone_thermometer": 2,
+            "zone_thermostat": 2,
+            "thermostatic_radiator_valve": 1,
+        }
+
+        for loc_id in self._thermo_locs:
+            for dev_id, device in self.gw_devices.items():
+                self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
+
+        # Update slave thermostat class where needed
+        for dev_id, device in self.gw_devices.items():
+            if (loc_id := device["location"]) in self._thermo_locs:
+                tl_loc_id = self._thermo_locs[loc_id]
+                if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
+                    device["dev_class"] = "thermo_sensor"
+
+    def _match_locations(self) -> dict[str, ThermoLoc]:
+        """Helper-function for _scan_thermostats().
+
+        Match appliances with locations.
+        """
+        matched_locations: dict[str, ThermoLoc] = {}
+        for location_id, location_details in self._loc_data.items():
+            for appliance_details in self.gw_devices.values():
+                if appliance_details["location"] == location_id:
+                    location_details.update(
+                        {"master": None, "master_prio": 0, "slaves": set()}
+                    )
+                    matched_locations[location_id] = location_details
+
+        return matched_locations
+
     def _rank_thermostat(
         self,
         thermo_matching: dict[str, int],
@@ -1046,32 +1072,6 @@ class SmileHelper:
 
             else:
                 self._thermo_locs[loc_id]["slaves"].add(appliance_id)
-
-    def _scan_thermostats(self) -> None:
-        """Helper-function for smile.py: get_all_devices().
-
-        Update locations with thermostat ranking results and use
-        the result to update the device_class of slave thermostats.
-        """
-        self._thermo_locs = self._match_locations()
-
-        thermo_matching: dict[str, int] = {
-            "thermostat": 3,
-            "zone_thermometer": 2,
-            "zone_thermostat": 2,
-            "thermostatic_radiator_valve": 1,
-        }
-
-        for loc_id in self._thermo_locs:
-            for dev_id, device in self.gw_devices.items():
-                self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
-
-        # Update slave thermostat class where needed
-        for dev_id, device in self.gw_devices.items():
-            if (loc_id := device["location"]) in self._thermo_locs:
-                tl_loc_id = self._thermo_locs[loc_id]
-                if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
-                    device["dev_class"] = "thermo_sensor"
 
     def _thermostat_uri(self, loc_id: str) -> str:
         """Helper-function for smile.py: set_temperature().
