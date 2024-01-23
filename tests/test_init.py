@@ -409,7 +409,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-        location_list = smile._thermo_locs
+
+        # location_list_alt = [d.get["location"] for d in list(data.devices.values())]
+        _list = list(data.devices.values())
+        _temp_list = [d["location"] for d in _list]
+        location_list = list(dict.fromkeys(_temp_list))
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
