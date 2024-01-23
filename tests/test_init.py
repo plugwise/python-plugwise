@@ -419,7 +419,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
         _LOGGER.info("Device list = %s", data.devices)
-        self.show_setup(location_list, data.devices)
+        # self.show_setup(location_list, data.devices)
 
         # Perform tests and asserts
         tests = 0
