@@ -27,7 +27,7 @@ from .constants import (
     PlugwiseData,
 )
 from .data_legacy import SmileLegacyData
-from .helper import SmileComm, SmileHelper
+from .helper import SmileComm
 
 class SmileLegacyAPI(SmileComm, SmileLegacyData):
     """The Plugwise SmileLegacyAPI class."""

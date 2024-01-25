@@ -45,7 +45,7 @@ from .exceptions import (
     UnsupportedDeviceError,
 )
 from .data import SmileData
-from .helper import SmileComm, SmileHelper
+from .helper import SmileComm
 
 
 class SmileAPI(SmileComm, SmileData):
