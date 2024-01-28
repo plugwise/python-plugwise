@@ -360,7 +360,7 @@ class SmileAPI(SmileComm, SmileData):
             )
             # Don't bother switching a relay when the corresponding lock-state is true
             if self._domain_objects.find(locator).text == "true":
-                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
+                raise PlugwiseError
 
         await self._request(uri, method="put", data=data)
 
