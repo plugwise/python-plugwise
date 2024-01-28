@@ -359,13 +359,10 @@ class Smile(SmileComm):
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
-        if mode not in self._dhw_allowed_modes:
+        try:
+            await self._smile_api.set_dhw_mode(mode)
+        except PlugwiseError:
             raise PlugwiseError("Plugwise: invalid dhw mode.")
-
-        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
-        data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
