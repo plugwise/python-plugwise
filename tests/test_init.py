@@ -417,7 +417,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # location_list_alt = [d.get["location"] for d in list(data.devices.values())]
         _list = list(data.devices.values())
-        _temp_list = [d["location"] for d in _list]
+        _temp_list = [d["location"] for d in _list if "location" in d]
         location_list = list(dict.fromkeys(_temp_list))
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
