@@ -349,7 +349,10 @@ class Smile(SmileComm):
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
         """Set the given State of the relevant Switch."""
-        self._smile_api.set_switch_state(appl_id, members, model, state)
+        try:
+            self._smile_api.set_switch_state(appl_id, members, model, state)
+        except PlugwiseError:
+            raise PlugwiseError
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
