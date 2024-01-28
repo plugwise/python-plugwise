@@ -404,6 +404,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.gateway_id = data.gateway["gateway_id"]
         self.heater_id = data.gateway["heater_id"]
         self.device_items = data.gateway["item_count"]
+        
+        self._cooling_enabled = False
         if "cooling_enabled" in data.devices[self.heater_id]["binary_sensors"]:
             self._cooling_enabled = data.devices[self.heater_id]["binary_sensors"]["cooling_enabled"]
         self._cooling_active = False        

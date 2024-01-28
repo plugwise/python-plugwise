@@ -35,7 +35,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         assert not smile._cooling_present
         assert not self._cooling_active
-        assert not self.cooling_enabled
+        assert not self._cooling_enabled
 
         result = await self.tinker_thermostat(
             smile,
@@ -193,7 +193,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.device_items == 66
         assert not self.notifications
         assert self.cooling_present
-        assert not self.cooling_enabled
+        assert not self._cooling_enabled
         assert not self._cooling_active
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
@@ -249,7 +249,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.cooling_present
         assert not self.notifications
 
-        assert self.cooling_enabled
+        assert self._cooling_enabled
         assert self._cooling_active
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
@@ -292,7 +292,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
         assert self.device_items == 63
         assert smile._cooling_present
-        assert self.cooling_enabled
+        assert self._cooling_enabled
         assert self._cooling_active
 
         await smile.close_connection()
@@ -347,7 +347,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.device_items == 62
         assert self.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
-        assert not self.cooling_enabled
+        assert not self._cooling_enabled
         assert not self.notifications
 
         await smile.close_connection()
@@ -368,7 +368,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         #     == THERMOSTAT_SCHEDULE
         # )
         assert smile._cooling_present
-        assert not self.cooling_enabled
+        assert not self._cooling_enabled
         assert self.device_items == 62
 
         await smile.close_connection()
@@ -402,7 +402,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert not self.notifications
 
         assert self.cooling_present
-        assert self.cooling_enabled
+        assert self._cooling_enabled
         assert self._cooling_active
 
         await smile.close_connection()
@@ -427,7 +427,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         # assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert self.device_items == 63
         assert smile._cooling_present
-        assert not self.cooling_enabled
+        assert not self._cooling_enabled
 
         switch_change = await self.tinker_switch(
             smile,
@@ -482,7 +482,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         # assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert self.device_items == 63
         assert smile._cooling_present
-        assert self.cooling_enabled
+        assert self._cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -505,7 +505,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert self.device_items == 63
         assert smile._cooling_present
-        assert not self.cooling_enabled
+        assert not self._cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
