@@ -1342,11 +1342,11 @@ class SmileHelper:
             if (state := xml.find(locator)) is not None:
                 data["switches"][name] = state.text == "on"
                 self._count += 1
-                # Remove the cooling_enabled binary_sensor when the corresponding switch is present
-                # Except for Elga
-                if toggle == "cooling_enabled" and not self._elga:
-                    data["binary_sensors"].pop("cooling_enabled")
-                    self._count -= 1
+        #        # Remove the cooling_enabled binary_sensor when the corresponding switch is present
+        #        # Except for Elga
+        #        if toggle == "cooling_enabled" and not self._elga:
+        #            data["binary_sensors"].pop("cooling_enabled")
+        #            self._count -= 1
 
     def _get_plugwise_notifications(self) -> None:
         """Collect the Plugwise notifications."""
