@@ -478,7 +478,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
-        for new_state in "false", "true", "false"]:
+        for new_state in ["false", "true", "false"]:
             tinker_switch_passed = False
             _LOGGER.info("- Switching %s", new_state)
             try:
