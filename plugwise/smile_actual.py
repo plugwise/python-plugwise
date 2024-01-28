@@ -382,7 +382,7 @@ class SmileAPI(SmileComm, SmileData):
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
         if mode not in self._gw_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid gateway mode.")
+            raise PlugwiseError
 
         end_time = "2037-04-21T08:00:53.000Z"
         valid = ""

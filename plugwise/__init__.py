@@ -360,26 +360,10 @@ class Smile(SmileComm):
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        if mode not in self._data.devices[self.gateway_id]["gateway_modes"]:
+        try:
+            await self._smile_api.set_gateway_mode(mode)
+        except PlugwiseError:
             raise PlugwiseError("Plugwise: invalid gateway mode.")
-
-        end_time = "2037-04-21T08:00:53.000Z"
-        valid = ""
-        if mode == "away":
-            time_1 = self._domain_objects.find("./gateway/time").text
-            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
-            valid = (
-                f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
-            )
-        if mode == "vacation":
-            time_2 = str(dt.date.today() - dt.timedelta(1))
-            vacation_time = time_2 + "T23:00:00.000Z"
-            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
-
-        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
-        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
