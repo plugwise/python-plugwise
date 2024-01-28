@@ -83,6 +83,7 @@ class Smile(SmileComm):
 
         self._cooling_present = False
         self._elga = False
+        self._gw_allowed_modes = []
         self._is_thermostat = False
         self._on_off_device = False
         self._opentherm_device = False
@@ -135,6 +136,7 @@ class Smile(SmileComm):
             self._passwd,
             self._cooling_present,
             self._elga,
+            self._gw_allowed_modes,
             self._is_thermostat,
             self._on_off_device,
             self._opentherm_device,
