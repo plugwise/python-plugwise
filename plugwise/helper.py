@@ -215,7 +215,7 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
-        self._cooling_present = False
+        # self._cooling_present = False
         self._count: int
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
