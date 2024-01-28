@@ -62,6 +62,7 @@ class SmileAPI(SmileComm, SmileData):
         _is_thermostat: bool,
         _on_off_device: bool,
         _opentherm_device: bool,
+        _schedule_old_states: dict[str, dict[str, str]],
         _smile_legacy: bool,
         _target_smile: str | None,
         smile_fw_version: str | None,
@@ -94,6 +95,7 @@ class SmileAPI(SmileComm, SmileData):
         self._is_thermostat = _is_thermostat
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
+        self._schedule_old_states = _schedule_old_states
         self._smile_legacy = _smile_legacy
         self._target_smile = _target_smile
         self.smile_fw_version = smile_fw_version

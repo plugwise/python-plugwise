@@ -86,6 +86,7 @@ class Smile(SmileComm):
         self._is_thermostat = False
         self._on_off_device = False
         self._opentherm_device = False
+        self._schedule_old_states = {}
         self._smile_legacy = False
         self._target_smile: str | None = None
         self.smile_fw_version: str | None = None
@@ -137,6 +138,7 @@ class Smile(SmileComm):
             self._is_thermostat,
             self._on_off_device,
             self._opentherm_device,
+            self._schedule_old_states,
             self._smile_legacy,
             self._target_smile,
             self.smile_fw_version,
