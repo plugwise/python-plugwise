@@ -327,17 +327,12 @@ class Smile(SmileComm):
             raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
 
     async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
-        """Set the Temperature offset for thermostats that support this feature."""
-        if dev_id not in self.therms_with_offset_func:
+        try:
+            await self._smile_api.set_temperature_offset(dev_id, offset)
+        except PlugwiseError:
             raise PlugwiseError(
                 "Plugwise: this device does not have temperature-offset capability."
             )
-
-        value = str(offset)
-        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
-        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
-
-        await self._request(uri, method="put", data=data)
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
