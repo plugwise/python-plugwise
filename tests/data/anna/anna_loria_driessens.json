@@ -57,6 +57,7 @@
   "a449cbc334ae4a5bb7f89064984b2906": {
     "available": true,
     "binary_sensors": {
+      "cooling_enabled": false,
       "cooling_state": false,
       "dhw_state": false,
       "flame_state": false,
