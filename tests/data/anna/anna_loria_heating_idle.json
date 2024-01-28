@@ -51,6 +51,7 @@
       "dhw_state": false,
       "heating_state": false,
       "cooling_state": false,
+      "cooling_enabled": false,
       "flame_state": false
     },
     "sensors": {
