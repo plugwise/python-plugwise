@@ -352,7 +352,7 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_switch_state(appl_id, members, model, state)
         except PlugwiseError:
-            raise PlugwiseError
+            raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
