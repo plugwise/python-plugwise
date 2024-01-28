@@ -59,7 +59,6 @@ class SmileAPI(SmileComm, SmileData):
         password: str,
         _cooling_present: bool,
         _elga: bool,
-        _gw_allowed_modes: list[str],
         _is_thermostat: bool,
         _on_off_device: bool,
         _opentherm_device: bool,
@@ -93,7 +92,6 @@ class SmileAPI(SmileComm, SmileData):
 
         self._cooling_present = _cooling_present
         self._elga = _elga
-        self._gw_allowed_modes = _gw_allowed_modes
         self._is_thermostat = _is_thermostat
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device

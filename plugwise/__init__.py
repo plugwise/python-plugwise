@@ -82,8 +82,8 @@ class Smile(SmileComm):
         self._websession = websession
 
         self._cooling_present = False
+        self._data: PlugwiseData = {}
         self._elga = False
-        self._gw_allowed_modes = []
         self._is_thermostat = False
         self._on_off_device = False
         self._opentherm_device = False
@@ -136,7 +136,6 @@ class Smile(SmileComm):
             self._passwd,
             self._cooling_present,
             self._elga,
-            self._gw_allowed_modes,
             self._is_thermostat,
             self._on_off_device,
             self._opentherm_device,
@@ -291,7 +290,8 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        return await self._smile_api.async_update()
+        self._data = await self._smile_api.async_update()
+        return self._data
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
@@ -358,7 +358,7 @@ class Smile(SmileComm):
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        if mode not in self._gw_allowed_modes:
+        if mode not in self._data[self.gateway_id]["gateway_modes"]:
             raise PlugwiseError("Plugwise: invalid gateway mode.")
 
         end_time = "2037-04-21T08:00:53.000Z"
