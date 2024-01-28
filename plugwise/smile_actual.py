@@ -285,7 +285,7 @@ class SmileAPI(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
+    async def set_number_setpoint(self, key: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
         temp = str(temperature)
         thermostat_id: str | None = None
@@ -296,7 +296,7 @@ class SmileAPI(SmileComm, SmileData):
                     thermostat_id = th_func.attrib["id"]
 
         if thermostat_id is None:
-            raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
+            raise PlugwiseError
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"

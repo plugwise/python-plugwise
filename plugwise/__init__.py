@@ -321,20 +321,10 @@ class Smile(SmileComm):
 
     async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
-        temp = str(temperature)
-        thermostat_id: str | None = None
-        locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
-        if th_func_list := self._domain_objects.findall(locator):
-            for th_func in th_func_list:
-                if th_func.find("type").text == key:
-                    thermostat_id = th_func.attrib["id"]
-
-        if thermostat_id is None:
+        try:
+            await self._smile_api.set_number_setpoint(key, temperature)
+        except PlugwiseError:
             raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
-
-        uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
-        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
-        await self._request(uri, method="put", data=data)
 
     async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
