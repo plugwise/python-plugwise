@@ -33,7 +33,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.device_items == 56
         assert not self.notifications
 
-        assert not smile._cooling_present
+        assert not self.cooling_present
         assert not self._cooling_active
         assert not self._cooling_enabled
 
@@ -291,7 +291,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
         assert self.device_items == 63
-        assert smile._cooling_present
+        assert self.cooling_present
         assert self._cooling_enabled
         assert self._cooling_active
 
@@ -367,7 +367,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         #     smile._last_active["d3ce834534114348be628b61b26d9220"]
         #     == THERMOSTAT_SCHEDULE
         # )
-        assert smile._cooling_present
+        assert self.cooling_present
         assert not self._cooling_enabled
         assert self.device_items == 62
 
@@ -426,7 +426,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         # assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert self.device_items == 63
-        assert smile._cooling_present
+        assert self.cooling_present
         assert not self._cooling_enabled
 
         switch_change = await self.tinker_switch(
@@ -481,7 +481,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         # assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
         assert self.device_items == 63
-        assert smile._cooling_present
+        assert self.cooling_present
         assert self._cooling_enabled
 
         await smile.close_connection()
@@ -504,7 +504,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert self.device_items == 63
-        assert smile._cooling_present
+        assert self.cooling_present
         assert not self._cooling_enabled
 
         await smile.close_connection()

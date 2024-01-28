@@ -167,7 +167,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
         assert self.device_items == 56
-        assert smile._cooling_present
+        assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
 
         await smile.close_connection()
