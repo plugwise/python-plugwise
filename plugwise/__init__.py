@@ -367,16 +367,10 @@ class Smile(SmileComm):
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        if mode not in self._reg_allowed_modes:
+        try:
+            await self._smile_api.set_regulation_mode(mode)
+        except PlugwiseError:
             raise PlugwiseError("Plugwise: invalid regulation mode.")
-
-        uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
-        duration = ""
-        if "bleeding" in mode:
-            duration = "<duration>300</duration>"
-        data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""

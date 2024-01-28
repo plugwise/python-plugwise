@@ -405,7 +405,7 @@ class SmileAPI(SmileComm, SmileData):
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._reg_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid regulation mode.")
+            raise PlugwiseError
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         duration = ""
