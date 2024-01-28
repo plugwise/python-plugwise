@@ -32,7 +32,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "fe799307f1624099878210aa0b9f1475"
+        assert self.gateway_id == "fe799307f1624099878210aa0b9f1475"
         assert smile._last_active["12493538af164a409c6a1c79e38afe1c"] == BADKAMER_SCHEMA
         assert smile._last_active["c50f167537524366a5af7aa3942feb1e"] == GF7_WOONKAMER
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
@@ -189,7 +189,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
-        assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
+        assert self.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert smile._last_active["009490cc2f674ce6b576863fbb64f867"] == "Weekschema"
         assert smile.device_items == 70
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
@@ -238,7 +238,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2023-12-17 00:00:01", testdata)
-        assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
+        assert self.gateway_id == "da224107914542988a88561b4452b0f6"
         assert smile._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
         assert smile._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
         assert smile.device_items == 147
@@ -342,7 +342,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper()
 
         await self.device_test(smile, "2021-06-20 00:00:01", testdata)
-        assert smile.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
+        assert self.gateway_id == "b5c2386c6f6342669e50fe49dd05b188"
         assert smile._last_active["d58fec52899f4f1c92e4f8fad6d8c48c"] is None
         assert smile._last_active["06aecb3d00354375924f50c47af36bd2"] is None
         assert smile._last_active["d27aede973b54be484f6842d1b2802ad"] is None
