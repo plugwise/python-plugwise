@@ -350,7 +350,7 @@ class Smile(SmileComm):
     ) -> None:
         """Set the given State of the relevant Switch."""
         try:
-            self._smile_api.set_switch_state(appl_id, members, model, state)
+            await self._smile_api.set_switch_state(appl_id, members, model, state)
         except PlugwiseError:
             raise PlugwiseError
 
