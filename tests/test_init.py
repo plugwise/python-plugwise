@@ -406,6 +406,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.device_items = data.gateway["item_count"]
         if "cooling_enabled" in data.devices[self.heater_id]["binary_sensors"]:
             self._cooling_enabled = data.devices[self.heater_id]["binary_sensors"]["cooling_enabled"]
+        if "cooling_state" in data.devices[self.heater_id]["binary_sensors"]:
+            self._cooling_active = data.devices[self.heater_id]["binary_sensors"]["cooling_state"]
+        
         self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
         self._write_json("device_list", list(data.devices.keys()))
         self._write_json("notifications", data.gateway["notifications"])
