@@ -242,7 +242,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         # assert smile._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
         # assert smile._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
         assert self.device_items == 147
-        assert smile.device_list == [
+        assert self.device_list == [
             "da224107914542988a88561b4452b0f6",
             "056ee145a816487eaa69243c3280f8bf",
             "67d73d0bd469422db25a618a5fb8eeb0",
