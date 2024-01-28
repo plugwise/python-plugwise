@@ -30,7 +30,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert self.gateway_id == "0466eae8520144c78afb29628384edeb"
         # assert smile._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
-        assert smile.device_items == 56
+        assert self.device_items == 56
         assert not self.notifications
 
         assert not smile._cooling_present
@@ -99,7 +99,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         # assert smile._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
-        assert smile.device_items == 56
+        assert self.device_items == 56
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -132,7 +132,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
-        assert smile.device_items == 56
+        assert self.device_items == 56
 
         result = await self.tinker_thermostat(
             smile,
@@ -161,7 +161,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         # assert smile._last_active["c34c6864216446528e95d88985e714cc"] == "Normaal"
-        assert smile.device_items == 38
+        assert self.device_items == 38
         assert not self.notifications
 
         result = await self.tinker_thermostat(
@@ -190,7 +190,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert self.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         # assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
-        assert smile.device_items == 66
+        assert self.device_items == 66
         assert not self.notifications
         assert self.cooling_present
         assert not smile._cooling_enabled
@@ -219,7 +219,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(
             smile, "2020-04-13 00:00:01", testdata_updated, initialize=False
         )
-        assert smile.device_items == 63
+        assert self.device_items == 63
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -245,7 +245,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
         # assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
-        assert smile.device_items == 63
+        assert self.device_items == 63
         assert self.cooling_present
         assert not self.notifications
 
@@ -290,7 +290,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2020-04-19 00:00:01", testdata)
-        assert smile.device_items == 63
+        assert self.device_items == 63
         assert smile._cooling_present
         assert smile._cooling_enabled
         assert smile._cooling_active
@@ -317,7 +317,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
         assert self.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         # assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
-        assert smile.device_items == 62
+        assert self.device_items == 62
         assert not self.notifications
         assert not self.cooling_present
 
@@ -344,7 +344,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         #     smile._last_active["d3ce834534114348be628b61b26d9220"]
         #     == THERMOSTAT_SCHEDULE
         # )
-        assert smile.device_items == 62
+        assert self.device_items == 62
         assert self.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not smile._cooling_enabled
@@ -369,7 +369,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         # )
         assert smile._cooling_present
         assert not smile._cooling_enabled
-        assert smile.device_items == 62
+        assert self.device_items == 62
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -398,7 +398,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         #     smile._last_active["d3ce834534114348be628b61b26d9220"]
         #     == THERMOSTAT_SCHEDULE
         # )
-        assert smile.device_items == 62
+        assert self.device_items == 62
         assert not self.notifications
 
         assert self.cooling_present
@@ -425,7 +425,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         # assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
-        assert smile.device_items == 63
+        assert self.device_items == 63
         assert smile._cooling_present
         assert not smile._cooling_enabled
 
@@ -480,7 +480,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         # assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
-        assert smile.device_items == 63
+        assert self.device_items == 63
         assert smile._cooling_present
         assert smile._cooling_enabled
 
@@ -503,7 +503,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.device_items == 63
+        assert self.device_items == 63
         assert smile._cooling_present
         assert not smile._cooling_enabled
 
