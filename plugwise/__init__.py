@@ -360,7 +360,7 @@ class Smile(SmileComm):
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        if mode not in self._data[self.gateway_id]["gateway_modes"]:
+        if mode not in self._data.devices[self.gateway_id]["gateway_modes"]:
             raise PlugwiseError("Plugwise: invalid gateway mode.")
 
         end_time = "2037-04-21T08:00:53.000Z"
