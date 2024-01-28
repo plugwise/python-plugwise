@@ -90,6 +90,7 @@ class Smile(SmileComm):
         self._schedule_old_states = {}
         self._smile_legacy = False
         self._target_smile: str | None = None
+        self.gateway_id: str
         self.smile_fw_version: str | None = None
         self.smile_hostname: str | None = None
         self.smile_hw_version: str | None = None
@@ -291,6 +292,7 @@ class Smile(SmileComm):
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         self._data = await self._smile_api.async_update()
+        self.gateway_id = self._data["gateway"]["gateway_id"]
         return self._data
 
 ########################################################################################################
