@@ -7,7 +7,6 @@ from __future__ import annotations
 import datetime as dt
 
 import aiohttp
-from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
@@ -204,7 +203,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         """
         for member in members:
             locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
-            switch_id = self._appliances.find(locator).attrib["id"]
             uri = f"{APPLIANCES};id={member}/{switch.func_type}"
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
