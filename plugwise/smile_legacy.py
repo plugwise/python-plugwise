@@ -82,7 +82,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             )
             self.gw_data: GatewayData = {}
             self.gw_devices: dict[str, DeviceData] = {}
-            await self._full_update_device()
+            await self.full_update_device()
             self.get_all_devices()
         # Otherwise perform an incremental update
         else:

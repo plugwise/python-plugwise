@@ -131,7 +131,7 @@ class SmileAPI(SmileComm, SmileData):
         # Perform a full update at day-change
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
-        await self._full_update_device()
+        await self.full_update_device()
         self.get_all_devices()
 
         return PlugwiseData(self.gw_data, self.gw_devices)
