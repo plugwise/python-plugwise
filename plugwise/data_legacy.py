@@ -120,10 +120,6 @@ class SmileLegacyData(SmileHelper):
         """
         self._update_gw_devices()
         self.device_items = self._count
-        self.device_list = []
-        for device in self.gw_devices:
-            self.device_list.append(device)
-
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
