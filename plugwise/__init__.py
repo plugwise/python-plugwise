@@ -74,6 +74,8 @@ class Smile(SmileComm):
         self._opentherm_device = False
         self._schedule_old_states = {}
         self._smile_legacy = False
+        self._stretch_v2 = False
+        self._stretch_v3 = False
         self._target_smile: str | None = None
         self.smile_fw_version: str | None = None
         self.smile_hostname: str | None = None
@@ -83,6 +85,7 @@ class Smile(SmileComm):
         self.smile_name: str
         self.smile_type: str
         self.smile_version: tuple[str, semver.version.Version]
+        self.smile_zigbee_mac_address: str | None = None
 
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
@@ -144,6 +147,23 @@ class Smile(SmileComm):
             self._smile_api = SmileLegacyAPI(
                 self._host,
                 self._passwd,
+                self._is_thermostat,
+                self._on_off_device,
+                self._opentherm_device,
+                self._schedule_old_states,
+                self._smile_legacy,
+                self._stretch_v2,
+                self._stretch_v3,
+                self._target_smile,
+                self.smile_fw_version,
+                self.smile_hostname,
+                self.smile_hw_version,
+                self.smile_mac_address,
+                self.smile_model,
+                self.smile_name,
+                self.smile_type,
+                self.smile_version,
+                self.smile_zigbee_mac_address,
                 self._user,
                 self._port,
                 self._timeout,
@@ -246,22 +266,22 @@ class Smile(SmileComm):
             result.find('./appliance[type="thermostat"]') is not None
             or network is not None
         ):
-            self._system = await self._request(SYSTEM)
-            self.smile_fw_version = self._system.find("./gateway/firmware").text
-            return_model = self._system.find("./gateway/product").text
-            self.smile_hostname = self._system.find("./gateway/hostname").text
+            system = await self._request(SYSTEM)
+            self.smile_fw_version = system.find("./gateway/firmware").text
+            return_model = system.find("./gateway/product").text
+            self.smile_hostname = system.find("./gateway/hostname").text
             # If wlan0 contains data it's active, so eth0 should be checked last
             for network in ("wlan0", "eth0"):
                 locator = f"./{network}/mac"
-                if (net_locator := self._system.find(locator)) is not None:
+                if (net_locator := system.find(locator)) is not None:
                     self.smile_mac_address = net_locator.text
         # P1 legacy:
         elif dsmrmain is not None:
-            self._status = await self._request(STATUS)
-            self.smile_fw_version = self._status.find("./system/version").text
-            return_model = self._status.find("./system/product").text
-            self.smile_hostname = self._status.find("./network/hostname").text
-            self.smile_mac_address = self._status.find("./network/mac_address").text
+            status = await self._request(STATUS)
+            self.smile_fw_version = status.find("./system/version").text
+            return_model = status.find("./system/product").text
+            self.smile_hostname = status.find("./network/hostname").text
+            self.smile_mac_address = status.find("./network/mac_address").text
         else:  # pragma: no cover
             # No cornercase, just end of the line
             LOGGER.error(
