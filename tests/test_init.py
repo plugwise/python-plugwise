@@ -422,8 +422,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-
-        # location_list_alt = [d.get["location"] for d in list(data.devices.values())]
         self.device_list = list(data.devices.keys())
         _temp_list = [d["location"] for d in self.device_list if "location" in d]
         location_list = list(dict.fromkeys(_temp_list))
@@ -432,7 +430,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
         _LOGGER.info("Device list = %s", data.devices)
-        # self.show_setup(location_list, data.devices)
+        self.show_setup(location_list, data.devices)
 
         # Perform tests and asserts
         tests = 0
