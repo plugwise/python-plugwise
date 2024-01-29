@@ -41,6 +41,23 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         host: str,
         password: str,
+        _is_thermostat,
+        _on_off_device,
+        _opentherm_device,
+        _schedule_old_states,
+        _smile_legacy,
+        _stretch_v2,
+        _stretch_v3,
+        _target_smile,
+        smile_fw_version,
+        smile_hostname,
+        smile_hw_version,
+        smile_mac_address,
+        smile_model,
+        smile_name,
+        smile_type,
+        smile_version,
+        smile_zigbee_mac_address,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
@@ -56,6 +73,25 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             websession,
         )
         SmileLegacyData.__init__(self)
+
+        self._is_thermostat = _is_thermostat
+        self._on_off_device = _on_off_device
+        self._opentherm_device = _opentherm_device
+        self._schedule_old_states = _schedule_old_states
+        self._smile_legacy = _smile_legacy
+        self._stretch_v2 = _stretch_v2
+        self._stretch_v3 = _stretch_v3
+        self._target_smile = _target_smile
+        self.smile_fw_version = smile_fw_version
+        self.smile_hostname = smile_hostname
+        self.smile_hw_version = smile_hw_version
+        self.smile_mac_address = smile_mac_address
+        self.smile_model = smile_model
+        self.smile_name = smile_name
+        self.smile_type = smile_type
+        self.smile_version = smile_version
+        self.smile_zigbee_mac_address = smile_zigbee_mac_address
+
         self._previous_day_number: str = "0"
 
     async def full_update_device(self) -> None:
