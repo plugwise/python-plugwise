@@ -33,7 +33,7 @@ from .constants import (
     GatewayData,
     PlugwiseData,
 )
-from .data import SmileData
+from .data import SmileLegacyData
 from .exceptions import PlugwiseError
 from .helper import SmileComm
 
