@@ -182,15 +182,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             return await self._set_groupswitch_member_state(members, state, switch)
 
         locator = f'appliance[@id="{appl_id}"]/{switch.actuator}/{switch.func_type}'
-        found: list[etree] = self._appliances.findall(locator)
-        for item in found:
-            if (sw_type := item.find("type")) is not None:
-                if sw_type.text == switch.act_type:
-                    switch_id = item.attrib["id"]
-            else:
-                switch_id = item.attrib["id"]
-                break
-
         uri = f"{APPLIANCES};id={appl_id}/{switch.func_type}"
         data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
