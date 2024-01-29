@@ -98,7 +98,7 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_version = smile_version
 
 
-    async def _full_update_device(self) -> None:
+    async def full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()

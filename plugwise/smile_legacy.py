@@ -58,7 +58,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         SmileLegacyData.__init__(self)
         self._previous_day_number: str = "0"
 
-    async def _full_update_device(self) -> None:
+    async def full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self._request(DOMAIN_OBJECTS)
         self._locations = await self._request(LOCATIONS)
