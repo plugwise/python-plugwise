@@ -215,7 +215,7 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
-        # self._cooling_present = False
+        self._cooling_present = False
         self._count: int
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
@@ -261,10 +261,10 @@ class SmileHelper:
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
-        # self.smile_model: str
-        # self.smile_name: str
-        # self.smile_type: str
-        # self.smile_version: tuple[str, semver.version.Version]
+        self.smile_model: str
+        self.smile_name: str
+        self.smile_type: str
+        self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
         self.therms_with_offset_func: list[str] = []
 
