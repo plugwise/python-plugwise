@@ -104,8 +104,8 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
         self.smile_name = smile_name
-        self.smile_type = smile_name
-        self.smile_version = smile_name
+        self.smile_type = smile_type
+        self.smile_version = smile_version
 
 
     async def _full_update_device(self) -> None:
