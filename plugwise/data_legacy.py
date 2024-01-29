@@ -4,52 +4,21 @@ Plugwise Smile protocol data-collection helpers for legacy devices.
 """
 from __future__ import annotations
 
-import datetime as dt
-
-import aiohttp
-from defusedxml import ElementTree as etree
-
 # Dict as class
-from munch import Munch
-
 # Version detection
-import semver
-
 from .constants import (
     ADAM,
     ANNA,
-    APPLIANCES,
-    DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
-    DEFAULT_USERNAME,
-    DOMAIN_OBJECTS,
-    LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
-    MODULES,
     NONE,
-    NOTIFICATIONS,
     OFF,
-    REQUIRE_APPLIANCES,
-    RULES,
-    SMILES,
-    STATUS,
     SWITCH_GROUP_TYPES,
-    SYSTEM,
     ZONE_THERMOSTATS,
     ActuatorData,
     DeviceData,
-    GatewayData,
-    PlugwiseData,
 )
-from .exceptions import (
-    InvalidSetupError,
-    PlugwiseError,
-    ResponseError,
-    UnsupportedDeviceError,
-)
-from .helper import SmileComm, SmileHelper
+from .helper import SmileHelper
 
 
 def remove_empty_platform_dicts(data: DeviceData) -> None:

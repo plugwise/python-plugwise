@@ -24,27 +24,17 @@ from .constants import (
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NOTIFICATIONS,
     OFF,
     RULES,
-    SMILES,
-    STATUS,
-    SYSTEM,
     DeviceData,
     GatewayData,
     PlugwiseData,
 )
 from .data import SmileData
-from .exceptions import (
-    InvalidSetupError,
-    PlugwiseError,
-    ResponseError,
-    UnsupportedDeviceError,
-)
-from .data import SmileData
+from .exceptions import PlugwiseError
 from .helper import SmileComm
 
 

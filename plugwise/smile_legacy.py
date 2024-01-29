@@ -5,8 +5,6 @@ Plugwise backend module for Home Assistant Core - covering the legacy P1, Anna, 
 from __future__ import annotations
 
 from .constants import (
-    ADAM,
-    ANNA,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -14,20 +12,14 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
-    MAX_SETPOINT,
-    MIN_SETPOINT,
-    NOTIFICATIONS,
-    OFF,
     RULES,
-    SMILES,
-    STATUS,
-    SYSTEM,
     DeviceData,
     GatewayData,
     PlugwiseData,
 )
 from .data_legacy import SmileLegacyData
 from .helper import SmileComm
+
 
 class SmileLegacyAPI(SmileComm, SmileLegacyData):
     """The Plugwise SmileLegacyAPI class."""

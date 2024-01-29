@@ -16,7 +16,6 @@ from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
-import semver
 
 from .constants import (
     ACTIVE_ACTUATORS,
