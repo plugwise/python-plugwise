@@ -253,9 +253,7 @@ class SmileAPI(SmileComm, SmileData):
 
         if self.smile(ANNA) and self._cooling_present:
             if "setpoint_high" not in items:
-                raise PlugwiseError(
-                    "Plugwise: failed setting temperature: no valid input provided"
-                )
+                raise PlugwiseError
             tmp_setpoint_high = items["setpoint_high"]
             tmp_setpoint_low = items["setpoint_low"]
             if self._cooling_enabled:  # in cooling mode
@@ -272,9 +270,7 @@ class SmileAPI(SmileComm, SmileData):
                     )
 
         if setpoint is None:
-            raise PlugwiseError(
-                "Plugwise: failed setting temperature: no valid input provided"
-            )  # pragma: no cover"
+            raise PlugwiseError  # pragma: no cover"
 
         temperature = str(setpoint)
         uri = self._thermostat_uri(loc_id)

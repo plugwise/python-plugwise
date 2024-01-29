@@ -317,7 +317,12 @@ class Smile(SmileComm):
         await self._smile_api.set_preset(loc_id, preset)
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
-        await self._smile_api.set_temperature(loc_id, items)
+        try:
+            await self._smile_api.set_temperature(loc_id, items)
+        except PlugwiseError:
+            raise PlugwiseError(
+                    "Plugwise: failed setting temperature: no valid input provided"
+                )
 
     async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
