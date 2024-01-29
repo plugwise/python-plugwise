@@ -264,7 +264,7 @@ class SmileHelper:
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
-        self.smile_version: tuple[str, semver.version.Version]
+        # self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
         self.therms_with_offset_func: list[str] = []
 
