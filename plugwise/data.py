@@ -33,6 +33,7 @@ class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
     def __init__(self) -> None:
+        """Init."""
         SmileHelper.__init__(self)
 
 

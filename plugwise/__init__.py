@@ -316,6 +316,7 @@ class Smile(SmileComm):
             raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.") from exc
 
     async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
+        """Set the Temperature offset for thermostats that support this feature."""
         try:
             await self._smile_api.set_temperature_offset(dev_id, offset)
         except PlugwiseError as exc:

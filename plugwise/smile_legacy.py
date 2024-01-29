@@ -4,20 +4,37 @@ Plugwise backend module for Home Assistant Core - covering the legacy P1, Anna, 
 """
 from __future__ import annotations
 
+import datetime as dt
+
+import aiohttp
+from defusedxml import ElementTree as etree
+
+# Dict as class
+from munch import Munch
+
+# Version detection
+import semver
+
 from .constants import (
+    ADAM,
+    ANNA,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
-    LOGGER,
+    MAX_SETPOINT,
+    MIN_SETPOINT,
+    NOTIFICATIONS,
+    OFF,
     RULES,
     DeviceData,
     GatewayData,
     PlugwiseData,
 )
-from .data_legacy import SmileLegacyData
+from .data import SmileData
+from .exceptions import PlugwiseError
 from .helper import SmileComm
 
 
