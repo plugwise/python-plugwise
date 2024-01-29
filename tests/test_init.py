@@ -423,14 +423,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return  # pragma: no cover
 
         self.device_list = list(data.devices.keys())
-        _temp_list = [d["location"] for d in self.device_list if "location" in d]
-        location_list = list(dict.fromkeys(_temp_list))
+        # _temp_list = [d["location"] for d in self.device_list if "location" in d]
+        # location_list = list(dict.fromkeys(_temp_list))
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
         _LOGGER.info("Device list = %s", data.devices)
-        self.show_setup(location_list, data.devices)
+        # self.show_setup(location_list, data.devices)
 
         # Perform tests and asserts
         tests = 0
