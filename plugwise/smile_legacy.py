@@ -202,7 +202,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         Set the given State of the relevant Switch within a group of members.
         """
         for member in members:
-            locator = f'appliance[@id="{member}"]/{switch.actuator}/{switch.func_type}'
             uri = f"{APPLIANCES};id={member}/{switch.func_type}"
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
