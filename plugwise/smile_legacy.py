@@ -13,21 +13,13 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 
 # Version detection
-import semver
-
 from .constants import (
-    ADAM,
-    ANNA,
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
-    MAX_SETPOINT,
-    MIN_SETPOINT,
-    NOTIFICATIONS,
-    OFF,
     RULES,
     DeviceData,
     GatewayData,
