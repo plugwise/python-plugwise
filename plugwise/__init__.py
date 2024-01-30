@@ -30,8 +30,8 @@ from .exceptions import (
     UnsupportedDeviceError,
 )
 from .helper import SmileComm
-from .smile_actual import SmileAPI
-from .smile_legacy import SmileLegacyAPI
+from .smile import SmileAPI
+from .legacy.smile import SmileLegacyAPI
 
 
 class Smile(SmileComm):

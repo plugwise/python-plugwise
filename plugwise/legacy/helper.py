@@ -18,7 +18,7 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 import semver
 
-from .constants import (
+from ..constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
     ANNA,
@@ -58,13 +58,13 @@ from .constants import (
     SwitchType,
     ThermoLoc,
 )
-from .exceptions import (
+from ..exceptions import (
     ConnectionFailedError,
     InvalidAuthentication,
     InvalidXMLError,
     ResponseError,
 )
-from .util import escape_illegal_xml_characters, format_measure, version_to_model
+from ..util import escape_illegal_xml_characters, format_measure, version_to_model
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:

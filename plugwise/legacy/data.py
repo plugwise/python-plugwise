@@ -6,7 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from .constants import (
+from ..constants import (
     ADAM,
     ANNA,
     MAX_SETPOINT,
@@ -18,7 +18,7 @@ from .constants import (
     ActuatorData,
     DeviceData,
 )
-from .helper import SmileHelper
+from .helper import SmileLegacyHelper
 
 
 def remove_empty_platform_dicts(data: DeviceData) -> None:
@@ -31,7 +31,7 @@ def remove_empty_platform_dicts(data: DeviceData) -> None:
         data.pop("switches")
 
 
-class SmileLegacyData(SmileHelper):
+class SmileLegacyData(SmileLegacyHelper):
     """The Plugwise Smile main class."""
 
     def _update_gw_devices(self) -> None:
