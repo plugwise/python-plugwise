@@ -117,12 +117,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
-#            if not stretch:
-            app.router.add_route(
-                "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
-            )
-#            else:
-#                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_ok)
+            if not stretch:
+                app.router.add_route(
+                    "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
+                )
+            else:
+                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_ok)
         else:
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
@@ -134,15 +134,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return app
 
     # Wrapper for appliances uri
-#    async def smile_appliances(self, request):
-#        """Render setup specific appliances endpoint."""
-#        userdata = os.path.join(
-#            os.path.dirname(__file__),
-#            f"../userdata/{self.smile_setup}/core.appliances.xml",
-#        )
-#        with open(userdata, encoding="utf-8") as filedata:
-#            data = filedata.read()
-#        return aiohttp.web.Response(text=data)
+    async def smile_appliances(self, request):
+        """Render setup specific appliances endpoint."""
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.appliances.xml",
+        )
+        with open(userdata, encoding="utf-8") as filedata:
+            data = filedata.read()
+        return aiohttp.web.Response(text=data)
 
     async def smile_domain_objects(self, request):
         """Render setup specific domain objects endpoint."""
@@ -154,38 +154,38 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             data = filedata.read()
         return aiohttp.web.Response(text=data)
 
-#    async def smile_locations(self, request):
-#        """Render setup specific locations endpoint."""
-#        userdata = os.path.join(
-#            os.path.dirname(__file__),
-#            f"../userdata/{self.smile_setup}/core.locations.xml",
-#        )
-#        with open(userdata, encoding="utf-8") as filedata:
-#            data = filedata.read()
-#        return aiohttp.web.Response(text=data)
+    async def smile_locations(self, request):
+        """Render setup specific locations endpoint."""
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.locations.xml",
+        )
+        with open(userdata, encoding="utf-8") as filedata:
+            data = filedata.read()
+        return aiohttp.web.Response(text=data)
 
-#    async def smile_modules(self, request):
-#        """Render setup specific modules endpoint."""
-#        userdata = os.path.join(
-#            os.path.dirname(__file__),
-#            f"../userdata/{self.smile_setup}/core.modules.xml",
-#        )
-#        with open(userdata, encoding="utf-8") as filedata:
-#            data = filedata.read()
-#        return aiohttp.web.Response(text=data)
+    async def smile_modules(self, request):
+        """Render setup specific modules endpoint."""
+        userdata = os.path.join(
+            os.path.dirname(__file__),
+            f"../userdata/{self.smile_setup}/core.modules.xml",
+        )
+        with open(userdata, encoding="utf-8") as filedata:
+            data = filedata.read()
+        return aiohttp.web.Response(text=data)
 
-#    async def smile_status(self, request):
-#        """Render setup specific status endpoint."""
-#        try:
-#            userdata = os.path.join(
-#                os.path.dirname(__file__),
-#                f"../userdata/{self.smile_setup}/system_status_xml.xml",
-#            )
-#            with open(userdata, encoding="utf-8") as filedata:
-#                data = filedata.read()
-#            return aiohttp.web.Response(text=data)
-#        except OSError:
-#            raise aiohttp.web.HTTPNotFound
+    async def smile_status(self, request):
+        """Render setup specific status endpoint."""
+        try:
+            userdata = os.path.join(
+                os.path.dirname(__file__),
+                f"../userdata/{self.smile_setup}/system_status_xml.xml",
+            )
+            with open(userdata, encoding="utf-8") as filedata:
+                data = filedata.read()
+            return aiohttp.web.Response(text=data)
+        except OSError:
+            raise aiohttp.web.HTTPNotFound
 
     @classmethod
     async def smile_http_accept(cls, request):
@@ -193,11 +193,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         text = EMPTY_XML
         raise aiohttp.web.HTTPAccepted(text=text)
 
-#    @classmethod
-#    async def smile_http_ok(cls, request):
-#        """Render generic API calling endpoint."""
-#        text = EMPTY_XML
-#        raise aiohttp.web.HTTPOk(text=text)
+    @classmethod
+    async def smile_http_ok(cls, request):
+        """Render generic API calling endpoint."""
+        text = EMPTY_XML
+        raise aiohttp.web.HTTPOk(text=text)
 
     @classmethod
     async def smile_timeout(cls, request):
