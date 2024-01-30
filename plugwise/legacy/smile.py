@@ -105,6 +105,29 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 
         self._get_plugwise_notifications()
 
+    def get_all_devices(self) -> None:
+        """Determine the evices present from the obtained XML-data.
+
+        Run this functions once to gather the initial device configuration,
+        then regularly run async_update() to refresh the device data.
+        """
+        # Gather all the devices and their initial data
+        self._all_appliances()
+        if self._is_thermostat:
+            if self.smile(ADAM):
+                self._scan_thermostats()
+            # Collect a list of thermostats with offset-capability
+            self.therms_with_offset_func = (
+                self._get_appliances_with_offset_functionality()
+            )
+
+        # Collect and add switching- and/or pump-group devices
+        if group_data := self._get_group_switches():
+            self.gw_devices.update(group_data)
+
+        # Collect the remaining data for all devices
+        self._all_device_data()
+
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         # Perform a full update at day-change
