@@ -25,12 +25,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version="1.8.22",
-            smile_legacy=True,
+            # smile_legacy=True,
         )
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
-        assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert smile.device_items == 44
+        assert self.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
+        assert self.device_items == 44
         assert not self.notifications
 
         result = await self.tinker_legacy_thermostat(smile)
@@ -60,13 +60,13 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version="1.8.22",
-            smile_legacy=True,
+            # smile_legacy=True,
         )
 
         await self.device_test(smile, "2020-05-03 00:00:01", testdata)
 
-        assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
-        assert smile.device_items == 44
+        assert self.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
+        assert self.device_items == 44
         assert not self.notifications
 
         result = await self.tinker_legacy_thermostat(smile)
@@ -77,4 +77,3 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await smile.close_connection()
         await self.disconnect(server, client)
-
