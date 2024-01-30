@@ -1556,3 +1556,19 @@ class SmileLegacyHelper:
 #                if toggle == "cooling_enabled" and not self._elga:
 #                    data["binary_sensors"].pop("cooling_enabled")
 #                    self._count -= 1
+
+    def _get_plugwise_notifications(self) -> None:
+        """Collect the Plugwise notifications."""
+        self._notifications = {}
+        for notification in self._domain_objects.findall("./notification"):
+            try:
+                msg_id = notification.attrib["id"]
+                msg_type = notification.find("type").text
+                msg = notification.find("message").text
+                self._notifications.update({msg_id: {msg_type: msg}})
+                LOGGER.debug("Plugwise notifications: %s", self._notifications)
+            except AttributeError:  # pragma: no cover
+                LOGGER.debug(
+                    "Plugwise notification present but unable to process, manually investigate: %s",
+                    f"{self._endpoint}{DOMAIN_OBJECTS}",
+                )
