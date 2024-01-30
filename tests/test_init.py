@@ -559,7 +559,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if initialize:
                 _LOGGER.info("Asserting testdata:")
                 if smile.smile_legacy:
-                    await smile._full_update_device()
+                    await smile.full_update_device()
                     smile.get_all_devices()
                     data = await smile.async_update()
                 else:
