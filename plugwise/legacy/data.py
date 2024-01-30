@@ -54,7 +54,7 @@ class SmileLegacyData(SmileLegacyHelper):
             device_id == self.gateway_id
             and (
                 self._is_thermostat
-                or (self.smile_type == "power" and not self._smile_legacy)
+                or (self.smile_type == "power" and not self.smile_legacy)
             )
         ) or (
             "binary_sensors" in device
@@ -239,7 +239,7 @@ class SmileLegacyData(SmileLegacyHelper):
         self._schedule_old_states[location] = loc_schedule_states
 
         all_off = True
-        if not self._smile_legacy:
+        if not self.smile_legacy:
             for state in self._schedule_old_states[location].values():
                 if state == "on":
                     all_off = False
@@ -270,7 +270,7 @@ class SmileLegacyData(SmileLegacyHelper):
         data = self._get_measurement_data(dev_id)
 
         # Check availability of non-legacy wired-connected devices
-        if not self._smile_legacy:
+        if not self.smile_legacy:
             # Smartmeter
             self._check_availability(
                 device, "smartmeter", data, "P1 does not seem to be connected"
