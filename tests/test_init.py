@@ -150,11 +150,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         app.router.add_get("/system", self.smile_status)
 
         if broken:
-            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_broken)
+            app.router.add_get(CORE_LOCATIONS, self.smile_broken)
         elif timeout:
-            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_timeout)
+            app.router.add_get(CORE_LOCATIONS, self.smile_timeout)
         else:
-            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_domain_objects)
+            app.router.add_get(CORE_LOCATIONS, self.smile_locations)
 
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
