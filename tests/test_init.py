@@ -96,11 +96,58 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
             return app
 
-        # app.router.add_get("/core/appliances", self.smile_appliances)
-        # app.router.add_get("/core/domain_objects", self.smile_domain_objects)
-        # app.router.add_get("/core/modules", self.smile_modules)
-        # app.router.add_get("/system/status.xml", self.smile_status)
-        # app.router.add_get("/system", self.smile_status)
+        if broken:
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_broken)
+        elif timeout:
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_timeout)
+        else:
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_domain_objects)
+
+        # Introducte timeout with 2 seconds, test by setting response to 10ms
+        # Don't actually wait 2 seconds as this will prolongue testing
+        if not raise_timeout:
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
+            app.router.add_route(
+                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
+            )
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
+            if not stretch:
+                app.router.add_route(
+                    "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
+                )
+            else:
+                app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_ok)
+        else:
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_timeout
+            )
+
+        return app
+
+    async def setup_legacy_app(
+        self,
+        broken=False,
+        timeout=False,
+        raise_timeout=False,
+        fail_auth=False,
+        stretch=False,
+    ):
+        """Create mock webserver for Smile to interface with."""
+        app = aiohttp.web.Application()
+
+        if fail_auth:
+            app.router.add_get("/{tail:.*}", self.smile_fail_auth)
+            app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
+            return app
+
+        app.router.add_get("/core/appliances", self.smile_appliances)
+        app.router.add_get("/core/domain_objects", self.smile_domain_objects)
+        app.router.add_get("/core/modules", self.smile_modules)
+        app.router.add_get("/system/status.xml", self.smile_status)
+        app.router.add_get("/system", self.smile_status)
 
         if broken:
             app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_broken)
@@ -307,6 +354,87 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.disconnect(server, client)
             raise exception
 
+    async def connect_legacy(
+        self,
+        broken=False,
+        timeout=False,
+        raise_timeout=False,
+        fail_auth=False,
+        stretch=False,
+    ):
+        """Connect to a smile environment and perform basic asserts."""
+        port = aiohttp.test_utils.unused_port()
+        test_password = "".join(
+            secrets.choice(string.ascii_lowercase) for _ in range(8)
+        )
+
+        # Happy flow
+        app = await self.setup_legacy_app(broken, timeout, raise_timeout, fail_auth, stretch)
+
+        server = aiohttp.test_utils.TestServer(
+            app, port=port, scheme="http", host="127.0.0.1"
+        )
+        await server.start_server()
+
+        client = aiohttp.test_utils.TestClient(server)
+        websession = client.session
+
+        url = f"{server.scheme}://{server.host}:{server.port}{CORE_DOMAIN_OBJECTS}"
+
+        # Try/exceptpass to accommodate for Timeout of aoihttp
+        try:
+            resp = await websession.get(url)
+            assumed_status = self.connect_status(broken, timeout, fail_auth)
+            assert resp.status == assumed_status
+            timeoutpass_result = False
+            assert timeoutpass_result
+        except Exception:  # pylint: disable=broad-except
+            timeoutpass_result = True
+            assert timeoutpass_result
+
+        if not broken and not timeout and not fail_auth:
+            text = await resp.text()
+            assert "xml" in text
+
+        # Test lack of websession
+        try:
+            smile = pw_smile.Smile(
+                host=server.host,
+                username=pw_constants.DEFAULT_USERNAME,
+                password=test_password,
+                port=server.port,
+                websession=None,
+            )
+            lack_of_websession = False
+            assert lack_of_websession
+        except Exception:  # pylint: disable=broad-except
+            lack_of_websession = True
+            assert lack_of_websession
+
+        smile = pw_smile.Smile(
+            host=server.host,
+            username=pw_constants.DEFAULT_USERNAME,
+            password=test_password,
+            port=server.port,
+            websession=websession,
+        )
+
+        if not timeout:
+            assert smile._timeout == 30
+
+        # Connect to the smile
+        try:
+            connection_state = await smile.connect()
+            assert connection_state
+            return server, smile, client
+        except (
+            pw_exceptions.DeviceTimeoutError,
+            pw_exceptions.InvalidXMLError,
+            pw_exceptions.InvalidAuthentication,
+        ) as exception:
+            await self.disconnect(server, client)
+            raise exception
+
     # Wrap connect for invalid connections
     async def connect_wrapper(
         self, raise_timeout=False, fail_auth=False, stretch=False
@@ -344,6 +472,43 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         _LOGGER.info("Connecting to functioning device:")
         return await self.connect(stretch=stretch)
+
+    async def connect_legacy_wrapper(
+        self, raise_timeout=False, fail_auth=False, stretch=False
+    ):
+        """Wrap connect to try negative testing before positive testing."""
+        if fail_auth:
+            try:
+                _LOGGER.warning("Connecting to device with invalid credentials:")
+                await self.connect_legacy(fail_auth=fail_auth)
+                _LOGGER.error(" - invalid credentials not handled")  # pragma: no cover
+                raise self.ConnectError  # pragma: no cover
+            except pw_exceptions.InvalidAuthentication:
+                _LOGGER.info(" + successfully aborted on credentials missing.")
+                raise pw_exceptions.InvalidAuthentication
+
+        if raise_timeout:
+            _LOGGER.warning("Connecting to device exceeding timeout in handling:")
+            return await self.connect_legacy(raise_timeout=True)
+
+        try:
+            _LOGGER.warning("Connecting to device exceeding timeout in response:")
+            await self.connect(timeout=True)
+            _LOGGER.error(" - timeout not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
+        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
+            _LOGGER.info(" + successfully passed timeout handling.")
+
+        try:
+            _LOGGER.warning("Connecting to device with missing data:")
+            await self.connect_legacy(broken=True)
+            _LOGGER.error(" - broken information not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
+        except pw_exceptions.InvalidXMLError:
+            _LOGGER.info(" + successfully passed XML issue handling.")
+
+        _LOGGER.info("Connecting to functioning device:")
+        return await self.connect_legacy(stretch=stretch)
 
     # Generic disconnect
     @classmethod
