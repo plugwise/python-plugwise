@@ -293,6 +293,10 @@ class Smile(SmileComm):
         self.smile_legacy = True
         return return_model
 
+    async def full_update_device(self) -> None:
+        """Perform a first fetch of all XML data, needed for initialization."""
+        await self._smile_api.full_update_device()
+
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         self._data = await self._smile_api.async_update()
