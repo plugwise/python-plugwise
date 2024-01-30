@@ -45,13 +45,13 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         _on_off_device,
         _opentherm_device,
         _schedule_old_states,
-        _smile_legacy,
         _stretch_v2,
         _stretch_v3,
         _target_smile,
         smile_fw_version,
         smile_hostname,
         smile_hw_version,
+        smile_legacy,
         smile_mac_address,
         smile_model,
         smile_name,
@@ -78,13 +78,13 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
-        self._smile_legacy = _smile_legacy
         self._stretch_v2 = _stretch_v2
         self._stretch_v3 = _stretch_v3
         self._target_smile = _target_smile
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
+        self.smile_legacy = smile_legacy
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
         self.smile_name = smile_name
@@ -100,7 +100,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
-        if not (self.smile_type == "power" and self._smile_legacy):
+        if not (self.smile_type == "power" and self.smile_legacy):
             self._appliances = await self._request(APPLIANCES)
 
         self._get_plugwise_notifications()

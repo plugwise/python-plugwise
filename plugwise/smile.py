@@ -53,11 +53,11 @@ class SmileAPI(SmileComm, SmileData):
         _on_off_device: bool,
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
-        _smile_legacy: bool,
         _target_smile: str | None,
         smile_fw_version: str | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
+        smile_legacy: bool,
         smile_mac_address: str | None,
         smile_model: str,
         smile_name: str,
@@ -86,11 +86,11 @@ class SmileAPI(SmileComm, SmileData):
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
-        self._smile_legacy = _smile_legacy
         self._target_smile = _target_smile
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
+        self.smile_legacy = smile_legacy
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
         self.smile_name = smile_name

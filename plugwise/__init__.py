@@ -73,13 +73,13 @@ class Smile(SmileComm):
         self._on_off_device = False
         self._opentherm_device = False
         self._schedule_old_states = {}
-        self._smile_legacy = False
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._target_smile: str | None = None
         self.smile_fw_version: str | None = None
         self.smile_hostname: str | None = None
         self.smile_hw_version: str | None = None
+        self.smile_legacy = False
         self.smile_mac_address: str | None = None
         self.smile_model: str
         self.smile_name: str
@@ -128,11 +128,11 @@ class Smile(SmileComm):
             self._on_off_device,
             self._opentherm_device,
             self._schedule_old_states,
-            self._smile_legacy,
             self._target_smile,
             self.smile_fw_version,
             self.smile_hostname,
             self.smile_hw_version,
+            self.smile_legacy,
             self.smile_mac_address,
             self.smile_model,
             self.smile_name,
@@ -143,7 +143,7 @@ class Smile(SmileComm):
             self._timeout,
             self._websession,
          )
-        if self._smile_legacy:
+        if self.smile_legacy:
             self._smile_api = SmileLegacyAPI(
                 self._host,
                 self._passwd,
@@ -151,13 +151,13 @@ class Smile(SmileComm):
                 self._on_off_device,
                 self._opentherm_device,
                 self._schedule_old_states,
-                self._smile_legacy,
                 self._stretch_v2,
                 self._stretch_v3,
                 self._target_smile,
                 self.smile_fw_version,
                 self.smile_hostname,
                 self.smile_hw_version,
+                self.smile_legacy,
                 self.smile_mac_address,
                 self.smile_model,
                 self.smile_name,
@@ -290,7 +290,7 @@ class Smile(SmileComm):
             )
             raise ResponseError
 
-        self._smile_legacy = True
+        self.smile_legacy = True
         return return_model
 
     async def async_update(self) -> PlugwiseData:
