@@ -18,7 +18,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.smile_setup = "legacy_anna"
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
 
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_legacy_wrapper()
         assert smile.smile_hostname == "smile000000"
 
         self.validate_test_basics(
@@ -38,7 +38,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await smile.close_connection()
         await self.disconnect(server, client)
 
-        server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        server, smile, client = await self.connect_legacy_wrapper(raise_timeout=True)
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         result = await self.tinker_legacy_thermostat(smile, unhappy=True)
         assert result
@@ -53,7 +53,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
         # LEFT: figure out why None becomes str instead of nonetype on this particular one
         #       i.e. in JSON `9e7377867dc24e51b8098a5ba02bd89d`:select_schedule is now 'None' not null
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_legacy_wrapper()
         assert smile.smile_hostname == "smile000000"
 
         self.validate_test_basics(

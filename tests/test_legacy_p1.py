@@ -16,7 +16,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         self.smile_setup = "smile_p1_v2"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_legacy_wrapper()
         assert smile.smile_hostname == "smile000000"
 
         self.validate_test_basics(
@@ -41,7 +41,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         self.smile_setup = "smile_p1_v2_2"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_wrapper()
+        server, smile, client = await self.connect_legacy_wrapper()
         assert smile.smile_hostname == "smile000000"
 
         self.validate_test_basics(

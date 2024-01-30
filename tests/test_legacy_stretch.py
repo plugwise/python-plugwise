@@ -18,7 +18,7 @@ class TestPlugwiseStretch(
         self.smile_setup = "stretch_v31"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_wrapper(stretch=True)
+        server, smile, client = await self.connect_legacy_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
         self.validate_test_basics(
@@ -52,7 +52,7 @@ class TestPlugwiseStretch(
         self.smile_setup = "stretch_v23"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_wrapper(stretch=True)
+        server, smile, client = await self.connect_legacy_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
         self.validate_test_basics(
@@ -87,7 +87,7 @@ class TestPlugwiseStretch(
         self.smile_setup = "stretch_v27_no_domain"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        server, smile, client = await self.connect_wrapper(stretch=True)
+        server, smile, client = await self.connect_legacy_wrapper(stretch=True)
         assert smile.smile_hostname == "stretch000000"
 
         self.validate_test_basics(

@@ -15,7 +15,7 @@ class TestPlugwiseGeneric(
         """Test erroneous legacy stretch system."""
         self.smile_setup = "faulty_stretch"
         try:
-            _server, _smile, _client = await self.connect_wrapper()
+            _server, _smile, _client = await self.connect_legacy_wrapper()
             setup_result = False  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
             setup_result = True
