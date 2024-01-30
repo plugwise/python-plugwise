@@ -25,7 +25,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version="1.8.22",
-            # smile_legacy=True,
+            smile_legacy=True,
         )
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
@@ -60,7 +60,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             _LOGGER,
             smile,
             smile_version="1.8.22",
-            # smile_legacy=True,
+            smile_legacy=True,
         )
 
         await self.device_test(smile, "2020-05-03 00:00:01", testdata)
