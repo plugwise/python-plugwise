@@ -227,7 +227,6 @@ class SmileLegacyHelper:
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float
-        self._smile_legacy = False
         self._status: etree
         self._stretch_v2 = False
         self._stretch_v3 = False
@@ -241,6 +240,7 @@ class SmileLegacyHelper:
         self.gw_devices: dict[str, DeviceData] = {}
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
+        self.smile_legacy = False
         self.smile_mac_address: str | None = None
         self.smile_model: str
         self.smile_name: str
@@ -259,7 +259,7 @@ class SmileLegacyHelper:
 
         locations = self._locations.findall("./location")
         # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
-        if not locations and self._smile_legacy:
+        if not locations and self.smile_legacy:
             self._home_location = FAKE_LOC
             self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
@@ -270,7 +270,7 @@ class SmileLegacyHelper:
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if (
-                self._smile_legacy
+                self.smile_legacy
                 and self.smile_type == "power"
                 and len(location.find(locator)) == 0
             ):
@@ -279,7 +279,7 @@ class SmileLegacyHelper:
             if loc.name == "Home":
                 self._home_location = loc.loc_id
             # Replace location-name for P1 legacy, can contain privacy-related info
-            if self._smile_legacy and self.smile_type == "power":
+            if self.smile_legacy and self.smile_type == "power":
                 loc.name = "Home"
                 self._home_location = loc.loc_id
 
@@ -419,7 +419,7 @@ class SmileLegacyHelper:
         loc_id = next(iter(self._loc_data.keys()))
         appl.dev_id = self.gateway_id
         appl.location = loc_id
-        if self._smile_legacy:
+        if self.smile_legacy:
             appl.dev_id = loc_id
         appl.mac = None
         appl.model = self.smile_model
@@ -477,7 +477,7 @@ class SmileLegacyHelper:
         self._count = 0
         self._all_locations()
 
-        if self._smile_legacy:
+        if self.smile_legacy:
             self._create_legacy_gateway()
             # For legacy P1 collect the connected SmartMeter info
             if self.smile_type == "power":
@@ -591,7 +591,7 @@ class SmileLegacyHelper:
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
-                if self._smile_legacy and measurement == "domestic_hot_water_state":
+                if self.smile_legacy and measurement == "domestic_hot_water_state":
                     continue
 
                 # Skip known obsolete measurements
@@ -671,7 +671,7 @@ class SmileLegacyHelper:
             if item == "temperature_offset":
                 functionality = "offset_functionality"
                 # Don't support temperature_offset for legacy Anna
-                if self._smile_legacy:
+                if self.smile_legacy:
                     continue
 
             # When there is no updated_date-text, skip the actuator
