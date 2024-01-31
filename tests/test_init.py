@@ -718,7 +718,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         test_temp = 22.9
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
-            await smile.set_temperature(test_temp)
+            await smile.set_temperature(test_temp, None)
             _LOGGER.info("  + worked as intended")
             return True
         except (
