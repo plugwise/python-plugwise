@@ -29,6 +29,7 @@ from ..constants import (
     BINARY_SENSORS,
     DATA,
     DEVICE_MEASUREMENTS,
+    DOMAIN_OBJECTS,
     #    DHW_SETPOINT,
     ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
@@ -1129,10 +1130,7 @@ class SmileLegacyHelper:
                     device["dev_class"] = "thermo_sensor"
 
     def _thermostat_uri(self) -> str:
-        """Helper-function for _thermostat_uri().
-
-        Determine the location-set_temperature uri - from APPLIANCES.
-        """
+        """Determine the location-set_temperature uri - from APPLIANCES."""
         locator = "./appliance[type='thermostat']"
         appliance_id = self._appliances.find(locator).attrib["id"]
 
