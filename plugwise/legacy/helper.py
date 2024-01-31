@@ -1182,7 +1182,7 @@ class SmileLegacyHelper:
                 if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
                     device["dev_class"] = "thermo_sensor"
 
-    def _thermostat_uri_legacy(self) -> str:
+    def _thermostat_uri(self) -> str:
         """Helper-function for _thermostat_uri().
 
         Determine the location-set_temperature uri - from APPLIANCES.
@@ -1191,16 +1191,6 @@ class SmileLegacyHelper:
         appliance_id = self._appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
-
-#    def _thermostat_uri(self, loc_id: str) -> str:
-#        """Helper-function for smile.py: set_temperature().
-#
-#        Determine the location-set_temperature uri - from LOCATIONS.
-#        """
-#        locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
-#        thermostat_functionality_id = self._locations.find(locator).attrib["id"]
-#
-#        return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
     def _get_group_switches(self) -> dict[str, DeviceData]:
         """Helper-function for smile.py: get_all_devices().
