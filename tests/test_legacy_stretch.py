@@ -30,8 +30,8 @@ class TestPlugwiseStretch(
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert smile.device_items == 83
+        assert self.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
+        assert self.device_items == 83
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
@@ -64,7 +64,7 @@ class TestPlugwiseStretch(
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.device_items == 229
+        assert self.device_items == 229
 
         switch_change = await self.tinker_switch(
             smile, "2587a7fcdd7e482dab03fda256076b4b"
@@ -99,7 +99,7 @@ class TestPlugwiseStretch(
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert smile.device_items == 190
+        assert self.device_items == 190
         _LOGGER.info(" # Assert no master thermostat")
 
         switch_change = await self.tinker_switch(
