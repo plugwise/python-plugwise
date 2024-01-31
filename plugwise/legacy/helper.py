@@ -724,7 +724,7 @@ class SmileLegacyHelper:
 #
 #        return False
 
-    def _presets_legacy(self) -> dict[str, list[float]]:
+    def _presets(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
         presets: dict[str, list[float]] = {}
         for directive in self._domain_objects.findall("rule/directives/when/then"):
@@ -736,60 +736,6 @@ class SmileLegacyHelper:
                 ]
 
         return presets
-
-#    def _presets(self, loc_id: str) -> dict[str, list[float]]:
-#        """Collect Presets for a Thermostat based on location_id."""
-#        presets: dict[str, list[float]] = {}
-#        tag_1 = "zone_setpoint_and_state_based_on_preset"
-#        tag_2 = "Thermostat presets"
-#        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
-#            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
-#                return presets  # pragma: no cover
-#
-#        for rule_id in rule_ids:
-#            directives: etree = self._domain_objects.find(
-#                f'rule[@id="{rule_id}"]/directives'
-#            )
-#            for directive in directives:
-#                preset = directive.find("then").attrib
-#                presets[directive.attrib["preset"]] = [
-#                    float(preset["heating_setpoint"]),
-#                    float(preset["cooling_setpoint"]),
-#                ]
-#
-#        return presets
-
-#    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, str]:
-#        """Helper-function for _presets().
-#
-#        Obtain the rule_id from the given name and and provide the location_id, when present.
-#        """
-#        schedule_ids: dict[str, str] = {}
-#        locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
-#        for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
-#            if rule.find(locator) is not None:
-#                schedule_ids[rule.attrib["id"]] = loc_id
-#            else:
-#                schedule_ids[rule.attrib["id"]] = NONE
-#
-#        return schedule_ids
-
-#    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, str]:
-#        """Helper-function for _presets(), _schedules() and _last_active_schedule().
-#
-#        Obtain the rule_id from the given template_tag and provide the location_id, when present.
-#        """
-#        schedule_ids: dict[str, str] = {}
-#        locator1 = f'./template[@tag="{tag}"]'
-#        locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
-#        for rule in self._domain_objects.findall("./rule"):
-#            if rule.find(locator1) is not None:
-#                if rule.find(locator2) is not None:
-#                    schedule_ids[rule.attrib["id"]] = loc_id
-#                else:
-#                    schedule_ids[rule.attrib["id"]] = NONE
-#
-#        return schedule_ids
 
     def _appliance_measurements(
         self,

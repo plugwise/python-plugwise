@@ -126,7 +126,7 @@ class SmileLegacyData(SmileLegacyHelper):
         data["preset_modes"] = None
         data["active_preset"] = None
         self._count += 2
-        if presets := self._presets_legacy():
+        if presets := self._presets():
             data["preset_modes"] = list(presets)
             data["active_preset"] = self._preset()
 
