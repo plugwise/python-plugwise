@@ -6,18 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from ..constants import (
-    ADAM,
-    ANNA,
-    MAX_SETPOINT,
-    MIN_SETPOINT,
-    NONE,
-    OFF,
-    SWITCH_GROUP_TYPES,
-    ZONE_THERMOSTATS,
-    ActuatorData,
-    DeviceData,
-)
+from ..constants import NONE, SWITCH_GROUP_TYPES, ZONE_THERMOSTATS, DeviceData
 from .helper import SmileLegacyHelper
 
 
