@@ -17,6 +17,7 @@ from .constants import (
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOGGER,
+    MODULES,
     NOTIFICATIONS,
     SMILES,
     STATUS,
@@ -90,7 +91,11 @@ class Smile(SmileComm):
     async def connect(self) -> bool:
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
-        vendor_names = result.findall("./module/vendor_name")
+        # Work-around for Stretch fw 2.7.18
+        if not (vendor_names := result.findall("./module/vendor_name")):
+            result = await self._request(MODULES)
+            vendor_names = result.findall("./module/vendor_name")
+
         names: list[str] = []
         for name in vendor_names:
             names.append(name.text)
