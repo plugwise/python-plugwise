@@ -862,6 +862,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return result_1 and result_2 and result_3 and result_4 and result_5
         return result_1 and result_2 and result_3
 
+    @pytest.mark.asyncio
+    async def tinker_legacy_thermostat(self, smile, schedule_on=True, unhappy=False):
+        """Toggle various climate settings to test functionality."""
+        result_1 = await self.tinker_legacy_thermostat_temp(smile, unhappy)
+        result_2 = await self.tinker_thermostat_preset(smile, None, unhappy)
+        result_3 = await self.tinker_legacy_thermostat_schedule(smile, "on", unhappy)
+        if schedule_on:
+            result_4 = await self.tinker_legacy_thermostat_schedule(smile, "off", unhappy)
+            result_5 = await self.tinker_legacy_thermostat_schedule(smile, "on", unhappy)
+            return result_1 and result_2 and result_3 and result_4 and result_5
+        return result_1 and result_2 and result_3
+
     @staticmethod
     async def tinker_dhw_mode(smile):
         """Toggle dhw to test functionality."""
