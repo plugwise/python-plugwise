@@ -109,8 +109,6 @@ class SmileLegacyData(SmileLegacyHelper):
 
         Determine climate-control device data.
         """
-#        loc_id = device["location"]
-
         # Presets
         data["preset_modes"] = None
         data["active_preset"] = None
@@ -120,12 +118,12 @@ class SmileLegacyData(SmileLegacyHelper):
             data["active_preset"] = self._preset()
 
         # Schedule
-        avail_schedules, sel_schedule = self._schedules()  # (loc_id)
+        avail_schedules, sel_schedule = self._schedules()
         data["available_schedules"] = avail_schedules
         data["select_schedule"] = sel_schedule
         self._count += 2
 
-        # Operation modes: auto, heat, heat_cool, cool and off
+        # Operation modes: auto, heat
         data["mode"] = "auto"
         self._count += 1
         if sel_schedule == NONE:
