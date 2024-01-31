@@ -10,7 +10,6 @@ from typing import cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
-
 from defusedxml import ElementTree as etree
 from munch import Munch
 import semver
@@ -58,7 +57,6 @@ from ..constants import (
     SwitchType,
     ThermoLoc,
 )
-
 from ..exceptions import (
     ConnectionFailedError,
     InvalidAuthentication,
