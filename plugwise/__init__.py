@@ -316,11 +316,7 @@ class Smile(SmileComm):
         new_state: str,
         name: str | None = None,
     ) -> None:
-        """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
-
-        Determined from - DOMAIN_OBJECTS.
-        Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
-        """
+        """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
         await self._smile_api.set_schedule_state(loc_id, new_state, name)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:

@@ -807,7 +807,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Toggle schedules to test functionality."""
         _LOGGER.info("- Adjusting schedule to state %s", state)
         try:
-            await smile.set_schedule_state(state)
+            await smile.set_schedule_state(None, state, None)
             tinker_schedule_passed = True
             _LOGGER.info("  + working as intended")
         except pw_exceptions.PlugwiseError:
