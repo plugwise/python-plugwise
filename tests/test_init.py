@@ -379,7 +379,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         client = aiohttp.test_utils.TestClient(server)
         websession = client.session
 
-        url = f"{server.scheme}://{server.host}:{server.port}{CORE_DOMAIN_OBJECTS}"
+        url = f"{server.scheme}://{server.host}:{server.port}{CORE_LOCATIONS}"
 
         # Try/exceptpass to accommodate for Timeout of aoihttp
         try:
