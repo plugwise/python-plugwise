@@ -712,6 +712,27 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_temp_passed
 
     @pytest.mark.asyncio
+    async def tinker_legacy_thermostat_temp(self, smile, unhappy=False):
+        """Toggle temperature to test functionality."""
+        _LOGGER.info("Assert modifying temperature setpoint")
+        test_temp = 22.9
+        _LOGGER.info("- Adjusting temperature to %s", test_temp)
+        try:
+            await smile.set_temperature(test_temp)
+            _LOGGER.info("  + worked as intended")
+            return True
+        except (
+            pw_exceptions.ErrorSendingCommandError,
+            pw_exceptions.ResponseError,
+        ):
+            if unhappy:
+                _LOGGER.info("  + failed as expected")
+                return True
+            else:  # pragma: no cover
+                _LOGGER.info("  - failed unexpectedly")
+                return True
+
+    @pytest.mark.asyncio
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
         for new_preset in ["asleep", "home", BOGUS]:
@@ -780,6 +801,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         _LOGGER.info("- Skipping schedule adjustments")  # pragma: no cover
         # pragma warning restore S3776
+
+    @pytest.mark.asyncio
+    async def tinker_legacy_thermostat_schedule(self, smile, state, unhappy=False):
+        """Toggle schedules to test functionality."""
+        _LOGGER.info("- Adjusting schedule to state %s", state)
+        try:
+            await smile.set_schedule_state(state)
+            tinker_schedule_passed = True
+            _LOGGER.info("  + working as intended")
+        except pw_exceptions.PlugwiseError:
+            _LOGGER.info("  + failed as expected")
+            tinker_schedule_passed = True
+        except (
+            pw_exceptions.ErrorSendingCommandError,
+            pw_exceptions.ResponseError,
+        ):
+            tinker_schedule_passed = False
+            if unhappy:
+                _LOGGER.info("  + failed as expected before intended failure")
+                tinker_schedule_passed = True
+            else:  # pragma: no cover
+                _LOGGER.info("  - succeeded unexpectedly for some reason")
+                return False
+
+        return tinker_schedule_passed
 
     @pytest.mark.asyncio
     async def tinker_thermostat(
