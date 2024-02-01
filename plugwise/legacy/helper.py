@@ -251,17 +251,6 @@ class SmileLegacyHelper:
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-#        # Collect gateway device info
-#        if appl.pwclass == "gateway":
-#            self.gateway_id = appliance.attrib["id"]
-#            appl.firmware = self.smile_fw_version
-#            appl.hardware = self.smile_hw_version
-#            appl.mac = self.smile_mac_address
-#            appl.model = self.smile_model
-#            appl.name = self.smile_name
-#            appl.vendor_name = "Plugwise"
-#            return appl
-
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
             locator = "./logs/point_log[type='thermostat']/thermostat"
@@ -458,14 +447,6 @@ class SmileLegacyHelper:
             if appl.pwclass == "gateway" and self.smile_type == "power":
                 appl.dev_id = appl.location
 
-#            # Don't show orphaned non-legacy thermostat-types or the OpenTherm Gateway.
-#            if (
-#                not self.smile_legacy
-#                and appl.pwclass in THERMOSTAT_CLASSES
-#                and appl.location is None
-#            ):
-#                continue
-
             self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
             self._count += 1
             for key, value in {
@@ -492,22 +473,6 @@ class SmileLegacyHelper:
                     cleared_dict = self.gw_devices
                     add_to_front = {dev_id: tmp_device}
                     self.gw_devices = {**add_to_front, **cleared_dict}
-
-    def _match_locations(self) -> dict[str, ThermoLoc]:
-        """Helper-function for _scan_thermostats().
-
-        Match appliances with locations.
-        """
-        matched_locations: dict[str, ThermoLoc] = {}
-        for location_id, location_details in self._loc_data.items():
-            for appliance_details in self.gw_devices.values():
-                if appliance_details["location"] == location_id:
-                    location_details.update(
-                        {"master": None, "master_prio": 0, "slaves": set()}
-                    )
-                    matched_locations[location_id] = location_details
-
-        return matched_locations
 
     def _presets(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
@@ -669,59 +634,6 @@ class SmileLegacyHelper:
             self._count -= 1
 
         return data
-
-    def _rank_thermostat(  # TODO change for Adam only
-        self,
-        thermo_matching: dict[str, int],
-        loc_id: str,
-        appliance_id: str,
-        appliance_details: DeviceData,
-    ) -> None:
-        """Helper-function for _scan_thermostats().
-
-        Rank the thermostat based on appliance_details: master or slave.
-        """
-        appl_class = appliance_details["dev_class"]
-        appl_d_loc = appliance_details["location"]
-        if loc_id == appl_d_loc and appl_class in thermo_matching:
-            # Pre-elect new master
-            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
-                # Demote former master
-                if (tl_master := self._thermo_locs[loc_id]["master"]) is not None:
-                    self._thermo_locs[loc_id]["slaves"].add(tl_master)
-
-                # Crown master
-                self._thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
-                self._thermo_locs[loc_id]["master"] = appliance_id
-
-            else:
-                self._thermo_locs[loc_id]["slaves"].add(appliance_id)
-
-    def _scan_thermostats(self) -> None:  # TODO change for Adam only
-        """Helper-function for smile.py: get_all_devices().
-
-        Update locations with thermostat ranking results and use
-        the result to update the device_class of slave thermostats.
-        """
-        self._thermo_locs = self._match_locations()
-
-        thermo_matching: dict[str, int] = {
-            "thermostat": 3,
-            "zone_thermometer": 2,
-            "zone_thermostat": 2,
-            "thermostatic_radiator_valve": 1,
-        }
-
-        for loc_id in self._thermo_locs:
-            for dev_id, device in self.gw_devices.items():
-                self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
-
-        # Update slave thermostat class where needed
-        for dev_id, device in self.gw_devices.items():
-            if (loc_id := device["location"]) in self._thermo_locs:
-                tl_loc_id = self._thermo_locs[loc_id]
-                if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
-                    device["dev_class"] = "thermo_sensor"
 
     def _thermostat_uri(self) -> str:
         """Determine the location-set_temperature uri - from APPLIANCES."""
