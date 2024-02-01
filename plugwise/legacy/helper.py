@@ -4,12 +4,10 @@ Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
 
-import asyncio
 import datetime as dt
 from typing import cast
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
 from defusedxml import ElementTree as etree
 from munch import Munch
 import semver
@@ -57,13 +55,7 @@ from ..constants import (
     SwitchType,
     ThermoLoc,
 )
-from ..exceptions import (
-    ConnectionFailedError,
-    InvalidAuthentication,
-    InvalidXMLError,
-    ResponseError,
-)
-from ..util import escape_illegal_xml_characters, format_measure, version_to_model
+from ..util import format_measure, version_to_model
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
