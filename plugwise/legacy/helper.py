@@ -86,8 +86,8 @@ class SmileLegacyHelper:
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._appliances: etree
-        self._cooling_present = False
         self._count: int
+        self._cooling_present = False
         self._domain_objects: etree
         self._heater_id: str
         self._home_location: str
@@ -101,30 +101,13 @@ class SmileLegacyHelper:
         self._on_off_device = False
         self._opentherm_device = False
         self._outdoor_temp: float
-        self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._status: etree
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._system: etree
-        self._thermo_locs: dict[str, ThermoLoc] = {}
-        ###################################################################
-        # '_cooling_enabled' can refer to the state of the Elga heatpump
-        # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
-        # means cooling mode is available, next to heating mode.
-        # 'elga_status_code' = 8 means cooling is active, 9 means idle.
-        #
-        # '_cooling_enabled' cam refer to the state of the Loria or
-        # Thermastage heatpump connected to an Anna. For these,
-        # 'cooling_enabled' = on means set to cooling mode, instead of to
-        # heating mode.
-        # 'cooling_state' = on means cooling is active.
-        ###################################################################
-        self._cooling_active = False
-        self._cooling_enabled = False
 
         self.device_items: int = 0
-        self.device_list: list[str]
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -137,7 +120,6 @@ class SmileLegacyHelper:
         self.smile_type: str
         self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
-        self.therms_with_offset_func: list[str] = []
 
     def smile(self, name: str) -> bool:
         """Helper-function checking the smile-name."""
@@ -149,7 +131,7 @@ class SmileLegacyHelper:
 
         locations = self._locations.findall("./location")
         # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
-        if not locations and self.smile_legacy:
+        if not locations:
             self._home_location = FAKE_LOC
             self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
@@ -160,8 +142,7 @@ class SmileLegacyHelper:
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
             if (
-                self.smile_legacy
-                and self.smile_type == "power"
+                self.smile_type == "power"
                 and len(location.find(locator)) == 0
             ):
                 continue
@@ -169,7 +150,7 @@ class SmileLegacyHelper:
             if loc.name == "Home":
                 self._home_location = loc.loc_id
             # Replace location-name for P1 legacy, can contain privacy-related info
-            if self.smile_legacy and self.smile_type == "power":
+            if self.smile_type == "power":
                 loc.name = "Home"
                 self._home_location = loc.loc_id
 
@@ -283,11 +264,7 @@ class SmileLegacyHelper:
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
             if appl.model is None:
-                appl.model = (
-                    "Generic heater/cooler"
-                    if self._cooling_present
-                    else "Generic heater"
-                )
+                appl.model = "Generic heater"
 
             return appl
 
@@ -327,10 +304,8 @@ class SmileLegacyHelper:
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self._loc_data.keys()))
-        appl.dev_id = self.gateway_id
+        appl.dev_id = loc_id
         appl.location = loc_id
-        if self.smile_legacy:
-            appl.dev_id = loc_id
         appl.mac = None
         appl.model = self.smile_model
         appl.name = "P1"
@@ -387,14 +362,13 @@ class SmileLegacyHelper:
         self._count = 0
         self._all_locations()
 
-        if self.smile_legacy:
-            self._create_legacy_gateway()
-            # For legacy P1 collect the connected SmartMeter info
-            if self.smile_type == "power":
-                appl = Munch()
-                self._p1_smartmeter_info_finder(appl)
-                # Legacy P1 has no more devices
-                return
+        self._create_legacy_gateway()
+        # For legacy P1 collect the connected SmartMeter info
+        if self.smile_type == "power":
+            appl = Munch()
+            self._p1_smartmeter_info_finder(appl)
+            # Legacy P1 has no more devices
+            return
 
         for appliance in self._appliances.findall("./appliance"):
             appl = Munch()
@@ -475,7 +449,7 @@ class SmileLegacyHelper:
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
-                if self.smile_legacy and measurement == "domestic_hot_water_state":
+                if measurement == "domestic_hot_water_state":
                     continue
 
                 # Skip known obsolete measurements
@@ -543,18 +517,13 @@ class SmileLegacyHelper:
 
             temp_dict: ActuatorData = {}
             functionality = "thermostat_functionality"
-            if item == "temperature_offset":
-                functionality = "offset_functionality"
-                # Don't support temperature_offset for legacy Anna
-                if self.smile_legacy:
-                    continue
 
             # When there is no updated_date-text, skip the actuator
             updated_date_location = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
             if (
                 updated_date_key := xml.find(updated_date_location)
             ) is not None and updated_date_key.text is None:
-                continue
+                continue  # pragma: no cover
 
             for key in LIMITS:
                 locator = (
