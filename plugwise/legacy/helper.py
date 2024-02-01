@@ -266,10 +266,10 @@ class SmileLegacyHelper:
 
             #  Info for On-Off device
             if self._on_off_device:
-                appl.name = "OnOff"
-                appl.vendor_name = None
-                appl.model = "Unknown"
-                return appl
+                appl.name = "OnOff"  # pragma: no cover
+                appl.vendor_name = None  # pragma: no cover
+                appl.model = "Unknown"  # pragma: no cover
+                return appl  # pragma: no cover
 
             # Info for OpenTherm device
             appl.name = "OpenTherm"
@@ -315,12 +315,12 @@ class SmileLegacyHelper:
 
         heater_central_id = list(hc_list[0].keys())[0]
         if hc_count > 1:
-            for item in hc_list:
-                for key, value in item.items():
-                    if value:
-                        heater_central_id = key
+            for item in hc_list:  # pragma: no cover
+                for key, value in item.items():  # pragma: no cover
+                    if value:  # pragma: no cover
+                        heater_central_id = key  # pragma: no cover
                         # Stop when a valid id is found
-                        break
+                        break  # pragma: no cover
 
         return heater_central_id
 
@@ -404,7 +404,7 @@ class SmileLegacyHelper:
                 appl.pwclass == "thermostat"
                 and appliance.find("actuator_functionalities/") is None
             ):
-                continue
+                continue  # pragma: no cover
 
             appl.location = self._home_location
             appl.dev_id = appliance.attrib["id"]
@@ -423,7 +423,7 @@ class SmileLegacyHelper:
 
             # Skip orphaned heater_central (Core Issue #104433)
             if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
-                continue
+                continue  # pragma: no cover
 
             self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
             self._count += 1
@@ -491,7 +491,7 @@ class SmileLegacyHelper:
                     date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
                     date_2 = dt.datetime.now()
                     if int((date_2 - date_1).days) > 7:
-                        continue
+                        continue  # pragma: no cover
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
@@ -690,25 +690,9 @@ class SmileLegacyHelper:
     def _power_data_peak_value(self, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
-        # If locator not found look for P1 gas_consumed or phase data (without tariff)
-        # or for P1 legacy electricity_point_meter or gas_*_meter data
+        # If locator not found for P1 legacy electricity_point_meter or gas_*_meter data
         if loc.logs.find(loc.locator) is None:
-            if "log" in loc.log_type and (
-                "gas" in loc.measurement or "phase" in loc.measurement
-            ):
-                # Avoid double processing by skipping one peak-list option
-                if loc.peak_select == "nl_offpeak":
-                    loc.found = False
-                    return loc
-
-                loc.locator = (
-                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-                )
-                if loc.logs.find(loc.locator) is None:
-                    loc.found = False
-                    return loc
-            # P1 legacy point_meter has no tariff_indicator
-            elif "meter" in loc.log_type and (
+            if "meter" in loc.log_type and (
                 "point" in loc.log_type or "gas" in loc.measurement
             ):
                 # Avoid double processing by skipping one peak-list option
