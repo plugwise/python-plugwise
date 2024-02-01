@@ -113,6 +113,8 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         """
         # Gather all the devices and their initial data
         self._all_appliances()
+        if self._is_thermostat:
+            self._scan_thermostats()
 
         # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():

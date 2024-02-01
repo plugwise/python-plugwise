@@ -47,24 +47,6 @@ class SmileLegacyData(SmileLegacyHelper):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             self._count += 1
 
-    def get_all_devices(self) -> None:
-        """Determine the evices present from the obtained XML-data.
-
-        Run this functions once to gather the initial device configuration,
-        then regularly run async_update() to refresh the device data.
-        """
-        # Gather all the devices and their initial data
-        self._all_appliances()
-        if self._is_thermostat:
-            self._scan_thermostats()
-
-        # Collect and add switching- and/or pump-group devices
-        if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
-
-        # Collect the remaining data for all devices
-        self._all_device_data()
-
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
 
