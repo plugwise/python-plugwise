@@ -331,7 +331,7 @@ jobs:
           coverage report --fail-under=94
           coverage xml
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
 
   test-publishing:
     name: Build and publish Python 🐍 distributions 📦 to TestPyPI
