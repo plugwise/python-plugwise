@@ -251,16 +251,16 @@ class SmileLegacyHelper:
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-        # Collect gateway device info
-        if appl.pwclass == "gateway":
-            self.gateway_id = appliance.attrib["id"]
-            appl.firmware = self.smile_fw_version
-            appl.hardware = self.smile_hw_version
-            appl.mac = self.smile_mac_address
-            appl.model = self.smile_model
-            appl.name = self.smile_name
-            appl.vendor_name = "Plugwise"
-            return appl
+#        # Collect gateway device info
+#        if appl.pwclass == "gateway":
+#            self.gateway_id = appliance.attrib["id"]
+#            appl.firmware = self.smile_fw_version
+#            appl.hardware = self.smile_hw_version
+#            appl.mac = self.smile_mac_address
+#            appl.model = self.smile_model
+#            appl.name = self.smile_name
+#            appl.vendor_name = "Plugwise"
+#            return appl
 
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
@@ -458,13 +458,13 @@ class SmileLegacyHelper:
             if appl.pwclass == "gateway" and self.smile_type == "power":
                 appl.dev_id = appl.location
 
-            # Don't show orphaned non-legacy thermostat-types or the OpenTherm Gateway.
-            if (
-                not self.smile_legacy
-                and appl.pwclass in THERMOSTAT_CLASSES
-                and appl.location is None
-            ):
-                continue
+#            # Don't show orphaned non-legacy thermostat-types or the OpenTherm Gateway.
+#            if (
+#                not self.smile_legacy
+#                and appl.pwclass in THERMOSTAT_CLASSES
+#                and appl.location is None
+#            ):
+#                continue
 
             self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
             self._count += 1
