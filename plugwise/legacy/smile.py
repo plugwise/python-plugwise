@@ -98,7 +98,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._locations = await self._request(LOCATIONS)
         self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
-        if not self.smile_type == "power":
+        if self.smile_type != "power":
             self._appliances = await self._request(APPLIANCES)
 
         self._get_plugwise_notifications()
