@@ -425,11 +425,6 @@ class SmileLegacyHelper:
             if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
                 continue
 
-            # P1: for gateway and smartmeter switch device_id - part 1
-            # This is done to avoid breakage in HA Core
-            if appl.pwclass == "gateway" and self.smile_type == "power":
-                appl.dev_id = appl.location
-
             self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
             self._count += 1
             for key, value in {
