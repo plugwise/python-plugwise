@@ -162,7 +162,6 @@ class Smile(SmileComm):
                 self.smile_fw_version,
                 self.smile_hostname,
                 self.smile_hw_version,
-                self.smile_legacy,
                 self.smile_mac_address,
                 self.smile_model,
                 self.smile_name,
