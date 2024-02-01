@@ -406,16 +406,7 @@ class SmileLegacyHelper:
             ):
                 continue
 
-            appl.location = None
-            if (appl_loc := appliance.find("location")) is not None:
-                appl.location = appl_loc.attrib["id"]
-            # Provide a location for legacy_anna, also don't assign the _home_location
-            # to thermostat-devices without a location, they are not active
-            elif (
-                self.smile_legacy and self.smile_type == "thermostat"
-            ) or appl.pwclass not in THERMOSTAT_CLASSES:
-                appl.location = self._home_location
-
+            appl.location = self._home_location
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
