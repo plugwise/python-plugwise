@@ -58,14 +58,6 @@ from ..constants import (
 from ..util import format_measure, version_to_model
 
 
-def check_model(name: str | None, vendor_name: str | None) -> str | None:
-    """Model checking before using version_to_model."""
-    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
-        return model
-
-    return name
-
-
 def etree_to_dict(element: etree) -> dict[str, str]:
     """Helper-function translating xml Element to dict."""
     node: dict[str, str] = {}
@@ -257,7 +249,7 @@ class SmileLegacyHelper:
             mod_type = "thermostat"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.vendor_name = module_data["vendor_name"]
-            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
+            appl.model = module_data["vendor_model"]
             appl.hardware = module_data["hardware_version"]
             appl.firmware = module_data["firmware_version"]
             appl.zigbee_mac = module_data["zigbee_mac_address"]
@@ -289,7 +281,7 @@ class SmileLegacyHelper:
                 module_data = self._get_module_data(appliance, locator2, mod_type)
             appl.vendor_name = module_data["vendor_name"]
             appl.hardware = module_data["hardware_version"]
-            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
+            appl.model = module_data["vendor_model"]
             if appl.model is None:
                 appl.model = (
                     "Generic heater/cooler"
