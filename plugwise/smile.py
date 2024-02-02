@@ -98,6 +98,7 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_type = smile_type
         self.smile_version = smile_version
 
+        self._gateway_id: str
         self._heater_id: str
         self._cooling_enabled = False
 
