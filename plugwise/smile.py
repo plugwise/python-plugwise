@@ -249,8 +249,8 @@ class SmileAPI(SmileComm, SmileData):
             setpoint = items["setpoint"]
 
         if self.smile(ANNA) and self._cooling_present:
-            LOGGER.debug("HOI 1 cooling enabled:" self._cooling_enabled)
-            LOGGER.debug("HOI 2 cooling enabled:" self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"])
+            LOGGER.debug("HOI 1 cooling enabled:", self._cooling_enabled)
+            LOGGER.debug("HOI 2 cooling enabled:", self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"])
             if "setpoint_high" not in items:
                 raise PlugwiseError
             tmp_setpoint_high = items["setpoint_high"]
