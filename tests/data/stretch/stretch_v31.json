@@ -101,7 +101,7 @@
     },
     "switches": {
       "relay": true,
-      "lock": false
+      "lock": true
     }
   },
   "d950b314e9d8499f968e6db8d82ef78c": {
