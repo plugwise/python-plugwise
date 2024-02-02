@@ -33,6 +33,11 @@ class TestPlugwiseStretch(
         assert self.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 83
 
+        switch_change = await self.tinker_switch(
+            smile, "059e4d03c7a34d278add5c7a4a781d19", unhappy=True,
+        )
+        assert switch_change
+
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
         testdata_updated = self.load_testdata(
