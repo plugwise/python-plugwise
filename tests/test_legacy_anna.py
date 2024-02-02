@@ -33,8 +33,9 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.device_items == 44
         assert not self.notifications
 
-        result = await self.tinker_legacy_thermostat(smile)
+        result = await self.tinker_legacy_thermostat(smile, schedule_on=False)
         assert result
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
