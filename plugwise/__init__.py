@@ -384,4 +384,4 @@ class Smile(SmileComm):
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
-        await self._request(NOTIFICATIONS, method="delete")
+        await self._smile_api.delete_notification
