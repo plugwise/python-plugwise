@@ -575,14 +575,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.gateway_id = data.gateway["gateway_id"]
         self.device_items = data.gateway["item_count"]
 
-        self._cooling_enabled = False
         self._cooling_active = False
+        self._cooling_enabled = False
         if "heater_id" in data.gateway:
-            self.heater_id = data.gateway["heater_id"]
-            if "cooling_enabled" in data.devices[self.heater_id]["binary_sensors"]:
-                self._cooling_enabled = data.devices[self.heater_id]["binary_sensors"]["cooling_enabled"]
-            if "cooling_state" in data.devices[self.heater_id]["binary_sensors"]:
-                self._cooling_active = data.devices[self.heater_id]["binary_sensors"]["cooling_state"]
+            heater_id = data.gateway["heater_id"]
+            if "cooling_enabled" in data.devices[heater_id]["binary_sensors"]:
+                self._cooling_enabled = data.devices[heater_id]["binary_sensors"]["cooling_enabled"]
+            if "cooling_state" in data.devices[heater_id]["binary_sensors"]:
+                self._cooling_active = data.devices[heater_id]["binary_sensors"]["cooling_state"]
 
         self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
         self._write_json("device_list", list(data.devices.keys()))
@@ -688,7 +688,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         tinker_temp_passed = False
         test_temp = {"setpoint": 22.9}
-        if smile._cooling_present and not block_cooling:
+        if self.cooling_present and not block_cooling:
             test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
