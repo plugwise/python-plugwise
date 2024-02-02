@@ -24,7 +24,6 @@ from .constants import (
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NOTIFICATIONS,
@@ -173,7 +172,6 @@ class SmileAPI(SmileComm, SmileData):
         # Handle no schedule-name / Off-schedule provided
         if name is None or name == OFF:
             if schedule_name := self._last_active[loc_id]:
-                LOGGER.debug("HOI 3 Last active: %s", self._last_active)
                 name = schedule_name
             else:
                 return
@@ -185,7 +183,6 @@ class SmileAPI(SmileComm, SmileData):
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         # If no state change is requested, do nothing
-        LOGGER.debug("HOI 5 Old schedule states: %s", self._schedule_old_states)
         if new_state == self._schedule_old_states[loc_id][name]:
             return
 
