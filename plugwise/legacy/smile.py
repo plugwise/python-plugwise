@@ -101,8 +101,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         if self.smile_type != "power":
             self._appliances = await self._request(APPLIANCES)
 
-        self._get_plugwise_notifications()
-
     def get_all_devices(self) -> None:
         """Determine the evices present from the obtained XML-data.
 
@@ -144,7 +142,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
                     self._appliances = await self._request(APPLIANCES)
 
             self._update_gw_devices()
-            self._get_plugwise_notifications()
             self.gw_data["notifications"] = self._notifications
 
         self._previous_day_number = day_number
