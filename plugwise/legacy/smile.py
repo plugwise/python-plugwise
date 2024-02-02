@@ -170,7 +170,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
                 schedule_rule_id = rule.attrib["id"]
 
         if schedule_rule_id is None:
-            raise PlugwiseError("Plugwise: no schedule with this name available.")
+            raise PlugwiseError("Plugwise: no schedule with this name available.")  # pragma: no cover
 
         new_state = "false"
         if state == "on":
