@@ -170,6 +170,7 @@ class SmileAPI(SmileComm, SmileData):
         # Handle no schedule-name / Off-schedule provided
         if name is None or name == OFF:
             if schedule_name := self._last_active[loc_id]:
+                LOGGER.debug("HOI 3 Last active: %s", self._last_active)
                 name = schedule_name
             else:
                 return
@@ -181,6 +182,7 @@ class SmileAPI(SmileComm, SmileData):
             raise PlugwiseError("Plugwise: no schedule with this name available.")
 
         # If no state change is requested, do nothing
+        LOGGER.debug("HOI 5 Old schedule states: %s", self._schedule_old_states)
         if new_state == self._schedule_old_states[loc_id][name]:
             return
 
@@ -250,8 +252,6 @@ class SmileAPI(SmileComm, SmileData):
             setpoint = items["setpoint"]
 
         if self.smile(ANNA) and self._cooling_present:
-            LOGGER.debug("HOI 1 cooling enabled: %s", self._cooling_enabled)
-            LOGGER.debug("HOI 2 cooling enabled: %s", self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"])
             if "setpoint_high" not in items:
                 raise PlugwiseError
             tmp_setpoint_high = items["setpoint_high"]
