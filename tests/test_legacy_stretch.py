@@ -34,9 +34,9 @@ class TestPlugwiseStretch(
         assert self.device_items == 83
 
         switch_change = await self.tinker_switch(
-            smile, "059e4d03c7a34d278add5c7a4a781d19", unhappy=True,
+            smile, "059e4d03c7a34d278add5c7a4a781d19",
         )
-        assert switch_change
+        assert not switch_change
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
