@@ -97,11 +97,8 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_type = smile_type
         self.smile_version = smile_version
 
-        if "heater_id" in self.gw_data:
-            self._heater_id = self.gw_data["heater_id"]
-            if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
-                self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
-
+        self._heater_id: str
+        self._cooling_enabled = False
 
     async def full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
@@ -138,6 +135,11 @@ class SmileAPI(SmileComm, SmileData):
         self.gw_devices: dict[str, DeviceData] = {}
         await self.full_update_device()
         self.get_all_devices()
+
+        if "heater_id" in self.gw_data:
+            self._heater_id = self.gw_data["heater_id"]
+            if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
+                self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
