@@ -18,7 +18,6 @@ from .constants import (
     DOMAIN_OBJECTS,
     LOGGER,
     MODULES,
-    NOTIFICATIONS,
     SMILES,
     STATUS,
     SYSTEM,
