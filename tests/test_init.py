@@ -800,27 +800,29 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # pragma warning restore S3776
 
     @pytest.mark.asyncio
-    async def tinker_legacy_thermostat_schedule(self, smile, state, unhappy=False):
+    async def tinker_legacy_thermostat_schedule(self, smile, unhappy=False):
         """Toggle schedules to test functionality."""
-        _LOGGER.info("- Adjusting schedule to state %s", state)
-        try:
-            await smile.set_schedule_state(None, state, None)
-            tinker_schedule_passed = True
-            _LOGGER.info("  + working as intended")
-        except pw_exceptions.PlugwiseError:
-            _LOGGER.info("  + failed as expected")
-            tinker_schedule_passed = True
-        except (
-            pw_exceptions.ErrorSendingCommandError,
-            pw_exceptions.ResponseError,
-        ):
-            tinker_schedule_passed = False
-            if unhappy:
-                _LOGGER.info("  + failed as expected before intended failure")
+        states = ["on", "off", "!Bogus"]
+        for state in states:
+            _LOGGER.info("- Adjusting schedule to state %s", state)
+            try:
+                await smile.set_schedule_state(None, state, None)
                 tinker_schedule_passed = True
-            else:  # pragma: no cover
-                _LOGGER.info("  - succeeded unexpectedly for some reason")
-                return False
+                _LOGGER.info("  + working as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + failed as expected")
+                tinker_schedule_passed = True
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
+                tinker_schedule_passed = False
+                if unhappy:
+                    _LOGGER.info("  + failed as expected before intended failure")
+                    tinker_schedule_passed = True
+                else:  # pragma: no cover
+                    _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
 
         return tinker_schedule_passed
 
@@ -864,11 +866,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Toggle various climate settings to test functionality."""
         result_1 = await self.tinker_legacy_thermostat_temp(smile, unhappy)
         result_2 = await self.tinker_thermostat_preset(smile, None, unhappy)
-        result_3 = await self.tinker_legacy_thermostat_schedule(smile, "on", unhappy)
+        result_3 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
         if schedule_on:
-            result_4 = await self.tinker_legacy_thermostat_schedule(smile, "off", unhappy)
-            result_5 = await self.tinker_legacy_thermostat_schedule(smile, "on", unhappy)
-            return result_1 and result_2 and result_3 and result_4 and result_5
+            result_4 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
+            return result_1 and result_2 and result_3 and result_4
         return result_1 and result_2 and result_3
 
     @staticmethod
