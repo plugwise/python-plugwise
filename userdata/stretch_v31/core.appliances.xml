@@ -610,7 +610,7 @@
 			<relay_functionality id='0eff576e00c245c288aa9492ff4a9115'>
 				<updated_date>2020-09-06T14:20:56.241+02:00</updated_date>
 				<state>on</state>
-				<lock>false</lock>
+				<lock>true</lock>
 				<relay id='7beee08f9e4a46cc8e7a7df399e693dd'/>
 			</relay_functionality>
 		</actuator_functionalities>
