@@ -6,11 +6,6 @@ from __future__ import annotations
 
 import datetime as dt
 
-import aiohttp
-
-from munch import Munch
-import semver
-
 # Version detection
 from plugwise.constants import (
     APPLIANCES,
@@ -30,6 +25,10 @@ from plugwise.constants import (
 from plugwise.exceptions import PlugwiseError
 from plugwise.helper import SmileComm
 from plugwise.legacy.data import SmileLegacyData
+
+import aiohttp
+from munch import Munch
+import semver
 
 
 class SmileLegacyAPI(SmileComm, SmileLegacyData):

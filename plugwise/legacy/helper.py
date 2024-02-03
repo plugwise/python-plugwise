@@ -7,11 +7,6 @@ from __future__ import annotations
 import datetime as dt
 from typing import cast
 
-# This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from defusedxml import ElementTree as etree
-from munch import Munch
-import semver
-
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -54,6 +49,11 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.util import format_measure, version_to_model
+
+# This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
+from defusedxml import ElementTree as etree
+from munch import Munch
+import semver
 
 
 def etree_to_dict(element: etree) -> dict[str, str]:
