@@ -257,19 +257,19 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             await self._request(uri, method="put", data=data)
 
     async def set_number_setpoint(self, key: str, temperature: float) -> None:
-        """Placeholder, function is not used for legacy devices."""
+        """Placeholder, use only for non-legacy devices."""
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
-        """Placeholder, function is not used for legacy devices."""
+        """Placeholder, use only for non-legacy devices."""
 
     async def set_gateway_mode(self, mode: str) -> None:
-        """Placeholder, function is not used for legacy devices."""
+        """Placeholder, use only for non-legacy devices."""
 
     async def set_regulation_mode(self, mode: str) -> None:
-        """Placeholder, function is not used for legacy devices."""
+        """Placeholder, use only for non-legacy devices"""
 
     async def set_dhw_mode(self, mode: str) -> None:
-        """Placeholder, function is not used for legacy devices."""
+        """Placeholder, use only for non-legacy devices."""
 
     async def delete_notification(self) -> None:
-        """Placeholder, function is not used for legacy devices."""
+        """Placeholder, use only for non-legacy devices."""
