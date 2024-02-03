@@ -127,9 +127,8 @@ class SmileLegacyHelper:
         """Collect all locations."""
         loc = Munch()
 
-        locations = self._locations.findall("./location")
         # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
-        if not locations:
+        if not (locations := self._locations.findall("./location")):
             self._home_location = FAKE_LOC
             self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
