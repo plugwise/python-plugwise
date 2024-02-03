@@ -231,7 +231,6 @@ class SmileHelper:
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
         self._last_modified: dict[str, str] = {}
-        self._loc_data: dict[str, ThermoLoc] = {}
         self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device = False
         self._opentherm_device = False
@@ -263,6 +262,7 @@ class SmileHelper:
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
+        self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_mac_address: str | None = None
@@ -286,7 +286,7 @@ class SmileHelper:
             if loc.name == "Home":
                 self._home_location = loc.loc_id
 
-            self._loc_data[loc.loc_id] = {"name": loc.name}
+            self.loc_data[loc.loc_id] = {"name": loc.name}
 
     def _get_module_data(
         self, appliance: etree, locator: str, mod_type: str
@@ -491,7 +491,7 @@ class SmileHelper:
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
-        loc_id = next(iter(self._loc_data.keys()))
+        loc_id = next(iter(self.loc_data.keys()))
         appl.dev_id = self.gateway_id
         appl.location = loc_id
         appl.mac = None
@@ -1039,7 +1039,7 @@ class SmileHelper:
         Match appliances with locations.
         """
         matched_locations: dict[str, ThermoLoc] = {}
-        for location_id, location_details in self._loc_data.items():
+        for location_id, location_details in self.loc_data.items():
             for appliance_details in self.gw_devices.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(

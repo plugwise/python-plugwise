@@ -23,6 +23,7 @@ from plugwise.constants import (
     DeviceData,
     GatewayData,
     PlugwiseData,
+    ThermoLoc,
 )
 from plugwise.data import SmileData
 from plugwise.exceptions import PlugwiseError
@@ -54,6 +55,7 @@ class SmileAPI(SmileComm, SmileData):
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
         _target_smile: str | None,
+        loc_data: dict[str, ThermoLoc],
         smile_fw_version: str | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
@@ -87,6 +89,7 @@ class SmileAPI(SmileComm, SmileData):
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
         self._target_smile = _target_smile
+        self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version

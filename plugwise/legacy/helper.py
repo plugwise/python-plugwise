@@ -93,7 +93,6 @@ class SmileLegacyHelper:
         self._last_active: dict[str, str | None] = {}
         self._last_modified: dict[str, str] = {}
         self._locations: etree
-        self._loc_data: dict[str, ThermoLoc] = {}
         self._modules: etree
         self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device = False
@@ -109,6 +108,7 @@ class SmileLegacyHelper:
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
+        self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: str | None = None
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
@@ -130,7 +130,7 @@ class SmileLegacyHelper:
         # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
         if not (locations := self._locations.findall("./location")):
             self._home_location = FAKE_LOC
-            self._loc_data[FAKE_LOC] = {"name": "Home"}
+            self.loc_data[FAKE_LOC] = {"name": "Home"}
             return
 
         for location in locations:
@@ -151,7 +151,7 @@ class SmileLegacyHelper:
                 loc.name = "Home"
                 self._home_location = loc.loc_id
 
-            self._loc_data[loc.loc_id] = {"name": loc.name}
+            self.loc_data[loc.loc_id] = {"name": loc.name}
 
     def _get_module_data(
         self, appliance: etree, locator: str, mod_type: str
@@ -300,7 +300,7 @@ class SmileLegacyHelper:
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
-        loc_id = next(iter(self._loc_data.keys()))
+        loc_id = next(iter(self.loc_data.keys()))
         appl.dev_id = loc_id
         appl.location = loc_id
         appl.mac = None

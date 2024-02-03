@@ -21,6 +21,7 @@ from plugwise.constants import (
     DeviceData,
     GatewayData,
     PlugwiseData,
+    ThermoLoc,
 )
 from plugwise.exceptions import PlugwiseError
 from plugwise.helper import SmileComm
@@ -47,6 +48,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         _stretch_v2: bool,
         _stretch_v3: bool,
         _target_smile: str,
+        loc_data: dict[str, ThermoLoc],
         smile_fw_version: str | None,
         smile_hostname: str,
         smile_hw_version: str | None,
@@ -79,6 +81,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._stretch_v2 = _stretch_v2
         self._stretch_v3 = _stretch_v3
         self._target_smile = _target_smile
+        self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version

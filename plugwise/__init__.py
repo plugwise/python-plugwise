@@ -15,6 +15,7 @@ from plugwise.constants import (
     STATUS,
     SYSTEM,
     PlugwiseData,
+    ThermoLoc,
 )
 from plugwise.exceptions import (
     InvalidSetupError,
@@ -76,6 +77,7 @@ class Smile(SmileComm):
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._target_smile: str
+        self.loc_data: dict[str, ThermoLoc] = {}
         self.smile_fw_version: str | None
         self.smile_hostname: str
         self.smile_hw_version: str | None = None
@@ -133,6 +135,7 @@ class Smile(SmileComm):
             self._opentherm_device,
             self._schedule_old_states,
             self._target_smile,
+            self.loc_data,
             self.smile_fw_version,
             self.smile_hostname,
             self.smile_hw_version,
@@ -158,6 +161,7 @@ class Smile(SmileComm):
                 self._stretch_v2,
                 self._stretch_v3,
                 self._target_smile,
+                self.loc_data,
                 self.smile_fw_version,
                 self.smile_hostname,
                 self.smile_hw_version,
