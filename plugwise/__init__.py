@@ -11,7 +11,7 @@ from defusedxml import ElementTree as etree
 # Version detection
 import semver
 
-from .constants import (
+from plugwise.constants import (
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
@@ -23,15 +23,15 @@ from .constants import (
     SYSTEM,
     PlugwiseData,
 )
-from .exceptions import (
+from plugwise.exceptions import (
     InvalidSetupError,
     PlugwiseError,
     ResponseError,
     UnsupportedDeviceError,
 )
-from .helper import SmileComm
-from .legacy.smile import SmileLegacyAPI
-from .smile import SmileAPI
+from plugwise.helper import SmileComm
+from plugwise.legacy.smile import SmileLegacyAPI
+from plugwise.smile import SmileAPI
 
 
 class Smile(SmileComm):

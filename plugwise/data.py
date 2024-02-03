@@ -4,7 +4,7 @@ Plugwise Smile protocol data-collection helpers.
 """
 from __future__ import annotations
 
-from .constants import (
+from plugwise.constants import (
     ADAM,
     ANNA,
     MAX_SETPOINT,
@@ -16,7 +16,7 @@ from .constants import (
     ActuatorData,
     DeviceData,
 )
-from .helper import SmileHelper
+from plugwise.helper import SmileHelper
 
 
 def remove_empty_platform_dicts(data: DeviceData) -> None:

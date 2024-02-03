@@ -12,7 +12,7 @@ import aiohttp
 from munch import Munch
 
 # Version detection
-from .constants import (
+from plugwise.constants import (
     APPLIANCES,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -27,9 +27,9 @@ from .constants import (
     GatewayData,
     PlugwiseData,
 )
-from .exceptions import PlugwiseError
-from .helper import SmileComm
-from .legacy.data import SmileLegacyData
+from plugwise.exceptions import PlugwiseError
+from plugwise.helper import SmileComm
+from plugwise.legacy.data import SmileLegacyData
 
 
 class SmileLegacyAPI(SmileComm, SmileLegacyData):

@@ -6,8 +6,8 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from .constants import NONE, SWITCH_GROUP_TYPES, ZONE_THERMOSTATS, DeviceData
-from .legacy.helper import SmileLegacyHelper
+from plugwise.constants import NONE, SWITCH_GROUP_TYPES, ZONE_THERMOSTATS, DeviceData
+from plugwise.legacy.helper import SmileLegacyHelper
 
 
 def remove_empty_platform_dicts(data: DeviceData) -> None:

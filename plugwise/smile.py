@@ -15,7 +15,7 @@ from munch import Munch
 # Version detection
 import semver
 
-from .constants import (
+from plugwise.constants import (
     ADAM,
     ANNA,
     APPLIANCES,
@@ -33,9 +33,9 @@ from .constants import (
     GatewayData,
     PlugwiseData,
 )
-from .data import SmileData
-from .exceptions import PlugwiseError
-from .helper import SmileComm
+from plugwise.data import SmileData
+from plugwise.exceptions import PlugwiseError
+from plugwise.helper import SmileComm
 
 
 class SmileAPI(SmileComm, SmileData):

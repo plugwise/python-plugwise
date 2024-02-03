@@ -12,7 +12,7 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 import semver
 
-from .constants import (
+from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
     ANNA,
@@ -53,7 +53,7 @@ from .constants import (
     SwitchType,
     ThermoLoc,
 )
-from .util import format_measure, version_to_model
+from plugwise.util import format_measure, version_to_model
 
 
 def etree_to_dict(element: etree) -> dict[str, str]:

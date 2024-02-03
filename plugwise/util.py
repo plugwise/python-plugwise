@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import re
 
-from .constants import (
+from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
