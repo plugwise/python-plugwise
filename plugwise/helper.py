@@ -104,10 +104,10 @@ class SmileComm:
         self,
         host: str,
         password: str,
+        websession: ClientSession | None,
         username: str,
         port: int,
         timeout: float,
-        websession: ClientSession | None,
     ) -> None:
         """Set the constructor for this class."""
         if not websession:

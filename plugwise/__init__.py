@@ -43,19 +43,20 @@ class Smile(SmileComm):
         self,
         host: str,
         password: str,
+        websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
-        websession: aiohttp.ClientSession | None = None,
+
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
             password,
+            websession,
             username,
             port,
             timeout,
-            websession,
         )
 
         self._smile_api: SmileAPI | SmileLegacyAPI
@@ -64,7 +65,7 @@ class Smile(SmileComm):
         self._user = username
         self._port = port
         self._timeout = timeout
-        # self._websession = websession
+        self._websession = websession
 
         self._cooling_present = False
         self._elga = False
@@ -141,10 +142,10 @@ class Smile(SmileComm):
             self.smile_name,
             self.smile_type,
             self.smile_version,
+            self._websession,
             self._user,
             self._port,
             self._timeout,
-            # self._websession,
          )
         if self.smile_legacy:
             self._smile_api = SmileLegacyAPI(
@@ -166,10 +167,10 @@ class Smile(SmileComm):
                 self.smile_type,
                 self.smile_version,
                 self.smile_zigbee_mac_address,
+                self._websession,
                 self._user,
                 self._port,
                 self._timeout,
-                # self._websession,
             )
 
         # Update all endpoints on first connect

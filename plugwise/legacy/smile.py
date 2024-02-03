@@ -57,19 +57,19 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_type: str,
         smile_version: tuple[str, semver.version.Version],
         smile_zigbee_mac_address: str | None,
+        websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
-        websession: aiohttp.ClientSession | None = None,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
             password,
+            websession,
             username,
             port,
             timeout,
-            websession,
         )
         SmileLegacyData.__init__(self)
 

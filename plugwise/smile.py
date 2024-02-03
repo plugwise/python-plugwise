@@ -63,20 +63,20 @@ class SmileAPI(SmileComm, SmileData):
         smile_name: str,
         smile_type: str,
         smile_version: tuple[str, semver.version.Version],
+        websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
-        websession: aiohttp.ClientSession | None = None,
 
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
             password,
+            websession,
             username,
             port,
             timeout,
-            websession,
         )
         SmileData.__init__(self)
 
