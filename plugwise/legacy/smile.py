@@ -258,24 +258,24 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 
     async def set_number_setpoint(self, key: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
-        pass
+        pass  # pragma: no cover
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
-        pass
+        pass  # pragma: no cover
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        pass
+        pass  # pragma: no cover
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        pass
+        pass  # pragma: no cover
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
-        pass
+        pass  # pragma: no cover
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
-        pass
+        pass  # pragma: no cover
