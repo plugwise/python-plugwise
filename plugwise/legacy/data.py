@@ -23,6 +23,10 @@ def remove_empty_platform_dicts(data: DeviceData) -> None:
 class SmileLegacyData(SmileLegacyHelper):
     """The Plugwise Smile main class."""
 
+    def __init__(self) -> None:
+        """Init."""
+        SmileLegacyHelper.__init__(self)
+
     def _update_gw_devices(self) -> None:
         """Helper-function for _all_device_data() and async_update().
 
