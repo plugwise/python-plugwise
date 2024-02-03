@@ -58,29 +58,28 @@ class Smile(SmileComm):
             websession,
         )
 
-        self._smile_api = None
+        self._smile_api: SmileAPI | SmileLegacyAPI
         self._host = host
         self._passwd = password
         self._user = username
         self._port = port
         self._timeout = timeout
-        self._websession = websession
+        # self._websession = websession
 
         self._cooling_present = False
-        self._data: PlugwiseData = {}
         self._elga = False
         self._is_thermostat = False
         self._on_off_device = False
         self._opentherm_device = False
-        self._schedule_old_states = {}
+        self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._stretch_v2 = False
         self._stretch_v3 = False
-        self._target_smile: str | None = None
-        self.smile_fw_version: str | None = None
-        self.smile_hostname: str | None = None
+        self._target_smile: str
+        self.smile_fw_version: str | None
+        self.smile_hostname: str
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
-        self.smile_mac_address: str | None = None
+        self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
@@ -145,7 +144,7 @@ class Smile(SmileComm):
             self._user,
             self._port,
             self._timeout,
-            self._websession,
+            # self._websession,
          )
         if self.smile_legacy:
             self._smile_api = SmileLegacyAPI(
@@ -170,7 +169,7 @@ class Smile(SmileComm):
                 self._user,
                 self._port,
                 self._timeout,
-                self._websession,
+                # self._websession,
             )
 
         # Update all endpoints on first connect
@@ -306,8 +305,7 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        self._data = await self._smile_api.async_update()
-        return self._data
+        return await self._smile_api.async_update()
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

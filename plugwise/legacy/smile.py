@@ -8,8 +8,8 @@ import datetime as dt
 
 import aiohttp
 
-# Dict as class
 from munch import Munch
+import semver
 
 # Version detection
 from plugwise.constants import (
@@ -41,22 +41,22 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         host: str,
         password: str,
-        _is_thermostat,
-        _on_off_device,
-        _opentherm_device,
-        _schedule_old_states,
-        _stretch_v2,
-        _stretch_v3,
-        _target_smile,
-        smile_fw_version,
-        smile_hostname,
-        smile_hw_version,
-        smile_mac_address,
-        smile_model,
-        smile_name,
-        smile_type,
-        smile_version,
-        smile_zigbee_mac_address,
+        _is_thermostat: bool,
+        _on_off_device: bool,
+        _opentherm_device: bool,
+        _schedule_old_states: dict[str, dict[str, str]],
+        _stretch_v2: bool,
+        _stretch_v3: bool,
+        _target_smile: str,
+        smile_fw_version: str | None,
+        smile_hostname: str,
+        smile_hw_version: str | None,
+        smile_mac_address: str | None,
+        smile_model: str,
+        smile_name: str,
+        smile_type: str,
+        smile_version: tuple[str, semver.version.Version],
+        smile_zigbee_mac_address: str | None,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
@@ -255,3 +255,27 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
             await self._request(uri, method="put", data=data)
+
+    async def set_number_setpoint(self, key: str, temperature: float) -> None:
+        """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
+        pass
+
+    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
+        """Set the Temperature offset for thermostats that support this feature."""
+        pass
+
+    async def set_gateway_mode(self, mode: str) -> None:
+        """Set the gateway mode."""
+        pass
+
+    async def set_regulation_mode(self, mode: str) -> None:
+        """Set the heating regulation mode."""
+        pass
+
+    async def set_dhw_mode(self, mode: str) -> None:
+        """Set the domestic hot water heating regulation mode."""
+        pass
+
+    async def delete_notification(self) -> None:
+        """Delete the active Plugwise Notification."""
+        pass
