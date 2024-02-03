@@ -6,15 +6,6 @@ from __future__ import annotations
 
 import datetime as dt
 
-import aiohttp
-from defusedxml import ElementTree as etree
-
-# Dict as class
-from munch import Munch
-
-# Version detection
-import semver
-
 from plugwise.constants import (
     ADAM,
     ANNA,
@@ -36,6 +27,15 @@ from plugwise.constants import (
 from plugwise.data import SmileData
 from plugwise.exceptions import PlugwiseError
 from plugwise.helper import SmileComm
+
+import aiohttp
+from defusedxml import ElementTree as etree
+
+# Dict as class
+from munch import Munch
+
+# Version detection
+import semver
 
 
 class SmileAPI(SmileComm, SmileData):

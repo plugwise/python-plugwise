@@ -4,13 +4,6 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
-import aiohttp
-from defusedxml import ElementTree as etree
-
-# Dict as class
-# Version detection
-import semver
-
 from plugwise.constants import (
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
@@ -32,6 +25,13 @@ from plugwise.exceptions import (
 from plugwise.helper import SmileComm
 from plugwise.legacy.smile import SmileLegacyAPI
 from plugwise.smile import SmileAPI
+
+import aiohttp
+from defusedxml import ElementTree as etree
+
+# Dict as class
+# Version detection
+import semver
 
 
 class Smile(SmileComm):

@@ -8,15 +8,6 @@ import asyncio
 import datetime as dt
 from typing import cast
 
-# This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
-
-# Time related
-from dateutil import tz
-from dateutil.parser import parse
-from defusedxml import ElementTree as etree
-from munch import Munch
-
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -69,7 +60,20 @@ from plugwise.exceptions import (
     InvalidXMLError,
     ResponseError,
 )
-from plugwise.util import escape_illegal_xml_characters, format_measure, version_to_model
+from plugwise.util import (
+    escape_illegal_xml_characters,
+    format_measure,
+    version_to_model,
+)
+
+# This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
+from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
+
+# Time related
+from dateutil import tz
+from dateutil.parser import parse
+from defusedxml import ElementTree as etree
+from munch import Munch
 
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
