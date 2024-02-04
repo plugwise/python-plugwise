@@ -228,8 +228,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             with open(userdata, encoding="utf-8") as filedata:
                 data = filedata.read()
             return aiohttp.web.Response(text=data)
-        except OSError:
-            raise aiohttp.web.HTTPNotFound
+        except OSError as exc:
+            raise aiohttp.web.HTTPNotFound from exc
 
     @classmethod
     async def smile_http_accept(cls, request):
@@ -480,9 +480,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 #                await self.connect_legacy(fail_auth=fail_auth)
 #                _LOGGER.error(" - invalid credentials not handled")  # pragma: no cover
 #                raise self.ConnectError  # pragma: no cover
-#            except pw_exceptions.InvalidAuthentication:
+#            except pw_exceptions.InvalidAuthentication as exc:
 #                _LOGGER.info(" + successfully aborted on credentials missing.")
-#                raise pw_exceptions.InvalidAuthentication
+#                raise pw_exceptions.InvalidAuthentication from exc
 
         if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
