@@ -10,6 +10,7 @@ from plugwise.constants import (
     PERCENTAGE,
     SPECIAL_FORMAT,
     TEMP_CELSIUS,
+    DeviceData,
 )
 
 
@@ -62,3 +63,13 @@ def version_to_model(version: str | None) -> str | None:
         model = HW_MODELS.get(version[-2:] + version[-4:-2] + version[-6:-4])
 
     return model if model is not None else "Unknown"
+
+
+def remove_empty_platform_dicts(data: DeviceData) -> None:
+    """Helper-function for removing any empty platform dicts."""
+    if not data["binary_sensors"]:
+        data.pop("binary_sensors")
+    if not data["sensors"]:
+        data.pop("sensors")
+    if not data["switches"]:
+        data.pop("switches")

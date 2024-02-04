@@ -8,16 +8,7 @@ from __future__ import annotations
 # Version detection
 from plugwise.constants import NONE, SWITCH_GROUP_TYPES, ZONE_THERMOSTATS, DeviceData
 from plugwise.legacy.helper import SmileLegacyHelper
-
-
-def remove_empty_platform_dicts(data: DeviceData) -> None:
-    """Helper-function for removing any empty platform dicts."""
-    if not data["binary_sensors"]:
-        data.pop("binary_sensors")
-    if not data["sensors"]:
-        data.pop("sensors")
-    if not data["switches"]:
-        data.pop("switches")
+from plugwise.util import remove_empty_platform_dicts
 
 
 class SmileLegacyData(SmileLegacyHelper):
