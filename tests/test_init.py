@@ -1,6 +1,5 @@
 # pylint: disable=protected-access
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
-import asyncio
 import importlib
 import json
 
@@ -201,7 +200,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @classmethod
     async def smile_timeout(cls, request):
         """Render timeout endpoint."""
-        raise asyncio.TimeoutError
+        raise TimeoutError
 
     @classmethod
     async def smile_broken(cls, request):
