@@ -127,7 +127,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             day_number  # pylint: disable=consider-using-assignment-expr
             != self._previous_day_number
         ):
-            LOGGER.debug(
+            LOGGER.info(
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
             self.gw_data: GatewayData = {}
