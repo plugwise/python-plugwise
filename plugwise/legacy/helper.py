@@ -48,7 +48,7 @@ from plugwise.constants import (
     SwitchType,
     ThermoLoc,
 )
-from plugwise.util import format_measure, version_to_model
+from plugwise.util import format_measure, power_data_local_format, version_to_model
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
@@ -63,19 +63,6 @@ def etree_to_dict(element: etree) -> dict[str, str]:
         node.update(element.items())
 
     return node
-
-
-def power_data_local_format(
-    attrs: dict[str, str], key_string: str, val: str
-) -> float | int:
-    """Format power data."""
-    # Special formatting of P1_MEASUREMENT POWER_WATT values, do not move to util-format_measure() function!
-    if all(item in key_string for item in ("electricity", "cumulative")):
-        return format_measure(val, ENERGY_KILO_WATT_HOUR)
-    if (attrs_uom := getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)) == POWER_WATT:
-        return int(round(float(val)))
-
-    return format_measure(val, attrs_uom)
 
 
 class SmileLegacyHelper:

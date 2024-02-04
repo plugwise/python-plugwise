@@ -48,6 +48,19 @@ def format_measure(measure: str, unit: str) -> float | int:
     return result
 
 
+def power_data_local_format(
+    attrs: dict[str, str], key_string: str, val: str
+) -> float | int:
+    """Format power data."""
+    # Special formatting of P1_MEASUREMENT POWER_WATT values, do not move to util-format_measure() function!
+    if all(item in key_string for item in ("electricity", "cumulative")):
+        return format_measure(val, ENERGY_KILO_WATT_HOUR)
+    if (attrs_uom := getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)) == POWER_WATT:
+        return int(round(float(val)))
+
+    return format_measure(val, attrs_uom)
+
+
 # NOTE: this function version_to_model is shared between Smile and USB
 def version_to_model(version: str | None) -> str | None:
     """Translate hardware_version to device type."""
