@@ -164,9 +164,9 @@ class SmileComm:
         try:
             # Encode to ensure utf8 parsing
             xml = etree.XML(escape_illegal_xml_characters(result).encode())
-        except etree.ParseError:
+        except etree.ParseError as exc:
             LOGGER.warning("Smile returns invalid XML for %s", self._endpoint)
-            raise InvalidXMLError
+            raise InvalidXMLError from exc
 
         return xml
 
@@ -202,15 +202,15 @@ class SmileComm:
                 )
         except (
             ClientError
-        ) as err:  # ClientError is an ancestor class of ServerTimeoutError
+        ) as exc:  # ClientError is an ancestor class of ServerTimeoutError
             if retry < 1:
                 LOGGER.warning(
                     "Failed sending %s %s to Plugwise Smile, error: %s",
                     method,
                     command,
-                    err,
+                    exc,
                 )
-                raise ConnectionFailedError
+                raise ConnectionFailedError from exc
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
