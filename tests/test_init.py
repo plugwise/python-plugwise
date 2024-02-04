@@ -581,8 +581,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 self._cooling_active = data.devices[heater_id]["binary_sensors"]["cooling_state"]
 
         self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
-        self._write_json("device_list", list(data.devices.keys()))
-        self._write_json("notifications", data.gateway["notifications"])
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
