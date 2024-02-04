@@ -135,11 +135,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
 
-#        if fail_auth:
-#            app.router.add_get("/{tail:.*}", self.smile_fail_auth)
-#            app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
-#            return app
-
         app.router.add_get("/core/appliances", self.smile_appliances)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
         app.router.add_get("/core/modules", self.smile_modules)
@@ -474,16 +469,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self, raise_timeout=False, fail_auth=False, stretch=False
     ):
         """Wrap connect to try negative testing before positive testing."""
-#        if fail_auth:
-#            try:
-#                _LOGGER.warning("Connecting to device with invalid credentials:")
-#                await self.connect_legacy(fail_auth=fail_auth)
-#                _LOGGER.error(" - invalid credentials not handled")  # pragma: no cover
-#                raise self.ConnectError  # pragma: no cover
-#            except pw_exceptions.InvalidAuthentication as exc:
-#                _LOGGER.info(" + successfully aborted on credentials missing.")
-#                raise pw_exceptions.InvalidAuthentication from exc
-
         if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
             return await self.connect_legacy(raise_timeout=True)
