@@ -70,23 +70,19 @@ class SmileLegacyHelper:
         """Set the constructor for this class."""
         self._appliances: etree
         self._count: int
-        self._cooling_present = False
         self._domain_objects: etree
         self._heater_id: str
         self._home_location: str
-        self._is_thermostat = False
-        self._last_active: dict[str, str | None] = {}
+        self._is_thermostat: bool
         self._last_modified: dict[str, str] = {}
         self._locations: etree
         self._modules: etree
         self._notifications: dict[str, dict[str, str]] = {}
-        self._on_off_device = False
-        self._opentherm_device = False
+        self._on_off_device: bool
+        self._opentherm_device: bool
         self._outdoor_temp: float
-        self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._status: etree
-        self._stretch_v2 = False
-        self._stretch_v3 = False
+        self._stretch_v2: bool
         self._system: etree
 
         self.device_items: int = 0

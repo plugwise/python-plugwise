@@ -197,28 +197,27 @@ class SmileHelper:
         """Set the constructor for this class."""
         self._cooling_activation_outdoor_temp: float
         self._cooling_deactivation_threshold: float
-        self._cooling_present = False
+        self._cooling_present: bool
         self._count: int
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
         self._endpoint: str
-        self._elga = False
+        self._elga: bool
         self._gw_allowed_modes: list[str] = []
         self._heater_id: str
         self._home_location: str
-        self._is_thermostat = False
+        self._is_thermostat: bool
         self._last_active: dict[str, str | None]
         self._last_modified: dict[str, str] = {}
         self._notifications: dict[str, dict[str, str]] = {}
-        self._on_off_device = False
-        self._opentherm_device = False
+        self._on_off_device: bool
+        self._opentherm_device: bool
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._smile_legacy = False
         self._status: etree
-        self._stretch_v2 = False
-        self._stretch_v3 = False
+        self._stretch_v2: bool
         self._system: etree
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################

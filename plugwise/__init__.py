@@ -61,13 +61,12 @@ class Smile(SmileComm):
             timeout,
         )
 
-        self._smile_api: SmileAPI | SmileLegacyAPI
         self._host = host
         self._passwd = password
+        self._websession = websession
         self._user = username
         self._port = port
         self._timeout = timeout
-        self._websession = websession
 
         self._cooling_present = False
         self._elga = False
@@ -76,9 +75,9 @@ class Smile(SmileComm):
         self._on_off_device = False
         self._opentherm_device = False
         self._schedule_old_states: dict[str, dict[str, str]] = {}
+        self._smile_api: SmileAPI | SmileLegacyAPI
         self._stretch_v2 = False
-        self._stretch_v3 = False
-        self._target_smile: str
+        self._target_smile: str = NONE
         self.gateway_id: str = NONE
         self.loc_data: dict[str, ThermoLoc] = {}
         self.smile_fw_version: str | None
@@ -131,6 +130,7 @@ class Smile(SmileComm):
         self._smile_api = SmileAPI(
             self._host,
             self._passwd,
+            self._websession,
             self._cooling_present,
             self._elga,
             self._is_thermostat,
@@ -138,7 +138,6 @@ class Smile(SmileComm):
             self._on_off_device,
             self._opentherm_device,
             self._schedule_old_states,
-            self._target_smile,
             self.gateway_id,
             self.loc_data,
             self.smile_fw_version,
@@ -150,7 +149,6 @@ class Smile(SmileComm):
             self.smile_name,
             self.smile_type,
             self.smile_version,
-            self._websession,
             self._user,
             self._port,
             self._timeout,
@@ -159,12 +157,11 @@ class Smile(SmileComm):
             self._smile_api = SmileLegacyAPI(
                 self._host,
                 self._passwd,
+                self._websession,
                 self._is_thermostat,
                 self._on_off_device,
                 self._opentherm_device,
-                self._schedule_old_states,
                 self._stretch_v2,
-                self._stretch_v3,
                 self._target_smile,
                 self.loc_data,
                 self.smile_fw_version,
@@ -176,7 +173,6 @@ class Smile(SmileComm):
                 self.smile_type,
                 self.smile_version,
                 self.smile_zigbee_mac_address,
-                self._websession,
                 self._user,
                 self._port,
                 self._timeout,
@@ -236,7 +232,6 @@ class Smile(SmileComm):
 
         if self.smile_type == "stretch":
             self._stretch_v2 = self.smile_version[1].major == 2
-            self._stretch_v3 = self.smile_version[1].major == 3
 
         if self.smile_type == "thermostat":
             self._is_thermostat = True

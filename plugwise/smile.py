@@ -48,6 +48,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
+        websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
@@ -55,7 +56,6 @@ class SmileAPI(SmileComm, SmileData):
         _on_off_device: bool,
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
-        _target_smile: str | None,
         gateway_id: str,
         loc_data: dict[str, ThermoLoc],
         smile_fw_version: str | None,
@@ -67,7 +67,6 @@ class SmileAPI(SmileComm, SmileData):
         smile_name: str,
         smile_type: str,
         smile_version: tuple[str, semver.version.Version],
-        websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
@@ -91,7 +90,6 @@ class SmileAPI(SmileComm, SmileData):
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
-        self._target_smile = _target_smile
         self.gateway_id = gateway_id
         self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version

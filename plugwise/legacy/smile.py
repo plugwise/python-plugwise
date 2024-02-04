@@ -41,12 +41,11 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         host: str,
         password: str,
+        websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _on_off_device: bool,
         _opentherm_device: bool,
-        _schedule_old_states: dict[str, dict[str, str]],
         _stretch_v2: bool,
-        _stretch_v3: bool,
         _target_smile: str,
         loc_data: dict[str, ThermoLoc],
         smile_fw_version: str | None,
@@ -58,7 +57,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_type: str,
         smile_version: tuple[str, semver.version.Version],
         smile_zigbee_mac_address: str | None,
-        websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
@@ -77,9 +75,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._is_thermostat = _is_thermostat
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
-        self._schedule_old_states = _schedule_old_states
         self._stretch_v2 = _stretch_v2
-        self._stretch_v3 = _stretch_v3
         self._target_smile = _target_smile
         self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version
