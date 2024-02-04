@@ -28,7 +28,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
+        assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
         assert self.device_items == 26
         assert not self.notifications
 

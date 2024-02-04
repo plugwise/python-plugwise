@@ -55,6 +55,7 @@ class SmileAPI(SmileComm, SmileData):
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
         _target_smile: str | None,
+        gateway_id: str,
         loc_data: dict[str, ThermoLoc],
         smile_fw_version: str | None,
         smile_hostname: str | None,
@@ -89,6 +90,7 @@ class SmileAPI(SmileComm, SmileData):
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
         self._target_smile = _target_smile
+        self.gateway_id = gateway_id
         self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
@@ -100,7 +102,6 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_type = smile_type
         self.smile_version = smile_version
 
-        self._gateway_id: str
         self._heater_id: str
         self._cooling_enabled = False
 
@@ -140,8 +141,6 @@ class SmileAPI(SmileComm, SmileData):
         await self.full_update_device()
         self.get_all_devices()
 
-
-        self._gateway_id = self.gw_data["gateway_id"]
         if "heater_id" in self.gw_data:
             self._heater_id = self.gw_data["heater_id"]
             if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
@@ -394,7 +393,7 @@ class SmileAPI(SmileComm, SmileData):
             vacation_time = time_2 + "T23:00:00.000Z"
             valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
-        uri = f"{APPLIANCES};id={self._gateway_id}/gateway_mode_control"
+        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
 
         await self._request(uri, method="put", data=data)

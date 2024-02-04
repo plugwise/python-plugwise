@@ -27,7 +27,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.gateway_id == "a455b61e52394b2db5081ce025a430f3"
+        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
         assert self.device_items == 29
         assert "97a04c0c263049b29350a660b4cdd01e" in self.notifications
 
@@ -51,7 +51,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.gateway_id == "a455b61e52394b2db5081ce025a430f3"
+        assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
         assert self.device_items == 31
         assert not self.notifications
 
@@ -85,7 +85,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"
+        assert smile.gateway_id == "03e65b16e4b247a29ae0d75a78cb492e"
         assert self.device_items == 40
         assert self.notifications
 

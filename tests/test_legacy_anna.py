@@ -29,7 +29,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
-        assert self.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
+        assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 44
         assert not self.notifications
 
@@ -66,7 +66,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2020-05-03 00:00:01", testdata)
 
-        assert self.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
+        assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
         assert self.device_items == 44
         assert not self.notifications
 

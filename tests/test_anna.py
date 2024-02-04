@@ -28,7 +28,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
-        assert self.gateway_id == "0466eae8520144c78afb29628384edeb"
+        assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
         # assert smile._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
         assert self.device_items == 56
         assert not self.notifications
@@ -188,7 +188,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
-        assert self.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
+        assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         # assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert self.device_items == 66
         assert not self.notifications
@@ -315,7 +315,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2020-04-12 00:00:01", testdata)
-        assert self.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
+        assert smile.gateway_id == "015ae9ea3f964e668e490fa39da3870b"
         # assert smile._last_active["c784ee9fdab44e1395b8dee7d7a497d5"] == "standaard"
         assert self.device_items == 62
         assert not self.notifications
@@ -345,7 +345,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         #     == THERMOSTAT_SCHEDULE
         # )
         assert self.device_items == 62
-        assert self.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
+        assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self._cooling_enabled
         assert not self.notifications

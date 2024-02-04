@@ -30,7 +30,7 @@ class TestPlugwiseStretch(
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
+        assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 83
 
         switch_change = await self.tinker_switch(

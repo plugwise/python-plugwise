@@ -11,6 +11,7 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     LOGGER,
     MODULES,
+    NONE,
     SMILES,
     STATUS,
     SYSTEM,
@@ -69,6 +70,7 @@ class Smile(SmileComm):
         self._websession = websession
 
         self._cooling_present = False
+        self._data: PlugwiseData = {}
         self._elga = False
         self._is_thermostat = False
         self._on_off_device = False
@@ -77,6 +79,7 @@ class Smile(SmileComm):
         self._stretch_v2 = False
         self._stretch_v3 = False
         self._target_smile: str
+        self.gateway_id: str = NONE
         self.loc_data: dict[str, ThermoLoc] = {}
         self.smile_fw_version: str | None
         self.smile_hostname: str
@@ -135,6 +138,7 @@ class Smile(SmileComm):
             self._opentherm_device,
             self._schedule_old_states,
             self._target_smile,
+            self.gateway_id,
             self.loc_data,
             self.smile_fw_version,
             self.smile_hostname,
@@ -310,7 +314,9 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        return await self._smile_api.async_update()
+        self._data = await self._smile_api.async_update()
+        self.gateway_id = self._data.gateway["gateway_id"]
+        return self._data
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

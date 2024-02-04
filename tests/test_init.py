@@ -568,7 +568,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if "cooling_present" in data.gateway:
             self.cooling_present = data.gateway["cooling_present"]
         self.notifications = data.gateway["notifications"]
-        self.gateway_id = data.gateway["gateway_id"]
         self.device_items = data.gateway["item_count"]
 
         self._cooling_active = False
