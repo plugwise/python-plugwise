@@ -51,6 +51,7 @@ class SmileAPI(SmileComm, SmileData):
         _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
+        _last_active: dict[str, str | None],
         _on_off_device: bool,
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
@@ -86,6 +87,7 @@ class SmileAPI(SmileComm, SmileData):
         self._cooling_present = _cooling_present
         self._elga = _elga
         self._is_thermostat = _is_thermostat
+        self._last_active = _last_active
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states

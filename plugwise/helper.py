@@ -207,7 +207,7 @@ class SmileHelper:
         self._heater_id: str
         self._home_location: str
         self._is_thermostat = False
-        self._last_active: dict[str, str | None] = {}
+        self._last_active: dict[str, str | None]
         self._last_modified: dict[str, str] = {}
         self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device = False
