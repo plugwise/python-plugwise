@@ -28,7 +28,7 @@
       "model": "Plug",
       "name": "Playstation Smart Plug",
       "sensors": {
-        "electricity_consumed": 81.2,
+        "electricity_consumed": 80.1,
         "electricity_consumed_interval": 12.7,
         "electricity_produced": 0.0,
         "electricity_produced_interval": 0.0
@@ -165,7 +165,7 @@
     },
     "90986d591dcd426cae3ec3e8111ff730": {
       "binary_sensors": {
-        "heating_state": false
+        "heating_state": true
       },
       "dev_class": "heater_central",
       "location": "1f9dcf83fd4e4b66b72ff787957bfe5d",
@@ -233,7 +233,7 @@
         "setpoint": 21.5,
         "temperature": 26.2,
         "temperature_difference": 3.7,
-        "valve_position": 0.0
+        "valve_position": 100
       },
       "temperature_offset": {
         "lower_bound": -2.0,

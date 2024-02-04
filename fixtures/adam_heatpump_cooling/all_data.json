@@ -4,7 +4,7 @@
       "available": true,
       "binary_sensors": {
         "cooling_state": false,
-        "dhw_state": false,
+        "dhw_state": true,
         "flame_state": false,
         "heating_state": false
       },

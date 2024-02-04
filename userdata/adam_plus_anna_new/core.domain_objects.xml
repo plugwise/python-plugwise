@@ -1,5 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <domain_objects>
+	<appliance id='67d73d0bd469422db25a618a5fb8eeb0'>
+		<name>SmartPlug Floor 0</name>
+		<description>A device that communicates through the ZigBee protocol.</description>
+		<type>zz_misc</type>
+		<created_date>2022-03-11T11:21:58.858+01:00</created_date>
+		<modified_date>2022-06-13T15:15:12.921+02:00</modified_date>
+		<modified_date>2023-12-22T16:18:09.841+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='b4f211175e124df59603412bafa77a34'/>
+		<groups/>
+		<logs>
+			<interval_log id='3c32af0fb9744d8baf9f68ba7f9143f3'>
+				<type>electricity_consumed</type>
+				<unit>Wh</unit>
+				<updated_date>2023-12-22T16:15:00+01:00</updated_date>
+				<last_consecutive_log_date>2023-12-22T16:00:00+01:00</last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='0d52d0e144b443f185ff0103962ab6ad'/>
+				<period start_date="2023-12-22T16:15:00+01:00" end_date="2023-12-22T16:15:00+01:00" interval="PT15M">
+					<measurement log_date="2023-12-22T16:15:00+01:00">0.00</measurement>
+				</period>
+			</interval_log>
+			<interval_log id='56a14efb191c4e35890939aa65bd42fe'>
+				<type>electricity_produced</type>
+				<unit>Wh</unit>
+				<updated_date></updated_date>
+				<last_consecutive_log_date></last_consecutive_log_date>
+				<interval>PT15M</interval>
+				<electricity_interval_meter id='0d52d0e144b443f185ff0103962ab6ad'/>
+			</interval_log>
+			<point_log id='c62e9097eb324f539f62cb22d275533f'>
+				<type>relay</type>
+				<unit></unit>
+				<updated_date>2023-12-22T16:18:09.841+01:00</updated_date>
+				<last_consecutive_log_date>2022-06-11T15:25:12.796+02:00</last_consecutive_log_date>
+				<interval/>
+				<relay id='36368e4365e248f2a3afc21d5afb1693'/>
+				<period start_date="2023-12-22T16:18:09.841+01:00" end_date="2023-12-22T16:18:09.841+01:00">
+					<measurement log_date="2023-12-22T16:18:09.841+01:00">on</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id='76c3a214120b42e790641aff891a5f82'>
+				<updated_date>2023-12-22T16:18:09.841+01:00</updated_date>
+				<lock>false</lock>
+				<state>on</state>
+				<relay id='36368e4365e248f2a3afc21d5afb1693'/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<module id='6fe74ec044bd44d88ac0412df67f188f'>
+		<vendor_name>LUMI</vendor_name>
+		<vendor_model>lumi.plug.maeu01</vendor_model>
+		<hardware_version></hardware_version>
+		<firmware_version></firmware_version>
+		<upgrade/>
+		<created_date>2022-03-11T11:21:37.406+01:00</created_date>
+		<modified_date>2022-03-11T18:44:23.929+01:00</modified_date>
+		<deleted_date></deleted_date>
+		<services>
+			<electricity_interval_meter id='0d52d0e144b443f185ff0103962ab6ad' log_type='electricity' endpoint='1'>
+				<functionalities><interval_log id='3c32af0fb9744d8baf9f68ba7f9143f3'/><interval_log id='56a14efb191c4e35890939aa65bd42fe'/></functionalities>
+			</electricity_interval_meter>
+			<relay id='36368e4365e248f2a3afc21d5afb1693' log_type='relay' endpoint='1'>
+				<functionalities><relay_functionality id='76c3a214120b42e790641aff891a5f82'/><point_log id='c62e9097eb324f539f62cb22d275533f'/></functionalities>
+			</relay>
+		</services>
+		<protocols>
+			<zig_bee_node id='8e0dc5319eb0424eb6dc63943e9d0d3a'>
+				<mac_address>54EF4410002C97F2</mac_address>
+				<type>router</type>
+				<reachable>true</reachable>
+				<power_source>mains</power_source>
+				<zig_bee_coordinator id='accec35dd04241ecb4ff68d2c35f2e36'/>
+				<neighbors>
+					<neighbor mac_address='000D6F0017DAA2B7'>
+						<lqi>63</lqi>
+						<depth>1</depth>
+						<relationship>sibling</relationship>
+					</neighbor>
+					<neighbor mac_address='000D6F000C85F701'>
+						<lqi>75</lqi>
+						<depth>1</depth>
+						<relationship>sibling</relationship>
+					</neighbor>
+					<neighbor mac_address='000D6F000D5A29BD'>
+						<lqi>67</lqi>
+						<depth>0</depth>
+						<relationship>parent</relationship>
+					</neighbor>
+				</neighbors>
+				<last_neighbor_table_received>2023-12-22T16:24:36+01:00</last_neighbor_table_received>
+				<neighbor_table_support>true</neighbor_table_support>
+			</zig_bee_node>
+		</protocols>
+	</module>
 	<appliance id='e2f4322d57924fa090fbbc48b3a140dc'>
 		<name>Lisa Badkamer</name>
 		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
@@ -487,8 +584,8 @@
 			<thermostat_functionality id='130d8795df4041f3ad3540117a2bd5dc'>
 				<updated_date>2023-12-22T16:30:38.873+01:00</updated_date>
 				<type>thermostat</type>
-				<lower_bound>0</lower_bound>
-				<upper_bound>30</upper_bound>
+				<lower_bound>1</lower_bound>
+				<upper_bound>35</upper_bound>
 				<resolution>0.01</resolution>
 				<setpoint>18.5</setpoint>
 				<regulations><open_therm_regulation id='f47674d5b4fd44778d2e0c9df77e0186'/></regulations>
@@ -1857,7 +1954,7 @@
 		<actuator_functionalities>
 			<relay_functionality id='45cfd0a5759e45699ec6e653cb867981'>
 				<updated_date>2023-12-22T16:29:30.555+01:00</updated_date>
-				<lock>false</lock>
+				<lock>true</lock>
 				<state>on</state>
 				<relay id='35e7673305014654a4575f591ca6a01a'/>
 			</relay_functionality>

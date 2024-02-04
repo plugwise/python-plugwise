@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <domain_objects>
+	<appliance id='d440da497ab549dfb7e76bcf4827f388'>
+		<name>OpenThermThermostat</name>
+		<description>A Thermostat</description>
+		<type>thermostat</type>
+		<created_date>2020-06-03T00:26:51.308+02:00</created_date>
+		<modified_date>2020-07-31T16:04:57.153+02:00</modified_date>
+		<deleted_date></deleted_date>
+		<location id='c3807baa2be64289a6e8d0f64468bdad'/>
+		<groups/>
+		<logs>
+			<point_log id='2c4226827eae48559a697bb343f72b8a'>
+				<type>maximum_modulation_level</type>
+				<unit></unit>
+				<updated_date>2020-07-31T08:12:56.454+02:00</updated_date>
+				<last_consecutive_log_date>2020-06-03T00:27:08.401+02:00</last_consecutive_log_date>
+				<interval/>
+				<modulation_level id='f50ac168cc0a462b952c07bd0256f434'/>
+				<period start_date="2020-07-31T08:12:56.454+02:00" end_date="2020-07-31T08:12:56.454+02:00">
+					<measurement log_date="2020-07-31T08:12:56.454+02:00">1.00</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities/>
+	</appliance>
 	<module id='0fd8411d0bc446a08c336a7bba029e22'>
 		<vendor_name>Plugwise</vendor_name>
 		<vendor_model>160-01</vendor_model>
@@ -108,7 +132,7 @@
 	</module>
 	<module id='72b2aa43d2ea4a33b23ade5e6629de8d'>
 		<vendor_name>Plugwise</vendor_name>
-		<vendor_model>160-01</vendor_model>
+		<vendor_model></vendor_model>
 		<hardware_version></hardware_version>
 		<firmware_version>2019-06-21T02:00:00+02:00</firmware_version>
 		<created_date>2020-02-29T22:56:58.823+01:00</created_date>
@@ -1138,7 +1162,7 @@
 		</zones>
 	</open_therm_regulation>
 	<appliance id='f2be121e4a9345ac83c6e99ed89a98be'>
-		<name>Bouwe-PC</name>
+		<name>Work-PC</name>
 		<description>A smart plug that can be switched on/off and measure power usage.</description>
 		<type>computer_desktop</type>
 		<created_date>2020-02-29T22:56:59.235+01:00</created_date>

@@ -15,17 +15,6 @@ class TestPlugwiseGeneric(
     """Tests for generic functionality."""
 
     @pytest.mark.asyncio
-    async def test_fail_legacy_system(self):
-        """Test erroneous legacy stretch system."""
-        self.smile_setup = "faulty_stretch"
-        try:
-            _server, _smile, _client = await self.connect_wrapper()
-            setup_result = False  # pragma: no cover
-        except pw_exceptions.InvalidXMLError:
-            setup_result = True
-        assert setup_result
-
-    @pytest.mark.asyncio
     async def test_fail_anna_connected_to_adam(self):
         """Test erroneous adam with anna system."""
         self.smile_setup = "anna_connected_to_adam"

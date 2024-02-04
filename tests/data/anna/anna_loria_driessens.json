@@ -57,6 +57,7 @@
   "a449cbc334ae4a5bb7f89064984b2906": {
     "available": true,
     "binary_sensors": {
+      "cooling_enabled": false,
       "cooling_state": false,
       "dhw_state": false,
       "flame_state": false,
@@ -84,7 +85,7 @@
       "dhw_temperature": 49.5,
       "intended_boiler_temperature": 0,
       "modulation_level": 0,
-      "outdoor_air_temperature": 7.63,
+      "outdoor_air_temperature": 7.5,
       "return_temperature": 23,
       "water_temperature": 23.3
     },

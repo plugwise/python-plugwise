@@ -31,8 +31,8 @@
       "flame_state": true
     },
     "sensors": {
-      "water_temperature": 29,
-      "intended_boiler_temperature": 20
+      "water_temperature": 30,
+      "intended_boiler_temperature": 23.9
     },
     "switches": {
       "dhw_cm_switch": false
@@ -158,7 +158,7 @@
     "zigbee_mac_address": "000D6F000D13CA9A",
     "vendor": "Plugwise",
     "sensors": {
-      "electricity_consumed": 87.6,
+      "electricity_consumed": 91.3,
       "electricity_consumed_interval": 23,
       "electricity_produced": 0,
       "electricity_produced_interval": 0

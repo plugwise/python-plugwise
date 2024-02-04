@@ -67,7 +67,7 @@
       "sensors": {
         "cooling_activation_outdoor_temperature": 21.0,
         "cooling_deactivation_threshold": 6.0,
-        "illuminance": 25.5,
+        "illuminance": 24.5,
         "setpoint_high": 22.0,
         "setpoint_low": 4.0,
         "temperature": 22.3

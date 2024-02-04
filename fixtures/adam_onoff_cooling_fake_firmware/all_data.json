@@ -3,7 +3,7 @@
     "0ca13e8176204ca7bf6f09de59f81c83": {
       "binary_sensors": {
         "cooling_state": true,
-        "dhw_state": false,
+        "dhw_state": true,
         "flame_state": false,
         "heating_state": false
       },
@@ -25,7 +25,7 @@
       "name": "OnOff",
       "sensors": {
         "dhw_temperature": 63.5,
-        "intended_boiler_temperature": 35.0,
+        "intended_boiler_temperature": 0.0,
         "modulation_level": 0.0,
         "outdoor_air_temperature": 13.5,
         "return_temperature": 24.9,

@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.37.0
+
+- Refactor code into separate parts/paths for actual and legacy Plugwise devices.
+
 ## v0.36.3
 
 - Bugfixes for [#558](https://github.com/plugwise/plugwise-beta/issues/558) and [#559](https://github.com/plugwise/plugwise-beta/issues/559).

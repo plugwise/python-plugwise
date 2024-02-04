@@ -19,7 +19,7 @@
       "name": "OpenTherm",
       "sensors": {
         "intended_boiler_temperature": 0.0,
-        "water_temperature": 47.0
+        "water_temperature": 48.0
       },
       "switches": {
         "dhw_cm_switch": false
@@ -92,7 +92,7 @@
       "location": "5ccb6c41a7d9403988d261ceee04239f",
       "name": "Work-PC",
       "sensors": {
-        "electricity_consumed": 79.8,
+        "electricity_consumed": 80.5,
         "electricity_consumed_interval": 7.03,
         "electricity_produced": 0.0,
         "electricity_produced_interval": 0.0

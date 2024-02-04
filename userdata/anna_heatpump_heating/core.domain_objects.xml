@@ -322,7 +322,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-09T13:51:55.147+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-09T14:06:36.049+02:00" end_date="2020-04-09T14:06:36.049+02:00">
-					<measurement log_date="2020-04-09T14:06:36.049+02:00">18.00</measurement>
+					<measurement log_date="2020-04-09T14:06:36.049+02:00">3.00</measurement>
 				</period>
 				<thermo_meter id='71b1d108384a49769ee4f47b1317cbc6'/>
 			</point_log>
@@ -382,7 +382,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-03T07:54:47.729+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-08T19:24:39.363+02:00" end_date="2020-04-08T19:24:39.363+02:00">
-					<measurement log_date="2020-04-08T19:24:39.363+02:00">0.00</measurement>
+					<measurement log_date="2020-04-08T19:24:39.363+02:00">35.00</measurement>
 				</period>
 				<thermo_meter id='6a3b56382ef04a2db54c35c349a6521f'/>
 			</point_log>
@@ -701,7 +701,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-09T12:44:36.599+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-09T14:10:15.513+02:00" end_date="2020-04-09T14:10:15.513+02:00">
-					<measurement log_date="2020-04-09T14:10:15.513+02:00">9</measurement>
+					<measurement log_date="2020-04-09T14:10:15.513+02:00">3</measurement>
 				</period>
 				<status_code id='3e8f2ecf95e34aa7a8ce4427bc57561e'/>
 			</point_log>
@@ -751,7 +751,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-03T07:54:23.120+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-08T19:24:39.011+02:00" end_date="2020-04-08T19:24:39.011+02:00">
-					<measurement log_date="2020-04-08T19:24:39.011+02:00">off</measurement>
+					<measurement log_date="2020-04-08T19:24:39.011+02:00">on</measurement>
 				</period>
 				<boiler_state id='5bf08d5027e44fb389bc21b6d24f0ada'/>
 			</point_log>
@@ -765,8 +765,25 @@
 				</period>
 				<fault_code id='c2f0f2af06284c9999e1446431bb0438'/>
 			</point_log>
+			<point_log id='9257714483e4423a8a3423072eda3d40'>
+				<type>cooling_enabled</type>
+				<unit></unit>
+				<updated_date>2022-11-02T03:57:23.207+01:00</updated_date>
+				<last_consecutive_log_date>2022-11-02T03:57:23.207+01:00</last_consecutive_log_date>
+				<interval/>
+				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
+				<period start_date="2022-11-02T03:57:23.207+01:00" end_date="2022-11-02T03:57:23.207+01:00">
+					<measurement log_date="2022-11-02T03:57:23.207+01:00">off</measurement>
+				</period>
+			</point_log>
 		</logs>
 		<actuator_functionalities>
+			<toggle_functionality id='7de76401da0249e1b9f13759d8938749'>
+				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
+				<updated_date>2022-11-02T03:57:23.207+01:00</updated_date>
+				<type>cooling_enabled</type>
+				<state>off</state>
+			</toggle_functionality>
 			<offset_functionality id='0150ad6c0a2d47aba4c490e88205d026'>
 				<temperature_offset id='218d5dadf1b748278d8ecfa335f6f2cc'/>
 				<updated_date>2020-04-09T13:25:31.144+02:00</updated_date>
@@ -866,6 +883,16 @@
 				<lower_bound>0</lower_bound>
 				<upper_bound>100</upper_bound>
 				<resolution>1</resolution>
+				<regulations/>
+				<thermostat id='5e49f223e7224c3f93552db2c63881f6'/>
+			</thermostat_functionality>
+			<thermostat_functionality id='d9455c3ba0b0412cb264b8b33f4e3849'>
+				<updated_date>2020-04-08T19:24:38.964+02:00</updated_date>
+				<type>domestic_hot_water_setpoint</type>
+				<setpoint>53</setpoint>
+				<lower_bound>35</lower_bound>
+				<upper_bound>60</upper_bound>
+				<resolution>0.01</resolution>
 				<regulations/>
 				<thermostat id='5e49f223e7224c3f93552db2c63881f6'/>
 			</thermostat_functionality>
@@ -1077,7 +1104,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-09T14:09:41+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-09T14:09:41+02:00" end_date="2020-04-09T14:09:41+02:00">
-					<measurement log_date="2020-04-09T14:09:41+02:00">20.25</measurement>
+					<measurement log_date="2020-04-09T14:09:41+02:00">20.23</measurement>
 				</period>
 				<thermo_meter id='a69da3a5a8504186b6773c95f79e641e'/>
 			</point_log>
@@ -1343,7 +1370,7 @@
 				<unit>C</unit>
 				<last_consecutive_log_date>2020-04-09T14:12:19.497+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-09T14:12:19.497+02:00" end_date="2020-04-09T14:12:19.497+02:00">
-					<measurement log_date="2020-04-09T14:12:19.497+02:00">23.30</measurement>
+					<measurement log_date="2020-04-09T14:12:19.497+02:00">19.30</measurement>
 				</period>
 				<thermo_meter id='0961c99850a942319310d93d2074127b'/>
 			</point_log>
@@ -1493,7 +1520,7 @@
 				<unit></unit>
 				<last_consecutive_log_date>2020-04-03T07:54:23.097+02:00</last_consecutive_log_date>
 				<period start_date="2020-04-09T13:27:29.070+02:00" end_date="2020-04-09T13:27:29.070+02:00">
-					<measurement log_date="2020-04-09T13:27:29.070+02:00">off</measurement>
+					<measurement log_date="2020-04-09T13:27:29.070+02:00">on</measurement>
 				</period>
 				<boiler_state id='5126b3ed229b422a87a38ce4bb2b8678'/>
 			</point_log>

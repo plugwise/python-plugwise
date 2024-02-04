@@ -52,6 +52,7 @@
     "bfb5ee0a88e14e5f97bfa725a760cc49": {
       "available": true,
       "binary_sensors": {
+        "cooling_enabled": false,
         "cooling_state": false,
         "dhw_state": false,
         "flame_state": false,
@@ -79,7 +80,7 @@
         "dhw_temperature": 52.9,
         "intended_boiler_temperature": 0.0,
         "modulation_level": 0.0,
-        "outdoor_air_temperature": 17.3,
+        "outdoor_air_temperature": 17.2,
         "return_temperature": 26.3,
         "water_temperature": 25.3
       },
@@ -94,7 +95,7 @@
     "cooling_present": true,
     "gateway_id": "9ff0569b4984459fb243af64c0901894",
     "heater_id": "bfb5ee0a88e14e5f97bfa725a760cc49",
-    "item_count": 63,
+    "item_count": 64,
     "notifications": {},
     "smile_name": "Smile Anna"
   }

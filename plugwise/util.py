@@ -3,14 +3,25 @@ from __future__ import annotations
 
 import re
 
-from .constants import (
+from plugwise.constants import (
+    ATTR_UNIT_OF_MEASUREMENT,
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
     PERCENTAGE,
+    POWER_WATT,
     SPECIAL_FORMAT,
     TEMP_CELSIUS,
+    DeviceData,
 )
+
+
+def check_model(name: str | None, vendor_name: str | None) -> str | None:
+    """Model checking before using version_to_model."""
+    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
+        return model
+
+    return name
 
 
 def escape_illegal_xml_characters(xmldata: str) -> str:
@@ -47,6 +58,19 @@ def format_measure(measure: str, unit: str) -> float | int:
     return result
 
 
+def power_data_local_format(
+    attrs: dict[str, str], key_string: str, val: str
+) -> float | int:
+    """Format power data."""
+    # Special formatting of P1_MEASUREMENT POWER_WATT values, do not move to util-format_measure() function!
+    if all(item in key_string for item in ("electricity", "cumulative")):
+        return format_measure(val, ENERGY_KILO_WATT_HOUR)
+    if (attrs_uom := getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)) == POWER_WATT:
+        return int(round(float(val)))
+
+    return format_measure(val, attrs_uom)
+
+
 # NOTE: this function version_to_model is shared between Smile and USB
 def version_to_model(version: str | None) -> str | None:
     """Translate hardware_version to device type."""
@@ -62,3 +86,13 @@ def version_to_model(version: str | None) -> str | None:
         model = HW_MODELS.get(version[-2:] + version[-4:-2] + version[-6:-4])
 
     return model if model is not None else "Unknown"
+
+
+def remove_empty_platform_dicts(data: DeviceData) -> None:
+    """Helper-function for removing any empty platform dicts."""
+    if not data["binary_sensors"]:
+        data.pop("binary_sensors")
+    if not data["sensors"]:
+        data.pop("sensors")
+    if not data["switches"]:
+        data.pop("switches")

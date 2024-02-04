@@ -26,6 +26,8 @@ pytestmark = pytest.mark.asyncio
 
 pp = PrettyPrinter(indent=8)
 
+CORE_DOMAIN_OBJECTS = "/core/domain_objects"
+CORE_DOMAIN_OBJECTS_TAIL = "/core/domain_objects{tail:.*}"
 CORE_LOCATIONS = "/core/locations"
 CORE_LOCATIONS_TAIL = "/core/locations{tail:.*}"
 CORE_APPLIANCES_TAIL = "/core/appliances{tail:.*}"
@@ -93,6 +95,45 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             app.router.add_get("/{tail:.*}", self.smile_fail_auth)
             app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
             return app
+
+        if broken:
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_broken)
+        elif timeout:
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_timeout)
+        else:
+            app.router.add_get(CORE_DOMAIN_OBJECTS, self.smile_domain_objects)
+
+        # Introducte timeout with 2 seconds, test by setting response to 10ms
+        # Don't actually wait 2 seconds as this will prolongue testing
+        if not raise_timeout:
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
+            app.router.add_route(
+                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
+            )
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
+            app.router.add_route(
+                "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
+            )
+        else:
+            app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
+            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
+            app.router.add_route(
+                "DELETE", "/core/notifications{tail:.*}", self.smile_timeout
+            )
+
+        return app
+
+    async def setup_legacy_app(
+        self,
+        broken=False,
+        timeout=False,
+        raise_timeout=False,
+        fail_auth=False,
+        stretch=False,
+    ):
+        """Create mock webserver for Smile to interface with."""
+        app = aiohttp.web.Application()
 
         app.router.add_get("/core/appliances", self.smile_appliances)
         app.router.add_get("/core/domain_objects", self.smile_domain_objects)
@@ -249,6 +290,87 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         client = aiohttp.test_utils.TestClient(server)
         websession = client.session
 
+        url = f"{server.scheme}://{server.host}:{server.port}{CORE_DOMAIN_OBJECTS}"
+
+        # Try/exceptpass to accommodate for Timeout of aoihttp
+        try:
+            resp = await websession.get(url)
+            assumed_status = self.connect_status(broken, timeout, fail_auth)
+            assert resp.status == assumed_status
+            timeoutpass_result = False
+            assert timeoutpass_result
+        except Exception:  # pylint: disable=broad-except
+            timeoutpass_result = True
+            assert timeoutpass_result
+
+        if not broken and not timeout and not fail_auth:
+            text = await resp.text()
+            assert "xml" in text
+
+        # Test lack of websession
+        try:
+            smile = pw_smile.Smile(
+                host=server.host,
+                username=pw_constants.DEFAULT_USERNAME,
+                password=test_password,
+                port=server.port,
+                websession=None,
+            )
+            lack_of_websession = False
+            assert lack_of_websession
+        except Exception:  # pylint: disable=broad-except
+            lack_of_websession = True
+            assert lack_of_websession
+
+        smile = pw_smile.Smile(
+            host=server.host,
+            username=pw_constants.DEFAULT_USERNAME,
+            password=test_password,
+            port=server.port,
+            websession=websession,
+        )
+
+        if not timeout:
+            assert smile._timeout == 30
+
+        # Connect to the smile
+        try:
+            connection_state = await smile.connect()
+            assert connection_state
+            return server, smile, client
+        except (
+            pw_exceptions.DeviceTimeoutError,
+            pw_exceptions.InvalidXMLError,
+            pw_exceptions.InvalidAuthentication,
+        ) as exception:
+            await self.disconnect(server, client)
+            raise exception
+
+    async def connect_legacy(
+        self,
+        broken=False,
+        timeout=False,
+        raise_timeout=False,
+        fail_auth=False,
+        stretch=False,
+    ):
+        """Connect to a smile environment and perform basic asserts."""
+        port = aiohttp.test_utils.unused_port()
+        test_password = "".join(
+            secrets.choice(string.ascii_lowercase) for _ in range(8)
+        )
+
+        # Happy flow
+        app = await self.setup_legacy_app(broken, timeout, raise_timeout, fail_auth, stretch)
+
+        server = aiohttp.test_utils.TestServer(
+            app, port=port, scheme="http", host="127.0.0.1"
+        )
+        await server.start_server()
+
+        client = aiohttp.test_utils.TestClient(server)
+        websession = client.session
+
         url = f"{server.scheme}://{server.host}:{server.port}{CORE_LOCATIONS}"
 
         # Try/exceptpass to accommodate for Timeout of aoihttp
@@ -343,6 +465,33 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Connecting to functioning device:")
         return await self.connect(stretch=stretch)
 
+    async def connect_legacy_wrapper(
+        self, raise_timeout=False, fail_auth=False, stretch=False
+    ):
+        """Wrap connect to try negative testing before positive testing."""
+        if raise_timeout:
+            _LOGGER.warning("Connecting to device exceeding timeout in handling:")
+            return await self.connect_legacy(raise_timeout=True)
+
+        try:
+            _LOGGER.warning("Connecting to device exceeding timeout in response:")
+            await self.connect_legacy(timeout=True)
+            _LOGGER.error(" - timeout not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
+        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
+            _LOGGER.info(" + successfully passed timeout handling.")
+
+        try:
+            _LOGGER.warning("Connecting to device with missing data:")
+            await self.connect_legacy(broken=True)
+            _LOGGER.error(" - broken information not handled")  # pragma: no cover
+            raise self.ConnectError  # pragma: no cover
+        except pw_exceptions.InvalidXMLError:
+            _LOGGER.info(" + successfully passed XML issue handling.")
+
+        _LOGGER.info("Connecting to functioning device:")
+        return await self.connect_legacy(stretch=stretch)
+
     # Generic disconnect
     @classmethod
     @pytest.mark.asyncio
@@ -371,7 +520,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     )
             if device_count == 0:  # pragma: no cover
                 _LOGGER.info("      ! no devices found in this location")
-                assert False
 
     @pytest.mark.asyncio
     async def device_test(
@@ -391,25 +539,39 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         with freeze_time(test_time):
             if initialize:
                 _LOGGER.info("Asserting testdata:")
-                await smile._full_update_device()
-                smile.get_all_devices()
-                data = await smile.async_update()
+                if smile.smile_legacy:
+                    await smile.full_update_device()
+                    smile.get_all_devices()
+                    data = await smile.async_update()
+                else:
+                    data = await smile.async_update()
             else:
                 _LOGGER.info("Asserting updated testdata:")
                 data = await smile.async_update()
 
-        if "heater_id" in data.gateway:
+        self.cooling_present = False
+        if "cooling_present" in data.gateway:
             self.cooling_present = data.gateway["cooling_present"]
         self.notifications = data.gateway["notifications"]
+        self.device_items = data.gateway["item_count"]
+
+        self._cooling_active = False
+        self._cooling_enabled = False
+        if "heater_id" in data.gateway:
+            heater_id = data.gateway["heater_id"]
+            if "cooling_enabled" in data.devices[heater_id]["binary_sensors"]:
+                self._cooling_enabled = data.devices[heater_id]["binary_sensors"]["cooling_enabled"]
+            if "cooling_state" in data.devices[heater_id]["binary_sensors"]:
+                self._cooling_active = data.devices[heater_id]["binary_sensors"]["cooling_state"]
+
         self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
-        self._write_json("device_list", smile.device_list)
-        self._write_json("notifications", data.gateway["notifications"])
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-        location_list = smile._thermo_locs
+        self.device_list = list(data.devices.keys())
+        location_list = smile.loc_data
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
@@ -472,7 +634,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
-        for new_state in [False, True, False]:
+        for new_state in ["false", "true", "false"]:
             tinker_switch_passed = False
             _LOGGER.info("- Switching %s", new_state)
             try:
@@ -503,7 +665,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         tinker_temp_passed = False
         test_temp = {"setpoint": 22.9}
-        if smile._cooling_present and not block_cooling:
+        if self.cooling_present and not block_cooling:
             test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
@@ -519,7 +681,31 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 tinker_temp_passed = True
             else:  # pragma: no cover
                 _LOGGER.info("  - tinker_thermostat_temp failed unexpectedly")
-                return False
+                tinker_temp_passed = False
+
+        return tinker_temp_passed
+
+    @pytest.mark.asyncio
+    async def tinker_legacy_thermostat_temp(self, smile, unhappy=False):
+        """Toggle temperature to test functionality."""
+        _LOGGER.info("Assert modifying temperature setpoint")
+        tinker_temp_passed = False
+        test_temp = 22.9
+        _LOGGER.info("- Adjusting temperature to %s", test_temp)
+        try:
+            await smile.set_temperature(test_temp, None)
+            _LOGGER.info("  + worked as intended")
+            tinker_temp_passed = True
+        except (
+            pw_exceptions.ErrorSendingCommandError,
+            pw_exceptions.ResponseError,
+        ):
+            if unhappy:
+                _LOGGER.info("  + failed as expected")
+                tinker_temp_passed = True
+            else:  # pragma: no cover
+                _LOGGER.info("  - failed unexpectedly")
+                tinker_temp_passed = False
 
         return tinker_temp_passed
 
@@ -594,6 +780,33 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # pragma warning restore S3776
 
     @pytest.mark.asyncio
+    async def tinker_legacy_thermostat_schedule(self, smile, unhappy=False):
+        """Toggle schedules to test functionality."""
+        states = ["on", "off", "!Bogus"]
+        for state in states:
+            _LOGGER.info("- Adjusting schedule to state %s", state)
+            try:
+                await smile.set_schedule_state(None, state, None)
+                tinker_schedule_passed = True
+                _LOGGER.info("  + working as intended")
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + failed as expected")
+                tinker_schedule_passed = True
+            except (
+                pw_exceptions.ErrorSendingCommandError,
+                pw_exceptions.ResponseError,
+            ):
+                tinker_schedule_passed = False
+                if unhappy:
+                    _LOGGER.info("  + failed as expected before intended failure")
+                    tinker_schedule_passed = True
+                else:  # pragma: no cover
+                    _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
+
+        return tinker_schedule_passed
+
+    @pytest.mark.asyncio
     async def tinker_thermostat(
         self,
         smile,
@@ -626,6 +839,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 smile, loc_id, "on", good_schedules, single, unhappy
             )
             return result_1 and result_2 and result_3 and result_4 and result_5
+        return result_1 and result_2 and result_3
+
+    @pytest.mark.asyncio
+    async def tinker_legacy_thermostat(self, smile, schedule_on=True, unhappy=False):
+        """Toggle various climate settings to test functionality."""
+        result_1 = await self.tinker_legacy_thermostat_temp(smile, unhappy)
+        result_2 = await self.tinker_thermostat_preset(smile, None, unhappy)
+        result_3 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
+        if schedule_on:
+            result_4 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
+            return result_1 and result_2 and result_3 and result_4
         return result_1 and result_2 and result_3
 
     @staticmethod
@@ -723,9 +947,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             log_msg = f" # Assert legacy {smile_legacy}"
             parent_logger.info(log_msg)
             if smile_legacy:
-                assert smile._smile_legacy
+                assert smile.smile_legacy
             else:
-                assert not smile._smile_legacy
+                assert not smile.smile_legacy
 
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""

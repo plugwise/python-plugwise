@@ -18,8 +18,8 @@
       "model": "Generic heater",
       "name": "OpenTherm",
       "sensors": {
-        "intended_boiler_temperature": 20.0,
-        "water_temperature": 29.0
+        "intended_boiler_temperature": 23.9,
+        "water_temperature": 30.0
       },
       "switches": {
         "dhw_cm_switch": false
@@ -77,7 +77,7 @@
       "model": "Plug",
       "name": "Plug Werkplek",
       "sensors": {
-        "electricity_consumed": 87.6,
+        "electricity_consumed": 91.3,
         "electricity_consumed_interval": 23.0,
         "electricity_produced": 0.0,
         "electricity_produced_interval": 0.0

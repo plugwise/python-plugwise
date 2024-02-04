@@ -51,6 +51,7 @@
       "dhw_state": false,
       "heating_state": false,
       "cooling_state": true,
+      "cooling_enabled": true,
       "flame_state": false
     },
     "sensors": {
@@ -59,7 +60,7 @@
       "intended_boiler_temperature": 0,
       "modulation_level": 100,
       "return_temperature": 26.3,
-      "outdoor_air_temperature": 17.3
+      "outdoor_air_temperature": 17.2
     },
     "switches": {
       "dhw_cm_switch": true,

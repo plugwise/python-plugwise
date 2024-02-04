@@ -25,7 +25,7 @@
         "electricity_consumed_off_peak_point": 0,
         "electricity_consumed_peak_cumulative": 9067.554,
         "electricity_consumed_peak_interval": 335,
-        "electricity_consumed_peak_point": 548,
+        "electricity_consumed_peak_point": 571,
         "electricity_produced_off_peak_cumulative": 0.0,
         "electricity_produced_off_peak_interval": 0,
         "electricity_produced_off_peak_point": 0,
@@ -33,7 +33,7 @@
         "electricity_produced_peak_interval": 0,
         "electricity_produced_peak_point": 0,
         "net_electricity_cumulative": 20983.453,
-        "net_electricity_point": 548
+        "net_electricity_point": 571
       },
       "vendor": "SHENZHEN KAIFA TECHNOLOGY CHENGDU CO."
     }
