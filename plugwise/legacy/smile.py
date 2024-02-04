@@ -144,7 +144,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
                     self._appliances = await self._request(APPLIANCES)
 
             self._update_gw_devices()
-            self.gw_data["notifications"] = self._notifications
 
         self._previous_day_number = day_number
         return PlugwiseData(self.gw_data, self.gw_devices)
