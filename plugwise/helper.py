@@ -20,7 +20,6 @@ from plugwise.constants import (
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
     DOMAIN_OBJECTS,
-    ENERGY_KILO_WATT_HOUR,
     ENERGY_WATT_HOUR,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
@@ -30,7 +29,6 @@ from plugwise.constants import (
     OBSOLETE_MEASUREMENTS,
     OFF,
     P1_MEASUREMENTS,
-    POWER_WATT,
     SENSORS,
     SPECIAL_PLUG_TYPES,
     SPECIALS,
@@ -61,10 +59,10 @@ from plugwise.exceptions import (
     ResponseError,
 )
 from plugwise.util import (
+    check_model,
     escape_illegal_xml_characters,
     format_measure,
     power_data_local_format,
-    version_to_model,
 )
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
@@ -75,14 +73,6 @@ from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
-
-
-def check_model(name: str | None, vendor_name: str | None) -> str | None:
-    """Model checking before using version_to_model."""
-    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
-        return model
-
-    return name
 
 
 class SmileComm:

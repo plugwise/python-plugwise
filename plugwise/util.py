@@ -4,14 +4,24 @@ from __future__ import annotations
 import re
 
 from plugwise.constants import (
+    ATTR_UNIT_OF_MEASUREMENT,
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
     PERCENTAGE,
+    POWER_WATT,
     SPECIAL_FORMAT,
     TEMP_CELSIUS,
     DeviceData,
 )
+
+
+def check_model(name: str | None, vendor_name: str | None) -> str | None:
+    """Model checking before using version_to_model."""
+    if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
+        return model
+
+    return name
 
 
 def escape_illegal_xml_characters(xmldata: str) -> str:
