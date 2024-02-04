@@ -70,7 +70,6 @@ class Smile(SmileComm):
         self._websession = websession
 
         self._cooling_present = False
-        self._data: PlugwiseData = {}
         self._elga = False
         self._is_thermostat = False
         self._on_off_device = False
@@ -314,9 +313,9 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        self._data = await self._smile_api.async_update()
-        self.gateway_id = self._data.gateway["gateway_id"]
-        return self._data
+        data: PlugwiseData = await self._smile_api.async_update()
+        self.gateway_id = data.gateway["gateway_id"]
+        return data
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
