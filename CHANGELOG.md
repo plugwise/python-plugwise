@@ -1,6 +1,6 @@
 # Changelog
 
-### Ongoing
+## Ongoing
 
 - Reduce complexity after the recent refactoring, improve.
 
