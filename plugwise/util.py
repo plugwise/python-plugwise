@@ -15,6 +15,37 @@ from plugwise.constants import (
     DeviceData,
 )
 
+from defusedxml import ElementTree as etree
+
+
+def check_heater_central(xml: etree) -> str:
+    """Find the valid heater_central, helper-function for _appliance_info_finder().
+
+    Solution for Core Issue #104433,
+    for a system that has two heater_central appliances.
+    """
+    locator = "./appliance[type='heater_central']"
+    hc_count = 0
+    hc_list: list[dict[str, bool]] = []
+    for heater_central in xml.findall(locator):
+        hc_count += 1
+        hc_id: str = heater_central.attrib["id"]
+        has_actuators: bool = (
+            heater_central.find("actuator_functionalities/") is not None
+        )
+        hc_list.append({hc_id: has_actuators})
+
+    heater_central_id = list(hc_list[0].keys())[0]
+    if hc_count > 1:
+        for item in hc_list:  # pragma: no cover
+            for key, value in item.items():  # pragma: no cover
+                if value:  # pragma: no cover
+                    heater_central_id = key  # pragma: no cover
+                    # Stop when a valid id is found
+                    break  # pragma: no cover
+
+    return heater_central_id
+
 
 def check_model(name: str | None, vendor_name: str | None) -> str | None:
     """Model checking before using version_to_model."""

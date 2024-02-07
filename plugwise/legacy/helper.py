@@ -46,7 +46,12 @@ from plugwise.constants import (
     SwitchType,
     ThermoLoc,
 )
-from plugwise.util import format_measure, power_data_local_format, version_to_model
+from plugwise.util import (
+    check_heater_central,
+    format_measure,
+    power_data_local_format,
+    version_to_model,
+)
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
@@ -221,7 +226,7 @@ class SmileLegacyHelper:
                 return None
 
             # Find the valid heater_central
-            self._heater_id = self._check_heater_central()
+            self._heater_id = check_heater_central(self._appliances)
 
             #  Info for On-Off device
             if self._on_off_device:
@@ -250,34 +255,6 @@ class SmileLegacyHelper:
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
-
-    def _check_heater_central(self) -> str:
-        """Find the valid heater_central, helper-function for _appliance_info_finder().
-
-        Solution for Core Issue #104433,
-        for a system that has two heater_central appliances.
-        """
-        locator = "./appliance[type='heater_central']"
-        hc_count = 0
-        hc_list: list[dict[str, bool]] = []
-        for heater_central in self._appliances.findall(locator):
-            hc_count += 1
-            hc_id: str = heater_central.attrib["id"]
-            has_actuators: bool = (
-                heater_central.find("actuator_functionalities/") is not None
-            )
-            hc_list.append({hc_id: has_actuators})
-
-        heater_central_id = list(hc_list[0].keys())[0]
-        if hc_count > 1:
-            for item in hc_list:  # pragma: no cover
-                for key, value in item.items():  # pragma: no cover
-                    if value:  # pragma: no cover
-                        heater_central_id = key  # pragma: no cover
-                        # Stop when a valid id is found
-                        break  # pragma: no cover
-
-        return heater_central_id
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
