@@ -7,6 +7,7 @@ from __future__ import annotations
 import datetime as dt
 from typing import cast
 
+from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -68,7 +69,7 @@ def etree_to_dict(element: etree) -> dict[str, str]:
     return node
 
 
-class SmileLegacyHelper:
+class SmileLegacyHelper(SmileCommon):
     """The SmileLegacyHelper class."""
 
     def __init__(self) -> None:
@@ -104,10 +105,7 @@ class SmileLegacyHelper:
         self.smile_type: str
         self.smile_version: tuple[str, semver.version.Version]
         self.smile_zigbee_mac_address: str | None = None
-
-    def smile(self, name: str) -> bool:
-        """Helper-function checking the smile-name."""
-        return self.smile_name == name
+        SmileCommon.__init__(self)
 
     def _all_locations(self) -> None:
         """Collect all locations."""

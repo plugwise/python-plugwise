@@ -8,6 +8,7 @@ import asyncio
 import datetime as dt
 from typing import cast
 
+from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -191,7 +192,7 @@ class SmileComm:
         await self._websession.close()
 
 
-class SmileHelper:
+class SmileHelper(SmileCommon):
     """The SmileHelper class."""
 
     def __init__(self) -> None:
@@ -249,10 +250,7 @@ class SmileHelper:
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None = None
         self.therms_with_offset_func: list[str] = []
-
-    def smile(self, name: str) -> bool:
-        """Helper-function checking the smile-name."""
-        return self.smile_name == name
+        SmileCommon.__init__(self)
 
     def _all_locations(self) -> None:
         """Collect all locations."""
