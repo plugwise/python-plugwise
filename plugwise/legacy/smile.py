@@ -51,6 +51,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_fw_version: str | None,
         smile_hostname: str,
         smile_hw_version: str | None,
+        smile_legacy: bool,
         smile_mac_address: str | None,
         smile_model: str,
         smile_name: str,
@@ -81,6 +82,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
+        self.smile_legacy = smile_legacy
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
         self.smile_name = smile_name
