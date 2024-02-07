@@ -59,6 +59,7 @@ from plugwise.exceptions import (
     ResponseError,
 )
 from plugwise.util import (
+    check_heater_central,
     check_model,
     escape_illegal_xml_characters,
     format_measure,
@@ -393,7 +394,7 @@ class SmileHelper:
                 return None  # pragma: no cover
 
             # Find the valid heater_central
-            self._heater_id = self._check_heater_central()
+            self._heater_id = check_heater_central(self._domain_objects)
 
             #  Info for On-Off device
             if self._on_off_device:
@@ -435,34 +436,6 @@ class SmileHelper:
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
-
-    def _check_heater_central(self) -> str:
-        """Find the valid heater_central, helper-function for _appliance_info_finder().
-
-        Solution for Core Issue #104433,
-        for a system that has two heater_central appliances.
-        """
-        locator = "./appliance[type='heater_central']"
-        hc_count = 0
-        hc_list: list[dict[str, bool]] = []
-        for heater_central in self._domain_objects.findall(locator):
-            hc_count += 1
-            hc_id: str = heater_central.attrib["id"]
-            has_actuators: bool = (
-                heater_central.find("actuator_functionalities/") is not None
-            )
-            hc_list.append({hc_id: has_actuators})
-
-        heater_central_id = list(hc_list[0].keys())[0]
-        if hc_count > 1:
-            for item in hc_list:
-                for key, value in item.items():
-                    if value:
-                        heater_central_id = key
-                        # Stop when a valid id is found
-                        break
-
-        return heater_central_id
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
