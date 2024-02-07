@@ -13,6 +13,16 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 
 
+def get_vendor_name(module: etree, model_data: ModelData) -> ModelData:
+    """Helper-function for _get_model_data()."""
+    if (vendor_name := module.find("vendor_name").text) is not None:
+        model_data["vendor_name"] = vendor_name
+        if "Plugwise" in vendor_name:
+            model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
+
+    return model_data
+
+
 class SmileCommon:
     """The SmileCommon class."""
 
@@ -149,10 +159,7 @@ class SmileCommon:
 
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
-                if (vendor_name := module.find("vendor_name").text) is not None:
-                    model_data["vendor_name"] = vendor_name
-                    if "Plugwise" in vendor_name:
-                        model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
+                get_vendor_name(module, model_data)
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
