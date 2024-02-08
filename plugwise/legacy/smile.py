@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import datetime as dt
 
-# Version detection
 from plugwise.constants import (
     APPLIANCES,
     DEFAULT_PORT,
