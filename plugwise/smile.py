@@ -35,9 +35,6 @@ from defusedxml import ElementTree as etree
 # Dict as class
 from munch import Munch
 
-# Version detection
-import semver
-
 
 class SmileAPI(SmileComm, SmileData):
     """The Plugwise SmileAPI helper class for actual Plugwise devices."""
@@ -61,12 +58,10 @@ class SmileAPI(SmileComm, SmileData):
         smile_fw_version: str | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
-        smile_legacy: bool,
         smile_mac_address: str | None,
         smile_model: str,
         smile_name: str,
         smile_type: str,
-        smile_version: tuple[str, semver.version.Version],
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,
@@ -95,12 +90,10 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
-        self.smile_legacy = smile_legacy
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
         self.smile_name = smile_name
         self.smile_type = smile_type
-        self.smile_version = smile_version
 
         self._heater_id: str
         self._cooling_enabled = False

@@ -214,8 +214,7 @@ class SmileHelper:
         self._opentherm_device: bool
         self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
-        self._schedule_old_states: dict[str, dict[str, str]] = {}
-        self._smile_legacy = False
+        self._schedule_old_states: dict[str, dict[str, str]]
         self._status: etree
         self._stretch_v2: bool
         self._system: etree
@@ -240,13 +239,13 @@ class SmileHelper:
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.loc_data: dict[str, ThermoLoc]
-        self.smile_fw_version: str | None = None
-        self.smile_hw_version: str | None = None
-        self.smile_mac_address: str | None = None
+        self.smile_fw_version: str | None
+        self.smile_hw_version: str | None
+        self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
-        self.smile_zigbee_mac_address: str | None = None
+        self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
 
     def smile(self, name: str) -> bool:
@@ -305,13 +304,12 @@ class SmileHelper:
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
-        Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
+        Collect energy device info (Smartmeter, Plug): firmware, model and vendor name.
         """
         if self.smile_type == "power":
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
             appl.vendor_name = module_data["vendor_name"]

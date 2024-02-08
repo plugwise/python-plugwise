@@ -51,7 +51,6 @@ from plugwise.util import format_measure, power_data_local_format, version_to_mo
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
 from munch import Munch
-import semver
 
 
 def etree_to_dict(element: etree) -> dict[str, str]:
@@ -90,15 +89,13 @@ class SmileLegacyHelper:
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.loc_data: dict[str, ThermoLoc]
-        self.smile_fw_version: str | None = None
-        self.smile_hw_version: str | None = None
-        self.smile_legacy = False
-        self.smile_mac_address: str | None = None
+        self.smile_fw_version: str | None
+        self.smile_hw_version: str | None
+        self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
-        self.smile_version: tuple[str, semver.version.Version]
-        self.smile_zigbee_mac_address: str | None = None
+        self.smile_zigbee_mac_address: str | None
 
     def smile(self, name: str) -> bool:
         """Helper-function checking the smile-name."""
@@ -176,15 +173,15 @@ class SmileLegacyHelper:
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
-        Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
+        Collect energy device info (Smartmeter, Circle, Stealth, etc.): firmware, model and vendor name.
         """
         if self.smile_type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
             module_data = self._get_module_data(appliance, locator, mod_type)
-            # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
+            # Filter appliance without zigbee_mac, it's an orphaned device
             if appl.zigbee_mac is None and self.smile_type != "power":
                 return None
 

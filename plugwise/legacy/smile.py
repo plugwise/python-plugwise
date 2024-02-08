@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import datetime as dt
 
-# Version detection
 from plugwise.constants import (
     APPLIANCES,
     DEFAULT_PORT,
@@ -29,7 +28,6 @@ from plugwise.legacy.data import SmileLegacyData
 
 import aiohttp
 from munch import Munch
-import semver
 
 
 class SmileLegacyAPI(SmileComm, SmileLegacyData):
@@ -55,7 +53,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_model: str,
         smile_name: str,
         smile_type: str,
-        smile_version: tuple[str, semver.version.Version],
         smile_zigbee_mac_address: str | None,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
@@ -85,7 +82,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self.smile_model = smile_model
         self.smile_name = smile_name
         self.smile_type = smile_type
-        self.smile_version = smile_version
         self.smile_zigbee_mac_address = smile_zigbee_mac_address
 
         self._previous_day_number: str = "0"

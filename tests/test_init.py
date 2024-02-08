@@ -942,7 +942,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if smile_version:
             log_msg = f" # Assert version matching '{smile_version}"
             parent_logger.info(log_msg)
-            assert smile.smile_version[0] == smile_version
+            assert smile.smile_version == smile_version
         if smile_version:
             log_msg = f" # Assert legacy {smile_legacy}"
             parent_logger.info(log_msg)
