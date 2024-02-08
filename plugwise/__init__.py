@@ -318,36 +318,38 @@ class Smile(SmileComm):
         name: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
-        await self._smile_api.set_schedule_state(loc_id, new_state, name)
+        try:
+            await self._smile_api.set_schedule_state(loc_id, new_state, name)
+        except PlugwiseError as exc:
+            raise exc
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat."""
-        await self._smile_api.set_preset(loc_id, preset)
+        try:
+            await self._smile_api.set_preset(loc_id, preset)
+        except PlugwiseError as exc:
+            raise exc
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
         try:
             await self._smile_api.set_temperature(loc_id, items)
         except PlugwiseError as exc:
-            raise PlugwiseError(
-                    "Plugwise: failed setting temperature: no valid input provided"
-                ) from exc
+            raise exc
 
     async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
         try:
             await self._smile_api.set_number_setpoint(key, temperature)
         except PlugwiseError as exc:
-            raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.") from exc
+            raise exc
 
     async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
         try:
             await self._smile_api.set_temperature_offset(dev_id, offset)
         except PlugwiseError as exc:
-            raise PlugwiseError(
-                "Plugwise: this device does not have temperature-offset capability."
-            ) from exc
+            raise exc
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
@@ -356,28 +358,28 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_switch_state(appl_id, members, model, state)
         except PlugwiseError as exc:
-            raise PlugwiseError("Plugwise: the locked Relay was not switched.") from exc
+            raise exc
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
         try:
             await self._smile_api.set_gateway_mode(mode)
         except PlugwiseError as exc:
-            raise PlugwiseError("Plugwise: invalid gateway mode.") from exc
+            raise exc
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         try:
             await self._smile_api.set_regulation_mode(mode)
         except PlugwiseError as exc:
-            raise PlugwiseError("Plugwise: invalid regulation mode.") from exc
+            raise exc
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
         try:
             await self._smile_api.set_dhw_mode(mode)
         except PlugwiseError as exc:
-            raise PlugwiseError("Plugwise: invalid dhw mode.") from exc
+            raise exc
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
