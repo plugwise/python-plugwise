@@ -77,14 +77,14 @@ class Smile(SmileComm):
         self.gateway_id: str = NONE
         self.loc_data: dict[str, ThermoLoc] = {}
         self.smile_fw_version: str | None = None
-        self.smile_hostname: str
+        self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
         self.smile_mac_address: str | None = None
-        self.smile_model: str
-        self.smile_name: str
-        self.smile_type: str
-        self.smile_version: str
+        self.smile_model: str = NONE
+        self.smile_name: str = NONE
+        self.smile_type: str = NONE
+        self.smile_version: str = NONE
         self.smile_zigbee_mac_address: str | None = None
 
     async def connect(self) -> bool:
