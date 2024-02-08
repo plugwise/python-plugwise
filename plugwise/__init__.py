@@ -31,10 +31,6 @@ from plugwise.smile import SmileAPI
 import aiohttp
 from defusedxml import ElementTree as etree
 
-# Dict as class
-# Version detection
-import semver
-
 
 class Smile(SmileComm):
     """The Plugwise SmileConnect class."""
@@ -88,7 +84,7 @@ class Smile(SmileComm):
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
-        self.smile_version: tuple[str, semver.version.Version]
+        self.smile_version: str
         self.smile_zigbee_mac_address: str | None = None
 
     async def connect(self) -> bool:
@@ -207,8 +203,8 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        ver = semver.version.Version.parse(self.smile_fw_version)
-        self._target_smile = f"{model}_v{ver.major}"
+        version_major: str = self.smile_fw_version.split(".", 1)[0]
+        self._target_smile = f"{model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
             LOGGER.error(
@@ -228,10 +224,10 @@ class Smile(SmileComm):
         self.smile_model = "Gateway"
         self.smile_name = SMILES[self._target_smile].smile_name
         self.smile_type = SMILES[self._target_smile].smile_type
-        self.smile_version = (self.smile_fw_version, ver)
+        self.smile_version = self.smile_fw_version
 
         if self.smile_type == "stretch":
-            self._stretch_v2 = self.smile_version[1].major == 2
+            self._stretch_v2 = int(version_major) == 2
 
         if self.smile_type == "thermostat":
             self._is_thermostat = True
