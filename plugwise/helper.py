@@ -305,13 +305,12 @@ class SmileHelper:
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
-        Collect energy device info (Circle, Plug, Stealth): firmware, model and vendor name.
+        Collect energy device info (Smartmeter, Plug): firmware, model and vendor name.
         """
         if self.smile_type == "power":
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
             appl.vendor_name = module_data["vendor_name"]
