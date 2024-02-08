@@ -51,7 +51,6 @@ from plugwise.util import format_measure, power_data_local_format, version_to_mo
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
 from munch import Munch
-import semver
 
 
 def etree_to_dict(element: etree) -> dict[str, str]:
@@ -96,7 +95,6 @@ class SmileLegacyHelper:
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
-        self.smile_version: str
         self.smile_zigbee_mac_address: str | None
 
     def smile(self, name: str) -> bool:

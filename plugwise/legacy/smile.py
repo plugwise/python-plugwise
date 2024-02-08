@@ -53,7 +53,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_model: str,
         smile_name: str,
         smile_type: str,
-        smile_version: str,
         smile_zigbee_mac_address: str | None,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
@@ -83,7 +82,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self.smile_model = smile_model
         self.smile_name = smile_name
         self.smile_type = smile_type
-        self.smile_version = smile_version
         self.smile_zigbee_mac_address = smile_zigbee_mac_address
 
         self._previous_day_number: str = "0"
