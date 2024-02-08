@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- General improving of code
+
 ## v0.37.0
 
 - Refactor code into separate parts/paths for actual and legacy Plugwise devices.
