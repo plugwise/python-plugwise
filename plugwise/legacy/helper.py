@@ -90,15 +90,15 @@ class SmileLegacyHelper:
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.loc_data: dict[str, ThermoLoc]
-        self.smile_fw_version: str | None = None
-        self.smile_hw_version: str | None = None
-        self.smile_legacy = False
-        self.smile_mac_address: str | None = None
+        self.smile_fw_version: str | None
+        self.smile_hw_version: str | None
+        self.smile_legacy: bool
+        self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
         self.smile_version: tuple[str, semver.version.Version]
-        self.smile_zigbee_mac_address: str | None = None
+        self.smile_zigbee_mac_address: str | None
 
     def smile(self, name: str) -> bool:
         """Helper-function checking the smile-name."""

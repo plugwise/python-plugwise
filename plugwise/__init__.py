@@ -80,11 +80,11 @@ class Smile(SmileComm):
         self._target_smile: str = NONE
         self.gateway_id: str = NONE
         self.loc_data: dict[str, ThermoLoc] = {}
-        self.smile_fw_version: str | None
+        self.smile_fw_version: str | None = None
         self.smile_hostname: str
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
-        self.smile_mac_address: str | None
+        self.smile_mac_address: str | None = None
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
