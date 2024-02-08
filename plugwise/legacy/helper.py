@@ -92,7 +92,6 @@ class SmileLegacyHelper:
         self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: str | None
         self.smile_hw_version: str | None
-        self.smile_legacy: bool
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_name: str
