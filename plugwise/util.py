@@ -123,7 +123,7 @@ def remove_empty_platform_dicts(data: DeviceData) -> None:
         data.pop("switches")
 
 
-def safe(value, default):
+def safe(value: etree | None, default: etree) -> etree:
     """Return default when value is None."""
     return value if value is not None else default
 
