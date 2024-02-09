@@ -120,7 +120,7 @@ class SmileCommon:
 
         return model_data
 
-    def _get_zigbee_data(self, module: etree, model_data: ModelData, legacy: bool) -> ModelData:
+    def _get_zigbee_data(self, module: etree, model_data: ModelData, legacy: bool) -> None:
         """Helper-function for _get_model_data()."""
         if legacy:
             # Stretches
@@ -133,3 +133,4 @@ class SmileCommon:
         elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
                 model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
                 model_data["reachable"] = zb_node.find("reachable").text == "true"
+
