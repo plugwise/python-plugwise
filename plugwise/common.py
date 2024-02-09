@@ -5,7 +5,12 @@ Plugwise Smile protocol helpers.
 from __future__ import annotations
 
 from plugwise.constants import ModelData
-from plugwise.util import check_heater_central, check_model, get_vendor_name, return_valid
+from plugwise.util import (
+    check_heater_central,
+    check_model,
+    get_vendor_name,
+    return_valid,
+)
 
 from defusedxml import ElementTree as etree
 from munch import Munch
