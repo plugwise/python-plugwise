@@ -47,12 +47,7 @@ from plugwise.constants import (
     SwitchType,
     ThermoLoc,
 )
-from plugwise.util import (
-    check_heater_central,
-    format_measure,
-    power_data_local_format,
-    version_to_model,
-)
+from plugwise.util import format_measure, power_data_local_format, version_to_model
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
@@ -203,47 +198,11 @@ class SmileLegacyHelper(SmileCommon):
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
-            locator = "./logs/point_log[type='thermostat']/thermostat"
-            mod_type = "thermostat"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.vendor_name = module_data["vendor_name"]
-            appl.model = module_data["vendor_model"]
-            appl.hardware = module_data["hardware_version"]
-            appl.firmware = module_data["firmware_version"]
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
-            return appl
+            return self._appl_thermostat_info(appliance, appl)
 
         # Collect heater_central device info
         if appl.pwclass == "heater_central":
-            # Remove heater_central when no active device present
-            if not self._opentherm_device and not self._on_off_device:
-                return None
-
-            # Find the valid heater_central
-            self._heater_id = check_heater_central(self._appliances)
-
-            #  Info for On-Off device
-            if self._on_off_device:
-                appl.name = "OnOff"  # pragma: no cover
-                appl.vendor_name = None  # pragma: no cover
-                appl.model = "Unknown"  # pragma: no cover
-                return appl  # pragma: no cover
-
-            # Info for OpenTherm device
-            appl.name = "OpenTherm"
-            locator1 = "./logs/point_log[type='flame_state']/boiler_state"
-            locator2 = "./services/boiler_state"
-            mod_type = "boiler_state"
-            module_data = self._get_module_data(appliance, locator1, mod_type)
-            if not module_data["contents"]:
-                module_data = self._get_module_data(appliance, locator2, mod_type)
-            appl.vendor_name = module_data["vendor_name"]
-            appl.hardware = module_data["hardware_version"]
-            appl.model = module_data["vendor_model"]
-            if appl.model is None:
-                appl.model = "Generic heater"
-
-            return appl
+            return self._appl_heater_central_info(self._appliances, appliance, appl)
 
         # Collect info from Stretches
         appl = self._energy_device_info_finder(appliance, appl)

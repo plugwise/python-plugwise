@@ -60,7 +60,6 @@ from plugwise.exceptions import (
     ResponseError,
 )
 from plugwise.util import (
-    check_heater_central,
     check_model,
     escape_illegal_xml_characters,
     format_measure,
@@ -373,51 +372,11 @@ class SmileHelper(SmileCommon):
 
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
-            locator = "./logs/point_log[type='thermostat']/thermostat"
-            mod_type = "thermostat"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.vendor_name = module_data["vendor_name"]
-            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
-            appl.hardware = module_data["hardware_version"]
-            appl.firmware = module_data["firmware_version"]
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
+            return self._appl_thermostat_info(appliance, appl)
 
-            return appl
-
-        # Collect heater_central device info
+        # Collect extra heater_central device info
         if appl.pwclass == "heater_central":
-            # Remove heater_central when no active device present
-            if not self._opentherm_device and not self._on_off_device:
-                return None  # pragma: no cover
-
-            # Find the valid heater_central
-            self._heater_id = check_heater_central(self._domain_objects)
-
-            #  Info for On-Off device
-            if self._on_off_device:
-                appl.name = "OnOff"
-                appl.vendor_name = None
-                appl.model = "Unknown"
-                return appl
-
-            # Info for OpenTherm device
-            appl.name = "OpenTherm"
-            locator1 = "./logs/point_log[type='flame_state']/boiler_state"
-            locator2 = "./services/boiler_state"
-            mod_type = "boiler_state"
-            module_data = self._get_module_data(appliance, locator1, mod_type)
-            if not module_data["contents"]:
-                module_data = self._get_module_data(appliance, locator2, mod_type)
-            appl.vendor_name = module_data["vendor_name"]
-            appl.hardware = module_data["hardware_version"]
-            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
-            if appl.model is None:
-                appl.model = (
-                    "Generic heater/cooler"
-                    if self._cooling_present
-                    else "Generic heater"
-                )
-
+            appl = self._appl_heater_central_info(self._domain_objects, appliance, appl)
             # Anna + Loria: collect dhw control operation modes
             dhw_mode_list: list[str] = []
             locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
