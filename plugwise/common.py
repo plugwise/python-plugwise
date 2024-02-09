@@ -86,7 +86,7 @@ class SmileCommon:
         return appl
 
     def _get_module_data(
-        self, xml_1: etree, xml_2: etree, locator: str, mod_type: str, legacy=False,
+        self, xml_1: etree, xml_2: etree, locator: str, mod_type: str, legacy:bool=False,
     ) -> ModelData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
 
