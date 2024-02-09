@@ -126,16 +126,20 @@ class SmileCommon:
                 model_data["vendor_model"] = module.find("vendor_model").text
                 model_data["hardware_version"] = module.find("hardware_version").text
                 model_data["firmware_version"] = module.find("firmware_version").text
-                if legacy:
-                    # Stretches
-                    if (router := module.find("./protocols/network_router")) is not None:
-                        model_data["zigbee_mac_address"] = router.find("mac_address").text
-                    # Also look for the Circle+/Stealth M+
-                    if (coord := module.find("./protocols/network_coordinator")) is not None:
-                        model_data["zigbee_mac_address"] = coord.find("mac_address").text
-                # Adam
-                elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
-                        model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
-                        model_data["reachable"] = zb_node.find("reachable").text == "true"
+                self._get_zigbee_data(module, model_data, legacy)
 
         return model_data
+
+    def _get_zigbee_data(self, module: etree, model_data: ModelData, legacy: bool) -> ModelData:
+        """Helper-function for _get_model_data()."""
+        if legacy:
+            # Stretches
+            if (router := module.find("./protocols/network_router")) is not None:
+                model_data["zigbee_mac_address"] = router.find("mac_address").text
+            # Also look for the Circle+/Stealth M+
+            if (coord := module.find("./protocols/network_coordinator")) is not None:
+                model_data["zigbee_mac_address"] = coord.find("mac_address").text
+        # Adam
+        elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
+                model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
+                model_data["reachable"] = zb_node.find("reachable").text == "true"
