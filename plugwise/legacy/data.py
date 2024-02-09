@@ -25,22 +25,8 @@ class SmileLegacyData(SmileLegacyHelper):
         """
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            self._add_or_update_notifications(device_id, device, data)
             device.update(data)
             remove_empty_platform_dicts(device)
-
-    def _add_or_update_notifications(
-        self, device_id: str, device: DeviceData, data: DeviceData
-    ) -> None:
-        """Helper-function adding or updating the Plugwise notifications."""
-        if (
-            device_id == self.gateway_id and self._is_thermostat
-        ) or (
-            "binary_sensors" in device
-            and "plugwise_notification" in device["binary_sensors"]
-        ):
-            data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
-            self._count += 1
 
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
