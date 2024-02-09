@@ -53,7 +53,7 @@ class SmileCommon:
             return None
 
         # Find the valid heater_central
-        # xml_1 = self._appliances for legacy, self._domain_objects for actual
+        # xml_1: self._appliances for legacy, self._domain_objects for actual
         self._heater_id = check_heater_central(xml_1)
 
         #  Info for On-Off device
@@ -68,8 +68,8 @@ class SmileCommon:
         locator_1 = "./logs/point_log[type='flame_state']/boiler_state"
         locator_2 = "./services/boiler_state"
         mod_type = "boiler_state"
-        # xml_2 = appliance
-        # xml_3 = self._modules for legacy, self._domain_objects for actual
+        # xml_2: appliance
+        # xml_3: self._modules for legacy, self._domain_objects for actual
         module_data = self._get_module_data(xml_2, xml_3, locator_1, mod_type)
         if not module_data["contents"]:
             module_data = self._get_module_data(xml_2, xml_3, locator_2, mod_type)
@@ -101,14 +101,14 @@ class SmileCommon:
             "vendor_model": None,
             "zigbee_mac_address": None,
         }
-        # xml_1 = appliance
+        # xml_1: appliance
         if (appl_search := xml_1.find(locator)) is not None:
             link_id = appl_search.attrib["id"]
             loc = f".//services/{mod_type}[@id='{link_id}']...."
             if legacy:
                 loc = f".//{mod_type}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
-            # xml_2 = self._modules for legacy, self._domain_objects for actual
+            # xml_2: self._modules for legacy, self._domain_objects for actual
             module = xml_2.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
