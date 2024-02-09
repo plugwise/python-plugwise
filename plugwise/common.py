@@ -5,20 +5,10 @@ Plugwise Smile protocol helpers.
 from __future__ import annotations
 
 from plugwise.constants import ModelData
-from plugwise.util import check_heater_central, check_model
+from plugwise.util import check_heater_central, check_model, get_vendor_name
 
 from defusedxml import ElementTree as etree
 from munch import Munch
-
-
-def get_vendor_name(module: etree, model_data: ModelData) -> ModelData:
-    """Helper-function for _get_model_data()."""
-    if (vendor_name := module.find("vendor_name").text) is not None:
-        model_data["vendor_name"] = vendor_name
-        if "Plugwise" in vendor_name:
-            model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
-
-    return model_data
 
 
 class SmileCommon:

@@ -13,6 +13,7 @@ from plugwise.constants import (
     SPECIAL_FORMAT,
     TEMP_CELSIUS,
     DeviceData,
+    ModelData,
 )
 
 from defusedxml import ElementTree as etree
@@ -87,6 +88,16 @@ def format_measure(measure: str, unit: str) -> float | int:
             result = int(round(float_measure))
 
     return result
+
+
+def get_vendor_name(module: etree, model_data: ModelData) -> ModelData:
+    """Helper-function for _get_model_data()."""
+    if (vendor_name := module.find("vendor_name").text) is not None:
+        model_data["vendor_name"] = vendor_name
+        if "Plugwise" in vendor_name:
+            model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
+
+    return model_data
 
 
 def power_data_local_format(
