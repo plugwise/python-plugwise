@@ -90,7 +90,6 @@ class SmileLegacyHelper(SmileCommon):
         self._stretch_v2: bool
         self._system: etree
 
-        self.device_items: int = 0
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}

@@ -34,8 +34,6 @@ class SmileLegacyData(SmileLegacyHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
-        self.device_items = self._count
-
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
