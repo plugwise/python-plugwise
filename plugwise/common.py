@@ -5,7 +5,7 @@ Plugwise Smile protocol helpers.
 from __future__ import annotations
 
 from plugwise.constants import ModelData
-from plugwise.util import check_heater_central, check_model, get_vendor_name, safe
+from plugwise.util import check_heater_central, check_model, get_vendor_name, return_valid
 
 from defusedxml import ElementTree as etree
 from munch import Munch
@@ -32,7 +32,7 @@ class SmileCommon:
         """Helper-function for _appliance_info_finder()."""
         locator = "./logs/point_log[type='thermostat']/thermostat"
         mod_type = "thermostat"
-        xml_2 = safe(xml_2, self._domain_objects)
+        xml_2 = return_valid(xml_2, self._domain_objects)
         module_data = self._get_module_data(xml_1, locator, mod_type, xml_2)
         appl.vendor_name = module_data["vendor_name"]
         appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
@@ -56,7 +56,7 @@ class SmileCommon:
 
         # Find the valid heater_central
         # xml_2 self._appliances for legacy, self._domain_objects for actual
-        xml_2 = safe(xml_2, self._domain_objects)
+        xml_2 = return_valid(xml_2, self._domain_objects)
         self._heater_id = check_heater_central(xml_2)
 
         #  Info for On-Off device
@@ -73,7 +73,7 @@ class SmileCommon:
         mod_type = "boiler_state"
         # xml_1: appliance
         # xml_3: self._modules for legacy, self._domain_objects for actual
-        xml_3 = safe(xml_3, self._domain_objects)
+        xml_3 = return_valid(xml_3, self._domain_objects)
         module_data = self._get_module_data(xml_1, locator_1, mod_type, xml_3)
         if not module_data["contents"]:
             module_data = self._get_module_data(xml_1, locator_2, mod_type, xml_3)
