@@ -17,6 +17,7 @@ class SmileCommon:
     def __init__(self) -> None:
         """Init."""
         self._appliances: etree
+        self._domain_objects: etree
         self._cooling_present: bool
         self._heater_id: str
         self._on_off_device: bool
@@ -27,11 +28,12 @@ class SmileCommon:
         """Helper-function checking the smile-name."""
         return self.smile_name == name
 
-    def _appl_thermostat_info(self, xml_1: etree, xml_2: etree, appl: Munch) -> Munch:
+    def _appl_thermostat_info(self, appl: Munch, xml_1: etree, xml_2: etree = None) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         locator = "./logs/point_log[type='thermostat']/thermostat"
         mod_type = "thermostat"
-        module_data = self._get_module_data(xml_1, xml_2, locator, mod_type)
+        xml_2 = xml_2 or self._domain_objects
+        module_data = self._get_module_data(xml_1, locator, mod_type, xml_2)
         appl.vendor_name = module_data["vendor_name"]
         appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
         appl.hardware = module_data["hardware_version"]
@@ -42,10 +44,10 @@ class SmileCommon:
 
     def _appl_heater_central_info(
         self,
+        appl: Munch,
         xml_1: etree,
-        xml_2: etree,
-        xml_3: etree,
-        appl: Munch
+        xml_2: etree = None,
+        xml_3: etree = None,
     ) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         # Remove heater_central when no active device present
@@ -53,8 +55,8 @@ class SmileCommon:
             return None
 
         # Find the valid heater_central
-        # xml_1: self._appliances for legacy, self._domain_objects for actual
-        self._heater_id = check_heater_central(xml_1)
+        # xml_2 self._appliances for legacy, self._domain_objects for actual
+        self._heater_id = check_heater_central(xml_2 or self._domain_objects)
 
         #  Info for On-Off device
         if self._on_off_device:
@@ -68,11 +70,12 @@ class SmileCommon:
         locator_1 = "./logs/point_log[type='flame_state']/boiler_state"
         locator_2 = "./services/boiler_state"
         mod_type = "boiler_state"
-        # xml_2: appliance
+        # xml_1: appliance
         # xml_3: self._modules for legacy, self._domain_objects for actual
-        module_data = self._get_module_data(xml_2, xml_3, locator_1, mod_type)
+        xml_3 = xml_3 or self._domain_objects
+        module_data = self._get_module_data(xml_1, locator_1, mod_type, xml_3)
         if not module_data["contents"]:
-            module_data = self._get_module_data(xml_2, xml_3, locator_2, mod_type)
+            module_data = self._get_module_data(xml_1, locator_2, mod_type, xml_3)
         appl.vendor_name = module_data["vendor_name"]
         appl.hardware = module_data["hardware_version"]
         appl.model = module_data["vendor_model"]
@@ -86,7 +89,12 @@ class SmileCommon:
         return appl
 
     def _get_module_data(
-        self, xml_1: etree, xml_2: etree, locator: str, mod_type: str, legacy:bool=False,
+        self,
+        xml_1: etree,
+        locator: str,
+        mod_type: str,
+        xml_2: etree = None,
+        legacy: bool = False,
     ) -> ModelData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
 
@@ -109,7 +117,8 @@ class SmileCommon:
                 loc = f".//{mod_type}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
             # xml_2: self._modules for legacy, self._domain_objects for actual
-            module = xml_2.find(loc)
+            search = xml_2 or self._domain_objects
+            module = search.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
                 get_vendor_name(module, model_data)

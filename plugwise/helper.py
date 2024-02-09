@@ -268,7 +268,7 @@ class SmileHelper(SmileCommon):
         if self.smile_type == "power":
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
-            module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
+            module_data = self._get_module_data(appliance, locator, mod_type)
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
             appl.vendor_name = module_data["vendor_name"]
@@ -279,7 +279,7 @@ class SmileHelper(SmileCommon):
         if self.smile(ADAM):
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
+            module_data = self._get_module_data(appliance, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             if appl.zigbee_mac is None:
@@ -294,7 +294,7 @@ class SmileHelper(SmileCommon):
 
         return appl  # pragma: no cover
 
-    def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+    def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Collect gateway device info
         if appl.pwclass == "gateway":
@@ -334,11 +334,11 @@ class SmileHelper(SmileCommon):
 
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appliance, self._domain_objects, appl)
+            return self._appl_thermostat_info(appl, appliance)
 
         # Collect extra heater_central device info
         if appl.pwclass == "heater_central":
-            appl = self._appl_heater_central_info(self._domain_objects, appliance, self._domain_objects, appl)
+            appl = self._appl_heater_central_info(appl, appliance)
             # Anna + Loria: collect dhw control operation modes
             dhw_mode_list: list[str] = []
             locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
@@ -420,7 +420,7 @@ class SmileHelper(SmileCommon):
 
             # Determine class for this appliance
             # Skip on heater_central when no active device present
-            if not (appl := self._appliance_info_finder(appliance, appl)):
+            if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
             # Skip orphaned heater_central (Core Issue #104433)
@@ -634,12 +634,12 @@ class SmileHelper(SmileCommon):
             # Collect for Plugs
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
+            module_data = self._get_module_data(appliance, locator, mod_type)
             if module_data["reachable"] is None:
                 # Collect for wireless thermostats
                 locator = "./logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
-                module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
+                module_data = self._get_module_data(appliance, locator, mod_type)
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]

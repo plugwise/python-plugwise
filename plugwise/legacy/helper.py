@@ -136,7 +136,7 @@ class SmileLegacyHelper(SmileCommon):
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
-            module_data = self._get_module_data(appliance, self._modules, locator, mod_type, legacy=True)
+            module_data = self._get_module_data(appliance, locator, mod_type, self._modules, legacy=True)
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             # Filter appliance without zigbee_mac, it's an orphaned device
             if appl.zigbee_mac is None and self.smile_type != "power":
@@ -158,11 +158,11 @@ class SmileLegacyHelper(SmileCommon):
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appliance, self._modules, appl)
+            return self._appl_thermostat_info(appl, appliance, self._modules)
 
         # Collect heater_central device info
         if appl.pwclass == "heater_central":
-            return self._appl_heater_central_info(self._appliances, appliance, self._modules, appl)
+            return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
 
         # Collect info from Stretches
         appl = self._energy_device_info_finder(appliance, appl)
