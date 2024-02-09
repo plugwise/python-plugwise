@@ -30,7 +30,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert self.device_items == 44
+        assert self.device_items == 43
         assert not self.notifications
 
         result = await self.tinker_legacy_thermostat(smile, schedule_on=False)
@@ -52,8 +52,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.smile_setup = "legacy_anna_2"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        # LEFT: figure out why None becomes str instead of nonetype on this particular one
-        #       i.e. in JSON `9e7377867dc24e51b8098a5ba02bd89d`:select_schedule is now 'None' not null
         server, smile, client = await self.connect_legacy_wrapper()
         assert smile.smile_hostname == "smile000000"
 
@@ -67,7 +65,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-05-03 00:00:01", testdata)
 
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
-        assert self.device_items == 44
+        assert self.device_items == 43
         assert not self.notifications
 
         result = await self.tinker_legacy_thermostat(smile)
