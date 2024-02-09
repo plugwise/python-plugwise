@@ -18,12 +18,7 @@ from plugwise.constants import (
     PlugwiseData,
     ThermoLoc,
 )
-from plugwise.exceptions import (
-    InvalidSetupError,
-    PlugwiseError,
-    ResponseError,
-    UnsupportedDeviceError,
-)
+from plugwise.exceptions import InvalidSetupError, ResponseError, UnsupportedDeviceError
 from plugwise.helper import SmileComm
 from plugwise.legacy.smile import SmileLegacyAPI
 from plugwise.smile import SmileAPI
@@ -318,68 +313,41 @@ class Smile(SmileComm):
         name: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
-        try:
-            await self._smile_api.set_schedule_state(loc_id, new_state, name)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_schedule_state(loc_id, new_state, name)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat."""
-        try:
-            await self._smile_api.set_preset(loc_id, preset)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_preset(loc_id, preset)
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        try:
-            await self._smile_api.set_temperature(loc_id, items)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_temperature(loc_id, items)
 
     async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
-        try:
-            await self._smile_api.set_number_setpoint(key, temperature)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_number_setpoint(key, temperature)
 
     async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
-        try:
-            await self._smile_api.set_temperature_offset(dev_id, offset)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_temperature_offset(dev_id, offset)
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
         """Set the given State of the relevant Switch."""
-        try:
-            await self._smile_api.set_switch_state(appl_id, members, model, state)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_switch_state(appl_id, members, model, state)
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        try:
-            await self._smile_api.set_gateway_mode(mode)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_gateway_mode(mode)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        try:
-            await self._smile_api.set_regulation_mode(mode)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_regulation_mode(mode)
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
-        try:
-            await self._smile_api.set_dhw_mode(mode)
-        except PlugwiseError as exc:
-            raise exc
+        await self._smile_api.set_dhw_mode(mode)
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
