@@ -41,7 +41,6 @@ from plugwise.constants import (
     BinarySensorType,
     DeviceData,
     GatewayData,
-    ModelData,
     SensorType,
     SpecialType,
     SwitchType,
@@ -128,45 +127,6 @@ class SmileLegacyHelper(SmileCommon):
 
             self.loc_data[loc.loc_id] = {"name": loc.name}
 
-    def _get_module_data(
-        self, appliance: etree, locator: str, mod_type: str
-    ) -> ModelData:
-        """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
-
-        Collect requested info from MODULES.
-        """
-        model_data: ModelData = {
-            "contents": False,
-            "firmware_version": None,
-            "hardware_version": None,
-            "reachable": None,
-            "vendor_name": None,
-            "vendor_model": None,
-            "zigbee_mac_address": None,
-        }
-        if (appl_search := appliance.find(locator)) is not None:
-            link_id = appl_search.attrib["id"]
-            loc = f".//{mod_type}[@id='{link_id}']...."
-            # Not possible to walrus for some reason...
-            module = self._modules.find(loc)
-            if module is not None:  # pylint: disable=consider-using-assignment-expr
-                model_data["contents"] = True
-                if (vendor_name := module.find("vendor_name").text) is not None:
-                    model_data["vendor_name"] = vendor_name
-                    if "Plugwise" in vendor_name:
-                        model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
-                model_data["vendor_model"] = module.find("vendor_model").text
-                model_data["hardware_version"] = module.find("hardware_version").text
-                model_data["firmware_version"] = module.find("firmware_version").text
-                # Stretches
-                if (router := module.find("./protocols/network_router")) is not None:
-                    model_data["zigbee_mac_address"] = router.find("mac_address").text
-                # Also look for the Circle+/Stealth M+
-                if (coord := module.find("./protocols/network_coordinator")) is not None:
-                    model_data["zigbee_mac_address"] = coord.find("mac_address").text
-
-        return model_data
-
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
@@ -176,7 +136,7 @@ class SmileLegacyHelper(SmileCommon):
             locator = "./services/electricity_point_meter"
             mod_type = "electricity_point_meter"
 
-            module_data = self._get_module_data(appliance, locator, mod_type)
+            module_data = self._get_module_data(appliance, self._modules, locator, mod_type, legacy=True)
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             # Filter appliance without zigbee_mac, it's an orphaned device
             if appl.zigbee_mac is None and self.smile_type != "power":
@@ -198,11 +158,11 @@ class SmileLegacyHelper(SmileCommon):
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appliance, appl)
+            return self._appl_thermostat_info(appliance, self._modules, appl)
 
         # Collect heater_central device info
         if appl.pwclass == "heater_central":
-            return self._appl_heater_central_info(self._appliances, appliance, appl)
+            return self._appl_heater_central_info(self._appliances, appliance, self._modules, appl)
 
         # Collect info from Stretches
         appl = self._energy_device_info_finder(appliance, appl)

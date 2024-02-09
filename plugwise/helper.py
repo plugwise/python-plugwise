@@ -46,7 +46,6 @@ from plugwise.constants import (
     BinarySensorType,
     DeviceData,
     GatewayData,
-    ModelData,
     SensorType,
     SpecialType,
     SwitchType,
@@ -261,43 +260,6 @@ class SmileHelper(SmileCommon):
 
             self.loc_data[loc.loc_id] = {"name": loc.name}
 
-    def _get_module_data(
-        self, appliance: etree, locator: str, mod_type: str
-    ) -> ModelData:
-        """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
-
-        Collect requested info from MODULES.
-        """
-        model_data: ModelData = {
-            "contents": False,
-            "firmware_version": None,
-            "hardware_version": None,
-            "reachable": None,
-            "vendor_name": None,
-            "vendor_model": None,
-            "zigbee_mac_address": None,
-        }
-        if (appl_search := appliance.find(locator)) is not None:
-            link_id = appl_search.attrib["id"]
-            loc = f".//services/{mod_type}[@id='{link_id}']...."
-            # Not possible to walrus for some reason...
-            module = self._domain_objects.find(loc)
-            if module is not None:  # pylint: disable=consider-using-assignment-expr
-                model_data["contents"] = True
-                if (vendor_name := module.find("vendor_name").text) is not None:
-                    model_data["vendor_name"] = vendor_name
-                    if "Plugwise" in vendor_name:
-                        model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
-                model_data["vendor_model"] = module.find("vendor_model").text
-                model_data["hardware_version"] = module.find("hardware_version").text
-                model_data["firmware_version"] = module.find("firmware_version").text
-                # Adam
-                if (zb_node := module.find("./protocols/zig_bee_node")) is not None:
-                    model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
-                    model_data["reachable"] = zb_node.find("reachable").text == "true"
-
-        return model_data
-
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
@@ -306,7 +268,7 @@ class SmileHelper(SmileCommon):
         if self.smile_type == "power":
             locator = "./logs/point_log/electricity_point_meter"
             mod_type = "electricity_point_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
+            module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
             appl.hardware = module_data["hardware_version"]
             appl.model = module_data["vendor_model"]
             appl.vendor_name = module_data["vendor_name"]
@@ -317,7 +279,7 @@ class SmileHelper(SmileCommon):
         if self.smile(ADAM):
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
+            module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
             # Filter appliance without zigbee_mac, it's an orphaned device
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             if appl.zigbee_mac is None:
@@ -372,11 +334,11 @@ class SmileHelper(SmileCommon):
 
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appliance, appl)
+            return self._appl_thermostat_info(appliance, self._domain_objects, appl)
 
         # Collect extra heater_central device info
         if appl.pwclass == "heater_central":
-            appl = self._appl_heater_central_info(self._domain_objects, appliance, appl)
+            appl = self._appl_heater_central_info(self._domain_objects, appliance, self._domain_objects, appl)
             # Anna + Loria: collect dhw control operation modes
             dhw_mode_list: list[str] = []
             locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
@@ -672,12 +634,12 @@ class SmileHelper(SmileCommon):
             # Collect for Plugs
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
+            module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
             if module_data["reachable"] is None:
                 # Collect for wireless thermostats
                 locator = "./logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
-                module_data = self._get_module_data(appliance, locator, mod_type)
+                module_data = self._get_module_data(appliance, self._domain_objects, locator, mod_type)
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
