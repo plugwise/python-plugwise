@@ -6,10 +6,7 @@
     "mac_address": "01:23:45:67:89:AB",
     "model": "Gateway",
     "name": "Smile Anna",
-    "vendor": "Plugwise",
-    "binary_sensors": {
-      "plugwise_notification": false
-    }
+    "vendor": "Plugwise"
   },
   "0d266432d64443e283b5d708ae98b455": {
     "dev_class": "thermostat",
