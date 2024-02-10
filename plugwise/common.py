@@ -123,7 +123,7 @@ class SmileCommon:
                 loc = f".//{mod_type}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
             # xml_2: self._modules for legacy, self._domain_objects for actual
-            search = xml_2 or self._domain_objects
+            search = return_valid(xml_2, self._domain_objects)
             module = search.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
                 model_data["contents"] = True
