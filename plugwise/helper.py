@@ -8,6 +8,7 @@ import asyncio
 import datetime as dt
 from typing import cast
 
+from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -45,7 +46,6 @@ from plugwise.constants import (
     BinarySensorType,
     DeviceData,
     GatewayData,
-    ModelData,
     SensorType,
     SpecialType,
     SwitchType,
@@ -190,7 +190,7 @@ class SmileComm:
         await self._websession.close()
 
 
-class SmileHelper:
+class SmileHelper(SmileCommon):
     """The SmileHelper class."""
 
     def __init__(self) -> None:
@@ -234,7 +234,6 @@ class SmileHelper:
         self._cooling_active = False
         self._cooling_enabled = False
 
-        self.device_items: int = 0
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
@@ -247,10 +246,7 @@ class SmileHelper:
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
-
-    def smile(self, name: str) -> bool:
-        """Helper-function checking the smile-name."""
-        return self.smile_name == name
+        SmileCommon.__init__(self)
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -263,43 +259,6 @@ class SmileHelper:
                 self._home_location = loc.loc_id
 
             self.loc_data[loc.loc_id] = {"name": loc.name}
-
-    def _get_module_data(
-        self, appliance: etree, locator: str, mod_type: str
-    ) -> ModelData:
-        """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
-
-        Collect requested info from MODULES.
-        """
-        model_data: ModelData = {
-            "contents": False,
-            "firmware_version": None,
-            "hardware_version": None,
-            "reachable": None,
-            "vendor_name": None,
-            "vendor_model": None,
-            "zigbee_mac_address": None,
-        }
-        if (appl_search := appliance.find(locator)) is not None:
-            link_id = appl_search.attrib["id"]
-            loc = f".//services/{mod_type}[@id='{link_id}']...."
-            # Not possible to walrus for some reason...
-            module = self._domain_objects.find(loc)
-            if module is not None:  # pylint: disable=consider-using-assignment-expr
-                model_data["contents"] = True
-                if (vendor_name := module.find("vendor_name").text) is not None:
-                    model_data["vendor_name"] = vendor_name
-                    if "Plugwise" in vendor_name:
-                        model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
-                model_data["vendor_model"] = module.find("vendor_model").text
-                model_data["hardware_version"] = module.find("hardware_version").text
-                model_data["firmware_version"] = module.find("firmware_version").text
-                # Adam
-                if (zb_node := module.find("./protocols/zig_bee_node")) is not None:
-                    model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
-                    model_data["reachable"] = zb_node.find("reachable").text == "true"
-
-        return model_data
 
     def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
@@ -335,7 +294,7 @@ class SmileHelper:
 
         return appl  # pragma: no cover
 
-    def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+    def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Collect gateway device info
         if appl.pwclass == "gateway":
@@ -375,51 +334,11 @@ class SmileHelper:
 
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
-            locator = "./logs/point_log[type='thermostat']/thermostat"
-            mod_type = "thermostat"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.vendor_name = module_data["vendor_name"]
-            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
-            appl.hardware = module_data["hardware_version"]
-            appl.firmware = module_data["firmware_version"]
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
+            return self._appl_thermostat_info(appl, appliance)
 
-            return appl
-
-        # Collect heater_central device info
+        # Collect extra heater_central device info
         if appl.pwclass == "heater_central":
-            # Remove heater_central when no active device present
-            if not self._opentherm_device and not self._on_off_device:
-                return None  # pragma: no cover
-
-            # Find the valid heater_central
-            self._heater_id = self._check_heater_central()
-
-            #  Info for On-Off device
-            if self._on_off_device:
-                appl.name = "OnOff"
-                appl.vendor_name = None
-                appl.model = "Unknown"
-                return appl
-
-            # Info for OpenTherm device
-            appl.name = "OpenTherm"
-            locator1 = "./logs/point_log[type='flame_state']/boiler_state"
-            locator2 = "./services/boiler_state"
-            mod_type = "boiler_state"
-            module_data = self._get_module_data(appliance, locator1, mod_type)
-            if not module_data["contents"]:
-                module_data = self._get_module_data(appliance, locator2, mod_type)
-            appl.vendor_name = module_data["vendor_name"]
-            appl.hardware = module_data["hardware_version"]
-            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
-            if appl.model is None:
-                appl.model = (
-                    "Generic heater/cooler"
-                    if self._cooling_present
-                    else "Generic heater"
-                )
-
+            appl = self._appl_heater_central_info(appl, appliance)
             # Anna + Loria: collect dhw control operation modes
             dhw_mode_list: list[str] = []
             locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
@@ -435,34 +354,6 @@ class SmileHelper:
         appl = self._energy_device_info_finder(appliance, appl)
 
         return appl
-
-    def _check_heater_central(self) -> str:
-        """Find the valid heater_central, helper-function for _appliance_info_finder().
-
-        Solution for Core Issue #104433,
-        for a system that has two heater_central appliances.
-        """
-        locator = "./appliance[type='heater_central']"
-        hc_count = 0
-        hc_list: list[dict[str, bool]] = []
-        for heater_central in self._domain_objects.findall(locator):
-            hc_count += 1
-            hc_id: str = heater_central.attrib["id"]
-            has_actuators: bool = (
-                heater_central.find("actuator_functionalities/") is not None
-            )
-            hc_list.append({hc_id: has_actuators})
-
-        heater_central_id = list(hc_list[0].keys())[0]
-        if hc_count > 1:
-            for item in hc_list:
-                for key, value in item.items():
-                    if value:
-                        heater_central_id = key
-                        # Stop when a valid id is found
-                        break
-
-        return heater_central_id
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
@@ -529,7 +420,7 @@ class SmileHelper:
 
             # Determine class for this appliance
             # Skip on heater_central when no active device present
-            if not (appl := self._appliance_info_finder(appliance, appl)):
+            if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
             # Skip orphaned heater_central (Core Issue #104433)

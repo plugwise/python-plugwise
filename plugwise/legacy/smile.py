@@ -69,6 +69,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         )
         SmileLegacyData.__init__(self)
 
+        self._cooling_present = False
         self._is_thermostat = _is_thermostat
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device

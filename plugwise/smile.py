@@ -248,7 +248,9 @@ class SmileAPI(SmileComm, SmileData):
 
         if self.smile(ANNA) and self._cooling_present:
             if "setpoint_high" not in items:
-                raise PlugwiseError
+                raise PlugwiseError(
+                    "Plugwise: failed setting temperature: no valid input provided"
+                )
             tmp_setpoint_high = items["setpoint_high"]
             tmp_setpoint_low = items["setpoint_low"]
             if self._cooling_enabled:  # in cooling mode
@@ -265,7 +267,9 @@ class SmileAPI(SmileComm, SmileData):
                     )
 
         if setpoint is None:
-            raise PlugwiseError  # pragma: no cover"
+            raise PlugwiseError(
+                    "Plugwise: failed setting temperature: no valid input provided"
+                )  # pragma: no cover"
 
         temperature = str(setpoint)
         uri = self._thermostat_uri(loc_id)
@@ -287,7 +291,7 @@ class SmileAPI(SmileComm, SmileData):
                     thermostat_id = th_func.attrib["id"]
 
         if thermostat_id is None:
-            raise PlugwiseError
+            raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
@@ -296,7 +300,9 @@ class SmileAPI(SmileComm, SmileData):
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
         if dev_id not in self.therms_with_offset_func:
-            raise PlugwiseError
+            raise PlugwiseError(
+                "Plugwise: this device does not have temperature-offset capability."
+            )
 
         value = str(offset)
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
@@ -349,7 +355,7 @@ class SmileAPI(SmileComm, SmileData):
             )
             # Don't bother switching a relay when the corresponding lock-state is true
             if self._domain_objects.find(locator).text == "true":
-                raise PlugwiseError
+                raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
         await self._request(uri, method="put", data=data)
 
@@ -371,7 +377,7 @@ class SmileAPI(SmileComm, SmileData):
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
         if mode not in self._gw_allowed_modes:
-            raise PlugwiseError
+            raise PlugwiseError("Plugwise: invalid gateway mode.")
 
         end_time = "2037-04-21T08:00:53.000Z"
         valid = ""
@@ -394,7 +400,7 @@ class SmileAPI(SmileComm, SmileData):
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._reg_allowed_modes:
-            raise PlugwiseError
+            raise PlugwiseError("Plugwise: invalid regulation mode.")
 
         uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
         duration = ""

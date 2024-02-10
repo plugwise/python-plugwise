@@ -7,9 +7,6 @@
     "model": "Gateway",
     "name": "Smile Anna",
     "vendor": "Plugwise",
-    "binary_sensors": {
-      "plugwise_notification": false
-    },
     "sensors": {
       "outdoor_temperature": 21
     }
