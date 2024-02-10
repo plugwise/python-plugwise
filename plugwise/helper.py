@@ -296,23 +296,21 @@ class SmileHelper(SmileCommon):
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-        # Collect gateway device info
-        if appl.pwclass == "gateway":
-            return self._appl_gateway_info(appl, appliance)
-
-        # Collect thermostat device info
-        if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appl, appliance)
-
-        # Collect heater_central device info
-        if appl.pwclass == "heater_central":
-            self._appl_heater_central_info(appl, appliance)
-            self._appl_dhw_mode_info(appl, appliance)
-
-            return appl
-
-        # Collect info from power-related devices (Plug, Aqara Smart Plug)
-        return self._energy_device_info_finder(appl, appliance)
+        match appl.pwclass:
+            case "gateway":
+                # Collect gateway device info
+                return self._appl_gateway_info(appl, appliance)
+            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
+                # Collect thermostat device info
+                return self._appl_thermostat_info(appl, appliance)
+            case "heater_central":
+                # Collect heater_central device info
+                self._appl_heater_central_info(appl, appliance)
+                self._appl_dhw_mode_info(appl, appliance)
+                return appl
+            case _:
+                # Collect info from power-related devices (Plug, Aqara Smart Plug)
+                return self._energy_device_info_finder(appl, appliance)
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder()."""
