@@ -156,18 +156,16 @@ class SmileLegacyHelper(SmileCommon):
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
+        match appl.pwclass:
         # Collect thermostat device info
-        if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appl, appliance, self._modules)
-
+            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
+                return self._appl_thermostat_info(appl, appliance, self._modules)
         # Collect heater_central device info
-        if appl.pwclass == "heater_central":
-            return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
-
+            case "heater_central":
+                return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
         # Collect info from Stretches
-        appl = self._energy_device_info_finder(appliance, appl)
-
-        return appl
+            case _:
+                return self._energy_device_info_finder(appliance, appl)
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""

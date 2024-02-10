@@ -260,7 +260,7 @@ class SmileHelper(SmileCommon):
 
             self.loc_data[loc.loc_id] = {"name": loc.name}
 
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+    def _energy_device_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder().
 
         Collect energy device info (Smartmeter, Plug): firmware, model and vendor name.
@@ -338,15 +338,13 @@ class SmileHelper(SmileCommon):
 
         # Collect heater_central device info
         if appl.pwclass == "heater_central":
-            appl = self._appl_heater_central_info(appl, appliance)
-            appl = self._appl_dhw_mode_info(appl, appliance)
+            self._appl_heater_central_info(appl, appliance)
+            self._appl_dhw_mode_info(appl, appliance)
 
             return appl
 
         # Collect info from power-related devices (Plug, Aqara Smart Plug)
-        appl = self._energy_device_info_finder(appliance, appl)
-
-        return appl
+        return self._energy_device_info_finder(appl, appliance)
 
     def _appl_dhw_mode_info(self, appl: Munch, appliance: etree) -> Munch:
         """Collect dhw control operation modes - Anna + Loria."""
@@ -371,7 +369,7 @@ class SmileHelper(SmileCommon):
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
-        appl = self._energy_device_info_finder(location, appl)
+        appl = self._energy_device_info_finder(appl, location)
 
         self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
         self._count += 1
