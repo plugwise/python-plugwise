@@ -336,22 +336,27 @@ class SmileHelper(SmileCommon):
         if appl.pwclass in THERMOSTAT_CLASSES:
             return self._appl_thermostat_info(appl, appliance)
 
-        # Collect extra heater_central device info
+        # Collect heater_central device info
         if appl.pwclass == "heater_central":
             appl = self._appl_heater_central_info(appl, appliance)
-            # Anna + Loria: collect dhw control operation modes
-            dhw_mode_list: list[str] = []
-            locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
-            if (search := appliance.find(locator)) is not None:
-                if search.find("allowed_modes") is not None:
-                    for mode in search.find("allowed_modes"):
-                        dhw_mode_list.append(mode.text)
-                    self._dhw_allowed_modes = dhw_mode_list
+            appl = self._appl_dhw_mode_info(appl, appliance)
 
             return appl
 
         # Collect info from power-related devices (Plug, Aqara Smart Plug)
         appl = self._energy_device_info_finder(appliance, appl)
+
+        return appl
+
+    def _appl_dhw_mode_info(self, appl: Munch, appliance: etree) -> Munch:
+        """Collect dhw control operation modes - Anna + Loria."""
+        dhw_mode_list: list[str] = []
+        locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            if search.find("allowed_modes") is not None:
+                for mode in search.find("allowed_modes"):
+                    dhw_mode_list.append(mode.text)
+                self._dhw_allowed_modes = dhw_mode_list
 
         return appl
 
