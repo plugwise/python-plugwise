@@ -306,24 +306,16 @@ class SmileHelper(SmileCommon):
             appl.name = self.smile_name
             appl.vendor_name = "Plugwise"
 
-            # Adam: look for the ZigBee MAC address of the Smile
+            # Adam: collect the ZigBee MAC address of the Smile
             if self.smile(ADAM) and (
                 (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None
             ):
                 appl.zigbee_mac = found.find("mac_address").text
 
             # Adam: collect regulation_modes and check for cooling, indicating cooling-mode is present
-            reg_mode_list: list[str] = []
-            locator = "./actuator_functionalities/regulation_mode_control_functionality"
-            if (search := appliance.find(locator)) is not None:
-                if search.find("allowed_modes") is not None:
-                    for mode in search.find("allowed_modes"):
-                        reg_mode_list.append(mode.text)
-                        if mode.text == "cooling":
-                            self._cooling_present = True
-                    self._reg_allowed_modes = reg_mode_list
+            self._appl_regulation_mode_info(appliance)
 
-            # Adam: check for presence of gateway_modes
+            # Adam: collect the gateway_modes
             self._gw_allowed_modes = []
             locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
             if appliance.find(locator) is not None:
@@ -346,8 +338,23 @@ class SmileHelper(SmileCommon):
         # Collect info from power-related devices (Plug, Aqara Smart Plug)
         return self._energy_device_info_finder(appl, appliance)
 
+    def _appl_regulation_mode_info(self, appliance: etree) -> None:
+        """Helper-function for _appliance_info_finder()."""
+        reg_mode_list: list[str] = []
+        locator = "./actuator_functionalities/regulation_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            if search.find("allowed_modes") is not None:
+                for mode in search.find("allowed_modes"):
+                    reg_mode_list.append(mode.text)
+                    if mode.text == "cooling":
+                        self._cooling_present = True
+                self._reg_allowed_modes = reg_mode_list
+
     def _appl_dhw_mode_info(self, appl: Munch, appliance: etree) -> Munch:
-        """Collect dhw control operation modes - Anna + Loria."""
+        """Helper-function for _appliance_info_finder().
+
+        Collect dhw control operation modes - Anna + Loria.
+        """
         dhw_mode_list: list[str] = []
         locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
