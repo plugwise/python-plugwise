@@ -298,31 +298,7 @@ class SmileHelper(SmileCommon):
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         # Collect gateway device info
         if appl.pwclass == "gateway":
-            self.gateway_id = appliance.attrib["id"]
-            appl.firmware = self.smile_fw_version
-            appl.hardware = self.smile_hw_version
-            appl.mac = self.smile_mac_address
-            appl.model = self.smile_model
-            appl.name = self.smile_name
-            appl.vendor_name = "Plugwise"
-
-            # Adam: collect the ZigBee MAC address of the Smile
-            if self.smile(ADAM) and (
-                (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None
-            ):
-                appl.zigbee_mac = found.find("mac_address").text
-
-            # Adam: collect regulation_modes and check for cooling, indicating cooling-mode is present
-            self._appl_regulation_mode_info(appliance)
-
-            # Adam: collect the gateway_modes
-            self._gw_allowed_modes = []
-            locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
-            if appliance.find(locator) is not None:
-                # Limit the possible gateway-modes
-                self._gw_allowed_modes = ["away", "full", "vacation"]
-
-            return appl
+            return self._appl_gateway_info(appl, appliance)
 
         # Collect thermostat device info
         if appl.pwclass in THERMOSTAT_CLASSES:
@@ -337,6 +313,34 @@ class SmileHelper(SmileCommon):
 
         # Collect info from power-related devices (Plug, Aqara Smart Plug)
         return self._energy_device_info_finder(appl, appliance)
+
+    def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
+        """Helper-function for _appliance_info_finder()."""
+        self.gateway_id = appliance.attrib["id"]
+        appl.firmware = self.smile_fw_version
+        appl.hardware = self.smile_hw_version
+        appl.mac = self.smile_mac_address
+        appl.model = self.smile_model
+        appl.name = self.smile_name
+        appl.vendor_name = "Plugwise"
+
+        # Adam: collect the ZigBee MAC address of the Smile
+        if self.smile(ADAM) and (
+            (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None
+        ):
+            appl.zigbee_mac = found.find("mac_address").text
+
+        # Adam: collect regulation_modes and check for cooling, indicating cooling-mode is present
+        self._appl_regulation_mode_info(appliance)
+
+        # Adam: collect the gateway_modes
+        self._gw_allowed_modes = []
+        locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
+        if appliance.find(locator) is not None:
+            # Limit the possible gateway-modes
+            self._gw_allowed_modes = ["away", "full", "vacation"]
+
+        return appl
 
     def _appl_regulation_mode_info(self, appliance: etree) -> None:
         """Helper-function for _appliance_info_finder()."""
