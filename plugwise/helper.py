@@ -323,20 +323,19 @@ class SmileHelper(SmileCommon):
         appl.vendor_name = "Plugwise"
 
         # Adam: collect the ZigBee MAC address of the Smile
-        if self.smile(ADAM) and (
-            (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None
-        ):
-            appl.zigbee_mac = found.find("mac_address").text
+        if self.smile(ADAM):
+            if (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None:
+                appl.zigbee_mac = found.find("mac_address").text
 
-        # Adam: collect regulation_modes and check for cooling, indicating cooling-mode is present
-        self._appl_regulation_mode_info(appliance)
+            # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
+            self._appl_regulation_mode_info(appliance)
 
-        # Adam: collect the gateway_modes
-        self._gw_allowed_modes = []
-        locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
-        if appliance.find(locator) is not None:
-            # Limit the possible gateway-modes
-            self._gw_allowed_modes = ["away", "full", "vacation"]
+            # Finally, collect the gateway_modes
+            self._gw_allowed_modes = []
+            locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
+            if appliance.find(locator) is not None:
+                # Limit the possible gateway-modes
+                self._gw_allowed_modes = ["away", "full", "vacation"]
 
         return appl
 
