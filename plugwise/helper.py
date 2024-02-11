@@ -111,34 +111,6 @@ class SmileComm:
         self._endpoint = f"http://{host}:{str(port)}"
         self._timeout = timeout
 
-    async def _request_validate(self, resp: ClientResponse, method: str) -> etree:
-        """Helper-function for _request(): validate the returned data."""
-        # Command accepted gives empty body with status 202
-        if resp.status == 202:
-            return
-
-        # Cornercase for stretch not responding with 202
-        if method == "put" and resp.status == 200:
-            return
-
-        if resp.status == 401:
-            msg = "Invalid Plugwise login, please retry with the correct credentials."
-            LOGGER.error("%s", msg)
-            raise InvalidAuthentication
-
-        if not (result := await resp.text()) or "<error>" in result:
-            LOGGER.warning("Smile response empty or error in %s", result)
-            raise ResponseError
-
-        try:
-            # Encode to ensure utf8 parsing
-            xml = etree.XML(escape_illegal_xml_characters(result).encode())
-        except etree.ParseError as exc:
-            LOGGER.warning("Smile returns invalid XML for %s", self._endpoint)
-            raise InvalidXMLError from exc
-
-        return xml
-
     async def _request(
         self,
         command: str,
@@ -183,6 +155,34 @@ class SmileComm:
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
+
+    async def _request_validate(self, resp: ClientResponse, method: str) -> etree:
+        """Helper-function for _request(): validate the returned data."""
+        # Command accepted gives empty body with status 202
+        if resp.status == 202:
+            return
+
+        # Cornercase for stretch not responding with 202
+        if method == "put" and resp.status == 200:
+            return
+
+        if resp.status == 401:
+            msg = "Invalid Plugwise login, please retry with the correct credentials."
+            LOGGER.error("%s", msg)
+            raise InvalidAuthentication
+
+        if not (result := await resp.text()) or "<error>" in result:
+            LOGGER.warning("Smile response empty or error in %s", result)
+            raise ResponseError
+
+        try:
+            # Encode to ensure utf8 parsing
+            xml = etree.XML(escape_illegal_xml_characters(result).encode())
+        except etree.ParseError as exc:
+            LOGGER.warning("Smile returns invalid XML for %s", self._endpoint)
+            raise InvalidXMLError from exc
+
+        return xml
 
     async def close_connection(self) -> None:
         """Close the Plugwise connection."""
@@ -243,155 +243,6 @@ class SmileHelper(SmileCommon):
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
         SmileCommon.__init__(self)
-
-    def _all_locations(self) -> None:
-        """Collect all locations."""
-        loc = Munch()
-        locations = self._domain_objects.findall("./location")
-        for location in locations:
-            loc.name = location.find("name").text
-            loc.loc_id = location.attrib["id"]
-            if loc.name == "Home":
-                self._home_location = loc.loc_id
-
-            self.loc_data[loc.loc_id] = {"name": loc.name}
-
-    def _energy_device_info_finder(self, appl: Munch, appliance: etree) -> Munch:
-        """Helper-function for _appliance_info_finder().
-
-        Collect energy device info (Smartmeter, Plug): firmware, model and vendor name.
-        """
-        if self.smile_type == "power":
-            locator = "./logs/point_log/electricity_point_meter"
-            mod_type = "electricity_point_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.hardware = module_data["hardware_version"]
-            appl.model = module_data["vendor_model"]
-            appl.vendor_name = module_data["vendor_name"]
-            appl.firmware = module_data["firmware_version"]
-
-            return appl
-
-        if self.smile(ADAM):
-            locator = "./logs/interval_log/electricity_interval_meter"
-            mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            # Filter appliance without zigbee_mac, it's an orphaned device
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
-            if appl.zigbee_mac is None:
-                return None
-
-            appl.vendor_name = module_data["vendor_name"]
-            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
-            appl.hardware = module_data["hardware_version"]
-            appl.firmware = module_data["firmware_version"]
-
-            return appl
-
-        return appl  # pragma: no cover
-
-    def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
-        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-        match appl.pwclass:
-            case "gateway":
-                # Collect gateway device info
-                return self._appl_gateway_info(appl, appliance)
-            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
-                # Collect thermostat device info
-                return self._appl_thermostat_info(appl, appliance)
-            case "heater_central":
-                # Collect heater_central device info
-                self._appl_heater_central_info(appl, appliance)
-                self._appl_dhw_mode_info(appl, appliance)
-                return appl
-            case _:
-                # Collect info from power-related devices (Plug, Aqara Smart Plug)
-                return self._energy_device_info_finder(appl, appliance)
-
-    def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
-        """Helper-function for _appliance_info_finder()."""
-        self.gateway_id = appliance.attrib["id"]
-        appl.firmware = self.smile_fw_version
-        appl.hardware = self.smile_hw_version
-        appl.mac = self.smile_mac_address
-        appl.model = self.smile_model
-        appl.name = self.smile_name
-        appl.vendor_name = "Plugwise"
-
-        # Adam: collect the ZigBee MAC address of the Smile
-        if self.smile(ADAM):
-            if (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None:
-                appl.zigbee_mac = found.find("mac_address").text
-
-            # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
-            self._appl_regulation_mode_info(appliance)
-
-            # Finally, collect the gateway_modes
-            self._gw_allowed_modes = []
-            locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
-            if appliance.find(locator) is not None:
-                # Limit the possible gateway-modes
-                self._gw_allowed_modes = ["away", "full", "vacation"]
-
-        return appl
-
-    def _appl_regulation_mode_info(self, appliance: etree) -> None:
-        """Helper-function for _appliance_info_finder()."""
-        reg_mode_list: list[str] = []
-        locator = "./actuator_functionalities/regulation_mode_control_functionality"
-        if (search := appliance.find(locator)) is not None:
-            if search.find("allowed_modes") is not None:
-                for mode in search.find("allowed_modes"):
-                    reg_mode_list.append(mode.text)
-                    if mode.text == "cooling":
-                        self._cooling_present = True
-                self._reg_allowed_modes = reg_mode_list
-
-    def _appl_dhw_mode_info(self, appl: Munch, appliance: etree) -> Munch:
-        """Helper-function for _appliance_info_finder().
-
-        Collect dhw control operation modes - Anna + Loria.
-        """
-        dhw_mode_list: list[str] = []
-        locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
-        if (search := appliance.find(locator)) is not None:
-            if search.find("allowed_modes") is not None:
-                for mode in search.find("allowed_modes"):
-                    dhw_mode_list.append(mode.text)
-                self._dhw_allowed_modes = dhw_mode_list
-
-        return appl
-
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
-        """Collect P1 DSMR Smartmeter info."""
-        loc_id = next(iter(self.loc_data.keys()))
-        appl.dev_id = self.gateway_id
-        appl.location = loc_id
-        appl.mac = None
-        appl.model = self.smile_model
-        appl.name = "P1"
-        appl.pwclass = "smartmeter"
-        appl.zigbee_mac = None
-        location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
-        appl = self._energy_device_info_finder(appl, location)
-
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-        self._count += 1
-
-        for key, value in {
-            "firmware": appl.firmware,
-            "hardware": appl.hardware,
-            "location": appl.location,
-            "mac_address": appl.mac,
-            "model": appl.model,
-            "name": appl.name,
-            "zigbee_mac_address": appl.zigbee_mac,
-            "vendor": appl.vendor_name,
-        }.items():
-            if value is not None or key == "location":
-                p1_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][p1_key] = value
-                self._count += 1
 
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
@@ -480,6 +331,155 @@ class SmileHelper(SmileCommon):
                     add_to_front = {dev_id: tmp_device}
                     self.gw_devices = {**add_to_front, **cleared_dict}
 
+    def _all_locations(self) -> None:
+        """Collect all locations."""
+        loc = Munch()
+        locations = self._domain_objects.findall("./location")
+        for location in locations:
+            loc.name = location.find("name").text
+            loc.loc_id = location.attrib["id"]
+            if loc.name == "Home":
+                self._home_location = loc.loc_id
+
+            self.loc_data[loc.loc_id] = {"name": loc.name}
+
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
+        """Collect P1 DSMR Smartmeter info."""
+        loc_id = next(iter(self.loc_data.keys()))
+        appl.dev_id = self.gateway_id
+        appl.location = loc_id
+        appl.mac = None
+        appl.model = self.smile_model
+        appl.name = "P1"
+        appl.pwclass = "smartmeter"
+        appl.zigbee_mac = None
+        location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        appl = self._energy_device_info_finder(appl, location)
+
+        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+        self._count += 1
+
+        for key, value in {
+            "firmware": appl.firmware,
+            "hardware": appl.hardware,
+            "location": appl.location,
+            "mac_address": appl.mac,
+            "model": appl.model,
+            "name": appl.name,
+            "zigbee_mac_address": appl.zigbee_mac,
+            "vendor": appl.vendor_name,
+        }.items():
+            if value is not None or key == "location":
+                p1_key = cast(ApplianceType, key)
+                self.gw_devices[appl.dev_id][p1_key] = value
+                self._count += 1
+
+    def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
+        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
+        match appl.pwclass:
+            case "gateway":
+                # Collect gateway device info
+                return self._appl_gateway_info(appl, appliance)
+            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
+                # Collect thermostat device info
+                return self._appl_thermostat_info(appl, appliance)
+            case "heater_central":
+                # Collect heater_central device info
+                self._appl_heater_central_info(appl, appliance)
+                self._appl_dhw_mode_info(appl, appliance)
+                return appl
+            case _:
+                # Collect info from power-related devices (Plug, Aqara Smart Plug)
+                return self._energy_device_info_finder(appl, appliance)
+
+    def _energy_device_info_finder(self, appl: Munch, appliance: etree) -> Munch:
+        """Helper-function for _appliance_info_finder().
+
+        Collect energy device info (Smartmeter, Plug): firmware, model and vendor name.
+        """
+        if self.smile_type == "power":
+            locator = "./logs/point_log/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+            module_data = self._get_module_data(appliance, locator, mod_type)
+            appl.hardware = module_data["hardware_version"]
+            appl.model = module_data["vendor_model"]
+            appl.vendor_name = module_data["vendor_name"]
+            appl.firmware = module_data["firmware_version"]
+
+            return appl
+
+        if self.smile(ADAM):
+            locator = "./logs/interval_log/electricity_interval_meter"
+            mod_type = "electricity_interval_meter"
+            module_data = self._get_module_data(appliance, locator, mod_type)
+            # Filter appliance without zigbee_mac, it's an orphaned device
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
+            if appl.zigbee_mac is None:
+                return None
+
+            appl.vendor_name = module_data["vendor_name"]
+            appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
+            appl.hardware = module_data["hardware_version"]
+            appl.firmware = module_data["firmware_version"]
+
+            return appl
+
+        return appl  # pragma: no cover
+
+    def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
+        """Helper-function for _appliance_info_finder()."""
+        self.gateway_id = appliance.attrib["id"]
+        appl.firmware = self.smile_fw_version
+        appl.hardware = self.smile_hw_version
+        appl.mac = self.smile_mac_address
+        appl.model = self.smile_model
+        appl.name = self.smile_name
+        appl.vendor_name = "Plugwise"
+
+        # Adam: collect the ZigBee MAC address of the Smile
+        if self.smile(ADAM):
+            if (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None:
+                appl.zigbee_mac = found.find("mac_address").text
+
+            # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
+            self._appl_regulation_mode_info(appliance)
+
+            # Finally, collect the gateway_modes
+            self._gw_allowed_modes = []
+            locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
+            if appliance.find(locator) is not None:
+                # Limit the possible gateway-modes
+                self._gw_allowed_modes = ["away", "full", "vacation"]
+
+        return appl
+
+    def _appl_regulation_mode_info(self, appliance: etree) -> None:
+        """Helper-function for _appliance_info_finder()."""
+        reg_mode_list: list[str] = []
+        locator = "./actuator_functionalities/regulation_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            if search.find("allowed_modes") is not None:
+                for mode in search.find("allowed_modes"):
+                    reg_mode_list.append(mode.text)
+                    if mode.text == "cooling":
+                        self._cooling_present = True
+                self._reg_allowed_modes = reg_mode_list
+
+    def _appl_dhw_mode_info(self, appl: Munch, appliance: etree) -> Munch:
+        """Helper-function for _appliance_info_finder().
+
+        Collect dhw control operation modes - Anna + Loria.
+        """
+        dhw_mode_list: list[str] = []
+        locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            if search.find("allowed_modes") is not None:
+                for mode in search.find("allowed_modes"):
+                    dhw_mode_list.append(mode.text)
+                self._dhw_allowed_modes = dhw_mode_list
+
+        return appl
+
     def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _device_data_adam().
 
@@ -494,6 +494,17 @@ class SmileHelper(SmileCommon):
                 return str(ctrl_state.text)
 
         return False
+
+    def _get_appliances_with_offset_functionality(self) -> list[str]:
+        """Helper-function collecting all appliance that have offset_functionality."""
+        therm_list: list[str] = []
+        offset_appls = self._domain_objects.findall(
+            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
+        )
+        for item in offset_appls:
+            therm_list.append(item.attrib["id"])
+
+        return therm_list
 
     def _presets(self, loc_id: str) -> dict[str, list[float]]:
         """Collect Presets for a Thermostat based on location_id."""
@@ -551,228 +562,6 @@ class SmileHelper(SmileCommon):
                     schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
 
         return schedule_ids
-
-    def _appliance_measurements(
-        self,
-        appliance: etree,
-        data: DeviceData,
-        measurements: dict[str, DATA | UOM],
-    ) -> None:
-        """Helper-function for _get_measurement_data() - collect appliance measurement data."""
-        for measurement, attrs in measurements.items():
-            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
-            if (appl_p_loc := appliance.find(p_locator)) is not None:
-                # Skip known obsolete measurements
-                updated_date_locator = (
-                    f'.//logs/point_log[type="{measurement}"]/updated_date'
-                )
-                if (
-                    measurement in OBSOLETE_MEASUREMENTS
-                    and (updated_date_key := appliance.find(updated_date_locator))
-                    is not None
-                ):
-                    updated_date = updated_date_key.text.split("T")[0]
-                    date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
-                    date_2 = dt.datetime.now()
-                    if int((date_2 - date_1).days) > 7:
-                        continue
-
-                if new_name := getattr(attrs, ATTR_NAME, None):
-                    measurement = new_name
-
-                match measurement:
-                    # measurements with states "on" or "off" that need to be passed directly
-                    case "select_dhw_mode":
-                        data["select_dhw_mode"] = appl_p_loc.text
-                    case _ as measurement if measurement in BINARY_SENSORS:
-                        bs_key = cast(BinarySensorType, measurement)
-                        bs_value = appl_p_loc.text in ["on", "true"]
-                        data["binary_sensors"][bs_key] = bs_value
-                    case _ as measurement if measurement in SENSORS:
-                        s_key = cast(SensorType, measurement)
-                        s_value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        )
-                        data["sensors"][s_key] = s_value
-                    case _ as measurement if measurement in SWITCHES:
-                        sw_key = cast(SwitchType, measurement)
-                        sw_value = appl_p_loc.text in ["on", "true"]
-                        data["switches"][sw_key] = sw_value
-                    case _ as measurement if measurement in SPECIALS:
-                        sp_key = cast(SpecialType, measurement)
-                        sp_value = appl_p_loc.text in ["on", "true"]
-                        data[sp_key] = sp_value
-                    case "elga_status_code":
-                        data["elga_status_code"] = int(appl_p_loc.text)
-
-            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
-            if (appl_i_loc := appliance.find(i_locator)) is not None:
-                name = cast(SensorType, f"{measurement}_interval")
-                data["sensors"][name] = format_measure(
-                    appl_i_loc.text, ENERGY_WATT_HOUR
-                )
-
-        self._count += len(data["binary_sensors"])
-        self._count += len(data["sensors"])
-        self._count += len(data["switches"])
-        # Don't count the above top-level dicts, only the remaining single items
-        self._count += len(data) - 3
-
-    def _wireless_availability(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Collect the availability-status for wireless connected devices.
-        """
-        if self.smile(ADAM):
-            # Collect for Plugs
-            locator = "./logs/interval_log/electricity_interval_meter"
-            mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            if module_data["reachable"] is None:
-                # Collect for wireless thermostats
-                locator = "./logs/point_log[type='thermostat']/thermostat"
-                mod_type = "thermostat"
-                module_data = self._get_module_data(appliance, locator, mod_type)
-
-            if module_data["reachable"] is not None:
-                data["available"] = module_data["reachable"]
-                self._count += 1
-
-    def _get_appliances_with_offset_functionality(self) -> list[str]:
-        """Helper-function collecting all appliance that have offset_functionality."""
-        therm_list: list[str] = []
-        offset_appls = self._domain_objects.findall(
-            './/actuator_functionalities/offset_functionality[type="temperature_offset"]/offset/../../..'
-        )
-        for item in offset_appls:
-            therm_list.append(item.attrib["id"])
-
-        return therm_list
-
-    def _get_actuator_functionalities(
-        self, xml: etree, device: DeviceData, data: DeviceData
-    ) -> None:
-        """Helper-function for _get_measurement_data()."""
-        for item in ACTIVE_ACTUATORS:
-            # Skip max_dhw_temperature, not initially valid,
-            # skip thermostat for thermo_sensors
-            if item == "max_dhw_temperature" or (
-                item == "thermostat" and device["dev_class"] == "thermo_sensor"
-            ):
-                continue
-
-            temp_dict: ActuatorData = {}
-            functionality = "thermostat_functionality"
-            if item == "temperature_offset":
-                functionality = "offset_functionality"
-            # When there is no updated_date-text, skip the actuator
-            updated_date_location = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
-            if (
-                updated_date_key := xml.find(updated_date_location)
-            ) is not None and updated_date_key.text is None:
-                continue
-
-            for key in LIMITS:
-                locator = (
-                    f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
-                )
-                if (pw_function := xml.find(locator)) is not None:
-                    if key == "offset":
-                        # Add limits and resolution for temperature_offset,
-                        # not provided by Plugwise in the XML data
-                        temp_dict["lower_bound"] = -2.0
-                        temp_dict["resolution"] = 0.1
-                        temp_dict["upper_bound"] = 2.0
-                        self._count += 3
-                        # Rename offset to setpoint
-                        key = "setpoint"
-
-                    act_key = cast(ActuatorDataType, key)
-                    temp_dict[act_key] = format_measure(pw_function.text, TEMP_CELSIUS)
-                    self._count += 1
-
-            if temp_dict:
-                # If domestic_hot_water_setpoint is present as actuator,
-                # rename and remove as sensor
-                if item == DHW_SETPOINT:
-                    item = "max_dhw_temperature"
-                    if DHW_SETPOINT in data["sensors"]:
-                        data["sensors"].pop(DHW_SETPOINT)
-                        self._count -= 1
-
-                act_item = cast(ActuatorType, item)
-                data[act_item] = temp_dict
-
-    def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Collect the gateway regulation_mode.
-        """
-        locator = "./actuator_functionalities/regulation_mode_control_functionality"
-        if (search := appliance.find(locator)) is not None:
-            data["select_regulation_mode"] = search.find("mode").text
-            self._count += 1
-            self._cooling_enabled = data["select_regulation_mode"] == "cooling"
-
-    def _get_gateway_mode(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Collect the gateway mode.
-        """
-        locator = "./actuator_functionalities/gateway_mode_control_functionality"
-        if (search := appliance.find(locator)) is not None:
-            data["select_gateway_mode"] = search.find("mode").text
-            self._count += 1
-
-    def _cleanup_data(self, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Clean up the data dict.
-        """
-        # Don't show cooling-related when no cooling present,
-        # but, keep cooling_enabled for Elga
-        if not self._cooling_present:
-            if "cooling_state" in data["binary_sensors"]:
-                data["binary_sensors"].pop("cooling_state")
-                self._count -= 1
-            if "cooling_ena_switch" in data["switches"]:
-                data["switches"].pop("cooling_ena_switch")  # pragma: no cover
-                self._count -= 1  # pragma: no cover
-            if "cooling_enabled" in data["binary_sensors"]:
-                data["binary_sensors"].pop("cooling_enabled")  # pragma: no cover
-                self._count -= 1  # pragma: no cover
-
-        if "thermostat_supports_cooling" in data:
-            data.pop("thermostat_supports_cooling", None)
-            self._count -= 1
-
-    def _process_c_heating_state(self, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Process the central_heating_state value.
-        """
-        if self._on_off_device:
-            # Anna + OnOff heater: use central_heating_state to show heating_state
-            # Solution for Core issue #81839
-            if self.smile(ANNA):
-                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
-
-            # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
-            if self.smile(ADAM):
-                if "heating_state" not in data["binary_sensors"]:
-                    self._count += 1
-                data["binary_sensors"]["heating_state"] = False
-                if "cooling_state" not in data["binary_sensors"]:
-                    self._count += 1
-                data["binary_sensors"]["cooling_state"] = False
-                if self._cooling_enabled:
-                    data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
-                else:
-                    data["binary_sensors"]["heating_state"] = data["c_heating_state"]
-
-        # Anna + Elga: use central_heating_state to show heating_state
-        if self._elga:
-            data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
     def _get_measurement_data(self, dev_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
@@ -865,6 +654,342 @@ class SmileHelper(SmileCommon):
         self._cleanup_data(data)
 
         return data
+
+    def _power_data_from_location(self, loc_id: str) -> DeviceData:
+        """Helper-function for smile.py: _get_device_data().
+
+        Collect the power-data based on Location ID, from LOCATIONS.
+        """
+        direct_data: DeviceData = {"sensors": {}}
+        loc = Munch()
+        log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
+        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
+        t_string = "tariff"
+
+        search = self._domain_objects
+        loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
+        for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
+            for loc.log_type in log_list:
+                for loc.peak_select in peak_list:
+                    loc.locator = (
+                        f'./{loc.log_type}[type="{loc.measurement}"]/period/'
+                        f'measurement[@{t_string}="{loc.peak_select}"]'
+                    )
+                    loc = self._power_data_peak_value(loc)
+                    if not loc.found:
+                        continue
+
+                    direct_data = self.power_data_energy_diff(
+                        loc.measurement, loc.net_string, loc.f_val, direct_data
+                    )
+                    key = cast(SensorType, loc.key_string)
+                    direct_data["sensors"][key] = loc.f_val
+
+        self._count += len(direct_data["sensors"])
+        return direct_data
+
+    def _power_data_peak_value(self, loc: Munch) -> Munch:
+        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
+        loc.found = True
+        # If locator not found look for P1 gas_consumed or phase data (without tariff)
+        if loc.logs.find(loc.locator) is None:
+            if "log" in loc.log_type and (
+                "gas" in loc.measurement or "phase" in loc.measurement
+            ):
+                # Avoid double processing by skipping one peak-list option
+                if loc.peak_select == "nl_offpeak":
+                    loc.found = False
+                    return loc
+
+                loc.locator = (
+                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+                )
+                if loc.logs.find(loc.locator) is None:
+                    loc.found = False
+                    return loc
+            else:
+                loc.found = False  # pragma: no cover
+                return loc  # pragma: no cover
+
+        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
+            peak = "off_peak"
+        log_found = loc.log_type.split("_")[0]
+        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+        if "gas" in loc.measurement or loc.log_type == "point_meter":
+            loc.key_string = f"{loc.measurement}_{log_found}"
+        if "phase" in loc.measurement:
+            loc.key_string = f"{loc.measurement}"
+        loc.net_string = f"net_electricity_{log_found}"
+        val = loc.logs.find(loc.locator).text
+        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
+
+        return loc
+
+    def _appliance_measurements(
+        self,
+        appliance: etree,
+        data: DeviceData,
+        measurements: dict[str, DATA | UOM],
+    ) -> None:
+        """Helper-function for _get_measurement_data() - collect appliance measurement data."""
+        for measurement, attrs in measurements.items():
+            p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
+            if (appl_p_loc := appliance.find(p_locator)) is not None:
+                # Skip known obsolete measurements
+                updated_date_locator = (
+                    f'.//logs/point_log[type="{measurement}"]/updated_date'
+                )
+                if (
+                    measurement in OBSOLETE_MEASUREMENTS
+                    and (updated_date_key := appliance.find(updated_date_locator))
+                    is not None
+                ):
+                    updated_date = updated_date_key.text.split("T")[0]
+                    date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
+                    date_2 = dt.datetime.now()
+                    if int((date_2 - date_1).days) > 7:
+                        continue
+
+                if new_name := getattr(attrs, ATTR_NAME, None):
+                    measurement = new_name
+
+                match measurement:
+                    # measurements with states "on" or "off" that need to be passed directly
+                    case "select_dhw_mode":
+                        data["select_dhw_mode"] = appl_p_loc.text
+                    case _ as measurement if measurement in BINARY_SENSORS:
+                        bs_key = cast(BinarySensorType, measurement)
+                        bs_value = appl_p_loc.text in ["on", "true"]
+                        data["binary_sensors"][bs_key] = bs_value
+                    case _ as measurement if measurement in SENSORS:
+                        s_key = cast(SensorType, measurement)
+                        s_value = format_measure(
+                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                        )
+                        data["sensors"][s_key] = s_value
+                    case _ as measurement if measurement in SWITCHES:
+                        sw_key = cast(SwitchType, measurement)
+                        sw_value = appl_p_loc.text in ["on", "true"]
+                        data["switches"][sw_key] = sw_value
+                    case _ as measurement if measurement in SPECIALS:
+                        sp_key = cast(SpecialType, measurement)
+                        sp_value = appl_p_loc.text in ["on", "true"]
+                        data[sp_key] = sp_value
+                    case "elga_status_code":
+                        data["elga_status_code"] = int(appl_p_loc.text)
+
+            i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
+            if (appl_i_loc := appliance.find(i_locator)) is not None:
+                name = cast(SensorType, f"{measurement}_interval")
+                data["sensors"][name] = format_measure(
+                    appl_i_loc.text, ENERGY_WATT_HOUR
+                )
+
+        self._count += len(data["binary_sensors"])
+        self._count += len(data["sensors"])
+        self._count += len(data["switches"])
+        # Don't count the above top-level dicts, only the remaining single items
+        self._count += len(data) - 3
+
+    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Adam & Stretches: obtain the relay-switch lock state.
+        """
+        actuator = "actuator_functionalities"
+        func_type = "relay_functionality"
+        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
+            locator = f"./{actuator}/{func_type}/lock"
+            if (found := xml.find(locator)) is not None:
+                data["switches"]["lock"] = found.text == "true"
+                self._count += 1
+
+    def _get_toggle_state(
+        self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
+    ) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Obtain the toggle state of a 'toggle' = switch.
+        """
+        if xml.find("type").text == "heater_central":
+            locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
+            if (state := xml.find(locator)) is not None:
+                data["switches"][name] = state.text == "on"
+                self._count += 1
+
+    def _get_plugwise_notifications(self) -> None:
+        """Collect the Plugwise notifications."""
+        self._notifications = {}
+        for notification in self._domain_objects.findall("./notification"):
+            try:
+                msg_id = notification.attrib["id"]
+                msg_type = notification.find("type").text
+                msg = notification.find("message").text
+                self._notifications.update({msg_id: {msg_type: msg}})
+                LOGGER.debug("Plugwise notifications: %s", self._notifications)
+            except AttributeError:  # pragma: no cover
+                LOGGER.debug(
+                    "Plugwise notification present but unable to process, manually investigate: %s",
+                    f"{self._endpoint}{DOMAIN_OBJECTS}",
+                )
+
+    def _get_actuator_functionalities(
+        self, xml: etree, device: DeviceData, data: DeviceData
+    ) -> None:
+        """Helper-function for _get_measurement_data()."""
+        for item in ACTIVE_ACTUATORS:
+            # Skip max_dhw_temperature, not initially valid,
+            # skip thermostat for thermo_sensors
+            if item == "max_dhw_temperature" or (
+                item == "thermostat" and device["dev_class"] == "thermo_sensor"
+            ):
+                continue
+
+            temp_dict: ActuatorData = {}
+            functionality = "thermostat_functionality"
+            if item == "temperature_offset":
+                functionality = "offset_functionality"
+            # When there is no updated_date-text, skip the actuator
+            updated_date_location = f'.//actuator_functionalities/{functionality}[type="{item}"]/updated_date'
+            if (
+                updated_date_key := xml.find(updated_date_location)
+            ) is not None and updated_date_key.text is None:
+                continue
+
+            for key in LIMITS:
+                locator = (
+                    f'.//actuator_functionalities/{functionality}[type="{item}"]/{key}'
+                )
+                if (pw_function := xml.find(locator)) is not None:
+                    if key == "offset":
+                        # Add limits and resolution for temperature_offset,
+                        # not provided by Plugwise in the XML data
+                        temp_dict["lower_bound"] = -2.0
+                        temp_dict["resolution"] = 0.1
+                        temp_dict["upper_bound"] = 2.0
+                        self._count += 3
+                        # Rename offset to setpoint
+                        key = "setpoint"
+
+                    act_key = cast(ActuatorDataType, key)
+                    temp_dict[act_key] = format_measure(pw_function.text, TEMP_CELSIUS)
+                    self._count += 1
+
+            if temp_dict:
+                # If domestic_hot_water_setpoint is present as actuator,
+                # rename and remove as sensor
+                if item == DHW_SETPOINT:
+                    item = "max_dhw_temperature"
+                    if DHW_SETPOINT in data["sensors"]:
+                        data["sensors"].pop(DHW_SETPOINT)
+                        self._count -= 1
+
+                act_item = cast(ActuatorType, item)
+                data[act_item] = temp_dict
+
+    def _wireless_availability(self, appliance: etree, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Collect the availability-status for wireless connected devices.
+        """
+        if self.smile(ADAM):
+            # Collect for Plugs
+            locator = "./logs/interval_log/electricity_interval_meter"
+            mod_type = "electricity_interval_meter"
+            module_data = self._get_module_data(appliance, locator, mod_type)
+            if module_data["reachable"] is None:
+                # Collect for wireless thermostats
+                locator = "./logs/point_log[type='thermostat']/thermostat"
+                mod_type = "thermostat"
+                module_data = self._get_module_data(appliance, locator, mod_type)
+
+            if module_data["reachable"] is not None:
+                data["available"] = module_data["reachable"]
+                self._count += 1
+
+    def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Collect the gateway regulation_mode.
+        """
+        locator = "./actuator_functionalities/regulation_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            data["select_regulation_mode"] = search.find("mode").text
+            self._count += 1
+            self._cooling_enabled = data["select_regulation_mode"] == "cooling"
+
+    def _get_gateway_mode(self, appliance: etree, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Collect the gateway mode.
+        """
+        locator = "./actuator_functionalities/gateway_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            data["select_gateway_mode"] = search.find("mode").text
+            self._count += 1
+
+    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
+        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
+
+        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
+        """
+        val: float | int | None = None
+        search = self._domain_objects
+        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
+        if (found := search.find(locator)) is not None:
+            val = format_measure(found.text, NONE)
+
+        return val
+
+    def _process_c_heating_state(self, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Process the central_heating_state value.
+        """
+        if self._on_off_device:
+            # Anna + OnOff heater: use central_heating_state to show heating_state
+            # Solution for Core issue #81839
+            if self.smile(ANNA):
+                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+            # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
+            if self.smile(ADAM):
+                if "heating_state" not in data["binary_sensors"]:
+                    self._count += 1
+                data["binary_sensors"]["heating_state"] = False
+                if "cooling_state" not in data["binary_sensors"]:
+                    self._count += 1
+                data["binary_sensors"]["cooling_state"] = False
+                if self._cooling_enabled:
+                    data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
+                else:
+                    data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+        # Anna + Elga: use central_heating_state to show heating_state
+        if self._elga:
+            data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+    def _cleanup_data(self, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Clean up the data dict.
+        """
+        # Don't show cooling-related when no cooling present,
+        # but, keep cooling_enabled for Elga
+        if not self._cooling_present:
+            if "cooling_state" in data["binary_sensors"]:
+                data["binary_sensors"].pop("cooling_state")
+                self._count -= 1
+            if "cooling_ena_switch" in data["switches"]:
+                data["switches"].pop("cooling_ena_switch")  # pragma: no cover
+                self._count -= 1  # pragma: no cover
+            if "cooling_enabled" in data["binary_sensors"]:
+                data["binary_sensors"].pop("cooling_enabled")  # pragma: no cover
+                self._count -= 1  # pragma: no cover
+
+        if "thermostat_supports_cooling" in data:
+            data.pop("thermostat_supports_cooling", None)
+            self._count -= 1
 
     def _scan_thermostats(self) -> None:
         """Helper-function for smile.py: get_all_devices().
@@ -962,76 +1087,6 @@ class SmileHelper(SmileCommon):
 
         return False if loc_found == 0 else open_valve_count
 
-    def _power_data_peak_value(self, loc: Munch) -> Munch:
-        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
-        loc.found = True
-        # If locator not found look for P1 gas_consumed or phase data (without tariff)
-        if loc.logs.find(loc.locator) is None:
-            if "log" in loc.log_type and (
-                "gas" in loc.measurement or "phase" in loc.measurement
-            ):
-                # Avoid double processing by skipping one peak-list option
-                if loc.peak_select == "nl_offpeak":
-                    loc.found = False
-                    return loc
-
-                loc.locator = (
-                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-                )
-                if loc.logs.find(loc.locator) is None:
-                    loc.found = False
-                    return loc
-            else:
-                loc.found = False  # pragma: no cover
-                return loc  # pragma: no cover
-
-        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
-            peak = "off_peak"
-        log_found = loc.log_type.split("_")[0]
-        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        if "gas" in loc.measurement or loc.log_type == "point_meter":
-            loc.key_string = f"{loc.measurement}_{log_found}"
-        if "phase" in loc.measurement:
-            loc.key_string = f"{loc.measurement}"
-        loc.net_string = f"net_electricity_{log_found}"
-        val = loc.logs.find(loc.locator).text
-        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
-
-        return loc
-
-    def _power_data_from_location(self, loc_id: str) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
-
-        Collect the power-data based on Location ID, from LOCATIONS.
-        """
-        direct_data: DeviceData = {"sensors": {}}
-        loc = Munch()
-        log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
-        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
-        t_string = "tariff"
-
-        search = self._domain_objects
-        loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
-        for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
-            for loc.log_type in log_list:
-                for loc.peak_select in peak_list:
-                    loc.locator = (
-                        f'./{loc.log_type}[type="{loc.measurement}"]/period/'
-                        f'measurement[@{t_string}="{loc.peak_select}"]'
-                    )
-                    loc = self._power_data_peak_value(loc)
-                    if not loc.found:
-                        continue
-
-                    direct_data = self.power_data_energy_diff(
-                        loc.measurement, loc.net_string, loc.f_val, direct_data
-                    )
-                    key = cast(SensorType, loc.key_string)
-                    direct_data["sensors"][key] = loc.f_val
-
-        self._count += len(direct_data["sensors"])
-        return direct_data
-
     def _preset(self, loc_id: str) -> str | None:
         """Helper-function for smile.py: device_data_climate().
 
@@ -1099,58 +1154,3 @@ class SmileHelper(SmileCommon):
             schedules_dates[name] = (schedule_time - epoch).total_seconds()
 
         return sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
-
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
-
-        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
-        """
-        val: float | int | None = None
-        search = self._domain_objects
-        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
-        if (found := search.find(locator)) is not None:
-            val = format_measure(found.text, NONE)
-
-        return val
-
-    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Adam & Stretches: obtain the relay-switch lock state.
-        """
-        actuator = "actuator_functionalities"
-        func_type = "relay_functionality"
-        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
-            locator = f"./{actuator}/{func_type}/lock"
-            if (found := xml.find(locator)) is not None:
-                data["switches"]["lock"] = found.text == "true"
-                self._count += 1
-
-    def _get_toggle_state(
-        self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
-    ) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Obtain the toggle state of a 'toggle' = switch.
-        """
-        if xml.find("type").text == "heater_central":
-            locator = f"./actuator_functionalities/toggle_functionality[type='{toggle}']/state"
-            if (state := xml.find(locator)) is not None:
-                data["switches"][name] = state.text == "on"
-                self._count += 1
-
-    def _get_plugwise_notifications(self) -> None:
-        """Collect the Plugwise notifications."""
-        self._notifications = {}
-        for notification in self._domain_objects.findall("./notification"):
-            try:
-                msg_id = notification.attrib["id"]
-                msg_type = notification.find("type").text
-                msg = notification.find("message").text
-                self._notifications.update({msg_id: {msg_type: msg}})
-                LOGGER.debug("Plugwise notifications: %s", self._notifications)
-            except AttributeError:  # pragma: no cover
-                LOGGER.debug(
-                    "Plugwise notification present but unable to process, manually investigate: %s",
-                    f"{self._endpoint}{DOMAIN_OBJECTS}",
-                )
