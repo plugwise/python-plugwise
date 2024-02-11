@@ -290,19 +290,6 @@ class SmileLegacyHelper(SmileCommon):
                 self.gw_devices[appl.dev_id][p1_key] = value
                 self._count += 1
 
-    def _presets(self) -> dict[str, list[float]]:
-        """Helper-function for presets() - collect Presets for a legacy Anna."""
-        presets: dict[str, list[float]] = {}
-        for directive in self._domain_objects.findall("rule/directives/when/then"):
-            if directive is not None and directive.get("icon") is not None:
-                # Ensure list of heating_setpoint, cooling_setpoint
-                presets[directive.attrib["icon"]] = [
-                    float(directive.attrib["temperature"]),
-                    0,
-                ]
-
-        return presets
-
     def _get_measurement_data(self, dev_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
 
@@ -560,6 +547,19 @@ class SmileLegacyHelper(SmileCommon):
             return None
 
         return active_rule["icon"]
+
+    def _presets(self) -> dict[str, list[float]]:
+        """Helper-function for presets() - collect Presets for a legacy Anna."""
+        presets: dict[str, list[float]] = {}
+        for directive in self._domain_objects.findall("rule/directives/when/then"):
+            if directive is not None and directive.get("icon") is not None:
+                # Ensure list of heating_setpoint, cooling_setpoint
+                presets[directive.attrib["icon"]] = [
+                    float(directive.attrib["temperature"]),
+                    0,
+                ]
+
+        return presets
 
     def _schedules(self) -> tuple[list[str], str]:
         """Collect available schedules/schedules for the legacy thermostat."""

@@ -480,21 +480,6 @@ class SmileHelper(SmileCommon):
 
         return appl
 
-    def _control_state(self, loc_id: str) -> str | bool:
-        """Helper-function for _device_data_adam().
-
-        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
-        Represents the heating/cooling demand-state of the local master thermostat.
-        Note: heating or cooling can still be active when the setpoint has been reached.
-        """
-        locator = f'location[@id="{loc_id}"]'
-        if (location := self._domain_objects.find(locator)) is not None:
-            locator = './actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
-            if (ctrl_state := location.find(locator)) is not None:
-                return str(ctrl_state.text)
-
-        return False
-
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
         therm_list: list[str] = []
@@ -505,63 +490,6 @@ class SmileHelper(SmileCommon):
             therm_list.append(item.attrib["id"])
 
         return therm_list
-
-    def _presets(self, loc_id: str) -> dict[str, list[float]]:
-        """Collect Presets for a Thermostat based on location_id."""
-        presets: dict[str, list[float]] = {}
-        tag_1 = "zone_setpoint_and_state_based_on_preset"
-        tag_2 = "Thermostat presets"
-        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
-            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
-                return presets  # pragma: no cover
-
-        for rule_id in rule_ids:
-            directives: etree = self._domain_objects.find(
-                f'rule[@id="{rule_id}"]/directives'
-            )
-            for directive in directives:
-                preset = directive.find("then").attrib
-                presets[directive.attrib["preset"]] = [
-                    float(preset["heating_setpoint"]),
-                    float(preset["cooling_setpoint"]),
-                ]
-
-        return presets
-
-    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
-        """Helper-function for _presets().
-
-        Obtain the rule_id from the given name and and provide the location_id, when present.
-        """
-        schedule_ids: dict[str, dict[str, str]] = {}
-        locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
-            active = rule.find("active").text
-            if rule.find(locator) is not None:
-                schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
-            else:
-                schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
-
-        return schedule_ids
-
-    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, dict[str, str]]:
-        """Helper-function for _presets(), _schedules() and _last_active_schedule().
-
-        Obtain the rule_id from the given template_tag and provide the location_id, when present.
-        """
-        schedule_ids: dict[str, dict[str, str]] = {}
-        locator1 = f'./template[@tag="{tag}"]'
-        locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
-        for rule in self._domain_objects.findall("./rule"):
-            if rule.find(locator1) is not None:
-                name = rule.find("name").text
-                active = rule.find("active").text
-                if rule.find(locator2) is not None:
-                    schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
-                else:
-                    schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
-
-        return schedule_ids
 
     def _get_measurement_data(self, dev_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
@@ -1060,15 +988,20 @@ class SmileHelper(SmileCommon):
             else:
                 self._thermo_locs[loc_id]["slaves"].add(appliance_id)
 
-    def _thermostat_uri(self, loc_id: str) -> str:
-        """Helper-function for smile.py: set_temperature().
+    def _control_state(self, loc_id: str) -> str | bool:
+        """Helper-function for _device_data_adam().
 
-        Determine the location-set_temperature uri - from LOCATIONS.
+        Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
+        Represents the heating/cooling demand-state of the local master thermostat.
+        Note: heating or cooling can still be active when the setpoint has been reached.
         """
-        locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
-        thermostat_functionality_id = self._domain_objects.find(locator).attrib["id"]
+        locator = f'location[@id="{loc_id}"]'
+        if (location := self._domain_objects.find(locator)) is not None:
+            locator = './actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
+            if (ctrl_state := location.find(locator)) is not None:
+                return str(ctrl_state.text)
 
-        return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
+        return False
 
     def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _device_data_adam().
@@ -1097,6 +1030,63 @@ class SmileHelper(SmileCommon):
             return str(preset.text)
 
         return None  # pragma: no cover
+
+    def _presets(self, loc_id: str) -> dict[str, list[float]]:
+        """Collect Presets for a Thermostat based on location_id."""
+        presets: dict[str, list[float]] = {}
+        tag_1 = "zone_setpoint_and_state_based_on_preset"
+        tag_2 = "Thermostat presets"
+        if not (rule_ids := self._rule_ids_by_tag(tag_1, loc_id)):
+            if not (rule_ids := self._rule_ids_by_name(tag_2, loc_id)):
+                return presets  # pragma: no cover
+
+        for rule_id in rule_ids:
+            directives: etree = self._domain_objects.find(
+                f'rule[@id="{rule_id}"]/directives'
+            )
+            for directive in directives:
+                preset = directive.find("then").attrib
+                presets[directive.attrib["preset"]] = [
+                    float(preset["heating_setpoint"]),
+                    float(preset["cooling_setpoint"]),
+                ]
+
+        return presets
+
+    def _rule_ids_by_name(self, name: str, loc_id: str) -> dict[str, dict[str, str]]:
+        """Helper-function for _presets().
+
+        Obtain the rule_id from the given name and and provide the location_id, when present.
+        """
+        schedule_ids: dict[str, dict[str, str]] = {}
+        locator = f'./contexts/context/zone/location[@id="{loc_id}"]'
+        for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
+            active = rule.find("active").text
+            if rule.find(locator) is not None:
+                schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
+            else:
+                schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
+
+        return schedule_ids
+
+    def _rule_ids_by_tag(self, tag: str, loc_id: str) -> dict[str, dict[str, str]]:
+        """Helper-function for _presets(), _schedules() and _last_active_schedule().
+
+        Obtain the rule_id from the given template_tag and provide the location_id, when present.
+        """
+        schedule_ids: dict[str, dict[str, str]] = {}
+        locator1 = f'./template[@tag="{tag}"]'
+        locator2 = f'./contexts/context/zone/location[@id="{loc_id}"]'
+        for rule in self._domain_objects.findall("./rule"):
+            if rule.find(locator1) is not None:
+                name = rule.find("name").text
+                active = rule.find("active").text
+                if rule.find(locator2) is not None:
+                    schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
+                else:
+                    schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
+
+        return schedule_ids
 
     def _schedules(self, location: str) -> tuple[list[str], str]:
         """Helper-function for smile.py: _device_data_climate().
@@ -1154,3 +1144,13 @@ class SmileHelper(SmileCommon):
             schedules_dates[name] = (schedule_time - epoch).total_seconds()
 
         return sorted(schedules_dates.items(), key=lambda kv: kv[1])[-1][0]
+
+    def _thermostat_uri(self, loc_id: str) -> str:
+        """Helper-function for smile.py: set_temperature().
+
+        Determine the location-set_temperature uri - from LOCATIONS.
+        """
+        locator = f'./location[@id="{loc_id}"]/actuator_functionalities/thermostat_functionality'
+        thermostat_functionality_id = self._domain_objects.find(locator).attrib["id"]
+
+        return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
