@@ -4,7 +4,13 @@ Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
 
-from plugwise.constants import ANNA, SWITCH_GROUP_TYPES, DeviceData, ModelData
+from plugwise.constants import (
+    ANNA,
+    SWITCH_GROUP_TYPES,
+    DeviceData,
+    ModelData,
+    SensorType,
+)
 from plugwise.util import (
     check_heater_central,
     check_model,
@@ -187,3 +193,34 @@ class SmileCommon:
                 self._count += 4
 
         return switch_groups
+
+    def power_data_energy_diff(
+        self,
+        measurement: str,
+        net_string: SensorType,
+        f_val: float | int,
+        direct_data: DeviceData,
+    ) -> DeviceData:
+        """Calculate differential energy."""
+        if (
+            "electricity" in measurement
+            and "phase" not in measurement
+            and "interval" not in net_string
+        ):
+            diff = 1
+            if "produced" in measurement:
+                diff = -1
+            if net_string not in direct_data["sensors"]:
+                tmp_val: float | int = 0
+            else:
+                tmp_val = direct_data["sensors"][net_string]
+
+            if isinstance(f_val, int):
+                tmp_val += f_val * diff
+            else:
+                tmp_val += float(f_val * diff)
+                tmp_val = float(f"{round(tmp_val, 3):.3f}")
+
+            direct_data["sensors"][net_string] = tmp_val
+
+        return direct_data
