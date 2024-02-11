@@ -95,132 +95,6 @@ class SmileLegacyHelper(SmileCommon):
         self.smile_zigbee_mac_address: str | None
         SmileCommon.__init__(self)
 
-    def _all_locations(self) -> None:
-        """Collect all locations."""
-        loc = Munch()
-
-        # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
-        if not (locations := self._locations.findall("./location")):
-            self._home_location = FAKE_LOC
-            self.loc_data[FAKE_LOC] = {"name": "Home"}
-            return
-
-        for location in locations:
-            loc.name = location.find("name").text
-            loc.loc_id = location.attrib["id"]
-            # Filter the valid single location for P1 legacy: services not empty
-            locator = "./services"
-            if (
-                self.smile_type == "power"
-                and len(location.find(locator)) == 0
-            ):
-                continue
-
-            if loc.name == "Home":
-                self._home_location = loc.loc_id
-            # Replace location-name for P1 legacy, can contain privacy-related info
-            if self.smile_type == "power":
-                loc.name = "Home"
-                self._home_location = loc.loc_id
-
-            self.loc_data[loc.loc_id] = {"name": loc.name}
-
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
-        """Helper-function for _appliance_info_finder().
-
-        Collect energy device info (Smartmeter, Circle, Stealth, etc.): firmware, model and vendor name.
-        """
-        if self.smile_type in ("power", "stretch"):
-            locator = "./services/electricity_point_meter"
-            mod_type = "electricity_point_meter"
-
-            module_data = self._get_module_data(appliance, locator, mod_type, self._modules, legacy=True)
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
-            # Filter appliance without zigbee_mac, it's an orphaned device
-            if appl.zigbee_mac is None and self.smile_type != "power":
-                return None
-
-            appl.hardware = module_data["hardware_version"]
-            appl.model = module_data["vendor_model"]
-            appl.vendor_name = module_data["vendor_name"]
-            if appl.hardware is not None:
-                hw_version = appl.hardware.replace("-", "")
-                appl.model = version_to_model(hw_version)
-            appl.firmware = module_data["firmware_version"]
-
-            return appl
-
-        return appl  # pragma: no cover
-
-    def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
-        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-        match appl.pwclass:
-        # Collect thermostat device info
-            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
-                return self._appl_thermostat_info(appl, appliance, self._modules)
-        # Collect heater_central device info
-            case "heater_central":
-                return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
-        # Collect info from Stretches
-            case _:
-                return self._energy_device_info_finder(appliance, appl)
-
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
-        """Collect P1 DSMR Smartmeter info."""
-        loc_id = next(iter(self.loc_data.keys()))
-        appl.dev_id = loc_id
-        appl.location = loc_id
-        appl.mac = None
-        appl.model = self.smile_model
-        appl.name = "P1"
-        appl.pwclass = "smartmeter"
-        appl.zigbee_mac = None
-        location = self._locations.find(f'./location[@id="{loc_id}"]')
-        appl = self._energy_device_info_finder(location, appl)
-
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-        self._count += 1
-
-        for key, value in {
-            "firmware": appl.firmware,
-            "hardware": appl.hardware,
-            "location": appl.location,
-            "mac_address": appl.mac,
-            "model": appl.model,
-            "name": appl.name,
-            "zigbee_mac_address": appl.zigbee_mac,
-            "vendor": appl.vendor_name,
-        }.items():
-            if value is not None or key == "location":
-                p1_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][p1_key] = value
-                self._count += 1
-
-    def _create_legacy_gateway(self) -> None:
-        """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
-
-        Use the home_location or FAKE_APPL as device id.
-        """
-        self.gateway_id = self._home_location
-        if self.smile_type == "power":
-            self.gateway_id = FAKE_APPL
-
-        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
-        self._count += 1
-        for key, value in {
-            "firmware": self.smile_fw_version,
-            "location": self._home_location,
-            "mac_address": self.smile_mac_address,
-            "model": self.smile_model,
-            "name": self.smile_name,
-            "zigbee_mac_address": self.smile_zigbee_mac_address,
-            "vendor": "Plugwise",
-        }.items():
-            if value is not None:
-                gw_key = cast(ApplianceType, key)
-                self.gw_devices[self.gateway_id][gw_key] = value
-                self._count += 1
-
     def _all_appliances(self) -> None:
         """Collect all appliances with relevant info."""
         self._count = 0
@@ -290,6 +164,132 @@ class SmileLegacyHelper(SmileCommon):
                     add_to_front = {dev_id: tmp_device}
                     self.gw_devices = {**add_to_front, **cleared_dict}
 
+    def _all_locations(self) -> None:
+        """Collect all locations."""
+        loc = Munch()
+
+        # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
+        if not (locations := self._locations.findall("./location")):
+            self._home_location = FAKE_LOC
+            self.loc_data[FAKE_LOC] = {"name": "Home"}
+            return
+
+        for location in locations:
+            loc.name = location.find("name").text
+            loc.loc_id = location.attrib["id"]
+            # Filter the valid single location for P1 legacy: services not empty
+            locator = "./services"
+            if (
+                self.smile_type == "power"
+                and len(location.find(locator)) == 0
+            ):
+                continue
+
+            if loc.name == "Home":
+                self._home_location = loc.loc_id
+            # Replace location-name for P1 legacy, can contain privacy-related info
+            if self.smile_type == "power":
+                loc.name = "Home"
+                self._home_location = loc.loc_id
+
+            self.loc_data[loc.loc_id] = {"name": loc.name}
+
+    def _create_legacy_gateway(self) -> None:
+        """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
+
+        Use the home_location or FAKE_APPL as device id.
+        """
+        self.gateway_id = self._home_location
+        if self.smile_type == "power":
+            self.gateway_id = FAKE_APPL
+
+        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
+        self._count += 1
+        for key, value in {
+            "firmware": self.smile_fw_version,
+            "location": self._home_location,
+            "mac_address": self.smile_mac_address,
+            "model": self.smile_model,
+            "name": self.smile_name,
+            "zigbee_mac_address": self.smile_zigbee_mac_address,
+            "vendor": "Plugwise",
+        }.items():
+            if value is not None:
+                gw_key = cast(ApplianceType, key)
+                self.gw_devices[self.gateway_id][gw_key] = value
+                self._count += 1
+
+    def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
+        match appl.pwclass:
+        # Collect thermostat device info
+            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
+                return self._appl_thermostat_info(appl, appliance, self._modules)
+        # Collect heater_central device info
+            case "heater_central":
+                return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
+        # Collect info from Stretches
+            case _:
+                return self._energy_device_info_finder(appliance, appl)
+
+    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+        """Helper-function for _appliance_info_finder().
+
+        Collect energy device info (Smartmeter, Circle, Stealth, etc.): firmware, model and vendor name.
+        """
+        if self.smile_type in ("power", "stretch"):
+            locator = "./services/electricity_point_meter"
+            mod_type = "electricity_point_meter"
+
+            module_data = self._get_module_data(appliance, locator, mod_type, self._modules, legacy=True)
+            appl.zigbee_mac = module_data["zigbee_mac_address"]
+            # Filter appliance without zigbee_mac, it's an orphaned device
+            if appl.zigbee_mac is None and self.smile_type != "power":
+                return None
+
+            appl.hardware = module_data["hardware_version"]
+            appl.model = module_data["vendor_model"]
+            appl.vendor_name = module_data["vendor_name"]
+            if appl.hardware is not None:
+                hw_version = appl.hardware.replace("-", "")
+                appl.model = version_to_model(hw_version)
+            appl.firmware = module_data["firmware_version"]
+
+            return appl
+
+        return appl  # pragma: no cover
+
+    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
+        """Collect P1 DSMR Smartmeter info."""
+        loc_id = next(iter(self.loc_data.keys()))
+        appl.dev_id = loc_id
+        appl.location = loc_id
+        appl.mac = None
+        appl.model = self.smile_model
+        appl.name = "P1"
+        appl.pwclass = "smartmeter"
+        appl.zigbee_mac = None
+        location = self._locations.find(f'./location[@id="{loc_id}"]')
+        appl = self._energy_device_info_finder(location, appl)
+
+        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+        self._count += 1
+
+        for key, value in {
+            "firmware": appl.firmware,
+            "hardware": appl.hardware,
+            "location": appl.location,
+            "mac_address": appl.mac,
+            "model": appl.model,
+            "name": appl.name,
+            "zigbee_mac_address": appl.zigbee_mac,
+            "vendor": appl.vendor_name,
+        }.items():
+            if value is not None or key == "location":
+                p1_key = cast(ApplianceType, key)
+                self.gw_devices[appl.dev_id][p1_key] = value
+                self._count += 1
+
     def _presets(self) -> dict[str, list[float]]:
         """Helper-function for presets() - collect Presets for a legacy Anna."""
         presets: dict[str, list[float]] = {}
@@ -302,6 +302,121 @@ class SmileLegacyHelper(SmileCommon):
                 ]
 
         return presets
+
+    def _get_measurement_data(self, dev_id: str) -> DeviceData:
+        """Helper-function for smile.py: _get_device_data().
+
+        Collect the appliance-data based on device id.
+        """
+        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
+        # Get P1 smartmeter data from LOCATIONS or MODULES
+        device = self.gw_devices[dev_id]
+        # !! DON'T CHANGE below two if-lines, will break stuff !!
+        if self.smile_type == "power":
+            if device["dev_class"] == "smartmeter":
+                data.update(self._power_data_from_modules())
+
+            return data
+
+        measurements = DEVICE_MEASUREMENTS
+        if self._is_thermostat and dev_id == self._heater_id:
+            measurements = HEATER_CENTRAL_MEASUREMENTS
+
+        if (
+            appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
+        ) is not None:
+            self._appliance_measurements(appliance, data, measurements)
+            self._get_lock_state(appliance, data)
+
+            if appliance.find("type").text in ACTUATOR_CLASSES:
+                self._get_actuator_functionalities(appliance, device, data)
+
+        # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
+        # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+        if self._is_thermostat and dev_id == self.gateway_id:
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+                self._count += 1
+
+        if "c_heating_state" in data:
+            data.pop("c_heating_state")
+            self._count -= 1
+
+        return data
+
+    def _power_data_from_modules(self) -> DeviceData:
+        """Helper-function for smile.py: _get_device_data().
+
+        Collect the power-data from MODULES (P1 legacy only).
+        """
+        direct_data: DeviceData = {"sensors": {}}
+        loc = Munch()
+        mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
+        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
+        t_string = "tariff_indicator"
+
+        search = self._modules
+        mod_logs = search.findall("./module/services")
+        for loc.measurement, loc.attrs in P1_LEGACY_MEASUREMENTS.items():
+            loc.meas_list = loc.measurement.split("_")
+            for loc.logs in mod_logs:
+                for loc.log_type in mod_list:
+                    for loc.peak_select in peak_list:
+                        loc.locator = (
+                            f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
+                            f'[@directionality="{loc.meas_list[1]}"][@{t_string}="{loc.peak_select}"]'
+                        )
+                        loc = self._power_data_peak_value(loc)
+                        if not loc.found:
+                            continue
+
+                        direct_data = self.power_data_energy_diff(
+                            loc.measurement, loc.net_string, loc.f_val, direct_data
+                        )
+                        key = cast(SensorType, loc.key_string)
+                        direct_data["sensors"][key] = loc.f_val
+
+        self._count += len(direct_data["sensors"])
+        return direct_data
+
+    def _power_data_peak_value(self, loc: Munch) -> Munch:
+        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
+        loc.found = True
+        # If locator not found for P1 legacy electricity_point_meter or gas_*_meter data
+        if loc.logs.find(loc.locator) is None:
+            if "meter" in loc.log_type and (
+                "point" in loc.log_type or "gas" in loc.measurement
+            ):
+                # Avoid double processing by skipping one peak-list option
+                if loc.peak_select == "nl_offpeak":
+                    loc.found = False
+                    return loc
+
+                loc.locator = (
+                    f"./{loc.meas_list[0]}_{loc.log_type}/"
+                    f'measurement[@directionality="{loc.meas_list[1]}"]'
+                )
+                if loc.logs.find(loc.locator) is None:
+                    loc.found = False
+                    return loc
+            else:
+                loc.found = False
+                return loc
+
+        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
+            peak = "off_peak"
+        log_found = loc.log_type.split("_")[0]
+        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+        if "gas" in loc.measurement or loc.log_type == "point_meter":
+            loc.key_string = f"{loc.measurement}_{log_found}"
+        loc.net_string = f"net_electricity_{log_found}"
+        val = loc.logs.find(loc.locator).text
+        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
+
+        return loc
 
     def _appliance_measurements(
         self,
@@ -367,6 +482,22 @@ class SmileLegacyHelper(SmileCommon):
         # Don't count the above top-level dicts, only the remaining single items
         self._count += len(data) - 3
 
+    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Adam & Stretches: obtain the relay-switch lock state.
+        """
+        actuator = "actuator_functionalities"
+        func_type = "relay_functionality"
+        if self._stretch_v2:
+            actuator = "actuators"
+            func_type = "relay"
+        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
+            locator = f"./{actuator}/{func_type}/lock"
+            if (found := xml.find(locator)) is not None:
+                data["switches"]["lock"] = found.text == "true"
+                self._count += 1
+
     def _get_actuator_functionalities(
         self, xml: etree, device: DeviceData, data: DeviceData
     ) -> None:
@@ -402,127 +533,19 @@ class SmileLegacyHelper(SmileCommon):
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
-    def _get_measurement_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
+    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
+        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
 
-        Collect the appliance-data based on device id.
+        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
-        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        # Get P1 smartmeter data from LOCATIONS or MODULES
-        device = self.gw_devices[dev_id]
-        # !! DON'T CHANGE below two if-lines, will break stuff !!
-        if self.smile_type == "power":
-            if device["dev_class"] == "smartmeter":
-                data.update(self._power_data_from_modules())
+        val: float | int | None = None
+        search = self._domain_objects
+        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
+        if (found := search.find(locator)) is not None:
+            val = format_measure(found.text, NONE)
+            return val
 
-            return data
-
-        measurements = DEVICE_MEASUREMENTS
-        if self._is_thermostat and dev_id == self._heater_id:
-            measurements = HEATER_CENTRAL_MEASUREMENTS
-
-        if (
-            appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
-        ) is not None:
-            self._appliance_measurements(appliance, data, measurements)
-            self._get_lock_state(appliance, data)
-
-            if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, device, data)
-
-        # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-        # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-        if self._is_thermostat and dev_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
-                self._count += 1
-
-        if "c_heating_state" in data:
-            data.pop("c_heating_state")
-            self._count -= 1
-
-        return data
-
-    def _thermostat_uri(self) -> str:
-        """Determine the location-set_temperature uri - from APPLIANCES."""
-        locator = "./appliance[type='thermostat']"
-        appliance_id = self._appliances.find(locator).attrib["id"]
-
-        return f"{APPLIANCES};id={appliance_id}/thermostat"
-
-    def _power_data_peak_value(self, loc: Munch) -> Munch:
-        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
-        loc.found = True
-        # If locator not found for P1 legacy electricity_point_meter or gas_*_meter data
-        if loc.logs.find(loc.locator) is None:
-            if "meter" in loc.log_type and (
-                "point" in loc.log_type or "gas" in loc.measurement
-            ):
-                # Avoid double processing by skipping one peak-list option
-                if loc.peak_select == "nl_offpeak":
-                    loc.found = False
-                    return loc
-
-                loc.locator = (
-                    f"./{loc.meas_list[0]}_{loc.log_type}/"
-                    f'measurement[@directionality="{loc.meas_list[1]}"]'
-                )
-                if loc.logs.find(loc.locator) is None:
-                    loc.found = False
-                    return loc
-            else:
-                loc.found = False
-                return loc
-
-        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
-            peak = "off_peak"
-        log_found = loc.log_type.split("_")[0]
-        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        if "gas" in loc.measurement or loc.log_type == "point_meter":
-            loc.key_string = f"{loc.measurement}_{log_found}"
-        loc.net_string = f"net_electricity_{log_found}"
-        val = loc.logs.find(loc.locator).text
-        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
-
-        return loc
-
-    def _power_data_from_modules(self) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
-
-        Collect the power-data from MODULES (P1 legacy only).
-        """
-        direct_data: DeviceData = {"sensors": {}}
-        loc = Munch()
-        mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
-        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
-        t_string = "tariff_indicator"
-
-        search = self._modules
-        mod_logs = search.findall("./module/services")
-        for loc.measurement, loc.attrs in P1_LEGACY_MEASUREMENTS.items():
-            loc.meas_list = loc.measurement.split("_")
-            for loc.logs in mod_logs:
-                for loc.log_type in mod_list:
-                    for loc.peak_select in peak_list:
-                        loc.locator = (
-                            f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
-                            f'[@directionality="{loc.meas_list[1]}"][@{t_string}="{loc.peak_select}"]'
-                        )
-                        loc = self._power_data_peak_value(loc)
-                        if not loc.found:
-                            continue
-
-                        direct_data = self.power_data_energy_diff(
-                            loc.measurement, loc.net_string, loc.f_val, direct_data
-                        )
-                        key = cast(SensorType, loc.key_string)
-                        direct_data["sensors"][key] = loc.f_val
-
-        self._count += len(direct_data["sensors"])
-        return direct_data
+        return val
 
     def _preset(self) -> str | None:
         """Helper-function for smile.py: device_data_climate().
@@ -563,32 +586,9 @@ class SmileLegacyHelper(SmileCommon):
 
         return available, selected
 
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
+    def _thermostat_uri(self) -> str:
+        """Determine the location-set_temperature uri - from APPLIANCES."""
+        locator = "./appliance[type='thermostat']"
+        appliance_id = self._appliances.find(locator).attrib["id"]
 
-        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
-        """
-        val: float | int | None = None
-        search = self._domain_objects
-        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
-        if (found := search.find(locator)) is not None:
-            val = format_measure(found.text, NONE)
-            return val
-
-        return val
-
-    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Adam & Stretches: obtain the relay-switch lock state.
-        """
-        actuator = "actuator_functionalities"
-        func_type = "relay_functionality"
-        if self._stretch_v2:
-            actuator = "actuators"
-            func_type = "relay"
-        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
-            locator = f"./{actuator}/{func_type}/lock"
-            if (found := xml.find(locator)) is not None:
-                data["switches"]["lock"] = found.text == "true"
-                self._count += 1
+        return f"{APPLIANCES};id={appliance_id}/thermostat"
