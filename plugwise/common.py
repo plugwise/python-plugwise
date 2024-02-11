@@ -19,6 +19,7 @@ from plugwise.util import (
     check_heater_central,
     check_model,
     get_vendor_name,
+    power_data_local_format,
     return_valid,
 )
 
@@ -106,6 +107,77 @@ class SmileCommon:
         appl.zigbee_mac = module_data["zigbee_mac_address"]
 
         return appl
+
+    def _collect_power_values(self, data: DeviceData, loc: Munch, tariff: str, legacy: bool = False) -> None:
+        """Something."""
+        for loc.peak_select in ("nl_peak", "nl_offpeak"):
+            loc.locator = (
+                f'./{loc.log_type}[type="{loc.measurement}"]/period/'
+                f'measurement[@{tariff}="{loc.peak_select}"]'
+            )
+            if legacy:
+                loc.locator = (
+                    f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
+                    f'[@directionality="{loc.meas_list[1]}"][@{tariff}="{loc.peak_select}"]'
+                )
+
+            loc = self._power_data_peak_value(loc, legacy)
+            if not loc.found:
+                continue
+
+            data = self._power_data_energy_diff(
+                loc.measurement, loc.net_string, loc.f_val, data
+            )
+            key = cast(SensorType, loc.key_string)
+            data["sensors"][key] = loc.f_val
+
+    def _power_data_peak_value(self, loc: Munch, legacy: bool) -> Munch:
+        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
+        loc.found = True
+        combination = "log" in loc.log_type and ("gas" in loc.measurement or "phase" in loc.measurement)
+        if legacy:
+             combination = "meter" in loc.log_type and ("point" in loc.log_type or "gas" in loc.measurement)
+
+        if loc.logs.find(loc.locator) is None:
+            # If locator not found look for P1 gas_consumed or phase data (without tariff)
+            # For legacy look for P1 legacy electricity_point_meter or gas_*_meter data
+            if combination:
+                # Avoid double processing by skipping one peak-list option
+                if loc.peak_select == "nl_offpeak":
+                    loc.found = False
+                    return loc
+
+                loc.locator = (
+                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+                )
+                if legacy:
+                    loc.locator = (
+                        f"./{loc.meas_list[0]}_{loc.log_type}/"
+                        f'measurement[@directionality="{loc.meas_list[1]}"]'
+                    )
+
+                if loc.logs.find(loc.locator) is None:
+                    loc.found = False
+                    return loc
+            else:
+                loc.found = False
+                return loc
+
+        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
+            peak = "off_peak"
+        log_found = loc.log_type.split("_")[0]
+        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+        if "gas" in loc.measurement or loc.log_type == "point_meter":
+            loc.key_string = f"{loc.measurement}_{log_found}"
+        # Only for P1 Actual -------------------#
+        if "phase" in loc.measurement:
+            loc.key_string = f"{loc.measurement}"
+        # --------------------------------------#
+        loc.net_string = f"net_electricity_{log_found}"
+        val = loc.logs.find(loc.locator).text
+        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
+
+        return loc
 
     def _device_data_switching_group(
         self, device: DeviceData, data: DeviceData

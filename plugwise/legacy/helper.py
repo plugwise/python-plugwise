@@ -43,7 +43,7 @@ from plugwise.constants import (
     SwitchType,
     ThermoLoc,
 )
-from plugwise.util import format_measure, power_data_local_format, version_to_model
+from plugwise.util import format_measure, version_to_model
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
@@ -310,7 +310,6 @@ class SmileLegacyHelper(SmileCommon):
         direct_data: DeviceData = {"sensors": {}}
         loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
-        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff_indicator"
 
         search = self._modules
@@ -319,59 +318,10 @@ class SmileLegacyHelper(SmileCommon):
             loc.meas_list = loc.measurement.split("_")
             for loc.logs in mod_logs:
                 for loc.log_type in mod_list:
-                    for loc.peak_select in peak_list:
-                        loc.locator = (
-                            f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
-                            f'[@directionality="{loc.meas_list[1]}"][@{t_string}="{loc.peak_select}"]'
-                        )
-                        loc = self._power_data_peak_value(loc)
-                        if not loc.found:
-                            continue
-
-                        direct_data = self._power_data_energy_diff(
-                            loc.measurement, loc.net_string, loc.f_val, direct_data
-                        )
-                        key = cast(SensorType, loc.key_string)
-                        direct_data["sensors"][key] = loc.f_val
+                    self._collect_power_values(direct_data, loc, t_string, legacy=True)
 
         self._count += len(direct_data["sensors"])
         return direct_data
-
-    def _power_data_peak_value(self, loc: Munch) -> Munch:
-        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
-        loc.found = True
-        # If locator not found for P1 legacy electricity_point_meter or gas_*_meter data
-        if loc.logs.find(loc.locator) is None:
-            if "meter" in loc.log_type and (
-                "point" in loc.log_type or "gas" in loc.measurement
-            ):
-                # Avoid double processing by skipping one peak-list option
-                if loc.peak_select == "nl_offpeak":
-                    loc.found = False
-                    return loc
-
-                loc.locator = (
-                    f"./{loc.meas_list[0]}_{loc.log_type}/"
-                    f'measurement[@directionality="{loc.meas_list[1]}"]'
-                )
-                if loc.logs.find(loc.locator) is None:
-                    loc.found = False
-                    return loc
-            else:
-                loc.found = False
-                return loc
-
-        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
-            peak = "off_peak"
-        log_found = loc.log_type.split("_")[0]
-        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        if "gas" in loc.measurement or loc.log_type == "point_meter":
-            loc.key_string = f"{loc.measurement}_{log_found}"
-        loc.net_string = f"net_electricity_{log_found}"
-        val = loc.logs.find(loc.locator).text
-        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
-
-        return loc
 
     def _appliance_measurements(
         self,

@@ -55,12 +55,7 @@ from plugwise.exceptions import (
     InvalidXMLError,
     ResponseError,
 )
-from plugwise.util import (
-    check_model,
-    escape_illegal_xml_characters,
-    format_measure,
-    power_data_local_format,
-)
+from plugwise.util import check_model, escape_illegal_xml_characters, format_measure
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -558,67 +553,16 @@ class SmileHelper(SmileCommon):
         direct_data: DeviceData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
-        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff"
 
         search = self._domain_objects
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
-                for loc.peak_select in peak_list:
-                    loc.locator = (
-                        f'./{loc.log_type}[type="{loc.measurement}"]/period/'
-                        f'measurement[@{t_string}="{loc.peak_select}"]'
-                    )
-                    loc = self._power_data_peak_value(loc)
-                    if not loc.found:
-                        continue
-
-                    direct_data = self._power_data_energy_diff(
-                        loc.measurement, loc.net_string, loc.f_val, direct_data
-                    )
-                    key = cast(SensorType, loc.key_string)
-                    direct_data["sensors"][key] = loc.f_val
+                self._collect_power_values(direct_data, loc, t_string)
 
         self._count += len(direct_data["sensors"])
         return direct_data
-
-    def _power_data_peak_value(self, loc: Munch) -> Munch:
-        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
-        loc.found = True
-        # If locator not found look for P1 gas_consumed or phase data (without tariff)
-        if loc.logs.find(loc.locator) is None:
-            if "log" in loc.log_type and (
-                "gas" in loc.measurement or "phase" in loc.measurement
-            ):
-                # Avoid double processing by skipping one peak-list option
-                if loc.peak_select == "nl_offpeak":
-                    loc.found = False
-                    return loc
-
-                loc.locator = (
-                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-                )
-                if loc.logs.find(loc.locator) is None:
-                    loc.found = False
-                    return loc
-            else:
-                loc.found = False  # pragma: no cover
-                return loc  # pragma: no cover
-
-        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
-            peak = "off_peak"
-        log_found = loc.log_type.split("_")[0]
-        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        if "gas" in loc.measurement or loc.log_type == "point_meter":
-            loc.key_string = f"{loc.measurement}_{log_found}"
-        if "phase" in loc.measurement:
-            loc.key_string = f"{loc.measurement}"
-        loc.net_string = f"net_electricity_{log_found}"
-        val = loc.logs.find(loc.locator).text
-        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
-
-        return loc
 
     def _appliance_measurements(
         self,
