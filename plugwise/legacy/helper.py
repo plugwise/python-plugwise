@@ -11,7 +11,6 @@ from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
-    ANNA,
     APPLIANCES,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -29,7 +28,6 @@ from plugwise.constants import (
     SENSORS,
     SPECIAL_PLUG_TYPES,
     SPECIALS,
-    SWITCH_GROUP_TYPES,
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
@@ -454,42 +452,6 @@ class SmileLegacyHelper(SmileCommon):
         appliance_id = self._appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
-
-    def _get_group_switches(self) -> dict[str, DeviceData]:
-        """Helper-function for smile.py: get_all_devices().
-
-        Collect switching- or pump-group info.
-        """
-        switch_groups: dict[str, DeviceData] = {}
-        # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile(ANNA):
-            return switch_groups
-
-        for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
-            group_id = group.attrib["id"]
-            group_name = group.find("name").text
-            group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            for item in group_appliances:
-                # Check if members are not orphaned - stretch
-                if item.attrib["id"] in self.gw_devices:
-                    members.append(item.attrib["id"])
-
-            if group_type in SWITCH_GROUP_TYPES and members:
-                switch_groups.update(
-                    {
-                        group_id: {
-                            "dev_class": group_type,
-                            "model": "Switchgroup",
-                            "name": group_name,
-                            "members": members,
-                        },
-                    },
-                )
-                self._count += 4
-
-        return switch_groups
 
     def power_data_energy_diff(
         self,

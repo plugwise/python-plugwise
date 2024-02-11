@@ -4,7 +4,7 @@ Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
 
-from plugwise.constants import ModelData
+from plugwise.constants import ANNA, SWITCH_GROUP_TYPES, DeviceData, ModelData
 from plugwise.util import (
     check_heater_central,
     check_model,
@@ -22,12 +22,15 @@ class SmileCommon:
     def __init__(self) -> None:
         """Init."""
         self._appliances: etree
+        self._count: int
         self._domain_objects: etree
         self._cooling_present: bool
         self._heater_id: str
         self._on_off_device: bool
         self._opentherm_device: bool
+        self.gw_devices: dict[str, DeviceData]
         self.smile_name: str
+        self.smile_type: str
 
     def smile(self, name: str) -> bool:
         """Helper-function checking the smile-name."""
@@ -149,3 +152,38 @@ class SmileCommon:
                 model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
                 model_data["reachable"] = zb_node.find("reachable").text == "true"
 
+    def _get_group_switches(self) -> dict[str, DeviceData]:
+        """Helper-function for smile.py: get_all_devices().
+
+        Collect switching- or pump-group info.
+        """
+        switch_groups: dict[str, DeviceData] = {}
+        # P1 and Anna don't have switchgroups
+        if self.smile_type == "power" or self.smile(ANNA):
+            return switch_groups
+
+        for group in self._domain_objects.findall("./group"):
+            members: list[str] = []
+            group_id = group.attrib["id"]
+            group_name = group.find("name").text
+            group_type = group.find("type").text
+            group_appliances = group.findall("appliances/appliance")
+            for item in group_appliances:
+                # Check if members are not orphaned - stretch
+                if item.attrib["id"] in self.gw_devices:
+                    members.append(item.attrib["id"])
+
+            if group_type in SWITCH_GROUP_TYPES and members:
+                switch_groups.update(
+                    {
+                        group_id: {
+                            "dev_class": group_type,
+                            "model": "Switchgroup",
+                            "name": group_name,
+                            "members": members,
+                        },
+                    },
+                )
+                self._count += 4
+
+        return switch_groups

@@ -33,7 +33,6 @@ from plugwise.constants import (
     SENSORS,
     SPECIAL_PLUG_TYPES,
     SPECIALS,
-    SWITCH_GROUP_TYPES,
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
@@ -945,42 +944,6 @@ class SmileHelper(SmileCommon):
         thermostat_functionality_id = self._domain_objects.find(locator).attrib["id"]
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
-
-    def _get_group_switches(self) -> dict[str, DeviceData]:
-        """Helper-function for smile.py: get_all_devices().
-
-        Collect switching- or pump-group info.
-        """
-        switch_groups: dict[str, DeviceData] = {}
-        # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile(ANNA):
-            return switch_groups
-
-        for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
-            group_id = group.attrib["id"]
-            group_name = group.find("name").text
-            group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            # Check if members are not orphaned
-            for item in group_appliances:
-                if item.attrib["id"] in self.gw_devices:
-                    members.append(item.attrib["id"])
-
-            if group_type in SWITCH_GROUP_TYPES and members:
-                switch_groups.update(
-                    {
-                        group_id: {
-                            "dev_class": group_type,
-                            "model": "Switchgroup",
-                            "name": group_name,
-                            "members": members,
-                        },
-                    },
-                )
-                self._count += 4
-
-        return switch_groups
 
     def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _device_data_adam().
