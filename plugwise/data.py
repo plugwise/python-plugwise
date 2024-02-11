@@ -27,6 +27,25 @@ class SmileData(SmileHelper):
         SmileHelper.__init__(self)
 
 
+    def _all_device_data(self) -> None:
+        """Helper-function for get_all_devices().
+
+        Collect data for each device and add to self.gw_data and self.gw_devices.
+        """
+        self._update_gw_devices()
+        self.gw_data.update(
+            {
+                "gateway_id": self.gateway_id,
+                "item_count": self._count,
+                "notifications": self._notifications,
+                "smile_name": self.smile_name,
+            }
+        )
+        if self._is_thermostat:
+            self.gw_data.update(
+                {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
+            )
+
     def _update_gw_devices(self) -> None:
         """Helper-function for _all_device_data() and async_update().
 
@@ -83,24 +102,52 @@ class SmileData(SmileHelper):
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             self._count += 2
 
-    def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
+    def _get_device_data(self, dev_id: str) -> DeviceData:
+        """Helper-function for _all_device_data() and async_update().
 
-        Collect data for each device and add to self.gw_data and self.gw_devices.
+        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        self._update_gw_devices()
-        self.gw_data.update(
-            {
-                "gateway_id": self.gateway_id,
-                "item_count": self._count,
-                "notifications": self._notifications,
-                "smile_name": self.smile_name,
-            }
+        device = self.gw_devices[dev_id]
+        data = self._get_measurement_data(dev_id)
+
+        # Check availability of wired-connected devices
+        # Smartmeter
+        self._check_availability(
+            device, "smartmeter", data, "P1 does not seem to be connected"
         )
-        if self._is_thermostat:
-            self.gw_data.update(
-                {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
+        # OpenTherm device
+        if device["name"] != "OnOff":
+            self._check_availability(
+                device, "heater_central", data, "no OpenTherm communication"
             )
+
+        # Switching groups data
+        self._device_data_switching_group(device, data)
+        # Adam data
+        self._device_data_adam(device, data)
+        # Skip obtaining data for non master-thermostats
+        if device["dev_class"] not in ZONE_THERMOSTATS:
+            return data
+
+        # Thermostat data (presets, temperatures etc)
+        self._device_data_climate(device, data)
+
+        return data
+
+    def _check_availability(
+        self, device: DeviceData, dev_class: str, data: DeviceData, message: str
+    ) -> None:
+        """Helper-function for _get_device_data().
+
+        Provide availability status for the wired-commected devices.
+        """
+        if device["dev_class"] == dev_class:
+            data["available"] = True
+            self._count += 1
+            for item in self._notifications.values():
+                for msg in item.values():
+                    if message in msg:
+                        data["available"] = False
 
     def _device_data_adam(self, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
@@ -197,50 +244,3 @@ class SmileData(SmileHelper):
                 all_off = False
         if all_off:
             data["select_schedule"] = OFF
-
-    def _check_availability(
-        self, device: DeviceData, dev_class: str, data: DeviceData, message: str
-    ) -> None:
-        """Helper-function for _get_device_data().
-
-        Provide availability status for the wired-commected devices.
-        """
-        if device["dev_class"] == dev_class:
-            data["available"] = True
-            self._count += 1
-            for item in self._notifications.values():
-                for msg in item.values():
-                    if message in msg:
-                        data["available"] = False
-
-    def _get_device_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for _all_device_data() and async_update().
-
-        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
-        """
-        device = self.gw_devices[dev_id]
-        data = self._get_measurement_data(dev_id)
-
-        # Check availability of wired-connected devices
-        # Smartmeter
-        self._check_availability(
-            device, "smartmeter", data, "P1 does not seem to be connected"
-        )
-        # OpenTherm device
-        if device["name"] != "OnOff":
-            self._check_availability(
-                device, "heater_central", data, "no OpenTherm communication"
-            )
-
-        # Switching groups data
-        self._device_data_switching_group(device, data)
-        # Adam data
-        self._device_data_adam(device, data)
-        # Skip obtaining data for non master-thermostats
-        if device["dev_class"] not in ZONE_THERMOSTATS:
-            return data
-
-        # Thermostat data (presets, temperatures etc)
-        self._device_data_climate(device, data)
-
-        return data
