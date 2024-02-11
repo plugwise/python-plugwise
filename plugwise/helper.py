@@ -195,8 +195,6 @@ class SmileHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._cooling_activation_outdoor_temp: float
-        self._cooling_deactivation_threshold: float
         self._cooling_present: bool
         self._count: int
         self._dhw_allowed_modes: list[str] = []
@@ -212,7 +210,6 @@ class SmileHelper(SmileCommon):
         self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device: bool
         self._opentherm_device: bool
-        self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]]
         self._status: etree
@@ -598,20 +595,6 @@ class SmileHelper(SmileCommon):
                             appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                         )
                         data["sensors"][s_key] = s_value
-                        # Anna: save cooling-related measurements for later use
-                        # Use the local outdoor temperature as reference for turning cooling on/off
-                        if measurement == "cooling_activation_outdoor_temperature":
-                            self._cooling_activation_outdoor_temp = data["sensors"][
-                                "cooling_activation_outdoor_temperature"
-                            ]
-                        if measurement == "cooling_deactivation_threshold":
-                            self._cooling_deactivation_threshold = data["sensors"][
-                                "cooling_deactivation_threshold"
-                            ]
-                        if measurement == "outdoor_air_temperature":
-                            self._outdoor_temp = data["sensors"][
-                                "outdoor_air_temperature"
-                            ]
                     case _ as measurement if measurement in SWITCHES:
                         sw_key = cast(SwitchType, measurement)
                         sw_value = appl_p_loc.text in ["on", "true"]
