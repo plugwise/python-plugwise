@@ -194,7 +194,7 @@ class SmileCommon:
 
         return switch_groups
 
-    def power_data_energy_diff(
+    def _power_data_energy_diff(
         self,
         measurement: str,
         net_string: SensorType,

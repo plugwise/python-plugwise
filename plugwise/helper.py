@@ -607,7 +607,7 @@ class SmileHelper(SmileCommon):
                     if not loc.found:
                         continue
 
-                    direct_data = self.power_data_energy_diff(
+                    direct_data = self._power_data_energy_diff(
                         loc.measurement, loc.net_string, loc.f_val, direct_data
                     )
                     key = cast(SensorType, loc.key_string)
