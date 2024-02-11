@@ -145,6 +145,93 @@ class SmileAPI(SmileComm, SmileData):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
+    async def delete_notification(self) -> None:
+        """Delete the active Plugwise Notification."""
+        await self._request(NOTIFICATIONS, method="delete")
+
+    async def set_dhw_mode(self, mode: str) -> None:
+        """Set the domestic hot water heating regulation mode."""
+        if mode not in self._dhw_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid dhw mode.")
+
+        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
+        data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
+    async def set_gateway_mode(self, mode: str) -> None:
+        """Set the gateway mode."""
+        if mode not in self._gw_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid gateway mode.")
+
+        end_time = "2037-04-21T08:00:53.000Z"
+        valid = ""
+        if mode == "away":
+            time_1 = self._domain_objects.find("./gateway/time").text
+            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+            valid = (
+                f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
+            )
+        if mode == "vacation":
+            time_2 = str(dt.date.today() - dt.timedelta(1))
+            vacation_time = time_2 + "T23:00:00.000Z"
+            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
+
+        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
+        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
+    async def set_number_setpoint(self, key: str, temperature: float) -> None:
+        """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
+        temp = str(temperature)
+        thermostat_id: str | None = None
+        locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
+        if th_func_list := self._domain_objects.findall(locator):
+            for th_func in th_func_list:
+                if th_func.find("type").text == key:
+                    thermostat_id = th_func.attrib["id"]
+
+        if thermostat_id is None:
+            raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
+
+        uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
+        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
+        await self._request(uri, method="put", data=data)
+
+    async def set_preset(self, loc_id: str, preset: str) -> None:
+        """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
+        if (presets := self._presets(loc_id)) is None:
+            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
+        if preset not in list(presets):
+            raise PlugwiseError("Plugwise: invalid preset.")
+
+        current_location = self._domain_objects.find(f'location[@id="{loc_id}"]')
+        location_name = current_location.find("name").text
+        location_type = current_location.find("type").text
+
+        uri = f"{LOCATIONS};id={loc_id}"
+        data = (
+            "<locations><location"
+            f' id="{loc_id}"><name>{location_name}</name><type>{location_type}'
+            f"</type><preset>{preset}</preset></location></locations>"
+        )
+
+        await self._request(uri, method="put", data=data)
+
+    async def set_regulation_mode(self, mode: str) -> None:
+        """Set the heating regulation mode."""
+        if mode not in self._reg_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid regulation mode.")
+
+        uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
+        duration = ""
+        if "bleeding" in mode:
+            duration = "<duration>300</duration>"
+        data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
     async def set_schedule_state(
         self,
         loc_id: str,
@@ -219,97 +306,6 @@ class SmileAPI(SmileComm, SmileData):
 
         return etree.tostring(contexts, encoding="unicode").rstrip()
 
-    async def set_preset(self, loc_id: str, preset: str) -> None:
-        """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
-        if (presets := self._presets(loc_id)) is None:
-            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
-        if preset not in list(presets):
-            raise PlugwiseError("Plugwise: invalid preset.")
-
-        current_location = self._domain_objects.find(f'location[@id="{loc_id}"]')
-        location_name = current_location.find("name").text
-        location_type = current_location.find("type").text
-
-        uri = f"{LOCATIONS};id={loc_id}"
-        data = (
-            "<locations><location"
-            f' id="{loc_id}"><name>{location_name}</name><type>{location_type}'
-            f"</type><preset>{preset}</preset></location></locations>"
-        )
-
-        await self._request(uri, method="put", data=data)
-
-    async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
-        """Set the given Temperature on the relevant Thermostat."""
-        setpoint: float | None = None
-
-        if "setpoint" in items:
-            setpoint = items["setpoint"]
-
-        if self.smile(ANNA) and self._cooling_present:
-            if "setpoint_high" not in items:
-                raise PlugwiseError(
-                    "Plugwise: failed setting temperature: no valid input provided"
-                )
-            tmp_setpoint_high = items["setpoint_high"]
-            tmp_setpoint_low = items["setpoint_low"]
-            if self._cooling_enabled:  # in cooling mode
-                setpoint = tmp_setpoint_high
-                if tmp_setpoint_low != MIN_SETPOINT:
-                    raise PlugwiseError(
-                        "Plugwise: heating setpoint cannot be changed when in cooling mode"
-                    )
-            else:  # in heating mode
-                setpoint = tmp_setpoint_low
-                if tmp_setpoint_high != MAX_SETPOINT:
-                    raise PlugwiseError(
-                        "Plugwise: cooling setpoint cannot be changed when in heating mode"
-                    )
-
-        if setpoint is None:
-            raise PlugwiseError(
-                    "Plugwise: failed setting temperature: no valid input provided"
-                )  # pragma: no cover"
-
-        temperature = str(setpoint)
-        uri = self._thermostat_uri(loc_id)
-        data = (
-            "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
-        )
-
-        await self._request(uri, method="put", data=data)
-
-    async def set_number_setpoint(self, key: str, temperature: float) -> None:
-        """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
-        temp = str(temperature)
-        thermostat_id: str | None = None
-        locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
-        if th_func_list := self._domain_objects.findall(locator):
-            for th_func in th_func_list:
-                if th_func.find("type").text == key:
-                    thermostat_id = th_func.attrib["id"]
-
-        if thermostat_id is None:
-            raise PlugwiseError(f"Plugwise: cannot change setpoint, {key} not found.")
-
-        uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
-        data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
-        await self._request(uri, method="put", data=data)
-
-    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
-        """Set the Temperature offset for thermostats that support this feature."""
-        if dev_id not in self.therms_with_offset_func:
-            raise PlugwiseError(
-                "Plugwise: this device does not have temperature-offset capability."
-            )
-
-        value = str(offset)
-        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
-        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
-
-        await self._request(uri, method="put", data=data)
-
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
@@ -374,52 +370,56 @@ class SmileAPI(SmileComm, SmileData):
 
             await self._request(uri, method="put", data=data)
 
-    async def set_gateway_mode(self, mode: str) -> None:
-        """Set the gateway mode."""
-        if mode not in self._gw_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid gateway mode.")
+    async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
+        """Set the given Temperature on the relevant Thermostat."""
+        setpoint: float | None = None
 
-        end_time = "2037-04-21T08:00:53.000Z"
-        valid = ""
-        if mode == "away":
-            time_1 = self._domain_objects.find("./gateway/time").text
-            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
-            valid = (
-                f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
+        if "setpoint" in items:
+            setpoint = items["setpoint"]
+
+        if self.smile(ANNA) and self._cooling_present:
+            if "setpoint_high" not in items:
+                raise PlugwiseError(
+                    "Plugwise: failed setting temperature: no valid input provided"
+                )
+            tmp_setpoint_high = items["setpoint_high"]
+            tmp_setpoint_low = items["setpoint_low"]
+            if self._cooling_enabled:  # in cooling mode
+                setpoint = tmp_setpoint_high
+                if tmp_setpoint_low != MIN_SETPOINT:
+                    raise PlugwiseError(
+                        "Plugwise: heating setpoint cannot be changed when in cooling mode"
+                    )
+            else:  # in heating mode
+                setpoint = tmp_setpoint_low
+                if tmp_setpoint_high != MAX_SETPOINT:
+                    raise PlugwiseError(
+                        "Plugwise: cooling setpoint cannot be changed when in heating mode"
+                    )
+
+        if setpoint is None:
+            raise PlugwiseError(
+                    "Plugwise: failed setting temperature: no valid input provided"
+                )  # pragma: no cover"
+
+        temperature = str(setpoint)
+        uri = self._thermostat_uri(loc_id)
+        data = (
+            "<thermostat_functionality><setpoint>"
+            f"{temperature}</setpoint></thermostat_functionality>"
+        )
+
+        await self._request(uri, method="put", data=data)
+
+    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
+        """Set the Temperature offset for thermostats that support this feature."""
+        if dev_id not in self.therms_with_offset_func:
+            raise PlugwiseError(
+                "Plugwise: this device does not have temperature-offset capability."
             )
-        if mode == "vacation":
-            time_2 = str(dt.date.today() - dt.timedelta(1))
-            vacation_time = time_2 + "T23:00:00.000Z"
-            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
-        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
-        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
+        value = str(offset)
+        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
+        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
 
         await self._request(uri, method="put", data=data)
-
-    async def set_regulation_mode(self, mode: str) -> None:
-        """Set the heating regulation mode."""
-        if mode not in self._reg_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid regulation mode.")
-
-        uri = f"{APPLIANCES};type=gateway/regulation_mode_control"
-        duration = ""
-        if "bleeding" in mode:
-            duration = "<duration>300</duration>"
-        data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
-
-    async def set_dhw_mode(self, mode: str) -> None:
-        """Set the domestic hot water heating regulation mode."""
-        if mode not in self._dhw_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid dhw mode.")
-
-        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
-        data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
-
-    async def delete_notification(self) -> None:
-        """Delete the active Plugwise Notification."""
-        await self._request(NOTIFICATIONS, method="delete")
