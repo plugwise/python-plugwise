@@ -8,6 +8,7 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
+    SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     ApplianceType,
     DeviceData,
@@ -156,6 +157,22 @@ class SmileCommon:
                 self._count += 4
 
         return switch_groups
+
+    def _get_lock_state(self, xml: etree, data: DeviceData, stretch_v2: bool = False) -> None:
+        """Helper-function for _get_measurement_data().
+
+        Adam & Stretches: obtain the relay-switch lock state.
+        """
+        actuator = "actuator_functionalities"
+        func_type = "relay_functionality"
+        if stretch_v2:
+            actuator = "actuators"
+            func_type = "relay"
+        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
+            locator = f"./{actuator}/{func_type}/lock"
+            if (found := xml.find(locator)) is not None:
+                data["switches"]["lock"] = found.text == "true"
+                self._count += 1
 
     def _get_module_data(
         self,

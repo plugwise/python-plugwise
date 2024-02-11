@@ -31,7 +31,6 @@ from plugwise.constants import (
     OFF,
     P1_MEASUREMENTS,
     SENSORS,
-    SPECIAL_PLUG_TYPES,
     SPECIALS,
     SWITCHES,
     TEMP_CELSIUS,
@@ -686,19 +685,6 @@ class SmileHelper(SmileCommon):
         self._count += len(data["switches"])
         # Don't count the above top-level dicts, only the remaining single items
         self._count += len(data) - 3
-
-    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Adam & Stretches: obtain the relay-switch lock state.
-        """
-        actuator = "actuator_functionalities"
-        func_type = "relay_functionality"
-        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
-            locator = f"./{actuator}/{func_type}/lock"
-            if (found := xml.find(locator)) is not None:
-                data["switches"]["lock"] = found.text == "true"
-                self._count += 1
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData

@@ -26,7 +26,6 @@ from plugwise.constants import (
     OBSOLETE_MEASUREMENTS,
     P1_LEGACY_MEASUREMENTS,
     SENSORS,
-    SPECIAL_PLUG_TYPES,
     SPECIALS,
     SWITCHES,
     TEMP_CELSIUS,
@@ -282,7 +281,7 @@ class SmileLegacyHelper(SmileCommon):
             appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
         ) is not None:
             self._appliance_measurements(appliance, data, measurements)
-            self._get_lock_state(appliance, data)
+            self._get_lock_state(appliance, data, self._stretch_v2)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, device, data)
@@ -437,22 +436,6 @@ class SmileLegacyHelper(SmileCommon):
         self._count += len(data["switches"])
         # Don't count the above top-level dicts, only the remaining single items
         self._count += len(data) - 3
-
-    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Adam & Stretches: obtain the relay-switch lock state.
-        """
-        actuator = "actuator_functionalities"
-        func_type = "relay_functionality"
-        if self._stretch_v2:
-            actuator = "actuators"
-            func_type = "relay"
-        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
-            locator = f"./{actuator}/{func_type}/lock"
-            if (found := xml.find(locator)) is not None:
-                data["switches"]["lock"] = found.text == "true"
-                self._count += 1
 
     def _get_actuator_functionalities(
         self, xml: etree, device: DeviceData, data: DeviceData
