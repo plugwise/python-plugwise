@@ -6,7 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, SWITCH_GROUP_TYPES, ZONE_THERMOSTATS, DeviceData
+from plugwise.constants import NONE, ZONE_THERMOSTATS, DeviceData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 

@@ -11,7 +11,6 @@ from plugwise.constants import (
     MIN_SETPOINT,
     NONE,
     OFF,
-    SWITCH_GROUP_TYPES,
     ZONE_THERMOSTATS,
     ActuatorData,
     DeviceData,
