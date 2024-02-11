@@ -46,21 +46,6 @@ class SmileLegacyData(SmileLegacyHelper):
                 {"heater_id": self._heater_id, "cooling_present": False}
             )
 
-    def _device_data_switching_group(
-        self, device: DeviceData, data: DeviceData
-    ) -> None:
-        """Helper-function for _get_device_data().
-
-        Determine switching group device data.
-        """
-        if device["dev_class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in device["members"]:
-                if self.gw_devices[member]["switches"].get("relay"):
-                    counter += 1
-            data["switches"]["relay"] = counter != 0
-            self._count += 1
-
     def _device_data_climate(self, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
