@@ -41,7 +41,6 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    ApplianceType,
     BinarySensorType,
     DeviceData,
     GatewayData,
@@ -294,22 +293,7 @@ class SmileHelper(SmileCommon):
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
-            self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-            self._count += 1
-            for key, value in {
-                "firmware": appl.firmware,
-                "hardware": appl.hardware,
-                "location": appl.location,
-                "mac_address": appl.mac,
-                "model": appl.model,
-                "name": appl.name,
-                "zigbee_mac_address": appl.zigbee_mac,
-                "vendor": appl.vendor_name,
-            }.items():
-                if value is not None or key == "location":
-                    appl_key = cast(ApplianceType, key)
-                    self.gw_devices[appl.dev_id][appl_key] = value
-                    self._count += 1
+            self._create_gw_devices(appl)
 
         # For P1 collect the connected SmartMeter info
         if self.smile_type == "power":
@@ -356,23 +340,7 @@ class SmileHelper(SmileCommon):
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(appl, location)
 
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-        self._count += 1
-
-        for key, value in {
-            "firmware": appl.firmware,
-            "hardware": appl.hardware,
-            "location": appl.location,
-            "mac_address": appl.mac,
-            "model": appl.model,
-            "name": appl.name,
-            "zigbee_mac_address": appl.zigbee_mac,
-            "vendor": appl.vendor_name,
-        }.items():
-            if value is not None or key == "location":
-                p1_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][p1_key] = value
-                self._count += 1
+        self._create_gw_devices(appl)
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""

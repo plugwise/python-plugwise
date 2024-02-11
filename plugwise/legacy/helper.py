@@ -137,22 +137,7 @@ class SmileLegacyHelper(SmileCommon):
             if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
                 continue  # pragma: no cover
 
-            self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-            self._count += 1
-            for key, value in {
-                "firmware": appl.firmware,
-                "hardware": appl.hardware,
-                "location": appl.location,
-                "mac_address": appl.mac,
-                "model": appl.model,
-                "name": appl.name,
-                "zigbee_mac_address": appl.zigbee_mac,
-                "vendor": appl.vendor_name,
-            }.items():
-                if value is not None or key == "location":
-                    appl_key = cast(ApplianceType, key)
-                    self.gw_devices[appl.dev_id][appl_key] = value
-                    self._count += 1
+            self._create_gw_devices(appl)
 
         # Place the gateway and optional heater_central devices as 1st and 2nd
         for dev_class in ("heater_central", "gateway"):
@@ -272,23 +257,7 @@ class SmileLegacyHelper(SmileCommon):
         location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(location, appl)
 
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-        self._count += 1
-
-        for key, value in {
-            "firmware": appl.firmware,
-            "hardware": appl.hardware,
-            "location": appl.location,
-            "mac_address": appl.mac,
-            "model": appl.model,
-            "name": appl.name,
-            "zigbee_mac_address": appl.zigbee_mac,
-            "vendor": appl.vendor_name,
-        }.items():
-            if value is not None or key == "location":
-                p1_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][p1_key] = value
-                self._count += 1
+        self._create_gw_devices(appl)
 
     def _get_measurement_data(self, dev_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().

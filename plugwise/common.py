@@ -4,9 +4,12 @@ Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
 
+from typing import cast
+
 from plugwise.constants import (
     ANNA,
     SWITCH_GROUP_TYPES,
+    ApplianceType,
     DeviceData,
     ModelData,
     SensorType,
@@ -239,3 +242,22 @@ class SmileCommon:
             direct_data["sensors"][net_string] = tmp_val
 
         return direct_data
+
+    def _create_gw_devices(self, appl: Munch) -> None:
+        """Helper-function for creating/updating gw_devices."""
+        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+        self._count += 1
+        for key, value in {
+            "firmware": appl.firmware,
+            "hardware": appl.hardware,
+            "location": appl.location,
+            "mac_address": appl.mac,
+            "model": appl.model,
+            "name": appl.name,
+            "zigbee_mac_address": appl.zigbee_mac,
+            "vendor": appl.vendor_name,
+        }.items():
+            if value is not None or key == "location":
+                appl_key = cast(ApplianceType, key)
+                self.gw_devices[appl.dev_id][appl_key] = value
+                self._count += 1
