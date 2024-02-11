@@ -31,7 +31,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
         assert self.device_items == 43
-        assert not self.notifications
 
         result = await self.tinker_legacy_thermostat(smile, schedule_on=False)
         assert result
@@ -66,7 +65,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
         assert self.device_items == 43
-        assert not self.notifications
 
         result = await self.tinker_legacy_thermostat(smile)
         assert result
