@@ -42,20 +42,6 @@ class SmileCommon:
         """Helper-function checking the smile-name."""
         return self.smile_name == name
 
-    def _appl_thermostat_info(self, appl: Munch, xml_1: etree, xml_2: etree = None) -> Munch:
-        """Helper-function for _appliance_info_finder()."""
-        locator = "./logs/point_log[type='thermostat']/thermostat"
-        mod_type = "thermostat"
-        xml_2 = return_valid(xml_2, self._domain_objects)
-        module_data = self._get_module_data(xml_1, locator, mod_type, xml_2)
-        appl.vendor_name = module_data["vendor_name"]
-        appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
-        appl.hardware = module_data["hardware_version"]
-        appl.firmware = module_data["firmware_version"]
-        appl.zigbee_mac = module_data["zigbee_mac_address"]
-
-        return appl
-
     def _appl_heater_central_info(
         self,
         appl: Munch,
@@ -102,6 +88,71 @@ class SmileCommon:
             )
 
         return appl
+
+    def _appl_thermostat_info(self, appl: Munch, xml_1: etree, xml_2: etree = None) -> Munch:
+        """Helper-function for _appliance_info_finder()."""
+        locator = "./logs/point_log[type='thermostat']/thermostat"
+        mod_type = "thermostat"
+        xml_2 = return_valid(xml_2, self._domain_objects)
+        module_data = self._get_module_data(xml_1, locator, mod_type, xml_2)
+        appl.vendor_name = module_data["vendor_name"]
+        appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
+        appl.hardware = module_data["hardware_version"]
+        appl.firmware = module_data["firmware_version"]
+        appl.zigbee_mac = module_data["zigbee_mac_address"]
+
+        return appl
+
+    def _device_data_switching_group(
+        self, device: DeviceData, data: DeviceData
+    ) -> None:
+        """Helper-function for _get_device_data().
+
+        Determine switching group device data.
+        """
+        if device["dev_class"] in SWITCH_GROUP_TYPES:
+            counter = 0
+            for member in device["members"]:
+                if self.gw_devices[member]["switches"].get("relay"):
+                    counter += 1
+            data["switches"]["relay"] = counter != 0
+            self._count += 1
+
+    def _get_group_switches(self) -> dict[str, DeviceData]:
+        """Helper-function for smile.py: get_all_devices().
+
+        Collect switching- or pump-group info.
+        """
+        switch_groups: dict[str, DeviceData] = {}
+        # P1 and Anna don't have switchgroups
+        if self.smile_type == "power" or self.smile(ANNA):
+            return switch_groups
+
+        for group in self._domain_objects.findall("./group"):
+            members: list[str] = []
+            group_id = group.attrib["id"]
+            group_name = group.find("name").text
+            group_type = group.find("type").text
+            group_appliances = group.findall("appliances/appliance")
+            for item in group_appliances:
+                # Check if members are not orphaned - stretch
+                if item.attrib["id"] in self.gw_devices:
+                    members.append(item.attrib["id"])
+
+            if group_type in SWITCH_GROUP_TYPES and members:
+                switch_groups.update(
+                    {
+                        group_id: {
+                            "dev_class": group_type,
+                            "model": "Switchgroup",
+                            "name": group_name,
+                            "members": members,
+                        },
+                    },
+                )
+                self._count += 4
+
+        return switch_groups
 
     def _get_module_data(
         self,
@@ -158,42 +209,6 @@ class SmileCommon:
                 model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
                 model_data["reachable"] = zb_node.find("reachable").text == "true"
 
-    def _get_group_switches(self) -> dict[str, DeviceData]:
-        """Helper-function for smile.py: get_all_devices().
-
-        Collect switching- or pump-group info.
-        """
-        switch_groups: dict[str, DeviceData] = {}
-        # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile(ANNA):
-            return switch_groups
-
-        for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
-            group_id = group.attrib["id"]
-            group_name = group.find("name").text
-            group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            for item in group_appliances:
-                # Check if members are not orphaned - stretch
-                if item.attrib["id"] in self.gw_devices:
-                    members.append(item.attrib["id"])
-
-            if group_type in SWITCH_GROUP_TYPES and members:
-                switch_groups.update(
-                    {
-                        group_id: {
-                            "dev_class": group_type,
-                            "model": "Switchgroup",
-                            "name": group_name,
-                            "members": members,
-                        },
-                    },
-                )
-                self._count += 4
-
-        return switch_groups
-
     def _power_data_energy_diff(
         self,
         measurement: str,
@@ -224,18 +239,3 @@ class SmileCommon:
             direct_data["sensors"][net_string] = tmp_val
 
         return direct_data
-
-    def _device_data_switching_group(
-        self, device: DeviceData, data: DeviceData
-    ) -> None:
-        """Helper-function for _get_device_data().
-
-        Determine switching group device data.
-        """
-        if device["dev_class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in device["members"]:
-                if self.gw_devices[member]["switches"].get("relay"):
-                    counter += 1
-            data["switches"]["relay"] = counter != 0
-            self._count += 1
