@@ -11,7 +11,6 @@ from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
-    ANNA,
     APPLIANCES,
     ATTR_NAME,
     ATTR_UNIT_OF_MEASUREMENT,
@@ -29,7 +28,6 @@ from plugwise.constants import (
     SENSORS,
     SPECIAL_PLUG_TYPES,
     SPECIALS,
-    SWITCH_GROUP_TYPES,
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
@@ -156,18 +154,16 @@ class SmileLegacyHelper(SmileCommon):
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
+        match appl.pwclass:
         # Collect thermostat device info
-        if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appl, appliance, self._modules)
-
+            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
+                return self._appl_thermostat_info(appl, appliance, self._modules)
         # Collect heater_central device info
-        if appl.pwclass == "heater_central":
-            return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
-
+            case "heater_central":
+                return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
         # Collect info from Stretches
-        appl = self._energy_device_info_finder(appliance, appl)
-
-        return appl
+            case _:
+                return self._energy_device_info_finder(appliance, appl)
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
@@ -456,73 +452,6 @@ class SmileLegacyHelper(SmileCommon):
         appliance_id = self._appliances.find(locator).attrib["id"]
 
         return f"{APPLIANCES};id={appliance_id}/thermostat"
-
-    def _get_group_switches(self) -> dict[str, DeviceData]:
-        """Helper-function for smile.py: get_all_devices().
-
-        Collect switching- or pump-group info.
-        """
-        switch_groups: dict[str, DeviceData] = {}
-        # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile(ANNA):
-            return switch_groups
-
-        for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
-            group_id = group.attrib["id"]
-            group_name = group.find("name").text
-            group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            for item in group_appliances:
-                # Check if members are not orphaned - stretch
-                if item.attrib["id"] in self.gw_devices:
-                    members.append(item.attrib["id"])
-
-            if group_type in SWITCH_GROUP_TYPES and members:
-                switch_groups.update(
-                    {
-                        group_id: {
-                            "dev_class": group_type,
-                            "model": "Switchgroup",
-                            "name": group_name,
-                            "members": members,
-                        },
-                    },
-                )
-                self._count += 4
-
-        return switch_groups
-
-    def power_data_energy_diff(
-        self,
-        measurement: str,
-        net_string: SensorType,
-        f_val: float | int,
-        direct_data: DeviceData,
-    ) -> DeviceData:
-        """Calculate differential energy."""
-        if (
-            "electricity" in measurement
-            and "phase" not in measurement
-            and "interval" not in net_string
-        ):
-            diff = 1
-            if "produced" in measurement:
-                diff = -1
-            if net_string not in direct_data["sensors"]:
-                tmp_val: float | int = 0
-            else:
-                tmp_val = direct_data["sensors"][net_string]
-
-            if isinstance(f_val, int):
-                tmp_val += f_val * diff
-            else:
-                tmp_val += float(f_val * diff)
-                tmp_val = float(f"{round(tmp_val, 3):.3f}")
-
-            direct_data["sensors"][net_string] = tmp_val
-
-        return direct_data
 
     def _power_data_peak_value(self, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""

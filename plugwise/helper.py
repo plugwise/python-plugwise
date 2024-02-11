@@ -33,7 +33,6 @@ from plugwise.constants import (
     SENSORS,
     SPECIAL_PLUG_TYPES,
     SPECIALS,
-    SWITCH_GROUP_TYPES,
     SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
@@ -195,8 +194,6 @@ class SmileHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._cooling_activation_outdoor_temp: float
-        self._cooling_deactivation_threshold: float
         self._cooling_present: bool
         self._count: int
         self._dhw_allowed_modes: list[str] = []
@@ -212,7 +209,6 @@ class SmileHelper(SmileCommon):
         self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device: bool
         self._opentherm_device: bool
-        self._outdoor_temp: float
         self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]]
         self._status: etree
@@ -260,7 +256,7 @@ class SmileHelper(SmileCommon):
 
             self.loc_data[loc.loc_id] = {"name": loc.name}
 
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+    def _energy_device_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder().
 
         Collect energy device info (Smartmeter, Plug): firmware, model and vendor name.
@@ -296,62 +292,73 @@ class SmileHelper(SmileCommon):
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
-        # Collect gateway device info
-        if appl.pwclass == "gateway":
-            self.gateway_id = appliance.attrib["id"]
-            appl.firmware = self.smile_fw_version
-            appl.hardware = self.smile_hw_version
-            appl.mac = self.smile_mac_address
-            appl.model = self.smile_model
-            appl.name = self.smile_name
-            appl.vendor_name = "Plugwise"
+        match appl.pwclass:
+            case "gateway":
+                # Collect gateway device info
+                return self._appl_gateway_info(appl, appliance)
+            case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
+                # Collect thermostat device info
+                return self._appl_thermostat_info(appl, appliance)
+            case "heater_central":
+                # Collect heater_central device info
+                self._appl_heater_central_info(appl, appliance)
+                self._appl_dhw_mode_info(appl, appliance)
+                return appl
+            case _:
+                # Collect info from power-related devices (Plug, Aqara Smart Plug)
+                return self._energy_device_info_finder(appl, appliance)
 
-            # Adam: look for the ZigBee MAC address of the Smile
-            if self.smile(ADAM) and (
-                (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None
-            ):
+    def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
+        """Helper-function for _appliance_info_finder()."""
+        self.gateway_id = appliance.attrib["id"]
+        appl.firmware = self.smile_fw_version
+        appl.hardware = self.smile_hw_version
+        appl.mac = self.smile_mac_address
+        appl.model = self.smile_model
+        appl.name = self.smile_name
+        appl.vendor_name = "Plugwise"
+
+        # Adam: collect the ZigBee MAC address of the Smile
+        if self.smile(ADAM):
+            if (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None:
                 appl.zigbee_mac = found.find("mac_address").text
 
-            # Adam: collect regulation_modes and check for cooling, indicating cooling-mode is present
-            reg_mode_list: list[str] = []
-            locator = "./actuator_functionalities/regulation_mode_control_functionality"
-            if (search := appliance.find(locator)) is not None:
-                if search.find("allowed_modes") is not None:
-                    for mode in search.find("allowed_modes"):
-                        reg_mode_list.append(mode.text)
-                        if mode.text == "cooling":
-                            self._cooling_present = True
-                    self._reg_allowed_modes = reg_mode_list
+            # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
+            self._appl_regulation_mode_info(appliance)
 
-            # Adam: check for presence of gateway_modes
+            # Finally, collect the gateway_modes
             self._gw_allowed_modes = []
             locator = "./actuator_functionalities/gateway_mode_control_functionality[type='gateway_mode']/allowed_modes"
             if appliance.find(locator) is not None:
                 # Limit the possible gateway-modes
                 self._gw_allowed_modes = ["away", "full", "vacation"]
 
-            return appl
+        return appl
 
-        # Collect thermostat device info
-        if appl.pwclass in THERMOSTAT_CLASSES:
-            return self._appl_thermostat_info(appl, appliance)
+    def _appl_regulation_mode_info(self, appliance: etree) -> None:
+        """Helper-function for _appliance_info_finder()."""
+        reg_mode_list: list[str] = []
+        locator = "./actuator_functionalities/regulation_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            if search.find("allowed_modes") is not None:
+                for mode in search.find("allowed_modes"):
+                    reg_mode_list.append(mode.text)
+                    if mode.text == "cooling":
+                        self._cooling_present = True
+                self._reg_allowed_modes = reg_mode_list
 
-        # Collect extra heater_central device info
-        if appl.pwclass == "heater_central":
-            appl = self._appl_heater_central_info(appl, appliance)
-            # Anna + Loria: collect dhw control operation modes
-            dhw_mode_list: list[str] = []
-            locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
-            if (search := appliance.find(locator)) is not None:
-                if search.find("allowed_modes") is not None:
-                    for mode in search.find("allowed_modes"):
-                        dhw_mode_list.append(mode.text)
-                    self._dhw_allowed_modes = dhw_mode_list
+    def _appl_dhw_mode_info(self, appl: Munch, appliance: etree) -> Munch:
+        """Helper-function for _appliance_info_finder().
 
-            return appl
-
-        # Collect info from power-related devices (Plug, Aqara Smart Plug)
-        appl = self._energy_device_info_finder(appliance, appl)
+        Collect dhw control operation modes - Anna + Loria.
+        """
+        dhw_mode_list: list[str] = []
+        locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
+        if (search := appliance.find(locator)) is not None:
+            if search.find("allowed_modes") is not None:
+                for mode in search.find("allowed_modes"):
+                    dhw_mode_list.append(mode.text)
+                self._dhw_allowed_modes = dhw_mode_list
 
         return appl
 
@@ -366,7 +373,7 @@ class SmileHelper(SmileCommon):
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
-        appl = self._energy_device_info_finder(location, appl)
+        appl = self._energy_device_info_finder(appl, location)
 
         self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
         self._count += 1
@@ -587,20 +594,6 @@ class SmileHelper(SmileCommon):
                             appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                         )
                         data["sensors"][s_key] = s_value
-                        # Anna: save cooling-related measurements for later use
-                        # Use the local outdoor temperature as reference for turning cooling on/off
-                        if measurement == "cooling_activation_outdoor_temperature":
-                            self._cooling_activation_outdoor_temp = data["sensors"][
-                                "cooling_activation_outdoor_temperature"
-                            ]
-                        if measurement == "cooling_deactivation_threshold":
-                            self._cooling_deactivation_threshold = data["sensors"][
-                                "cooling_deactivation_threshold"
-                            ]
-                        if measurement == "outdoor_air_temperature":
-                            self._outdoor_temp = data["sensors"][
-                                "outdoor_air_temperature"
-                            ]
                     case _ as measurement if measurement in SWITCHES:
                         sw_key = cast(SwitchType, measurement)
                         sw_value = appl_p_loc.text in ["on", "true"]
@@ -952,42 +945,6 @@ class SmileHelper(SmileCommon):
 
         return f"{LOCATIONS};id={loc_id}/thermostat;id={thermostat_functionality_id}"
 
-    def _get_group_switches(self) -> dict[str, DeviceData]:
-        """Helper-function for smile.py: get_all_devices().
-
-        Collect switching- or pump-group info.
-        """
-        switch_groups: dict[str, DeviceData] = {}
-        # P1 and Anna don't have switchgroups
-        if self.smile_type == "power" or self.smile(ANNA):
-            return switch_groups
-
-        for group in self._domain_objects.findall("./group"):
-            members: list[str] = []
-            group_id = group.attrib["id"]
-            group_name = group.find("name").text
-            group_type = group.find("type").text
-            group_appliances = group.findall("appliances/appliance")
-            # Check if members are not orphaned
-            for item in group_appliances:
-                if item.attrib["id"] in self.gw_devices:
-                    members.append(item.attrib["id"])
-
-            if group_type in SWITCH_GROUP_TYPES and members:
-                switch_groups.update(
-                    {
-                        group_id: {
-                            "dev_class": group_type,
-                            "model": "Switchgroup",
-                            "name": group_name,
-                            "members": members,
-                        },
-                    },
-                )
-                self._count += 4
-
-        return switch_groups
-
     def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _device_data_adam().
 
@@ -1004,37 +961,6 @@ class SmileHelper(SmileCommon):
                     open_valve_count += 1
 
         return False if loc_found == 0 else open_valve_count
-
-    def power_data_energy_diff(
-        self,
-        measurement: str,
-        net_string: SensorType,
-        f_val: float | int,
-        direct_data: DeviceData,
-    ) -> DeviceData:
-        """Calculate differential energy."""
-        if (
-            "electricity" in measurement
-            and "phase" not in measurement
-            and "interval" not in net_string
-        ):
-            diff = 1
-            if "produced" in measurement:
-                diff = -1
-            if net_string not in direct_data["sensors"]:
-                tmp_val: float | int = 0
-            else:
-                tmp_val = direct_data["sensors"][net_string]
-
-            if isinstance(f_val, int):
-                tmp_val += f_val * diff
-            else:
-                tmp_val += float(f_val * diff)
-                tmp_val = float(f"{round(tmp_val, 3):.3f}")
-
-            direct_data["sensors"][net_string] = tmp_val
-
-        return direct_data
 
     def _power_data_peak_value(self, loc: Munch) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
