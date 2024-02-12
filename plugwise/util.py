@@ -19,6 +19,23 @@ from plugwise.constants import (
 )
 
 from defusedxml import ElementTree as etree
+from munch import Munch
+
+
+def check_alternative_locations(loc: Munch, legacy: bool) -> bool:
+    """Look for P1 gas_consumed or phase data (without tariff).
+
+    For legacy look for P1 legacy electricity_point_meter or gas_*_meter data.
+    """
+    present = "log" in loc.log_type and (
+        "gas" in loc.measurement or "phase" in loc.measurement
+        )
+    if legacy:
+        present = "meter" in loc.log_type and (
+            "point" in loc.log_type or "gas" in loc.measurement
+            )
+
+    return present
 
 
 def check_heater_central(xml: etree) -> str:

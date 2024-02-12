@@ -16,6 +16,7 @@ from plugwise.constants import (
     SensorType,
 )
 from plugwise.util import (
+    check_alternative_locations,
     check_heater_central,
     check_model,
     get_vendor_name,
@@ -131,17 +132,12 @@ class SmileCommon:
             key = cast(SensorType, loc.key_string)
             data["sensors"][key] = loc.f_val
 
+
     def _power_data_peak_value(self, loc: Munch, legacy: bool) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
-        combination = "log" in loc.log_type and ("gas" in loc.measurement or "phase" in loc.measurement)
-        if legacy:
-             combination = "meter" in loc.log_type and ("point" in loc.log_type or "gas" in loc.measurement)
-
         if loc.logs.find(loc.locator) is None:
-            # If locator not found look for P1 gas_consumed or phase data (without tariff)
-            # For legacy look for P1 legacy electricity_point_meter or gas_*_meter data
-            if combination:
+            if check_alternative_locations(loc, legacy):
                 # Avoid double processing by skipping one peak-list option
                 if loc.peak_select == "nl_offpeak":
                     loc.found = False
