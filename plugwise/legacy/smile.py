@@ -145,6 +145,34 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
+    async def delete_notification(self) -> None:
+        """Set-function placeholder for legacy devices."""
+
+    async def set_dhw_mode(self, mode: str) -> None:
+        """Set-function placeholder for legacy devices."""
+
+    async def set_gateway_mode(self, mode: str) -> None:
+        """Set-function placeholder for legacy devices."""
+
+    async def set_number_setpoint(self, key: str, temperature: float) -> None:
+        """Set-function placeholder for legacy devices."""
+
+    async def set_preset(self, _: str, preset: str) -> None:
+        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
+        if (presets := self._presets()) is None:
+            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
+        if preset not in list(presets):
+            raise PlugwiseError("Plugwise: invalid preset.")
+
+        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
+        rule = self._domain_objects.find(locator)
+        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
+
+        await self._request(RULES, method="put", data=data)
+
+    async def set_regulation_mode(self, mode: str) -> None:
+        """Set-function placeholder for legacy devices."""
+
     async def set_schedule_state(self, _: str, state: str, __: str | None) -> None:
         """Activate/deactivate the Schedule.
 
@@ -176,35 +204,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             "<rules><rule"
             f' id="{schedule_rule_id}"><name><![CDATA[{name}]]></name><template'
             f' id="{template_id}" /><active>{new_state}</active></rule></rules>'
-        )
-
-        await self._request(uri, method="put", data=data)
-
-    async def set_preset(self, _: str, preset: str) -> None:
-        """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
-        if (presets := self._presets()) is None:
-            raise PlugwiseError("Plugwise: no presets available.")  # pragma: no cover
-        if preset not in list(presets):
-            raise PlugwiseError("Plugwise: invalid preset.")
-
-        locator = f'rule/directives/when/then[@icon="{preset}"].../.../...'
-        rule = self._domain_objects.find(locator)
-        data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
-
-        await self._request(RULES, method="put", data=data)
-
-    async def set_temperature(self, setpoint: str, _: dict[str, float]) -> None:
-        """Set the given Temperature on the relevant Thermostat."""
-        if setpoint is None:
-            raise PlugwiseError(
-                "Plugwise: failed setting temperature: no valid input provided"
-            )  # pragma: no cover"
-
-        temperature = str(setpoint)
-        uri = self._thermostat_uri()
-        data = (
-            "<thermostat_functionality><setpoint>"
-            f"{temperature}</setpoint></thermostat_functionality>"
         )
 
         await self._request(uri, method="put", data=data)
@@ -250,20 +249,21 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 
             await self._request(uri, method="put", data=data)
 
-    async def set_number_setpoint(self, key: str, temperature: float) -> None:
-        """Set-function placeholder for legacy devices."""
+    async def set_temperature(self, setpoint: str, _: dict[str, float]) -> None:
+        """Set the given Temperature on the relevant Thermostat."""
+        if setpoint is None:
+            raise PlugwiseError(
+                "Plugwise: failed setting temperature: no valid input provided"
+            )  # pragma: no cover"
+
+        temperature = str(setpoint)
+        uri = self._thermostat_uri()
+        data = (
+            "<thermostat_functionality><setpoint>"
+            f"{temperature}</setpoint></thermostat_functionality>"
+        )
+
+        await self._request(uri, method="put", data=data)
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
-        """Set-function placeholder for legacy devices."""
-
-    async def set_gateway_mode(self, mode: str) -> None:
-        """Set-function placeholder for legacy devices."""
-
-    async def set_regulation_mode(self, mode: str) -> None:
-        """Set-function placeholder for legacy devices."""
-
-    async def set_dhw_mode(self, mode: str) -> None:
-        """Set-function placeholder for legacy devices."""
-
-    async def delete_notification(self) -> None:
         """Set-function placeholder for legacy devices."""

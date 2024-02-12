@@ -6,7 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, SWITCH_GROUP_TYPES, ZONE_THERMOSTATS, DeviceData
+from plugwise.constants import NONE, ZONE_THERMOSTATS, DeviceData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -18,16 +18,6 @@ class SmileLegacyData(SmileLegacyHelper):
         """Init."""
         SmileLegacyHelper.__init__(self)
 
-    def _update_gw_devices(self) -> None:
-        """Helper-function for _all_device_data() and async_update().
-
-        Collect data for each device and add to self.gw_devices.
-        """
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            device.update(data)
-            remove_empty_platform_dicts(device)
-
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
 
@@ -38,7 +28,6 @@ class SmileLegacyData(SmileLegacyHelper):
             {
                 "gateway_id": self.gateway_id,
                 "item_count": self._count,
-                "notifications": self._notifications,
                 "smile_name": self.smile_name,
             }
         )
@@ -47,20 +36,35 @@ class SmileLegacyData(SmileLegacyHelper):
                 {"heater_id": self._heater_id, "cooling_present": False}
             )
 
-    def _device_data_switching_group(
-        self, device: DeviceData, data: DeviceData
-    ) -> None:
-        """Helper-function for _get_device_data().
+    def _update_gw_devices(self) -> None:
+        """Helper-function for _all_device_data() and async_update().
 
-        Determine switching group device data.
+        Collect data for each device and add to self.gw_devices.
         """
-        if device["dev_class"] in SWITCH_GROUP_TYPES:
-            counter = 0
-            for member in device["members"]:
-                if self.gw_devices[member]["switches"].get("relay"):
-                    counter += 1
-            data["switches"]["relay"] = counter != 0
-            self._count += 1
+        for device_id, device in self.gw_devices.items():
+            data = self._get_device_data(device_id)
+            device.update(data)
+            remove_empty_platform_dicts(device)
+
+    def _get_device_data(self, dev_id: str) -> DeviceData:
+        """Helper-function for _all_device_data() and async_update().
+
+        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
+        """
+        device = self.gw_devices[dev_id]
+        data = self._get_measurement_data(dev_id)
+
+        # Switching groups data
+        self._device_data_switching_group(device, data)
+
+        # Skip obtaining data for non master-thermostats
+        if device["dev_class"] not in ZONE_THERMOSTATS:
+            return data
+
+        # Thermostat data (presets, temperatures etc)
+        self._device_data_climate(device, data)
+
+        return data
 
     def _device_data_climate(self, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
@@ -86,23 +90,3 @@ class SmileLegacyData(SmileLegacyHelper):
         self._count += 1
         if sel_schedule == NONE:
             data["mode"] = "heat"
-
-    def _get_device_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for _all_device_data() and async_update().
-
-        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
-        """
-        device = self.gw_devices[dev_id]
-        data = self._get_measurement_data(dev_id)
-
-        # Switching groups data
-        self._device_data_switching_group(device, data)
-
-        # Skip obtaining data for non master-thermostats
-        if device["dev_class"] not in ZONE_THERMOSTATS:
-            return data
-
-        # Thermostat data (presets, temperatures etc)
-        self._device_data_climate(device, data)
-
-        return data
