@@ -16,7 +16,7 @@ from plugwise.constants import (
     SensorType,
 )
 from plugwise.util import (
-    check_alternative_locations,
+    check_alternative_location,
     check_heater_central,
     check_model,
     get_vendor_name,
@@ -132,31 +132,12 @@ class SmileCommon:
             key = cast(SensorType, loc.key_string)
             data["sensors"][key] = loc.f_val
 
-
     def _power_data_peak_value(self, loc: Munch, legacy: bool) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
         if loc.logs.find(loc.locator) is None:
-            if check_alternative_locations(loc, legacy):
-                # Avoid double processing by skipping one peak-list option
-                if loc.peak_select == "nl_offpeak":
-                    loc.found = False
-                    return loc
-
-                loc.locator = (
-                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-                )
-                if legacy:
-                    loc.locator = (
-                        f"./{loc.meas_list[0]}_{loc.log_type}/"
-                        f'measurement[@directionality="{loc.meas_list[1]}"]'
-                    )
-
-                if loc.logs.find(loc.locator) is None:
-                    loc.found = False
-                    return loc
-            else:
-                loc.found = False
+            loc = check_alternative_location(loc, legacy)
+            if not loc.found:
                 return loc
 
         if (peak := loc.peak_select.split("_")[1]) == "offpeak":
@@ -174,6 +155,56 @@ class SmileCommon:
         loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
+
+    def _power_data_energy_diff(
+        self,
+        measurement: str,
+        net_string: SensorType,
+        f_val: float | int,
+        direct_data: DeviceData,
+    ) -> DeviceData:
+        """Calculate differential energy."""
+        if (
+            "electricity" in measurement
+            and "phase" not in measurement
+            and "interval" not in net_string
+        ):
+            diff = 1
+            if "produced" in measurement:
+                diff = -1
+            if net_string not in direct_data["sensors"]:
+                tmp_val: float | int = 0
+            else:
+                tmp_val = direct_data["sensors"][net_string]
+
+            if isinstance(f_val, int):
+                tmp_val += f_val * diff
+            else:
+                tmp_val += float(f_val * diff)
+                tmp_val = float(f"{round(tmp_val, 3):.3f}")
+
+            direct_data["sensors"][net_string] = tmp_val
+
+        return direct_data
+
+    def _create_gw_devices(self, appl: Munch) -> None:
+        """Helper-function for creating/updating gw_devices."""
+        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+        self._count += 1
+        for key, value in {
+            "firmware": appl.firmware,
+            "hardware": appl.hardware,
+            "location": appl.location,
+            "mac_address": appl.mac,
+            "model": appl.model,
+            "name": appl.name,
+            "zigbee_mac_address": appl.zigbee_mac,
+            "vendor": appl.vendor_name,
+        }.items():
+            if value is not None or key == "location":
+                appl_key = cast(ApplianceType, key)
+                self.gw_devices[appl.dev_id][appl_key] = value
+                self._count += 1
 
     def _device_data_switching_group(
         self, device: DeviceData, data: DeviceData
@@ -296,53 +327,3 @@ class SmileCommon:
         elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
                 model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
                 model_data["reachable"] = zb_node.find("reachable").text == "true"
-
-    def _power_data_energy_diff(
-        self,
-        measurement: str,
-        net_string: SensorType,
-        f_val: float | int,
-        direct_data: DeviceData,
-    ) -> DeviceData:
-        """Calculate differential energy."""
-        if (
-            "electricity" in measurement
-            and "phase" not in measurement
-            and "interval" not in net_string
-        ):
-            diff = 1
-            if "produced" in measurement:
-                diff = -1
-            if net_string not in direct_data["sensors"]:
-                tmp_val: float | int = 0
-            else:
-                tmp_val = direct_data["sensors"][net_string]
-
-            if isinstance(f_val, int):
-                tmp_val += f_val * diff
-            else:
-                tmp_val += float(f_val * diff)
-                tmp_val = float(f"{round(tmp_val, 3):.3f}")
-
-            direct_data["sensors"][net_string] = tmp_val
-
-        return direct_data
-
-    def _create_gw_devices(self, appl: Munch) -> None:
-        """Helper-function for creating/updating gw_devices."""
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-        self._count += 1
-        for key, value in {
-            "firmware": appl.firmware,
-            "hardware": appl.hardware,
-            "location": appl.location,
-            "mac_address": appl.mac,
-            "model": appl.model,
-            "name": appl.name,
-            "zigbee_mac_address": appl.zigbee_mac,
-            "vendor": appl.vendor_name,
-        }.items():
-            if value is not None or key == "location":
-                appl_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][appl_key] = value
-                self._count += 1

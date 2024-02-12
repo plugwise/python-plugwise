@@ -22,7 +22,34 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 
 
-def check_alternative_locations(loc: Munch, legacy: bool) -> bool:
+def check_alternative_location(loc: Munch, legacy: bool) -> Munch:
+    """Try."""
+    if in_alternative_location(loc, legacy):
+        # Avoid double processing by skipping one peak-list option
+        if loc.peak_select == "nl_offpeak":
+            loc.found = False
+            return loc
+
+        loc.locator = (
+            f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+        )
+        if legacy:
+            loc.locator = (
+                f"./{loc.meas_list[0]}_{loc.log_type}/"
+                f'measurement[@directionality="{loc.meas_list[1]}"]'
+            )
+
+        if loc.logs.find(loc.locator) is None:
+            loc.found = False
+            return loc
+
+        return loc
+
+    loc.found = False
+    return loc
+
+
+def in_alternative_location(loc: Munch, legacy: bool) -> bool:
     """Look for P1 gas_consumed or phase data (without tariff).
 
     For legacy look for P1 legacy electricity_point_meter or gas_*_meter data.
