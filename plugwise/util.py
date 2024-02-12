@@ -1,6 +1,7 @@
 """Plugwise protocol helpers."""
 from __future__ import annotations
 
+import datetime as dt
 import re
 
 from plugwise.constants import (
@@ -8,6 +9,7 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
+    OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
     SPECIAL_FORMAT,
@@ -126,6 +128,20 @@ def remove_empty_platform_dicts(data: DeviceData) -> None:
 def return_valid(value: etree | None, default: etree) -> etree:
     """Return default when value is None."""
     return value if value is not None else default
+
+
+def skip_obsolete_measurements(xml: etree, measurement: str) -> bool:
+    """Skipping known obsolete measurements."""
+    locator = f".//logs/point_log[type='{measurement}']/updated_date"
+    if (
+        measurement in OBSOLETE_MEASUREMENTS
+        and (updated_date_key := xml.find(locator))
+        is not None
+    ):
+        updated_date = updated_date_key.text.split("T")[0]
+        date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
+        date_2 = dt.datetime.now()
+        return int((date_2 - date_1).days) > 7
 
 
 # NOTE: this function version_to_model is shared between Smile and USB

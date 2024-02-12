@@ -27,7 +27,6 @@ from plugwise.constants import (
     LOCATIONS,
     LOGGER,
     NONE,
-    OBSOLETE_MEASUREMENTS,
     OFF,
     P1_MEASUREMENTS,
     SENSORS,
@@ -55,7 +54,12 @@ from plugwise.exceptions import (
     InvalidXMLError,
     ResponseError,
 )
-from plugwise.util import check_model, escape_illegal_xml_characters, format_measure
+from plugwise.util import (
+    check_model,
+    escape_illegal_xml_characters,
+    format_measure,
+    skip_obsolete_measurements,
+)
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
@@ -574,20 +578,8 @@ class SmileHelper(SmileCommon):
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
-                # Skip known obsolete measurements
-                updated_date_locator = (
-                    f'.//logs/point_log[type="{measurement}"]/updated_date'
-                )
-                if (
-                    measurement in OBSOLETE_MEASUREMENTS
-                    and (updated_date_key := appliance.find(updated_date_locator))
-                    is not None
-                ):
-                    updated_date = updated_date_key.text.split("T")[0]
-                    date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
-                    date_2 = dt.datetime.now()
-                    if int((date_2 - date_1).days) > 7:
-                        continue
+                if skip_obsolete_measurements(appliance, measurement):
+                    continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name

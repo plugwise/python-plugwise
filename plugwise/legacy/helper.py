@@ -4,7 +4,6 @@ Plugwise Smile protocol helpers.
 """
 from __future__ import annotations
 
-import datetime as dt
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -23,7 +22,6 @@ from plugwise.constants import (
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
     NONE,
-    OBSOLETE_MEASUREMENTS,
     P1_LEGACY_MEASUREMENTS,
     SENSORS,
     SPECIALS,
@@ -43,7 +41,7 @@ from plugwise.constants import (
     SwitchType,
     ThermoLoc,
 )
-from plugwise.util import format_measure, version_to_model
+from plugwise.util import format_measure, skip_obsolete_measurements, version_to_model
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
@@ -336,20 +334,8 @@ class SmileLegacyHelper(SmileCommon):
                 if measurement == "domestic_hot_water_state":
                     continue
 
-                # Skip known obsolete measurements
-                updated_date_locator = (
-                    f'.//logs/point_log[type="{measurement}"]/updated_date'
-                )
-                if (
-                    measurement in OBSOLETE_MEASUREMENTS
-                    and (updated_date_key := appliance.find(updated_date_locator))
-                    is not None
-                ):
-                    updated_date = updated_date_key.text.split("T")[0]
-                    date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
-                    date_2 = dt.datetime.now()
-                    if int((date_2 - date_1).days) > 7:
-                        continue  # pragma: no cover
+                if skip_obsolete_measurements(appliance, measurement):
+                    continue  # pragma: no cover
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
