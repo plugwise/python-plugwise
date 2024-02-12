@@ -143,6 +143,8 @@ def skip_obsolete_measurements(xml: etree, measurement: str) -> bool:
         date_2 = dt.datetime.now()
         return int((date_2 - date_1).days) > 7
 
+    return False
+
 
 # NOTE: this function version_to_model is shared between Smile and USB
 def version_to_model(version: str | None) -> str | None:
