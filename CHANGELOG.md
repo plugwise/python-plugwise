@@ -2,7 +2,7 @@
 
 ## V0.37.1
 
-- Further optimization of the refactored code.
+- Further optimization / deduplication of the refactored code.
 
 ## v0.37.0
 
