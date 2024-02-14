@@ -326,9 +326,23 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
         self.smile_setup = "updated/adam_plus_anna_new"
+        smile._old_device_list = [
+            "da224107914542988a88561b4452b0f6",
+            "056ee145a816487eaa69243c3280f8bf",
+            "67d73d0bd469422db25a618a5fb8eeb0",
+            "e2f4322d57924fa090fbbc48b3a140dc",
+            "29542b2b6a6a4169acecc15c72a599b8",
+            "ad4838d7d35c4d6ea796ee12ae5aedf8",
+            "1772a4ea304041adb83f357b751341ff",
+            "854f8a9b0e7e425db97f1f110e1ce4b3",
+            "2568cc4b9c1e401495d4741a5f89bee1",
+            "e8ef2a01ed3b4139a53bf749204fe6b4",
+        ]
         await self.device_test(
             smile, "2022-01-16 00:00:01", testdata_updated, initialize=False
         )
+        assert self.config_changed
+        assert self.config_changed == ["e2f4322d57924fa090fbbc48b3a140dc"]
 
         await smile.close_connection()
         await self.disconnect(server, client)

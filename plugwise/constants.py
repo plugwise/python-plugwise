@@ -383,6 +383,7 @@ ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
 class GatewayData(TypedDict, total=False):
     """The Gateway Data class."""
 
+    config_changed: list[str]
     cooling_present: bool
     gateway_id: str
     heater_id: str
