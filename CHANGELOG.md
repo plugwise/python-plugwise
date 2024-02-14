@@ -1,8 +1,8 @@
 # Changelog
 
-## Ongoing
+## V0.37.1
 
-- General improving of code
+- Further optimization / deduplication of the refactored code.
 
 ## v0.37.0
 

@@ -1,6 +1,7 @@
 """Plugwise protocol helpers."""
 from __future__ import annotations
 
+import datetime as dt
 import re
 
 from plugwise.constants import (
@@ -8,6 +9,7 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
+    OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
     SPECIAL_FORMAT,
@@ -17,6 +19,50 @@ from plugwise.constants import (
 )
 
 from defusedxml import ElementTree as etree
+from munch import Munch
+
+
+def check_alternative_location(loc: Munch, legacy: bool) -> Munch:
+    """Try."""
+    if in_alternative_location(loc, legacy):
+        # Avoid double processing by skipping one peak-list option
+        if loc.peak_select == "nl_offpeak":
+            loc.found = False
+            return loc
+
+        loc.locator = (
+            f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
+        )
+        if legacy:
+            loc.locator = (
+                f"./{loc.meas_list[0]}_{loc.log_type}/"
+                f'measurement[@directionality="{loc.meas_list[1]}"]'
+            )
+
+        if loc.logs.find(loc.locator) is None:
+            loc.found = False
+            return loc
+
+        return loc
+
+    loc.found = False
+    return loc
+
+
+def in_alternative_location(loc: Munch, legacy: bool) -> bool:
+    """Look for P1 gas_consumed or phase data (without tariff).
+
+    For legacy look for P1 legacy electricity_point_meter or gas_*_meter data.
+    """
+    present = "log" in loc.log_type and (
+        "gas" in loc.measurement or "phase" in loc.measurement
+        )
+    if legacy:
+        present = "meter" in loc.log_type and (
+            "point" in loc.log_type or "gas" in loc.measurement
+            )
+
+    return present
 
 
 def check_heater_central(xml: etree) -> str:
@@ -126,6 +172,22 @@ def remove_empty_platform_dicts(data: DeviceData) -> None:
 def return_valid(value: etree | None, default: etree) -> etree:
     """Return default when value is None."""
     return value if value is not None else default
+
+
+def skip_obsolete_measurements(xml: etree, measurement: str) -> bool:
+    """Skipping known obsolete measurements."""
+    locator = f".//logs/point_log[type='{measurement}']/updated_date"
+    if (
+        measurement in OBSOLETE_MEASUREMENTS
+        and (updated_date_key := xml.find(locator))
+        is not None
+    ):
+        updated_date = updated_date_key.text.split("T")[0]
+        date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
+        date_2 = dt.datetime.now()
+        return int((date_2 - date_1).days) > 7
+
+    return False
 
 
 # NOTE: this function version_to_model is shared between Smile and USB

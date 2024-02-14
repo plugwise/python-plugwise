@@ -27,11 +27,9 @@ from plugwise.constants import (
     LOCATIONS,
     LOGGER,
     NONE,
-    OBSOLETE_MEASUREMENTS,
     OFF,
     P1_MEASUREMENTS,
     SENSORS,
-    SPECIAL_PLUG_TYPES,
     SPECIALS,
     SWITCHES,
     TEMP_CELSIUS,
@@ -41,7 +39,6 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    ApplianceType,
     BinarySensorType,
     DeviceData,
     GatewayData,
@@ -61,7 +58,7 @@ from plugwise.util import (
     check_model,
     escape_illegal_xml_characters,
     format_measure,
-    power_data_local_format,
+    skip_obsolete_measurements,
 )
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
@@ -294,22 +291,7 @@ class SmileHelper(SmileCommon):
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
-            self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-            self._count += 1
-            for key, value in {
-                "firmware": appl.firmware,
-                "hardware": appl.hardware,
-                "location": appl.location,
-                "mac_address": appl.mac,
-                "model": appl.model,
-                "name": appl.name,
-                "zigbee_mac_address": appl.zigbee_mac,
-                "vendor": appl.vendor_name,
-            }.items():
-                if value is not None or key == "location":
-                    appl_key = cast(ApplianceType, key)
-                    self.gw_devices[appl.dev_id][appl_key] = value
-                    self._count += 1
+            self._create_gw_devices(appl)
 
         # For P1 collect the connected SmartMeter info
         if self.smile_type == "power":
@@ -356,23 +338,7 @@ class SmileHelper(SmileCommon):
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(appl, location)
 
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
-        self._count += 1
-
-        for key, value in {
-            "firmware": appl.firmware,
-            "hardware": appl.hardware,
-            "location": appl.location,
-            "mac_address": appl.mac,
-            "model": appl.model,
-            "name": appl.name,
-            "zigbee_mac_address": appl.zigbee_mac,
-            "vendor": appl.vendor_name,
-        }.items():
-            if value is not None or key == "location":
-                p1_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][p1_key] = value
-                self._count += 1
+        self._create_gw_devices(appl)
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
@@ -591,67 +557,16 @@ class SmileHelper(SmileCommon):
         direct_data: DeviceData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
-        peak_list: list[str] = ["nl_peak", "nl_offpeak"]
         t_string = "tariff"
 
         search = self._domain_objects
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
-                for loc.peak_select in peak_list:
-                    loc.locator = (
-                        f'./{loc.log_type}[type="{loc.measurement}"]/period/'
-                        f'measurement[@{t_string}="{loc.peak_select}"]'
-                    )
-                    loc = self._power_data_peak_value(loc)
-                    if not loc.found:
-                        continue
-
-                    direct_data = self._power_data_energy_diff(
-                        loc.measurement, loc.net_string, loc.f_val, direct_data
-                    )
-                    key = cast(SensorType, loc.key_string)
-                    direct_data["sensors"][key] = loc.f_val
+                self._collect_power_values(direct_data, loc, t_string)
 
         self._count += len(direct_data["sensors"])
         return direct_data
-
-    def _power_data_peak_value(self, loc: Munch) -> Munch:
-        """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
-        loc.found = True
-        # If locator not found look for P1 gas_consumed or phase data (without tariff)
-        if loc.logs.find(loc.locator) is None:
-            if "log" in loc.log_type and (
-                "gas" in loc.measurement or "phase" in loc.measurement
-            ):
-                # Avoid double processing by skipping one peak-list option
-                if loc.peak_select == "nl_offpeak":
-                    loc.found = False
-                    return loc
-
-                loc.locator = (
-                    f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-                )
-                if loc.logs.find(loc.locator) is None:
-                    loc.found = False
-                    return loc
-            else:
-                loc.found = False  # pragma: no cover
-                return loc  # pragma: no cover
-
-        if (peak := loc.peak_select.split("_")[1]) == "offpeak":
-            peak = "off_peak"
-        log_found = loc.log_type.split("_")[0]
-        loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
-        if "gas" in loc.measurement or loc.log_type == "point_meter":
-            loc.key_string = f"{loc.measurement}_{log_found}"
-        if "phase" in loc.measurement:
-            loc.key_string = f"{loc.measurement}"
-        loc.net_string = f"net_electricity_{log_found}"
-        val = loc.logs.find(loc.locator).text
-        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
-
-        return loc
 
     def _appliance_measurements(
         self,
@@ -663,20 +578,8 @@ class SmileHelper(SmileCommon):
         for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
-                # Skip known obsolete measurements
-                updated_date_locator = (
-                    f'.//logs/point_log[type="{measurement}"]/updated_date'
-                )
-                if (
-                    measurement in OBSOLETE_MEASUREMENTS
-                    and (updated_date_key := appliance.find(updated_date_locator))
-                    is not None
-                ):
-                    updated_date = updated_date_key.text.split("T")[0]
-                    date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
-                    date_2 = dt.datetime.now()
-                    if int((date_2 - date_1).days) > 7:
-                        continue
+                if skip_obsolete_measurements(appliance, measurement):
+                    continue
 
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
@@ -718,19 +621,6 @@ class SmileHelper(SmileCommon):
         self._count += len(data["switches"])
         # Don't count the above top-level dicts, only the remaining single items
         self._count += len(data) - 3
-
-    def _get_lock_state(self, xml: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Adam & Stretches: obtain the relay-switch lock state.
-        """
-        actuator = "actuator_functionalities"
-        func_type = "relay_functionality"
-        if xml.find("type").text not in SPECIAL_PLUG_TYPES:
-            locator = f"./{actuator}/{func_type}/lock"
-            if (found := xml.find(locator)) is not None:
-                data["switches"]["lock"] = found.text == "true"
-                self._count += 1
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
