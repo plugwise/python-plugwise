@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Remove unused dependencies from pyproject.toml
+
 ## V0.37.1
 
 - Further optimization / deduplication of the refactored code.
