@@ -29,7 +29,6 @@ requires-python = ">=3.11.0"
 dependencies    = [
         "aiohttp",
         "async_timeout",
-        "crcmod",
         "defusedxml",
         "munch",
         "pyserial",
