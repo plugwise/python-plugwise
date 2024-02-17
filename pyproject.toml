@@ -28,10 +28,8 @@ maintainers = [
 requires-python = ">=3.11.0"
 dependencies    = [
         "aiohttp",
-        "async_timeout",
         "defusedxml",
         "munch",
-        "pyserial",
         "python-dateutil",
 ]
 
