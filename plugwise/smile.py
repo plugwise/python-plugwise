@@ -136,22 +136,13 @@ class SmileAPI(SmileComm, SmileData):
         await self.full_update_device()
         self.get_all_devices()
 
-        config_changed = False
+        new_devices: list[str] = []
         self._new_device_list = list(self.gw_devices.keys())
         if self._old_device_list:
-            config_changed = self._new_device_list != self._old_device_list
+            new_devices = list(set(self._new_device_list) - set(self._old_device_list))
 
-        if config_changed:
-            added_devices: list[str] = []
-            for item_1 in self._new_device_list:
-                item_found = False
-                for item_2 in self._old_device_list:
-                    if item_found := item_1 == item_2:
-                        break
-
-                if not item_found:
-                    added_devices.append(item_1)
-            self.gw_data.update({"config_changed": added_devices})
+        if new_devices:
+            self.gw_data.update({"new_devices": new_devices})
 
         self._old_device_list = self._new_device_list
 
