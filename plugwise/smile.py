@@ -35,9 +35,6 @@ from defusedxml import ElementTree as etree
 # Dict as class
 from munch import Munch
 
-# Version detection
-import semver
-
 
 class SmileAPI(SmileComm, SmileData):
     """The Plugwise SmileAPI helper class for actual Plugwise devices."""
@@ -65,7 +62,6 @@ class SmileAPI(SmileComm, SmileData):
         smile_model: str,
         smile_name: str,
         smile_type: str,
-        smile_version: tuple[str, semver.version.Version],
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
         timeout: float = DEFAULT_TIMEOUT,

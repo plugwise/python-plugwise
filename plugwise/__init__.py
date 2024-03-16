@@ -25,9 +25,6 @@ from plugwise.smile import SmileAPI
 
 import aiohttp
 from defusedxml import ElementTree as etree
-
-# Dict as class
-# Version detection
 import semver
 
 
