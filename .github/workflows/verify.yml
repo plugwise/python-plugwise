@@ -375,8 +375,8 @@ jobs:
         continue-on-error: true
         with:
           password: ${{ secrets.testpypi_token }}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
 
   complexity:
     name: Process test complexity
