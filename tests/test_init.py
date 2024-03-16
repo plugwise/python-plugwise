@@ -944,13 +944,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             log_msg = f" # Assert version matching '{smile_version}"
             parent_logger.info(log_msg)
             assert smile.smile_version == smile_version
-        if smile_version:
-            log_msg = f" # Assert legacy {smile_legacy}"
-            parent_logger.info(log_msg)
-            if smile_legacy:
-                assert smile.smile_legacy
-            else:
-                assert not smile.smile_legacy
+        log_msg = f" # Assert legacy {smile_legacy}"
+        parent_logger.info(log_msg)
+        if smile_legacy:
+            assert smile.smile_legacy
+        else:
+            assert not smile.smile_legacy
 
     class PlugwiseTestError(Exception):
         """Plugwise test exceptions class."""
