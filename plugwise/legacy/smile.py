@@ -28,6 +28,7 @@ from plugwise.legacy.data import SmileLegacyData
 
 import aiohttp
 from munch import Munch
+import semver
 
 
 class SmileLegacyAPI(SmileComm, SmileLegacyData):
@@ -53,6 +54,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_model: str,
         smile_name: str,
         smile_type: str,
+        smile_version: tuple[str, semver.version.Version],
         smile_zigbee_mac_address: str | None,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
