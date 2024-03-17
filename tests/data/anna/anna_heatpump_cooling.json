@@ -34,7 +34,7 @@
       "compressor_state": true,
       "cooling_enabled": true,
       "cooling_state": true,
-      "slave_boiler_state": false,
+      "secondary_boiler_state": false,
       "flame_state": false
     },
     "sensors": {

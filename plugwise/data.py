@@ -125,7 +125,7 @@ class SmileData(SmileHelper):
         self._device_data_switching_group(device, data)
         # Adam data
         self._device_data_adam(device, data)
-        # Skip obtaining data for non master-thermostats
+        # Skip obtaining data for non main-thermostats
         if device["dev_class"] not in ZONE_THERMOSTATS:
             return data
 
@@ -173,7 +173,7 @@ class SmileData(SmileHelper):
                     data["gateway_modes"] = self._gw_allowed_modes
                     self._count += 1
 
-            # Control_state, only for Adam master thermostats
+            # Control_state, only for Adam main thermostats
             if device["dev_class"] in ZONE_THERMOSTATS:
                 loc_id = device["location"]
                 if ctrl_state := self._control_state(loc_id):

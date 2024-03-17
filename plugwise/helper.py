@@ -813,7 +813,7 @@ class SmileHelper(SmileCommon):
         """Helper-function for smile.py: get_all_devices().
 
         Update locations with thermostat ranking results and use
-        the result to update the device_class of slave thermostats.
+        the result to update the device_class of secondary thermostats.
         """
         self._thermo_locs = self._match_locations()
 
@@ -828,11 +828,11 @@ class SmileHelper(SmileCommon):
             for dev_id, device in self.gw_devices.items():
                 self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
 
-        # Update slave thermostat class where needed
+        # Update secondary thermostat class where needed
         for dev_id, device in self.gw_devices.items():
             if (loc_id := device["location"]) in self._thermo_locs:
                 tl_loc_id = self._thermo_locs[loc_id]
-                if "slaves" in tl_loc_id and dev_id in tl_loc_id["slaves"]:
+                if "secondary" in tl_loc_id and dev_id in tl_loc_id["secondary"]:
                     device["dev_class"] = "thermo_sensor"
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
@@ -845,7 +845,7 @@ class SmileHelper(SmileCommon):
             for appliance_details in self.gw_devices.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
-                        {"master": None, "master_prio": 0, "slaves": set()}
+                        {"main": None, "main_prio": 0, "secondary": set()}
                     )
                     matched_locations[location_id] = location_details
 
@@ -860,29 +860,29 @@ class SmileHelper(SmileCommon):
     ) -> None:
         """Helper-function for _scan_thermostats().
 
-        Rank the thermostat based on appliance_details: master or slave.
+        Rank the thermostat based on appliance_details: main or secondary.
         """
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
         if loc_id == appl_d_loc and appl_class in thermo_matching:
-            # Pre-elect new master
-            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["master_prio"]:
-                # Demote former master
-                if (tl_master := self._thermo_locs[loc_id]["master"]) is not None:
-                    self._thermo_locs[loc_id]["slaves"].add(tl_master)
+            # Pre-elect new main
+            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["main_prio"]:
+                # Demote former main
+                if (tl_main := self._thermo_locs[loc_id]["main"]) is not None:
+                    self._thermo_locs[loc_id]["secondary"].add(tl_main)
 
-                # Crown master
-                self._thermo_locs[loc_id]["master_prio"] = thermo_matching[appl_class]
-                self._thermo_locs[loc_id]["master"] = appliance_id
+                # Crown main
+                self._thermo_locs[loc_id]["main_prio"] = thermo_matching[appl_class]
+                self._thermo_locs[loc_id]["main"] = appliance_id
 
             else:
-                self._thermo_locs[loc_id]["slaves"].add(appliance_id)
+                self._thermo_locs[loc_id]["secondary"].add(appliance_id)
 
     def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _device_data_adam().
 
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
-        Represents the heating/cooling demand-state of the local master thermostat.
+        Represents the heating/cooling demand-state of the local main thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         locator = f'location[@id="{loc_id}"]'

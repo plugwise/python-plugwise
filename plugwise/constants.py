@@ -168,7 +168,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     # Available with the Loria and Elga (newer Anna firmware) heatpumps
     "cooling_enabled": UOM(NONE),
     # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
-    "slave_boiler_state": UOM(NONE),
+    "slave_boiler_state": DATA("secondary_boiler_state", NONE),
     "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
     "central_heater_water_pressure": DATA("water_pressure", PRESSURE_BAR),
     # Legacy Anna: similar to flame-state on Anna/Adam
@@ -260,7 +260,7 @@ BinarySensorType = Literal[
     "flame_state",
     "heating_state",
     "plugwise_notification",
-    "slave_boiler_state",
+    "secondary_boiler_state",
 ]
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
@@ -410,7 +410,7 @@ class SmileBinarySensors(TypedDict, total=False):
     flame_state: bool
     heating_state: bool
     plugwise_notification: bool
-    slave_boiler_state: bool
+    secondary_boiler_state: bool
 
 
 class SmileSensors(TypedDict, total=False):
@@ -482,9 +482,9 @@ class ThermoLoc(TypedDict, total=False):
     """Thermo Location class."""
 
     name: str
-    master: str | None
+    main: str | None
     master_prio: int
-    slaves: set[str]
+    secondary: set[str]
 
 
 class ActuatorData(TypedDict, total=False):
