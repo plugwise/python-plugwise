@@ -121,21 +121,20 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
 DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
-    # HA Core thermostat current_temperature
-    "temperature": UOM(TEMP_CELSIUS),
-    # HA Core thermostat setpoint
-    "thermostat": DATA("setpoint", TEMP_CELSIUS),
-    # Specific for an Anna
-    "illuminance": UOM(UNIT_LUMEN),
+    "humidity": UOM(PERCENTAGE),  # Specific for a Jip
+    "illuminance": UOM(UNIT_LUMEN),  # Specific for an Anna
+    "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
+    "thermostat": DATA("setpoint", TEMP_CELSIUS),  # HA Core thermostat setpoint
+    ########################################################
     # Specific for an Anna with heatpump extension installed
     "cooling_activation_outdoor_temperature": UOM(TEMP_CELSIUS),
     "cooling_deactivation_threshold": UOM(TEMP_CELSIUS),
-    # Specific for a Lisa a Tom/Floor
+    ##################################
+    # Specific for a Lisa or Tom/Floor
     "battery": UOM(PERCENTAGE),
     "temperature_difference": UOM(DEGREE),
     "valve_position": UOM(PERCENTAGE),
-    # Specific for a Jip
-    "humidity": UOM(PERCENTAGE),
+    #####################
     # Specific for a Plug
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
@@ -144,39 +143,43 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
 
 # Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
+    "boiler_state": DATA(
+        "flame_state", NONE
+    ),  # Legacy Anna: similar to flame-state on Anna/Adam
     "boiler_temperature": DATA("water_temperature", TEMP_CELSIUS),
+    "central_heating_state": DATA(
+        "c_heating_state", NONE
+    ),  # For Elga (heatpump) use this instead of intended_central_heating_state
+    "central_heater_water_pressure": DATA("water_pressure", PRESSURE_BAR),
+    "compressor_state": UOM(NONE),  # present with heatpump
+    "cooling_enabled": UOM(
+        NONE
+    ),  # Available with the Loria and Elga (newer Anna firmware) heatpumps
+    "cooling_state": UOM(NONE),
     "domestic_hot_water_mode": DATA("select_dhw_mode", NONE),
     "domestic_hot_water_setpoint": UOM(TEMP_CELSIUS),
     "domestic_hot_water_state": DATA("dhw_state", NONE),
     "domestic_hot_water_temperature": DATA("dhw_temperature", TEMP_CELSIUS),
     "elga_status_code": UOM(NONE),
+    "intended_boiler_state": DATA(
+        "heating_state", NONE
+    ),  # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
+    "flame_state": UOM(
+        NONE
+    ),  # Also present when there is a single gas-heater
     "intended_boiler_temperature": UOM(
         TEMP_CELSIUS
     ),  # Non-zero when heating, zero when dhw-heating
-    "central_heating_state": DATA(
-        "c_heating_state", NONE
-    ),  # For Elga (heatpump) use this instead of intended_central_heating_state
     "intended_central_heating_state": DATA(
         "heating_state", NONE
     ),  # This key shows in general the heating-behavior better than c-h_state. except when connected to a heatpump
     "modulation_level": UOM(PERCENTAGE),
     "return_water_temperature": DATA("return_temperature", TEMP_CELSIUS),
-    # Used with the Elga heatpump - marcelveldt
-    "compressor_state": UOM(NONE),
-    "cooling_state": UOM(NONE),
-    "thermostat_supports_cooling": UOM(NONE),
-    # Available with the Loria and Elga (newer Anna firmware) heatpumps
-    "cooling_enabled": UOM(NONE),
-    # Next 2 keys are used to show the state of the gas-heater used next to the Elga heatpump - marcelveldt
+    "outdoor_temperature": DATA(
+        "outdoor_air_temperature", TEMP_CELSIUS
+    ),  # Outdoor temperature from APPLIANCES - present for a heatpump
     "slave_boiler_state": DATA("secondary_boiler_state", NONE),
-    "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
-    "central_heater_water_pressure": DATA("water_pressure", PRESSURE_BAR),
-    # Legacy Anna: similar to flame-state on Anna/Adam
-    "boiler_state": DATA("flame_state", NONE),
-    # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
-    "intended_boiler_state": DATA("heating_state", NONE),
-    # Outdoor temperature from APPLIANCES - present for a heatpump
-    "outdoor_temperature": DATA("outdoor_air_temperature", TEMP_CELSIUS),
+    "thermostat_supports_cooling": UOM(NONE),  # present with heatpump
 }
 
 OBSOLETE_MEASUREMENTS: Final[tuple[str, ...]] = (
@@ -253,8 +256,8 @@ ApplianceType = Literal[
 ]
 
 BinarySensorType = Literal[
-    "cooling_enabled",
     "compressor_state",
+    "cooling_enabled",
     "cooling_state",
     "dhw_state",
     "flame_state",
@@ -265,10 +268,10 @@ BinarySensorType = Literal[
 BINARY_SENSORS: Final[tuple[str, ...]] = get_args(BinarySensorType)
 
 LIMITS: Final[tuple[str, ...]] = (
-    "offset",
-    "setpoint",
-    "resolution",
     "lower_bound",
+    "offset",
+    "resolution",
+    "setpoint",
     "upper_bound",
 )
 
@@ -329,8 +332,8 @@ SENSORS: Final[tuple[str, ...]] = get_args(SensorType)
 
 SPECIAL_PLUG_TYPES: Final[tuple[str, ...]] = (
     "central_heating_pump",
-    "valve_actuator",
     "heater_electric",
+    "valve_actuator",
 )
 
 SpecialType = Literal[
@@ -350,14 +353,14 @@ SwitchType = Literal[
 ]
 SWITCHES: Final[tuple[str, ...]] = get_args(SwitchType)
 
-SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("switching", "report")
+SWITCH_GROUP_TYPES: Final[tuple[str, ...]] = ("report", "switching")
 
 THERMOSTAT_CLASSES: Final[tuple[str, ...]] = (
     "thermostat",
+    "thermostatic_radiator_valve",
     "thermo_sensor",
     "zone_thermometer",
     "zone_thermostat",
-    "thermostatic_radiator_valve",
 )
 
 ToggleNameType = Literal[
@@ -392,19 +395,19 @@ class ModelData(TypedDict):
     """The ModelData class."""
 
     contents: bool
-    vendor_name: str | None
-    vendor_model: str | None
-    hardware_version: str | None
     firmware_version: str | None
-    zigbee_mac_address: str | None
+    hardware_version: str | None
     reachable: bool | None
+    vendor_model: str | None
+    vendor_name: str | None
+    zigbee_mac_address: str | None
 
 
 class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
-    cooling_enabled: bool
     compressor_state: bool
+    cooling_enabled: bool
     cooling_state: bool
     dhw_state: bool
     flame_state: bool
