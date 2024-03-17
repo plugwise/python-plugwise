@@ -57,7 +57,7 @@ class SmileLegacyData(SmileLegacyHelper):
         # Switching groups data
         self._device_data_switching_group(device, data)
 
-        # Skip obtaining data for non main-thermostats
+        # Skip obtaining data for non primary-thermostats
         if device["dev_class"] not in ZONE_THERMOSTATS:
             return data
 

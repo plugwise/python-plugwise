@@ -482,8 +482,8 @@ class ThermoLoc(TypedDict, total=False):
     """Thermo Location class."""
 
     name: str
-    main: str | None
-    master_prio: int
+    primary: str | None
+    primary_prio: int
     secondary: set[str]
 
 

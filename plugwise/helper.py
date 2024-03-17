@@ -845,7 +845,7 @@ class SmileHelper(SmileCommon):
             for appliance_details in self.gw_devices.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
-                        {"main": None, "main_prio": 0, "secondary": set()}
+                        {"primary": None, "primary_prio": 0, "secondary": set()}
                     )
                     matched_locations[location_id] = location_details
 
@@ -860,20 +860,20 @@ class SmileHelper(SmileCommon):
     ) -> None:
         """Helper-function for _scan_thermostats().
 
-        Rank the thermostat based on appliance_details: main or secondary.
+        Rank the thermostat based on appliance_details: primary or secondary.
         """
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
         if loc_id == appl_d_loc and appl_class in thermo_matching:
-            # Pre-elect new main
-            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["main_prio"]:
-                # Demote former main
-                if (tl_main := self._thermo_locs[loc_id]["main"]) is not None:
-                    self._thermo_locs[loc_id]["secondary"].add(tl_main)
+            # Pre-elect new primary
+            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
+                # Demote former primary
+                if (tl_primary:= self._thermo_locs[loc_id]["primary"]) is not None:
+                    self._thermo_locs[loc_id]["secondary"].add(tl_primary)
 
-                # Crown main
-                self._thermo_locs[loc_id]["main_prio"] = thermo_matching[appl_class]
-                self._thermo_locs[loc_id]["main"] = appliance_id
+                # Crown primary
+                self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]
+                self._thermo_locs[loc_id]["primary"] = appliance_id
 
             else:
                 self._thermo_locs[loc_id]["secondary"].add(appliance_id)
@@ -882,7 +882,7 @@ class SmileHelper(SmileCommon):
         """Helper-function for _device_data_adam().
 
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
-        Represents the heating/cooling demand-state of the local main thermostat.
+        Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
         locator = f'location[@id="{loc_id}"]'
