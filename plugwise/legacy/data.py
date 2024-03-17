@@ -6,7 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, ZONE_THERMOSTATS, DeviceData
+from plugwise.constants import NONE, DeviceData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -57,8 +57,8 @@ class SmileLegacyData(SmileLegacyHelper):
         # Switching groups data
         self._device_data_switching_group(device, data)
 
-        # Skip obtaining data for non master-thermostats
-        if device["dev_class"] not in ZONE_THERMOSTATS:
+        # Skip obtaining data when not a thermostat
+        if device["dev_class"] != "thermostat":
             return data
 
         # Thermostat data (presets, temperatures etc)
