@@ -97,7 +97,7 @@
 			</zig_bee_node>
 		</protocols>
 	</module>
-	<appliance id='e2f4322d57924fa090fbbc48b3a140dc'>
+	<appliance id='f2e4322d57924fa090fbbc48b3a140dc'>
 		<name>Lisa Badkamer</name>
 		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
 		<type>zone_thermostat</type>

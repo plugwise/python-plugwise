@@ -97,6 +97,8 @@ class SmileAPI(SmileComm, SmileData):
 
         self._heater_id: str
         self._cooling_enabled = False
+        self._new_device_list: list[str] = []
+        self._old_device_list: list[str] = []
 
     async def full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
@@ -133,6 +135,16 @@ class SmileAPI(SmileComm, SmileData):
         self.gw_devices: dict[str, DeviceData] = {}
         await self.full_update_device()
         self.get_all_devices()
+
+        new_devices: list[str] = []
+        self._new_device_list = list(self.gw_devices.keys())
+        if self._old_device_list:
+            new_devices = list(set(self._new_device_list) - set(self._old_device_list))
+
+        if new_devices:
+            self.gw_data.update({"new_devices": new_devices})
+
+        self._old_device_list = self._new_device_list
 
         if "heater_id" in self.gw_data:
             self._heater_id = self.gw_data["heater_id"]
