@@ -1,6 +1,6 @@
 # Changelog
 
-## Ongoing
+## v0.37.2
 
 - Code improvements
 - Remove unused dependencies from pyproject.toml
