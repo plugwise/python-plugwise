@@ -691,10 +691,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Toggle temperature to test functionality."""
         _LOGGER.info("Assert modifying temperature setpoint")
         tinker_temp_passed = False
-        test_temp = 22.9
+        test_temp = {"setpoint": 22.9}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
-            await smile.set_temperature(test_temp, None)
+            await smile.set_temperature("dummy", test_temp)
             _LOGGER.info("  + worked as intended")
             tinker_temp_passed = True
         except (
