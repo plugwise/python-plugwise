@@ -249,8 +249,12 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 
             await self._request(uri, method="put", data=data)
 
-    async def set_temperature(self, setpoint: str, _: dict[str, float]) -> None:
+    async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
+        setpoint: float | None = None
+        if "setpoint" in items:
+            setpoint = items["setpoint"]
+
         if setpoint is None:
             raise PlugwiseError(
                 "Plugwise: failed setting temperature: no valid input provided"

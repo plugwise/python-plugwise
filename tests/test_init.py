@@ -687,30 +687,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return tinker_temp_passed
 
     @pytest.mark.asyncio
-    async def tinker_legacy_thermostat_temp(self, smile, unhappy=False):
-        """Toggle temperature to test functionality."""
-        _LOGGER.info("Assert modifying temperature setpoint")
-        tinker_temp_passed = False
-        test_temp = 22.9
-        _LOGGER.info("- Adjusting temperature to %s", test_temp)
-        try:
-            await smile.set_temperature(test_temp, None)
-            _LOGGER.info("  + worked as intended")
-            tinker_temp_passed = True
-        except (
-            pw_exceptions.ErrorSendingCommandError,
-            pw_exceptions.ResponseError,
-        ):
-            if unhappy:
-                _LOGGER.info("  + failed as expected")
-                tinker_temp_passed = True
-            else:  # pragma: no cover
-                _LOGGER.info("  - failed unexpectedly")
-                tinker_temp_passed = False
-
-        return tinker_temp_passed
-
-    @pytest.mark.asyncio
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
         for new_preset in ["asleep", "home", BOGUS]:
@@ -843,9 +819,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         return result_1 and result_2 and result_3
 
     @pytest.mark.asyncio
-    async def tinker_legacy_thermostat(self, smile, schedule_on=True, unhappy=False):
+    async def tinker_legacy_thermostat(
+        self,
+        smile,
+        schedule_on=True,
+        block_cooling=False,
+        unhappy=False
+    ):
         """Toggle various climate settings to test functionality."""
-        result_1 = await self.tinker_legacy_thermostat_temp(smile, unhappy)
+        result_1 = await self.tinker_thermostat_temp(
+            smile, "dummy", block_cooling, unhappy
+        )
         result_2 = await self.tinker_thermostat_preset(smile, None, unhappy)
         result_3 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
         if schedule_on:

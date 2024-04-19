@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.37.3
+
+- Fix for [plugwise-beta #620](https://github.com/plugwise/plugwise-beta/issues/620)
+
 ## v0.37.2
 
 - Code improvements
