@@ -137,12 +137,17 @@ class SmileAPI(SmileComm, SmileData):
         self.get_all_devices()
 
         new_devices: list[str] = []
+        removed_devices: list[str] = []
         self._new_device_list = list(self.gw_devices.keys())
         if self._old_device_list:
             new_devices = list(set(self._new_device_list) - set(self._old_device_list))
+            removed_devices = list(set(self._old_device_list) - set(self._new_device_list))
 
         if new_devices:
             self.gw_data.update({"new_devices": new_devices})
+
+        if removed_devices:
+            self.gw_data.update({"removed_devices": removed_devices})
 
         self._old_device_list = self._new_device_list
 
