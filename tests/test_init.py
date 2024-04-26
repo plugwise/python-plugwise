@@ -549,9 +549,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("Asserting updated testdata:")
                 data = await smile.async_update()
 
-        self.new_devices = []
-        if "new_devices" in data.gateway:
-            self.new_devices = data.gateway["new_devices"]
+        self.new = []
+        self.removed = []
+        if "new" in data.gateway:
+            self.new = data.gateway["new"]
+        if "removed" in data.gateway:
+            self.removed = data.gateway["removed"]
         self.cooling_present = False
         if "cooling_present" in data.gateway:
             self.cooling_present = data.gateway["cooling_present"]
