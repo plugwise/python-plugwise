@@ -62,7 +62,7 @@ m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["available"] = True
 
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
-    "selected_schedule"
+    "select_schedule"
 ] = "None"
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
