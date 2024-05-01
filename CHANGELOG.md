@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Fix typo in manual_fixtures.py script
+
 ## v0.37.3
 
 - Fix for [plugwise-beta #620](https://github.com/plugwise/plugwise-beta/issues/620)
