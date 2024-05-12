@@ -182,15 +182,17 @@ class SmileAPI(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_number_setpoint(
+    async def set_number(
         self,
         key: str,
         temperature: float,
         dev_id: str | None,
     ) -> None:
-        """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
+        """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler,
+        or the temperature-offset on a Thermostat.
+        """
         if dev_id is not None:
-            await self.set_temperature_offset(dev_id, temperature)
+            await self.set_offset(dev_id, temperature)
             return
 
         temp = str(temperature)
@@ -208,7 +210,7 @@ class SmileAPI(SmileComm, SmileData):
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
         await self._request(uri, method="put", data=data)
 
-    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
+    async def set_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
         if dev_id not in self.therms_with_offset_func:
             raise PlugwiseError(

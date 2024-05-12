@@ -154,7 +154,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
     async def set_gateway_mode(self, mode: str) -> None:
         """Set-function placeholder for legacy devices."""
 
-    async def set_number_setpoint(self, key: str, temperature: float) -> None:
+    async def set_number(self, key: str, temperature: float, dev_id: str) -> None:
         """Set-function placeholder for legacy devices."""
 
     async def set_preset(self, _: str, preset: str) -> None:
@@ -268,6 +268,3 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         )
 
         await self._request(uri, method="put", data=data)
-
-    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
-        """Set-function placeholder for legacy devices."""
