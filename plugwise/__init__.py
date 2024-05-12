@@ -323,13 +323,14 @@ class Smile(SmileComm):
         """Set the given Temperature on the relevant Thermostat."""
         await self._smile_api.set_temperature(loc_id, items)
 
-    async def set_number_setpoint(self, key: str, _: str, temperature: float) -> None:
+    async def set_number(
+        self,
+        key: str,
+        temperature: float,
+        dev_id: str | None = None,
+    ) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
-        await self._smile_api.set_number_setpoint(key, temperature)
-
-    async def set_temperature_offset(self, _: str, dev_id: str, offset: float) -> None:
-        """Set the Temperature offset for thermostats that support this feature."""
-        await self._smile_api.set_temperature_offset(dev_id, offset)
+        await self._smile_api.set_number(key, temperature, dev_id)
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str

@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Combine set_temperature_offset() with set_number()
 - Fix typo in manual_fixtures.py script
 
 ## v0.37.3
