@@ -190,7 +190,7 @@ class SmileAPI(SmileComm, SmileData):
     ) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
         if dev_id is not None:
-            await set_temperature_offset(dev_id, temperature)
+            await self.set_temperature_offset(dev_id, temperature)
             return
 
         temp = str(temperature)
