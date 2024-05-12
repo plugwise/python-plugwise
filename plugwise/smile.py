@@ -182,8 +182,17 @@ class SmileAPI(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
-    async def set_number_setpoint(self, key: str, temperature: float) -> None:
+    async def set_number_setpoint(
+        self,
+        key: str,
+        temperature: float,
+        dev_id: str | None = None,
+    ) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
+        if dev_id is not None:
+            await set_temperature_offset(dev_id, temperature)
+            return
+
         temp = str(temperature)
         thermostat_id: str | None = None
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
@@ -197,6 +206,19 @@ class SmileAPI(SmileComm, SmileData):
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
+        await self._request(uri, method="put", data=data)
+
+    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
+        """Set the Temperature offset for thermostats that support this feature."""
+        if dev_id not in self.therms_with_offset_func:
+            raise PlugwiseError(
+                "Plugwise: this device does not have temperature-offset capability."
+            )
+
+        value = str(offset)
+        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
+        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
+
         await self._request(uri, method="put", data=data)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
@@ -408,18 +430,5 @@ class SmileAPI(SmileComm, SmileData):
             "<thermostat_functionality><setpoint>"
             f"{temperature}</setpoint></thermostat_functionality>"
         )
-
-        await self._request(uri, method="put", data=data)
-
-    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
-        """Set the Temperature offset for thermostats that support this feature."""
-        if dev_id not in self.therms_with_offset_func:
-            raise PlugwiseError(
-                "Plugwise: this device does not have temperature-offset capability."
-            )
-
-        value = str(offset)
-        uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
-        data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
 
         await self._request(uri, method="put", data=data)
