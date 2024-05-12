@@ -149,6 +149,9 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
     async def delete_notification(self) -> None:
         """Set-function placeholder for legacy devices."""
 
+    async def reboot_gateway(self) -> None:
+        """Set-function placeholder for legacy devices."""
+
     async def set_dhw_mode(self, mode: str) -> None:
         """Set-function placeholder for legacy devices."""
 

@@ -367,3 +367,7 @@ class Smile(SmileComm):
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
         await self._smile_api.delete_notification()
+
+    async def reboot_gateway(self) -> None:
+        """Reboot the Plugwise Gateway."""
+        await self._smile_api.reboot_gateway()
