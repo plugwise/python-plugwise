@@ -887,7 +887,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         new_offset = 1.0
         _LOGGER.info("- Adjusting temperature offset to %s", new_offset)
         try:
-            await smile.set_number_setpoint("dummy", new_offset, dev_id)
+            await smile.set_number_setpoint("dummy", new_offset, dev_id=dev_id)
             _LOGGER.info("  + tinker_temp_offset worked as intended")
             return True
         except pw_exceptions.PlugwiseError:
