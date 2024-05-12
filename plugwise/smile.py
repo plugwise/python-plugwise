@@ -186,7 +186,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         key: str,
         temperature: float,
-        dev_id: str | None = None,
+        dev_id: str | None,
     ) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
         if dev_id is not None:
