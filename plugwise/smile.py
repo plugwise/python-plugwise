@@ -184,9 +184,9 @@ class SmileAPI(SmileComm, SmileData):
 
     async def set_number(
         self,
+        dev_id: str,
         key: str,
         temperature: float,
-        dev_id: str,
     ) -> None:
         """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
         if key == "temperature_offset":

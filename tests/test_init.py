@@ -876,7 +876,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
         for test in ["maximum_boiler_temperature", "bogus_temperature"]:
             try:
-                await smile.set_number(test, new_temp, "dummy")
+                await smile.set_number("dummy", test, new_temp)
                 _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
@@ -887,7 +887,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         new_offset = 1.0
         _LOGGER.info("- Adjusting temperature offset to %s", new_offset)
         try:
-            await smile.set_number("temperature_offset", new_offset, dev_id)
+            await smile.set_number(dev_id, "temperature_offset", new_offset)
             _LOGGER.info("  + tinker_temp_offset worked as intended")
             return True
         except pw_exceptions.PlugwiseError:
