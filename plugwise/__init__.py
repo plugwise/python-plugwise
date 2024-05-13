@@ -330,7 +330,7 @@ class Smile(SmileComm):
         temperature: float,
     ) -> None:
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
-        await self._smile_api.set_number(key, temperature, dev_id)
+        await self._smile_api.set_number(dev_id, key, temperature)
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
