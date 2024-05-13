@@ -2,7 +2,7 @@
 
 ## v0.37.5
 
-- Combine set_temperature_offset() with set_number() function.
+- Add setting the thermostat temperature_offset to the set_number() function.
 - Fix typo in manual_fixtures.py script.
 
 ## v0.37.4 - not released
