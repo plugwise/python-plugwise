@@ -886,13 +886,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Change temperature_offset to test functionality."""
         new_offset = 1.0
         _LOGGER.info("- Adjusting temperature offset to %s", new_offset)
-        try:
-            await smile.set_number("dummy", new_offset, dev_id)
-            _LOGGER.info("  + tinker_temp_offset worked as intended")
-            return True
-        except pw_exceptions.PlugwiseError:
-            _LOGGER.info("  + tinker_temp_offset failed as intended")
-            return False
+        for test in ["temperature_offset", "bogus_offset"]:
+            try:
+                await smile.set_number(test, new_offset, dev_id)
+                _LOGGER.info("  + tinker_temp_offset worked as intended")
+                return True
+            except pw_exceptions.PlugwiseError:
+                _LOGGER.info("  + tinker_temp_offset failed as intended")
+                return False
 
     @staticmethod
     async def tinker_gateway_mode(smile):
