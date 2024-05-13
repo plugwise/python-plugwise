@@ -158,7 +158,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         key: str,
         temperature: float,
-        dev_id: str | None,
+        dev_id: str,
     ) -> None:
         """Set-function placeholder for legacy devices."""
 
