@@ -156,9 +156,9 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 
     async def set_number(
         self,
+        dev_id: str,
         key: str,
         temperature: float,
-        dev_id: str | None,
     ) -> None:
         """Set-function placeholder for legacy devices."""
 
