@@ -1,18 +1,20 @@
 # Changelog
 
-## V0.37.4
+## v0.37.5
 
-- Combine set_temperature_offset() with set_number()
-- Fix typo in manual_fixtures.py script
+- Combine set_temperature_offset() with set_number() function.
+- Fix typo in manual_fixtures.py script.
+
+## v0.37.4 - not released
 
 ## v0.37.3
 
-- Fix for [plugwise-beta #620](https://github.com/plugwise/plugwise-beta/issues/620)
+- Fix for [plugwise-beta #620](https://github.com/plugwise/plugwise-beta/issues/620).
 
 ## v0.37.2
 
-- Code improvements
-- Remove unused dependencies from pyproject.toml
+- Code improvements.
+- Remove unused dependencies from pyproject.toml.
 
 ## V0.37.1
 
