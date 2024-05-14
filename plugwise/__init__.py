@@ -306,6 +306,10 @@ class Smile(SmileComm):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
+    async def set_select(self, key: str, loc_id: str, option: str, name: str) -> None:
+        """Set the selected option for the applicable Select."""
+        await self._smile_api.set_select(loc_id, option)
+
     async def set_schedule_state(
         self,
         loc_id: str,
