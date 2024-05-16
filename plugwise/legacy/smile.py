@@ -181,7 +181,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
     async def set_regulation_mode(self, mode: str) -> None:
         """Set-function placeholder for legacy devices."""
 
-    async def set_schedule_state(self, _: str, state: str, __: str | None) -> None:
+    async def set_schedule_state(self, _: str, state: str, name: str | None) -> None:
         """Activate/deactivate the Schedule.
 
         Determined from - DOMAIN_OBJECTS.
@@ -190,7 +190,10 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         if state not in ["on", "off"]:
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
-        name = "Thermostat schedule"
+        # Handle no schedule-name / Off-schedule provided
+        if name is None or name == OFF:
+            name = "Thermostat schedule"
+
         schedule_rule_id: str | None = None
         for rule in self._domain_objects.findall("rule"):
             if rule.find("name").text == name:
