@@ -15,6 +15,7 @@ from plugwise.constants import (
     LOCATIONS,
     LOGGER,
     MODULES,
+    OFF,
     REQUIRE_APPLIANCES,
     RULES,
     DeviceData,
