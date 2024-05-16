@@ -36,7 +36,7 @@
     },
     "0d266432d64443e283b5d708ae98b455": {
       "active_preset": "home",
-      "available_schedules": ["Thermostat schedule"],
+      "available_schedules": ["Thermostat schedule", "off"],
       "dev_class": "thermostat",
       "firmware": "2017-03-13T11:54:58+01:00",
       "hardware": "6539-1301-500",
