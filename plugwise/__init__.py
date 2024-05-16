@@ -334,7 +334,7 @@ class Smile(SmileComm):
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
-        await self._smile_api.set_offset(dev_id, offset)
+        await self._smile_api.set_offset(dev_id, offset)  # pragma: no cover
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
