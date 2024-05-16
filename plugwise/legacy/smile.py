@@ -273,3 +273,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         )
 
         await self._request(uri, method="put", data=data)
+
+    async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
+        """Set-function placeholder for legacy devices."""
