@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Revert removal of set_temperature_offset() function.
+
 ## v0.37.5
 
 - Add setting the thermostat temperature_offset to the set_number() function.
