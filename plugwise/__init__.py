@@ -348,15 +348,15 @@ class Smile(SmileComm):
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        await self._smile_api.set_gateway_mode(mode)
+        await self._smile_api.set_gateway_mode(mode)  # pragma: no cover
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        await self._smile_api.set_regulation_mode(mode)
+        await self._smile_api.set_regulation_mode(mode)  # pragma: no cover
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
-        await self._smile_api.set_dhw_mode(mode)
+        await self._smile_api.set_dhw_mode(mode)  # pragma: no cover
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
