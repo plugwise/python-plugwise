@@ -6,7 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, DeviceData
+from plugwise.constants import NONE, OFF, DeviceData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -88,5 +88,5 @@ class SmileLegacyData(SmileLegacyHelper):
         # Operation modes: auto, heat
         data["mode"] = "auto"
         self._count += 1
-        if sel_schedule == NONE:
+        if sel_schedule in (NONE, OFF):
             data["mode"] = "heat"

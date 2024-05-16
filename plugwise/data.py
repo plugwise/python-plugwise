@@ -204,7 +204,7 @@ class SmileData(SmileHelper):
         # Operation modes: auto, heat, heat_cool, cool and off
         data["mode"] = "auto"
         self._count += 1
-        if sel_schedule == NONE:
+        if sel_schedule in (NONE, OFF):
             data["mode"] = "heat"
             if self._cooling_present:
                 data["mode"] = "cool" if self.check_reg_mode("cooling") else "heat_cool"
