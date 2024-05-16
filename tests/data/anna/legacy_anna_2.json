@@ -28,7 +28,7 @@
     "preset_modes": ["vacation", "away", "no_frost", "home", "asleep"],
     "active_preset": null,
     "available_schedules": ["Thermostat schedule", "off"],
-    "select_schedule": "None",
+    "select_schedule": "off",
     "mode": "heat",
     "sensors": {
       "temperature": 21.4,
