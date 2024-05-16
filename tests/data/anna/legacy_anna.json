@@ -24,7 +24,7 @@
     },
     "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
     "active_preset": "home",
-    "available_schedules": ["Thermostat schedule"],
+    "available_schedules": ["Thermostat schedule", "off"],
     "select_schedule": "Thermostat schedule",
     "mode": "auto",
     "sensors": {
