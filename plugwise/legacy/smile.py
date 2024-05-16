@@ -162,6 +162,9 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
     ) -> None:
         """Set-function placeholder for legacy devices."""
 
+    async def set_offset(self, dev_id: str, offset: float) -> None:
+        """Set-function placeholder for legacy devices."""
+
     async def set_preset(self, _: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from DOMAIN_OBJECTS."""
         if (presets := self._presets()) is None:
