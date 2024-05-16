@@ -22,6 +22,7 @@ from plugwise.constants import (
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
     NONE,
+    OFF,
     P1_LEGACY_MEASUREMENTS,
     SENSORS,
     SPECIALS,
@@ -468,7 +469,7 @@ class SmileLegacyHelper(SmileCommon):
             active = result.text == "on"
 
         if name is not None:
-            available = [name]
+            available = [name, OFF]
             if active:
                 selected = name
 
