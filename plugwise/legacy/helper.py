@@ -453,7 +453,7 @@ class SmileLegacyHelper(SmileCommon):
     def _schedules(self) -> tuple[list[str], str]:
         """Collect the schedule for the legacy thermostat."""
         available: list[str] = [NONE]
-        selected: str = NONE
+        selected = NONE
         name: str | None = None
 
         search = self._domain_objects
