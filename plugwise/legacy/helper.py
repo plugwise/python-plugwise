@@ -451,22 +451,21 @@ class SmileLegacyHelper(SmileCommon):
         return presets
 
     def _schedules(self) -> tuple[list[str], str]:
-        """Collect available schedules/schedules for the legacy thermostat."""
+        """Collect the schedule for the legacy thermostat."""
         available: list[str] = [NONE]
         selected: str = NONE
         name: str | None = None
 
         search = self._domain_objects
-        for schedule in search.findall("./rule"):
-            if rule_name := schedule.find("name").text:
-                if "preset" not in rule_name:
-                    name = rule_name
+        if search.find("./rule[name='Thermostat schedule']") is not None:
+            name = "Thermostat schedule"
 
         log_type = "schedule_state"
         locator = f"./appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
         active = False
         if (result := search.find(locator)) is not None:
             active = result.text == "on"
+        # check if schedule is empty
 
         if name is not None:
             available = [name, OFF]
