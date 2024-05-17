@@ -456,9 +456,11 @@ class SmileLegacyHelper(SmileCommon):
         selected = NONE
         name: str | None = None
 
+        rule_id = NONE
         search = self._domain_objects
-        if search.find("./rule[name='Thermostat schedule']") is not None:
+        if (result := search.find("./rule[name='Thermostat schedule']")) is not None:
             name = "Thermostat schedule"
+            rule_id = result.attrib["id"]
 
         log_type = "schedule_state"
         locator = f"./appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
@@ -467,7 +469,8 @@ class SmileLegacyHelper(SmileCommon):
             active = result.text == "on"
 
         # Show an empty schedule as no schedule found
-        if search.find('f./rule[name="{name}"]/directives') is not None and name is not None:
+        directives = search.find(f'./rule[@id="{rule_id}"]/directives/when/then') is not None
+        if directives and name is not None:
             available = [name, OFF]
             selected = name if active else OFF
 
