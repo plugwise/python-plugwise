@@ -453,10 +453,9 @@ class SmileLegacyHelper(SmileCommon):
     def _schedules(self) -> tuple[list[str], str]:
         """Collect the schedule for the legacy thermostat."""
         available: list[str] = [NONE]
-        selected = NONE
+        rule_id = selected = NONE
         name: str | None = None
 
-        rule_id = NONE
         search = self._domain_objects
         if (result := search.find("./rule[name='Thermostat schedule']")) is not None:
             name = "Thermostat schedule"
