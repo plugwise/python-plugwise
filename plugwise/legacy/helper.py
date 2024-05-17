@@ -467,7 +467,7 @@ class SmileLegacyHelper(SmileCommon):
             active = result.text == "on"
 
         # Show an empty schedule as no schedule found
-        if search.find("./rule[name='Thermostat schedule']/directives") is not None and name is not None:
+        if search.find('f./rule[name="{name}"]/directives') is not None and name is not None:
             available = [name, OFF]
             selected = name if active else OFF
 
