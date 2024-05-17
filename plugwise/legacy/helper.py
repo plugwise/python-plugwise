@@ -465,9 +465,9 @@ class SmileLegacyHelper(SmileCommon):
         active = False
         if (result := search.find(locator)) is not None:
             active = result.text == "on"
-        # check if schedule is empty
 
-        if name is not None:
+        # Show an empty schedule as no schedule found
+        if search.find("./rule[name='Thermostat schedule']/directives") is not None and name is not None:
             available = [name, OFF]
             selected = name if active else OFF
 
@@ -477,5 +477,4 @@ class SmileLegacyHelper(SmileCommon):
         """Determine the location-set_temperature uri - from APPLIANCES."""
         locator = "./appliance[type='thermostat']"
         appliance_id = self._appliances.find(locator).attrib["id"]
-
         return f"{APPLIANCES};id={appliance_id}/thermostat"
