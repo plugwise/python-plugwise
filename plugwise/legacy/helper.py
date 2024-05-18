@@ -35,8 +35,8 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.util import (
+    common_match_cases,
     format_measure,
-    match_on_true_cases,
     skip_obsolete_measurements,
     version_to_model,
 )
@@ -338,7 +338,7 @@ class SmileLegacyHelper(SmileCommon):
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
-                match_on_true_cases(measurement, attrs, appl_p_loc, data)
+                common_match_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:

@@ -113,6 +113,32 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return name
 
 
+def common_match_cases(
+    measurement: str,
+    attrs: DATA | UOM,
+    location: etree,
+    data: DeviceData,
+) -> None:
+    """Helper-function for common match-case execution."""
+    value = location.text in ("on", "true")
+    match measurement:
+        case _ as measurement if measurement in BINARY_SENSORS:
+            bs_key = cast(BinarySensorType, measurement)
+            data["binary_sensors"][bs_key] = value
+        case _ as measurement if measurement in SENSORS:
+            s_key = cast(SensorType, measurement)
+            s_value = format_measure(
+                location.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+            )
+            data["sensors"][s_key] = s_value
+        case _ as measurement if measurement in SWITCHES:
+            sw_key = cast(SwitchType, measurement)
+            data["switches"][sw_key] = value
+        case _ as measurement if measurement in SPECIALS:
+            sp_key = cast(SpecialType, measurement)
+            data[sp_key] = value
+
+
 def escape_illegal_xml_characters(xmldata: str) -> str:
     """Replace illegal &-characters."""
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
@@ -155,32 +181,6 @@ def get_vendor_name(module: etree, model_data: ModelData) -> ModelData:
             model_data["vendor_name"] = vendor_name.split(" ", 1)[0]
 
     return model_data
-
-
-def match_on_true_cases(
-    measurement: str,
-    attrs: DATA | UOM,
-    location: etree,
-    data: DeviceData,
-) -> None:
-    """Helper-function for common match-case execution."""
-    value = location.text in ("on", "true")
-    match measurement:
-        case _ as measurement if measurement in BINARY_SENSORS:
-            bs_key = cast(BinarySensorType, measurement)
-            data["binary_sensors"][bs_key] = value
-        case _ as measurement if measurement in SENSORS:
-            s_key = cast(SensorType, measurement)
-            s_value = format_measure(
-                location.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-            )
-            data["sensors"][s_key] = s_value
-        case _ as measurement if measurement in SWITCHES:
-            sw_key = cast(SwitchType, measurement)
-            data["switches"][sw_key] = value
-        case _ as measurement if measurement in SPECIALS:
-            sp_key = cast(SpecialType, measurement)
-            data[sp_key] = value
 
 
 def power_data_local_format(

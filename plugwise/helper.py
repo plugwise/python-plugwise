@@ -48,9 +48,9 @@ from plugwise.exceptions import (
 )
 from plugwise.util import (
     check_model,
+    common_match_cases,
     escape_illegal_xml_characters,
     format_measure,
-    match_on_true_cases,
     skip_obsolete_measurements,
 )
 
@@ -583,7 +583,7 @@ class SmileHelper(SmileCommon):
                     case "select_dhw_mode":
                         data["select_dhw_mode"] = appl_p_loc.text
 
-                match_on_true_cases(measurement, attrs, appl_p_loc, data)
+                common_match_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
