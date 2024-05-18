@@ -344,7 +344,7 @@ class SmileLegacyHelper(SmileCommon):
                 match measurement:
                     case _ as measurement if measurement in BINARY_SENSORS:
                         bs_key = cast(BinarySensorType, measurement)
-                        bs_value = appl_p_loc.text in ["on", "true"]
+                        bs_value = appl_p_loc.text in ("on", "true")
                         data["binary_sensors"][bs_key] = bs_value
                     case _ as measurement if measurement in SENSORS:
                         s_key = cast(SensorType, measurement)
@@ -354,11 +354,11 @@ class SmileLegacyHelper(SmileCommon):
                         data["sensors"][s_key] = s_value
                     case _ as measurement if measurement in SWITCHES:
                         sw_key = cast(SwitchType, measurement)
-                        sw_value = appl_p_loc.text in ["on", "true"]
+                        sw_value = appl_p_loc.text in ("on", "true")
                         data["switches"][sw_key] = sw_value
                     case _ as measurement if measurement in SPECIALS:
                         sp_key = cast(SpecialType, measurement)
-                        sp_value = appl_p_loc.text in ["on", "true"]
+                        sp_value = appl_p_loc.text in ("on", "true")
                         data[sp_key] = sp_value
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'

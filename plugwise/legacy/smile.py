@@ -188,7 +188,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         Determined from - DOMAIN_OBJECTS.
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
-        if state not in ["on", "off"]:
+        if state not in ("on", "off"):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Handle no schedule-name / Off-schedule provided

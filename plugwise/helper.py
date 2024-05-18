@@ -214,7 +214,7 @@ class SmileHelper(SmileCommon):
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
         # '_cooling_enabled' can refer to the state of the Elga heatpump
-        # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
+        # connected to an Anna. For Elga, 'elga_status_code' in (8, 9)
         # means cooling mode is available, next to heating mode.
         # 'elga_status_code' = 8 means cooling is active, 9 means idle.
         #
@@ -523,7 +523,7 @@ class SmileHelper(SmileCommon):
                     # Techneco Elga has cooling-capability
                     self._cooling_present = True
                     data["model"] = "Generic heater/cooler"
-                    self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                    self._cooling_enabled = data["elga_status_code"] in (8, 9)
                     data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                         data["elga_status_code"] == 8
                     )
@@ -590,7 +590,7 @@ class SmileHelper(SmileCommon):
                         data["select_dhw_mode"] = appl_p_loc.text
                     case _ as measurement if measurement in BINARY_SENSORS:
                         bs_key = cast(BinarySensorType, measurement)
-                        bs_value = appl_p_loc.text in ["on", "true"]
+                        bs_value = appl_p_loc.text in ("on", "true")
                         data["binary_sensors"][bs_key] = bs_value
                     case _ as measurement if measurement in SENSORS:
                         s_key = cast(SensorType, measurement)
@@ -600,11 +600,11 @@ class SmileHelper(SmileCommon):
                         data["sensors"][s_key] = s_value
                     case _ as measurement if measurement in SWITCHES:
                         sw_key = cast(SwitchType, measurement)
-                        sw_value = appl_p_loc.text in ["on", "true"]
+                        sw_value = appl_p_loc.text in ("on", "true")
                         data["switches"][sw_key] = sw_value
                     case _ as measurement if measurement in SPECIALS:
                         sp_key = cast(SpecialType, measurement)
-                        sp_value = appl_p_loc.text in ["on", "true"]
+                        sp_value = appl_p_loc.text in ("on", "true")
                         data[sp_key] = sp_value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
