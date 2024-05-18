@@ -15,8 +15,6 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     ATTR_NAME,
-    ATTR_UNIT_OF_MEASUREMENT,
-    BINARY_SENSORS,
     DATA,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
@@ -29,9 +27,6 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
-    SENSORS,
-    SPECIALS,
-    SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     TOGGLES,
@@ -39,12 +34,9 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    BinarySensorType,
     DeviceData,
     GatewayData,
     SensorType,
-    SpecialType,
-    SwitchType,
     ThermoLoc,
     ToggleNameType,
 )
@@ -58,6 +50,7 @@ from plugwise.util import (
     check_model,
     escape_illegal_xml_characters,
     format_measure,
+    match_on_true_cases,
     skip_obsolete_measurements,
 )
 
@@ -585,29 +578,12 @@ class SmileHelper(SmileCommon):
                     measurement = new_name
 
                 match measurement:
-                    # measurements with states "on" or "off" that need to be passed directly
-                    case "select_dhw_mode":
-                        data["select_dhw_mode"] = appl_p_loc.text
-                    case _ as measurement if measurement in BINARY_SENSORS:
-                        bs_key = cast(BinarySensorType, measurement)
-                        bs_value = appl_p_loc.text in ("on", "true")
-                        data["binary_sensors"][bs_key] = bs_value
-                    case _ as measurement if measurement in SENSORS:
-                        s_key = cast(SensorType, measurement)
-                        s_value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        )
-                        data["sensors"][s_key] = s_value
-                    case _ as measurement if measurement in SWITCHES:
-                        sw_key = cast(SwitchType, measurement)
-                        sw_value = appl_p_loc.text in ("on", "true")
-                        data["switches"][sw_key] = sw_value
-                    case _ as measurement if measurement in SPECIALS:
-                        sp_key = cast(SpecialType, measurement)
-                        sp_value = appl_p_loc.text in ("on", "true")
-                        data[sp_key] = sp_value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
+                    case "select_dhw_mode":
+                        data["select_dhw_mode"] = appl_p_loc.text
+
+                match_on_true_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:

@@ -12,8 +12,6 @@ from plugwise.constants import (
     ACTUATOR_CLASSES,
     APPLIANCES,
     ATTR_NAME,
-    ATTR_UNIT_OF_MEASUREMENT,
-    BINARY_SENSORS,
     DATA,
     DEVICE_MEASUREMENTS,
     ENERGY_WATT_HOUR,
@@ -24,9 +22,6 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_LEGACY_MEASUREMENTS,
-    SENSORS,
-    SPECIALS,
-    SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     UOM,
@@ -34,15 +29,17 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     ApplianceType,
-    BinarySensorType,
     DeviceData,
     GatewayData,
     SensorType,
-    SpecialType,
-    SwitchType,
     ThermoLoc,
 )
-from plugwise.util import format_measure, skip_obsolete_measurements, version_to_model
+from plugwise.util import (
+    format_measure,
+    match_on_true_cases,
+    skip_obsolete_measurements,
+    version_to_model,
+)
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
@@ -341,25 +338,7 @@ class SmileLegacyHelper(SmileCommon):
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
-                match measurement:
-                    case _ as measurement if measurement in BINARY_SENSORS:
-                        bs_key = cast(BinarySensorType, measurement)
-                        bs_value = appl_p_loc.text in ("on", "true")
-                        data["binary_sensors"][bs_key] = bs_value
-                    case _ as measurement if measurement in SENSORS:
-                        s_key = cast(SensorType, measurement)
-                        s_value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        )
-                        data["sensors"][s_key] = s_value
-                    case _ as measurement if measurement in SWITCHES:
-                        sw_key = cast(SwitchType, measurement)
-                        sw_value = appl_p_loc.text in ("on", "true")
-                        data["switches"][sw_key] = sw_value
-                    case _ as measurement if measurement in SPECIALS:
-                        sp_key = cast(SpecialType, measurement)
-                        sp_value = appl_p_loc.text in ("on", "true")
-                        data[sp_key] = sp_value
+                match_on_true_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
