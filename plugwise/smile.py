@@ -266,7 +266,7 @@ class SmileAPI(SmileComm, SmileData):
         Used in HA Core to set the hvac_mode: in practice switch between schedule on - off.
         """
         # Input checking
-        if new_state not in ["on", "off"]:
+        if new_state not in ("on", "off"):
             raise PlugwiseError("Plugwise: invalid schedule state.")
 
         # Translate selection of Off-schedule-option to disabling the active schedule

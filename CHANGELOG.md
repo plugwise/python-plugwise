@@ -1,7 +1,8 @@
 # Changelog
 
-## Ongoing
+## v0.37.6
 
+- Schedule-related improvements.
 - Revert removal of set_temperature_offset() function.
 
 ## v0.37.5

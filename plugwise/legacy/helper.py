@@ -12,8 +12,6 @@ from plugwise.constants import (
     ACTUATOR_CLASSES,
     APPLIANCES,
     ATTR_NAME,
-    ATTR_UNIT_OF_MEASUREMENT,
-    BINARY_SENSORS,
     DATA,
     DEVICE_MEASUREMENTS,
     ENERGY_WATT_HOUR,
@@ -22,10 +20,8 @@ from plugwise.constants import (
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
     NONE,
+    OFF,
     P1_LEGACY_MEASUREMENTS,
-    SENSORS,
-    SPECIALS,
-    SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     UOM,
@@ -33,15 +29,17 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     ApplianceType,
-    BinarySensorType,
     DeviceData,
     GatewayData,
     SensorType,
-    SpecialType,
-    SwitchType,
     ThermoLoc,
 )
-from plugwise.util import format_measure, skip_obsolete_measurements, version_to_model
+from plugwise.util import (
+    common_match_cases,
+    format_measure,
+    skip_obsolete_measurements,
+    version_to_model,
+)
 
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
@@ -340,25 +338,7 @@ class SmileLegacyHelper(SmileCommon):
                 if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
-                match measurement:
-                    case _ as measurement if measurement in BINARY_SENSORS:
-                        bs_key = cast(BinarySensorType, measurement)
-                        bs_value = appl_p_loc.text in ["on", "true"]
-                        data["binary_sensors"][bs_key] = bs_value
-                    case _ as measurement if measurement in SENSORS:
-                        s_key = cast(SensorType, measurement)
-                        s_value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        )
-                        data["sensors"][s_key] = s_value
-                    case _ as measurement if measurement in SWITCHES:
-                        sw_key = cast(SwitchType, measurement)
-                        sw_value = appl_p_loc.text in ["on", "true"]
-                        data["switches"][sw_key] = sw_value
-                    case _ as measurement if measurement in SPECIALS:
-                        sp_key = cast(SpecialType, measurement)
-                        sp_value = appl_p_loc.text in ["on", "true"]
-                        data[sp_key] = sp_value
+                common_match_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
@@ -450,16 +430,15 @@ class SmileLegacyHelper(SmileCommon):
         return presets
 
     def _schedules(self) -> tuple[list[str], str]:
-        """Collect available schedules/schedules for the legacy thermostat."""
+        """Collect the schedule for the legacy thermostat."""
         available: list[str] = [NONE]
-        selected = NONE
+        rule_id = selected = NONE
         name: str | None = None
 
         search = self._domain_objects
-        for schedule in search.findall("./rule"):
-            if rule_name := schedule.find("name").text:
-                if "preset" not in rule_name:
-                    name = rule_name
+        if (result := search.find("./rule[name='Thermostat schedule']")) is not None:
+            name = "Thermostat schedule"
+            rule_id = result.attrib["id"]
 
         log_type = "schedule_state"
         locator = f"./appliance[type='thermostat']/logs/point_log[type='{log_type}']/period/measurement"
@@ -467,10 +446,11 @@ class SmileLegacyHelper(SmileCommon):
         if (result := search.find(locator)) is not None:
             active = result.text == "on"
 
-        if name is not None:
-            available = [name]
-            if active:
-                selected = name
+        # Show an empty schedule as no schedule found
+        directives = search.find(f'./rule[@id="{rule_id}"]/directives/when/then') is not None
+        if directives and name is not None:
+            available = [name, OFF]
+            selected = name if active else OFF
 
         return available, selected
 
@@ -478,5 +458,4 @@ class SmileLegacyHelper(SmileCommon):
         """Determine the location-set_temperature uri - from APPLIANCES."""
         locator = "./appliance[type='thermostat']"
         appliance_id = self._appliances.find(locator).attrib["id"]
-
         return f"{APPLIANCES};id={appliance_id}/thermostat"

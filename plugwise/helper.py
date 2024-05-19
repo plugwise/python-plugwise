@@ -15,8 +15,6 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     ATTR_NAME,
-    ATTR_UNIT_OF_MEASUREMENT,
-    BINARY_SENSORS,
     DATA,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
@@ -29,9 +27,6 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
-    SENSORS,
-    SPECIALS,
-    SWITCHES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     TOGGLES,
@@ -39,12 +34,9 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    BinarySensorType,
     DeviceData,
     GatewayData,
     SensorType,
-    SpecialType,
-    SwitchType,
     ThermoLoc,
     ToggleNameType,
 )
@@ -56,6 +48,7 @@ from plugwise.exceptions import (
 )
 from plugwise.util import (
     check_model,
+    common_match_cases,
     escape_illegal_xml_characters,
     format_measure,
     skip_obsolete_measurements,
@@ -214,7 +207,7 @@ class SmileHelper(SmileCommon):
         self._thermo_locs: dict[str, ThermoLoc] = {}
         ###################################################################
         # '_cooling_enabled' can refer to the state of the Elga heatpump
-        # connected to an Anna. For Elga, 'elga_status_code' in [8, 9]
+        # connected to an Anna. For Elga, 'elga_status_code' in (8, 9)
         # means cooling mode is available, next to heating mode.
         # 'elga_status_code' = 8 means cooling is active, 9 means idle.
         #
@@ -523,7 +516,7 @@ class SmileHelper(SmileCommon):
                     # Techneco Elga has cooling-capability
                     self._cooling_present = True
                     data["model"] = "Generic heater/cooler"
-                    self._cooling_enabled = data["elga_status_code"] in [8, 9]
+                    self._cooling_enabled = data["elga_status_code"] in (8, 9)
                     data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                         data["elga_status_code"] == 8
                     )
@@ -585,29 +578,12 @@ class SmileHelper(SmileCommon):
                     measurement = new_name
 
                 match measurement:
-                    # measurements with states "on" or "off" that need to be passed directly
-                    case "select_dhw_mode":
-                        data["select_dhw_mode"] = appl_p_loc.text
-                    case _ as measurement if measurement in BINARY_SENSORS:
-                        bs_key = cast(BinarySensorType, measurement)
-                        bs_value = appl_p_loc.text in ["on", "true"]
-                        data["binary_sensors"][bs_key] = bs_value
-                    case _ as measurement if measurement in SENSORS:
-                        s_key = cast(SensorType, measurement)
-                        s_value = format_measure(
-                            appl_p_loc.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                        )
-                        data["sensors"][s_key] = s_value
-                    case _ as measurement if measurement in SWITCHES:
-                        sw_key = cast(SwitchType, measurement)
-                        sw_value = appl_p_loc.text in ["on", "true"]
-                        data["switches"][sw_key] = sw_value
-                    case _ as measurement if measurement in SPECIALS:
-                        sp_key = cast(SpecialType, measurement)
-                        sp_value = appl_p_loc.text in ["on", "true"]
-                        data[sp_key] = sp_value
                     case "elga_status_code":
                         data["elga_status_code"] = int(appl_p_loc.text)
+                    case "select_dhw_mode":
+                        data["select_dhw_mode"] = appl_p_loc.text
+
+                common_match_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
@@ -1014,6 +990,8 @@ class SmileHelper(SmileCommon):
         if schedules:
             available.remove(NONE)
             available.append(OFF)
+            if selected == NONE:
+                selected = OFF
             if self._last_active.get(location) is None:
                 self._last_active[location] = self._last_used_schedule(schedules)
 

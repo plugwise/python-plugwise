@@ -3,19 +3,30 @@ from __future__ import annotations
 
 import datetime as dt
 import re
+from typing import cast
 
 from plugwise.constants import (
     ATTR_UNIT_OF_MEASUREMENT,
+    BINARY_SENSORS,
+    DATA,
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
+    SENSORS,
     SPECIAL_FORMAT,
+    SPECIALS,
+    SWITCHES,
     TEMP_CELSIUS,
+    UOM,
+    BinarySensorType,
     DeviceData,
     ModelData,
+    SensorType,
+    SpecialType,
+    SwitchType,
 )
 
 from defusedxml import ElementTree as etree
@@ -23,7 +34,7 @@ from munch import Munch
 
 
 def check_alternative_location(loc: Munch, legacy: bool) -> Munch:
-    """Try."""
+    """Helper-function for _power_data_peak_value()."""
     if in_alternative_location(loc, legacy):
         # Avoid double processing by skipping one peak-list option
         if loc.peak_select == "nl_offpeak":
@@ -100,6 +111,32 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
         return model
 
     return name
+
+
+def common_match_cases(
+    measurement: str,
+    attrs: DATA | UOM,
+    location: etree,
+    data: DeviceData,
+) -> None:
+    """Helper-function for common match-case execution."""
+    value = location.text in ("on", "true")
+    match measurement:
+        case _ as measurement if measurement in BINARY_SENSORS:
+            bs_key = cast(BinarySensorType, measurement)
+            data["binary_sensors"][bs_key] = value
+        case _ as measurement if measurement in SENSORS:
+            s_key = cast(SensorType, measurement)
+            s_value = format_measure(
+                location.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+            )
+            data["sensors"][s_key] = s_value
+        case _ as measurement if measurement in SWITCHES:
+            sw_key = cast(SwitchType, measurement)
+            data["switches"][sw_key] = value
+        case _ as measurement if measurement in SPECIALS:
+            sp_key = cast(SpecialType, measurement)
+            data[sp_key] = value
 
 
 def escape_illegal_xml_characters(xmldata: str) -> str:
