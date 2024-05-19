@@ -63,7 +63,7 @@ m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["available"] = Tru
 
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "select_schedule"
-] = "None"
+] = "off"
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
 ] = "cooling"
