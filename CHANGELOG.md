@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.37.7
+
+- Don't output schedule-related data when no valid schedule(s) found.
+- Various corrections to impacted test- and data-files/fixtures.
+
 ## v0.37.6
 
 - Schedule-related improvements.

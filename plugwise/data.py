@@ -197,9 +197,10 @@ class SmileData(SmileHelper):
 
         # Schedule
         avail_schedules, sel_schedule = self._schedules(loc_id)
-        data["available_schedules"] = avail_schedules
-        data["select_schedule"] = sel_schedule
-        self._count += 2
+        if avail_schedules != [NONE]:
+            data["available_schedules"] = avail_schedules
+            data["select_schedule"] = sel_schedule
+            self._count += 2
 
         # Operation modes: auto, heat, heat_cool, cool and off
         data["mode"] = "auto"

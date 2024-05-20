@@ -52,8 +52,6 @@
     "available": true,
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "home",
-    "available_schedules": ["None"],
-    "select_schedule": "None",
     "control_state": "off",
     "mode": "heat",
     "sensors": {
@@ -80,8 +78,6 @@
     "available": true,
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "no_frost",
-    "available_schedules": ["None"],
-    "select_schedule": "None",
     "control_state": "off",
     "mode": "heat",
     "sensors": {
@@ -125,8 +121,6 @@
     "available": true,
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "home",
-    "available_schedules": ["None"],
-    "select_schedule": "None",
     "control_state": "off",
     "mode": "heat",
     "sensors": {
@@ -153,8 +147,6 @@
     "available": true,
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "home",
-    "available_schedules": ["None"],
-    "select_schedule": "None",
     "control_state": "off",
     "mode": "heat",
     "sensors": {

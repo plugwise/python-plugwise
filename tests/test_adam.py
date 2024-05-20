@@ -347,7 +347,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["06aecb3d00354375924f50c47af36bd2"] is None
         assert smile._last_active["d27aede973b54be484f6842d1b2802ad"] is None
         assert smile._last_active["13228dab8ce04617af318a2888b3c548"] is None
-        assert self.device_items == 221
+        assert self.device_items == 213
 
         # Negative test
         result = await self.tinker_thermostat(

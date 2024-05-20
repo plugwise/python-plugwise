@@ -81,9 +81,10 @@ class SmileLegacyData(SmileLegacyHelper):
 
         # Schedule
         avail_schedules, sel_schedule = self._schedules()
-        data["available_schedules"] = avail_schedules
-        data["select_schedule"] = sel_schedule
-        self._count += 2
+        if avail_schedules != [NONE]:
+            data["available_schedules"] = avail_schedules
+            data["select_schedule"] = sel_schedule
+            self._count += 2
 
         # Operation modes: auto, heat
         data["mode"] = "auto"
