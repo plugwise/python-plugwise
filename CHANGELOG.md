@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.37.8
+
+- Create a set_select() function, combining the set_dhw_mode(), set_gateway_mode(), set_regulation_mode() and set_schedule_state() functions.
+
 ## v0.37.7
 
 - Don't output schedule-related data when no valid schedule(s) found.
@@ -16,6 +20,8 @@
 - Fix typo in manual_fixtures.py script.
 
 ## v0.37.4 - not released
+
+- Create a set_number() function, combining the set_number_setpoint() and set_temperature_offset() functions.
 
 ## v0.37.3
 

@@ -149,39 +149,6 @@ class SmileAPI(SmileComm, SmileData):
         """Delete the active Plugwise Notification."""
         await self._request(NOTIFICATIONS, method="delete")
 
-    async def set_dhw_mode(self, mode: str) -> None:
-        """Set the domestic hot water heating regulation mode."""
-        if mode not in self._dhw_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid dhw mode.")
-
-        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
-        data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
-
-    async def set_gateway_mode(self, mode: str) -> None:
-        """Set the gateway mode."""
-        if mode not in self._gw_allowed_modes:
-            raise PlugwiseError("Plugwise: invalid gateway mode.")
-
-        end_time = "2037-04-21T08:00:53.000Z"
-        valid = ""
-        if mode == "away":
-            time_1 = self._domain_objects.find("./gateway/time").text
-            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
-            valid = (
-                f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
-            )
-        if mode == "vacation":
-            time_2 = str(dt.date.today() - dt.timedelta(1))
-            vacation_time = time_2 + "T23:00:00.000Z"
-            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
-
-        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
-        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
-
-        await self._request(uri, method="put", data=data)
-
     async def set_number(
         self,
         dev_id: str,
@@ -241,6 +208,53 @@ class SmileAPI(SmileComm, SmileData):
 
         await self._request(uri, method="put", data=data)
 
+    async def set_select(self, key: str, loc_id: str, option: str, name: str | None) -> None:
+        """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
+        match key:
+            case "select_dhw_mode":
+                await self.set_dhw_mode(option)
+            case "select_gateway_mode":
+                await self.set_gateway_mode(option)
+            case "select_regulation_mode":
+                await self.set_regulation_mode(option)
+            case "select_schedule":
+                # schedule state corresponds to select option
+                # schedule name corresponds to select name
+                await self.set_schedule_state(loc_id, option, name)
+
+    async def set_dhw_mode(self, mode: str) -> None:
+        """Set the domestic hot water heating regulation mode."""
+        if mode not in self._dhw_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid dhw mode.")
+
+        uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
+        data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
+    async def set_gateway_mode(self, mode: str) -> None:
+        """Set the gateway mode."""
+        if mode not in self._gw_allowed_modes:
+            raise PlugwiseError("Plugwise: invalid gateway mode.")
+
+        end_time = "2037-04-21T08:00:53.000Z"
+        valid = ""
+        if mode == "away":
+            time_1 = self._domain_objects.find("./gateway/time").text
+            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+            valid = (
+                f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
+            )
+        if mode == "vacation":
+            time_2 = str(dt.date.today() - dt.timedelta(1))
+            vacation_time = time_2 + "T23:00:00.000Z"
+            valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
+
+        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
+        data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
+
+        await self._request(uri, method="put", data=data)
+
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         if mode not in self._reg_allowed_modes:
@@ -258,7 +272,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         loc_id: str,
         new_state: str,
-        name: str | None = None,
+        name: str | None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat.
 
