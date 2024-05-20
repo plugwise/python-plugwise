@@ -24,6 +24,23 @@ def json_writer(manual_name: str, all_data: dict) -> None:
 
 print("... Crafting m_* fixtures from userdata ...")  # noqa: T201
 
+
+# Modified Adam fixtures
+
+base_adam_manual = "adam_multiple_devices_per_zone"
+basefile = f"./fixtures/{base_adam_manual}/all_data.json"
+
+io = open(basefile)
+base = json.load(io)
+
+adam_multiple_devices_per_zone = base.copy()
+
+# Change schedule to not present for "e7693eb9582644e5b865dba8d4447cf1"
+adam_multiple_devices_per_zone["devices"]["e7693eb9582644e5b865dba8d4447cf1"].pop("available_schedules")
+adam_multiple_devices_per_zone["devices"]["e7693eb9582644e5b865dba8d4447cf1"].pop("select_schedule")
+
+json_writer("m_adam_multiple_devices_per_zone", adam_multiple_devices_per_zone)
+
 base_adam_manual = "adam_jip"
 basefile = f"./fixtures/{base_adam_manual}/all_data.json"
 
@@ -36,6 +53,7 @@ adam_jip = base.copy()
 adam_jip["devices"]["1346fbd8498d4dbcab7e18d51b771f3d"]["mode"] = "off"
 
 json_writer("m_adam_jip", adam_jip)
+
 
 ### Manual Adam fixtures
 
@@ -218,7 +236,7 @@ m_adam_heating["devices"]["056ee145a816487eaa69243c3280f8bf"]["max_dhw_temperatu
 
 json_writer("m_adam_heating", m_adam_heating)
 
-### ANNA
+### Manual Anna fixtures
 
 base_anna_manual = "anna_heatpump_heating"
 basefile = f"./fixtures/{base_anna_manual}/all_data.json"
