@@ -847,7 +847,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting dhw mode to {mode}{warning}")
             try:
-                await smile.set_dhw_mode(mode)
+                await smile.set_select("select_dhw_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_dhw_mode found invalid mode, as expected")
@@ -862,7 +862,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting regulation mode to {mode}{warning}")
             try:
-                await smile.set_regulation_mode(mode)
+                await smile.set_select("select_regulation_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_regulation_mode worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info(
@@ -904,7 +904,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 mode = mode[1:]
             _LOGGER.info("%s", f"- Adjusting gateway mode to {mode}{warning}")
             try:
-                await smile.set_gateway_mode(mode)
+                await smile.set_select("select_gateway_mode", "dummy", mode)
                 _LOGGER.info("  + worked as intended")
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid mode, as expected")
