@@ -212,13 +212,13 @@ class SmileAPI(SmileComm, SmileData):
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
             case "select_dhw_mode":
-                await set_dhw_mode(option)
+                await self.set_dhw_mode(option)
             case "select_gateway_mode":
-                await set_gateway_mode(option)
+                await self.set_gateway_mode(option)
             case "select_regulation_mode":
-                await set_regulation_mode(option)
+                await self.set_regulation_mode(option)
             case "select_schedule":
-                await set_schedule_state(loc_id, option, name)
+                await self.set_schedule_state(loc_id, option, name)
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""

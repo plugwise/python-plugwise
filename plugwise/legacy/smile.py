@@ -184,7 +184,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 
     async def set_select(self, key: str, loc_id: str, option: str, name: str | None) -> None:
         """Set the thermostat schedule option."""
-        await set_schedule_state("dummy", option, name)
+        await self.set_schedule_state("dummy", option, name)
 
     async def set_schedule_state(self, _: str, state: str, name: str | None) -> None:
         """Activate/deactivate the Schedule.
