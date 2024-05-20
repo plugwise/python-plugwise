@@ -213,7 +213,7 @@ class SmileAPI(SmileComm, SmileData):
         match key:
             case "select_dhw_mode":
                 await set_dhw_mode(option)
-            case: "select_gateway_mode":
+            case "select_gateway_mode":
                 await set_gateway_mode(option)
             case "select_regulation_mode":
                 await set_regulation_mode(option)
