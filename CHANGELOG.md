@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.37.9
+
+- Correct set_select() function.
+
 ## v0.37.8
 
 - Create a set_select() function, combining the set_dhw_mode(), set_gateway_mode(), set_regulation_mode() and set_schedule_state() functions.
