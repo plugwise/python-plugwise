@@ -733,7 +733,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    await smile.set_select("select_schedule", loc_id, state, new_schedule)
+                    await smile.set_select("select_schedule", loc_id, new_schedule, state)
                     tinker_schedule_passed = True
                     _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
