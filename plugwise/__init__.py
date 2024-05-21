@@ -319,7 +319,7 @@ class Smile(SmileComm):
     async def set_schedule_state(
         self,
         loc_id: str,
-        state: str,
+        state: str | None,
         name: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""

@@ -188,7 +188,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         # schedule name corresponds to select option
         await self.set_schedule_state("dummy", state, option)
 
-    async def set_schedule_state(self, _: str, state: str, name: str | None) -> None:
+    async def set_schedule_state(self, _: str, state: str | None, name: str | None) -> None:
         """Activate/deactivate the Schedule.
 
         Determined from - DOMAIN_OBJECTS.
