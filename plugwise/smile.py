@@ -218,9 +218,9 @@ class SmileAPI(SmileComm, SmileData):
             case "select_regulation_mode":
                 await self.set_regulation_mode(option)
             case "select_schedule":
-                # schedule state corresponds to select option
-                # schedule name corresponds to select name
-                await self.set_schedule_state(loc_id, option, name)
+                # schedule state corresponds to select name
+                # schedule name corresponds to select option
+                await self.set_schedule_state(loc_id, name, option)
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
