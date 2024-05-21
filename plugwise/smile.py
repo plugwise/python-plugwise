@@ -218,7 +218,6 @@ class SmileAPI(SmileComm, SmileData):
             case "select_regulation_mode":
                 await self.set_regulation_mode(option)
             case "select_schedule":
-                # schedule state corresponds to select name
                 # schedule name corresponds to select option
                 await self.set_schedule_state(loc_id, state, option)
 
