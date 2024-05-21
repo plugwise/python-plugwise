@@ -311,19 +311,19 @@ class Smile(SmileComm):
         key: str,
         loc_id: str,
         option: str,
-        name: str | None = None,
+        state: str | None = None,
     ) -> None:
         """Set the selected option for the applicable Select."""
-        await self._smile_api.set_select(key, loc_id, option, name)
+        await self._smile_api.set_select(key, loc_id, option, state)
 
     async def set_schedule_state(
         self,
         loc_id: str,
-        new_state: str,
+        state: str,
         name: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
-        await self._smile_api.set_schedule_state(loc_id, new_state, name)
+        await self._smile_api.set_schedule_state(loc_id, state, name)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat."""
