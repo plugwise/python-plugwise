@@ -14,6 +14,7 @@ from plugwise.constants import (
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
+    GATEWAY_REBOOT,
     LOCATIONS,
     MAX_SETPOINT,
     MIN_SETPOINT,
@@ -151,7 +152,6 @@ class SmileAPI(SmileComm, SmileData):
 
     async def reboot_gateway(self) -> None:
         """Reboot the Gateway."""
-        GATEWAY_REBOOT = "/core/gateways;@reboot"
         await self._request(GATEWAY_REBOOT, method="put", data=None)
 
     async def set_number(
