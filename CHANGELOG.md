@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.38.0
+
+- Add the reboot_gateway() funtion for Adam & Anna.
+
 ## v0.37.9
 
 - Correct set_select() function.
