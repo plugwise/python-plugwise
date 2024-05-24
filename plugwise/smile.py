@@ -152,7 +152,7 @@ class SmileAPI(SmileComm, SmileData):
 
     async def reboot_gateway(self) -> None:
         """Reboot the Gateway."""
-        await self._request(GATEWAY_REBOOT, method="post", data=None)
+        await self._request(GATEWAY_REBOOT, method="post")
 
     async def set_number(
         self,
