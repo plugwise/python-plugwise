@@ -123,6 +123,14 @@ class SmileComm:
                 resp = await self._websession.get(
                     url, headers=use_headers, auth=self._auth
                 )
+            if method == "post":
+                use_headers = {"Content-type": "text/xml"}
+                resp = await self._websession.put(
+                    url,
+                    headers=use_headers,
+                    data=data,
+                    auth=self._auth,
+                )
             if method == "put":
                 use_headers = {"Content-type": "text/xml"}
                 resp = await self._websession.put(
