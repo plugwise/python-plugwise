@@ -2,7 +2,7 @@
 
 ## v0.38.0
 
-- Add the reboot_gateway() funtion for Adam & Anna.
+- Add a reboot_gateway() function for actual Plugwise devices.
 
 ## v0.37.9
 
