@@ -119,7 +119,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route(
-                "DELETE", "/core/notifications{tail:.*}", self.smile_timeout
+                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout
             )
 
         return app
