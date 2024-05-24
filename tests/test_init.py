@@ -31,6 +31,7 @@ CORE_DOMAIN_OBJECTS_TAIL = "/core/domain_objects{tail:.*}"
 CORE_LOCATIONS = "/core/locations"
 CORE_LOCATIONS_TAIL = "/core/locations{tail:.*}"
 CORE_APPLIANCES_TAIL = "/core/appliances{tail:.*}"
+CORE_GATEWAYS_TAIL = "/core/gateways{tail:.*}"
 CORE_NOTIFICATIONS_TAIL = "/core/notifications{tail:.*}"
 CORE_RULES_TAIL = "/core/rules{tail:.*}"
 EMPTY_XML = "<xml />"
@@ -114,12 +115,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             app.router.add_route(
                 "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
             )
+            app.router.add_route(
+                "PUT", CORE_GATEWAYS_TAIL, self.smile_http_accept
+            )
         else:
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route(
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout
+            )
+            app.router.add_route(
+                "PUT", CORE_GATEWAYS_TAIL, self.smile_timeout
             )
 
         return app
