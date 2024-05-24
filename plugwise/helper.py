@@ -125,7 +125,7 @@ class SmileComm:
                 )
             if method == "post":
                 use_headers = {"Content-type": "text/xml"}
-                resp = await self._websession.put(
+                resp = await self._websession.post(
                     url,
                     headers=use_headers,
                     data=data,
