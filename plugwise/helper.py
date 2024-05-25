@@ -169,7 +169,9 @@ class SmileComm:
             LOGGER.error("%s", msg)
             raise InvalidAuthentication
 
-        if not (result := await resp.text()) or ("<error>" in result and "Not started" not in result):
+        if not (result := await resp.text()) or (
+            "<error>" in result and "Not started" not in result
+        ):
             LOGGER.warning("Smile response empty or error in %s", result)
             raise ResponseError
 
