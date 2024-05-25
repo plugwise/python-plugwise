@@ -161,7 +161,7 @@ class SmileComm:
             return
 
         # Cornercase for stretch not responding with 202
-        if method == "put" and resp.status == 200:
+        if method in ("post", "put") and resp.status == 200:
             return
 
         if resp.status == 401:
