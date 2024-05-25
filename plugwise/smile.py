@@ -16,6 +16,7 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NOTIFICATIONS,
@@ -132,15 +133,21 @@ class SmileAPI(SmileComm, SmileData):
         # Perform a full update at day-change
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
-        await self.full_update_device()
-        self.get_all_devices()
 
-        if "heater_id" in self.gw_data:
-            self._heater_id = self.gw_data["heater_id"]
-            if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
-                self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
+        try:
+            await self.full_update_device()
+            self.get_all_devices()
+            if "heater_id" in self.gw_data:
+                self._heater_id = self.gw_data["heater_id"]
+                if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
+                    self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
 
-        return PlugwiseData(self.gw_data, self.gw_devices)
+            return PlugwiseData(self.gw_data, self.gw_devices)
+        except:
+            LOGGER.debug("Plugwise data-collection incomplete, please wait for the next update")
+            raise
+
+        return PlugwiseData ({}, {})
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
