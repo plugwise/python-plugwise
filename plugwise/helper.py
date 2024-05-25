@@ -160,7 +160,7 @@ class SmileComm:
         if resp.status == 202:
             return
 
-        # Cornercase for stretch not responding with 202
+        # Cornercase for server not responding with 202
         if method in ("post", "put") and resp.status == 200:
             return
 
@@ -169,7 +169,7 @@ class SmileComm:
             LOGGER.error("%s", msg)
             raise InvalidAuthentication
 
-        if not (result := await resp.text()) or "<error>" in result:
+        if not (result := await resp.text()) or ("<error>" in result and "Not started" not in result):
             LOGGER.warning("Smile response empty or error in %s", result)
             raise ResponseError
 
