@@ -143,9 +143,8 @@ class SmileAPI(SmileComm, SmileData):
                     self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
 
             return PlugwiseData(self.gw_data, self.gw_devices)
-        except:
-            LOGGER.debug("Plugwise data-collection incomplete, please wait for the next update")
-            raise
+        except Exception as err:
+            LOGGER.debug("Plugwise data-collection incomplete due to %s, please wait for the next update", err)
 
         return PlugwiseData ({}, {})
 
