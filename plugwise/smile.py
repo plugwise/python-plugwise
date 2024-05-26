@@ -28,7 +28,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.exceptions import PlugwiseError
+from plugwise.exceptions import PlugwiseError, PlugwiseException
 from plugwise.helper import SmileComm
 
 import aiohttp
@@ -143,7 +143,7 @@ class SmileAPI(SmileComm, SmileData):
                     self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
 
             return PlugwiseData(self.gw_data, self.gw_devices)
-        except Exception as err:
+        except PlugwiseException as err:
             LOGGER.debug("Plugwise data-collection incomplete due to %s, please wait for the next update", err)
 
         return PlugwiseData ({}, {})
