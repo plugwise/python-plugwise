@@ -9,6 +9,10 @@ class ConnectionFailedError(PlugwiseException):
     """Raised when unable to connect."""
 
 
+class DataIncomplete(PlugwiseException):
+    """Raised when unable to connect."""
+
+
 class InvalidAuthentication(PlugwiseException):
     """Raised when unable to authenticate."""
 
