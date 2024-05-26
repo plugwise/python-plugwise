@@ -16,7 +16,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NOTIFICATIONS,
@@ -28,7 +27,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.exceptions import PlugwiseError, PlugwiseException
+from plugwise.exceptions import DataIncomplete, PlugwiseError
 from plugwise.helper import SmileComm
 
 import aiohttp
@@ -144,9 +143,7 @@ class SmileAPI(SmileComm, SmileData):
 
             return PlugwiseData(self.gw_data, self.gw_devices)
         except KeyError as err:
-            LOGGER.debug("Plugwise data-collection incomplete, waiting f")
-
-        return PlugwiseData ({}, {})
+            raise DataIncomplete("Plugwise data collection incomplete") from err
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

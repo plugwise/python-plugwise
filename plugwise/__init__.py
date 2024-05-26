@@ -18,7 +18,12 @@ from plugwise.constants import (
     PlugwiseData,
     ThermoLoc,
 )
-from plugwise.exceptions import InvalidSetupError, ResponseError, UnsupportedDeviceError
+from plugwise.exceptions import (
+    DataIncomplete,
+    InvalidSetupError,
+    ResponseError,
+    UnsupportedDeviceError,
+)
 from plugwise.helper import SmileComm
 from plugwise.legacy.smile import SmileLegacyAPI
 from plugwise.smile import SmileAPI
@@ -298,9 +303,12 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        data: PlugwiseData = await self._smile_api.async_update()
-        self.gateway_id = data.gateway["gateway_id"]
-        return data
+        try:
+            data: PlugwiseData = await self._smile_api.async_update()
+            self.gateway_id = data.gateway["gateway_id"]
+            return data
+        except KeyError as err:
+            raise DataIncomplete("Plugwise data collection incomplete") from err
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
