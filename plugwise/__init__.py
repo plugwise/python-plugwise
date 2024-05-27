@@ -19,7 +19,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.exceptions import (
-    DataIncomplete,
+    DataMissingError,
     InvalidSetupError,
     ResponseError,
     UnsupportedDeviceError,
@@ -308,7 +308,7 @@ class Smile(SmileComm):
             self.gateway_id = data.gateway["gateway_id"]
             return data
         except KeyError as err:
-            raise DataIncomplete("Plugwise data collection incomplete") from err
+            raise DataMissingError("No Plugwise data received") from err
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

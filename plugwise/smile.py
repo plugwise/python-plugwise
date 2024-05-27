@@ -27,7 +27,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.exceptions import DataIncomplete, PlugwiseError
+from plugwise.exceptions import DataMissingError, PlugwiseError
 from plugwise.helper import SmileComm
 
 import aiohttp
@@ -143,7 +143,7 @@ class SmileAPI(SmileComm, SmileData):
 
             return PlugwiseData(self.gw_data, self.gw_devices)
         except KeyError as err:
-            raise DataIncomplete("Plugwise data collection incomplete") from err
+            raise DataMissingError("No Plugwise data received") from err
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

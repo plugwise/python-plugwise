@@ -9,7 +9,7 @@ class ConnectionFailedError(PlugwiseException):
     """Raised when unable to connect."""
 
 
-class DataIncomplete(PlugwiseException):
+class DataMissingError(PlugwiseException):
     """Raised when unable to connect."""
 
 
