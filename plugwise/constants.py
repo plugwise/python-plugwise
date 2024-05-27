@@ -389,6 +389,7 @@ class GatewayData(TypedDict, total=False):
     heater_id: str
     item_count: int
     notifications: dict[str, dict[str, str]]
+    reboot: bool
     smile_name: str
 
 
