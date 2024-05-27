@@ -303,12 +303,14 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
+        data = PlugwiseData({}, {})
         try:
-            data: PlugwiseData = await self._smile_api.async_update()
+            data = await self._smile_api.async_update()
             self.gateway_id = data.gateway["gateway_id"]
-            return data
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
+
+        return data
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

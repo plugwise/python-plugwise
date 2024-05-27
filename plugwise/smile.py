@@ -132,7 +132,6 @@ class SmileAPI(SmileComm, SmileData):
         # Perform a full update at day-change
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
-
         try:
             await self.full_update_device()
             self.get_all_devices()
@@ -140,10 +139,10 @@ class SmileAPI(SmileComm, SmileData):
                 self._heater_id = self.gw_data["heater_id"]
                 if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
                     self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
-
-            return PlugwiseData(self.gw_data, self.gw_devices)
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
+
+        return PlugwiseData(self.gw_data, self.gw_devices)
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
