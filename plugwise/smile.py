@@ -27,7 +27,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.exceptions import DataMissingError, PlugwiseError
+from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.helper import SmileComm
 
 import aiohttp
