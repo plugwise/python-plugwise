@@ -845,6 +845,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return result_1 and result_2 and result_3 and result_4
         return result_1 and result_2 and result_3
 
+    @pytest.mark.asyncio
+    async def test_reboot(smile, unhappy=False):
+        """Test rebooting a gateway."""
+        _LOGGER.info("- Rebooting the gateway")
+        try:
+            await smile.reboot_gateway()
+            _LOGGER.info("  + worked as intended")
+            return True
+        except pw_exceptions.PlugwiseError:
+            if unhappy:
+                _LOGGER.info("  + failed as expected")
+                return False
+            else:  # pragma: no cover
+                _LOGGER.info("  - failed unexpectedly")
+                return False
+
     @staticmethod
     async def tinker_dhw_mode(smile):
         """Toggle dhw to test functionality."""
