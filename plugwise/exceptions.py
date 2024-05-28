@@ -10,7 +10,7 @@ class ConnectionFailedError(PlugwiseException):
 
 
 class DataMissingError(PlugwiseException):
-    """Raised when unable to connect."""
+    """Raised when expected data is missing."""
 
 
 class InvalidAuthentication(PlugwiseException):
