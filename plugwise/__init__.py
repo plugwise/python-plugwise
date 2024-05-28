@@ -294,11 +294,11 @@ class Smile(SmileComm):
         return return_model
 
     async def full_update_device(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
+        """Helper-function used for testing."""
         await self._smile_api.full_update_device()
 
     def get_all_devices(self) -> None:
-        """Determine the devices present from the obtained XML-data."""
+        """Helper-function used for testing."""
         self._smile_api.get_all_devices()
 
     async def async_update(self) -> PlugwiseData:
