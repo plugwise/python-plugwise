@@ -146,30 +146,28 @@ class Smile(SmileComm):
             self._user,
             self._port,
             self._timeout,
-         )
-        if self.smile_legacy:
-            self._smile_api = SmileLegacyAPI(
-                self._host,
-                self._passwd,
-                self._websession,
-                self._is_thermostat,
-                self._on_off_device,
-                self._opentherm_device,
-                self._stretch_v2,
-                self._target_smile,
-                self.loc_data,
-                self.smile_fw_version,
-                self.smile_hostname,
-                self.smile_hw_version,
-                self.smile_mac_address,
-                self.smile_model,
-                self.smile_name,
-                self.smile_type,
-                self.smile_zigbee_mac_address,
-                self._user,
-                self._port,
-                self._timeout,
-            )
+         ) if not self.smile_legacy else SmileLegacyAPI(
+            self._host,
+            self._passwd,
+            self._websession,
+            self._is_thermostat,
+            self._on_off_device,
+            self._opentherm_device,
+            self._stretch_v2,
+            self._target_smile,
+            self.loc_data,
+            self.smile_fw_version,
+            self.smile_hostname,
+            self.smile_hw_version,
+            self.smile_mac_address,
+            self.smile_model,
+            self.smile_name,
+            self.smile_type,
+            self.smile_zigbee_mac_address,
+            self._user,
+            self._port,
+            self._timeout,
+        )
 
         # Update all endpoints on first connect
         await self._smile_api.full_update_device()

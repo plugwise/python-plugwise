@@ -255,7 +255,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "e8ef2a01ed3b4139a53bf749204fe6b4",
         ]
 
-        reboot = await self.test_reboot(smile)
+        reboot = await self.tinker_reboot(smile)
         assert reboot
 
         result = await self.tinker_thermostat(
