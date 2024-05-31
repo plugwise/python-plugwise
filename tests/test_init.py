@@ -249,7 +249,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @classmethod
     async def smile_timeout(cls, request):
         """Render timeout endpoint."""
-        raise pw_exceptions.ConnectionFailedError
+        raise aiohttp.web.HTTPGatewayTimeout()
 
     @classmethod
     async def smile_broken(cls, request):
