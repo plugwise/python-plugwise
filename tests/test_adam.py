@@ -333,6 +333,14 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile, "2022-01-16 00:00:01", testdata_updated, initialize=False
         )
 
+        # Now change some data and change directory reading xml from
+        # emulating reading newer dataset after an update_interval
+        self.smile_setup = "reboot/adam_plus_anna_new"
+        try:
+            await self.device_test(smile, initialize=False)
+        except pw_exceptions.PlugwiseError:
+            _LOGGER.debug("Updating failed as intended")
+
         await smile.close_connection()
         await self.disconnect(server, client)
 

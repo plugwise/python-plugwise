@@ -21,6 +21,7 @@ from plugwise.constants import (
 from plugwise.exceptions import (
     DataMissingError,
     InvalidSetupError,
+    PlugwiseError,
     ResponseError,
     UnsupportedDeviceError,
 )
@@ -306,7 +307,7 @@ class Smile(SmileComm):
             data = await self._smile_api.async_update()
             self.gateway_id = data.gateway["gateway_id"]
         except (DataMissingError, KeyError) as err:
-            raise DataMissingError("No Plugwise data received") from err
+            raise PlugwiseError("No Plugwise data received") from err
 
         return data
 
