@@ -347,7 +347,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert connection_state
             return server, smile, client
         except (
-            pw_exceptions.DeviceTimeoutError,
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
@@ -428,7 +427,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert connection_state
             return server, smile, client
         except (
-            pw_exceptions.DeviceTimeoutError,
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
@@ -459,7 +457,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect(timeout=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
-        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
+        except pw_exceptions.ResponseError:
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
@@ -486,7 +484,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect_legacy(timeout=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
-        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
+        except pw_exceptions.ResponseError:
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:

@@ -33,10 +33,6 @@ class DeviceSetupError(PlugwiseException):
     """Raised when device is missing critical setup data."""
 
 
-class DeviceTimeoutError(PlugwiseException):
-    """Raised when device is not supported."""
-
-
 class ResponseError(PlugwiseException):
     """Raised when empty or error in response returned."""
 
