@@ -37,10 +37,6 @@ class DeviceTimeoutError(PlugwiseException):
     """Raised when device is not supported."""
 
 
-class ErrorSendingCommandError(PlugwiseException):
-    """Raised when device is not accepting the command."""
-
-
 class ResponseError(PlugwiseException):
     """Raised when empty or error in response returned."""
 
