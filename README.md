@@ -48,9 +48,9 @@ See the [`plugwise-beta`](https://github.com/plugwise/plugwise-beta) repository 
 
 ## Development/patches
 
-Like Home Assistant Core we use `pre-commit` and additionally run [pre-commit.ci](http://pre-commit.ci) to automatically validate your commits and PRs.
+Like Home Assistant Core, we use `pre-commit` and additionally run [pre-commit.ci](http://pre-commit.ci) to automatically validate your commits and PRs.
 
-If you want to create a PR please make sure you at least run `scripts/setup.sh`. This will ensure your environment is set up correctly before attempting to `git commit`. We sincerely and highly recommended also setting up local testing, see [`tests/README.md`](https://github.com/plugwise/python-plugwise/blob/main/tests/README.md) for more information and run `scripts/setup_test.sh` to prepare your environment.
+If you want to create a PR, please ensure you at least run `scripts/setup.sh`. This will ensure your environment is set up correctly before attempting to `git commit`. We sincerely and highly recommended also setting up local testing, see [`tests/README.md`](https://github.com/plugwise/python-plugwise/blob/main/tests/README.md) for more information and run `scripts/setup_test.sh` to prepare your environment.
 
 ## Project support status
 
@@ -79,13 +79,13 @@ Module providing interfacing with the Plugwise devices:
 
 ## License, origins and contributors
 
-As per the origins we have retained the appropriate licensing and including the MIT-license for this project.
+As per the origins, we have retained the appropriate licensing and including the MIT-license for this project.
 
 Origins (from newest to oldest):
 
 - Networked (Smile/Stretch) Plugwise support by @bouwew (Bouwe) and @CoMPaTech (Tom). We both support and help out @brefra (Frank) where possible, he's supporting the USB module and integration.
 - 'All' available Plugwise support by @bouwew (Bouwe), @brefra (Frank) and @CoMPaTech (Tom)
-- Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta` by @bouwew (Bouwe) & @CoMPaTech (Tom)
+- Upstreamed haanna/HA-core Anna, including all later products - 'Plugwise-Smile/Plugwise-HA/plugwise-beta' by @bouwew (Bouwe) & @CoMPaTech (Tom)
 - Networked Plugwise Anna module with custom_module - `haanna/anna-ha` via <https://github.com/laetificat> (Kevin)
 - USB-based stick module with custom_module - `plugwise-stick/plugwise` by @brefra (Frank)
 - USB-plugwise module - `plugwise` by <https://github.com/cyberjunky/python-plugwise> (Ron) originally by <https://github.com/aequitas/python-plugwise> (Johan) (with reference only in license to Sven)
@@ -93,4 +93,4 @@ Origins (from newest to oldest):
 
 ## Thanks
 
-On behalf all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl) for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.
+On behalf of all of us, big thanks to Plugwise and community members @riemers and @tane from [HAshop](https://hashop.nl) for their support and obviously all our users and testers who dealt with our typos and challenges. Disclaimer, while we are communicating with Plugwise and they expressed their gratitude through their newsletter, we are not part of Plugwise as a company. We are just a bunch of guys anxious to get our (and your) Plugwise products working with Home Assistant.
