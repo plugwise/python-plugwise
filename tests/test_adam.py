@@ -78,7 +78,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         try:
             await smile.delete_notification()
             notification_deletion = False  # pragma: no cover
-        except pw_exceptions.ConnectionFailedError:
+        except pw_exceptions.PlugwiseError:
             notification_deletion = True
 
         assert notification_deletion
