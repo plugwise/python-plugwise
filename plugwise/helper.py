@@ -23,6 +23,7 @@ from plugwise.constants import (
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
     LOCATIONS,
+    LOGGER,
     NONE,
     OFF,
     P1_MEASUREMENTS,
