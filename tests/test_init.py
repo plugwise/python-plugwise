@@ -674,7 +674,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
                 return False
-            except pw_exceptions.ResponseError:
+            except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     tinker_switch_passed = True  # test is pass!
                     _LOGGER.info("  + failed as expected")
@@ -699,7 +699,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await smile.set_temperature(loc_id, test_temp)
             _LOGGER.info("  + tinker_thermostat_temp worked as intended")
             tinker_temp_passed = True
-        except pw_exceptions.ResponseError:
+        except pw_exceptions.ConnectionFailedError:
             if unhappy:
                 _LOGGER.info("  + tinker_thermostat_temp failed as expected")
                 tinker_temp_passed = True
@@ -726,7 +726,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid preset, as expected")
                 tinker_preset_passed = True
-            except pw_exceptions.ResponseError:
+            except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     tinker_preset_passed = True
                     _LOGGER.info("  + tinker_thermostat_preset failed as expected")
@@ -759,7 +759,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
                     tinker_schedule_passed = True
-                except pw_exceptions.ResponseError:
+                except pw_exceptions.ConnectionFailedError:
                     tinker_schedule_passed = False
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
@@ -786,7 +786,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as expected")
                 tinker_schedule_passed = True
-            except pw_exceptions.ResponseError:
+            except pw_exceptions.ConnectionFailedError:
                 tinker_schedule_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
