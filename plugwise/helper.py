@@ -115,30 +115,31 @@ class SmileComm:
         use_headers = headers
 
         try:
-            if method == "delete":
-                resp = await self._websession.delete(url, auth=self._auth)
-            if method == "get":
-                # Work-around for Stretchv2, should not hurt the other smiles
-                use_headers = {"Accept-Encoding": "gzip"}
-                resp = await self._websession.get(
-                    url, headers=use_headers, auth=self._auth
-                )
-            if method == "post":
-                use_headers = {"Content-type": "text/xml"}
-                resp = await self._websession.post(
-                    url,
-                    headers=use_headers,
-                    data=data,
-                    auth=self._auth,
-                )
-            if method == "put":
-                use_headers = {"Content-type": "text/xml"}
-                resp = await self._websession.put(
-                    url,
-                    headers=use_headers,
-                    data=data,
-                    auth=self._auth,
-                )
+            match method:
+                case "delete":
+                    resp = await self._websession.delete(url, auth=self._auth)
+                case "get":
+                    # Work-around for Stretchv2, should not hurt the other smiles
+                    use_headers = {"Accept-Encoding": "gzip"}
+                    resp = await self._websession.get(
+                        url, headers=use_headers, auth=self._auth
+                    )
+                case "post":
+                    use_headers = {"Content-type": "text/xml"}
+                    resp = await self._websession.post(
+                        url,
+                        headers=use_headers,
+                        data=data,
+                        auth=self._auth,
+                    )
+                case "put":
+                    use_headers = {"Content-type": "text/xml"}
+                    resp = await self._websession.put(
+                        url,
+                        headers=use_headers,
+                        data=data,
+                        auth=self._auth,
+                    )
         except (
             ClientError
         ) as exc:  # ClientError is an ancestor class of ServerTimeoutError
@@ -167,23 +168,22 @@ class SmileComm:
 
     async def _request_validate(self, resp: ClientResponse, method: str) -> etree:
         """Helper-function for _request(): validate the returned data."""
-        # Command accepted gives empty body with status 202
-        if resp.status == 202:
-            return
-
-        # Cornercase for server not responding with 202
-        if method in ("post", "put") and resp.status == 200:
-            return
-
-        if resp.status == 401:
-            msg = "Invalid Plugwise login, please retry with the correct credentials."
-            LOGGER.error("%s", msg)
-            raise InvalidAuthentication
-
-        if resp.status == 405:
-            msg = "405 Method not allowed."
-            LOGGER.error("%s", msg)
-            raise ConnectionFailedError
+        match resp.status:
+            case 200:
+                # Cornercases for server not responding with 202
+                if method in ("post", "put"):
+                    return
+            case 202:
+                # Command accepted gives empty body with status 202
+                return
+            case 401:
+                msg = "Invalid Plugwise login, please retry with the correct credentials."
+                LOGGER.error("%s", msg)
+                raise InvalidAuthentication
+            case 405:
+                msg = "405 Method not allowed."
+                LOGGER.error("%s", msg)
+                raise ConnectionFailedError
 
         if not (result := await resp.text()) or (
             "<error>" in result and "Not started" not in result
