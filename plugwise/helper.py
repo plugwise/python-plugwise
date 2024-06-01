@@ -140,7 +140,7 @@ class SmileComm:
                     auth=self._auth,
                 )
         except (
-            Exception  # ClientError
+            ClientError
         ) as exc:  # ClientError is an ancestor class of ServerTimeoutError
             LOGGER.debug("HOI exception: %s", exc)
             if retry < 1:
@@ -149,6 +149,17 @@ class SmileComm:
                     method,
                     command,
                     exc,
+                )
+                raise ConnectionFailedError from exc
+            return await self._request(command, retry - 1)
+
+        if resp.status == 504:
+            if retry < 1:
+                LOGGER.warning(
+                    "Failed sending %s %s to Plugwise Smile, error: %s",
+                    method,
+                    command,
+                    "504 Gateway Timeout",
                 )
                 raise ConnectionFailedError from exc
             return await self._request(command, retry - 1)
@@ -169,9 +180,6 @@ class SmileComm:
             msg = "Invalid Plugwise login, please retry with the correct credentials."
             LOGGER.error("%s", msg)
             raise InvalidAuthentication
-
-        if resp.status == 504:
-            raise ConnectionFailedError("504 Gateway Timeout")
 
         if not (result := await resp.text()) or (
             "<error>" in result and "Not started" not in result
