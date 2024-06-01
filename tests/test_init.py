@@ -454,8 +454,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 _LOGGER.warning("Connecting to device exceeding timeout in handling:")
                 return await self.connect(raise_timeout=True)
-                _LOGGER.error(" - timeout in handling not handled")  # pragma: no cover
-                raise self.ConnectError  # pragma: no cover
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
