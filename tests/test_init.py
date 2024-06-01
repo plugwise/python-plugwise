@@ -347,6 +347,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert connection_state
             return server, smile, client
         except (
+            pw_exceptions.ConnectionFailedError,
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
