@@ -19,6 +19,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.exceptions import (
+    ConnectionFailedError,
     DataMissingError,
     InvalidSetupError,
     PlugwiseError,
@@ -375,8 +376,14 @@ class Smile(SmileComm):
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
-        await self._smile_api.delete_notification()
+        try:
+            await self._smile_api.delete_notification()
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to delete notification: {str(exc)}") from exc
 
     async def reboot_gateway(self) -> None:
         """Reboot the Plugwise Gateway."""
-        await self._smile_api.reboot_gateway()
+        try:
+            await self._smile_api.reboot_gateway()
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to reboot gateway: {str(exc)}") from exc

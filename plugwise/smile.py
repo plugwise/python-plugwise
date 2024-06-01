@@ -153,14 +153,14 @@ class SmileAPI(SmileComm, SmileData):
         try:
             await self._request(NOTIFICATIONS, method="delete")
         except ConnectionFailedError as exc:
-            raise PlugwiseError(f"Failed to delete notification: {str(exc)}") from exc
+            raise ConnectionFailedError from exc
 
     async def reboot_gateway(self) -> None:
         """Reboot the Gateway."""
         try:
             await self._request(GATEWAY_REBOOT, method="post")
         except ConnectionFailedError as exc:
-            raise PlugwiseError(f"Failed to reboot gateway: {str(exc)}") from exc
+            raise ConnectionFailedError from exc
 
     async def set_number(
         self,
