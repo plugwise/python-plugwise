@@ -123,6 +123,14 @@ class SmileComm:
                 resp = await self._websession.get(
                     url, headers=use_headers, auth=self._auth
                 )
+            if method == "post":
+                use_headers = {"Content-type": "text/xml"}
+                resp = await self._websession.post(
+                    url,
+                    headers=use_headers,
+                    data=data,
+                    auth=self._auth,
+                )
             if method == "put":
                 use_headers = {"Content-type": "text/xml"}
                 resp = await self._websession.put(
@@ -144,6 +152,17 @@ class SmileComm:
                 raise ConnectionFailedError from exc
             return await self._request(command, retry - 1)
 
+        if resp.status == 504:
+            if retry < 1:
+                LOGGER.warning(
+                    "Failed sending %s %s to Plugwise Smile, error: %s",
+                    method,
+                    command,
+                    "504 Gateway Timeout",
+                )
+                raise ConnectionFailedError
+            return await self._request(command, retry - 1)
+
         return await self._request_validate(resp, method)
 
     async def _request_validate(self, resp: ClientResponse, method: str) -> etree:
@@ -152,8 +171,8 @@ class SmileComm:
         if resp.status == 202:
             return
 
-        # Cornercase for stretch not responding with 202
-        if method == "put" and resp.status == 200:
+        # Cornercase for server not responding with 202
+        if method in ("post", "put") and resp.status == 200:
             return
 
         if resp.status == 401:
@@ -161,7 +180,14 @@ class SmileComm:
             LOGGER.error("%s", msg)
             raise InvalidAuthentication
 
-        if not (result := await resp.text()) or "<error>" in result:
+        if resp.status == 405:
+            msg = "405 Method not allowed."
+            LOGGER.error("%s", msg)
+            raise ConnectionFailedError
+
+        if not (result := await resp.text()) or (
+            "<error>" in result and "Not started" not in result
+        ):
             LOGGER.warning("Smile response empty or error in %s", result)
             raise ResponseError
 

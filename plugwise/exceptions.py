@@ -9,6 +9,10 @@ class ConnectionFailedError(PlugwiseException):
     """Raised when unable to connect."""
 
 
+class DataMissingError(PlugwiseException):
+    """Raised when expected data is missing."""
+
+
 class InvalidAuthentication(PlugwiseException):
     """Raised when unable to authenticate."""
 
@@ -27,14 +31,6 @@ class UnsupportedDeviceError(PlugwiseException):
 
 class DeviceSetupError(PlugwiseException):
     """Raised when device is missing critical setup data."""
-
-
-class DeviceTimeoutError(PlugwiseException):
-    """Raised when device is not supported."""
-
-
-class ErrorSendingCommandError(PlugwiseException):
-    """Raised when device is not accepting the command."""
 
 
 class ResponseError(PlugwiseException):

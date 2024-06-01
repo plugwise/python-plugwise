@@ -93,6 +93,7 @@
     "heater_id": "573c152e7d4f4720878222bd75638f5b",
     "item_count": 62,
     "notifications": {},
+    "reboot": true,
     "smile_name": "Smile Anna"
   }
 }

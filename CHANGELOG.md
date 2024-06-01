@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.38.0
+
+- Add a reboot_gateway() function for actual Plugwise devices.
+
 ## v0.37.9
 
 - Correct set_select() function.

@@ -17,6 +17,7 @@ DEGREE: Final = "°"
 ELECTRIC_POTENTIAL_VOLT: Final = "V"
 ENERGY_KILO_WATT_HOUR: Final = "kWh"
 ENERGY_WATT_HOUR: Final = "Wh"
+GATEWAY_REBOOT: Final = "/core/gateways;@reboot"
 PERCENTAGE: Final = "%"
 POWER_WATT: Final = "W"
 PRESET_AWAY: Final = "away"
@@ -388,6 +389,7 @@ class GatewayData(TypedDict, total=False):
     heater_id: str
     item_count: int
     notifications: dict[str, dict[str, str]]
+    reboot: bool
     smile_name: str
 
 

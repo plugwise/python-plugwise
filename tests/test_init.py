@@ -31,6 +31,7 @@ CORE_DOMAIN_OBJECTS_TAIL = "/core/domain_objects{tail:.*}"
 CORE_LOCATIONS = "/core/locations"
 CORE_LOCATIONS_TAIL = "/core/locations{tail:.*}"
 CORE_APPLIANCES_TAIL = "/core/appliances{tail:.*}"
+CORE_GATEWAYS_TAIL = "/core/gateways{tail:.*}"
 CORE_NOTIFICATIONS_TAIL = "/core/notifications{tail:.*}"
 CORE_RULES_TAIL = "/core/rules{tail:.*}"
 EMPTY_XML = "<xml />"
@@ -93,6 +94,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         if fail_auth:
             app.router.add_get("/{tail:.*}", self.smile_fail_auth)
+            app.router.add_route("POST", "/{tail:.*}", self.smile_fail_auth)
             app.router.add_route("PUT", "/{tail:.*}", self.smile_fail_auth)
             return app
 
@@ -106,6 +108,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
         if not raise_timeout:
+            app.router.add_route(
+                "POST", CORE_GATEWAYS_TAIL, self.smile_http_accept
+            )
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route(
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
@@ -115,11 +120,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
             )
         else:
+            app.router.add_route(
+                "POST", CORE_GATEWAYS_TAIL, self.smile_timeout
+            )
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
             app.router.add_route(
-                "DELETE", "/core/notifications{tail:.*}", self.smile_timeout
+                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout
             )
 
         return app
@@ -241,7 +249,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @classmethod
     async def smile_timeout(cls, request):
         """Render timeout endpoint."""
-        raise TimeoutError
+        raise aiohttp.web.HTTPGatewayTimeout()
 
     @classmethod
     async def smile_broken(cls, request):
@@ -339,7 +347,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert connection_state
             return server, smile, client
         except (
-            pw_exceptions.DeviceTimeoutError,
+            pw_exceptions.ConnectionFailedError,
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
@@ -420,7 +428,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert connection_state
             return server, smile, client
         except (
-            pw_exceptions.DeviceTimeoutError,
+            pw_exceptions.ConnectionFailedError,
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
@@ -451,7 +459,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect(timeout=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
-        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
+        except pw_exceptions.ConnectionFailedError:
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
@@ -478,7 +486,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect_legacy(timeout=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
-        except (pw_exceptions.DeviceTimeoutError, pw_exceptions.ResponseError):
+        except pw_exceptions.ConnectionFailedError:
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
@@ -629,6 +637,22 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # pragma warning restore S3776
 
     @pytest.mark.asyncio
+    async def tinker_reboot(self, smile, unhappy=False):
+        """Test rebooting a gateway."""
+        _LOGGER.info("- Rebooting the gateway")
+        try:
+            await smile.reboot_gateway()
+            _LOGGER.info("  + worked as intended")
+            return True
+        except pw_exceptions.PlugwiseError:
+            if unhappy:
+                _LOGGER.info("  + failed as expected")
+                return False
+            else:  # pragma: no cover
+                _LOGGER.info("  - failed unexpectedly")
+                return False
+
+    @pytest.mark.asyncio
     async def tinker_switch(
         self, smile, dev_id=None, members=None, model="relay", unhappy=False
     ):
@@ -645,10 +669,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
                 return False
-            except (
-                pw_exceptions.ErrorSendingCommandError,
-                pw_exceptions.ResponseError,
-            ):
+            except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     tinker_switch_passed = True  # test is pass!
                     _LOGGER.info("  + failed as expected")
@@ -673,10 +694,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await smile.set_temperature(loc_id, test_temp)
             _LOGGER.info("  + tinker_thermostat_temp worked as intended")
             tinker_temp_passed = True
-        except (
-            pw_exceptions.ErrorSendingCommandError,
-            pw_exceptions.ResponseError,
-        ):
+        except pw_exceptions.ConnectionFailedError:
             if unhappy:
                 _LOGGER.info("  + tinker_thermostat_temp failed as expected")
                 tinker_temp_passed = True
@@ -703,10 +721,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid preset, as expected")
                 tinker_preset_passed = True
-            except (
-                pw_exceptions.ErrorSendingCommandError,
-                pw_exceptions.ResponseError,
-            ):
+            except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     tinker_preset_passed = True
                     _LOGGER.info("  + tinker_thermostat_preset failed as expected")
@@ -739,10 +754,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
                     tinker_schedule_passed = True
-                except (
-                    pw_exceptions.ErrorSendingCommandError,
-                    pw_exceptions.ResponseError,
-                ):
+                except pw_exceptions.ConnectionFailedError:
                     tinker_schedule_passed = False
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
@@ -769,10 +781,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as expected")
                 tinker_schedule_passed = True
-            except (
-                pw_exceptions.ErrorSendingCommandError,
-                pw_exceptions.ResponseError,
-            ):
+            except pw_exceptions.ConnectionFailedError:
                 tinker_schedule_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")

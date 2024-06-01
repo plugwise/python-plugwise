@@ -5,6 +5,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import datetime as dt
+from typing import Any
 
 from plugwise.constants import (
     ADAM,
@@ -14,6 +15,7 @@ from plugwise.constants import (
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
+    GATEWAY_REBOOT,
     LOCATIONS,
     MAX_SETPOINT,
     MIN_SETPOINT,
@@ -26,7 +28,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.data import SmileData
-from plugwise.exceptions import PlugwiseError
+from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.helper import SmileComm
 
 import aiohttp
@@ -131,13 +133,15 @@ class SmileAPI(SmileComm, SmileData):
         # Perform a full update at day-change
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
-        await self.full_update_device()
-        self.get_all_devices()
-
-        if "heater_id" in self.gw_data:
-            self._heater_id = self.gw_data["heater_id"]
-            if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
-                self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
+        try:
+            await self.full_update_device()
+            self.get_all_devices()
+            if "heater_id" in self.gw_data:
+                self._heater_id = self.gw_data["heater_id"]
+                if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
+                    self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
+        except KeyError as err:
+            raise DataMissingError("No Plugwise data received") from err
 
         return PlugwiseData(self.gw_data, self.gw_devices)
 
@@ -145,9 +149,21 @@ class SmileAPI(SmileComm, SmileData):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
+    async def call_request(self, uri: str, **kwargs: Any) -> None:
+        """ConnectionFailedError wrapper for calling _request()."""
+        method: str = kwargs["method"]
+        try:
+            await self._request(uri, method=method)
+        except ConnectionFailedError as exc:
+            raise ConnectionFailedError from exc
+
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
-        await self._request(NOTIFICATIONS, method="delete")
+        await self.call_request(NOTIFICATIONS, method="delete")
+
+    async def reboot_gateway(self) -> None:
+        """Reboot the Gateway."""
+        await self.call_request(GATEWAY_REBOOT, method="post")
 
     async def set_number(
         self,

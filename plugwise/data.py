@@ -38,6 +38,7 @@ class SmileData(SmileHelper):
                 "gateway_id": self.gateway_id,
                 "item_count": self._count,
                 "notifications": self._notifications,
+                "reboot": True,
                 "smile_name": self.smile_name,
             }
         )

@@ -18,7 +18,14 @@ from plugwise.constants import (
     PlugwiseData,
     ThermoLoc,
 )
-from plugwise.exceptions import InvalidSetupError, ResponseError, UnsupportedDeviceError
+from plugwise.exceptions import (
+    ConnectionFailedError,
+    DataMissingError,
+    InvalidSetupError,
+    PlugwiseError,
+    ResponseError,
+    UnsupportedDeviceError,
+)
 from plugwise.helper import SmileComm
 from plugwise.legacy.smile import SmileLegacyAPI
 from plugwise.smile import SmileAPI
@@ -141,30 +148,28 @@ class Smile(SmileComm):
             self._user,
             self._port,
             self._timeout,
-         )
-        if self.smile_legacy:
-            self._smile_api = SmileLegacyAPI(
-                self._host,
-                self._passwd,
-                self._websession,
-                self._is_thermostat,
-                self._on_off_device,
-                self._opentherm_device,
-                self._stretch_v2,
-                self._target_smile,
-                self.loc_data,
-                self.smile_fw_version,
-                self.smile_hostname,
-                self.smile_hw_version,
-                self.smile_mac_address,
-                self.smile_model,
-                self.smile_name,
-                self.smile_type,
-                self.smile_zigbee_mac_address,
-                self._user,
-                self._port,
-                self._timeout,
-            )
+         ) if not self.smile_legacy else SmileLegacyAPI(
+            self._host,
+            self._passwd,
+            self._websession,
+            self._is_thermostat,
+            self._on_off_device,
+            self._opentherm_device,
+            self._stretch_v2,
+            self._target_smile,
+            self.loc_data,
+            self.smile_fw_version,
+            self.smile_hostname,
+            self.smile_hw_version,
+            self.smile_mac_address,
+            self.smile_model,
+            self.smile_name,
+            self.smile_type,
+            self.smile_zigbee_mac_address,
+            self._user,
+            self._port,
+            self._timeout,
+        )
 
         # Update all endpoints on first connect
         await self._smile_api.full_update_device()
@@ -289,17 +294,22 @@ class Smile(SmileComm):
         return return_model
 
     async def full_update_device(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
+        """Helper-function used for testing."""
         await self._smile_api.full_update_device()
 
     def get_all_devices(self) -> None:
-        """Determine the devices present from the obtained XML-data."""
+        """Helper-function used for testing."""
         self._smile_api.get_all_devices()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        data: PlugwiseData = await self._smile_api.async_update()
-        self.gateway_id = data.gateway["gateway_id"]
+        data = PlugwiseData({}, {})
+        try:
+            data = await self._smile_api.async_update()
+            self.gateway_id = data.gateway["gateway_id"]
+        except (DataMissingError, KeyError) as err:
+            raise PlugwiseError("No Plugwise data received") from err
+
         return data
 
 ########################################################################################################
@@ -366,4 +376,14 @@ class Smile(SmileComm):
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
-        await self._smile_api.delete_notification()
+        try:
+            await self._smile_api.delete_notification()
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to delete notification: {str(exc)}") from exc
+
+    async def reboot_gateway(self) -> None:
+        """Reboot the Plugwise Gateway."""
+        try:
+            await self._smile_api.reboot_gateway()
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to reboot gateway: {str(exc)}") from exc

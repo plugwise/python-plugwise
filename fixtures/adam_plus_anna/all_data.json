@@ -115,6 +115,7 @@
         "error": "There is no OpenTherm communication with the boiler."
       }
     },
+    "reboot": true,
     "smile_name": "Adam"
   }
 }

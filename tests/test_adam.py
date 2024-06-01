@@ -55,6 +55,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile, "675416a629f343c495449970e2ca37b5"
         )
         assert not switch_change
+
+        reboot = await self.tinker_reboot(smile)
+        assert reboot
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -78,10 +82,12 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         try:
             await smile.delete_notification()
             notification_deletion = False  # pragma: no cover
-        except pw_exceptions.ResponseError:
+        except pw_exceptions.PlugwiseError:
             notification_deletion = True
-
         assert notification_deletion
+
+        reboot = await self.tinker_reboot(smile, unhappy=True)
+        assert not reboot
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -329,6 +335,20 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(
             smile, "2022-01-16 00:00:01", testdata_updated, initialize=False
         )
+
+        # Simulate receiving no xml-data after a requesting a reboot of the gateway
+        self.smile_setup = "reboot/adam_plus_anna_new"
+        try:
+            await self.device_test(smile, initialize=False)
+        except pw_exceptions.PlugwiseError:
+            _LOGGER.debug("Receiving no data after a reboot is properly handled")
+
+        # Simulate receiving xml-data with <error>
+        self.smile_setup = "error/adam_plus_anna_new"
+        try:
+            await self.device_test(smile, initialize=False)
+        except pw_exceptions.ResponseError:
+            _LOGGER.debug("Receiving error-data from the Gateway")
 
         await smile.close_connection()
         await self.disconnect(server, client)
