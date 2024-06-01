@@ -80,8 +80,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             notification_deletion = False  # pragma: no cover
         except pw_exceptions.PlugwiseError:
             notification_deletion = True
-
         assert notification_deletion
+
+        reboot = await smile.tinker_reboot(smile, unhappy=True)
+        assert not reboot
 
         await smile.close_connection()
         await self.disconnect(server, client)
