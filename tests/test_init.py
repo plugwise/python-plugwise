@@ -449,8 +449,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 raise pw_exceptions.InvalidAuthentication from exc
 
         if raise_timeout:
-            _LOGGER.warning("Connecting to device exceeding timeout in handling:")
-            return await self.connect(raise_timeout=True)
+            try:
+                _LOGGER.warning("Connecting to device exceeding timeout in handling:")
+                return await self.connect(raise_timeout=True)
+                _LOGGER.error(" - timeout in handling not handled")  # pragma: no cover
+                raise self.ConnectError  # pragma: no cover
+            except pw_exceptions.ConnectionFailedError fron exc:
+                _LOGGER.info(" + successfully aborted on server timeout.")
+                raise pw_exceptions.ConnectionFailedError from exc
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
