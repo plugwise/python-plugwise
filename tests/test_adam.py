@@ -55,6 +55,10 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile, "675416a629f343c495449970e2ca37b5"
         )
         assert not switch_change
+
+        reboot = await self.tinker_reboot(smile)
+        assert reboot
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -256,9 +260,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "2568cc4b9c1e401495d4741a5f89bee1",
             "e8ef2a01ed3b4139a53bf749204fe6b4",
         ]
-
-        reboot = await self.tinker_reboot(smile)
-        assert reboot
 
         result = await self.tinker_thermostat(
             smile,
