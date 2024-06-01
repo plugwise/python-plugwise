@@ -181,6 +181,11 @@ class SmileComm:
             LOGGER.error("%s", msg)
             raise InvalidAuthentication
 
+        if resp.status == 405:
+            msg = "405 Method not allowed."
+            LOGGER.error("%s", msg)
+            raise ConnectionFailedError
+
         if not (result := await resp.text()) or (
             "<error>" in result and "Not started" not in result
         ):
