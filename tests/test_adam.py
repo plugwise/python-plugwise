@@ -342,6 +342,13 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         except pw_exceptions.PlugwiseError:
             _LOGGER.debug("Receiving no data after a reboot is properly handled")
 
+        # Simulate receiving xml-data with <error>
+        self.smile_setup = "error/adam_plus_anna_new"
+        try:
+            await self.device_test(smile, initialize=False)
+        except pw_exceptions.ResponseError:
+            _LOGGER.debug("Receiving error-data from the Gateway")
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
