@@ -82,7 +82,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             notification_deletion = True
         assert notification_deletion
 
-        reboot = await smile.tinker_reboot(smile, unhappy=True)
+        reboot = await self.tinker_reboot(smile, unhappy=True)
         assert not reboot
 
         await smile.close_connection()
