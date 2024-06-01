@@ -464,7 +464,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await self.connect(timeout=True)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
-        except pw_exceptions.ResponseError:
+        except pw_exceptions.ConnectionFailedError:
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
