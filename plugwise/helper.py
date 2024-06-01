@@ -161,7 +161,7 @@ class SmileComm:
                     command,
                     "504 Gateway Timeout",
                 )
-                raise ConnectionFailedError from exc
+                raise ConnectionFailedError
             return await self._request(command, retry - 1)
 
         return await self._request_validate(resp, method)
