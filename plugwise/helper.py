@@ -140,8 +140,9 @@ class SmileComm:
                     auth=self._auth,
                 )
         except (
-            ClientError
+            Exception  # ClientError
         ) as exc:  # ClientError is an ancestor class of ServerTimeoutError
+            LOGGER.debug("HOI exception: %s", exc)
             if retry < 1:
                 LOGGER.warning(
                     "Failed sending %s %s to Plugwise Smile, error: %s",
