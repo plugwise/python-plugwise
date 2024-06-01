@@ -5,6 +5,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import datetime as dt
+from typing import Any
 
 from plugwise.constants import (
     ADAM,
@@ -148,19 +149,21 @@ class SmileAPI(SmileComm, SmileData):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
-    async def delete_notification(self) -> None:
-        """Delete the active Plugwise Notification."""
+    async def call_request(self, uri: str, **kwargs: Any) -> None:
+        """ConnectionFailedError wrapper for calling _request()."""
+        method: str = kwargs["method"]
         try:
-            await self._request(NOTIFICATIONS, method="delete")
+            await self._request(uri, method=method)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError from exc
 
+    async def delete_notification(self) -> None:
+        """Delete the active Plugwise Notification."""
+        await self.call_request(NOTIFICATIONS, method="delete")
+
     async def reboot_gateway(self) -> None:
         """Reboot the Gateway."""
-        try:
-            await self._request(GATEWAY_REBOOT, method="post")
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError from exc
+        await self.call_request(GATEWAY_REBOOT, method="post")
 
     async def set_number(
         self,
