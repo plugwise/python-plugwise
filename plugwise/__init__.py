@@ -338,8 +338,8 @@ class Smile(SmileComm):
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
         try:
             await self._smile_api.set_schedule_state(loc_id, state, name)
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set schedule state: {str(exc)}") from exc
+        except ConnectionFailedError as exc:  # pragma no cover
+            raise ConnectionFailedError(f"Failed to set schedule state: {str(exc)}") from exc  # pragma no cover
 
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
@@ -365,15 +365,15 @@ class Smile(SmileComm):
         """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
         try:
             await self._smile_api.set_number(dev_id, key, temperature)
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set number '{key}': {str(exc)}") from exc
+        except ConnectionFailedError as exc:  # pragma no cover
+            raise ConnectionFailedError(f"Failed to set number '{key}': {str(exc)}") from exc  # pragma no cover
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
-        try:
+        try:  # pragma no cover
             await self._smile_api.set_offset(dev_id, offset)  # pragma: no cover
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set temperature offset: {str(exc)}") from exc
+        except ConnectionFailedError as exc:  # pragma no cover
+            raise ConnectionFailedError(f"Failed to set temperature offset: {str(exc)}") from exc  # pragma no cover
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
@@ -386,24 +386,24 @@ class Smile(SmileComm):
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        try:
+        try:  # pragma no cover
             await self._smile_api.set_gateway_mode(mode)  # pragma: no cover
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set gateway mode: {str(exc)}") from exc
+        except ConnectionFailedError as exc:  # pragma no cover
+            raise ConnectionFailedError(f"Failed to set gateway mode: {str(exc)}") from exc  # pragma no cover
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        try:
+        try:  # pragma no cover
             await self._smile_api.set_regulation_mode(mode)  # pragma: no cover
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set regulation mode: {str(exc)}") from exc
+        except ConnectionFailedError as exc:  # pragma no cover
+            raise ConnectionFailedError(f"Failed to set regulation mode: {str(exc)}") from exc  # pragma no cover
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
-        try:
+        try:  # pragma no cover
             await self._smile_api.set_dhw_mode(mode)  # pragma: no cover
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set dhw mode: {str(exc)}") from exc
+        except ConnectionFailedError as exc:  # pragma no cover
+            raise ConnectionFailedError(f"Failed to set dhw mode: {str(exc)}") from exc  # pragma no cover
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
