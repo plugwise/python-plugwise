@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Implementing code improvements as suggested in #567
+
 ## v0.38.0
 
 - Add a reboot_gateway() function for actual Plugwise devices.
