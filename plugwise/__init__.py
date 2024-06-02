@@ -365,8 +365,8 @@ class Smile(SmileComm):
         """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
         try:
             await self._smile_api.set_number(dev_id, key, temperature)
-        except ConnectionFailedError as exc:  # pragma no cover
-            raise ConnectionFailedError(f"Failed to set number '{key}': {str(exc)}") from exc  # pragma no cover
+        except ConnectionFailedError as exc:
+            raise ConnectionFailedError(f"Failed to set number '{key}': {str(exc)}") from exc
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
