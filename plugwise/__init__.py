@@ -366,7 +366,7 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_number(dev_id, key, temperature)
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set number: {str(exc)}") from exc
+            raise ConnectionFailedError(f"Failed to set number '{key}': {str(exc)}") from exc
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
