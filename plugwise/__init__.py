@@ -324,7 +324,10 @@ class Smile(SmileComm):
         state: str | None = None,
     ) -> None:
         """Set the selected option for the applicable Select."""
-        await self._smile_api.set_select(key, loc_id, option, state)
+        try:
+            await self._smile_api.set_select(key, loc_id, option, state)
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set select: {str(exc)}") from exc
 
     async def set_schedule_state(
         self,
@@ -333,15 +336,25 @@ class Smile(SmileComm):
         name: str | None = None,
     ) -> None:
         """Activate/deactivate the Schedule, with the given name, on the relevant Thermostat."""
-        await self._smile_api.set_schedule_state(loc_id, state, name)
+        try:
+            await self._smile_api.set_schedule_state(loc_id, state, name)
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set schedule state: {str(exc)}") from exc
+
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat."""
-        await self._smile_api.set_preset(loc_id, preset)
+        try:
+            await self._smile_api.set_preset(loc_id, preset)
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set preset: {str(exc)}") from exc
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
-        await self._smile_api.set_temperature(loc_id, items)
+        try:
+            await self._smile_api.set_temperature(loc_id, items)
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set temperature: {str(exc)}") from exc
 
     async def set_number(
         self,
@@ -350,29 +363,47 @@ class Smile(SmileComm):
         temperature: float,
     ) -> None:
         """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
-        await self._smile_api.set_number(dev_id, key, temperature)
+        try:
+            await self._smile_api.set_number(dev_id, key, temperature)
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set number: {str(exc)}") from exc
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
-        await self._smile_api.set_offset(dev_id, offset)  # pragma: no cover
+        try:
+            await self._smile_api.set_offset(dev_id, offset)  # pragma: no cover
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set temperature offset: {str(exc)}") from exc
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
     ) -> None:
         """Set the given State of the relevant Switch."""
-        await self._smile_api.set_switch_state(appl_id, members, model, state)
+        try:
+            await self._smile_api.set_switch_state(appl_id, members, model, state)
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set switch state: {str(exc)}") from exc
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
-        await self._smile_api.set_gateway_mode(mode)  # pragma: no cover
+        try:
+            await self._smile_api.set_gateway_mode(mode)  # pragma: no cover
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set gateway mode: {str(exc)}") from exc
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
-        await self._smile_api.set_regulation_mode(mode)  # pragma: no cover
+        try:
+            await self._smile_api.set_regulation_mode(mode)  # pragma: no cover
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set regulation mode: {str(exc)}") from exc
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
-        await self._smile_api.set_dhw_mode(mode)  # pragma: no cover
+        try:
+            await self._smile_api.set_dhw_mode(mode)  # pragma: no cover
+        except ConnectionFailedError as exc:
+            raise PlugwiseError(f"Failed to set dhw mode: {str(exc)}") from exc
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
