@@ -644,7 +644,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             await smile.reboot_gateway()
             _LOGGER.info("  + worked as intended")
             return True
-        except pw_exceptions.PlugwiseError:
+        except pw_exceptions.ConnectionFailedError:
             if unhappy:
                 _LOGGER.info("  + failed as expected")
                 return False
