@@ -5,6 +5,7 @@ Plugwise backend module for Home Assistant Core - covering the legacy P1, Anna, 
 from __future__ import annotations
 
 import datetime as dt
+from typing import Any
 
 from plugwise.constants import (
     APPLIANCES,
@@ -23,7 +24,7 @@ from plugwise.constants import (
     PlugwiseData,
     ThermoLoc,
 )
-from plugwise.exceptions import PlugwiseError
+from plugwise.exceptions import ConnectionFailedError, PlugwiseError
 from plugwise.helper import SmileComm
 from plugwise.legacy.data import SmileLegacyData
 
@@ -180,7 +181,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         rule = self._domain_objects.find(locator)
         data = f'<rules><rule id="{rule.attrib["id"]}"><active>true</active></rule></rules>'
 
-        await self._request(RULES, method="put", data=data)
+        await self.call_request(RULES, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set-function placeholder for legacy devices."""
@@ -226,7 +227,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             f' id="{template_id}" /><active>{new_state}</active></rule></rules>'
         )
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
@@ -254,7 +255,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             if self._appliances.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
@@ -267,7 +268,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             uri = f"{APPLIANCES};id={member}/{switch.func_type}"
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
-            await self._request(uri, method="put", data=data)
+            await self.call_request(uri, method="put", data=data)
 
     async def set_temperature(self, _: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
@@ -287,4 +288,13 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             f"{temperature}</setpoint></thermostat_functionality>"
         )
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
+
+    async def call_request(self, uri: str, **kwargs: Any) -> None:
+        """ConnectionFailedError wrapper for calling _request()."""
+        method: str = kwargs["method"]
+        data: str | None = kwargs.get("data")
+        try:
+            await self._request(uri, method=method, data=data)
+        except ConnectionFailedError as exc:
+            raise ConnectionFailedError from exc
