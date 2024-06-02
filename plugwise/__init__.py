@@ -327,7 +327,7 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_select(key, loc_id, option, state)
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set select: {str(exc)}") from exc
+            raise ConnectionFailedError(f"Failed to set select option '{option}' for location '{loc_id}': {str(exc)}") from exc
 
     async def set_schedule_state(
         self,
