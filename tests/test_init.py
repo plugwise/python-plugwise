@@ -647,7 +647,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         except pw_exceptions.ConnectionFailedError:
             if unhappy:
                 _LOGGER.info("  + failed as expected")
-                return False
+                return True
             else:  # pragma: no cover
                 _LOGGER.info("  - failed unexpectedly")
                 return False
@@ -902,6 +902,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
         for test in ["maximum_boiler_temperature", "bogus_temperature"]:
+            _LOGGER.info("  + for %s", test)
             try:
                 await smile.set_number("dummy", test, new_temp)
                 _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
