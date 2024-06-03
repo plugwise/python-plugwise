@@ -858,13 +858,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_select("select_dhw_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
+                return True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_dhw_mode found invalid mode, as expected")
+                return False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
 
     @staticmethod
     async def tinker_regulation_mode(smile, unhappy=False):
@@ -878,15 +882,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_select("select_regulation_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_regulation_mode worked as intended")
+                return True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info(
                     "  + tinker_regulation_mode found invalid mode, as expected"
                 )
+                return False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
 
     @staticmethod
     async def tinker_max_boiler_temp(smile, unhappy=False):
@@ -897,14 +905,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_number("dummy", test, new_temp)
                 _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
+                return True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
+                return False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-
+                    return False
 
     @staticmethod
     async def tinker_temp_offset(smile, dev_id, unhappy=False):
@@ -938,13 +949,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_select("select_gateway_mode", "dummy", mode)
                 _LOGGER.info("  + worked as intended")
+                return True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid mode, as expected")
+                return False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
+                    return False
 
     @staticmethod
     def validate_test_basics(
