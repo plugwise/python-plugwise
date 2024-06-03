@@ -324,7 +324,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.tinker_gateway_mode(smile)
         await self.tinker_regulation_mode(smile)
-        await self.tinker_max_boiler_temp(smile)
+        tinkered = await self.tinker_max_boiler_temp(smile)
+        assert tinkered
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
