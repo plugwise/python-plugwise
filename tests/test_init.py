@@ -669,9 +669,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
                 return False
-            except pw_exceptions.ConnectionFailedError:
+            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 if unhappy:
-                    tinker_switch_passed = True  # test is pass!
+                    return True  # test is pass!
                     _LOGGER.info("  + failed as expected")
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
@@ -697,10 +697,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         except pw_exceptions.ConnectionFailedError:
             if unhappy:
                 _LOGGER.info("  + tinker_thermostat_temp failed as expected")
-                tinker_temp_passed = True
+                return True
             else:  # pragma: no cover
                 _LOGGER.info("  - tinker_thermostat_temp failed unexpectedly")
-                tinker_temp_passed = False
+                return False
 
         return tinker_temp_passed
 
@@ -721,10 +721,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid preset, as expected")
                 tinker_preset_passed = True
-            except pw_exceptions.ConnectionFailedError:
+            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 if unhappy:
-                    tinker_preset_passed = True
                     _LOGGER.info("  + tinker_thermostat_preset failed as expected")
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - tinker_thermostat_preset failed unexpectedly")
                     return False
@@ -755,11 +755,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
                     tinker_schedule_passed = True
-                except pw_exceptions.ConnectionFailedError:
+                except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                     tinker_schedule_passed = False
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
-                        tinker_schedule_passed = True
+                        return True
                     else:  # pragma: no cover
                         _LOGGER.info("  - succeeded unexpectedly for some reason")
                         return False
@@ -783,11 +783,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as expected")
                 tinker_schedule_passed = True
-            except pw_exceptions.ConnectionFailedError:
+            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 tinker_schedule_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    tinker_schedule_passed = True
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
                     return False
@@ -865,14 +865,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_dhw_mode found invalid mode, as expected")
                 tinker_dhw_mode_passed = False
-            except pw_exceptions.ConnectionFailedError:
+            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    ttinker_dhw_mode_passed = True
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    tinker_dhw_mode_passed = False
-        
+                    return False
+
         return tinker_dhw_mode_passed
 
     @staticmethod
@@ -894,13 +894,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "  + tinker_regulation_mode found invalid mode, as expected"
                 )
                 tinker_reg_mode_passed = False
-            except pw_exceptions.ConnectionFailedError:
+            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    tinker_reg_mode_passed = True
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    tinker_reg_mode_passed = False
+                    return False
 
         return tinker_reg_mode_passed
 
@@ -919,13 +919,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
                 tinker_max_boiler_temp_passed = False
-            except pw_exceptions.ConnectionFailedError:
+            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    tinker_max_boiler_temp_passed = True
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    tinker_max_boiler_temp_passed = False
+                    return False
 
         return tinker_max_boiler_temp_passed
 
@@ -966,13 +966,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid mode, as expected")
                 tinker_gateway_mode_passed = False
-            except pw_exceptions.ConnectionFailedError:
+            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    tinker_gateway_mode_passed = True
+                    return True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    tinker_gateway_mode_passed = False
+                    return False
 
         return tinker_gateway_mode_passed
 
