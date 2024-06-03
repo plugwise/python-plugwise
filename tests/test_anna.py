@@ -458,10 +458,21 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 "ERROR raised setting block cooling: %s", exc.value
             )  # pragma: no cover
 
-        await self.tinker_dhw_mode(smile)
+        tinkered = await self.tinker_dhw_mode(smile)
+        assert not tinkered
 
         await smile.close_connection()
         await self.disconnect(server, client)
+
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, "2022-05-16 00:00:01", testdata, skip_testing=True)
+
+        tinkered = await self.tinker_dhw_mode(smile, unhappy=True)
+        assert tinkered
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
 
     @pytest.mark.asyncio
     async def test_connect_anna_loria_cooling_active(self):

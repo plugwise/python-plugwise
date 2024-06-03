@@ -536,6 +536,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         test_time=None,
         testdata=None,
         initialize=True,
+        skip_testing=False,
     ):
         """Perform basic device tests."""
         bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
@@ -587,6 +588,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Gateway data = %s", data.gateway)
         _LOGGER.info("Device list = %s", data.devices)
         self.show_setup(location_list, data.devices)
+
+        if skip_testing:
+            return
 
         # Perform tests and asserts
         tests = 0
