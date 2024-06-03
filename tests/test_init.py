@@ -659,8 +659,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Turn a Switch on and off to test functionality."""
         _LOGGER.info("Asserting modifying settings for switch devices:")
         _LOGGER.info("- Devices (%s):", dev_id)
+        tinker_switch_passed = False
         for new_state in ["false", "true", "false"]:
-            tinker_switch_passed = False
             _LOGGER.info("- Switching %s", new_state)
             try:
                 await smile.set_switch_state(dev_id, members, model, new_state)
@@ -707,8 +707,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @pytest.mark.asyncio
     async def tinker_thermostat_preset(self, smile, loc_id, unhappy=False):
         """Toggle preset to test functionality."""
+        tinker_preset_passed = False
         for new_preset in ["asleep", "home", BOGUS]:
-            tinker_preset_passed = False
             warning = ""
             if new_preset[0] == "!":
                 warning = " TTP Negative test"
@@ -740,8 +740,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if good_schedules != []:
             if not single and ("!VeryBogusSchedule" not in good_schedules):
                 good_schedules.append("!VeryBogusSchedule")
+
+            tinker_schedule_passed = False
             for new_schedule in good_schedules:
-                tinker_schedule_passed = False
                 warning = ""
                 if new_schedule is not None and new_schedule[0] == "!":
                     warning = " TTS Negative test"
@@ -772,6 +773,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     async def tinker_legacy_thermostat_schedule(self, smile, unhappy=False):
         """Toggle schedules to test functionality."""
         states = ["on", "off", "!Bogus"]
+        tinker_schedule_passed = False
         for state in states:
             _LOGGER.info("- Adjusting schedule to state %s", state)
             try:
@@ -849,6 +851,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     async def tinker_dhw_mode(smile, unhappy=False):
         """Toggle dhw to test functionality."""
+        tinker_dhw_mode_passed = False
         for mode in ["auto", "boost", BOGUS]:
             warning = ""
             if mode[0] == "!":
@@ -858,21 +861,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_select("select_dhw_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_dhw_mode worked as intended")
-                return True
+                tinker_dhw_mode_passed = True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_dhw_mode found invalid mode, as expected")
-                return False
+                tinker_dhw_mode_passed = False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    return True
+                    ttinker_dhw_mode_passed = True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    return False
+                    tinker_dhw_mode_passed = False
+        
+        return tinker_dhw_mode_passed
 
     @staticmethod
     async def tinker_regulation_mode(smile, unhappy=False):
         """Toggle regulation_mode to test functionality."""
+        tinker_reg_mode_passed = False
         for mode in ["off", "heating", "bleeding_cold", BOGUS]:
             warning = ""
             if mode[0] == "!":
@@ -882,23 +888,26 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_select("select_regulation_mode", "dummy", mode)
                 _LOGGER.info("  + tinker_regulation_mode worked as intended")
-                return True
+                tinker_reg_mode_passed = True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info(
                     "  + tinker_regulation_mode found invalid mode, as expected"
                 )
-                return False
+                tinker_reg_mode_passed = False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    return True
+                    tinker_reg_mode_passed = True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    return False
+                    tinker_reg_mode_passed = False
+
+        return tinker_reg_mode_passed
 
     @staticmethod
     async def tinker_max_boiler_temp(smile, unhappy=False):
         """Change max boiler temp setpoint to test functionality."""
+        tinker_max_boiler_temp_passed = False
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
         for test in ["maximum_boiler_temperature", "bogus_temperature"]:
@@ -906,17 +915,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_number("dummy", test, new_temp)
                 _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
-                return True
+                tinker_max_boiler_temp_passed = True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
-                return False
+                tinker_max_boiler_temp_passed = False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    return True
+                    tinker_max_boiler_temp_passed = True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    return False
+                    tinker_max_boiler_temp_passed = False
+
+        return tinker_max_boiler_temp_passed
 
     @staticmethod
     async def tinker_temp_offset(smile, dev_id, unhappy=False):
@@ -941,6 +952,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
     @staticmethod
     async def tinker_gateway_mode(smile, unhappy=False):
         """Toggle gateway_mode to test functionality."""
+        tinker_gateway_mode_passed = False
         for mode in ["away", "full", "vacation", "!bogus"]:
             warning = ""
             if mode[0] == "!":
@@ -950,17 +962,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             try:
                 await smile.set_select("select_gateway_mode", "dummy", mode)
                 _LOGGER.info("  + worked as intended")
-                return True
+                tinker_gateway_mode_passed = True
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid mode, as expected")
-                return False
+                tinker_gateway_mode_passed = False
             except pw_exceptions.ConnectionFailedError:
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
-                    return True
+                    tinker_gateway_mode_passed = True
                 else:  # pragma: no cover
                     _LOGGER.info("  - succeeded unexpectedly for some reason")
-                    return False
+                    tinker_gateway_mode_passed = False
+
+        return tinker_gateway_mode_passed
 
     @staticmethod
     def validate_test_basics(
