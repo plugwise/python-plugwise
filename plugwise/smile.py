@@ -149,14 +149,6 @@ class SmileAPI(SmileComm, SmileData):
 ###  API Set and HA Service-related Functions                                                        ###
 ########################################################################################################
 
-    async def call_request(self, uri: str, **kwargs: Any) -> None:
-        """ConnectionFailedError wrapper for calling _request()."""
-        method: str = kwargs["method"]
-        try:
-            await self._request(uri, method=method)
-        except ConnectionFailedError as exc:
-            raise ConnectionFailedError from exc
-
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
         await self.call_request(NOTIFICATIONS, method="delete")
@@ -189,7 +181,7 @@ class SmileAPI(SmileComm, SmileData):
 
         uri = f"{APPLIANCES};id={self._heater_id}/thermostat;id={thermostat_id}"
         data = f"<thermostat_functionality><setpoint>{temp}</setpoint></thermostat_functionality>"
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def set_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
@@ -202,7 +194,7 @@ class SmileAPI(SmileComm, SmileData):
         uri = f"{APPLIANCES};id={dev_id}/offset;type=temperature_offset"
         data = f"<offset_functionality><offset>{value}</offset></offset_functionality>"
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat - from LOCATIONS."""
@@ -222,7 +214,7 @@ class SmileAPI(SmileComm, SmileData):
             f"</type><preset>{preset}</preset></location></locations>"
         )
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def set_select(self, key: str, loc_id: str, option: str, state: str | None) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
@@ -245,7 +237,7 @@ class SmileAPI(SmileComm, SmileData):
         uri = f"{APPLIANCES};type=heater_central/domestic_hot_water_mode_control"
         data = f"<domestic_hot_water_mode_control_functionality><mode>{mode}</mode></domestic_hot_water_mode_control_functionality>"
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
@@ -268,7 +260,7 @@ class SmileAPI(SmileComm, SmileData):
         uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
@@ -281,7 +273,7 @@ class SmileAPI(SmileComm, SmileData):
             duration = "<duration>300</duration>"
         data = f"<regulation_mode_control_functionality>{duration}<mode>{mode}</mode></regulation_mode_control_functionality>"
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def set_schedule_state(
         self,
@@ -335,7 +327,7 @@ class SmileAPI(SmileComm, SmileData):
             f"{template}{contexts}</rule></rules>"
         )
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
         self._schedule_old_states[loc_id][name] = new_state
 
     def determine_contexts(
@@ -404,7 +396,7 @@ class SmileAPI(SmileComm, SmileData):
             if self._domain_objects.find(locator).text == "true":
                 raise PlugwiseError("Plugwise: the locked Relay was not switched.")
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
 
     async def _set_groupswitch_member_state(
         self, members: list[str], state: str, switch: Munch
@@ -419,7 +411,7 @@ class SmileAPI(SmileComm, SmileData):
             uri = f"{APPLIANCES};id={member}/{switch.device};id={switch_id}"
             data = f"<{switch.func_type}><{switch.func}>{state}</{switch.func}></{switch.func_type}>"
 
-            await self._request(uri, method="put", data=data)
+            await self.call_request(uri, method="put", data=data)
 
     async def set_temperature(self, loc_id: str, items: dict[str, float]) -> None:
         """Set the given Temperature on the relevant Thermostat."""
@@ -460,4 +452,13 @@ class SmileAPI(SmileComm, SmileData):
             f"{temperature}</setpoint></thermostat_functionality>"
         )
 
-        await self._request(uri, method="put", data=data)
+        await self.call_request(uri, method="put", data=data)
+
+    async def call_request(self, uri: str, **kwargs: Any) -> None:
+        """ConnectionFailedError wrapper for calling _request()."""
+        method: str = kwargs["method"]
+        data: str | None = kwargs.get("data")
+        try:
+            await self._request(uri, method=method, data=data)
+        except ConnectionFailedError as exc:
+            raise ConnectionFailedError from exc

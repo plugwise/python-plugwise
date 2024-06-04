@@ -70,7 +70,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
         # Reset self.smile_setup
         self.smile_setup = "anna_v4"
-        await self.device_test(smile, "2020-04-05 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-05 00:00:01", testdata, skip_testing=True)
         result = await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",
@@ -79,6 +79,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             unhappy=True,
         )
         assert result
+
+        result = await self.tinker_temp_offset(
+            smile, "01b85360fdd243d0aaad4d6ac2a5ba7e", unhappy=True,
+        )
+        assert result
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -458,10 +464,21 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 "ERROR raised setting block cooling: %s", exc.value
             )  # pragma: no cover
 
-        await self.tinker_dhw_mode(smile)
+        tinkered = await self.tinker_dhw_mode(smile)
+        assert not tinkered
 
         await smile.close_connection()
         await self.disconnect(server, client)
+
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, "2022-05-16 00:00:01", testdata, skip_testing=True)
+
+        tinkered = await self.tinker_dhw_mode(smile, unhappy=True)
+        assert tinkered
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
 
     @pytest.mark.asyncio
     async def test_connect_anna_loria_cooling_active(self):

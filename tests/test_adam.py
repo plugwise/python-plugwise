@@ -63,7 +63,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-05-16 00:00:01", testdata, skip_testing=True)
         result = await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
@@ -79,15 +79,18 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert result
 
+        tinkered = await self.tinker_max_boiler_temp(smile, unhappy=True)
+        assert not tinkered
+
         try:
             await smile.delete_notification()
             notification_deletion = False  # pragma: no cover
-        except pw_exceptions.PlugwiseError:
+        except pw_exceptions.ConnectionFailedError:
             notification_deletion = True
         assert notification_deletion
 
         reboot = await self.tinker_reboot(smile, unhappy=True)
-        assert not reboot
+        assert reboot
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -212,7 +215,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata, skip_testing=True)
         result = await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
@@ -322,9 +325,14 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert not switch_change
 
-        await self.tinker_gateway_mode(smile)
-        await self.tinker_regulation_mode(smile)
-        await self.tinker_max_boiler_temp(smile)
+        tinkered = await self.tinker_gateway_mode(smile)
+        assert not tinkered
+
+        tinkered = await self.tinker_regulation_mode(smile)
+        assert not tinkered
+
+        tinkered = await self.tinker_max_boiler_temp(smile)
+        assert not tinkered
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
@@ -349,6 +357,23 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             await self.device_test(smile, initialize=False)
         except pw_exceptions.ResponseError:
             _LOGGER.debug("Receiving error-data from the Gateway")
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+        self.smile_setup = "adam_plus_anna_new"
+        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        server, smile, client = await self.connect_wrapper(raise_timeout=True)
+        await self.device_test(smile, "2023-12-17 00:00:01", testdata, skip_testing=True)
+
+        tinkered = await self.tinker_max_boiler_temp(smile, unhappy=True)
+        assert tinkered
+
+        tinkered = await self.tinker_gateway_mode(smile, unhappy=True)
+        assert tinkered
+
+        tinkered = await self.tinker_regulation_mode(smile, unhappy=True)
+        assert tinkered
 
         await smile.close_connection()
         await self.disconnect(server, client)
