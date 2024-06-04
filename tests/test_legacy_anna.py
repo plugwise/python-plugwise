@@ -39,7 +39,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_legacy_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata, skip_testing=True)
         result = await self.tinker_legacy_thermostat(smile, unhappy=True)
         assert result
         await smile.close_connection()

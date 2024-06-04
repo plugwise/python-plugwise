@@ -70,7 +70,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
         # Reset self.smile_setup
         self.smile_setup = "anna_v4"
-        await self.device_test(smile, "2020-04-05 00:00:01", testdata)
+        await self.device_test(smile, "2020-04-05 00:00:01", testdata, skip_testing=True)
         result = await self.tinker_thermostat(
             smile,
             "eb5309212bf5407bb143e5bfa3b18aee",

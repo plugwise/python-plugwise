@@ -63,7 +63,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2022-05-16 00:00:01", testdata)
+        await self.device_test(smile, "2022-05-16 00:00:01", testdata, skip_testing=True)
         result = await self.tinker_thermostat(
             smile,
             "c50f167537524366a5af7aa3942feb1e",
@@ -215,7 +215,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2020-03-22 00:00:01", testdata)
+        await self.device_test(smile, "2020-03-22 00:00:01", testdata, skip_testing=True)
         result = await self.tinker_thermostat(
             smile,
             "009490cc2f674ce6b576863fbb64f867",
@@ -361,7 +361,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.smile_setup = "adam_plus_anna_new"
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper(raise_timeout=True)
-        await self.device_test(smile, "2023-12-17 00:00:01", testdata)
+        await self.device_test(smile, "2023-12-17 00:00:01", testdata, skip_testing=True)
 
         tinkered = await self.tinker_max_boiler_temp(smile, unhappy=True)
         assert tinkered
