@@ -325,8 +325,11 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert not switch_change
 
-        await self.tinker_gateway_mode(smile)
-        await self.tinker_regulation_mode(smile)
+        tinkered = await self.tinker_gateway_mode(smile)
+        assert not tinkered
+
+        tinkered = await self.tinker_regulation_mode(smile)
+        assert not tinkered
 
         tinkered = await self.tinker_max_boiler_temp(smile)
         assert not tinkered
@@ -364,6 +367,12 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2023-12-17 00:00:01", testdata, skip_testing=True)
 
         tinkered = await self.tinker_max_boiler_temp(smile, unhappy=True)
+        assert tinkered
+
+        tinkered = await self.tinker_gateway_mode(smile, unhappy=True)
+        assert tinkered
+
+        tinkered = await self.tinker_regulation_mode(smile, unhappy=True)
         assert tinkered
 
         await smile.close_connection()

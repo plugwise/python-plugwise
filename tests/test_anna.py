@@ -79,6 +79,12 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             unhappy=True,
         )
         assert result
+
+        result = await self.tinker_temp_offset(
+            smile, "01b85360fdd243d0aaad4d6ac2a5ba7e", unhappy=True,
+        )
+        assert result
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
