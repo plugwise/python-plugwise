@@ -2,8 +2,9 @@
 
 ## v0.38.1
 
-- Add missing error-handling for set-function in __init__.py
-- Add call_request() functions combining all common error-handling for all set-functions
+- Add missing exception-handling for set-function in `__init__.py`
+- Add call_request() functions combining all common exception-handling for all set-functions
+- Update and improve test code
 - Implementing code improvements as suggested in #567
 
 ## v0.38.0
