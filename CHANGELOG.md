@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.38.2
+
+- Lower connection-timeout for actual devices after initial connect
+
 ## v0.38.1
 
 - Add missing exception-handling for set-function in `__init__.py`
