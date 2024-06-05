@@ -12,7 +12,6 @@ from plugwise.constants import (
     ANNA,
     APPLIANCES,
     DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
@@ -66,7 +65,7 @@ class SmileAPI(SmileComm, SmileData):
         smile_type: str,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_TIMEOUT,
+        timeout: float,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(

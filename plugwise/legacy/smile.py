@@ -9,7 +9,6 @@ from typing import Any
 
 from plugwise.constants import (
     APPLIANCES,
-    DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
@@ -58,7 +57,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_zigbee_mac_address: str | None,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_LEGACY_TIMEOUT,
+        timeout: float,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
