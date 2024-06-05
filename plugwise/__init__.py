@@ -7,6 +7,7 @@ from __future__ import annotations
 from plugwise.constants import (
     DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
+    DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOGGER,
@@ -128,6 +129,7 @@ class Smile(SmileComm):
         self._smile_api = SmileAPI(
             self._host,
             self._passwd,
+            self._timeout,
             self._websession,
             self._cooling_present,
             self._elga,
@@ -147,10 +149,10 @@ class Smile(SmileComm):
             self.smile_type,
             self._user,
             self._port,
-            self._timeout,
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
+            self._timeout,
             self._websession,
             self._is_thermostat,
             self._on_off_device,
@@ -168,7 +170,6 @@ class Smile(SmileComm):
             self.smile_zigbee_mac_address,
             self._user,
             self._port,
-            self._timeout,
         )
 
         # Update all endpoints on first connect

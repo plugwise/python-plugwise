@@ -46,6 +46,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
+        timeout: float,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
@@ -65,7 +66,6 @@ class SmileAPI(SmileComm, SmileData):
         smile_type: str,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
