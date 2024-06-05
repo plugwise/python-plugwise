@@ -552,8 +552,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     await smile.full_update_device()
                     smile.get_all_devices()
                     data = await smile.async_update()
+                    assert smile._timeout == 30
                 else:
                     data = await smile.async_update()
+                    assert smile._timeout == 10
             else:
                 _LOGGER.info("Asserting updated testdata:")
                 data = await smile.async_update()
