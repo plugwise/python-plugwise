@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from plugwise.constants import (
     DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
+    DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOGGER,
