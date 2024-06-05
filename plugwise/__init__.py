@@ -57,7 +57,7 @@ class Smile(SmileComm):
             websession,
             username,
             port,
-            self._timeout,
+            timeout,
         )
 
         self._host = host
