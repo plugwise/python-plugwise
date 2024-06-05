@@ -32,7 +32,8 @@ VOLUME_CUBIC_METERS_PER_HOUR: Final = "m³/h"
 
 ADAM: Final = "Adam"
 ANNA: Final = "Smile Anna"
-DEFAULT_TIMEOUT: Final = 30
+DEFAULT_TIMEOUT: Final = 10
+DEFAULT_LEGACY_TIMEOUT: Final = 30
 DEFAULT_USERNAME: Final = "smile"
 DEFAULT_PORT: Final = 80
 DEFAULT_PW_MAX: Final = 30.0

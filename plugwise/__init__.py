@@ -5,6 +5,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 from plugwise.constants import (
+    DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
@@ -46,7 +47,7 @@ class Smile(SmileComm):
         websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_TIMEOUT,
+        timeout: float = DEFAULT_LEGACY_TIMEOUT,
 
     ) -> None:
         """Set the constructor for this class."""
@@ -128,6 +129,7 @@ class Smile(SmileComm):
         self._smile_api = SmileAPI(
             self._host,
             self._passwd,
+            self._timeout,
             self._websession,
             self._cooling_present,
             self._elga,
@@ -147,10 +149,10 @@ class Smile(SmileComm):
             self.smile_type,
             self._user,
             self._port,
-            self._timeout,
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
+            self._timeout,
             self._websession,
             self._is_thermostat,
             self._on_off_device,
@@ -168,7 +170,6 @@ class Smile(SmileComm):
             self.smile_zigbee_mac_address,
             self._user,
             self._port,
-            self._timeout,
         )
 
         # Update all endpoints on first connect
@@ -191,6 +192,9 @@ class Smile(SmileComm):
             self.smile_mac_address = gateway.find("mac_address").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
+
+        if not self.smile_legacy:
+            self._timeout = DEFAULT_TIMEOUT
 
         if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check

@@ -10,7 +10,6 @@ from typing import Any
 from plugwise.constants import (
     APPLIANCES,
     DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
@@ -41,6 +40,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         host: str,
         password: str,
+        timeout: float,
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _on_off_device: bool,
@@ -58,7 +58,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_zigbee_mac_address: str | None,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_TIMEOUT,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
@@ -77,6 +76,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._opentherm_device = _opentherm_device
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
+        self._timeout = timeout
         self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname

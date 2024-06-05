@@ -12,7 +12,6 @@ from plugwise.constants import (
     ANNA,
     APPLIANCES,
     DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
@@ -47,6 +46,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
+        timeout: float,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
@@ -66,8 +66,6 @@ class SmileAPI(SmileComm, SmileData):
         smile_type: str,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_TIMEOUT,
-
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
@@ -87,6 +85,7 @@ class SmileAPI(SmileComm, SmileData):
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
+        self._timeout = timeout
         self.gateway_id = gateway_id
         self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version
