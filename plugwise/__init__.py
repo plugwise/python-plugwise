@@ -56,7 +56,7 @@ class Smile(SmileComm):
             websession,
             username,
             port,
-            timeout,
+            self._timeout,
         )
 
         self._host = host
@@ -64,6 +64,7 @@ class Smile(SmileComm):
         self._websession = websession
         self._user = username
         self._port = port
+        self._timeout = timeout
 
         self._cooling_present = False
         self._elga = False
@@ -146,6 +147,7 @@ class Smile(SmileComm):
             self.smile_type,
             self._user,
             self._port,
+            self._timeout,
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
@@ -166,6 +168,7 @@ class Smile(SmileComm):
             self.smile_zigbee_mac_address,
             self._user,
             self._port,
+            self._timeout,
         )
 
         # Update all endpoints on first connect
@@ -188,6 +191,9 @@ class Smile(SmileComm):
             self.smile_mac_address = gateway.find("mac_address").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
+
+        if not self.smile_legacy:
+            self._timeout = DEFAULT_TIMEOUT
 
         if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
