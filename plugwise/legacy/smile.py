@@ -9,8 +9,8 @@ from typing import Any
 
 from plugwise.constants import (
     APPLIANCES,
-    DEFAULT_PORT,
     DEFAULT_LEGACY_TIMEOUT,
+    DEFAULT_PORT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
