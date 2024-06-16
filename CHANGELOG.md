@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.38.3
+
+- Implement fix for Core Issue #119686
+
 ## v0.38.2
 
 - Lower connection-timeout for actual devices after initial connect
