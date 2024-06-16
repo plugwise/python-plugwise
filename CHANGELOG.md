@@ -2,7 +2,7 @@
 
 ## v0.38.3
 
-- Implement fix for Core Issue #119686
+- Implement fix for Core Issue [#119686](https://github.com/home-assistant/core/issues/119686)
 
 ## v0.38.2
 
