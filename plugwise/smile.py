@@ -163,9 +163,12 @@ class SmileAPI(SmileComm, SmileData):
         temperature: float,
     ) -> None:
         """Set the maximum boiler- or DHW-setpoint on the Central Heating boiler or the temperature-offset on a Thermostat."""
-        if key == "temperature_offset":
-            await self.set_offset(dev_id, temperature)
-            return
+        match key:
+            case "temperature_offset":
+                await self.set_offset(dev_id, temperature)
+                return
+            case "max_dhw_temperature":
+                key = "domestic_hot_water_setpoint"
 
         temp = str(temperature)
         thermostat_id: str | None = None
