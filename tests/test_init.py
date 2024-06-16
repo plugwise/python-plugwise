@@ -916,7 +916,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         tinker_max_boiler_temp_passed = False
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
-        for test in ["maximum_boiler_temperature", "bogus_temperature"]:
+        for test in ["maximum_boiler_temperature", "max_dhw_temperature", "bogus_temperature"]:
             _LOGGER.info("  + for %s", test)
             try:
                 await smile.set_number("dummy", test, new_temp)
