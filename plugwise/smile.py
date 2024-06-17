@@ -186,7 +186,7 @@ class SmileAPI(SmileComm, SmileData):
         """Set the max. Boiler or DHW setpoint on the Central Heating boiler."""
         if key == "max_dhw_temperature":
             key = "domestic_hot_water_setpoint"
-            
+
         temp = str(temperature)
         thermostat_id: str | None = None
         locator = f'appliance[@id="{self._heater_id}"]/actuator_functionalities/thermostat_functionality'
