@@ -875,12 +875,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         new_temp = 60.0
         dev_id = None
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
-        for test in ["maximum_boiler_temperature", "bogus_temperature"]:
+        for test in ["maximum_boiler_temperature", "max_dhw_temperature", "bogus_temperature"]:
             try:
                 await smile.set_number_setpoint(test, dev_id, new_temp)
-                _LOGGER.info("  + tinker_max_boiler_temp worked as intended")
+                _LOGGER.info("  + tinker %s worked as intended", test)
             except pw_exceptions.PlugwiseError:
-                _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
+                _LOGGER.info("  + tinker %s failed as intended", test)
 
     @staticmethod
     async def tinker_temp_offset(smile, dev_id):
