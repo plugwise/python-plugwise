@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.37.4
+## v0.37.4 (HA-Core-only release)
 
 - Fix for Core Issue #119686
 
