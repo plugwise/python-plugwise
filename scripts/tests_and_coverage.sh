@@ -24,7 +24,8 @@ fi
 # Install/update dependencies
 pre-commit install
 pre-commit install-hooks
-pip install -r requirements_test.txt -r requirements_commit.txt
+pip install uv
+uv pip install -r requirements_test.txt -r requirements_commit.txt
 
 set +u
 
