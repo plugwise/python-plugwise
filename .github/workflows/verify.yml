@@ -45,10 +45,10 @@ jobs:
       - name: Create Python virtual environment
         if: steps.cache-venv.outputs.cache-hit != 'true'
         run: |
-          pip install uv
-          uv pip install virtualenv --upgrade
+          pip install virtualenv --upgrade
           python -m venv venv
           . venv/bin/activate
+          pip install uv
           uv pip install -U pip setuptools wheel
           uv pip install -r requirements_test.txt -r requirements_commit.txt
           # TODO: Remove after update of aiohttp beyond 3.10.0
