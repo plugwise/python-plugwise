@@ -26,6 +26,8 @@ pre-commit install
 pre-commit install-hooks
 pip install uv
 uv pip install -r requirements_test.txt -r requirements_commit.txt
+# TODO: Remove after update of aiohttp beyond 3.10.0
+uv pip show aiohttp | grep -q "Version: 3.10.0" && (grep -q "core.locations" venv/lib/python*/site-packages/aiohttp/web_urldispatcher.py && echo " *** aiohttp already patched" || ( echo "Patching aiohttp 3.10.0 for tests"; patch -tRup0 venv/lib/python*/site-packages/aiohttp/web_urldispatcher.py < patch/aiohttp310.patch && echo " *** aiohttp Patched!" || echo " *** aiohttp patch failed?")) || ( echo " ***"; echo " *** WE CAN REMOVE THE PATCH FOR aiohttp 3.10.0 from $0"; echo " ***" )
 
 set +u
 
