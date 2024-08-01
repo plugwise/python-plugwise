@@ -97,7 +97,7 @@ jobs:
       - name: Ruff (with fix)
         run: |
           . venv/bin/activate
-          ruff plugwise/*py tests/*py
+          ruff check --fix plugwise/*py tests/*py
       - name: If needed, commit ruff changes to the pull request
         if: failure()
         run: |
