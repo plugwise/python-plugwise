@@ -1,9 +1,5 @@
 # Changelog
 
-## ongoing
-
-- Note2self; remove aiohttp 3.10 test fixing in scripts/* and verify workflow
-
 ## v0.38.3
 
 - Implement fix for Core Issue [#119686](https://github.com/home-assistant/core/issues/119686)
