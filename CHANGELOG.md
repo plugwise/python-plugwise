@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0
+
+- First formal release to v1.0.0!
+
 ## v0.38.3
 
 - Implement fix for Core Issue [#119686](https://github.com/home-assistant/core/issues/119686)
