@@ -188,7 +188,7 @@
         "off"
       ],
       "binary_sensors": {
-        "battery": false
+        "battery": true
       },
       "control_state": "preheating",
       "dev_class": "zone_thermostat",
