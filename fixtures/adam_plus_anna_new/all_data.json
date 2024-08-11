@@ -158,7 +158,7 @@
     },
     "da224107914542988a88561b4452b0f6": {
       "binary_sensors": {
-        "plugwise_notification": false
+        "plugwise_notification": true
       },
       "dev_class": "gateway",
       "firmware": "3.7.8",
@@ -238,7 +238,11 @@
     "gateway_id": "da224107914542988a88561b4452b0f6",
     "heater_id": "056ee145a816487eaa69243c3280f8bf",
     "item_count": 149,
-    "notifications": {},
+    "notifications": {
+      "996d1258bed54f8b895be4eafe7a5e4e": {
+        "message": "Battery of Lisa (with MAC address 000D6F000C869B61, in room 'Bathroom') is below 30%."
+      }
+    },
     "reboot": true,
     "smile_name": "Adam"
   }
