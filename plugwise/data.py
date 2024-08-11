@@ -57,7 +57,8 @@ class SmileData(SmileHelper):
         """
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            self._add_or_update_notifications(device_id, device, data)
+            if device_id == self.gateway_id:
+                self._add_or_update_notifications(device_id, device, data)
             device.update(data)
             self._update_for_cooling(device)
             remove_empty_platform_dicts(device)
