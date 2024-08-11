@@ -10,7 +10,7 @@
     "zigbee_mac_address": "000D6F000D5A168D",
     "vendor": "Plugwise",
     "binary_sensors": {
-      "plugwise_notification": false
+      "plugwise_notification": true
     },
     "sensors": {
       "outdoor_temperature": 9.19
