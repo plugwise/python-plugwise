@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+import re
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -646,6 +647,14 @@ class SmileHelper(SmileCommon):
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
                 self._notifications.update({msg_id: {msg_type: msg}})
+
+                # Change Battery is low message to update binary_sensor
+                matches = ["Battery", "below"]
+                if all(x in msg for x in matches):
+                    mac_pattern = "(?:([0-9A-Fa-f]{2}){8})"
+                    mac_address = re.findall(mac_pattern, msg)
+                    LOGGER.debug("HOI mac_address: %s", mac_address)
+
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
                 LOGGER.debug(
