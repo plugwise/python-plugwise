@@ -22,6 +22,14 @@ from plugwise.helper import SmileHelper
 from plugwise.util import remove_empty_platform_dicts
 
 
+def _update_battery_binary_sensors(device_id: str, device: DeviceData, mac_list: list[str]) -> None:
+    """Helper-function updating the battery-binary_sensor of battery-power devices."""
+    if "battery" in device["binary_sensors"]:
+        if device["binary_sensors"]["battery"] and device["zigbee_mac_address"] not in mac_list:
+            device["binary_sensors"]["battery"] = False
+        if device["zigbee_mac_address"] in mac_list:
+            device["binary_sensors"]["battery"] = True
+
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
 
@@ -55,20 +63,24 @@ class SmileData(SmileHelper):
 
         Collect data for each device and add to self.gw_devices.
         """
+        mac_list: list[str] = []
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             if device_id == self.gateway_id:
-                self._add_or_update_notifications(device_id, device, data)
+                mac_list = self._add_or_update_notifications(device_id, device, data)
             device.update(data)
+            if mac_list:
+                _update_battery_binary_sensors(device_id, device, mac_list)
             self._update_for_cooling(device)
             remove_empty_platform_dicts(device)
 
     def _add_or_update_notifications(
         self, device_id: str, device: DeviceData, data: DeviceData
-    ) -> None:
+    ) -> list[str] | None:
         """Helper-function adding or updating the Plugwise notifications."""
         # Use Battery-is-low message to update battery binary_sensor
         matches = ["Battery", "below"]
+        mac_address_list: list[str] = []
         if self._notifications:
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
@@ -79,6 +91,7 @@ class SmileData(SmileHelper):
 
                 if mac_address is not None:
                     self._notifications.pop(msg_id)
+                    mac_address_list.append(mac_address)
 
         if (
             device_id == self.gateway_id
@@ -91,6 +104,8 @@ class SmileData(SmileHelper):
         ):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             self._count += 1
+
+        return mac_address_list
 
     def _update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
