@@ -70,6 +70,7 @@ class SmileData(SmileHelper):
                 mac_list = self._add_or_update_notifications(device_id, device, data)
             device.update(data)
             if mac_list:
+                LOGGER.debug("HOI mac-list: %s", mac_list)
                 _update_battery_binary_sensors(device_id, device, mac_list)
             self._update_for_cooling(device)
             remove_empty_platform_dicts(device)
