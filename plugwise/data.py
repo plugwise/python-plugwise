@@ -87,7 +87,7 @@ class SmileData(SmileHelper):
                 mac_address: str | None = None
                 if "message" in notification and all(x in (msg := notification.get("message")) for x in matches):
                     mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
-                    mac_address = re.findall(mac_pattern, msg)
+                    mac_address = re.findall(mac_pattern, msg)[0]
                     LOGGER.debug("HOI mac_address: %s", mac_address)
 
                 if mac_address is not None:
