@@ -651,7 +651,7 @@ class SmileHelper(SmileCommon):
                 # Change Battery is low message to update binary_sensor
                 matches = ["Battery", "below"]
                 if all(x in msg for x in matches):
-                    mac_pattern = "(?:([0-9A-Fa-f]{2}){8})"
+                    mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
                     mac_address = re.findall(mac_pattern, msg)
                     LOGGER.debug("HOI mac_address: %s", mac_address)
 
