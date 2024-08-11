@@ -1834,6 +1834,18 @@
 			</zig_bee_node>
 		</protocols>
 	</module>
+	<notification id="996d1258bed54f8b895be4eafe7a5e4e">
+		<type>message</type>
+		<origin>local</origin>
+		<title>Battery of Lisa is low.</title>
+		<message>Battery of Lisa (with MAC address 000D6F000C869B61, in room 'Bathroom') is below 30%.</message>
+		<valid_from/>
+		<valid_to/>
+		<read_date/>
+		<created_date>2021-12-07T22:05:22.690+02:00</created_date>
+		<modified_date>2021-12-07T22:05:22.774+02:00</modified_date>
+		<deleted_date/>
+	</notification>
 	<module id='fe0bb67baa774960a41ca3148137d646'>
 		<vendor_name>Plugwise</vendor_name>
 		<vendor_model>160-01</vendor_model>
