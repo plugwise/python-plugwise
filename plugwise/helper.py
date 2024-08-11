@@ -654,7 +654,7 @@ class SmileHelper(SmileCommon):
                     mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
                     mac_address = re.findall(mac_pattern, msg)
                     LOGGER.debug("HOI mac_address: %s", mac_address)
-                
+
                 if mac_address is None:
                     self._notifications.update({msg_id: {msg_type: msg}})
 
