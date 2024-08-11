@@ -72,7 +72,7 @@ class SmileData(SmileHelper):
             LOGGER.debug("HOI: %s", self._notifications)
             for msg_id, notification in self._notifications.items():
                 mac_address: str | None = None
-                if "message" in notification and all(x in notification.get("message") for x in matches):
+                if "message" in notification and all(x in (msg := notification.get("message")) for x in matches):
                     mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
                     mac_address = re.findall(mac_pattern, msg)
                     LOGGER.debug("HOI mac_address: %s", mac_address)
