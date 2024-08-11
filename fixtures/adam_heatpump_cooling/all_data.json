@@ -47,6 +47,9 @@
         "Weekend",
         "off"
       ],
+      "binary_sensors": {
+        "battery": false
+      },
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -521,6 +524,9 @@
         "Weekend",
         "off"
       ],
+      "binary_sensors": {
+        "battery": false
+      },
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
@@ -632,7 +638,7 @@
     "cooling_present": true,
     "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
     "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
-    "item_count": 415,
+    "item_count": 417,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"
