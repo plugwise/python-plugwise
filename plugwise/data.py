@@ -4,6 +4,8 @@ Plugwise Smile protocol data-collection helpers.
 """
 from __future__ import annotations
 
+import re
+
 from plugwise.constants import (
     ADAM,
     ANNA,
