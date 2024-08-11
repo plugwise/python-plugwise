@@ -646,18 +646,7 @@ class SmileHelper(SmileCommon):
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
-
-                # Change Battery is low message to update binary_sensor
-                matches = ["Battery", "below"]
-                mac_address: str | None = None
-                if all(x in msg for x in matches):
-                    mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
-                    mac_address = re.findall(mac_pattern, msg)
-                    LOGGER.debug("HOI mac_address: %s", mac_address)
-
-                if mac_address is None:
-                    self._notifications.update({msg_id: {msg_type: msg}})
-
+                self._notifications.update({msg_id: {msg_type: msg}})
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
                 LOGGER.debug(

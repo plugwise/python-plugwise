@@ -63,6 +63,19 @@ class SmileData(SmileHelper):
         self, device_id: str, device: DeviceData, data: DeviceData
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
+        # Use Battery-is-low message to update battery binary_sensor
+        matches = ["Battery", "below"]
+        if self._notifications:
+            for msg_id, notification in self._notifications.items():
+                mac_address: str | None = None
+                if all(x in notification.get("message") for x in matches):
+                    mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
+                    mac_address = re.findall(mac_pattern, msg)
+                    LOGGER.debug("HOI mac_address: %s", mac_address)
+
+                if mac_address is not None:
+                    self._notifications.pop(msg_id)
+
         if (
             device_id == self.gateway_id
             and (
