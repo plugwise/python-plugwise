@@ -7,6 +7,7 @@ from __future__ import annotations
 from plugwise.constants import (
     ADAM,
     ANNA,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
