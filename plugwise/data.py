@@ -70,8 +70,7 @@ class SmileData(SmileHelper):
         # Use Battery-is-low message to update battery binary_sensor
         matches = ["Battery", "below"]
         if self._notifications:
-            LOGGER.debug("HOI: %s", self._notifications)
-            for msg_id, notification in self._notifications.items():
+            for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
                 if "message" in notification and all(x in (msg := notification.get("message")) for x in matches):
                     mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
