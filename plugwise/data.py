@@ -9,7 +9,6 @@ import re
 from plugwise.constants import (
     ADAM,
     ANNA,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -59,8 +58,8 @@ class SmileData(SmileHelper):
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             if device_id == self.gateway_id:
-                self._add_or_update_notifications(device_id, device, data)
                 mac_list = self._detect_low_batteries(device_id, device, data)
+                self._add_or_update_notifications(device_id, device, data)
             device.update(data)
             if mac_list:
                 update_battery_binary_sensors(device_id, device, mac_list)
@@ -70,14 +69,14 @@ class SmileData(SmileHelper):
     def _detect_low_batteries(
         self, device_id: str, device: DeviceData, data: DeviceData
     ) -> list[str]:
-        """Helper-function updating the battery binary_sensor status from a Battery-is-low message.""" 
+        """Helper-function updating the battery binary_sensor status from a Battery-is-low message."""
         matches = ["Battery", "below"]
         mac_address_list: list[str] = []
         if self._notifications:
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
                 if (
-                    "message" in notification 
+                    "message" in notification
                     and all(x in (msg := notification.get("message")) for x in matches)
                 ):
                     mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
