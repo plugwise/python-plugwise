@@ -70,9 +70,7 @@ class SmileData(SmileHelper):
 
             remove_empty_platform_dicts(device)
 
-    def _detect_low_batteries(
-        self, device_id: str, device: DeviceData, data: DeviceData
-    ) -> list[str]:
+    def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the battery_state binary_sensor status from a Battery-is-low message."""
         mac_address_list: list[str] = []
         mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
