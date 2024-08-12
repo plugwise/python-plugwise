@@ -48,7 +48,7 @@
         "off"
       ],
       "binary_sensors": {
-        "battery": false
+        "battery_state": false
       },
       "control_state": "off",
       "dev_class": "zone_thermostat",
@@ -525,7 +525,7 @@
         "off"
       ],
       "binary_sensors": {
-        "battery": false
+        "battery_state": false
       },
       "control_state": "off",
       "dev_class": "zone_thermostat",
