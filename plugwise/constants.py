@@ -258,7 +258,7 @@ ApplianceType = Literal[
 ]
 
 BinarySensorType = Literal[
-    "battery",
+    "battery_state",
     "compressor_state",
     "cooling_enabled",
     "cooling_state",
@@ -410,7 +410,7 @@ class ModelData(TypedDict):
 class SmileBinarySensors(TypedDict, total=False):
     """Smile Binary Sensors class."""
 
-    battery: bool
+    battery_state: bool
     compressor_state: bool
     cooling_enabled: bool
     cooling_state: bool

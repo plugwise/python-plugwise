@@ -139,7 +139,7 @@ def common_match_cases(
             data[sp_key] = value
 
     if "battery" in data["sensors"]:
-        data["binary_sensors"]["battery"] = False
+        data["binary_sensors"]["battery_state"] = False
 
 
 def escape_illegal_xml_characters(xmldata: str) -> str:
