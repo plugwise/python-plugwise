@@ -74,15 +74,15 @@ class SmileData(SmileHelper):
         self, device_id: str, device: DeviceData, data: DeviceData
     ) -> list[str]:
         """Helper-function updating the battery_state binary_sensor status from a Battery-is-low message."""
-        matches = ["Battery", "below"]
         mac_address_list: list[str] = []
+        mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
+        matches = ["Battery", "below"]
         if self._notifications:
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
-                if "message" in notification and all(x in (msg := notification.get("message")) for x in matches):
-                    mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
-                    if msg is not None:
-                        mac_address = re.findall(mac_pattern, msg)[0]  # re.findall() outputs a list
+                message: str | None = notification.get("message")
+                if message is not None and all(x in message for x in matches):
+                    mac_address = re.findall(mac_pattern, message)[0]  # re.findall() outputs a list
 
                 if mac_address is not None:
                     self._notifications.pop(msg_id)
