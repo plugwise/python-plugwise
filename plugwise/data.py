@@ -18,7 +18,7 @@ from plugwise.constants import (
     DeviceData,
 )
 from plugwise.helper import SmileHelper
-from plugwise.util import remove_empty_platform_dicts, update_battery_binary_sensors
+from plugwise.util import remove_empty_platform_dicts
 
 
 class SmileData(SmileHelper):
@@ -60,10 +60,14 @@ class SmileData(SmileHelper):
             if device_id == self.gateway_id:
                 mac_list = self._detect_low_batteries(device_id, device, data)
                 self._add_or_update_notifications(device_id, device, data)
+
             device.update(data)
-            if mac_list:
-                update_battery_binary_sensors(device_id, device, mac_list)
+
+            if mac_list and "battery" in device["binary_sensors"] and device["zigbee_mac_address"] in mac_list:
+                device["binary_sensors"]["battery"] = True
+
             self._update_for_cooling(device)
+
             remove_empty_platform_dicts(device)
 
     def _detect_low_batteries(

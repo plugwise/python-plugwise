@@ -245,9 +245,3 @@ def version_to_model(version: str | None) -> str | None:
         model = HW_MODELS.get(version[-2:] + version[-4:-2] + version[-6:-4])
 
     return model if model is not None else "Unknown"
-
-
-def update_battery_binary_sensors(device_id: str, device: DeviceData, mac_list: list[str]) -> None:
-    """Helper-function updating the battery-binary_sensor of battery-power devices."""
-    if "battery" in device["binary_sensors"] and device["zigbee_mac_address"] in mac_list:
-            device["binary_sensors"]["battery"] = True
