@@ -70,6 +70,9 @@
     "name": "Lisa Badkamer",
     "zigbee_mac_address": "000D6F000C869B61",
     "vendor": "Plugwise",
+    "binary_sensors": {
+        "battery": true
+      },
     "sensors": {
       "temperature": 16.5,
       "setpoint": 18,

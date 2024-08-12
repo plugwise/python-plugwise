@@ -27,6 +27,9 @@
     "available": false
   },
   "e2f4322d57924fa090fbbc48b3a140dc": {
+    "binary_sensors": {
+        "battery": false
+      },
     "mode": "off"
   },
   "da224107914542988a88561b4452b0f6": {
