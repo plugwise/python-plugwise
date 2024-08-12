@@ -19,16 +19,8 @@ from plugwise.constants import (
     DeviceData,
 )
 from plugwise.helper import SmileHelper
-from plugwise.util import remove_empty_platform_dicts
+from plugwise.util import remove_empty_platform_dicts, update_battery_binary_sensors
 
-
-def _update_battery_binary_sensors(device_id: str, device: DeviceData, mac_list: list[str]) -> None:
-    """Helper-function updating the battery-binary_sensor of battery-power devices."""
-    if "battery" in device["binary_sensors"]:
-        if device["binary_sensors"]["battery"] and device["zigbee_mac_address"] not in mac_list:
-            device["binary_sensors"]["battery"] = False
-        if device["zigbee_mac_address"] in mac_list:
-            device["binary_sensors"]["battery"] = True
 
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
@@ -67,33 +59,40 @@ class SmileData(SmileHelper):
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             if device_id == self.gateway_id:
-                mac_list = self._add_or_update_notifications(device_id, device, data)
+                self._add_or_update_notifications(device_id, device, data)
+                mac_list = self._detect_low_batteries(device_id, device, data)
             device.update(data)
             if mac_list:
-                LOGGER.debug("HOI mac-list: %s", mac_list)
-                _update_battery_binary_sensors(device_id, device, mac_list)
+                update_battery_binary_sensors(device_id, device, mac_list)
             self._update_for_cooling(device)
             remove_empty_platform_dicts(device)
 
-    def _add_or_update_notifications(
+    def _detect_low_batteries(
         self, device_id: str, device: DeviceData, data: DeviceData
-    ) -> list[str] | None:
-        """Helper-function adding or updating the Plugwise notifications."""
-        # Use Battery-is-low message to update battery binary_sensor
+    ) -> list[str]:
+        """Helper-function updating the battery binary_sensor status from a Battery-is-low message.""" 
         matches = ["Battery", "below"]
         mac_address_list: list[str] = []
         if self._notifications:
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
-                if "message" in notification and all(x in (msg := notification.get("message")) for x in matches):
+                if (
+                    "message" in notification 
+                    and all(x in (msg := notification.get("message")) for x in matches)
+                ):
                     mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
-                    mac_address = re.findall(mac_pattern, msg)[0]
-                    LOGGER.debug("HOI mac_address: %s", mac_address)
+                    mac_address = re.findall(mac_pattern, msg)[0]  # re.findall() outputs a list
 
                 if mac_address is not None:
                     self._notifications.pop(msg_id)
                     mac_address_list.append(mac_address)
 
+        return mac_address_list
+
+    def _add_or_update_notifications(
+        self, device_id: str, device: DeviceData, data: DeviceData
+    ) -> None:
+        """Helper-function adding or updating the Plugwise notifications."""
         if (
             device_id == self.gateway_id
             and (
@@ -105,8 +104,6 @@ class SmileData(SmileHelper):
         ):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             self._count += 1
-
-        return mac_address_list
 
     def _update_for_cooling(self, device: DeviceData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
