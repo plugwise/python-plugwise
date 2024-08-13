@@ -138,6 +138,9 @@ def common_match_cases(
             sp_key = cast(SpecialType, measurement)
             data[sp_key] = value
 
+    if "battery" in data["sensors"]:
+        data["binary_sensors"]["battery_state"] = False
+
 
 def escape_illegal_xml_characters(xmldata: str) -> str:
     """Replace illegal &-characters."""

@@ -4,6 +4,8 @@ Plugwise Smile protocol data-collection helpers.
 """
 from __future__ import annotations
 
+import re
+
 from plugwise.constants import (
     ADAM,
     ANNA,
@@ -52,12 +54,48 @@ class SmileData(SmileHelper):
 
         Collect data for each device and add to self.gw_devices.
         """
+        mac_list: list[str] = []
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
-            self._add_or_update_notifications(device_id, device, data)
+            if device_id == self.gateway_id:
+                mac_list = self._detect_low_batteries()
+                self._add_or_update_notifications(device_id, device, data)
+
             device.update(data)
+
+            is_battery_low = (
+                mac_list
+                and "battery_state" in device["binary_sensors"]
+                and device["zigbee_mac_address"] in mac_list
+                and (
+                    (device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve") and device["sensors"]["battery"] < 30)
+                    or (device["dev_class"] in ("zone_thermometer", "zone_thermostat") and device["sensors"]["battery"] < 15)
+                )
+            )
+            if is_battery_low:
+                device["binary_sensors"]["battery_state"] = True
+
             self._update_for_cooling(device)
+
             remove_empty_platform_dicts(device)
+
+    def _detect_low_batteries(self) -> list[str]:
+        """Helper-function updating the battery_state binary_sensor status from a Battery-is-low message."""
+        mac_address_list: list[str] = []
+        mac_pattern = re.compile(r"(?:[0-9A-F]{2}){8}")
+        matches = ["Battery", "below"]
+        if self._notifications:
+            for msg_id, notification in list(self._notifications.items()):
+                mac_address: str | None = None
+                message: str | None = notification.get("message")
+                if message is not None and all(x in message for x in matches) and (mac_addresses := mac_pattern.findall(message)):
+                    mac_address = mac_addresses[0]  # re.findall() outputs a list
+
+                if mac_address is not None:
+                    self._notifications.pop(msg_id)
+                    mac_address_list.append(mac_address)
+
+        return mac_address_list
 
     def _add_or_update_notifications(
         self, device_id: str, device: DeviceData, data: DeviceData

@@ -129,7 +129,6 @@ class SmileAPI(SmileComm, SmileData):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        # Perform a full update at day-change
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         try:
