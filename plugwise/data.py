@@ -63,7 +63,12 @@ class SmileData(SmileHelper):
 
             device.update(data)
 
-            if mac_list and "battery_state" in device["binary_sensors"] and device["zigbee_mac_address"] in mac_list:
+            if (
+                mac_list
+                and "battery_state" in device["binary_sensors"]
+                and device["zigbee_mac_address"] in mac_list
+                and device["sensors"]["battery"] < 15
+            ):
                 device["binary_sensors"]["battery_state"] = True
 
             self._update_for_cooling(device)

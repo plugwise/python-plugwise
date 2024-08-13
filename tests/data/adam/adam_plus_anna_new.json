@@ -76,7 +76,7 @@
     "sensors": {
       "temperature": 16.5,
       "setpoint": 18,
-      "battery": 38
+      "battery": 14
     },
     "temperature_offset": {
       "lower_bound": -2,
