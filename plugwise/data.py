@@ -58,7 +58,7 @@ class SmileData(SmileHelper):
         for device_id, device in self.gw_devices.items():
             data = self._get_device_data(device_id)
             if device_id == self.gateway_id:
-                mac_list = self._detect_low_batteries(device_id, device, data)
+                mac_list = self._detect_low_batteries()
                 self._add_or_update_notifications(device_id, device, data)
 
             device.update(data)
