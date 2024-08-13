@@ -79,10 +79,8 @@ class SmileData(SmileHelper):
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
                 message: str | None = notification.get("message")
-                if message is not None and all(x in message for x in matches):
-                    mac_addresses = re.findall(mac_pattern, message)
-                    if mac_addresses:
-                        mac_address = mac_addresses[0]  # re.findall() outputs a list
+                if message is not None and all(x in message for x in matches) and (mac_addresses := re.findall(mac_pattern, message)):
+                    mac_address = mac_addresses[0]  # re.findall() outputs a list
 
                 if mac_address is not None:
                     self._notifications.pop(msg_id)
