@@ -73,7 +73,7 @@ class SmileData(SmileHelper):
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the battery_state binary_sensor status from a Battery-is-low message."""
         mac_address_list: list[str] = []
-        mac_pattern = "(?:[0-9A-F]{2}){7}(?:[0-9A-F]{2})"
+        mac_pattern = "(?:[0-9A-F]{2}){8}"
         matches = ["Battery", "below"]
         if self._notifications:
             for msg_id, notification in list(self._notifications.items()):
