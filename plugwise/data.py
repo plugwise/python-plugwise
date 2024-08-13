@@ -63,12 +63,13 @@ class SmileData(SmileHelper):
 
             device.update(data)
 
-            if (
+            is_battery_low = (
                 mac_list
                 and "battery_state" in device["binary_sensors"]
                 and device["zigbee_mac_address"] in mac_list
                 and device["sensors"]["battery"] < 15
-            ):
+            )
+            if is_battery_low:
                 device["binary_sensors"]["battery_state"] = True
 
             self._update_for_cooling(device)
@@ -78,13 +79,13 @@ class SmileData(SmileHelper):
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the battery_state binary_sensor status from a Battery-is-low message."""
         mac_address_list: list[str] = []
-        mac_pattern = "(?:[0-9A-F]{2}){8}"
+        mac_pattern = re.compile(r"(?:[0-9A-F]{2}){8}")
         matches = ["Battery", "below"]
         if self._notifications:
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
                 message: str | None = notification.get("message")
-                if message is not None and all(x in message for x in matches) and (mac_addresses := re.findall(mac_pattern, message)):
+                if message is not None and all(x in message for x in matches) and (mac_addresses := mac_pattern.findall(message)):
                     mac_address = mac_addresses[0]  # re.findall() outputs a list
 
                 if mac_address is not None:
