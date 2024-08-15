@@ -2,7 +2,7 @@
 
 ## v1.1.0
 
-- New Feature: add a battery_state binary_sensor for battery-powered devices and block the related battery-low notifications.
+- New Feature: add a low_battery binary_sensor for battery-powered devices and block the related battery-low notifications.
 
 ## v1.0.0
 

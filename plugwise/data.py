@@ -65,7 +65,7 @@ class SmileData(SmileHelper):
 
             is_battery_low = (
                 mac_list
-                and "battery_state" in device["binary_sensors"]
+                and "low_battery" in device["binary_sensors"]
                 and device["zigbee_mac_address"] in mac_list
                 and (
                     (device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve") and device["sensors"]["battery"] < 30)
@@ -73,14 +73,14 @@ class SmileData(SmileHelper):
                 )
             )
             if is_battery_low:
-                device["binary_sensors"]["battery_state"] = True
+                device["binary_sensors"]["low_battery"] = True
 
             self._update_for_cooling(device)
 
             remove_empty_platform_dicts(device)
 
     def _detect_low_batteries(self) -> list[str]:
-        """Helper-function updating the battery_state binary_sensor status from a Battery-is-low message."""
+        """Helper-function updating the low-battery binary_sensor status from a Battery-is-low message."""
         mac_address_list: list[str] = []
         mac_pattern = re.compile(r"(?:[0-9A-F]{2}){8}")
         matches = ["Battery", "below"]
