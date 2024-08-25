@@ -62,15 +62,11 @@ class SmileData(SmileHelper):
                 self._add_or_update_notifications(device_id, device, data)
 
             device.update(data)
-
             is_battery_low = (
                 mac_list
                 and "low_battery" in device["binary_sensors"]
                 and device["zigbee_mac_address"] in mac_list
-                and (
-                    (device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve") and device["sensors"]["battery"] < 30)
-                    or (device["dev_class"] in ("zone_thermometer", "zone_thermostat") and device["sensors"]["battery"] < 15)
-                )
+                and device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
             )
             if is_battery_low:
                 device["binary_sensors"]["low_battery"] = True
@@ -88,12 +84,15 @@ class SmileData(SmileHelper):
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
                 message: str | None = notification.get("message")
-                if message is not None and all(x in message for x in matches) and (mac_addresses := mac_pattern.findall(message)):
+                warning: str | None = notification.get("warning")
+                notify = message or warning
+                if notify is not None and all(x in notify for x in matches) and (mac_addresses := mac_pattern.findall(notify)):
                     mac_address = mac_addresses[0]  # re.findall() outputs a list
 
                 if mac_address is not None:
-                    self._notifications.pop(msg_id)
                     mac_address_list.append(mac_address)
+                    if message is not None:  # only block message-type notifications
+                        self._notifications.pop(msg_id)
 
         return mac_address_list
 

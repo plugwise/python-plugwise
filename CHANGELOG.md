@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.2.0
+
+- Improve the low_battery feature, also take the battery-critically-low warning notification into account.
+
 ## v1.1.0
 
 - New Feature: add a low_battery binary_sensor for battery-powered devices and block the related battery-low notifications.
