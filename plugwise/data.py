@@ -67,10 +67,7 @@ class SmileData(SmileHelper):
                 mac_list
                 and "low_battery" in device["binary_sensors"]
                 and device["zigbee_mac_address"] in mac_list
-                and (
-                    (device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve") and device["sensors"]["battery"] < 30)
-                    or (device["dev_class"] in ("zone_thermometer", "zone_thermostat") and device["sensors"]["battery"] < 15)
-                )
+                and device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
             )
             if is_battery_low:
                 device["binary_sensors"]["low_battery"] = True
