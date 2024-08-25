@@ -84,11 +84,13 @@ class SmileData(SmileHelper):
         if self._notifications:
             for msg_id, notification in list(self._notifications.items()):
                 mac_address: str | None = None
-                message: str | None = notification.get("message") or notification.get("warning")
-                if message is not None and all(x in message for x in matches) and (mac_addresses := mac_pattern.findall(message)):
+                message: str | None = notification.get("message")
+                warning: str | None = notification.get("warning")
+                notify = message or warning
+                if notify is not None and all(x in notify for x in matches) and (mac_addresses := mac_pattern.findall(notify)):
                     mac_address = mac_addresses[0]  # re.findall() outputs a list
 
-                if mac_address is not None:
+                if mac_address is not None and message is not None:  # only block message-type notifications
                     self._notifications.pop(msg_id)
                     mac_address_list.append(mac_address)
 
