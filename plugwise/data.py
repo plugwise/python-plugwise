@@ -9,7 +9,6 @@ import re
 from plugwise.constants import (
     ADAM,
     ANNA,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -63,15 +62,12 @@ class SmileData(SmileHelper):
                 self._add_or_update_notifications(device_id, device, data)
 
             device.update(data)
-
-            LOGGER.debug("HOI mac-list: %s", mac_list)
             is_battery_low = (
                 mac_list
                 and "low_battery" in device["binary_sensors"]
                 and device["zigbee_mac_address"] in mac_list
                 and device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
             )
-            LOGGER.debug("HOI battery-low: %s", is_battery_low)
             if is_battery_low:
                 device["binary_sensors"]["low_battery"] = True
 
@@ -90,7 +86,6 @@ class SmileData(SmileHelper):
                 message: str | None = notification.get("message")
                 warning: str | None = notification.get("warning")
                 notify = message or warning
-                LOGGER.debug("HOI result: %s", notify)
                 if notify is not None and all(x in notify for x in matches) and (mac_addresses := mac_pattern.findall(notify)):
                     mac_address = mac_addresses[0]  # re.findall() outputs a list
 
