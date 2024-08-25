@@ -171,17 +171,29 @@
 			</offset_functionality>
 		</actuator_functionalities>
 	</appliance>
-		<notification id='af82e4ccf9c548528166d38e560662a4'>
+	<notification id='af82e4ccf9c548528166d38e560662a4'>
 		<type>warning</type>
 		<origin>local</origin>
-		<title>Plug has been unreachable since 23:03 2020-01-18.</title>
+		<title>Plug has been unreachable since 23:03 2023-12-21.</title>
 		<message>Node Plug (with MAC address 000D6F000D13CB01, in room &apos;n.a.&apos;) has been unreachable since 23:03 2020-01-18. Please check the connection and restart the device.</message>
 		<valid_from></valid_from>
 		<valid_to></valid_to>
-		<read_date>2020-01-23T10:54:59.710+01:00</read_date>
-		<created_date>2020-01-18T23:03:43.689+01:00</created_date>
-		<modified_date>2020-01-18T23:03:43.749+01:00</modified_date>
+		<read_date>2023-12-22T10:54:59.710+01:00</read_date>
+		<created_date>2023-12-21T22:03:43.689+01:00</created_date>
+		<modified_date>2023-12-21T22:03:43.749+01:00</modified_date>
 		<deleted_date></deleted_date>
+	</notification>
+	<notification id="aeeb31fcc226439b8ec4fddf0163367e">
+		<type>warning</type>
+		<origin>local</origin>
+		<title>Battery of Lisa is critically low.</title>
+		<message>Battery of Lisa (with MAC address 000D6F000C869B61, in room 'Bathroom') is below the critical level of 15%. Please replace the battery or connect the device to a power adapter.</message>
+		<valid_from/>
+		<valid_to/>
+		<read_date/>
+		<created_date>2023-12-21T08:06:18.095+02:00</created_date>
+		<modified_date>2023-12-21T08:06:18.164+02:00</modified_date>
+		<deleted_date/>
 	</notification>
 	<open_therm_regulation id='f47674d5b4fd44778d2e0c9df77e0186'>
 		<created_date>2021-12-16T19:30:15.976+01:00</created_date>
