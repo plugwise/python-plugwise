@@ -28,7 +28,7 @@
   },
   "e2f4322d57924fa090fbbc48b3a140dc": {
     "binary_sensors": {
-        "low_battery": false
+        "low_battery": true
       },
     "mode": "off"
   },
