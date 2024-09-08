@@ -420,7 +420,7 @@ class SmileHelper(SmileCommon):
         appl.hardware = self.smile_hw_version
         appl.mac = self.smile_mac_address
         appl.model = self.smile_model
-        appl.model_id = self._domain_objects.find("./gateway/vendor_mode").text
+        appl.model_id = self._domain_objects.find("./gateway/vendor_model").text
         appl.name = self.smile_name
         appl.vendor_name = "Plugwise"
 
