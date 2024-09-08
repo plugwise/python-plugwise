@@ -285,7 +285,7 @@ class SmileHelper(SmileCommon):
 
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
-            appl.model = appl.pwclass.replace("_", " ").title()
+            appl.model = None
             appl.model_id = None
             appl.firmware = None
             appl.hardware = None
@@ -351,7 +351,7 @@ class SmileHelper(SmileCommon):
         appl.dev_id = self.gateway_id
         appl.location = loc_id
         appl.mac = None
-        appl.model = self.smile_model
+        appl.model = self._domain_objects.find("./gateway/vendor_model").text
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
