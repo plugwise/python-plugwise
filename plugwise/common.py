@@ -85,8 +85,8 @@ class SmileCommon:
             module_data = self._get_module_data(xml_1, locator_2, mod_type, xml_3)
         appl.vendor_name = module_data["vendor_name"]
         appl.hardware = module_data["hardware_version"]
-        appl.model = module_data["vendor_model"]
-        if appl.model is None:
+        appl.model_id = module_data["vendor_model"]
+        if appl.model_id is None:
             appl.model = (
                 "Generic heater/cooler"
                 if self._cooling_present
@@ -102,7 +102,8 @@ class SmileCommon:
         xml_2 = return_valid(xml_2, self._domain_objects)
         module_data = self._get_module_data(xml_1, locator, mod_type, xml_2)
         appl.vendor_name = module_data["vendor_name"]
-        appl.model = check_model(module_data["vendor_model"], appl.vendor_name)
+        appl.model_id = module_data["vendor_model"]
+        appl.model = check_model(appl.model_id, appl.vendor_name)
         appl.hardware = module_data["hardware_version"]
         appl.firmware = module_data["firmware_version"]
         appl.zigbee_mac = module_data["zigbee_mac_address"]
@@ -197,6 +198,7 @@ class SmileCommon:
             "location": appl.location,
             "mac_address": appl.mac,
             "model": appl.model,
+            "model_id": appl.model_id,
             "name": appl.name,
             "zigbee_mac_address": appl.zigbee_mac,
             "vendor": appl.vendor_name,
