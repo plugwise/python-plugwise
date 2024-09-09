@@ -253,7 +253,6 @@ class SmileCommon:
                             "dev_class": group_type,
                             "model": "Switchgroup",
                             "name": group_name,
-                            "model_id": None,
                             "members": members,
                         },
                     },
