@@ -520,7 +520,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.device_items == 66
+        assert self.device_items == 67
         assert self.cooling_present
         assert not self._cooling_enabled
 
