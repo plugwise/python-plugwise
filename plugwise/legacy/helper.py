@@ -117,6 +117,7 @@ class SmileLegacyHelper(SmileCommon):
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
+            appl.model_id = None
             appl.firmware = None
             appl.hardware = None
             appl.mac = None
