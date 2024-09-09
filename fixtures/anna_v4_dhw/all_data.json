@@ -41,6 +41,7 @@
       "location": "94c107dc6ac84ed98e9f68c0dd06bf71",
       "mac_address": "012345670001",
       "model": "Gateway",
+      "model_id": "smile_thermo",
       "name": "Smile Anna",
       "sensors": {
         "outdoor_temperature": 7.44
@@ -68,7 +69,8 @@
         "setpoint": 70.0,
         "upper_bound": 100.0
       },
-      "model": "2.32",
+      "model": "Generic heater",
+      "model_id": "2.32",
       "name": "OpenTherm",
       "sensors": {
         "intended_boiler_temperature": 39.9,
@@ -87,7 +89,7 @@
     "cooling_present": false,
     "gateway_id": "0466eae8520144c78afb29628384edeb",
     "heater_id": "cd0e6156b1f04d5f952349ffbe397481",
-    "item_count": 56,
+    "item_count": 58,
     "notifications": {},
     "reboot": true,
     "smile_name": "Smile Anna"

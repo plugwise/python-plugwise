@@ -47,6 +47,7 @@
       "location": "eedadcb297564f1483faa509179aebed",
       "mac_address": "012345670001",
       "model": "Gateway",
+      "model_id": "smile_open_therm",
       "name": "Adam",
       "regulation_modes": [
         "heating",
@@ -76,6 +77,7 @@
       "location": "fa5fa6b34f6b40a0972988b20e888ed4",
       "mode": "auto",
       "model": "ThermoTouch",
+      "model_id": "143.1",
       "name": "Thermostaat WK",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
@@ -96,7 +98,7 @@
     "cooling_present": true,
     "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
     "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
-    "item_count": 56,
+    "item_count": 58,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"

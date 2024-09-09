@@ -31,6 +31,7 @@
       "firmware": "2019-06-21T02:00:00+02:00",
       "location": "45d410adf8fd461e85cebf16d5ead542",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "MediaCenter",
       "sensors": {
         "electricity_consumed": 10.3,
@@ -55,6 +56,7 @@
       "location": "07d618f0bb80412687f065b8698ce3e7",
       "mac_address": "012345670001",
       "model": "Gateway",
+      "model_id": "smile_open_therm",
       "name": "Adam",
       "select_regulation_mode": "heating",
       "sensors": {
@@ -70,6 +72,7 @@
       "location": "009490cc2f674ce6b576863fbb64f867",
       "mode": "auto",
       "model": "ThermoTouch",
+      "model_id": "143.1",
       "name": "Anna",
       "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
       "select_schedule": "Weekschema",
@@ -109,7 +112,7 @@
     "cooling_present": false,
     "gateway_id": "b128b4bbbd1f47e9bf4d756e8fb5ee94",
     "heater_id": "2743216f626f43948deec1f7ab3b3d70",
-    "item_count": 70,
+    "item_count": 73,
     "notifications": {
       "6fb89e35caeb4b1cb275184895202d84": {
         "error": "There is no OpenTherm communication with the boiler."

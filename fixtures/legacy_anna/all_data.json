@@ -22,7 +22,8 @@
         "setpoint": 50.0,
         "upper_bound": 90.0
       },
-      "model": "4.21",
+      "model": "Generic heater",
+      "model_id": "4.21",
       "name": "OpenTherm",
       "sensors": {
         "dhw_temperature": 51.2,
@@ -62,7 +63,7 @@
     "cooling_present": false,
     "gateway_id": "0000aaaa0000aaaa0000aaaa0000aa00",
     "heater_id": "04e4cbfe7f4340f090f85ec3b9e6a950",
-    "item_count": 41,
+    "item_count": 42,
     "smile_name": "Smile Anna"
   }
 }
