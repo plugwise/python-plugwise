@@ -431,7 +431,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
-        assert self.device_items == 66
+        assert self.device_items == 67
         assert self.cooling_present
         assert not self._cooling_enabled
 
@@ -497,7 +497,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile._last_active["15da035090b847e7a21f93e08c015ebc"] == "Winter"
-        assert self.device_items == 66
+        assert self.device_items == 67
         assert self.cooling_present
         assert self._cooling_enabled
 
