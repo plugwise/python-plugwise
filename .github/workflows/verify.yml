@@ -51,8 +51,6 @@ jobs:
           pip install uv
           uv pip install -U pip setuptools wheel
           uv pip install -r requirements_test.txt -r requirements_commit.txt
-          # TODO: Remove after update of aiohttp beyond 3.10.0
-          uv pip show aiohttp | grep -q "Version: 3.10.0" && (grep -q "core.locations" venv/lib/python*/site-packages/aiohttp/web_urldispatcher.py && echo " *** aiohttp already patched" || ( echo "Patching aiohttp 3.10.0 for tests"; patch -tRup0 venv/lib/python*/site-packages/aiohttp/web_urldispatcher.py < patch/aiohttp310.patch && echo " *** aiohttp Patched!" || echo " *** aiohttp patch failed?")) || ( echo " ***"; echo " *** WE CAN REMOVE THE PATCH FOR aiohttp 3.10.0 from $0"; echo " ***" )
       - name: Restore pre-commit environment from cache
         id: cache-precommit
         uses: actions/cache@v4
@@ -203,8 +201,6 @@ jobs:
           # 20220124 Mimic setup_test.sh
           uv pip install --upgrade -r requirements_test.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
           uv pip install --upgrade pytest-asyncio
-          # TODO: Remove after update of aiohttp beyond 3.10.0
-          uv pip show aiohttp | grep -q "Version: 3.10.0" && (grep -q "core.locations" venv/lib/python*/site-packages/aiohttp/web_urldispatcher.py && echo " *** aiohttp already patched" || ( echo "Patching aiohttp 3.10.0 for tests"; patch -tRup0 venv/lib/python*/site-packages/aiohttp/web_urldispatcher.py < patch/aiohttp310.patch && echo " *** aiohttp Patched!" || echo " *** aiohttp patch failed?")) || ( echo " ***"; echo " *** WE CAN REMOVE THE PATCH FOR aiohttp 3.10.0 from $0"; echo " ***" )
 
   pytest:
     runs-on: ubuntu-latest
@@ -240,16 +236,13 @@ jobs:
         run: |
           . venv/bin/activate
           pytest --log-level info tests/*.py --cov='.'
-      - name: Run all tests
-        run: |
-          echo "+Coverage debug here"
-          ls -alrt
-          echo "/Coverage debug here"
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.python-version }}
           path: .coverage
+          if-no-files-found: error
+          include-hidden-files: .coverage
 
   mypy:
     runs-on: ubuntu-latest
