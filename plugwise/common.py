@@ -104,7 +104,7 @@ class SmileCommon:
         appl.model = module_data["vendor_model"]
         if appl.model != "ThermoTouch":  # model_id for Anna not provided when stand-alone
             appl.model_id = appl.model
-            appl.model = check_model(model, appl.vendor_name)
+            appl.model = check_model(appl.model, appl.vendor_name)
 
         appl.hardware = module_data["hardware_version"]
         appl.firmware = module_data["firmware_version"]
