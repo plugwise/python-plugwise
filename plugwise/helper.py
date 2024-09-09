@@ -352,6 +352,7 @@ class SmileHelper(SmileCommon):
         appl.location = loc_id
         appl.mac = None
         appl.model = self._domain_objects.find("./gateway/vendor_model").text
+        appl.model_id = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
