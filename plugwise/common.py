@@ -68,8 +68,8 @@ class SmileCommon:
         #  Info for On-Off device
         if self._on_off_device:
             appl.name = "OnOff"  # pragma: no cover
-            appl.vendor_name = None  # pragma: no cover
             appl.model = "Unknown"  # pragma: no cover
+            appl.vendor_name = None  # pragma: no cover
             return appl  # pragma: no cover
 
         # Info for OpenTherm device
@@ -86,12 +86,11 @@ class SmileCommon:
         appl.vendor_name = module_data["vendor_name"]
         appl.hardware = module_data["hardware_version"]
         appl.model_id = module_data["vendor_model"]
-        if appl.model_id is None:
-            appl.model = (
-                "Generic heater/cooler"
-                if self._cooling_present
-                else "Generic heater"
-            )
+        appl.model = (
+            "Generic heater/cooler"
+            if self._cooling_present
+            else "Generic heater"
+        )
 
         return appl
 
