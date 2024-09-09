@@ -29,7 +29,8 @@
   "bfb5ee0a88e14e5f97bfa725a760cc49": {
     "dev_class": "heater_central",
     "location": "674b657c138a41a291d315d7471deb06",
-    "model": "173",
+    "model": "Generic heater/cooler",
+    "model_id": "173",
     "name": "OpenTherm",
     "vendor": "Atlantic",
     "select_dhw_mode": "auto",
