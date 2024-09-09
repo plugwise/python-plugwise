@@ -389,7 +389,7 @@ class SmileHelper(SmileCommon):
             mod_type = "electricity_point_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
             appl.hardware = module_data["hardware_version"]
-            appl.model_id = module_data["vendor_model"]
+            appl.model = module_data["vendor_model"]  # don't use model_id for P1
             appl.vendor_name = module_data["vendor_name"]
             appl.firmware = module_data["firmware_version"]
 
