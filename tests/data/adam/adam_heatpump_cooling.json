@@ -21,7 +21,8 @@
       "setpoint": 35,
       "upper_bound": 50
     },
-    "model": "17.1",
+    "model": "Generic heater/cooler",
+    "model_id": "17.1",
     "name": "OpenTherm",
     "sensors": {
       "dhw_temperature": 63.5,
