@@ -242,7 +242,7 @@ jobs:
           name: coverage-${{ matrix.python-version }}
           path: .coverage
           if-no-files-found: error
-          include-hidden-files: .coverage
+          include-hidden-files: true
 
   mypy:
     runs-on: ubuntu-latest
