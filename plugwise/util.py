@@ -110,7 +110,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     if vendor_name == "Plugwise" and ((model := version_to_model(name)) != "Unknown"):
         return model
 
-    if "lumi.plug" in name:
+    if name is not None and "lumi.plug" in name:
         return "Aqara Smart Plug"
 
     return name
