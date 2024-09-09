@@ -36,7 +36,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
         assert smile._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
         assert smile._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
-        assert self.device_items == 149
+        assert self.device_items == 157
         assert self.device_list == [
             "da224107914542988a88561b4452b0f6",
             "056ee145a816487eaa69243c3280f8bf",
@@ -186,7 +186,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.device_items == 323
+        assert self.device_items == 340
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -264,7 +264,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.device_items == 323
+        assert self.device_items == 340
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
