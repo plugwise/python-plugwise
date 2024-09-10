@@ -372,7 +372,7 @@ class SmileHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance)
             case "heater_central":
                 # Collect heater_central device info
-                self._appl_heater_central_info(appl, appliance, False)  # False = not legacy
+                self._appl_heater_central_info(appl, appliance, False)  # False means non-legacy device
                 self._appl_dhw_mode_info(appl, appliance)
                 return appl
             case _:

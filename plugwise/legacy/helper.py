@@ -210,7 +210,7 @@ class SmileLegacyHelper(SmileCommon):
             case "heater_central":
                 return self._appl_heater_central_info(
                     appl, appliance, True, self._appliances, self._modules
-                )  # True = legacy
+                )  # True means legacy device
         # Collect info from Stretches
             case _:
                 return self._energy_device_info_finder(appliance, appl)
