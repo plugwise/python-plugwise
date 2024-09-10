@@ -103,7 +103,7 @@ class SmileCommon:
         module_data = self._get_module_data(xml_1, locator, mod_type, xml_2)
         appl.vendor_name = module_data["vendor_name"]
         appl.model = module_data["vendor_model"]
-        if appl.model != "ThermoTouch":  # model_id for Anna not provided when stand-alone
+        if appl.model != "ThermoTouch":  # model_id for Anna not present as stand-alone device
             appl.model_id = appl.model
             appl.model = check_model(appl.model, appl.vendor_name)
 
