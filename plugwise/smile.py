@@ -76,6 +76,8 @@ class SmileAPI(SmileComm, SmileData):
             port,
             timeout,
         )
+        SmileData.__init__(self)
+
         self._cooling_present = _cooling_present
         self._elga = _elga
         self._is_thermostat = _is_thermostat
@@ -93,7 +95,6 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_model = smile_model
         self.smile_name = smile_name
         self.smile_type = smile_type
-        SmileData.__init__(self)
 
         self._heater_id: str
         self._cooling_enabled = False
