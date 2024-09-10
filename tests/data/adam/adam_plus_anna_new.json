@@ -71,8 +71,8 @@
     "zigbee_mac_address": "000D6F000C869B61",
     "vendor": "Plugwise",
     "binary_sensors": {
-        "low_battery": true
-      },
+      "low_battery": true
+    },
     "sensors": {
       "temperature": 16.5,
       "setpoint": 18,
@@ -182,8 +182,8 @@
     "zigbee_mac_address": "000D6F000C8FF5EE",
     "vendor": "Plugwise",
     "binary_sensors": {
-        "low_battery": false
-      },
+      "low_battery": false
+    },
     "sensors": {
       "temperature": 17.6,
       "setpoint": 18,
