@@ -252,7 +252,6 @@ class SmileHelper(SmileCommon):
         self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: str | None
         self.smile_hw_version: str | None
-        self.smile_legacy: bool
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_name: str
@@ -373,7 +372,7 @@ class SmileHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance)
             case "heater_central":
                 # Collect heater_central device info
-                self._appl_heater_central_info(appl, appliance, self.smile_legacy)
+                self._appl_heater_central_info(appl, appliance, False)  # False = not legacy
                 self._appl_dhw_mode_info(appl, appliance)
                 return appl
             case _:
