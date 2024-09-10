@@ -208,7 +208,7 @@ class SmileLegacyHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance, self._modules)
         # Collect heater_central device info
             case "heater_central":
-                return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
+                return self._appl_heater_central_info(appl, appliance, True, self._appliances, self._modules)
         # Collect info from Stretches
             case _:
                 return self._energy_device_info_finder(appliance, appl)

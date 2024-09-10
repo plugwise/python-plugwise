@@ -52,6 +52,7 @@ class SmileCommon:
         self,
         appl: Munch,
         xml_1: etree,
+        legacy: bool,
         xml_2: etree = None,
         xml_3: etree = None,
     ) -> Munch:
@@ -85,7 +86,7 @@ class SmileCommon:
             module_data = self._get_module_data(xml_1, locator_2, mod_type, xml_3)
         appl.vendor_name = module_data["vendor_name"]
         appl.hardware = module_data["hardware_version"]
-        appl.model_id = module_data["vendor_model"]
+        appl.model_id = module_data["vendor_model"] if not legacy else None
         appl.model = (
             "Generic heater/cooler"
             if self._cooling_present
