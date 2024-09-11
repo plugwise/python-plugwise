@@ -512,16 +512,16 @@ class DeviceData(TypedDict, total=False):
 
     # Appliance base data
     dev_class: str
-    firmware: str | None
+    firmware: str
     hardware: str
     location: str
-    mac_address: str | None
+    mac_address: str
     members: list[str]
     model: str
     model_id: str
     name: str
     vendor: str
-    zigbee_mac_address: str | None
+    zigbee_mac_address: str
 
     # For temporary use
     cooling_enabled: bool
