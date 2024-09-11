@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.1
+
+- Add missing typing for model_id.
+
 ## v1.3.0
 
 - New Feature: add device model_id's to the API output (not for legacy devices).
