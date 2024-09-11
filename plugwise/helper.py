@@ -382,7 +382,7 @@ class SmileHelper(SmileCommon):
     def _energy_device_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder().
 
-        Collect energy device info (Smartmeter, Plug): firmware, model and vendor name.
+        Collect energy device info (Smartmeter): firmware, model and vendor name.
         """
         if self.smile_type == "power":
             locator = "./logs/point_log/electricity_point_meter"
