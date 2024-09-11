@@ -2,7 +2,8 @@
   "e4684553153b44afbef2200885f379dc": {
     "dev_class": "heater_central",
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
-    "model": "10.20",
+    "model": "Generic heater",
+    "model_id": "10.20",
     "name": "OpenTherm",
     "vendor": "Remeha B.V.",
     "maximum_boiler_temperature": {
@@ -231,7 +232,8 @@
   "457ce8414de24596a2d5e7dbc9c7682f": {
     "dev_class": "zz_misc",
     "location": "9e4433a9d69f40b3aefd15e74395eaec",
-    "model": "lumi.plug.maeu01",
+    "model": "Aqara Smart Plug",
+    "model_id": "lumi.plug.maeu01",
     "name": "Plug",
     "zigbee_mac_address": "ABCD012345670A06",
     "vendor": "LUMI",

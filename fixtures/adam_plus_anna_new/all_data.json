@@ -35,6 +35,7 @@
       "hardware": "1",
       "location": "f871b8c4d63549319221e294e4f88074",
       "model": "Tom/Floor",
+      "model_id": "106-03",
       "name": "Tom Badkamer",
       "sensors": {
         "battery": 99,
@@ -58,6 +59,7 @@
       "firmware": "2020-11-10T01:00:00+01:00",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Plug MediaTV",
       "sensors": {
         "electricity_consumed": 14.8,
@@ -78,6 +80,7 @@
       "firmware": "2020-11-10T01:00:00+01:00",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Plug Werkplek",
       "sensors": {
         "electricity_consumed": 91.3,
@@ -96,7 +99,8 @@
       "available": true,
       "dev_class": "zz_misc",
       "location": "b4f211175e124df59603412bafa77a34",
-      "model": "lumi.plug.maeu01",
+      "model": "Aqara Smart Plug",
+      "model_id": "lumi.plug.maeu01",
       "name": "SmartPlug Floor 0",
       "sensors": {
         "electricity_consumed_interval": 0.0
@@ -114,6 +118,7 @@
       "firmware": "2020-11-10T01:00:00+01:00",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Plug Vloerverwarming",
       "sensors": {
         "electricity_consumed": 43.8,
@@ -141,6 +146,7 @@
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "mode": "auto",
       "model": "ThermoTouch",
+      "model_id": "143.1",
       "name": "Anna",
       "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
       "select_schedule": "Weekschema",
@@ -167,6 +173,7 @@
       "location": "bc93488efab249e5bc54fd7e175a6f91",
       "mac_address": "012345679891",
       "model": "Gateway",
+      "model_id": "smile_open_therm",
       "name": "Adam",
       "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
       "select_gateway_mode": "full",
@@ -197,6 +204,7 @@
       "location": "f871b8c4d63549319221e294e4f88074",
       "mode": "auto",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Lisa Badkamer",
       "preset_modes": ["no_frost", "asleep", "vacation", "home", "away"],
       "select_schedule": "Badkamer",
@@ -237,7 +245,7 @@
     "cooling_present": false,
     "gateway_id": "da224107914542988a88561b4452b0f6",
     "heater_id": "056ee145a816487eaa69243c3280f8bf",
-    "item_count": 149,
+    "item_count": 157,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"

@@ -10,6 +10,7 @@
       "location": "a455b61e52394b2db5081ce025a430f3",
       "mac_address": "012345670001",
       "model": "Gateway",
+      "model_id": "smile",
       "name": "Smile P1",
       "vendor": "Plugwise"
     },
@@ -40,7 +41,7 @@
   },
   "gateway": {
     "gateway_id": "a455b61e52394b2db5081ce025a430f3",
-    "item_count": 29,
+    "item_count": 30,
     "notifications": {
       "97a04c0c263049b29350a660b4cdd01e": {
         "warning": "The Smile P1 does not seem to be connected to a smart meter."

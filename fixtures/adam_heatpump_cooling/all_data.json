@@ -22,7 +22,8 @@
         "setpoint": 35.0,
         "upper_bound": 50.0
       },
-      "model": "17.1",
+      "model": "Generic heater/cooler",
+      "model_id": "17.1",
       "name": "OpenTherm",
       "sensors": {
         "dhw_temperature": 63.5,
@@ -57,6 +58,7 @@
       "location": "b52908550469425b812c87f766fe5303",
       "mode": "cool",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat BK",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "off",
@@ -86,6 +88,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "20e735858f8146cead98b873177a4f99",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug DB",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -105,6 +108,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug KK",
       "sensors": {
         "electricity_consumed": 2.13,
@@ -124,6 +128,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "04b15f6e884448288f811d29fb7b1b30",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug SJ",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -143,6 +148,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "fa5fa6b34f6b40a0972988b20e888ed4",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug WK",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -172,6 +178,7 @@
       "location": "20e735858f8146cead98b873177a4f99",
       "mode": "cool",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat DB",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "off",
@@ -200,6 +207,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "9a27714b970547ee9a6bdadc2b815ad5",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug SQ",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -224,6 +232,7 @@
       "location": "eedadcb297564f1483faa509179aebed",
       "mac_address": "012345670001",
       "model": "Gateway",
+      "model_id": "smile_open_therm",
       "name": "Adam",
       "regulation_modes": [
         "heating",
@@ -256,6 +265,7 @@
       "location": "e39529c79ab54fda9bed26cfc0447546",
       "mode": "cool",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat JM",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "off",
@@ -284,6 +294,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "b52908550469425b812c87f766fe5303",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug BK",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -303,6 +314,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "5cc21042f87f4b4c94ccb5537c47a53f",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug BK2",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -322,6 +334,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "e39529c79ab54fda9bed26cfc0447546",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug JM",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -341,6 +354,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug RB",
       "sensors": {
         "electricity_consumed": 3.13,
@@ -360,6 +374,7 @@
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "8cf650a4c10c44819e426bed406aec34",
       "model": "Plug",
+      "model_id": "160-01",
       "name": "Smart Plug BK1",
       "sensors": {
         "electricity_consumed": 0.0,
@@ -389,6 +404,7 @@
       "location": "9a27714b970547ee9a6bdadc2b815ad5",
       "mode": "cool",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat SQ",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "off",
@@ -427,6 +443,7 @@
       "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
       "mode": "cool",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat RB",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "off",
@@ -462,6 +479,7 @@
       "location": "fa5fa6b34f6b40a0972988b20e888ed4",
       "mode": "auto",
       "model": "ThermoTouch",
+      "model_id": "143.1",
       "name": "Thermostaat WK",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
@@ -493,6 +511,7 @@
       "location": "04b15f6e884448288f811d29fb7b1b30",
       "mode": "cool",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat SJ",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "off",
@@ -534,6 +553,7 @@
       "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
       "mode": "auto",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat KK",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
@@ -573,6 +593,7 @@
       "location": "8cf650a4c10c44819e426bed406aec34",
       "mode": "auto",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat BK1",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
@@ -611,6 +632,7 @@
       "location": "5cc21042f87f4b4c94ccb5537c47a53f",
       "mode": "auto",
       "model": "Lisa",
+      "model_id": "158-01",
       "name": "Thermostaat  BK2",
       "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
       "select_schedule": "Werkdag schema",
@@ -638,7 +660,7 @@
     "cooling_present": true,
     "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
     "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
-    "item_count": 417,
+    "item_count": 439,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"

@@ -41,6 +41,7 @@
       "location": "0f4f2ada20734a339fe353348fe87b96",
       "mac_address": "D40FB200FA1C",
       "model": "Gateway",
+      "model_id": "smile_thermo",
       "name": "Smile Anna",
       "sensors": {
         "outdoor_temperature": 8.31
@@ -61,7 +62,7 @@
     "cooling_present": false,
     "gateway_id": "a270735e4ccd45239424badc0578a2b1",
     "heater_id": "c46b4794d28149699eacf053deedd003",
-    "item_count": 38,
+    "item_count": 39,
     "notifications": {},
     "reboot": true,
     "smile_name": "Smile Anna"

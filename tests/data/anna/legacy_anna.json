@@ -34,7 +34,7 @@
   "04e4cbfe7f4340f090f85ec3b9e6a950": {
     "dev_class": "heater_central",
     "location": "0000aaaa0000aaaa0000aaaa0000aa00",
-    "model": "4.21",
+    "model": "Generic heater",
     "name": "OpenTherm",
     "vendor": "Bosch Thermotechniek B.V.",
     "maximum_boiler_temperature": {

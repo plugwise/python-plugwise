@@ -49,9 +49,9 @@ fi
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
     echo "... crafting manual fixtures ..." 
     PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
-    echo "... prettier-ing (fixtures) ..." 
-    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/
+    echo "... prettier-ing (fixtures and testdata) ..." 
+    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/ tests/data
 else
-    echo "... prettier-ing (fixtures) ..." 
-    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/
+    echo "... prettier-ing (fixtures and testdata) ..." 
+    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/ tests/data
 fi

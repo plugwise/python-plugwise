@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.0
+
+- New Feature: add device model_id's to the API output (not for legacy devices).
+
 ## v1.2.0
 
 - Improve the low_battery feature, also take the battery-critically-low warning notification into account.

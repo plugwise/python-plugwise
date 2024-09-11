@@ -117,6 +117,7 @@ class SmileLegacyHelper(SmileCommon):
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = appl.pwclass.replace("_", " ").title()
+            appl.model_id = None
             appl.firmware = None
             appl.hardware = None
             appl.mac = None
@@ -207,7 +208,9 @@ class SmileLegacyHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance, self._modules)
         # Collect heater_central device info
             case "heater_central":
-                return self._appl_heater_central_info(appl, appliance, self._appliances, self._modules)
+                return self._appl_heater_central_info(
+                    appl, appliance, True, self._appliances, self._modules
+                )  # True means legacy device
         # Collect info from Stretches
             case _:
                 return self._energy_device_info_finder(appliance, appl)
@@ -246,6 +249,7 @@ class SmileLegacyHelper(SmileCommon):
         appl.location = loc_id
         appl.mac = None
         appl.model = self.smile_model
+        appl.model_id = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
