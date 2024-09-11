@@ -252,6 +252,7 @@ ApplianceType = Literal[
     "mac_address",
     "members",
     "model",
+    "model_id",
     "name",
     "vendor",
     "zigbee_mac_address",
@@ -517,6 +518,7 @@ class DeviceData(TypedDict, total=False):
     mac_address: str | None
     members: list[str]
     model: str
+    model_id: str
     name: str
     vendor: str
     zigbee_mac_address: str | None
