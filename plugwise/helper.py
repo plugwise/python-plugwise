@@ -351,7 +351,7 @@ class SmileHelper(SmileCommon):
         appl.dev_id = self.gateway_id
         appl.location = loc_id
         appl.mac = None
-        appl.model = self._domain_objects.find("./gateway/vendor_model").text
+        appl.model = None
         appl.model_id = None
         appl.name = "P1"
         appl.pwclass = "smartmeter"
@@ -421,7 +421,7 @@ class SmileHelper(SmileCommon):
         appl.hardware = self.smile_hw_version
         appl.mac = self.smile_mac_address
         appl.model = self.smile_model
-        appl.model_id = self._domain_objects.find("./gateway/vendor_model").text
+        appl.model_id = self.smile_model_id
         appl.name = self.smile_name
         appl.vendor_name = "Plugwise"
 
