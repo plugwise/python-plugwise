@@ -254,6 +254,7 @@ class SmileHelper(SmileCommon):
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
+        self.smile_model_id: str
         self.smile_name: str
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None

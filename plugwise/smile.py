@@ -62,6 +62,7 @@ class SmileAPI(SmileComm, SmileData):
         smile_hw_version: str | None,
         smile_mac_address: str | None,
         smile_model: str,
+        smile_model_id: str,
         smile_name: str,
         smile_type: str,
         username: str = DEFAULT_USERNAME,
@@ -93,6 +94,7 @@ class SmileAPI(SmileComm, SmileData):
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
+        self.smile_model_id = smile_model_id
         self.smile_name = smile_name
         self.smile_type = smile_type
 

@@ -146,7 +146,7 @@ class Smile(SmileComm):
             self.smile_hw_version,
             self.smile_mac_address,
             self.smile_model,
-            self.smile_model_id
+            self.smile_model_id,
             self.smile_name,
             self.smile_type,
             self._user,
