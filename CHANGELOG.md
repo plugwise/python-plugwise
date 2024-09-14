@@ -2,7 +2,7 @@
 
 ## v1.4.0
 
-- Improve model_id implementation, allow direct access to the gateway `smile_mode_id`.
+- Improve model_id implementation, allow direct access to the gateway `smile_model_id`.
 
 ## v1.3.1
 
