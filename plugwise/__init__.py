@@ -85,7 +85,7 @@ class Smile(SmileComm):
         self.smile_legacy = False
         self.smile_mac_address: str | None = None
         self.smile_model: str = NONE
-        self.smile_model_id: str = NONE
+        self.smile_model_id: str | None = None
         self.smile_name: str = NONE
         self.smile_type: str = NONE
         self.smile_version: str = NONE

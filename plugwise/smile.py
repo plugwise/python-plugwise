@@ -62,7 +62,7 @@ class SmileAPI(SmileComm, SmileData):
         smile_hw_version: str | None,
         smile_mac_address: str | None,
         smile_model: str,
-        smile_model_id: str,
+        smile_model_id: str | None,
         smile_name: str,
         smile_type: str,
         username: str = DEFAULT_USERNAME,
