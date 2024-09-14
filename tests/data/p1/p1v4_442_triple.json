@@ -6,6 +6,7 @@
     "location": "03e65b16e4b247a29ae0d75a78cb492e",
     "mac_address": "012345670001",
     "model": "Gateway",
+    "model_id": "smile",
     "name": "Smile P1",
     "vendor": "Plugwise",
     "binary_sensors": {
