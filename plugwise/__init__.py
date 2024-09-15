@@ -85,6 +85,7 @@ class Smile(SmileComm):
         self.smile_legacy = False
         self.smile_mac_address: str | None = None
         self.smile_model: str = NONE
+        self.smile_model_id: str | None = None
         self.smile_name: str = NONE
         self.smile_type: str = NONE
         self.smile_version: str = NONE
@@ -145,6 +146,7 @@ class Smile(SmileComm):
             self.smile_hw_version,
             self.smile_mac_address,
             self.smile_model,
+            self.smile_model_id,
             self.smile_name,
             self.smile_type,
             self._user,
@@ -190,6 +192,7 @@ class Smile(SmileComm):
             self.smile_hw_version = gateway.find("hardware_version").text
             self.smile_hostname = gateway.find("hostname").text
             self.smile_mac_address = gateway.find("mac_address").text
+            self.smile_model_id = gateway.find("vendor_model").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 

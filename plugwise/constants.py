@@ -518,7 +518,7 @@ class DeviceData(TypedDict, total=False):
     mac_address: str
     members: list[str]
     model: str
-    model_id: str
+    model_id: str | None
     name: str
     vendor: str
     zigbee_mac_address: str
