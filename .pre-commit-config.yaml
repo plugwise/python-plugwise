@@ -1,7 +1,7 @@
 ci:
   # Defer autoupdate to quarterly (there is no 'off' button) to have renovate pick up first
   autoupdate_schedule: quarterly
-  skip: [pylint, markdownlint, testing]
+  skip: [setup, setup_test, pylint, markdownlint, testing]
   submodules: true
 
 default_language_version:
@@ -67,6 +67,14 @@ repos:
       # pyenv and/or virtualenv activated; it may not have been e.g. if
       # committing from a GUI tool that was not launched from an activated
       # shell.
+      - id: setup
+        name: Setup python
+        entry: /usr/bin/env bash -c 'test -d ./venv || scripts/setup.sh'
+        language: script
+      - id: setup_tests
+        name: Setup testing
+        entry: /usr/bin/env bash -c 'test -f ./tmp/biome || scripts/setup_test.sh pre-commit'
+        language: script
       - id: userdata
         name: userdata
         entry: scripts/pre-commit.sh
@@ -92,12 +100,10 @@ repos:
         entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" scripts/tests_and_coverage.sh test_and_coverage'
         language: script
         pass_filenames: false
-  - repo: https://github.com/biomejs/pre-commit
-    rev: v0.4.0
-    hooks:
-      - id: biome-lint
-        additional_dependencies: ["@biomejs/biome@1.8.3"]
-        name: "Verifying/updating code with biome (improved prettier)"
+      - id: biome
+        name: "Local Linting - Biome"
+        entry: ./tmp/biome check --staged --files-ignore-unknown=true --no-errors-on-unmatched
+        language: script
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.41.0
     hooks:
