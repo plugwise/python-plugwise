@@ -67,14 +67,23 @@
     },
     "ee62cad889f94e8ca3d09021f03a660b": {
       "active_preset": "home",
-      "available_schedules": ["Weekschema", "off"],
+      "available_schedules": [
+        "Weekschema",
+        "off"
+      ],
       "dev_class": "thermostat",
       "location": "009490cc2f674ce6b576863fbb64f867",
       "mode": "auto",
       "model": "ThermoTouch",
       "model_id": "143.1",
       "name": "Anna",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "select_schedule": "Weekschema",
       "sensors": {
         "setpoint": 20.5,
