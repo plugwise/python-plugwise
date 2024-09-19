@@ -71,7 +71,7 @@ repos:
         name: Setup python
         entry: /usr/bin/env bash -c 'test -d ./venv || scripts/setup.sh'
         language: script
-      - id: setup_tests
+      - id: setup_test
         name: Setup testing
         entry: /usr/bin/env bash -c 'test -f ./tmp/biome || scripts/setup_test.sh pre-commit'
         language: script
