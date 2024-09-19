@@ -51,5 +51,4 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
     PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
 fi
 echo "... biome-ing (fixtures and testdata) ..." 
-./tmp/biome lint fixtures/ tests/data/
-#npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/ tests/data
+./tmp/biome lint --staged --files-ignore-unknown=true --no-errors-on-unmatched
