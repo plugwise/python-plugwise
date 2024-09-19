@@ -160,7 +160,7 @@ jobs:
       - name: Biome lint
         run: |
           . venv/bin/activate
-          mkdir -p ./tmp && curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-linux-x64" -o ./tmp/biome && chmod -x ./tmp/biome
+          mkdir -p ./tmp && curl -sL "https://github.com/biomejs/biome/releases/latest/download/biome-linux-x64" -o ./tmp/biome && chmod +x ./tmp/biome
           pre-commit run --show-diff-on-failure --color=always --all-files --hook-stage manual biome
       - name: Lint markdown files
         run: |
