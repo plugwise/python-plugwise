@@ -12,7 +12,6 @@ tests/__pycache__
 .vscode
 venv
 *.sedbck
-tmp
 .mypy_cache
 fixtures/updated/*/
 tmp
