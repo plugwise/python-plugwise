@@ -13,13 +13,10 @@ if [ -f "${my_venv}/bin/activate" ]; then
     . "${my_venv}/bin/activate"
     set -o nounset
     # Install commit requirements
-    pip install wheel
-    pip install --upgrade -e . -r requirements_commit.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
+    pip install wheel uv
+    uv pip install --upgrade -e . -r requirements_commit.txt -c https://raw.githubusercontent.com/home-assistant/core/dev/homeassistant/package_constraints.txt -r https://raw.githubusercontent.com/home-assistant/core/dev/requirements_test_pre_commit.txt
     # Install pre-commit hook
     "${my_venv}/bin/pre-commit" install
-    # Prepare node virtualenv and prettier
-    nodeenv -p  # Use node with existing python-virtual env
-    npm install prettier
 else
     echo "Virtualenv available, bailing out"
     exit 2

@@ -6,7 +6,7 @@ my_path=$(git rev-parse --show-toplevel)
 my_venv=${my_path}/venv
 
 # Ensures a python virtualenv is available at the highest available python3 version
-for pv in "${pyversions[@]};"; do
+for pv in "${pyversions[@]}"; do
     if [ "$(which "python$pv")" ]; then
         # If not (yet) available instantiate python virtualenv
         if [ ! -d "${my_venv}" ]; then

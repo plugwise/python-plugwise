@@ -134,7 +134,13 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Zone Thermostat Jessie",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "select_schedule": "CV Jessie",
       "sensors": {
         "battery": 37,
@@ -285,7 +291,13 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Zone Lisa WK",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "select_schedule": "GF7  Woonkamer",
       "sensors": {
         "battery": 34,
@@ -378,7 +390,13 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Zone Lisa Bios",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "select_schedule": "off",
       "sensors": {
         "battery": 67,
@@ -422,7 +440,13 @@
       "model": "Tom/Floor",
       "model_id": "106-03",
       "name": "CV Kraan Garage",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "select_schedule": "off",
       "sensors": {
         "battery": 68,
@@ -468,7 +492,13 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Zone Thermostat Badkamer",
-      "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
       "select_schedule": "Badkamer Schema",
       "sensors": {
         "battery": 92,

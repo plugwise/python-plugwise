@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.1
+
+- Prettying documents with Biome (CLI), fixture layout updated accordingly.
+
 ## v1.4.0
 
 - Improve model_id implementation, allow direct access to the gateway `smile_model_id`.

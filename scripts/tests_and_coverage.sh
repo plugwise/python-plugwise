@@ -43,15 +43,12 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
     pylint plugwise/ tests/
 fi
 
-# As to not generated fixtures, leaving prettier to re-do them
+# As to not generated fixtures, leaving biome to re-do them
 # so no auto-generation during github run of testing
 # Creating todo #313 to 'gracefully' do this on merge on github action
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
     echo "... crafting manual fixtures ..." 
     PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
-    echo "... prettier-ing (fixtures and testdata) ..." 
-    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/ tests/data
-else
-    echo "... prettier-ing (fixtures and testdata) ..." 
-    npx prettier --write --list-different --ignore-unknown --log-level silent fixtures/ tests/data
 fi
+echo "... biome-ing (fixtures and testdata) ..." 
+./tmp/biome lint --staged --files-ignore-unknown=true --no-errors-on-unmatched
