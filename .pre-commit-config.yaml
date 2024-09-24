@@ -105,6 +105,6 @@ repos:
         entry: ./tmp/biome lint --staged --files-ignore-unknown=true --no-errors-on-unmatched
         language: script
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.41.0
+    rev: v0.42.0
     hooks:
       - id: markdownlint
