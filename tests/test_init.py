@@ -397,10 +397,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert "xml" in text
 
         # Test lack of websession
+        user_name = pw_constants.DEFAULT_USERNAME
+        if stretch:
+            user_name = pw_constants.STRETCH
+
         try:
             smile = pw_smile.Smile(
                 host=server.host,
-                username=pw_constants.DEFAULT_USERNAME,
+                username=user_name,
                 password=test_password,
                 port=server.port,
                 websession=None,
@@ -413,14 +417,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         smile = pw_smile.Smile(
             host=server.host,
-            username=pw_constants.DEFAULT_USERNAME,
+            username=user_name,
             password=test_password,
             port=server.port,
             websession=websession,
         )
 
         if not timeout:
-            assert smile._timeout == 30
+            if smile.smile_type == pw_constants.STRETCH:
+                assert smile._timeout == 30
+            else:
+                assert smile._timeout == 10
 
         # Connect to the smile
         try:
@@ -552,7 +559,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     await smile.full_update_device()
                     smile.get_all_devices()
                     data = await smile.async_update()
-                    assert smile._timeout == 30
+                    if smile.smile_type == pw_constants.STRETCH:
+                        assert smile._timeout == 30
+                    else:
+                        assert smile._timeout == 10
                 else:
                     data = await smile.async_update()
                     assert smile._timeout == 10

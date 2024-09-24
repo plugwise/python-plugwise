@@ -17,8 +17,8 @@ from plugwise.constants import (
     ATTR_NAME,
     DATA,
     DEFAULT_USERNAME,
-    DEFAULT_TIMEOUT,
     DEFAULT_LEGACY_TIMEOUT,
+    DEFAULT_TIMEOUT,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
     DOMAIN_OBJECTS,
@@ -79,7 +79,7 @@ class SmileComm:
         port: int,
     ) -> None:
         """Set the constructor for this class."""
-        timeout = DEFAULT_TIMEOUT        
+        timeout = DEFAULT_TIMEOUT
         if username != DEFAULT_USERNAME:
             timeout = DEFAULT_LEGACY_TIMEOUT
 
