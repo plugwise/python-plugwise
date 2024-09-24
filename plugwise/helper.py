@@ -16,6 +16,9 @@ from plugwise.constants import (
     ANNA,
     ATTR_NAME,
     DATA,
+    DEFAULT_USERNAME,
+    DEFAULT_TIMEOUT,
+    DEFAULT_LEGACY_TIMEOUT,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
     DOMAIN_OBJECTS,
@@ -74,9 +77,12 @@ class SmileComm:
         websession: ClientSession | None,
         username: str,
         port: int,
-        timeout: float,
     ) -> None:
         """Set the constructor for this class."""
+        timeout = DEFAULT_TIMEOUT        
+        if username != DEFAULT_USERNAME:
+            timeout = DEFAULT_LEGACY_TIMEOUT
+
         if not websession:
             aio_timeout = ClientTimeout(total=timeout)
 

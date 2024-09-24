@@ -5,9 +5,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 from plugwise.constants import (
-    DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOGGER,
@@ -47,7 +45,6 @@ class Smile(SmileComm):
         websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_LEGACY_TIMEOUT,
 
     ) -> None:
         """Set the constructor for this class."""
@@ -57,7 +54,6 @@ class Smile(SmileComm):
             websession,
             username,
             port,
-            timeout,
         )
 
         self._host = host
@@ -65,7 +61,6 @@ class Smile(SmileComm):
         self._websession = websession
         self._user = username
         self._port = port
-        self._timeout = timeout
 
         self._cooling_present = False
         self._elga = False
@@ -130,7 +125,6 @@ class Smile(SmileComm):
         self._smile_api = SmileAPI(
             self._host,
             self._passwd,
-            self._timeout,
             self._websession,
             self._cooling_present,
             self._elga,
@@ -154,7 +148,6 @@ class Smile(SmileComm):
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
-            self._timeout,
             self._websession,
             self._is_thermostat,
             self._on_off_device,
@@ -195,9 +188,6 @@ class Smile(SmileComm):
             self.smile_model_id = gateway.find("vendor_model").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
-
-        if not self.smile_legacy:
-            self._timeout = DEFAULT_TIMEOUT
 
         if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
