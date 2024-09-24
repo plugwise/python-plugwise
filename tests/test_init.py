@@ -425,7 +425,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         if not timeout:
-            _LOGGER.debug("HOI type: %s", smile_type)
+            _LOGGER.debug("HOI type: %s", smile.smile_type)
             if smile.smile_type == pw_constants.STRETCH:
                 assert smile._timeout == 30
             else:
