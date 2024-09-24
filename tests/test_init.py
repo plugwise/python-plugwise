@@ -400,6 +400,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         user_name = pw_constants.DEFAULT_USERNAME
         if stretch:
             user_name = pw_constants.STRETCH
+        _LOGGER.debug("HOI username: %s", user_name)
 
         try:
             smile = pw_smile.Smile(
@@ -424,6 +425,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         if not timeout:
+            _LOGGER.debug("HOI type: %s", smile_type)
             if smile.smile_type == pw_constants.STRETCH:
                 assert smile._timeout == 30
             else:
