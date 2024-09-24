@@ -339,7 +339,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         if not timeout:
-            assert smile._timeout == 30
+            assert smile._timeout == 10
 
         # Connect to the smile
         try:
