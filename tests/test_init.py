@@ -87,7 +87,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         timeout=False,
         raise_timeout=False,
         fail_auth=False,
-        stretch=False,
     ):
         """Create mock webserver for Smile to interface with."""
         app = aiohttp.web.Application()
@@ -279,7 +278,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         timeout=False,
         raise_timeout=False,
         fail_auth=False,
-        stretch=False,
     ):
         """Connect to a smile environment and perform basic asserts."""
         port = aiohttp.test_utils.unused_port()
@@ -288,7 +286,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth, stretch)
+        app = await self.setup_app(broken, timeout, raise_timeout, fail_auth)
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -443,7 +441,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     # Wrap connect for invalid connections
     async def connect_wrapper(
-        self, raise_timeout=False, fail_auth=False, stretch=False
+        self, raise_timeout=False, fail_auth=False,
     ):
         """Wrap connect to try negative testing before positive testing."""
         if fail_auth:
@@ -477,7 +475,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info(" + successfully passed XML issue handling.")
 
         _LOGGER.info("Connecting to functioning device:")
-        return await self.connect(stretch=stretch)
+        return await self.connect()
 
     async def connect_legacy_wrapper(
         self, raise_timeout=False, fail_auth=False, stretch=False
