@@ -370,7 +370,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         user_name = pw_constants.DEFAULT_USERNAME
         if stretch:
             user_name = pw_constants.STRETCH
-        _LOGGER.debug("HOI username: %s", user_name)
 
         # Happy flow
         app = await self.setup_legacy_app(broken, timeout, raise_timeout, fail_auth, stretch)
@@ -424,7 +423,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         if not timeout:
-            _LOGGER.debug("HOI type: %s", user_name)
             if user_name == pw_constants.STRETCH:
                 assert smile._timeout == 30
             else:

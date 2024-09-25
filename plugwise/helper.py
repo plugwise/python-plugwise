@@ -79,7 +79,6 @@ class SmileComm:
         port: int,
     ) -> None:
         """Set the constructor for this class."""
-        LOGGER.debug("HOI username in: %s", username)
         timeout = DEFAULT_TIMEOUT
         if username != DEFAULT_USERNAME:
             timeout = DEFAULT_LEGACY_TIMEOUT
