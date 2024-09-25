@@ -487,19 +487,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         """Wrap connect to try negative testing before positive testing."""
         if raise_timeout:
             _LOGGER.warning("Connecting to device exceeding timeout in handling:")
-            return await self.connect_legacy(raise_timeout=True)
+            return await self.connect_legacy(raise_timeout=True, stretch=stretch)
 
         try:
             _LOGGER.warning("Connecting to device exceeding timeout in response:")
-            await self.connect_legacy(timeout=True)
+            await self.connect_legacy(timeout=True, stretch=stretch)
             _LOGGER.error(" - timeout not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.ConnectionFailedError:
             _LOGGER.info(" + successfully passed timeout handling.")
 
         try:
-            _LOGGER.warning("Connecting to device with missing data:")
-            await self.connect_legacy(broken=True)
+            _LOGGER.warning("Connecting to device, with missing data:")
+            await self.connect_legacy(broken=True, stretch=stretch)
             _LOGGER.error(" - broken information not handled")  # pragma: no cover
             raise self.ConnectError  # pragma: no cover
         except pw_exceptions.InvalidXMLError:
