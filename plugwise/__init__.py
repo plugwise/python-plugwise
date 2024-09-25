@@ -59,7 +59,7 @@ class Smile(SmileComm):
         self._host = host
         self._passwd = password
         self._websession = websession
-        self._user = username
+        self._username = username
         self._port = port
 
         self._cooling_present = False
@@ -143,7 +143,7 @@ class Smile(SmileComm):
             self.smile_model_id,
             self.smile_name,
             self.smile_type,
-            self._user,
+            self._username,
             self._port,
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
@@ -163,7 +163,7 @@ class Smile(SmileComm):
             self.smile_name,
             self.smile_type,
             self.smile_zigbee_mac_address,
-            self._user,
+            self._username,
             self._port,
         )
 

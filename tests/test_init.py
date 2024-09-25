@@ -556,7 +556,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     await smile.full_update_device()
                     smile.get_all_devices()
                     data = await smile.async_update()
-                    if smile.smile_type == pw_constants.STRETCH:
+                    if smile._username == pw_constants.STRETCH:
                         assert smile._timeout == 30
                     else:
                         assert smile._timeout == 10
