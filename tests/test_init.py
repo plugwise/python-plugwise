@@ -367,6 +367,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         test_password = "".join(
             secrets.choice(string.ascii_lowercase) for _ in range(8)
         )
+        user_name = pw_constants.DEFAULT_USERNAME
+        if stretch:
+            user_name = pw_constants.STRETCH
+        _LOGGER.debug("HOI username: %s", user_name)
 
         # Happy flow
         app = await self.setup_legacy_app(broken, timeout, raise_timeout, fail_auth, stretch)
@@ -397,11 +401,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert "xml" in text
 
         # Test lack of websession
-        user_name = pw_constants.DEFAULT_USERNAME
-        if stretch:
-            user_name = pw_constants.STRETCH
-        _LOGGER.debug("HOI username: %s", user_name)
-
         try:
             smile = pw_smile.Smile(
                 host=server.host,
