@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.2
+
+- Improve timeout setting: set it to 30s for the Stretch, to 10s for all other devices.
+
 ## v1.4.1
 
 - Prettying documents with Biome (CLI), fixture layout updated accordingly.
