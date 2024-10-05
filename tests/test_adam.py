@@ -21,7 +21,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         """Test extended Adam (firmware 3.8) with Anna and a switch-group setup."""
         self.smile_setup = "adam_g_o"
 
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
