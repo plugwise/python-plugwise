@@ -138,7 +138,10 @@ class SmileAPI(SmileComm, SmileData):
             self.get_all_devices()
             if "heater_id" in self.gw_data:
                 self._heater_id = self.gw_data["heater_id"]
-                if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
+                if (
+                    "binary_sensors" in self.gw_devices[self._heater_id]
+                    and "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]
+                ):
                     self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
