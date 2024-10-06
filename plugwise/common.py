@@ -57,10 +57,6 @@ class SmileCommon:
         xml_3: etree = None,
     ) -> Munch:
         """Helper-function for _appliance_info_finder()."""
-        # Remove heater_central when no active device present
-        if not self._opentherm_device and not self._on_off_device:
-            return None
-
         # Find the valid heater_central
         # xml_2 self._appliances for legacy, self._domain_objects for actual
         xml_2 = return_valid(xml_2, self._domain_objects)
