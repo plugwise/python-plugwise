@@ -8,8 +8,12 @@
       "model": "Aqara Smart Plug",
       "model_id": "lumi.plug.maeu01",
       "name": "CV Atag E325EC (Plug 1)",
+      "sensors": {
+        "electricity_consumed_interval": 0.1
+      },
       "switches": {
-        "lock": true
+        "lock": true,
+        "relay": true
       },
       "vendor": "LUMI",
       "zigbee_mac_address": "54EF4410004E8D1F"
@@ -130,6 +134,43 @@
       },
       "vendor": "Plugwise",
       "zigbee_mac_address": "000D6F001609C327"
+    },
+    "72bb27095f2544959b3abaa2bcaf1fcb": {
+      "available": true,
+      "binary_sensors": {
+        "dhw_state": false,
+        "flame_state": false,
+        "heating_state": false
+      },
+      "dev_class": "heater_central",
+      "location": "125a7bbe822740528206946884853b36",
+      "max_dhw_temperature": {
+        "lower_bound": 40.0,
+        "resolution": 0.01,
+        "setpoint": 60.0,
+        "upper_bound": 60.0
+      },
+      "maximum_boiler_temperature": {
+        "lower_bound": 25.0,
+        "resolution": 0.01,
+        "setpoint": 55.0,
+        "upper_bound": 60.0
+      },
+      "model": "Generic heater",
+      "model_id": "170.1",
+      "name": "OpenTherm",
+      "sensors": {
+        "dhw_temperature": 22.5,
+        "intended_boiler_temperature": 0.0,
+        "modulation_level": 0.0,
+        "return_temperature": 23.4,
+        "water_pressure": 1.54,
+        "water_temperature": 22.9
+      },
+      "switches": {
+        "dhw_cm_switch": false
+      },
+      "vendor": "Siemens Building Technologies HVAC"
     },
     "85b9556a2ad7428aac8aca6ed6b6623d": {
       "available": true,
@@ -488,8 +529,8 @@
   "gateway": {
     "cooling_present": false,
     "gateway_id": "a80c7df87c8f47f3a26c6e12983725a8",
-    "heater_id": "095aedb59f1a4e87816875a01b6f7e4a",
-    "item_count": 285,
+    "heater_id": "72bb27095f2544959b3abaa2bcaf1fcb",
+    "item_count": 312,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"
