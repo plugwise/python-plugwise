@@ -19,6 +19,7 @@ from plugwise.constants import (
     FAKE_LOC,
     HEATER_CENTRAL_MEASUREMENTS,
     LIMITS,
+    LOGGER,
     NONE,
     OFF,
     P1_LEGACY_MEASUREMENTS,
@@ -131,6 +132,7 @@ class SmileLegacyHelper(SmileCommon):
             appl.zigbee_mac = None
             appl.vendor_name = None
 
+            LOGGER.debug("HOI appliance: %s", appl)
             # Determine class for this appliance
             # Skip on heater_central when no active device present or on orphaned stretch devices
             if not (appl := self._appliance_info_finder(appliance, appl)):
