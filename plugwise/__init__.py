@@ -44,10 +44,10 @@ class Smile(SmileComm):
         self,
         host: str,
         password: str,
+        timeout: float,
         websession: aiohttp.ClientSession,
         username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_LEGACY_TIMEOUT,
 
     ) -> None:
         """Set the constructor for this class."""
@@ -62,10 +62,10 @@ class Smile(SmileComm):
 
         self._host = host
         self._passwd = password
-        self._websession = websession
-        self._user = username
         self._port = port
         self._timeout = timeout
+        self._user = username
+        self._websession = websession
 
         self._cooling_present = False
         self._elga = False
