@@ -322,6 +322,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
+                timeout=pw_constants.DEFAULT_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -335,11 +336,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
+            timeout=pw_constants.DEFAULT_TIMEOUT,
             websession=websession,
         )
 
         if not timeout:
-            assert smile._timeout == 30
+            assert smile._timeout == 10
 
         # Connect to the smile
         try:
@@ -403,6 +405,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
+                timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -416,6 +419,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
+            timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
             websession=websession,
         )
 
