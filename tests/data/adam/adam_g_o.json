@@ -1,100 +1,94 @@
 {
     "095aedb59f1a4e87816875a01b6f7e4a": {
-      "available": true,
-      "dev_class": "heater_central",
-      "location": "f4eeb4052a2d4bd7a5fe5b25442ccd4d",
-      "model": "Generic heater",
-      "name": "OpenTherm",
-      "switches": {
-        "lock": true
-      }
+        "available": true,
+        "dev_class": "heater_central_plug",
+        "hardware": "1",
+        "location": "f4eeb4052a2d4bd7a5fe5b25442ccd4d",
+        "model": "Aqara Smart Plug",
+        "model_id": "lumi.plug.maeu01",
+        "name": "CV Atag E325EC (Plug 1)",
+        "sensors": {
+            "electricity_consumed_interval": 0.1
+        },
+        "switches": {
+            "lock": true,
+            "relay": true
+        },
+        "vendor": "LUMI",
+        "zigbee_mac_address": "54EF4410004E8D1F"
     },
     "293d2a55e55e424b800b9e509f5400d2": {
-      "active_preset": "home",
-      "available": true,
-      "available_schedules": [
-        "Werkkamers Nacht",
-        "Woonkamer Thuis en Nacht",
-        "Vakantie",
-        "Keuken Thuis en Nacht",
-        "Achterkamer Thuis en Nacht",
-        "Woonkamer Weg en Nacht",
-        "Keuken Weg en Nacht",
-        "off"
-      ],
-      "control_state": "heating",
-      "dev_class": "thermostatic_radiator_valve",
-      "firmware": "2020-11-04T01:00:00+01:00",
-      "hardware": "1",
-      "location": "594a88ed4dc343169741ab834ac0eec9",
-      "mode": "auto",
-      "model": "Tom/Floor",
-      "model_id": "106-03",
-      "name": "Tom Achterkamer",
-      "preset_modes": [
-        "vacation",
-        "no_frost",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "Achterkamer Thuis en Nacht",
-      "sensors": {
-        "setpoint": 19.5,
-        "temperature": 19.0,
-        "temperature_difference": 2.2,
-        "valve_position": 100
-      },
-      "temperature_offset": {
-        "lower_bound": -2.0,
-        "resolution": 0.1,
-        "setpoint": 0.1,
-        "upper_bound": 2.0
-      },
-      "thermostat": {
-        "lower_bound": 7.0,
-        "resolution": 0.01,
-        "setpoint": 19.5,
-        "upper_bound": 30.0
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F0017DAA650"
-    },
-    "095aedb59f1a4e87816875a01b6f7e4a": {
-      "available": true,
-      "dev_class": "heater_central_plug",
-      "hardware": "1",
-      "location": "f4eeb4052a2d4bd7a5fe5b25442ccd4d",
-      "model": "Aqara Smart Plug",
-      "model_id": "lumi.plug.maeu01",
-      "name": "CV Atag E325EC (Plug 1)",
-      "switches": {
-        "lock": true
-      },
-      "vendor": "LUMI",
-      "zigbee_mac_address": "54EF4410004E8D1F"
+        "active_preset": "home",
+        "available": true,
+        "available_schedules": [
+            "Werkkamers Nacht",
+            "Woonkamer Thuis en Nacht",
+            "Vakantie",
+            "Keuken Thuis en Nacht",
+            "Achterkamer Thuis en Nacht",
+            "Woonkamer Weg en Nacht",
+            "Keuken Weg en Nacht",
+            "off"
+        ],
+        "control_state": "heating",
+        "dev_class": "thermostatic_radiator_valve",
+        "firmware": "2020-11-04T01:00:00+01:00",
+        "hardware": "1",
+        "location": "594a88ed4dc343169741ab834ac0eec9",
+        "mode": "auto",
+        "model": "Tom/Floor",
+        "model_id": "106-03",
+        "name": "Tom Achterkamer",
+        "preset_modes": [
+            "vacation",
+            "no_frost",
+            "away",
+            "home",
+            "asleep"
+        ],
+        "select_schedule": "Achterkamer Thuis en Nacht",
+        "sensors": {
+            "setpoint": 19.5,
+            "temperature": 19.0,
+            "temperature_difference": 2.2,
+            "valve_position": 100
+        },
+            "temperature_offset": {
+            "lower_bound": -2.0,
+            "resolution": 0.1,
+            "setpoint": 0.1,
+            "upper_bound": 2.0
+        },
+        "thermostat": {
+            "lower_bound": 7.0,
+            "resolution": 0.01,
+            "setpoint": 19.5,
+            "upper_bound": 30.0
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F0017DAA650"
     },
     "2e73aaaea7da40a49343bf41646e0792": {
-      "available": true,
-      "dev_class": "valve_actuator_plug",
-      "hardware": "1",
-      "location": "d9786723dbcf4f19b5c629a54629f9c7",
-      "model": "Aqara Smart Plug",
-      "model_id": "lumi.plug.maeu01",
-      "name": "Koen keuken (Plug 3)",
-      "sensors": {
+        "available": true,
+        "dev_class": "valve_actuator_plug",
+        "hardware": "1",
+        "location": "d9786723dbcf4f19b5c629a54629f9c7",
+        "model": "Aqara Smart Plug",
+        "model_id": "lumi.plug.maeu01",
+        "name": "Koen keuken (Plug 3)",
+        "sensors": {
         "electricity_consumed_interval": 0.0
-      },
-      "switches": {
+        },
+        "switches": {
         "relay": true
-      },
-      "vendor": "LUMI",
-      "zigbee_mac_address": "54EF4410004E9BE6"
+        },
+        "vendor": "LUMI",
+        "zigbee_mac_address": "54EF4410004E9BE6"
     },
     "590541b0560f49ff9f1a3a171de294ed": {
-      "active_preset": "asleep",
-      "available": true,
-      "available_schedules": [
+        "active_preset": "asleep",
+        "available": true,
+        "available_schedules": [
         "Werkkamers Nacht",
         "Woonkamer Thuis en Nacht",
         "Vakantie",
@@ -103,101 +97,138 @@
         "Woonkamer Weg en Nacht",
         "Keuken Weg en Nacht",
         "off"
-      ],
-      "control_state": "off",
-      "dev_class": "zone_thermostat",
-      "firmware": "2016-10-27T02:00:00+02:00",
-      "hardware": "255",
-      "location": "85d3fc5254ce4df08697a676c2aa7120",
-      "mode": "auto",
-      "model": "Lisa",
-      "model_id": "158-01",
-      "name": "Lisa werkkamer achter",
-      "preset_modes": [
+        ],
+        "control_state": "off",
+        "dev_class": "zone_thermostat",
+        "firmware": "2016-10-27T02:00:00+02:00",
+        "hardware": "255",
+        "location": "85d3fc5254ce4df08697a676c2aa7120",
+        "mode": "auto",
+        "model": "Lisa",
+        "model_id": "158-01",
+        "name": "Lisa werkkamer achter",
+        "preset_modes": [
         "vacation",
         "no_frost",
         "away",
         "home",
         "asleep"
-      ],
-      "select_schedule": "Werkkamers Nacht",
-      "sensors": {
+        ],
+        "select_schedule": "Werkkamers Nacht",
+        "sensors": {
         "setpoint": 12.0,
         "temperature": 19.3
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": -0.8,
         "upper_bound": 2.0
-      },
-      "thermostat": {
+        },
+        "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
         "setpoint": 12.0,
         "upper_bound": 99.9
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F001609C327"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F001609C327"
+    },
+    "72bb27095f2544959b3abaa2bcaf1fcb": {
+        "available": true,
+        "binary_sensors": {
+        "dhw_state": false,
+        "flame_state": false,
+        "heating_state": false
+        },
+        "dev_class": "heater_central",
+        "location": "125a7bbe822740528206946884853b36",
+        "max_dhw_temperature": {
+        "lower_bound": 40.0,
+        "resolution": 0.01,
+        "setpoint": 60.0,
+        "upper_bound": 60.0
+        },
+        "maximum_boiler_temperature": {
+        "lower_bound": 25.0,
+        "resolution": 0.01,
+        "setpoint": 55.0,
+        "upper_bound": 60.0
+        },
+        "model": "Generic heater",
+        "model_id": "170.1",
+        "name": "OpenTherm",
+        "sensors": {
+        "dhw_temperature": 22.5,
+        "intended_boiler_temperature": 0.0,
+        "modulation_level": 0.0,
+        "return_temperature": 23.4,
+        "water_pressure": 1.54,
+        "water_temperature": 22.9
+        },
+        "switches": {
+        "dhw_cm_switch": false
+        },
+        "vendor": "Siemens Building Technologies HVAC"
     },
     "85b9556a2ad7428aac8aca6ed6b6623d": {
-      "available": true,
-      "dev_class": "thermo_sensor",
-      "firmware": "2020-11-04T01:00:00+01:00",
-      "hardware": "1",
-      "location": "35bdf58666b44eab9fac8f0ed50e045a",
-      "model": "Tom/Floor",
-      "model_id": "106-03",
-      "name": "Tom Werkkamer voor",
-      "sensors": {
+        "available": true,
+        "dev_class": "thermo_sensor",
+        "firmware": "2020-11-04T01:00:00+01:00",
+        "hardware": "1",
+        "location": "35bdf58666b44eab9fac8f0ed50e045a",
+        "model": "Tom/Floor",
+        "model_id": "106-03",
+        "name": "Tom Werkkamer voor",
+        "sensors": {
         "setpoint": 12.0,
         "temperature": 17.6,
         "temperature_difference": 2.0,
         "valve_position": 0.0
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": 0.0,
         "upper_bound": 2.0
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F00154771AF"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F00154771AF"
     },
     "a80c7df87c8f47f3a26c6e12983725a8": {
-      "binary_sensors": {
+        "binary_sensors": {
         "plugwise_notification": false
-      },
-      "dev_class": "gateway",
-      "firmware": "3.7.8",
-      "gateway_modes": [
+        },
+        "dev_class": "gateway",
+        "firmware": "3.7.8",
+        "gateway_modes": [
         "away",
         "full",
         "vacation"
-      ],
-      "hardware": "AME Smile 2.0 board",
-      "location": "125a7bbe822740528206946884853b36",
-      "mac_address": "D40FB201BC26",
-      "model": "Gateway",
-      "model_id": "smile_open_therm",
-      "name": "Adam",
-      "regulation_modes": [
+        ],
+        "hardware": "AME Smile 2.0 board",
+        "location": "125a7bbe822740528206946884853b36",
+        "mac_address": "D40FB201BC26",
+        "model": "Gateway",
+        "model_id": "smile_open_therm",
+        "name": "Adam",
+        "regulation_modes": [
         "bleeding_hot",
         "bleeding_cold",
         "heating",
         "off"
-      ],
-      "select_gateway_mode": "full",
-      "select_regulation_mode": "heating",
-      "sensors": {
+        ],
+        "select_gateway_mode": "full",
+        "select_regulation_mode": "heating",
+        "sensors": {
         "outdoor_temperature": 14.5
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F000D5A1A46"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F000D5A1A46"
     },
     "cd7b8b6d6ba341c4853c9b831187a912": {
-      "active_preset": "home",
-      "available_schedules": [
+        "active_preset": "home",
+        "available_schedules": [
         "Werkkamers Nacht",
         "Woonkamer Thuis en Nacht",
         "Vakantie",
@@ -206,38 +237,38 @@
         "Woonkamer Weg en Nacht",
         "Keuken Weg en Nacht",
         "off"
-      ],
-      "control_state": "off",
-      "dev_class": "thermostat",
-      "location": "a42c4e1774fc499aa3a55c7194848bf7",
-      "mode": "auto",
-      "model": "54.10",
-      "model_id": "54.10",
-      "name": "Honeywell Round Modulation",
-      "preset_modes": [
+        ],
+        "control_state": "off",
+        "dev_class": "thermostat",
+        "location": "a42c4e1774fc499aa3a55c7194848bf7",
+        "mode": "auto",
+        "model": "54.10",
+        "model_id": "54.10",
+        "name": "Honeywell Round Modulation",
+        "preset_modes": [
         "vacation",
         "no_frost",
         "away",
         "home",
         "asleep"
-      ],
-      "select_schedule": "Woonkamer Thuis en Nacht",
-      "sensors": {
+        ],
+        "select_schedule": "Woonkamer Thuis en Nacht",
+        "sensors": {
         "setpoint": 19.5,
         "temperature": 19.8
-      },
-      "thermostat": {
+        },
+        "thermostat": {
         "lower_bound": 1.0,
         "resolution": 0.01,
         "setpoint": 19.5,
         "upper_bound": 35.0
-      },
-      "vendor": "Honeywell CCP"
+        },
+        "vendor": "Honeywell CCP"
     },
     "d8ae278b6d9e401c937a3211dc96ec5c": {
-      "active_preset": "asleep",
-      "available": true,
-      "available_schedules": [
+        "active_preset": "asleep",
+        "available": true,
+        "available_schedules": [
         "Werkkamers Nacht",
         "Woonkamer Thuis en Nacht",
         "Vakantie",
@@ -246,71 +277,71 @@
         "Woonkamer Weg en Nacht",
         "Keuken Weg en Nacht",
         "off"
-      ],
-      "control_state": "off",
-      "dev_class": "zone_thermostat",
-      "firmware": "2016-10-27T02:00:00+02:00",
-      "hardware": "255",
-      "location": "35bdf58666b44eab9fac8f0ed50e045a",
-      "mode": "auto",
-      "model": "Lisa",
-      "model_id": "158-01",
-      "name": "Lisa werkkamer voor",
-      "preset_modes": [
+        ],
+        "control_state": "off",
+        "dev_class": "zone_thermostat",
+        "firmware": "2016-10-27T02:00:00+02:00",
+        "hardware": "255",
+        "location": "35bdf58666b44eab9fac8f0ed50e045a",
+        "mode": "auto",
+        "model": "Lisa",
+        "model_id": "158-01",
+        "name": "Lisa werkkamer voor",
+        "preset_modes": [
         "vacation",
         "no_frost",
         "away",
         "home",
         "asleep"
-      ],
-      "select_schedule": "Werkkamers Nacht",
-      "sensors": {
+        ],
+        "select_schedule": "Werkkamers Nacht",
+        "sensors": {
         "setpoint": 12.0,
         "temperature": 19.2
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": 0.0,
         "upper_bound": 2.0
-      },
-      "thermostat": {
+        },
+        "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
         "setpoint": 12.0,
         "upper_bound": 99.9
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F001609C431"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F001609C431"
     },
     "db814b6b539040f293b6aa9d7153b2bb": {
-      "available": true,
-      "dev_class": "thermo_sensor",
-      "firmware": "2020-11-04T01:00:00+01:00",
-      "hardware": "1",
-      "location": "85d3fc5254ce4df08697a676c2aa7120",
-      "model": "Tom/Floor",
-      "model_id": "106-03",
-      "name": "Tom Werkkamer achter",
-      "sensors": {
+        "available": true,
+        "dev_class": "thermo_sensor",
+        "firmware": "2020-11-04T01:00:00+01:00",
+        "hardware": "1",
+        "location": "85d3fc5254ce4df08697a676c2aa7120",
+        "model": "Tom/Floor",
+        "model_id": "106-03",
+        "name": "Tom Werkkamer achter",
+        "sensors": {
         "setpoint": 12.0,
         "temperature": 17.1,
         "temperature_difference": 1.9,
         "valve_position": 0.0
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": 0.1,
         "upper_bound": 2.0
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F0017DA9DCB"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F0017DA9DCB"
     },
     "ddf30b0ca5cf4be0990ef11a2a72eaaa": {
-      "active_preset": "home",
-      "available": true,
-      "available_schedules": [
+        "active_preset": "home",
+        "available": true,
+        "available_schedules": [
         "Werkkamers Nacht",
         "Woonkamer Thuis en Nacht",
         "Vakantie",
@@ -319,47 +350,47 @@
         "Woonkamer Weg en Nacht",
         "Keuken Weg en Nacht",
         "off"
-      ],
-      "control_state": "off",
-      "dev_class": "zone_thermostat",
-      "firmware": "2016-10-27T02:00:00+02:00",
-      "hardware": "255",
-      "location": "d9786723dbcf4f19b5c629a54629f9c7",
-      "mode": "auto",
-      "model": "Lisa",
-      "model_id": "158-01",
-      "name": "Lisa keuken",
-      "preset_modes": [
+        ],
+        "control_state": "off",
+        "dev_class": "zone_thermostat",
+        "firmware": "2016-10-27T02:00:00+02:00",
+        "hardware": "255",
+        "location": "d9786723dbcf4f19b5c629a54629f9c7",
+        "mode": "auto",
+        "model": "Lisa",
+        "model_id": "158-01",
+        "name": "Lisa keuken",
+        "preset_modes": [
         "vacation",
         "no_frost",
         "away",
         "home",
         "asleep"
-      ],
-      "select_schedule": "Keuken Thuis en Nacht",
-      "sensors": {
+        ],
+        "select_schedule": "Keuken Thuis en Nacht",
+        "sensors": {
         "setpoint": 19.5,
         "temperature": 19.7
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": 0.0,
         "upper_bound": 2.0
-      },
-      "thermostat": {
+        },
+        "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
         "setpoint": 19.5,
         "upper_bound": 99.9
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F00160AD764"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F00160AD764"
     },
     "e5590e806cb14335970921be13b2612b": {
-      "active_preset": "home",
-      "available": true,
-      "available_schedules": [
+        "active_preset": "home",
+        "available": true,
+        "available_schedules": [
         "Werkkamers Nacht",
         "Woonkamer Thuis en Nacht",
         "Vakantie",
@@ -368,129 +399,129 @@
         "Woonkamer Weg en Nacht",
         "Keuken Weg en Nacht",
         "off"
-      ],
-      "binary_sensors": {
+        ],
+        "binary_sensors": {
         "low_battery": false
-      },
-      "control_state": "heating",
-      "dev_class": "thermostatic_radiator_valve",
-      "firmware": "2020-11-04T01:00:00+01:00",
-      "hardware": "1",
-      "location": "4638a0951a9c42f5a642e3ee72ae3700",
-      "mode": "heat",
-      "model": "Tom/Floor",
-      "model_id": "106-03",
-      "name": "Tom Badkamer",
-      "preset_modes": [
+        },
+        "control_state": "heating",
+        "dev_class": "thermostatic_radiator_valve",
+        "firmware": "2020-11-04T01:00:00+01:00",
+        "hardware": "1",
+        "location": "4638a0951a9c42f5a642e3ee72ae3700",
+        "mode": "heat",
+        "model": "Tom/Floor",
+        "model_id": "106-03",
+        "name": "Tom Badkamer",
+        "preset_modes": [
         "vacation",
         "no_frost",
         "away",
         "home",
         "asleep"
-      ],
-      "select_schedule": "off",
-      "sensors": {
+        ],
+        "select_schedule": "off",
+        "sensors": {
         "battery": 67,
         "setpoint": 19.0,
         "temperature": 18.6,
         "temperature_difference": 0.0,
         "valve_position": 100
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": 0.0,
         "upper_bound": 2.0
-      },
-      "thermostat": {
+        },
+        "thermostat": {
         "lower_bound": 7.0,
         "resolution": 0.01,
         "setpoint": 19.0,
         "upper_bound": 30.0
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F0017DA9CAB"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F0017DA9CAB"
     },
     "eb97e2913dfc40d98e324cc23c1a7040": {
-      "available": true,
-      "dev_class": "heater_electric_plug",
-      "hardware": "1",
-      "location": "f4eeb4052a2d4bd7a5fe5b25442ccd4d",
-      "model": "Aqara Smart Plug",
-      "model_id": "lumi.plug.maeu01",
-      "name": "Elektrisch verwarmen (Plug 2)",
-      "sensors": {
+        "available": true,
+        "dev_class": "heater_electric_plug",
+        "hardware": "1",
+        "location": "f4eeb4052a2d4bd7a5fe5b25442ccd4d",
+        "model": "Aqara Smart Plug",
+        "model_id": "lumi.plug.maeu01",
+        "name": "Elektrisch verwarmen (Plug 2)",
+        "sensors": {
         "electricity_consumed_interval": 0.0
-      },
-      "switches": {
+        },
+        "switches": {
         "relay": true
-      },
-      "vendor": "LUMI",
-      "zigbee_mac_address": "54EF4410004DC036"
+        },
+        "vendor": "LUMI",
+        "zigbee_mac_address": "54EF4410004DC036"
     },
     "f0b2d085a27a4e5083c7435eece4af6f": {
-      "available": true,
-      "dev_class": "thermo_sensor",
-      "firmware": "2020-11-04T01:00:00+01:00",
-      "hardware": "1",
-      "location": "d9786723dbcf4f19b5c629a54629f9c7",
-      "model": "Tom/Floor",
-      "model_id": "106-03",
-      "name": "Tom Keuken",
-      "sensors": {
+        "available": true,
+        "dev_class": "thermo_sensor",
+        "firmware": "2020-11-04T01:00:00+01:00",
+        "hardware": "1",
+        "location": "d9786723dbcf4f19b5c629a54629f9c7",
+        "model": "Tom/Floor",
+        "model_id": "106-03",
+        "name": "Tom Keuken",
+        "sensors": {
         "setpoint": 19.5,
         "temperature": 19.0,
         "temperature_difference": 2.1,
         "valve_position": 100
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": 0.1,
         "upper_bound": 2.0
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F0017DAA607"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F0017DAA607"
     },
     "f4b109482f3d45058634ec15b027f119": {
-      "available": true,
-      "dev_class": "thermo_sensor",
-      "firmware": "2020-11-04T01:00:00+01:00",
-      "hardware": "1",
-      "location": "a42c4e1774fc499aa3a55c7194848bf7",
-      "model": "Tom/Floor",
-      "model_id": "106-03",
-      "name": "Tom Woonkamer",
-      "sensors": {
+        "available": true,
+        "dev_class": "thermo_sensor",
+        "firmware": "2020-11-04T01:00:00+01:00",
+        "hardware": "1",
+        "location": "a42c4e1774fc499aa3a55c7194848bf7",
+        "model": "Tom/Floor",
+        "model_id": "106-03",
+        "name": "Tom Woonkamer",
+        "sensors": {
         "setpoint": 19.5,
         "temperature": 19.1,
         "temperature_difference": 2.3,
         "valve_position": 0.0
-      },
-      "temperature_offset": {
+        },
+        "temperature_offset": {
         "lower_bound": -2.0,
         "resolution": 0.1,
         "setpoint": 0.1,
         "upper_bound": 2.0
-      },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "000D6F0017D8D661"
+        },
+        "vendor": "Plugwise",
+        "zigbee_mac_address": "000D6F0017D8D661"
     },
     "fc18f86153c742648e007431437caa96": {
-      "available": true,
-      "dev_class": "central_heating_pump_plug",
-      "hardware": "1",
-      "location": "d9786723dbcf4f19b5c629a54629f9c7",
-      "model": "Aqara Smart Plug",
-      "model_id": "lumi.plug.maeu01",
-      "name": "Vloerverwarming pomp (Plug 4)",
-      "sensors": {
+        "available": true,
+        "dev_class": "central_heating_pump_plug",
+        "hardware": "1",
+        "location": "d9786723dbcf4f19b5c629a54629f9c7",
+        "model": "Aqara Smart Plug",
+        "model_id": "lumi.plug.maeu01",
+        "name": "Vloerverwarming pomp (Plug 4)",
+        "sensors": {
         "electricity_consumed_interval": 0.0
-      },
-      "switches": {
+        },
+        "switches": {
         "relay": false
-      },
-      "vendor": "LUMI",
-      "zigbee_mac_address": "54EF4410004DD396"
+        },
+        "vendor": "LUMI",
+        "zigbee_mac_address": "54EF4410004DD396"
     }
-  }
+}
