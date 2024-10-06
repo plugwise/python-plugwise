@@ -90,7 +90,7 @@
     },
     "1a27dd03b5454c4e8b9e75c8d1afc7af": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "20e735858f8146cead98b873177a4f99",
       "model": "Plug",
@@ -110,7 +110,7 @@
     },
     "2e0fc4db2a6d4cbeb7cf786143543961": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
       "model": "Plug",
@@ -130,7 +130,7 @@
     },
     "3b4d2574e2c9443a832b48d19a1c4f06": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "04b15f6e884448288f811d29fb7b1b30",
       "model": "Plug",
@@ -150,7 +150,7 @@
     },
     "3f0afa71f16c45ab964050002560e43c": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "fa5fa6b34f6b40a0972988b20e888ed4",
       "model": "Plug",
@@ -215,7 +215,7 @@
     },
     "5ead63c65e5f44e7870ba2bd680ceb9e": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "9a27714b970547ee9a6bdadc2b815ad5",
       "model": "Plug",
@@ -312,7 +312,7 @@
     },
     "838c2f48195242709b87217cf8d8a71f": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "b52908550469425b812c87f766fe5303",
       "model": "Plug",
@@ -332,7 +332,7 @@
     },
     "8a482fa9dddb43acb765d019d8c9838b": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "5cc21042f87f4b4c94ccb5537c47a53f",
       "model": "Plug",
@@ -352,7 +352,7 @@
     },
     "96714ad90fc948bcbcb5021c4b9f5ae9": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "e39529c79ab54fda9bed26cfc0447546",
       "model": "Plug",
@@ -372,7 +372,7 @@
     },
     "a03b6e8e76dd4646af1a77c31dd9370c": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "93ac3f7bf25342f58cbb77c4a99ac0b3",
       "model": "Plug",
@@ -392,7 +392,7 @@
     },
     "bbcffa48019f4b09b8368bbaf9559e68": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "firmware": "2020-05-13T02:00:00+02:00",
       "location": "8cf650a4c10c44819e426bed406aec34",
       "model": "Plug",
