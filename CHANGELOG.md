@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.2
+
+- Bugfix: implement solution for issue reported in [#739](https://github.com/plugwise/plugwise-beta/issues/739)
+
 ## v1.4.1
 
 - Prettying documents with Biome (CLI), fixture layout updated accordingly.
