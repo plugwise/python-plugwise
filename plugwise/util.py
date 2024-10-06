@@ -12,6 +12,7 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
+    LOGGER,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
@@ -107,6 +108,7 @@ def check_heater_central(xml: etree) -> str:
                     # Stop when a valid id is found
                     break  # pragma: no cover
 
+    LOGGER.debug("HOI hc_id: %s", heater_central_id)
     return heater_central_id
 
 
