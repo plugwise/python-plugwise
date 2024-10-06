@@ -301,10 +301,6 @@ class SmileHelper(SmileCommon):
             appl.zigbee_mac = None
             appl.vendor_name = None
 
-
-            if appl.pwclass == "heater_central" and appl.name != "Central heating boiler":
-                appl.pwclass = "heater_central_plug"
-
             # Determine class for this appliance
             # Skip on heater_central when no active device present
             if not (appl := self._appliance_info_finder(appl, appliance)):
