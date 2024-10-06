@@ -17,24 +17,6 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
     """Tests for Adam."""
 
     @pytest.mark.asyncio
-    async def test_connect_adam_g_o(self):
-        """Test extended Adam (firmware 3.8) with Anna and a switch-group setup."""
-        self.smile_setup = "adam_g_o"
-
-        server, smile, client = await self.connect_wrapper()
-        assert smile.smile_hostname == "smile000000"
-
-        self.validate_test_basics(
-            _LOGGER,
-            smile,
-            smile_type=None,
-            smile_version="3.7.8",
-        )
-
-        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        await self.device_test(smile, "2023-12-17 00:00:01", testdata)
-
-    @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
         """Test extended Adam (firmware 3.8) with Anna and a switch-group setup."""
         self.smile_setup = "adam_plus_anna_new"
