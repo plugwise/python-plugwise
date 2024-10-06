@@ -99,6 +99,7 @@ def check_heater_central(xml: etree) -> str:
         ):
             hc_list.append({hc_id: has_actuators})
 
+    LOGGER.debug("HOI hc_list: %s", hc_list)
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
         for item in hc_list:  # pragma: no cover
