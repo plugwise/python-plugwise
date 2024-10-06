@@ -12,7 +12,6 @@ from plugwise.constants import (
     ELECTRIC_POTENTIAL_VOLT,
     ENERGY_KILO_WATT_HOUR,
     HW_MODELS,
-    LOGGER,
     OBSOLETE_MEASUREMENTS,
     PERCENTAGE,
     POWER_WATT,
@@ -98,13 +97,7 @@ def check_heater_central(xml: etree) -> str:
             "ZigBee protocol" not in hc_desc and "smart plug" not in hc_desc
         ):
             hc_list.append({hc_id: has_actuators})
-#        elif ("ZigBee protocol" not in hc_desc and "smart plug" not in hc_desc):
-#            hc_list.append({hc_id: has_actuators})
-#            LOGGER.debug("HOI desc: %s", hc_desc)
-#            LOGGER.debug("HOI logic 1: %s", ("ZigBee protocol" not in hc_desc))
-#            LOGGER.debug("HOI logic 2: %s", ("smart plug" not in hc_desc))
 
-    LOGGER.debug("HOI hc_list: %s", hc_list)
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:
         for item in hc_list:  # pragma: no cover
@@ -114,7 +107,6 @@ def check_heater_central(xml: etree) -> str:
                     # Stop when a valid id is found
                     break  # pragma: no cover
 
-    LOGGER.debug("HOI hc_id: %s", heater_central_id)
     return heater_central_id
 
 
