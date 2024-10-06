@@ -269,6 +269,13 @@ class SmileHelper(SmileCommon):
         for appliance in self._domain_objects.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
+            # Extend device_class name of Plugs (Plugwise and Aqara)"
+            description = appliance.find("description").text
+            if description is not None and (
+                "ZigBee protocol" in description or "smart plug" in description
+            ):
+                appl.pwclass = f"{appl.pwclass}_plug"
+
             # Skip thermostats that have this key, should be an orphaned device (Core #81712)
             if (
                 appl.pwclass == "thermostat"
@@ -293,6 +300,10 @@ class SmileHelper(SmileCommon):
             appl.mac = None
             appl.zigbee_mac = None
             appl.vendor_name = None
+
+
+            if appl.pwclass == "heater_central" and appl.name != "Central heating boiler":
+                appl.pwclass = "heater_central_plug"
 
             # Determine class for this appliance
             # Skip on heater_central when no active device present
