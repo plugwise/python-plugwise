@@ -30,8 +30,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile_type=None,
             smile_version="3.7.8",
         )
-        
-        testdata = {}
+
+        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
         await self.device_test(smile, "2023-12-17 00:00:01", testdata)
 
     @pytest.mark.asyncio
