@@ -60,9 +60,23 @@
       "vendor": "Plugwise",
       "zigbee_mac_address": "000D6F0017DAA650"
     },
+    "095aedb59f1a4e87816875a01b6f7e4a": {
+      "available": true,
+      "dev_class": "heater_central_plug",
+      "hardware": "1",
+      "location": "f4eeb4052a2d4bd7a5fe5b25442ccd4d",
+      "model": "Aqara Smart Plug",
+      "model_id": "lumi.plug.maeu01",
+      "name": "CV Atag E325EC (Plug 1)",
+      "switches": {
+        "lock": true
+      },
+      "vendor": "LUMI",
+      "zigbee_mac_address": "54EF4410004E8D1F"
+    },
     "2e73aaaea7da40a49343bf41646e0792": {
       "available": true,
-      "dev_class": "valve_actuator",
+      "dev_class": "valve_actuator_plug",
       "hardware": "1",
       "location": "d9786723dbcf4f19b5c629a54629f9c7",
       "model": "Aqara Smart Plug",
@@ -399,7 +413,7 @@
     },
     "eb97e2913dfc40d98e324cc23c1a7040": {
       "available": true,
-      "dev_class": "heater_electric",
+      "dev_class": "heater_electric_plug",
       "hardware": "1",
       "location": "f4eeb4052a2d4bd7a5fe5b25442ccd4d",
       "model": "Aqara Smart Plug",
@@ -464,7 +478,7 @@
     },
     "fc18f86153c742648e007431437caa96": {
       "available": true,
-      "dev_class": "central_heating_pump",
+      "dev_class": "central_heating_pump_plug",
       "hardware": "1",
       "location": "d9786723dbcf4f19b5c629a54629f9c7",
       "model": "Aqara Smart Plug",
