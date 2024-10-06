@@ -97,7 +97,7 @@
     },
     "67d73d0bd469422db25a618a5fb8eeb0": {
       "available": true,
-      "dev_class": "zz_misc_plug",
+      "dev_class": "heater_central_plug",
       "location": "b4f211175e124df59603412bafa77a34",
       "model": "Aqara Smart Plug",
       "model_id": "lumi.plug.maeu01",
