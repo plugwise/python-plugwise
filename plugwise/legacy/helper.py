@@ -116,7 +116,7 @@ class SmileLegacyHelper(SmileCommon):
             appl.location = self._home_location
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
-            # Extend device_class name when a Cirlce/Stealth has the type heater_central
+            # Extend device_class name when a Circle/Stealth is type heater_central -- Pw-Beta Issue #739
             if (
                 appl.pwclass == "heater_central"
                 and appl.name != "Central heating boiler"
