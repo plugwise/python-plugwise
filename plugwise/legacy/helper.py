@@ -122,7 +122,7 @@ class SmileLegacyHelper(SmileCommon):
                 appl.pwclass == "heater_central"
                 and appl.name != "Central heating boiler"
             ):
-                appl.pwclass == "heater_central_plug"
+                appl.pwclass = "heater_central_plug"
 
             appl.model = appl.pwclass.replace("_", " ").title()
             appl.model_id = None
