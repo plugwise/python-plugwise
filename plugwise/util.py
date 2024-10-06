@@ -91,11 +91,9 @@ def check_heater_central(xml: etree) -> str:
         has_actuators: bool = (
             heater_central.find("actuator_functionalities/") is not None
         )
-        # Filter Plug configured as heater_central type
-        hc_desc: str = heater_central.find("description").text
-        if hc_desc is None or (
-            "ZigBee protocol" not in hc_desc and "smart plug" not in hc_desc
-        ):
+        # Filter for Plug/Circle/Stealth heater_central
+        hc_name = heater_central.find("name").text
+        if hc_name == "Central heating boiler":
             hc_list.append({hc_id: has_actuators})
 
     heater_central_id = list(hc_list[0].keys())[0]
