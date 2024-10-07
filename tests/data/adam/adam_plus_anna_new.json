@@ -76,7 +76,7 @@
   },
   "2568cc4b9c1e401495d4741a5f89bee1": {
     "available": true,
-    "dev_class": "hometheater",
+    "dev_class": "hometheater_plug",
     "firmware": "2020-11-10T01:00:00+01:00",
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "Plug",
@@ -97,7 +97,7 @@
   },
   "29542b2b6a6a4169acecc15c72a599b8": {
     "available": true,
-    "dev_class": "computer_desktop",
+    "dev_class": "computer_desktop_plug",
     "firmware": "2020-11-10T01:00:00+01:00",
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "Plug",
@@ -118,7 +118,7 @@
   },
   "67d73d0bd469422db25a618a5fb8eeb0": {
     "available": true,
-    "dev_class": "zz_misc",
+    "dev_class": "heater_central_plug",
     "location": "b4f211175e124df59603412bafa77a34",
     "model": "Aqara Smart Plug",
     "model_id": "lumi.plug.maeu01",
@@ -135,7 +135,7 @@
   },
   "854f8a9b0e7e425db97f1f110e1ce4b3": {
     "available": true,
-    "dev_class": "central_heating_pump",
+    "dev_class": "central_heating_pump_plug",
     "firmware": "2020-11-10T01:00:00+01:00",
     "location": "f2bf9048bef64cc5b6d5110154e33c81",
     "model": "Plug",
