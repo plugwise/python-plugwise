@@ -322,6 +322,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
+                timeout=pw_constants.DEFAULT_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -335,11 +336,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
+            timeout=pw_constants.DEFAULT_TIMEOUT,
             websession=websession,
         )
 
         if not timeout:
-            assert smile._timeout == 30
+            assert smile._timeout == 10
 
         # Connect to the smile
         try:
@@ -403,6 +405,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
+                timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -416,6 +419,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
+            timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
             websession=websession,
         )
 
@@ -570,11 +574,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._cooling_active = False
         self._cooling_enabled = False
         if "heater_id" in data.gateway:
-            heater_id = data.gateway["heater_id"]
-            if "cooling_enabled" in data.devices[heater_id]["binary_sensors"]:
-                self._cooling_enabled = data.devices[heater_id]["binary_sensors"]["cooling_enabled"]
-            if "cooling_state" in data.devices[heater_id]["binary_sensors"]:
-                self._cooling_active = data.devices[heater_id]["binary_sensors"]["cooling_state"]
+            heat_cooler = data.devices[data.gateway["heater_id"]]
+            if "binary_sensors" in heat_cooler:
+                if "cooling_enabled" in heat_cooler["binary_sensors"]:
+                    self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
+                if "cooling_state" in heat_cooler["binary_sensors"]:
+                    self._cooling_active = heat_cooler["binary_sensors"]["cooling_state"]
 
         self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
 

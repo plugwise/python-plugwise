@@ -46,7 +46,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
-        timeout: float,
+        timeout: int,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
@@ -65,17 +65,17 @@ class SmileAPI(SmileComm, SmileData):
         smile_model_id: str | None,
         smile_name: str,
         smile_type: str,
-        username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
+        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
             password,
-            websession,
-            username,
             port,
             timeout,
+            username,
+            websession,
         )
         SmileData.__init__(self)
 
@@ -137,9 +137,12 @@ class SmileAPI(SmileComm, SmileData):
             await self.full_update_device()
             self.get_all_devices()
             if "heater_id" in self.gw_data:
-                self._heater_id = self.gw_data["heater_id"]
-                if "cooling_enabled" in self.gw_devices[self._heater_id]["binary_sensors"]:
-                    self._cooling_enabled = self.gw_devices[self._heater_id]["binary_sensors"]["cooling_enabled"]
+                heat_cooler = self.gw_devices[self.gw_data["heater_id"]]
+                if (
+                    "binary_sensors" in heat_cooler
+                    and "cooling_enabled" in heat_cooler["binary_sensors"]
+                ):
+                    self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
 

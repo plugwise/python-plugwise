@@ -91,7 +91,9 @@ def check_heater_central(xml: etree) -> str:
         has_actuators: bool = (
             heater_central.find("actuator_functionalities/") is not None
         )
-        hc_list.append({hc_id: has_actuators})
+        # Filter for Plug/Circle/Stealth heater_central -- Pw-Beta Issue #739
+        if heater_central.find("name").text == "Central heating boiler":
+            hc_list.append({hc_id: has_actuators})
 
     heater_central_id = list(hc_list[0].keys())[0]
     if hc_count > 1:

@@ -332,11 +332,31 @@
       },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A04"
+    },
+    "fead900a56d3430bb2d53d891f7c0656": {
+      "dev_class": "heater_central_plug",
+      "firmware": "2011-06-27T10:52:18+02:00",
+      "hardware": "6539-0701-4026",
+      "location": "0000aaaa0000aaaa0000aaaa0000aa00",
+      "model": "Circle type F",
+      "name": "CV-ketel 25F6789",
+      "sensors": {
+        "electricity_consumed": 1.56,
+        "electricity_consumed_interval": 0.04,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": true,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A06"
     }
   },
   "gateway": {
     "gateway_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-    "item_count": 229,
+    "item_count": 243,
     "smile_name": "Stretch"
   }
 }
