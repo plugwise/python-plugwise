@@ -56,8 +56,8 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_name: str,
         smile_type: str,
         smile_zigbee_mac_address: str | None,
-        username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
+        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(

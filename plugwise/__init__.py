@@ -147,8 +147,8 @@ class Smile(SmileComm):
             self.smile_model_id,
             self.smile_name,
             self.smile_type,
-            self._user,
             self._port,
+            self._user,
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
@@ -168,8 +168,8 @@ class Smile(SmileComm):
             self.smile_name,
             self.smile_type,
             self.smile_zigbee_mac_address,
-            self._user,
             self._port,
+            self._user,
         )
 
         # Update all endpoints on first connect
