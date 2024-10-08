@@ -40,7 +40,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         host: str,
         password: str,
-        timeout: float,
+        timeout: int,
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _on_off_device: bool,
@@ -63,11 +63,11 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         super().__init__(
             host,
             password,
-            websession,
-            username,
             port,
             timeout,
-        )
+            username,
+            websession,
+         )
         SmileLegacyData.__init__(self)
 
         self._cooling_present = False
