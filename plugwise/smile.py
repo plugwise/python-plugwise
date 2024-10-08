@@ -46,7 +46,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
-        timeout: float,
+        timeout: int,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
@@ -72,10 +72,10 @@ class SmileAPI(SmileComm, SmileData):
         super().__init__(
             host,
             password,
-            websession,
-            username,
             port,
             timeout,
+            username,
+            websession,
         )
         SmileData.__init__(self)
 
