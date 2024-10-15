@@ -5,7 +5,6 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 from plugwise.constants import (
-    DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
     DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
@@ -44,28 +43,27 @@ class Smile(SmileComm):
         self,
         host: str,
         password: str,
+        timeout: int,
         websession: aiohttp.ClientSession,
-        username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
-        timeout: float = DEFAULT_LEGACY_TIMEOUT,
-
+        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
             password,
-            websession,
-            username,
             port,
             timeout,
-        )
+            username,
+            websession,
+         )
 
         self._host = host
         self._passwd = password
-        self._websession = websession
-        self._user = username
         self._port = port
         self._timeout = timeout
+        self._user = username
+        self._websession = websession
 
         self._cooling_present = False
         self._elga = False
@@ -149,8 +147,8 @@ class Smile(SmileComm):
             self.smile_model_id,
             self.smile_name,
             self.smile_type,
-            self._user,
             self._port,
+            self._user,
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
@@ -170,8 +168,8 @@ class Smile(SmileComm):
             self.smile_name,
             self.smile_type,
             self.smile_zigbee_mac_address,
-            self._user,
             self._port,
+            self._user,
         )
 
         # Update all endpoints on first connect

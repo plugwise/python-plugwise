@@ -40,7 +40,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         host: str,
         password: str,
-        timeout: float,
+        timeout: int,
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _on_off_device: bool,
@@ -56,18 +56,18 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         smile_name: str,
         smile_type: str,
         smile_zigbee_mac_address: str | None,
-        username: str = DEFAULT_USERNAME,
         port: int = DEFAULT_PORT,
+        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         super().__init__(
             host,
             password,
-            websession,
-            username,
             port,
             timeout,
-        )
+            username,
+            websession,
+         )
         SmileLegacyData.__init__(self)
 
         self._cooling_present = False

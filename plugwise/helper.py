@@ -71,10 +71,10 @@ class SmileComm:
         self,
         host: str,
         password: str,
-        websession: ClientSession | None,
-        username: str,
         port: int,
-        timeout: float,
+        timeout: int,
+        username: str,
+        websession: ClientSession | None,
     ) -> None:
         """Set the constructor for this class."""
         if not websession:
@@ -269,6 +269,13 @@ class SmileHelper(SmileCommon):
         for appliance in self._domain_objects.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
+            # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
+            description = appliance.find("description").text
+            if description is not None and (
+                "ZigBee protocol" in description or "smart plug" in description
+            ):
+                appl.pwclass = f"{appl.pwclass}_plug"
+
             # Skip thermostats that have this key, should be an orphaned device (Core #81712)
             if (
                 appl.pwclass == "thermostat"
