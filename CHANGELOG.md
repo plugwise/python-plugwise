@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.3
+
+- Clean up timeout-related, pass _request-function as an argument.
+
 ## v1.4.2
 
 - Bugfix: implement solution for issue reported in [#739](https://github.com/plugwise/plugwise-beta/issues/739)
