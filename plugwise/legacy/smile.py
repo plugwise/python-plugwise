@@ -5,7 +5,7 @@ Plugwise backend module for Home Assistant Core - covering the legacy P1, Anna, 
 from __future__ import annotations
 
 import datetime as dt
-from typing import Any
+from typing import Any, Awaitable, Callable
 
 from plugwise.constants import (
     APPLIANCES,
@@ -40,7 +40,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self,
         host: str,
         password: str,
-        request: etree,
+        request: Callable[..., Awaitable[Any]],
         timeout: int,
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,

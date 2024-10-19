@@ -5,7 +5,7 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 import datetime as dt
-from typing import Any
+from typing import Any, Awaitable, Callable
 
 from plugwise.constants import (
     ADAM,
@@ -45,7 +45,7 @@ class SmileAPI(SmileData):
         self,
         host: str,
         password: str,
-        request: etree,
+        request: Callable[..., Awaitable[Any]],
         timeout: int,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
