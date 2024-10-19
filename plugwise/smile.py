@@ -4,8 +4,9 @@ Plugwise backend module for Home Assistant Core.
 """
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 import datetime as dt
-from typing import Any, Awaitable, Callable
+from typing import Any
 
 from plugwise.constants import (
     ADAM,

@@ -4,8 +4,9 @@ Plugwise backend module for Home Assistant Core - covering the legacy P1, Anna, 
 """
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 import datetime as dt
-from typing import Any, Awaitable, Callable
+from typing import Any
 
 from plugwise.constants import (
     APPLIANCES,
@@ -27,7 +28,6 @@ from plugwise.exceptions import ConnectionFailedError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
 
 import aiohttp
-from defusedxml import ElementTree as etree
 from munch import Munch
 
 
