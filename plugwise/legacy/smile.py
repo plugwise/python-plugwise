@@ -41,7 +41,6 @@ class SmileLegacyAPI(SmileLegacyData):
         host: str,
         password: str,
         request: Callable[..., Awaitable[Any]],
-        timeout: int,
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _on_off_device: bool,

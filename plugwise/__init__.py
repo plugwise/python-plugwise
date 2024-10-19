@@ -60,7 +60,6 @@ class Smile(SmileComm):
         self._host = host
         self._passwd = password
         self._port = port
-        self._timeout = timeout
         self._user = username
         self._websession = websession
 
@@ -128,7 +127,6 @@ class Smile(SmileComm):
             self._host,
             self._passwd,
             self._request,
-            self._timeout,
             self._websession,
             self._cooling_present,
             self._elga,
@@ -153,7 +151,6 @@ class Smile(SmileComm):
             self._host,
             self._passwd,
             self._request,
-            self._timeout,
             self._websession,
             self._is_thermostat,
             self._on_off_device,

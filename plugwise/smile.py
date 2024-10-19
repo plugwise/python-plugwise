@@ -47,7 +47,6 @@ class SmileAPI(SmileData):
         host: str,
         password: str,
         request: Callable[..., Awaitable[Any]],
-        timeout: int,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
