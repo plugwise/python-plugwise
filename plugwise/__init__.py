@@ -127,6 +127,7 @@ class Smile(SmileComm):
         self._smile_api = SmileAPI(
             self._host,
             self._passwd,
+            self._request,
             self._timeout,
             self._websession,
             self._cooling_present,
@@ -151,6 +152,7 @@ class Smile(SmileComm):
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
+            self._request,
             self._timeout,
             self._websession,
             self._is_thermostat,

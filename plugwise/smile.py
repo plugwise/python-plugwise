@@ -28,7 +28,6 @@ from plugwise.constants import (
 )
 from plugwise.data import SmileData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
-from plugwise.helper import SmileComm
 
 import aiohttp
 from defusedxml import ElementTree as etree
@@ -37,7 +36,7 @@ from defusedxml import ElementTree as etree
 from munch import Munch
 
 
-class SmileAPI(SmileComm, SmileData):
+class SmileAPI(SmileData):
     """The Plugwise SmileAPI helper class for actual Plugwise devices."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
@@ -46,6 +45,7 @@ class SmileAPI(SmileComm, SmileData):
         self,
         host: str,
         password: str,
+        request,
         timeout: int,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
@@ -69,14 +69,6 @@ class SmileAPI(SmileComm, SmileData):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        super().__init__(
-            host,
-            password,
-            port,
-            timeout,
-            username,
-            websession,
-        )
         SmileData.__init__(self)
 
         self._cooling_present = _cooling_present
@@ -88,6 +80,7 @@ class SmileAPI(SmileComm, SmileData):
         self._schedule_old_states = _schedule_old_states
         self.gateway_id = gateway_id
         self.loc_data = loc_data
+        self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
@@ -102,7 +95,7 @@ class SmileAPI(SmileComm, SmileData):
 
     async def full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
+        self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
 
     def get_all_devices(self) -> None:
@@ -460,10 +453,10 @@ class SmileAPI(SmileComm, SmileData):
         await self.call_request(uri, method="put", data=data)
 
     async def call_request(self, uri: str, **kwargs: Any) -> None:
-        """ConnectionFailedError wrapper for calling _request()."""
+        """ConnectionFailedError wrapper for calling request()."""
         method: str = kwargs["method"]
         data: str | None = kwargs.get("data")
         try:
-            await self._request(uri, method=method, data=data)
+            await self.request(uri, method=method, data=data)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError from exc
