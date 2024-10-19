@@ -76,7 +76,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._opentherm_device = _opentherm_device
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
-        self._timeout = timeout
         self.loc_data = loc_data
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
