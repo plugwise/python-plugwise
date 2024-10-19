@@ -4,6 +4,7 @@ Plugwise backend module for Home Assistant Core - covering the legacy P1, Anna, 
 """
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 import datetime as dt
 from typing import Any
 
@@ -24,14 +25,13 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.exceptions import ConnectionFailedError, PlugwiseError
-from plugwise.helper import SmileComm
 from plugwise.legacy.data import SmileLegacyData
 
 import aiohttp
 from munch import Munch
 
 
-class SmileLegacyAPI(SmileComm, SmileLegacyData):
+class SmileLegacyAPI(SmileLegacyData):
     """The Plugwise SmileLegacyAPI class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
@@ -40,7 +40,7 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self,
         host: str,
         password: str,
-        timeout: int,
+        request: Callable[..., Awaitable[Any]],
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _on_off_device: bool,
@@ -60,14 +60,6 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        super().__init__(
-            host,
-            password,
-            port,
-            timeout,
-            username,
-            websession,
-         )
         SmileLegacyData.__init__(self)
 
         self._cooling_present = False
@@ -76,8 +68,8 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         self._opentherm_device = _opentherm_device
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
-        self._timeout = timeout
         self.loc_data = loc_data
+        self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
@@ -91,12 +83,12 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
 
     async def full_update_device(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
-        self._domain_objects = await self._request(DOMAIN_OBJECTS)
-        self._locations = await self._request(LOCATIONS)
-        self._modules = await self._request(MODULES)
+        self._domain_objects = await self.request(DOMAIN_OBJECTS)
+        self._locations = await self.request(LOCATIONS)
+        self._modules = await self.request(MODULES)
         # P1 legacy has no appliances
         if self.smile_type != "power":
-            self._appliances = await self._request(APPLIANCES)
+            self._appliances = await self.request(APPLIANCES)
 
     def get_all_devices(self) -> None:
         """Determine the evices present from the obtained XML-data.
@@ -131,12 +123,12 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
             self.get_all_devices()
         # Otherwise perform an incremental update
         else:
-            self._domain_objects = await self._request(DOMAIN_OBJECTS)
+            self._domain_objects = await self.request(DOMAIN_OBJECTS)
             match self._target_smile:
                 case "smile_v2":
-                    self._modules = await self._request(MODULES)
+                    self._modules = await self.request(MODULES)
                 case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
-                    self._appliances = await self._request(APPLIANCES)
+                    self._appliances = await self.request(APPLIANCES)
 
             self._update_gw_devices()
 
@@ -291,10 +283,10 @@ class SmileLegacyAPI(SmileComm, SmileLegacyData):
         await self.call_request(uri, method="put", data=data)
 
     async def call_request(self, uri: str, **kwargs: Any) -> None:
-        """ConnectionFailedError wrapper for calling _request()."""
+        """ConnectionFailedError wrapper for calling request()."""
         method: str = kwargs["method"]
         data: str | None = kwargs.get("data")
         try:
-            await self._request(uri, method=method, data=data)
+            await self.request(uri, method=method, data=data)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError from exc

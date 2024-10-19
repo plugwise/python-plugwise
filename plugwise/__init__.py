@@ -6,7 +6,6 @@ from __future__ import annotations
 
 from plugwise.constants import (
     DEFAULT_PORT,
-    DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOGGER,
@@ -61,7 +60,6 @@ class Smile(SmileComm):
         self._host = host
         self._passwd = password
         self._port = port
-        self._timeout = timeout
         self._user = username
         self._websession = websession
 
@@ -128,7 +126,7 @@ class Smile(SmileComm):
         self._smile_api = SmileAPI(
             self._host,
             self._passwd,
-            self._timeout,
+            self._request,
             self._websession,
             self._cooling_present,
             self._elga,
@@ -152,7 +150,7 @@ class Smile(SmileComm):
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
             self._passwd,
-            self._timeout,
+            self._request,
             self._websession,
             self._is_thermostat,
             self._on_off_device,
@@ -193,9 +191,6 @@ class Smile(SmileComm):
             self.smile_model_id = gateway.find("vendor_model").text
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
-
-        if not self.smile_legacy:
-            self._timeout = DEFAULT_TIMEOUT
 
         if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
             # Corner case check
