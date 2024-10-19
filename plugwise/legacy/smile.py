@@ -27,6 +27,7 @@ from plugwise.exceptions import ConnectionFailedError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
 
 import aiohttp
+from defusedxml import ElementTree as etree
 from munch import Munch
 
 
@@ -39,7 +40,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self,
         host: str,
         password: str,
-        request,
+        request: etree,
         timeout: int,
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,

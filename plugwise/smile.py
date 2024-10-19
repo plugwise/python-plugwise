@@ -45,7 +45,7 @@ class SmileAPI(SmileData):
         self,
         host: str,
         password: str,
-        request,
+        request: etree,
         timeout: int,
         websession: aiohttp.ClientSession,
         _cooling_present: bool,
