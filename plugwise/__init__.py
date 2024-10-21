@@ -87,7 +87,7 @@ class Smile(SmileComm):
         self.smile_version: str = NONE
         self.smile_zigbee_mac_address: str | None = None
 
-    async def connect(self) -> bool:
+    async def connect(self) -> str:
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
         # Work-around for Stretch fw 2.7.18
@@ -173,7 +173,7 @@ class Smile(SmileComm):
         # Update all endpoints on first connect
         await self._smile_api.full_update_device()
 
-        return True
+        return self.smile_version
 
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
