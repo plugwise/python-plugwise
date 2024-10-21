@@ -346,7 +346,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Connect to the smile
         try:
             version = await smile.connect()
-            assert version != pw_constants.NONE
+            assert version is not None
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,
@@ -429,7 +429,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Connect to the smile
         try:
             version = await smile.connect()
-            assert version != pw_constants.NONE
+            assert version is not None
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,
