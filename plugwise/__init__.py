@@ -31,6 +31,7 @@ from plugwise.smile import SmileAPI
 
 import aiohttp
 from defusedxml import ElementTree as etree
+from packaging.version import Version, parse
 
 
 class Smile(SmileComm):
@@ -75,7 +76,7 @@ class Smile(SmileComm):
         self._target_smile: str = NONE
         self.gateway_id: str = NONE
         self.loc_data: dict[str, ThermoLoc] = {}
-        self.smile_fw_version: str | None = None
+        self.smile_fw_version: Version | None
         self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
@@ -84,7 +85,7 @@ class Smile(SmileComm):
         self.smile_model_id: str | None = None
         self.smile_name: str = NONE
         self.smile_type: str = NONE
-        self.smile_version: str | None = None
+        self.smile_version: Version | None = None
         self.smile_zigbee_mac_address: str | None = None
 
     async def connect(self) -> str | None:
@@ -184,7 +185,7 @@ class Smile(SmileComm):
         if (gateway := result.find("./gateway")) is not None:
             if (v_model := gateway.find("vendor_model")) is not None:
                 model = v_model.text
-            self.smile_fw_version = gateway.find("firmware_version").text
+            self.smile_fw_version = parse(gateway.find("firmware_version").text)
             self.smile_hw_version = gateway.find("hardware_version").text
             self.smile_hostname = gateway.find("hostname").text
             self.smile_mac_address = gateway.find("mac_address").text
@@ -200,7 +201,7 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        version_major: str = self.smile_fw_version.split(".", 1)[0]
+        version_major= str(self.smile_fw_version.major)
         self._target_smile = f"{model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
@@ -267,7 +268,7 @@ class Smile(SmileComm):
             or network is not None
         ):
             system = await self._request(SYSTEM)
-            self.smile_fw_version = system.find("./gateway/firmware").text
+            self.smile_fw_version = parse(system.find("./gateway/firmware").text)
             return_model = system.find("./gateway/product").text
             self.smile_hostname = system.find("./gateway/hostname").text
             # If wlan0 contains data it's active, so eth0 should be checked last
@@ -278,7 +279,7 @@ class Smile(SmileComm):
         # P1 legacy:
         elif dsmrmain is not None:
             status = await self._request(STATUS)
-            self.smile_fw_version = status.find("./system/version").text
+            self.smile_fw_version = parse(status.find("./system/version").text)
             return_model = status.find("./system/product").text
             self.smile_hostname = status.find("./network/hostname").text
             self.smile_mac_address = status.find("./network/mac_address").text
