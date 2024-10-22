@@ -76,7 +76,7 @@ class Smile(SmileComm):
         self._target_smile: str = NONE
         self.gateway_id: str = NONE
         self.loc_data: dict[str, ThermoLoc] = {}
-        self.smile_fw_version: Version | None
+        self.smile_fw_version: Version | None = None
         self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
@@ -88,7 +88,7 @@ class Smile(SmileComm):
         self.smile_version: Version | None = None
         self.smile_zigbee_mac_address: str | None = None
 
-    async def connect(self) -> str | None:
+    async def connect(self) -> Version | None:
         """Connect to Plugwise device and determine its name, type and version."""
         result = await self._request(DOMAIN_OBJECTS)
         # Work-around for Stretch fw 2.7.18

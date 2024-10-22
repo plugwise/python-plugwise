@@ -29,6 +29,7 @@ from plugwise.legacy.data import SmileLegacyData
 
 import aiohttp
 from munch import Munch
+from packaging.version import Version
 
 
 class SmileLegacyAPI(SmileLegacyData):
@@ -48,7 +49,7 @@ class SmileLegacyAPI(SmileLegacyData):
         _stretch_v2: bool,
         _target_smile: str,
         loc_data: dict[str, ThermoLoc],
-        smile_fw_version: str | None,
+        smile_fw_version: Version | None,
         smile_hostname: str,
         smile_hw_version: str | None,
         smile_mac_address: str | None,

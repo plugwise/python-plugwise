@@ -35,6 +35,7 @@ from defusedxml import ElementTree as etree
 
 # Dict as class
 from munch import Munch
+from packaging.version import Version
 
 
 class SmileAPI(SmileData):
@@ -57,7 +58,7 @@ class SmileAPI(SmileData):
         _schedule_old_states: dict[str, dict[str, str]],
         gateway_id: str,
         loc_data: dict[str, ThermoLoc],
-        smile_fw_version: str | None,
+        smile_fw_version: Version | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
         smile_mac_address: str | None,

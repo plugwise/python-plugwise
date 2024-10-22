@@ -2,7 +2,6 @@
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
 import importlib
 import json
-from packaging import version
 
 # Fixture writing
 import logging
@@ -18,6 +17,7 @@ import pytest
 # Testing
 import aiohttp
 from freezegun import freeze_time
+from packaging import version
 
 pw_constants = importlib.import_module("plugwise.constants")
 pw_exceptions = importlib.import_module("plugwise.exceptions")
