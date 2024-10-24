@@ -44,6 +44,7 @@ from plugwise.util import (
 # This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
 from defusedxml import ElementTree as etree
 from munch import Munch
+from packaging.version import Version
 
 
 def etree_to_dict(element: etree) -> dict[str, str]:
@@ -81,7 +82,7 @@ class SmileLegacyHelper(SmileCommon):
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.loc_data: dict[str, ThermoLoc]
-        self.smile_fw_version: str | None
+        self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
@@ -194,7 +195,7 @@ class SmileLegacyHelper(SmileCommon):
         self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
         self._count += 1
         for key, value in {
-            "firmware": self.smile_fw_version,
+            "firmware": str(self.smile_fw_version),
             "location": self._home_location,
             "mac_address": self.smile_mac_address,
             "model": self.smile_model,

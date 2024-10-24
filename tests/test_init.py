@@ -17,6 +17,7 @@ import pytest
 # Testing
 import aiohttp
 from freezegun import freeze_time
+from packaging import version
 
 pw_constants = importlib.import_module("plugwise.constants")
 pw_exceptions = importlib.import_module("plugwise.exceptions")
@@ -344,15 +345,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert smile._timeout == 10
 
         # Connect to the smile
+        version = None
         try:
-            connection_state = await smile.connect()
-            assert connection_state
+            version = await smile.connect()
+            assert version is not None
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
+            assert version is None
             await self.disconnect(server, client)
             raise exception
 
@@ -427,15 +430,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert smile._timeout == 30
 
         # Connect to the smile
+        version = None
         try:
-            connection_state = await smile.connect()
-            assert connection_state
+            version = await smile.connect()
+            assert version is not None
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,
             pw_exceptions.InvalidXMLError,
             pw_exceptions.InvalidAuthentication,
         ) as exception:
+            assert version is None
             await self.disconnect(server, client)
             raise exception
 
@@ -1004,7 +1009,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         if smile_version:
             log_msg = f" # Assert version matching '{smile_version}"
             parent_logger.info(log_msg)
-            assert smile.smile_version == smile_version
+            assert smile.smile_version == version.parse(smile_version)
         log_msg = f" # Assert legacy {smile_legacy}"
         parent_logger.info(log_msg)
         if smile_legacy:

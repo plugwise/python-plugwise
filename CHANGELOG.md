@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.4
+
+- Change connect() function to output the gateway firmware-version.
+
 ## v1.4.3
 
 - Clean up timeout-related, pass _request-function as an argument.
