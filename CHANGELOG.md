@@ -2,7 +2,7 @@
 
 ## v1.4.4
 
-- Change connect() output to gateway firmware version.
+- Change connect() function to output the gateway firmware-version.
 
 ## v1.4.3
 
