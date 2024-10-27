@@ -47,14 +47,13 @@ class Smile(SmileComm):
         password: str,
         websession: aiohttp.ClientSession,
         port: int = DEFAULT_PORT,
-        timeout = DEFAULT_LEGACY_TIMEOUT,
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         self._host = host
         self._password = password
         self._port = port
-        self._timeout = timeout
+        self._timeout = DEFAULT_LEGACY_TIMEOUT
         self._username = username
         self._websession = websession
         super().__init__(
