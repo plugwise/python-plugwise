@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.4.5
+## v1.5.0
 
 - Make timeout an internal parameter.
 
