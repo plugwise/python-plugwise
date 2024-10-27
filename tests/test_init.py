@@ -323,7 +323,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
-                timeout=pw_constants.DEFAULT_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -337,7 +336,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
-            timeout=pw_constants.DEFAULT_TIMEOUT,
             websession=websession,
         )
 
@@ -408,7 +406,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
-                timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -422,7 +419,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
-            timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
             websession=websession,
         )
 
