@@ -100,7 +100,6 @@ class SmileComm:
 
         self._auth = BasicAuth(username, password=password)
         self._endpoint = f"http://{host}:{str(port)}"
-        self._timeout = timeout
 
     async def _request(
         self,
