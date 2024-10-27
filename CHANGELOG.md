@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.5
+
+- Make timeout an internal parameter.
+
 ## v1.4.4
 
 - Change connect() function to output the gateway firmware-version.
