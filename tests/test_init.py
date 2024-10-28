@@ -323,7 +323,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
-                timeout=pw_constants.DEFAULT_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -337,18 +336,18 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
-            timeout=pw_constants.DEFAULT_TIMEOUT,
             websession=websession,
         )
 
         if not timeout:
-            assert smile._timeout == 10
+            assert smile._timeout == 30
 
         # Connect to the smile
         version = None
         try:
             version = await smile.connect()
             assert version is not None
+            assert smile._timeout == 10
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,
@@ -408,7 +407,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 username=pw_constants.DEFAULT_USERNAME,
                 password=test_password,
                 port=server.port,
-                timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
                 websession=None,
             )
             lack_of_websession = False
@@ -422,7 +420,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             username=pw_constants.DEFAULT_USERNAME,
             password=test_password,
             port=server.port,
-            timeout=pw_constants.DEFAULT_LEGACY_TIMEOUT,
             websession=websession,
         )
 
@@ -434,6 +431,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         try:
             version = await smile.connect()
             assert version is not None
+            assert smile._timeout == 30
             return server, smile, client
         except (
             pw_exceptions.ConnectionFailedError,

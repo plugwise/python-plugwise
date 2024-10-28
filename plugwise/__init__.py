@@ -5,7 +5,9 @@ Plugwise backend module for Home Assistant Core.
 from __future__ import annotations
 
 from plugwise.constants import (
+    DEFAULT_LEGACY_TIMEOUT,
     DEFAULT_PORT,
+    DEFAULT_TIMEOUT,
     DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOGGER,
@@ -43,26 +45,25 @@ class Smile(SmileComm):
         self,
         host: str,
         password: str,
-        timeout: int,
         websession: aiohttp.ClientSession,
         port: int = DEFAULT_PORT,
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        super().__init__(
-            host,
-            password,
-            port,
-            timeout,
-            username,
-            websession,
-         )
-
         self._host = host
-        self._passwd = password
+        self._password = password
         self._port = port
-        self._user = username
+        self._timeout = DEFAULT_LEGACY_TIMEOUT
+        self._username = username
         self._websession = websession
+        super().__init__(
+            self._host,
+            self._password,
+            self._port,
+            self._timeout,
+            self._username,
+            self._websession,
+         )
 
         self._cooling_present = False
         self._elga = False
@@ -126,7 +127,7 @@ class Smile(SmileComm):
 
         self._smile_api = SmileAPI(
             self._host,
-            self._passwd,
+            self._password,
             self._request,
             self._websession,
             self._cooling_present,
@@ -147,10 +148,10 @@ class Smile(SmileComm):
             self.smile_name,
             self.smile_type,
             self._port,
-            self._user,
+            self._username,
          ) if not self.smile_legacy else SmileLegacyAPI(
             self._host,
-            self._passwd,
+            self._password,
             self._request,
             self._websession,
             self._is_thermostat,
@@ -168,7 +169,7 @@ class Smile(SmileComm):
             self.smile_type,
             self.smile_zigbee_mac_address,
             self._port,
-            self._user,
+            self._username,
         )
 
         # Update all endpoints on first connect
@@ -211,6 +212,9 @@ class Smile(SmileComm):
                 self._target_smile,
             )
             raise UnsupportedDeviceError
+
+        if not self.smile_legacy:
+            self._timeout = DEFAULT_TIMEOUT
 
         if self._target_smile in ("smile_open_therm_v2", "smile_thermo_v3"):
             LOGGER.error(
