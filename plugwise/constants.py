@@ -552,7 +552,7 @@ class DeviceData(TypedDict, total=False):
     last_used: str | None
     select_schedule: str
 
-    mode: str
+    climate_mode: str
     # Extra for Adam Master Thermostats
     control_state: str | bool
 

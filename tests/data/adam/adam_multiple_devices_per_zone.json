@@ -404,7 +404,7 @@
       "off"
     ],
     "select_schedule": "off",
-    "mclimate_modeode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 15.6,
       "setpoint": 5.5,
