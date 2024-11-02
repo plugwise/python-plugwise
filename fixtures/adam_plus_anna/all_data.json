@@ -71,9 +71,9 @@
         "Weekschema",
         "off"
       ],
+      "climate_mode": "auto",
       "dev_class": "thermostat",
       "location": "009490cc2f674ce6b576863fbb64f867",
-      "mode": "auto",
       "model": "ThermoTouch",
       "model_id": "143.1",
       "name": "Anna",

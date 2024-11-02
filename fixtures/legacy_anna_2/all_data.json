@@ -6,11 +6,11 @@
         "Thermostat schedule",
         "off"
       ],
+      "climate_mode": "heat",
       "dev_class": "thermostat",
       "firmware": "2017-03-13T11:54:58+01:00",
       "hardware": "6539-1301-5002",
       "location": "be81e3f8275b4129852c4d8d550ae2eb",
-      "mode": "heat",
       "model": "ThermoTouch",
       "name": "Anna",
       "preset_modes": [
