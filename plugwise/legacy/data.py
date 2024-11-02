@@ -87,7 +87,7 @@ class SmileLegacyData(SmileLegacyHelper):
             self._count += 2
 
         # Operation modes: auto, heat
-        data["mode"] = "auto"
+        data["climate_mode"] = "auto"
         self._count += 1
         if sel_schedule in (NONE, OFF):
-            data["mode"] = "heat"
+            data["climate_mode"] = "heat"
