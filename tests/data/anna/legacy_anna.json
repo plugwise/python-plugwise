@@ -24,7 +24,7 @@
     },
     "preset_modes": ["away", "vacation", "asleep", "home", "no_frost"],
     "active_preset": "home",
-    "mode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 20.4,
       "illuminance": 151,

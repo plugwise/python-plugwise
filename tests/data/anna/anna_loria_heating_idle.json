@@ -18,7 +18,7 @@
     "active_preset": "home",
     "available_schedules": ["Winter", "Test ", "off"],
     "select_schedule": "Winter",
-    "mode": "auto",
+    "climate_mode": "auto",
     "sensors": {
       "temperature": 22.1,
       "illuminance": 45,

@@ -53,7 +53,7 @@
     "active_preset": "home",
     "available_schedules": ["Standaard", "Thuiswerken", "off"],
     "select_schedule": "off",
-    "mode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 20.6,
       "setpoint": 20.5,

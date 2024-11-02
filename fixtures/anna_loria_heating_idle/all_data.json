@@ -7,11 +7,11 @@
         "Test ",
         "off"
       ],
+      "climate_mode": "auto",
       "dev_class": "thermostat",
       "firmware": "2018-02-08T11:15:53+01:00",
       "hardware": "6539-1301-5002",
       "location": "15da035090b847e7a21f93e08c015ebc",
-      "mode": "auto",
       "model": "ThermoTouch",
       "name": "Anna",
       "preset_modes": [

@@ -29,7 +29,7 @@
     "active_preset": null,
     "available_schedules": ["Thermostat schedule", "off"],
     "select_schedule": "off",
-    "mode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 21.4,
       "illuminance": 19.5,

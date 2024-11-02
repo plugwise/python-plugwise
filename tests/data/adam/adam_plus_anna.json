@@ -78,7 +78,7 @@
     "active_preset": "home",
     "available_schedules": ["Weekschema", "off"],
     "select_schedule": "Weekschema",
-    "mode": "auto",
+    "climate_mode": "auto",
     "sensors": {
       "temperature": 20.5,
       "setpoint": 20.5

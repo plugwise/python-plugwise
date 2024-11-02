@@ -33,7 +33,7 @@
     "active_preset": "home",
     "available_schedules": ["Test", "Normaal", "off"],
     "select_schedule": "Normaal",
-    "mode": "auto",
+    "climate_mode": "auto",
     "sensors": {
       "temperature": 19.1,
       "setpoint": 19,

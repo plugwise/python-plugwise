@@ -54,7 +54,7 @@
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "home",
     "control_state": "off",
-    "mode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 30,
       "setpoint": 13,
@@ -80,7 +80,7 @@
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "no_frost",
     "control_state": "off",
-    "mode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 24.2,
       "setpoint": 13,
@@ -123,7 +123,7 @@
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "home",
     "control_state": "off",
-    "mode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 30,
       "setpoint": 13,
@@ -149,7 +149,7 @@
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
     "active_preset": "home",
     "control_state": "off",
-    "mode": "heat",
+    "climate_mode": "heat",
     "sensors": {
       "temperature": 27.4,
       "setpoint": 9,

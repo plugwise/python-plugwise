@@ -50,7 +50,7 @@ base = json.load(io)
 adam_jip = base.copy()
 
 # Change mode to off for "1346fbd8498d4dbcab7e18d51b771f3d"
-adam_jip["devices"]["1346fbd8498d4dbcab7e18d51b771f3d"]["mode"] = "off"
+adam_jip["devices"]["1346fbd8498d4dbcab7e18d51b771f3d"]["climate_mode"] = "off"
 
 json_writer("m_adam_jip", adam_jip)
 
@@ -85,7 +85,7 @@ m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
 ] = "cooling"
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "cool"
+m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["climate_mode"] = "cool"
 
 # (following diff, now 2954 is removed)
 # Remove device "29542b2b6a6a4169acecc15c72a599b8" from anywhere
@@ -169,7 +169,7 @@ m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
     "control_state"
 ] = "preheating"
 
-m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["mode"] = "heat"
+m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["climate_mode"] = "heat"
 
 # Back at ad48
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"][
