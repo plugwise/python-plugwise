@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Rename mode to climate_mode.
+
 ## v1.5.0
 
 - Make timeout an internal parameter.
