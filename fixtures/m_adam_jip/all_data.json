@@ -6,13 +6,12 @@
       "binary_sensors": {
         "low_battery": false
       },
-      "climate_mode": "heat",
+      "climate_mode": "off",
       "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-27T02:00:00+02:00",
       "hardware": "255",
       "location": "06aecb3d00354375924f50c47af36bd2",
-      "mode": "off",
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Slaapkamer",
