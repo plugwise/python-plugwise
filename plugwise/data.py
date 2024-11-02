@@ -240,16 +240,16 @@ class SmileData(SmileHelper):
             data["select_schedule"] = sel_schedule
             self._count += 2
 
-        # Operation modes: auto, heat, heat_cool, cool and off
-        data["mode"] = "auto"
+        # Set HA climate HVACModes: auto, heat, heat_cool, cool and off
+        data["climate_mode"] = "auto"
         self._count += 1
         if sel_schedule in (NONE, OFF):
-            data["mode"] = "heat"
+            data["climate_mode"] = "heat"
             if self._cooling_present:
-                data["mode"] = "cool" if self.check_reg_mode("cooling") else "heat_cool"
+                data["climate_mode"] = "cool" if self.check_reg_mode("cooling") else "heat_cool"
 
         if self.check_reg_mode("off"):
-            data["mode"] = "off"
+            data["climate_mode"] = "off"
 
         if NONE not in avail_schedules:
             self._get_schedule_states_with_off(
@@ -273,7 +273,7 @@ class SmileData(SmileHelper):
         loc_schedule_states: dict[str, str] = {}
         for schedule in schedules:
             loc_schedule_states[schedule] = "off"
-            if schedule == selected and data["mode"] == "auto":
+            if schedule == selected and data["climate_mode"] == "auto":
                 loc_schedule_states[schedule] = "on"
         self._schedule_old_states[location] = loc_schedule_states
 
