@@ -69,7 +69,7 @@
     "active_preset": "home",
     "available_schedules": ["Thermostat schedule", "off"],
     "select_schedule": "Thermostat schedule",
-    "mode": "auto",
+    "climate_mode": "auto",
     "sensors": {
       "temperature": 20.9,
       "illuminance": 0.5,

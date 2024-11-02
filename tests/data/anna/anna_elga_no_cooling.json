@@ -78,7 +78,7 @@
     "active_preset": "home",
     "available_schedules": ["standaard", "off"],
     "select_schedule": "standaard",
-    "mode": "auto",
+    "climate_mode": "auto",
     "sensors": {
       "setpoint": 20.5,
       "temperature": 19.3,

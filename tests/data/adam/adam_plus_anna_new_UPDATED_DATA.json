@@ -5,7 +5,7 @@
     }
   },
   "ad4838d7d35c4d6ea796ee12ae5aedf8": {
-    "mode": "off"
+    "climate_mode": "off"
   },
   "29542b2b6a6a4169acecc15c72a599b8": {
     "switches": {
@@ -30,7 +30,7 @@
     "binary_sensors": {
       "low_battery": true
     },
-    "mode": "off"
+    "climate_mode": "off"
   },
   "da224107914542988a88561b4452b0f6": {
     "binary_sensors": {

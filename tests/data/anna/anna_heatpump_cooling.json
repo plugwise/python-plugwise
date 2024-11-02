@@ -69,7 +69,7 @@
     "active_preset": "home",
     "available_schedules": ["standaard", "off"],
     "select_schedule": "off",
-    "mode": "heat_cool",
+    "climate_mode": "heat_cool",
     "sensors": {
       "temperature": 22.3,
       "illuminance": 24.5,

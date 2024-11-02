@@ -37,7 +37,7 @@
     },
     "active_preset": "away",
     "select_schedule": "Standaard",
-    "mode": "auto",
+    "climate_mode": "auto",
     "sensors": {
       "temperature": 19.5,
       "setpoint": 19.5,
