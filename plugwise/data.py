@@ -240,7 +240,7 @@ class SmileData(SmileHelper):
             data["select_schedule"] = sel_schedule
             self._count += 2
 
-        # Set HA climate HVACModes: auto, heat, heat_cool, cool and off
+        # Set HA climate HVACMode: auto, heat, heat_cool, cool and off
         data["climate_mode"] = "auto"
         self._count += 1
         if sel_schedule in (NONE, OFF):
