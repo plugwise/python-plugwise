@@ -431,30 +431,28 @@ class SmileSensors(TypedDict, total=False):
     dhw_temperature: float
     domestic_hot_water_setpoint: float
     temperature: float
-    electricity_consumed: float
-    electricity_consumed_interval: float
+    electricity_consumed_interval:int
     electricity_consumed_off_peak_cumulative: float
     electricity_consumed_off_peak_interval: int
     electricity_consumed_off_peak_point: int
     electricity_consumed_peak_cumulative: float
     electricity_consumed_peak_interval: int
     electricity_consumed_peak_point: int
-    electricity_consumed_point: float
-    electricity_phase_one_consumed: float
-    electricity_phase_two_consumed: float
-    electricity_phase_three_consumed: float
-    electricity_phase_one_produced: float
-    electricity_phase_two_produced: float
-    electricity_phase_three_produced: float
-    electricity_produced: float
-    electricity_produced_interval: float
+    electricity_consumed_point: int
+    electricity_phase_one_consumed: int
+    electricity_phase_two_consumed: int
+    electricity_phase_three_consumed: int
+    electricity_phase_one_produced: int
+    electricity_phase_two_produced: int
+    electricity_phase_three_produced: int
+    electricity_produced_interval: int
     electricity_produced_off_peak_cumulative: float
     electricity_produced_off_peak_interval: int
     electricity_produced_off_peak_point: int
     electricity_produced_peak_cumulative: float
     electricity_produced_peak_interval: int
     electricity_produced_peak_point: int
-    electricity_produced_point: float
+    electricity_produced_point: int
     gas_consumed_cumulative: float
     gas_consumed_interval: float
     humidity: float
