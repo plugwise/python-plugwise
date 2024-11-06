@@ -2,6 +2,7 @@
 
 ## Ongoing
 
+- Fix typing of P1 sensors.
 - Rename mode to climate_mode.
 
 ## v1.5.0
