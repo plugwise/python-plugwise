@@ -27,7 +27,7 @@
     "climate_mode": "heat",
     "sensors": {
       "temperature": 20.4,
-      "illuminance": 151,
+      "illuminance": 150.8,
       "setpoint": 20.5
     }
   },
