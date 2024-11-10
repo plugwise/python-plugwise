@@ -115,7 +115,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     if name is not None and "lumi.plug" in name:
         return "Aqara Smart Plug"
 
-    return name  # pragma: no cover
+    return name
 
 
 def common_match_cases(
