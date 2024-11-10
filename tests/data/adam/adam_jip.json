@@ -7,15 +7,15 @@
     "name": "OpenTherm",
     "vendor": "Remeha B.V.",
     "maximum_boiler_temperature": {
-      "setpoint": 90,
-      "lower_bound": 20,
-      "upper_bound": 90,
+      "setpoint": 90.0,
+      "lower_bound": 20.0,
+      "upper_bound": 90.0,
       "resolution": 0.01
     },
     "max_dhw_temperature": {
-      "setpoint": 60,
-      "lower_bound": 40,
-      "upper_bound": 60,
+      "setpoint": 60.0,
+      "lower_bound": 40.0,
+      "upper_bound": 60.0,
       "resolution": 0.01
     },
     "available": true,
@@ -26,7 +26,7 @@
     },
     "sensors": {
       "water_temperature": 37.3,
-      "intended_boiler_temperature": 0,
+      "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
       "return_temperature": 37.1,
       "water_pressure": 1.4
@@ -45,10 +45,10 @@
     "zigbee_mac_address": "ABCD012345670A01",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint": 13,
-      "lower_bound": 0,
-      "upper_bound": 99.9,
-      "resolution": 0.01
+      "lower_bound": 0.0,
+      "setpoint": 13.0,
+      "resolution": 0.01,
+      "upper_bound": 99.9
     },
     "available": true,
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
@@ -56,8 +56,8 @@
     "control_state": "off",
     "climate_mode": "heat",
     "sensors": {
-      "temperature": 30,
-      "setpoint": 13,
+      "temperature": 30.0,
+      "setpoint": 13.0,
       "battery": 80
     }
   },
@@ -71,8 +71,8 @@
     "zigbee_mac_address": "ABCD012345670A03",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint": 13,
-      "lower_bound": 0,
+      "setpoint": 13.0,
+      "lower_bound": 0.0,
       "upper_bound": 99.9,
       "resolution": 0.01
     },
@@ -83,7 +83,7 @@
     "climate_mode": "heat",
     "sensors": {
       "temperature": 24.2,
-      "setpoint": 13,
+      "setpoint": 13.0,
       "battery": 92
     }
   },
@@ -98,8 +98,8 @@
     "vendor": "Plugwise",
     "available": true,
     "sensors": {
-      "temperature": 24,
-      "setpoint": 9,
+      "temperature": 24.0,
+      "setpoint": 9.0,
       "temperature_difference": 1.8,
       "valve_position": 100
     }
@@ -114,8 +114,8 @@
     "zigbee_mac_address": "ABCD012345670A02",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint": 13,
-      "lower_bound": 0,
+      "setpoint": 13.0,
+      "lower_bound": 0.0,
       "upper_bound": 99.9,
       "resolution": 0.01
     },
@@ -125,8 +125,8 @@
     "control_state": "off",
     "climate_mode": "heat",
     "sensors": {
-      "temperature": 30,
-      "setpoint": 13,
+      "temperature": 30.0,
+      "setpoint": 13.0,
       "battery": 79
     }
   },
@@ -140,9 +140,9 @@
     "zigbee_mac_address": "ABCD012345670A08",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint": 9,
-      "lower_bound": 4,
-      "upper_bound": 30,
+      "setpoint": 9.0,
+      "lower_bound": 4.0,
+      "upper_bound": 30.0,
       "resolution": 0.01
     },
     "available": true,
@@ -152,7 +152,7 @@
     "climate_mode": "heat",
     "sensors": {
       "temperature": 27.4,
-      "setpoint": 9,
+      "setpoint": 9.0,
       "battery": 100,
       "humidity": 56.2
     }
@@ -169,7 +169,7 @@
     "available": true,
     "sensors": {
       "temperature": 28.7,
-      "setpoint": 13,
+      "setpoint": 13.0,
       "temperature_difference": 1.9,
       "valve_position": 0
     }
@@ -186,7 +186,7 @@
     "available": true,
     "sensors": {
       "temperature": 24.2,
-      "setpoint": 13,
+      "setpoint": 13.0,
       "temperature_difference": 1.7,
       "valve_position": 0
     }
@@ -224,8 +224,8 @@
     "available": true,
     "sensors": {
       "temperature": 28.8,
-      "setpoint": 13,
-      "temperature_difference": 2,
+      "setpoint": 13.0,
+      "temperature_difference": 2.0,
       "valve_position": 0
     }
   },
@@ -239,7 +239,7 @@
     "vendor": "LUMI",
     "available": true,
     "sensors": {
-      "electricity_consumed_interval": 0
+      "electricity_consumed_interval": 0.0
     },
     "switches": {
       "relay": false,
