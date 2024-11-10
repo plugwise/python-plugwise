@@ -267,7 +267,7 @@ class SmileHelper(SmileCommon):
         self._all_locations()
 
         for appliance in self._domain_objects.findall("./appliance"):
-            appl = Munch()
+            appl: Munch | None = Munch()
             appl.pwclass = appliance.find("type").text
             # Don't collect data for the OpenThermGateway appliance
             if appl.pwclass == "open_therm_gateway":
@@ -310,14 +310,7 @@ class SmileHelper(SmileCommon):
             appl.vendor_name = None
 
             # Collect appliance info
-            appl = self._appliance_info_finder(appl, appliance)
-
-            # Skip orphaned heater_central (Core Issue #104433)
-            if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
-                continue
-
-            # Skip orphaned/removed plug-type
-            if "_plug" in appl.pwclass and appl.zigbee_mac is None:
+            if (appl := self._appliance_info_finder(appl, appliance)) is None:
                 continue
 
             # P1: for gateway and smartmeter switch device_id - part 1
@@ -381,7 +374,7 @@ class SmileHelper(SmileCommon):
 
         self._create_gw_devices(appl)
 
-    def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
+    def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch | None:
         """Collect info for all appliances found."""
         match appl.pwclass:
             case "gateway":
@@ -394,6 +387,9 @@ class SmileHelper(SmileCommon):
                 # Collect heater_central device info
                 self._appl_heater_central_info(appl, appliance, False)  # False means non-legacy device
                 self._appl_dhw_mode_info(appl, appliance)
+                # Skip orphaned heater_central (Core Issue #104433)
+                if appl.dev_id != self._heater_id:
+                    return None
                 return appl
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
@@ -402,7 +398,7 @@ class SmileHelper(SmileCommon):
                 module_data = self._get_module_data(appliance, locator, mod_type)
                 # A plug without module-data is orphaned/ no present
                 if not module_data["contents"]:
-                    return appl
+                    return None
 
                 appl.firmware = module_data["firmware_version"]
                 appl.hardware = module_data["hardware_version"]
