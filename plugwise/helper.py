@@ -716,16 +716,18 @@ class SmileHelper(SmileCommon):
         Collect the availability-status for wireless connected devices.
         """
         if self.smile(ADAM):
-            # Collect for Plugs
+            # Try collecting for a Plug
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-
-            if module_data["reachable"] is None:
-                # Collect for wireless thermostats
+            if not module_data["contents"]:
+                # Try collecting for a wireless thermostat
                 locator = "./logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
                 module_data = self._get_module_data(appliance, locator, mod_type)
+                if not module_data["contents"]:
+                    LOGGER.error("No module data found for Plug or wireless thermostat")  # pragma: no cover
+                    return None  # pragma: no cover
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
