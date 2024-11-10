@@ -359,6 +359,9 @@ class SmileHelper(SmileCommon):
         locator = "./logs/point_log/electricity_point_meter"
         mod_type = "electricity_point_meter"
         module_data = self._get_module_data(location, locator, mod_type)
+        if not module_data["contents"]:
+            LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
+            return None  # pragma: no cover
 
         appl.dev_id = self.gateway_id
         appl.firmware = module_data["firmware_version"]
@@ -717,6 +720,7 @@ class SmileHelper(SmileCommon):
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
+
             if module_data["reachable"] is None:
                 # Collect for wireless thermostats
                 locator = "./logs/point_log[type='thermostat']/thermostat"
