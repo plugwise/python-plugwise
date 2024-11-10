@@ -269,6 +269,10 @@ class SmileHelper(SmileCommon):
         for appliance in self._domain_objects.findall("./appliance"):
             appl = Munch()
             appl.pwclass = appliance.find("type").text
+            # Don't collect data for the OpenThermGateway appliance
+            if appl.pwclass == "open_therm_gateway":
+                continue
+
             # Extend device_class name of Plugs (Plugwise and Aqara) - Pw-Beta Issue #739
             description = appliance.find("description").text
             if description is not None and (
@@ -291,6 +295,10 @@ class SmileHelper(SmileCommon):
             elif appl.pwclass not in THERMOSTAT_CLASSES:
                 appl.location = self._home_location
 
+            # Don't show orphaned thermostat-types
+            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
+                continue
+
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = None
@@ -301,23 +309,14 @@ class SmileHelper(SmileCommon):
             appl.zigbee_mac = None
             appl.vendor_name = None
 
-            # Determine class for this appliance
-            # Skip on heater_central when no active device present
+            # Collect appliance info, skip orphaned/removed devices
             if not (appl := self._appliance_info_finder(appl, appliance)):
-                continue
-
-            # Skip orphaned heater_central (Core Issue #104433)
-            if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
                 continue
 
             # P1: for gateway and smartmeter switch device_id - part 1
             # This is done to avoid breakage in HA Core
             if appl.pwclass == "gateway" and self.smile_type == "power":
                 appl.dev_id = appl.location
-
-            # Don't show orphaned thermostat-types or the OpenTherm Gateway.
-            if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
-                continue
 
             self._create_gw_devices(appl)
 
@@ -354,23 +353,32 @@ class SmileHelper(SmileCommon):
             self.loc_data[loc.loc_id] = {"name": loc.name}
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
-        """Collect P1 DSMR Smartmeter info."""
+        """Collect P1 DSMR SmartMeter info."""
         loc_id = next(iter(self.loc_data.keys()))
+        location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        locator = "./logs/point_log/electricity_point_meter"
+        mod_type = "electricity_point_meter"
+        module_data = self._get_module_data(location, locator, mod_type)
+        if not module_data["contents"]:
+            LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
+            return None  # pragma: no cover
+
         appl.dev_id = self.gateway_id
+        appl.firmware = module_data["firmware_version"]
+        appl.hardware = module_data["hardware_version"]
         appl.location = loc_id
         appl.mac = None
-        appl.model = None
-        appl.model_id = None
+        appl.model = module_data["vendor_model"]
+        appl.model_id = None  # don't use model_id for SmartMeter
         appl.name = "P1"
         appl.pwclass = "smartmeter"
+        appl.vendor_name = module_data["vendor_name"]
         appl.zigbee_mac = None
-        location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
-        appl = self._energy_device_info_finder(appl, location)
 
         self._create_gw_devices(appl)
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
-        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
+        """Collect info for all appliances found."""
         match appl.pwclass:
             case "gateway":
                 # Collect gateway device info
@@ -382,45 +390,28 @@ class SmileHelper(SmileCommon):
                 # Collect heater_central device info
                 self._appl_heater_central_info(appl, appliance, False)  # False means non-legacy device
                 self._appl_dhw_mode_info(appl, appliance)
+                # Skip orphaned heater_central (Core Issue #104433)
+                if appl.dev_id != self._heater_id:
+                    return Munch()
                 return appl
-            case _:
-                # Collect info from power-related devices (Plug, Aqara Smart Plug)
-                return self._energy_device_info_finder(appl, appliance)
+            case _ as s if s.endswith("_plug"):
+                # Collect info from plug-types (Plug, Aqara Smart Plug)
+                locator = "./logs/interval_log/electricity_interval_meter"
+                mod_type = "electricity_interval_meter"
+                module_data = self._get_module_data(appliance, locator, mod_type)
+                # A plug without module-data is orphaned/ no present
+                if not module_data["contents"]:
+                    return Munch()
 
-    def _energy_device_info_finder(self, appl: Munch, appliance: etree) -> Munch:
-        """Helper-function for _appliance_info_finder().
-
-        Collect energy device info (Smartmeter): firmware, model and vendor name.
-        """
-        if self.smile_type == "power":
-            locator = "./logs/point_log/electricity_point_meter"
-            mod_type = "electricity_point_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            appl.hardware = module_data["hardware_version"]
-            appl.model = module_data["vendor_model"]  # don't use model_id for Smartmeter
-            appl.vendor_name = module_data["vendor_name"]
-            appl.firmware = module_data["firmware_version"]
-
-            return appl
-
-        if self.smile(ADAM):
-            locator = "./logs/interval_log/electricity_interval_meter"
-            mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
-            # Filter appliance without zigbee_mac, it's an orphaned device
-            appl.zigbee_mac = module_data["zigbee_mac_address"]
-            if appl.zigbee_mac is None:
-                return None
-
-            appl.vendor_name = module_data["vendor_name"]
-            appl.model_id = module_data["vendor_model"]
-            appl.model = check_model(appl.model_id, appl.vendor_name)
-            appl.hardware = module_data["hardware_version"]
-            appl.firmware = module_data["firmware_version"]
-
-            return appl
-
-        return appl  # pragma: no cover
+                appl.firmware = module_data["firmware_version"]
+                appl.hardware = module_data["hardware_version"]
+                appl.model_id = module_data["vendor_model"]
+                appl.vendor_name = module_data["vendor_name"]
+                appl.model = check_model(appl.model_id, appl.vendor_name)
+                appl.zigbee_mac = module_data["zigbee_mac_address"]
+                return appl
+            case _:  # pragma: no cover
+                return appl
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder()."""
@@ -725,15 +716,18 @@ class SmileHelper(SmileCommon):
         Collect the availability-status for wireless connected devices.
         """
         if self.smile(ADAM):
-            # Collect for Plugs
+            # Try collecting for a Plug
             locator = "./logs/interval_log/electricity_interval_meter"
             mod_type = "electricity_interval_meter"
             module_data = self._get_module_data(appliance, locator, mod_type)
-            if module_data["reachable"] is None:
-                # Collect for wireless thermostats
+            if not module_data["contents"]:
+                # Try collecting for a wireless thermostat
                 locator = "./logs/point_log[type='thermostat']/thermostat"
                 mod_type = "thermostat"
                 module_data = self._get_module_data(appliance, locator, mod_type)
+                if not module_data["contents"]:
+                    LOGGER.error("No module data found for Plug or wireless thermostat")  # pragma: no cover
+                    return None  # pragma: no cover
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
