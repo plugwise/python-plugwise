@@ -431,6 +431,7 @@ class SmileSensors(TypedDict, total=False):
     dhw_temperature: float
     domestic_hot_water_setpoint: float
     temperature: float
+    electricity_consumed: int
     electricity_consumed_interval:int
     electricity_consumed_off_peak_cumulative: float
     electricity_consumed_off_peak_interval: int
@@ -445,6 +446,7 @@ class SmileSensors(TypedDict, total=False):
     electricity_phase_one_produced: int
     electricity_phase_two_produced: int
     electricity_phase_three_produced: int
+    electricity_produced: int
     electricity_produced_interval: int
     electricity_produced_off_peak_cumulative: float
     electricity_produced_off_peak_interval: int
