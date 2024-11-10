@@ -167,8 +167,8 @@
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
     "select_schedule": "off",
     "sensors": {
-      "setpoint": 18,
-      "temperature": 22
+      "setpoint": 18.0,
+      "temperature": 22.0
     },
     "thermostat": {
       "lower_bound": 0.0,
