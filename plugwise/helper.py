@@ -360,7 +360,7 @@ class SmileHelper(SmileCommon):
             self.loc_data[loc.loc_id] = {"name": loc.name}
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
-        """Collect P1 DSMR Smartmeter info."""
+        """Collect P1 DSMR SmartMeter info."""
         loc_id = next(iter(self.loc_data.keys()))
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
         locator = "./logs/point_log/electricity_point_meter"
@@ -372,8 +372,8 @@ class SmileHelper(SmileCommon):
         appl.hardware = module_data["hardware_version"]
         appl.location = loc_id
         appl.mac = None
-        appl.model = module_data["vendor_model"]  # don't use model_id for Smartmeter
-        appl.model_id = None
+        appl.model = module_data["vendor_model"]
+        appl.model_id = None  # don't use model_id for SmartMeter
         appl.name = "P1"
         appl.pwclass = "smartmeter"
         appl.vendor_name = module_data["vendor_name"]
@@ -382,7 +382,7 @@ class SmileHelper(SmileCommon):
         self._create_gw_devices(appl)
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
-        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
+        """Collect info for all appliances found."""
         match appl.pwclass:
             case "gateway":
                 # Collect gateway device info
