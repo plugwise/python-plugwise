@@ -425,7 +425,7 @@ class SmileBinarySensors(TypedDict, total=False):
 class SmileSensors(TypedDict, total=False):
     """Smile Sensors class."""
 
-    battery: float
+    battery: int
     cooling_activation_outdoor_temperature: float
     cooling_deactivation_threshold: float
     dhw_temperature: float
@@ -457,10 +457,10 @@ class SmileSensors(TypedDict, total=False):
     electricity_produced_point: float
     gas_consumed_cumulative: float
     gas_consumed_interval: float
-    humidity: float
+    humidity: int
     illuminance: float
     intended_boiler_temperature: float
-    modulation_level: float
+    modulation_level: int
     net_electricity_cumulative: float
     net_electricity_point: float
     outdoor_air_temperature: float
@@ -470,7 +470,7 @@ class SmileSensors(TypedDict, total=False):
     setpoint_high: float
     setpoint_low: float
     temperature_difference: float
-    valve_position: float
+    valve_position: int
     voltage_phase_one: float
     voltage_phase_two: float
     voltage_phase_three: float
