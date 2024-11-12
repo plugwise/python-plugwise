@@ -123,7 +123,7 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
 DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
-    "humidity": UOM(PERCENTAGE),  # Specific for a Jip
+    "humidity": UOM(NONE),  # Specific for a Jip
     "illuminance": UOM(UNIT_LUMEN),  # Specific for an Anna
     "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
     "thermostat": DATA("setpoint", TEMP_CELSIUS),  # HA Core thermostat setpoint
@@ -457,7 +457,7 @@ class SmileSensors(TypedDict, total=False):
     electricity_produced_point: float
     gas_consumed_cumulative: float
     gas_consumed_interval: float
-    humidity: int
+    humidity: float
     illuminance: float
     intended_boiler_temperature: float
     modulation_level: int
