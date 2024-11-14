@@ -799,7 +799,6 @@ class SmileHelper(SmileCommon):
         the result to update the device_class of secondary thermostats.
         """
         self._thermo_locs = self._match_locations()
-        LOGGER.debug("HOI 1 thermo_locs: %s", self._thermo_locs)
 
         thermo_matching: dict[str, int] = {
             "thermostat": 2,
@@ -813,16 +812,16 @@ class SmileHelper(SmileCommon):
                 self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
 
         for loc_id, loc_data in list(self._thermo_locs.items()):
-            if loc_data["primary_prio"] == 0:
-                self._thermo_locs.pop(loc_id)
-
-        LOGGER.debug("HOI 2 thermo_locs: %s", self._thermo_locs)
-        # Update secondary thermostat class where needed
-        for dev_id, device in self.gw_devices.items():
-            if (loc_id := device["location"]) in self._thermo_locs:
-                tl_loc_id = self._thermo_locs[loc_id]
-                if "secondary" in tl_loc_id and dev_id in tl_loc_id["secondary"]:
-                    device["dev_class"] = "thermo_sensor"
+            if loc_data["primary_prio"] != 0:
+                self.gw_devices.update(
+                    {
+                        loc_id: {
+                            "dev_class": "climate",
+                            "name": loc_data["name"],
+                            "devices": loc_data["primary"]
+                        }
+                    }
+                )
 
         # All thermostat appliances can keep their device_class but must not become climate-entities in HA.
         # For each _thermo_loc a special climate-device must be created, with setpoint and temperature taken from the thermostat appliance with the lowest reported temperature.
@@ -865,8 +864,6 @@ class SmileHelper(SmileCommon):
             if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
                 # Demote former primary
                 if (tl_primary:= self._thermo_locs[loc_id]["primary"]):
-                    LOGGER.debug("HOI 3 tl_primary: %s", tl_primary)
-                    LOGGER.debug("HOI 4 secondary: %s", self._thermo_locs[loc_id]["secondary"])
                     self._thermo_locs[loc_id]["secondary"].update(tl_primary)
 
                 # Crown primary
