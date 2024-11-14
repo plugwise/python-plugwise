@@ -9,8 +9,8 @@
     "zigbee_mac_address": "ABCD012345670A06",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint": 13,
-      "lower_bound": 0,
+      "setpoint": 13.0,
+      "lower_bound": 0.0,
       "upper_bound": 99.9,
       "resolution": 0.01
     },
@@ -29,7 +29,7 @@
     "climate_mode": "heat",
     "sensors": {
       "temperature": 16.5,
-      "setpoint": 13,
+      "setpoint": 13.0,
       "battery": 67
     }
   },
@@ -62,7 +62,7 @@
     "available": true,
     "sensors": {
       "temperature": 17.1,
-      "setpoint": 13,
+      "setpoint": 13.0,
       "battery": 62,
       "temperature_difference": -0.1,
       "valve_position": 0
@@ -79,7 +79,7 @@
     "vendor": "Plugwise",
     "thermostat": {
       "setpoint": 21.5,
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "upper_bound": 99.9,
       "resolution": 0.01
     },
@@ -132,7 +132,7 @@
     "available": true,
     "sensors": {
       "temperature": 16.9,
-      "setpoint": 16,
+      "setpoint": 16.0,
       "battery": 62,
       "temperature_difference": 0.1,
       "valve_position": 0
@@ -150,8 +150,8 @@
     "sensors": {
       "electricity_consumed": 80.1,
       "electricity_consumed_interval": 12.7,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,
@@ -170,8 +170,8 @@
     "sensors": {
       "electricity_consumed": 35.8,
       "electricity_consumed_interval": 5.85,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true
@@ -186,8 +186,8 @@
       "heating_state": true
     },
     "sensors": {
-      "water_temperature": 70,
-      "intended_boiler_temperature": 70,
+      "water_temperature": 70.0,
+      "intended_boiler_temperature": 70.0,
       "modulation_level": 1
     }
   },
@@ -203,8 +203,8 @@
     "sensors": {
       "electricity_consumed": 16.5,
       "electricity_consumed_interval": 0.29,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,
@@ -222,9 +222,9 @@
     "available": true,
     "sensors": {
       "electricity_consumed": 8.5,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,
@@ -241,10 +241,10 @@
     "vendor": "Plugwise",
     "available": true,
     "sensors": {
-      "electricity_consumed": 34,
+      "electricity_consumed": 34.0,
       "electricity_consumed_interval": 8.65,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,
@@ -262,9 +262,9 @@
     "available": true,
     "sensors": {
       "electricity_consumed": 12.5,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,
@@ -281,8 +281,8 @@
     "zigbee_mac_address": "ABCD012345670A03",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint": 16,
-      "lower_bound": 0,
+      "setpoint": 16.0,
+      "lower_bound": 0.0,
       "upper_bound": 99.9,
       "resolution": 0.01
     },
@@ -301,7 +301,7 @@
     "climate_mode": "auto",
     "sensors": {
       "temperature": 17.1,
-      "setpoint": 16,
+      "setpoint": 16.0,
       "battery": 37
     }
   },
@@ -317,7 +317,7 @@
     "available": true,
     "sensors": {
       "temperature": 19.1,
-      "setpoint": 14,
+      "setpoint": 14.0,
       "battery": 51,
       "temperature_difference": -0.3,
       "valve_position": 0
@@ -333,8 +333,8 @@
     "zigbee_mac_address": "ABCD012345670A08",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint": 14,
-      "lower_bound": 0,
+      "setpoint": 14.0,
+      "lower_bound": 0.0,
       "upper_bound": 99.9,
       "resolution": 0.01
     },
@@ -353,7 +353,7 @@
     "climate_mode": "auto",
     "sensors": {
       "temperature": 18.8,
-      "setpoint": 14,
+      "setpoint": 14.0,
       "battery": 92
     }
   },
@@ -369,8 +369,8 @@
     "sensors": {
       "electricity_consumed": 12.2,
       "electricity_consumed_interval": 2.8,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,
@@ -388,8 +388,8 @@
     "vendor": "Plugwise",
     "thermostat": {
       "setpoint": 5.5,
-      "lower_bound": 0,
-      "upper_bound": 100,
+      "lower_bound": 0.0,
+      "upper_bound": 100.0,
       "resolution": 0.01
     },
     "available": true,

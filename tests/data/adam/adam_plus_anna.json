@@ -5,10 +5,10 @@
     "model": "Generic heater",
     "name": "OpenTherm",
     "maximum_boiler_temperature": {
-      "setpoint": 80,
-      "lower_bound": 0,
-      "upper_bound": 100,
-      "resolution": 1
+      "setpoint": 80.0,
+      "lower_bound": 0.0,
+      "upper_bound": 100.0,
+      "resolution": 1.0
     },
     "available": false,
     "binary_sensors": {
@@ -17,8 +17,8 @@
       "flame_state": false
     },
     "sensors": {
-      "water_temperature": 48,
-      "intended_boiler_temperature": 0
+      "water_temperature": 48.0,
+      "intended_boiler_temperature": 0.0
     },
     "switches": {
       "dhw_cm_switch": false
@@ -35,9 +35,9 @@
     "available": true,
     "sensors": {
       "electricity_consumed": 10.3,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,
@@ -70,8 +70,8 @@
     "vendor": "Plugwise",
     "thermostat": {
       "setpoint": 20.5,
-      "lower_bound": 1,
-      "upper_bound": 35,
+      "lower_bound": 1.0,
+      "upper_bound": 35.0,
       "resolution": 0.01
     },
     "preset_modes": ["home", "asleep", "away", "vacation", "no_frost"],
@@ -95,8 +95,8 @@
     "sensors": {
       "electricity_consumed": 80.5,
       "electricity_consumed_interval": 7.03,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,

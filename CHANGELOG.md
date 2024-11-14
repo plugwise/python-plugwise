@@ -1,8 +1,8 @@
 # Changelog
 
-## Ongoing
+## v1.5.1
 
-- Fix typing of P1 sensors, energy-device-related improvements.
+- Fix typing and rounding of P1 and thermostat sensors, energy-device-related code improvements.
 - Rename mode to climate_mode.
 
 ## v1.5.0

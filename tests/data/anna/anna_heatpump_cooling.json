@@ -12,7 +12,7 @@
       "plugwise_notification": false
     },
     "sensors": {
-      "outdoor_temperature": 22
+      "outdoor_temperature": 22.0
     }
   },
   "1cbf783bb11e4a7c8a6843dee3a86927": {
@@ -22,10 +22,10 @@
     "name": "OpenTherm",
     "vendor": "Techneco",
     "maximum_boiler_temperature": {
-      "setpoint": 60,
-      "lower_bound": 0,
-      "upper_bound": 100,
-      "resolution": 1
+      "setpoint": 60.0,
+      "lower_bound": 0.0,
+      "upper_bound": 100.0,
+      "resolution": 1.0
     },
     "available": true,
     "binary_sensors": {
@@ -39,12 +39,12 @@
     },
     "sensors": {
       "water_temperature": 24.7,
-      "domestic_hot_water_setpoint": 60,
-      "intended_boiler_temperature": 0,
+      "domestic_hot_water_setpoint": 60.0,
+      "intended_boiler_temperature": 0.0,
       "modulation_level": 40,
       "return_temperature": 23.8,
       "water_pressure": 1.61,
-      "outdoor_air_temperature": 22
+      "outdoor_air_temperature": 22.0
     },
     "switches": {
       "dhw_cm_switch": false
@@ -59,10 +59,10 @@
     "name": "Anna",
     "vendor": "Plugwise",
     "thermostat": {
-      "setpoint_low": 4,
-      "setpoint_high": 22,
-      "lower_bound": 4,
-      "upper_bound": 30,
+      "setpoint_low": 4.0,
+      "setpoint_high": 22.0,
+      "lower_bound": 4.0,
+      "upper_bound": 30.0,
       "resolution": 0.1
     },
     "preset_modes": ["no_frost", "home", "away", "asleep", "vacation"],
@@ -73,10 +73,10 @@
     "sensors": {
       "temperature": 22.3,
       "illuminance": 24.5,
-      "cooling_activation_outdoor_temperature": 21,
-      "cooling_deactivation_threshold": 6,
-      "setpoint_low": 4,
-      "setpoint_high": 22
+      "cooling_activation_outdoor_temperature": 21.0,
+      "cooling_deactivation_threshold": 6.0,
+      "setpoint_low": 4.0,
+      "setpoint_high": 22.0
     }
   }
 }

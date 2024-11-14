@@ -20,8 +20,8 @@
     "vendor": "Plugwise",
     "sensors": {
       "electricity_consumed": 1.19,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0
     },
     "switches": {
       "relay": true,
@@ -40,7 +40,7 @@
     "sensors": {
       "electricity_consumed": 50.5,
       "electricity_consumed_interval": 0.08,
-      "electricity_produced": 0
+      "electricity_produced": 0.0
     },
     "switches": {
       "relay": true,
@@ -57,9 +57,9 @@
     "zigbee_mac_address": "ABCD012345670A02",
     "vendor": "Plugwise",
     "sensors": {
-      "electricity_consumed": 0,
+      "electricity_consumed": 0.0,
       "electricity_consumed_interval": 0.71,
-      "electricity_produced": 0
+      "electricity_produced": 0.0
     },
     "switches": {
       "relay": true,
@@ -76,9 +76,9 @@
     "zigbee_mac_address": "ABCD012345670A04",
     "vendor": "Plugwise",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0
     },
     "switches": {
       "relay": true,
@@ -95,9 +95,9 @@
     "zigbee_mac_address": "ABCD012345670A01",
     "vendor": "Plugwise",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0
     },
     "switches": {
       "relay": true,

@@ -1,15 +1,15 @@
 {
   "cd0e6156b1f04d5f952349ffbe397481": {
     "maximum_boiler_temperature": {
-      "setpoint": 69,
-      "lower_bound": 0,
-      "upper_bound": 100,
-      "resolution": 1
+      "setpoint": 69.0,
+      "lower_bound": 0.0,
+      "upper_bound": 100.0,
+      "resolution": 1.0
     },
     "max_dhw_temperature": {
-      "setpoint": 59,
-      "lower_bound": 30,
-      "upper_bound": 60,
+      "setpoint": 59.0,
+      "lower_bound": 30.0,
+      "upper_bound": 60.0,
       "resolution": 0.01
     },
     "binary_sensors": {
@@ -18,10 +18,10 @@
       "flame_state": false
     },
     "sensors": {
-      "water_temperature": 51,
-      "intended_boiler_temperature": 0,
+      "water_temperature": 51.0,
+      "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
-      "return_temperature": 41,
+      "return_temperature": 41.0,
       "water_pressure": 2.1
     },
     "switches": {
@@ -31,8 +31,8 @@
   "01b85360fdd243d0aaad4d6ac2a5ba7e": {
     "thermostat": {
       "setpoint": 19.5,
-      "lower_bound": 4,
-      "upper_bound": 30,
+      "lower_bound": 4.0,
+      "upper_bound": 30.0,
       "resolution": 0.1
     },
     "active_preset": "away",

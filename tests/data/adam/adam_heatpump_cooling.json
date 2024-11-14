@@ -10,27 +10,27 @@
     "dev_class": "heater_central",
     "location": "eedadcb297564f1483faa509179aebed",
     "max_dhw_temperature": {
-      "lower_bound": 40,
+      "lower_bound": 40.0,
       "resolution": 0.01,
-      "setpoint": 60,
-      "upper_bound": 65
+      "setpoint": 60.0,
+      "upper_bound": 65.0
     },
     "maximum_boiler_temperature": {
-      "lower_bound": 7,
+      "lower_bound": 7.0,
       "resolution": 0.01,
-      "setpoint": 35,
-      "upper_bound": 50
+      "setpoint": 35.0,
+      "upper_bound": 50.0
     },
     "model": "Generic heater/cooler",
     "model_id": "17.1",
     "name": "OpenTherm",
     "sensors": {
       "dhw_temperature": 63.5,
-      "intended_boiler_temperature": 0,
-      "modulation_level": 0,
+      "intended_boiler_temperature": 0.0,
+      "modulation_level": 0.0,
       "outdoor_air_temperature": 13.5,
       "return_temperature": 24.9,
-      "water_pressure": 2,
+      "water_pressure": 2.0,
       "water_temperature": 24.5
     },
     "switches": {
@@ -59,13 +59,13 @@
     "select_schedule": "off",
     "sensors": {
       "battery": 55,
-      "setpoint": 18,
+      "setpoint": 18.0,
       "temperature": 18.8
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
-      "setpoint": 18,
+      "setpoint": 18.0,
       "upper_bound": 99.9
     },
     "vendor": "Plugwise",
@@ -79,10 +79,10 @@
     "model": "Plug",
     "name": "Smart Plug DB",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -99,9 +99,9 @@
     "name": "Smart Plug KK",
     "sensors": {
       "electricity_consumed": 2.13,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true
@@ -117,10 +117,10 @@
     "model": "Plug",
     "name": "Smart Plug SJ",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -136,10 +136,10 @@
     "model": "Plug",
     "name": "Smart Plug WK",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -167,13 +167,13 @@
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
     "select_schedule": "off",
     "sensors": {
-      "setpoint": 18,
-      "temperature": 22
+      "setpoint": 18.0,
+      "temperature": 22.0
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
-      "setpoint": 18,
+      "setpoint": 18.0,
       "upper_bound": 99.9
     },
     "vendor": "Plugwise",
@@ -187,10 +187,10 @@
     "model": "Plug",
     "name": "Smart Plug SQ",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -245,13 +245,13 @@
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
     "select_schedule": "off",
     "sensors": {
-      "setpoint": 18,
-      "temperature": 20
+      "setpoint": 18.0,
+      "temperature": 20.0
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
-      "setpoint": 18,
+      "setpoint": 18.0,
       "upper_bound": 99.9
     },
     "vendor": "Plugwise",
@@ -265,10 +265,10 @@
     "model": "Plug",
     "name": "Smart Plug BK",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -284,10 +284,10 @@
     "model": "Plug",
     "name": "Smart Plug BK2",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -303,10 +303,10 @@
     "model": "Plug",
     "name": "Smart Plug JM",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -324,8 +324,8 @@
     "sensors": {
       "electricity_consumed": 3.13,
       "electricity_consumed_interval": 0.77,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -341,10 +341,10 @@
     "model": "Plug",
     "name": "Smart Plug BK1",
     "sensors": {
-      "electricity_consumed": 0,
-      "electricity_consumed_interval": 0,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_consumed": 0.0,
+      "electricity_consumed_interval": 0.0,
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": false
@@ -376,7 +376,7 @@
       "temperature": 21.4
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 18.5,
       "upper_bound": 99.9
@@ -404,13 +404,13 @@
     "preset_modes": ["no_frost", "vacation", "away", "home", "asleep"],
     "select_schedule": "off",
     "sensors": {
-      "setpoint": 17,
+      "setpoint": 17.0,
       "temperature": 20.7
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
-      "setpoint": 17,
+      "setpoint": 17.0,
       "upper_bound": 99.9
     },
     "vendor": "Plugwise",
@@ -437,10 +437,10 @@
       "temperature": 22.5
     },
     "thermostat": {
-      "lower_bound": 1,
+      "lower_bound": 1.0,
       "resolution": 0.01,
       "setpoint": 21.5,
-      "upper_bound": 35
+      "upper_bound": 35.0
     },
     "vendor": "Plugwise"
   },
@@ -468,7 +468,7 @@
       "temperature": 22.6
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 20.5,
       "upper_bound": 99.9
@@ -501,7 +501,7 @@
       "temperature": 22.5
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 21.5,
       "upper_bound": 99.9
@@ -533,7 +533,7 @@
       "temperature": 21.5
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 20.5,
       "upper_bound": 99.9
@@ -565,7 +565,7 @@
       "temperature": 21.9
     },
     "thermostat": {
-      "lower_bound": 0,
+      "lower_bound": 0.0,
       "resolution": 0.01,
       "setpoint": 20.5,
       "upper_bound": 99.9

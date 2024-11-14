@@ -11,8 +11,8 @@
     "sensors": {
       "electricity_consumed": 13.3,
       "electricity_consumed_interval": 7.77,
-      "electricity_produced": 0,
-      "electricity_produced_interval": 0
+      "electricity_produced": 0.0,
+      "electricity_produced_interval": 0.0
     },
     "switches": {
       "relay": true,

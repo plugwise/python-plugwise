@@ -9,9 +9,9 @@
     "vendor": "Plugwise",
     "thermostat": {
       "setpoint_low": 20.5,
-      "setpoint_high": 30,
-      "lower_bound": 4,
-      "upper_bound": 30,
+      "setpoint_high": 30.0,
+      "lower_bound": 4.0,
+      "upper_bound": 30.0,
       "resolution": 0.1
     },
     "preset_modes": ["away", "vacation", "no_frost", "home", "asleep"],
@@ -21,9 +21,9 @@
     "climate_mode": "auto",
     "sensors": {
       "temperature": 22.1,
-      "illuminance": 45,
+      "illuminance": 45.0,
       "setpoint_low": 20.5,
-      "setpoint_high": 30
+      "setpoint_high": 30.0
     }
   },
   "bfb5ee0a88e14e5f97bfa725a760cc49": {
@@ -35,15 +35,15 @@
     "vendor": "Atlantic",
     "select_dhw_mode": "auto",
     "maximum_boiler_temperature": {
-      "setpoint": 40,
-      "lower_bound": 25,
-      "upper_bound": 45,
+      "setpoint": 40.0,
+      "lower_bound": 25.0,
+      "upper_bound": 45.0,
       "resolution": 0.01
     },
     "max_dhw_temperature": {
-      "setpoint": 53,
-      "lower_bound": 35,
-      "upper_bound": 60,
+      "setpoint": 53.0,
+      "lower_bound": 35.0,
+      "upper_bound": 60.0,
       "resolution": 0.01
     },
     "dhw_modes": ["off", "auto", "boost", "eco", "comfort"],
@@ -58,7 +58,7 @@
     "sensors": {
       "water_temperature": 25.3,
       "dhw_temperature": 52.9,
-      "intended_boiler_temperature": 0,
+      "intended_boiler_temperature": 0.0,
       "modulation_level": 0,
       "return_temperature": 26.3,
       "outdoor_air_temperature": 17.2
