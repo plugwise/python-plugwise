@@ -801,7 +801,7 @@ class SmileHelper(SmileCommon):
         self._thermo_locs = self._match_locations()
 
         thermo_matching: dict[str, int] = {
-            "thermostat": 3,
+            "thermostat": 2,
             "zone_thermometer": 2,
             "zone_thermostat": 2,
             "thermostatic_radiator_valve": 1,
@@ -828,7 +828,7 @@ class SmileHelper(SmileCommon):
             for appliance_details in self.gw_devices.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
-                        {"primary": None, "primary_prio": 0, "secondary": set()}
+                        {"primary": set(), "primary_prio": 0, "secondary": set()}
                     )
                     matched_locations[location_id] = location_details
 
@@ -844,6 +844,8 @@ class SmileHelper(SmileCommon):
         """Helper-function for _scan_thermostats().
 
         Rank the thermostat based on appliance_details: primary or secondary.
+        Note: there can be several primary thermostats, then the lowest reported 
+        temperature of a location is used as the reported value.
         """
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
@@ -851,12 +853,12 @@ class SmileHelper(SmileCommon):
             # Pre-elect new primary
             if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
                 # Demote former primary
-                if (tl_primary:= self._thermo_locs[loc_id]["primary"]) is not None:
+                if (tl_primary:= self._thermo_locs[loc_id]["primary"]):
                     self._thermo_locs[loc_id]["secondary"].add(tl_primary)
 
                 # Crown primary
                 self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]
-                self._thermo_locs[loc_id]["primary"] = appliance_id
+                self._thermo_locs[loc_id]["primary"].add(appliance_id)
 
             else:
                 self._thermo_locs[loc_id]["secondary"].add(appliance_id)
