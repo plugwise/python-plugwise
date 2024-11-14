@@ -812,6 +812,10 @@ class SmileHelper(SmileCommon):
             for dev_id, device in self.gw_devices.items():
                 self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
 
+        for loc_id, loc_data in list(self._thermo_locs.items()):
+            if loc_data["primary_prio"] == 0:
+                self._thermo_locs.pop(loc_id)
+
         LOGGER.debug("HOI 2 thermo_locs: %s", self._thermo_locs)
         # Update secondary thermostat class where needed
         for dev_id, device in self.gw_devices.items():
@@ -868,8 +872,6 @@ class SmileHelper(SmileCommon):
                 self._thermo_locs[loc_id]["primary"].add(appliance_id)
             else:
                 self._thermo_locs[loc_id]["secondary"].add(appliance_id)
-        else:
-            self._thermo_locs.pop(loc_id)
 
     def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _device_data_adam().
