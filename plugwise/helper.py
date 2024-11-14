@@ -818,6 +818,11 @@ class SmileHelper(SmileCommon):
                 if "secondary" in tl_loc_id and dev_id in tl_loc_id["secondary"]:
                     device["dev_class"] = "thermo_sensor"
 
+        # All thermostat appliances can keep their device_class but must not become climate-entities in HA.
+        # For each _thermo_loc a special climate-device must be created, with setpoint and temperature taken from the thermostat appliance with the lowest reported temperature.
+        # Also the corresponding device_id must be available, and updated, as an attribute.
+        # And the other attributes must be taken from the _thermo_loc.
+
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
 
