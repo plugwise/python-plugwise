@@ -17,6 +17,7 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NOTIFICATIONS,
@@ -120,6 +121,7 @@ class SmileAPI(SmileData):
             self.gw_devices.update(group_data)
 
         # Collect the remaining data for all devices
+        LOGGER.debug("HOI all_devices: %s", self.gw_devices)
         self._all_device_data()
 
     async def async_update(self) -> PlugwiseData:
