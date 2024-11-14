@@ -799,6 +799,7 @@ class SmileHelper(SmileCommon):
         the result to update the device_class of secondary thermostats.
         """
         self._thermo_locs = self._match_locations()
+        LOGGER.debug("HOI 1 thermo_locs: %s", self._thermo_locs)
 
         thermo_matching: dict[str, int] = {
             "thermostat": 2,
@@ -811,6 +812,7 @@ class SmileHelper(SmileCommon):
             for dev_id, device in self.gw_devices.items():
                 self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
 
+        LOGGER.debug("HOI 2 thermo_locs: %s", self._thermo_locs)
         # Update secondary thermostat class where needed
         for dev_id, device in self.gw_devices.items():
             if (loc_id := device["location"]) in self._thermo_locs:
