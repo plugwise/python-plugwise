@@ -867,7 +867,7 @@ class SmileHelper(SmileCommon):
                 if (tl_primary:= self._thermo_locs[loc_id]["primary"]):
                     LOGGER.debug("HOI 3 tl_primary: %s", tl_primary)
                     LOGGER.debug("HOI 4 secondary: %s", self._thermo_locs[loc_id]["secondary"])
-                    self._thermo_locs[loc_id]["secondary"].add(tl_primary)
+                    self._thermo_locs[loc_id]["secondary"].update(tl_primary)
 
                 # Crown primary
                 self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]
