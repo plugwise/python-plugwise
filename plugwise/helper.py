@@ -866,9 +866,10 @@ class SmileHelper(SmileCommon):
                 # Crown primary
                 self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]
                 self._thermo_locs[loc_id]["primary"].add(appliance_id)
-
             else:
                 self._thermo_locs[loc_id]["secondary"].add(appliance_id)
+        else:
+            self._thermo_locs.pop(loc_id)
 
     def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _device_data_adam().
