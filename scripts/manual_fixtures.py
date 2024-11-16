@@ -65,8 +65,9 @@ base = json.load(io)
 
 m_adam_cooling = base.copy()
 
-# Set cooling_present to true
+# Set cooling_present to true, item_count to 89
 m_adam_cooling["gateway"]["cooling_present"] = True
+m_adam_cooling["gateway"]["item_count"] = 89
 
 # Remove devices "67d73d0bd469422db25a618a5fb8eeb0" and "10016900610d4c7481df78c89606ef22" from anywhere
 m_adam_cooling["devices"].pop("67d73d0bd469422db25a618a5fb8eeb0")
