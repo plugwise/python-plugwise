@@ -125,6 +125,7 @@ class SmileLegacyHelper(SmileCommon):
                 appl.pwclass = "heater_central_plug"
 
             appl.model = appl.pwclass.replace("_", " ").title()
+            appl.available = None
             appl.model_id = None
             appl.firmware = None
             appl.hardware = None
@@ -251,6 +252,7 @@ class SmileLegacyHelper(SmileCommon):
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self.loc_data.keys()))
+        appl.available = None
         appl.dev_id = loc_id
         appl.location = loc_id
         appl.mac = None

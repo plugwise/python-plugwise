@@ -300,6 +300,7 @@ class SmileHelper(SmileCommon):
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
                 continue
 
+            appl.available = None
             appl.dev_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = None
@@ -402,6 +403,7 @@ class SmileHelper(SmileCommon):
                 if not module_data["contents"]:
                     return Munch()
 
+                appl.available = module_data["reachable"]
                 appl.firmware = module_data["firmware_version"]
                 appl.hardware = module_data["hardware_version"]
                 appl.model_id = module_data["vendor_model"]
@@ -513,9 +515,6 @@ class SmileHelper(SmileCommon):
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, device, data)
-
-            # Collect availability-status for wireless connected devices to Adam
-            self._wireless_availability(appliance, data)
 
         if dev_id == self.gateway_id and self.smile(ADAM):
             self._get_regulation_mode(appliance, data)
@@ -708,22 +707,6 @@ class SmileHelper(SmileCommon):
 
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
-
-    def _wireless_availability(self, appliance: etree, data: DeviceData) -> None:
-        """Helper-function for _get_measurement_data().
-
-        Collect the availability-status for wireless connected devices.
-        """
-        if self.smile(ADAM):
-            locator = MODULE_LOCATOR
-            module_data = self._get_module_data(appliance, locator)
-            if not module_data["contents"]:
-                LOGGER.error("No module data found for Plug or wireless thermostat")  # pragma: no cover
-                return None  # pragma: no cover
-
-            if module_data["reachable"] is not None:
-                data["available"] = module_data["reachable"]
-                self._count += 1
 
     def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
         """Helper-function for _get_measurement_data().

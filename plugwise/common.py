@@ -101,6 +101,7 @@ class SmileCommon:
             appl.model_id = appl.model
             appl.model = check_model(appl.model, appl.vendor_name)
 
+        appl.available = module_data["reachable"]
         appl.hardware = module_data["hardware_version"]
         appl.firmware = module_data["firmware_version"]
         appl.zigbee_mac = module_data["zigbee_mac_address"]
@@ -190,6 +191,7 @@ class SmileCommon:
         self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
         self._count += 1
         for key, value in {
+            "available": appl.available,
             "firmware": appl.firmware,
             "hardware": appl.hardware,
             "location": appl.location,
