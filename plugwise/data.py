@@ -9,6 +9,7 @@ import re
 from plugwise.constants import (
     ADAM,
     ANNA,
+    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
@@ -35,6 +36,7 @@ class SmileData(SmileHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
+        self._update_climates()
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
@@ -48,6 +50,15 @@ class SmileData(SmileHelper):
             self.gw_data.update(
                 {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
             )
+
+    def _update_climates(self) -> None:
+        """Helper-function for _all_device_data() and async_update().
+
+        Collect data for each climate-location and add to self.climate_data.
+        """
+        for location_id, climate in self.climate_data.items():
+            data = self._get_location_data(location_id)
+            climate.update(data)
 
     def _update_gw_devices(self) -> None:
         """Helper-function for _all_device_data() and async_update().
@@ -140,10 +151,27 @@ class SmileData(SmileHelper):
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             self._count += 2
 
-    def _get_device_data(self, dev_id: str) -> DeviceData:
+
+    def _get_location_data(self, loc_id: str) -> DeviceData:
         """Helper-function for _all_device_data() and async_update().
 
-        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
+        Provide device-data, based on Location ID (= loc_id).
+        """
+        climate = self.climate_data[loc_id]
+        data = self._get_climate_data(loc_id)
+        if ctrl_state := self._control_state(loc_id):
+            data["control_state"] = ctrl_state
+            self._count += 1
+
+        # Thermostat data (presets, temperatures etc)
+        self._device_data_climate(loc_id, climate, data)
+
+        return data
+
+    def _get_device_data(self, dev_id: str) -> DeviceData:
+        """Helper-function for _update_gw_devices() and async_update().
+
+        Provide device-data, based on appliance_id ()= dev_id).
         """
         device = self.gw_devices[dev_id]
         data = self._get_measurement_data(dev_id)
@@ -162,13 +190,7 @@ class SmileData(SmileHelper):
         # Switching groups data
         self._device_data_switching_group(device, data)
         # Adam data
-        self._device_data_adam(device, data)
-        # Skip obtaining data for (Adam) secondary thermostats
-        if device["dev_class"] not in ZONE_THERMOSTATS:
-            return data
-
-        # Thermostat data (presets, temperatures etc)
-        self._device_data_climate(device, data)
+        self._device_data_adam(dev_id, device, data)
 
         return data
 
@@ -187,7 +209,7 @@ class SmileData(SmileHelper):
                     if message in msg:
                         data["available"] = False
 
-    def _device_data_adam(self, device: DeviceData, data: DeviceData) -> None:
+    def _device_data_adam(self, loc_id: str, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
         Determine Adam heating-status for on-off heating via valves,
@@ -211,20 +233,12 @@ class SmileData(SmileHelper):
                     data["gateway_modes"] = self._gw_allowed_modes
                     self._count += 1
 
-            # Control_state, only available for Adam primary thermostats
-            if device["dev_class"] in ZONE_THERMOSTATS:
-                loc_id = device["location"]
-                if ctrl_state := self._control_state(loc_id):
-                    data["control_state"] = ctrl_state
-                    self._count += 1
 
-    def _device_data_climate(self, device: DeviceData, data: DeviceData) -> None:
+    def _device_data_climate(self, loc_id: str, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
         Determine climate-control device data.
         """
-        loc_id = device["location"]
-
         # Presets
         data["preset_modes"] = None
         data["active_preset"] = None

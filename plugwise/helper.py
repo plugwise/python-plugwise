@@ -15,6 +15,7 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     ATTR_NAME,
+    CLIMATE_MEASUREMENTS,
     DATA,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
@@ -35,6 +36,7 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
+    ClimateData,
     DeviceData,
     GatewayData,
     SensorType,
@@ -248,6 +250,7 @@ class SmileHelper(SmileCommon):
         self._cooling_enabled = False
 
         self.gateway_id: str
+        self.climate_data: ClimateData = {}
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.loc_data: dict[str, ThermoLoc]
@@ -480,6 +483,22 @@ class SmileHelper(SmileCommon):
 
         return therm_list
 
+    def _get_climate_data(self, loc_id: str) -> ClimateData:
+        """Helper-function for smile.py: _get_device_data().
+
+        Collect the location-data based on location id.
+        """
+        data: ClimateData = {"sensors": {}}
+        climate = self.climate_data[loc_id]
+        measurements = CLIMATE_MEASUREMENTS        
+        if (
+            location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        ) is not None:
+            self._appliance_measurements(location, data, measurements)
+            self._get_actuator_functionalities(location, climate, data)
+
+        return data
+
     def _get_measurement_data(self, dev_id: str) -> DeviceData:
         """Helper-function for smile.py: _get_device_data().
 
@@ -619,11 +638,14 @@ class SmileHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count += len(data["binary_sensors"])
-        self._count += len(data["sensors"])
-        self._count += len(data["switches"])
+        if data.get("binary_sensors"):
+            self._count += len(data["binary_sensors"]) - 1
+        if data.get("sensors"):
+            self._count += len(data["sensors"]) -1
+        if data.get("switches"):
+            self._count += len(data["switches"]) -1
         # Don't count the above top-level dicts, only the remaining single items
-        self._count += len(data) - 3
+        #self._count += len(data) - 3
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
@@ -660,9 +682,9 @@ class SmileHelper(SmileCommon):
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             # Skip max_dhw_temperature, not initially valid,
-            # skip thermostat for thermo_sensors
+            # skip thermostat for all but climates
             if item == "max_dhw_temperature" or (
-                item == "thermostat" and device["dev_class"] == "thermo_sensor"
+                item == "thermostat" and device["dev_class"] != "climate"
             ):
                 continue
 
@@ -813,12 +835,12 @@ class SmileHelper(SmileCommon):
 
         for loc_id, loc_data in list(self._thermo_locs.items()):
             if loc_data["primary_prio"] != 0:
-                self.gw_devices.update(
+                self.climate_data.update(
                     {
                         loc_id: {
                             "dev_class": "climate",
                             "name": loc_data["name"],
-                            "devices": loc_data["primary"]
+                            "members": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}
                         }
                     }
                 )
@@ -864,7 +886,7 @@ class SmileHelper(SmileCommon):
             if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
                 # Demote former primary
                 if (tl_primary:= self._thermo_locs[loc_id]["primary"]):
-                    self._thermo_locs[loc_id]["secondary"].update(tl_primary)
+                    self._thermo_locs[loc_id]["secondary"].add(tl_primary)
 
                 # Crown primary
                 self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]

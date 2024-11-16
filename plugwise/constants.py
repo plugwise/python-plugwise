@@ -144,6 +144,11 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "relay": UOM(NONE),
 }
 
+# Climate related measurements
+CLIMATE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
+    "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
+}
+
 # Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_state": DATA(
@@ -492,7 +497,7 @@ class ThermoLoc(TypedDict, total=False):
     """Thermo Location class."""
 
     name: str
-    primary: str | None
+    primary: set[str]
     primary_prio: int
     secondary: set[str]
 
@@ -506,6 +511,25 @@ class ActuatorData(TypedDict, total=False):
     setpoint_high: float
     setpoint_low: float
     upper_bound: float
+
+
+class ClimateData(TypedDict, total=False):
+    """The Climate Data class, covering the collected and ordered output-data per location."""
+
+    dev_class: str
+    name: str
+    members: dict[str, str]  # TODO complete
+    climate_mode: str
+    # Extra for Adam Master Thermostats
+    control_state: str | bool
+    # Presets:
+    active_preset: str | None
+    preset_modes: list[str] | None
+    # Schedules:
+    available_schedules: list[str]
+    select_schedule: str
+
+    thermostat: ActuatorData
 
 
 class DeviceData(TypedDict, total=False):
@@ -544,19 +568,6 @@ class DeviceData(TypedDict, total=False):
     select_gateway_mode: str
     select_regulation_mode: str
 
-    # Master Thermostats
-    # Presets:
-    active_preset: str | None
-    preset_modes: list[str] | None
-    # Schedules:
-    available_schedules: list[str]
-    last_used: str | None
-    select_schedule: str
-
-    climate_mode: str
-    # Extra for Adam Master Thermostats
-    control_state: str | bool
-
     # Dict-types
     binary_sensors: SmileBinarySensors
     max_dhw_temperature: ActuatorData
@@ -564,7 +575,6 @@ class DeviceData(TypedDict, total=False):
     sensors: SmileSensors
     switches: SmileSwitches
     temperature_offset: ActuatorData
-    thermostat: ActuatorData
 
 
 @dataclass
@@ -572,4 +582,5 @@ class PlugwiseData:
     """Plugwise data provided as output."""
 
     gateway: GatewayData
+    climates: dict[str, ClimateData]
     devices: dict[str, DeviceData]

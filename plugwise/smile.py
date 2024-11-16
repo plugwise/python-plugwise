@@ -23,6 +23,7 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
+    ClimateData,
     DeviceData,
     GatewayData,
     PlugwiseData,
@@ -121,11 +122,11 @@ class SmileAPI(SmileData):
             self.gw_devices.update(group_data)
 
         # Collect the remaining data for all devices
-        LOGGER.debug("HOI all_devices: %s", self.gw_devices)
         self._all_device_data()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
+        self.climate_data: ClimateData = {}
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         try:
@@ -141,7 +142,11 @@ class SmileAPI(SmileData):
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
 
-        return PlugwiseData(self.gw_data, self.gw_devices)
+        return PlugwiseData(
+            gateway=self.gw_data,
+            climates=self.climate_data,
+            devices=self.gw_devices,
+        )
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
