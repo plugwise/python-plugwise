@@ -40,6 +40,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.device_list == [
             "da224107914542988a88561b4452b0f6",
             "056ee145a816487eaa69243c3280f8bf",
+            "10016900610d4c7481df78c89606ef22",
             "67d73d0bd469422db25a618a5fb8eeb0",
             "e2f4322d57924fa090fbbc48b3a140dc",
             "29542b2b6a6a4169acecc15c72a599b8",
