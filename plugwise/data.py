@@ -207,7 +207,7 @@ class SmileData(SmileHelper):
                     if message in msg:
                         data["available"] = False
 
-    def _device_data_adam(self, loc_id: str, device: DeviceData, data: DeviceData) -> None:
+    def _device_data_adam(self, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
         Determine Adam heating-status for on-off heating via valves,
