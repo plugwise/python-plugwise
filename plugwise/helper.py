@@ -356,9 +356,7 @@ class SmileHelper(SmileCommon):
         """Collect P1 DSMR SmartMeter info."""
         loc_id = next(iter(self.loc_data.keys()))
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
-        locator = "./logs/point_log/electricity_point_meter"
-        mod_type = "electricity_point_meter"
-        module_data = self._get_module_data(location, locator, mod_type)
+        module_data = self._get_module_data(location)
         if not module_data["contents"]:
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return None  # pragma: no cover
@@ -715,14 +713,10 @@ class SmileHelper(SmileCommon):
         """
         if self.smile(ADAM):
             # Try collecting for a Plug
-            locator = "./logs/interval_log/electricity_interval_meter"
-            mod_type = "electricity_interval_meter"
-            module_data = self._get_module_data(appliance, locator, mod_type)
+            module_data = self._get_module_data(appliance)
             if not module_data["contents"]:
                 # Try collecting for a wireless thermostat
-                locator = "./logs/point_log[type='thermostat']/thermostat"
-                mod_type = "thermostat"
-                module_data = self._get_module_data(appliance, locator, mod_type)
+                module_data = self._get_module_data(appliance)
                 if not module_data["contents"]:
                     LOGGER.error("No module data found for Plug or wireless thermostat")  # pragma: no cover
                     return None  # pragma: no cover
