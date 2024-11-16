@@ -73,13 +73,12 @@ class SmileCommon:
         appl.name = "OpenTherm"
         locator_1 = "./logs/point_log[type='flame_state']/boiler_state"
         locator_2 = "./services/boiler_state"
-        mod_type = "boiler_state"
         # xml_1: appliance
         # xml_3: self._modules for legacy, self._domain_objects for actual
         xml_3 = return_valid(xml_3, self._domain_objects)
-        module_data = self._get_module_data(xml_1, locator_1, mod_type, xml_3)
+        module_data = self._get_module_data(xml_1, locator_1, xml_3)
         if not module_data["contents"]:
-            module_data = self._get_module_data(xml_1, locator_2, mod_type, xml_3)
+            module_data = self._get_module_data(xml_1, locator_2, xml_3)
         appl.vendor_name = module_data["vendor_name"]
         appl.hardware = module_data["hardware_version"]
         appl.model_id = module_data["vendor_model"] if not legacy else None
@@ -94,15 +93,15 @@ class SmileCommon:
     def _appl_thermostat_info(self, appl: Munch, xml_1: etree, xml_2: etree = None) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         locator = "./logs/point_log[type='thermostat']/thermostat"
-        mod_type = "thermostat"
         xml_2 = return_valid(xml_2, self._domain_objects)
-        module_data = self._get_module_data(xml_1, locator, mod_type, xml_2)
+        module_data = self._get_module_data(xml_1, locator, xml_2)
         appl.vendor_name = module_data["vendor_name"]
         appl.model = module_data["vendor_model"]
         if appl.model != "ThermoTouch":  # model_id for Anna not present as stand-alone device
             appl.model_id = appl.model
             appl.model = check_model(appl.model, appl.vendor_name)
 
+        appl.available = module_data["reachable"]
         appl.hardware = module_data["hardware_version"]
         appl.firmware = module_data["firmware_version"]
         appl.zigbee_mac = module_data["zigbee_mac_address"]
@@ -192,6 +191,7 @@ class SmileCommon:
         self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
         self._count += 1
         for key, value in {
+            "available": appl.available,
             "firmware": appl.firmware,
             "hardware": appl.hardware,
             "location": appl.location,
@@ -278,7 +278,6 @@ class SmileCommon:
         self,
         xml_1: etree,
         locator: str,
-        mod_type: str,
         xml_2: etree = None,
         legacy: bool = False,
     ) -> ModelData:
@@ -295,12 +294,11 @@ class SmileCommon:
             "vendor_model": None,
             "zigbee_mac_address": None,
         }
-        # xml_1: appliance
+
         if (appl_search := xml_1.find(locator)) is not None:
+            link_tag = appl_search.tag
             link_id = appl_search.attrib["id"]
-            loc = f".//services/{mod_type}[@id='{link_id}']...."
-            if legacy:
-                loc = f".//{mod_type}[@id='{link_id}']...."
+            loc = f".//services/{link_tag}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
             # xml_2: self._modules for legacy, self._domain_objects for actual
             search = return_valid(xml_2, self._domain_objects)

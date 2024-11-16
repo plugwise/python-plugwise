@@ -125,6 +125,7 @@ class SmileLegacyHelper(SmileCommon):
                 appl.pwclass = "heater_central_plug"
 
             appl.model = appl.pwclass.replace("_", " ").title()
+            appl.available = None
             appl.model_id = None
             appl.firmware = None
             appl.hardware = None
@@ -230,9 +231,7 @@ class SmileLegacyHelper(SmileCommon):
         """
         if self.smile_type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
-            mod_type = "electricity_point_meter"
-
-            module_data = self._get_module_data(appliance, locator, mod_type, self._modules, legacy=True)
+            module_data = self._get_module_data(appliance, locator, self._modules, legacy=True)
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             # Filter appliance without zigbee_mac, it's an orphaned device
             if appl.zigbee_mac is None and self.smile_type != "power":
@@ -253,6 +252,7 @@ class SmileLegacyHelper(SmileCommon):
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
         loc_id = next(iter(self.loc_data.keys()))
+        appl.available = None
         appl.dev_id = loc_id
         appl.location = loc_id
         appl.mac = None
