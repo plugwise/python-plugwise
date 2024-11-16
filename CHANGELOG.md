@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Implement collection of zone data: Plugwise thermostat representations are zone/location-based.
+
 ## v1.5.2
 
 - Bugfix for Adam: improve recognition of unknown zigbee devices.
