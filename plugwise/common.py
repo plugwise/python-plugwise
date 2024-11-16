@@ -8,6 +8,7 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
+    LOGGER,
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     ApplianceType,
@@ -277,8 +278,6 @@ class SmileCommon:
     def _get_module_data(
         self,
         xml_1: etree,
-        locator: str,
-        mod_type: str,
         xml_2: etree = None,
         legacy: bool = False,
     ) -> ModelData:
@@ -295,12 +294,12 @@ class SmileCommon:
             "vendor_model": None,
             "zigbee_mac_address": None,
         }
-        # xml_1: appliance
-        if (appl_search := xml_1.find(locator)) is not None:
+        if (appl_search := xml_1.find("./logs/point_log/*[@id]")) is not None:
+            link_tag = appl_search.tag
             link_id = appl_search.attrib["id"]
-            loc = f".//services/{mod_type}[@id='{link_id}']...."
+            loc = f".//services/{link_tag}[@id='{link_id}']...."
             if legacy:
-                loc = f".//{mod_type}[@id='{link_id}']...."
+                loc = f".//{link_tag}[@id='{link_id}']...."
             # Not possible to walrus for some reason...
             # xml_2: self._modules for legacy, self._domain_objects for actual
             search = return_valid(xml_2, self._domain_objects)

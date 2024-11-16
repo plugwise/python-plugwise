@@ -396,9 +396,7 @@ class SmileHelper(SmileCommon):
                 return appl
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
-                locator = "./logs/interval_log/electricity_interval_meter"
-                mod_type = "electricity_interval_meter"
-                module_data = self._get_module_data(appliance, locator, mod_type)
+                module_data = self._get_module_data(appliance)
                 # A plug without module-data is orphaned/ no present
                 if not module_data["contents"]:
                     return Munch()
