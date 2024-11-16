@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.5.2
+
+- Bugfix for Adam: improve recognition of unknown zigbee devices.
+
 ## v1.5.1
 
 - Fix typing and rounding of P1 and thermostat sensors, energy-device-related code improvements.
