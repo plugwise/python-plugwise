@@ -356,7 +356,8 @@ class SmileHelper(SmileCommon):
         """Collect P1 DSMR SmartMeter info."""
         loc_id = next(iter(self.loc_data.keys()))
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
-        module_data = self._get_module_data(location)
+        locator = "./logs/point_log/*[@id]"
+        module_data = self._get_module_data(location, locator)
         if not module_data["contents"]:
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return None  # pragma: no cover
@@ -394,7 +395,8 @@ class SmileHelper(SmileCommon):
                 return appl
             case _ as s if s.endswith("_plug"):
                 # Collect info from plug-types (Plug, Aqara Smart Plug)
-                module_data = self._get_module_data(appliance)
+                locator = "./logs/point_log/*[@id]"
+                module_data = self._get_module_data(appliance, locator)
                 # A plug without module-data is orphaned/ no present
                 if not module_data["contents"]:
                     return Munch()
@@ -712,14 +714,11 @@ class SmileHelper(SmileCommon):
         Collect the availability-status for wireless connected devices.
         """
         if self.smile(ADAM):
-            # Try collecting for a Plug
-            module_data = self._get_module_data(appliance)
+            locator = "./logs/point_log/*[@id]"
+            module_data = self._get_module_data(appliance, locator)
             if not module_data["contents"]:
-                # Try collecting for a wireless thermostat
-                module_data = self._get_module_data(appliance)
-                if not module_data["contents"]:
-                    LOGGER.error("No module data found for Plug or wireless thermostat")  # pragma: no cover
-                    return None  # pragma: no cover
+                LOGGER.error("No module data found for Plug or wireless thermostat")  # pragma: no cover
+                return None  # pragma: no cover
 
             if module_data["reachable"] is not None:
                 data["available"] = module_data["reachable"]
