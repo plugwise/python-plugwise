@@ -1,5 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <domain_objects>
+	<appliance id="10016900610d4c7481df78c89606ef22">
+		<name>Aanvoer water afsluiter (nous lz3)</name>
+		<description>A device that communicates through the ZigBee protocol.</description>
+		<type>valve_actuator</type>
+		<created_date>2024-11-11T20:31:49.734+01:00</created_date>
+		<modified_date>2024-11-15T13:55:19.574+01:00</modified_date>
+		<deleted_date/>
+		<location id="d9786723dbcf4f19b5c629a54629f9c7"/>
+		<groups>
+		<group id="195983e6a2ac4567a0acd14afff21ae0"/>
+		</groups>
+		<logs>
+			<point_log id="8ce65a98d6ba4ca9a531272927891014">
+				<type>relay</type>
+				<unit/>
+				<updated_date>2024-11-15T13:55:19.571+01:00</updated_date>
+				<last_consecutive_log_date>2024-11-15T13:55:19.571+01:00</last_consecutive_log_date>
+				<interval/>
+				<relay id="e837f6f0f2014b0c92c81e65981e1de5"/>
+				<period start_date="2024-11-15T13:55:19.571+01:00" end_date="2024-11-15T13:55:19.571+01:00">
+					<measurement log_date="2024-11-15T13:55:19.571+01:00">off</measurement>
+				</period>
+			</point_log>
+		</logs>
+		<actuator_functionalities>
+			<relay_functionality id="8ebe8457de324c3d82d7e08ba7ec62f4">
+				<updated_date>2024-11-15T13:55:19.571+01:00</updated_date>
+				<lock>false</lock>
+				<state>off</state>
+				<relay id="e837f6f0f2014b0c92c81e65981e1de5"/>
+			</relay_functionality>
+		</actuator_functionalities>
+	</appliance>
+	<module id="c1f98356f09346b28e26a6ebc0f69275">
+		<vendor_name>_TZ3000_abjodzas</vendor_name>
+		<vendor_model>TS0011</vendor_model>
+		<hardware_version/>
+		<firmware_version/>
+		<upgrade/>
+		<created_date>2024-11-11T20:31:46.189+01:00</created_date>
+		<modified_date>2024-11-11T20:31:49.706+01:00</modified_date>
+		<deleted_date/>
+		<services>
+			<relay id="e837f6f0f2014b0c92c81e65981e1de5" log_type="relay">
+			<functionalities>
+				<point_log id="8ce65a98d6ba4ca9a531272927891014"/>
+				<relay_functionality id="8ebe8457de324c3d82d7e08ba7ec62f4"/>
+			</functionalities>
+			</relay>
+		</services>
+		<protocols>
+			<zig_bee_node id="7959e6435fd742f0bcdafefd192c951d">
+				<mac_address>A4C13862AF9917B1</mac_address>
+				<type>end_device</type>
+				<reachable>true</reachable>
+				<power_source>battery</power_source>
+				<zig_bee_coordinator id="6e9b4e783b05409c944aaf8e14cc1f30"/>
+				<neighbors>
+				<neighbor mac_address="54EF4410004DD396">
+					<lqi>221</lqi>
+					<depth>1</depth>
+					<relationship>parent</relationship>
+				</neighbor>
+				</neighbors>
+				<last_neighbor_table_received>2024-11-15T14:07:23+01:00</last_neighbor_table_received>
+				<neighbor_table_support>true</neighbor_table_support>
+			</zig_bee_node>
+		</protocols>
+	</module>
 	<appliance id='67d73d0bd469422db25a618a5fb8eeb0'>
 		<name>SmartPlug Floor 0</name>
 		<description>A device that communicates through the ZigBee protocol.</description>
