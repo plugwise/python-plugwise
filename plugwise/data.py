@@ -9,12 +9,10 @@ import re
 from plugwise.constants import (
     ADAM,
     ANNA,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NONE,
     OFF,
-    ZONE_THERMOSTATS,
     ActuatorData,
     DeviceData,
 )

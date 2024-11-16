@@ -17,7 +17,6 @@ from plugwise.constants import (
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
-    LOGGER,
     MAX_SETPOINT,
     MIN_SETPOINT,
     NOTIFICATIONS,

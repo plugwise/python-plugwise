@@ -490,7 +490,7 @@ class SmileHelper(SmileCommon):
         """
         data: ZoneData = {"sensors": {}}
         zone = self.zone_data[loc_id]
-        measurements = ZONE_MEASUREMENTS        
+        measurements = ZONE_MEASUREMENTS
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
         ) is not None:
