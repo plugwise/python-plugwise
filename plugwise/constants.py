@@ -81,6 +81,7 @@ HW_MODELS: Final[dict[str, str]] = {
 
 MAX_SETPOINT: Final[float] = 30.0
 MIN_SETPOINT: Final[float] = 4.0
+MODULE_LOCATOR: Final = "./logs/point_log/*[@id]"
 NONE: Final = "None"
 OFF: Final = "off"
 
