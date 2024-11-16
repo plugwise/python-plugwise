@@ -25,6 +25,18 @@
         "dhw_cm_switch": false
       }
     },
+    "10016900610d4c7481df78c89606ef22": {
+      "available": true,
+      "dev_class": "valve_actuator_plug",
+      "location": "d9786723dbcf4f19b5c629a54629f9c7",
+      "model_id": "TS0011",
+      "name": "Aanvoer water afsluiter (nous lz3)",
+      "switches": {
+        "relay": false
+      },
+      "vendor": "_TZ3000_abjodzas",
+      "zigbee_mac_address": "A4C13862AF9917B1"
+    },
     "1772a4ea304041adb83f357b751341ff": {
       "available": true,
       "binary_sensors": {
@@ -266,7 +278,7 @@
     "cooling_present": false,
     "gateway_id": "da224107914542988a88561b4452b0f6",
     "heater_id": "056ee145a816487eaa69243c3280f8bf",
-    "item_count": 157,
+    "item_count": 165,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"
