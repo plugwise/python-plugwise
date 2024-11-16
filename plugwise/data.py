@@ -36,7 +36,7 @@ class SmileData(SmileHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
-        self._update_climates()
+        self._update_zones()
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
@@ -51,14 +51,14 @@ class SmileData(SmileHelper):
                 {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
             )
 
-    def _update_climates(self) -> None:
+    def _update_zones(self) -> None:
         """Helper-function for _all_device_data() and async_update().
 
-        Collect data for each climate-location and add to self.climate_data.
+        Collect data for each zone/location and add to self.zone_data.
         """
-        for location_id, climate in self.climate_data.items():
+        for location_id, zone in self.zone_data.items():
             data = self._get_location_data(location_id)
-            climate.update(data)
+            zone.update(data)
 
     def _update_gw_devices(self) -> None:
         """Helper-function for _all_device_data() and async_update().
@@ -157,14 +157,14 @@ class SmileData(SmileHelper):
 
         Provide device-data, based on Location ID (= loc_id).
         """
-        climate = self.climate_data[loc_id]
-        data = self._get_climate_data(loc_id)
+        zone = self.zone_data[loc_id]
+        data = self._get_zone_data(loc_id)
         if ctrl_state := self._control_state(loc_id):
             data["control_state"] = ctrl_state
             self._count += 1
 
         # Thermostat data (presets, temperatures etc)
-        self._device_data_climate(loc_id, climate, data)
+        self._device_data_climate(loc_id, zone, data)
 
         return data
 

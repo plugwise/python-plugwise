@@ -15,7 +15,6 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     ATTR_NAME,
-    CLIMATE_MEASUREMENTS,
     DATA,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
@@ -33,15 +32,16 @@ from plugwise.constants import (
     THERMOSTAT_CLASSES,
     TOGGLES,
     UOM,
+    ZONE_MEASUREMENTS,
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    ClimateData,
     DeviceData,
     GatewayData,
     SensorType,
     ThermoLoc,
     ToggleNameType,
+    ZoneData,
 )
 from plugwise.exceptions import (
     ConnectionFailedError,
@@ -250,7 +250,6 @@ class SmileHelper(SmileCommon):
         self._cooling_enabled = False
 
         self.gateway_id: str
-        self.climate_data: ClimateData = {}
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
         self.loc_data: dict[str, ThermoLoc]
@@ -263,6 +262,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
+        self.zone_data: ZoneData = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -483,19 +483,19 @@ class SmileHelper(SmileCommon):
 
         return therm_list
 
-    def _get_climate_data(self, loc_id: str) -> ClimateData:
+    def _get_zone_data(self, loc_id: str) -> ZoneData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the location-data based on location id.
         """
-        data: ClimateData = {"sensors": {}}
-        climate = self.climate_data[loc_id]
-        measurements = CLIMATE_MEASUREMENTS        
+        data: ZoneData = {"sensors": {}}
+        zone = self.zone_data[loc_id]
+        measurements = ZONE_MEASUREMENTS        
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
         ) is not None:
             self._appliance_measurements(location, data, measurements)
-            self._get_actuator_functionalities(location, climate, data)
+            self._get_actuator_functionalities(location, zone, data)
 
         return data
 
@@ -682,7 +682,7 @@ class SmileHelper(SmileCommon):
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             # Skip max_dhw_temperature, not initially valid,
-            # skip thermostat for all but climates
+            # skip thermostat for all but zones with thermostats
             if item == "max_dhw_temperature" or (
                 item == "thermostat" and device["dev_class"] != "climate"
             ):
@@ -835,7 +835,7 @@ class SmileHelper(SmileCommon):
 
         for loc_id, loc_data in list(self._thermo_locs.items()):
             if loc_data["primary_prio"] != 0:
-                self.climate_data.update(
+                self.zone_data.update(
                     {
                         loc_id: {
                             "dev_class": "climate",
@@ -844,11 +844,6 @@ class SmileHelper(SmileCommon):
                         }
                     }
                 )
-
-        # All thermostat appliances can keep their device_class but must not become climate-entities in HA.
-        # For each _thermo_loc a special climate-device must be created, with setpoint and temperature taken from the thermostat appliance with the lowest reported temperature.
-        # Also the corresponding device_id must be available, and updated, as an attribute.
-        # And the other attributes must be taken from the _thermo_loc.
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().

@@ -144,11 +144,6 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "relay": UOM(NONE),
 }
 
-# Climate related measurements
-CLIMATE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
-    "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
-}
-
 # Heater Central related measurements
 HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "boiler_state": DATA(
@@ -194,6 +189,14 @@ OBSOLETE_MEASUREMENTS: Final[tuple[str, ...]] = (
     "central_heater_water_pressure",
     "outdoor_temperature",
 )
+
+# Zone/climate related measurements
+ZONE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
+    "electricity_consumed": UOM(POWER_WATT),
+    "electricity_produced": UOM(POWER_WATT),
+    "relay": UOM(NONE),
+    "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
+}
 
 # Literals
 SMILE_P1 = "Smile P1"
@@ -513,7 +516,7 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class ClimateData(TypedDict, total=False):
+class ZoneData(TypedDict, total=False):
     """The Climate Data class, covering the collected and ordered output-data per location."""
 
     dev_class: str
@@ -529,6 +532,7 @@ class ClimateData(TypedDict, total=False):
     available_schedules: list[str]
     select_schedule: str
 
+    sensors: SmileSensors
     thermostat: ActuatorData
 
 
@@ -582,5 +586,5 @@ class PlugwiseData:
     """Plugwise data provided as output."""
 
     gateway: GatewayData
-    climates: dict[str, ClimateData]
     devices: dict[str, DeviceData]
+    zones: dict[str, ZoneData]

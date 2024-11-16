@@ -584,7 +584,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 if "cooling_state" in heat_cooler["binary_sensors"]:
                     self._cooling_active = heat_cooler["binary_sensors"]["cooling_state"]
 
-        self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
+        self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices, "zones": data.zones})
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
@@ -596,7 +596,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
-        _LOGGER.info("Climate data = %s", data.climates)
+        _LOGGER.info("Zone data = %s", data.zones)
         _LOGGER.info("Device list = %s", data.devices)
         self.show_setup(location_list, data.devices)
 
