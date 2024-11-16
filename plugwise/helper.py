@@ -871,8 +871,7 @@ class SmileHelper(SmileCommon):
         """Helper-function for _scan_thermostats().
 
         Rank the thermostat based on appliance_details: primary or secondary.
-        Note: there can be several primary thermostats, then the lowest reported 
-        temperature of a location is used as the reported value.
+        Note: there can be several primary and secondary thermostats.
         """
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
