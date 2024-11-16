@@ -188,7 +188,7 @@ class SmileData(SmileHelper):
         # Switching groups data
         self._device_data_switching_group(device, data)
         # Adam data
-        self._device_data_adam(dev_id, device, data)
+        self._device_data_adam(device, data)
 
         return data
 
