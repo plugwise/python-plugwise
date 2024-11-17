@@ -262,7 +262,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
-        self.zone_data: ZoneData = {}
+        self.zone_data: dict[str, ZoneData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:

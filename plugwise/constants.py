@@ -500,9 +500,9 @@ class ThermoLoc(TypedDict, total=False):
     """Thermo Location class."""
 
     name: str
-    primary: set[str]
+    primary: list[str]
     primary_prio: int
-    secondary: set[str]
+    secondary: list[str]
 
 
 class ActuatorData(TypedDict, total=False):
@@ -516,12 +516,19 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
+class MemberData:
+    """ZoneData Member data class."""
+
+    primary: list[str]
+    secondary: list[str]
+
+
 class ZoneData(TypedDict, total=False):
     """The Climate Data class, covering the collected and ordered output-data per location."""
 
     dev_class: str
     name: str
-    members: dict[str, set[str]]
+    members: dict[MemberData]
     climate_mode: str
     # Extra for Adam Master Thermostats
     control_state: str | bool
@@ -572,6 +579,18 @@ class DeviceData(TypedDict, total=False):
     select_gateway_mode: str
     select_regulation_mode: str
 
+    # Single thermostat (Anna)
+    # Presets:
+    active_preset: str | None
+    preset_modes: list[str] | None
+    # Schedules:
+    available_schedules: list[str]
+    select_schedule: str
+
+    climate_mode: str
+    # Extra for Adam Master Thermostats
+    control_state: str | bool
+
     # Dict-types
     binary_sensors: SmileBinarySensors
     max_dhw_temperature: ActuatorData
@@ -579,6 +598,7 @@ class DeviceData(TypedDict, total=False):
     sensors: SmileSensors
     switches: SmileSwitches
     temperature_offset: ActuatorData
+    thermostat: ActuatorData
 
 
 @dataclass

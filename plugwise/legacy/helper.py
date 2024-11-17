@@ -90,7 +90,7 @@ class SmileLegacyHelper(SmileCommon):
         self.smile_name: str
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
-        self.zone_data: ZoneData = {}
+        self.zone_data: dict[str, ZoneData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -336,7 +336,7 @@ class SmileLegacyHelper(SmileCommon):
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceData,
+        data: DeviceData | ZoneData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
@@ -368,7 +368,10 @@ class SmileLegacyHelper(SmileCommon):
         self._count += len(data) - 3
 
     def _get_actuator_functionalities(
-        self, xml: etree, device: DeviceData, data: DeviceData
+        self,
+        xml: etree,
+        device: DeviceData | ZoneData,
+        data: DeviceData | ZoneData
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:

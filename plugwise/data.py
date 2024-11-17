@@ -15,6 +15,7 @@ from plugwise.constants import (
     OFF,
     ActuatorData,
     DeviceData,
+    ZoneData,
 )
 from plugwise.helper import SmileHelper
 from plugwise.util import remove_empty_platform_dicts
@@ -151,7 +152,7 @@ class SmileData(SmileHelper):
             self._count += 2  # add 4, remove 2
 
 
-    def _get_location_data(self, loc_id: str) -> DeviceData:
+    def _get_location_data(self, loc_id: str) -> ZoneData:
         """Helper-function for _all_device_data() and async_update().
 
         Provide device-data, based on Location ID (= loc_id).
@@ -237,14 +238,19 @@ class SmileData(SmileHelper):
                     self._count += 1
 
 
-    def _device_data_climate(self, location_id: str, device: DeviceData, data: DeviceData) -> None:
+    def _device_data_climate(
+        self,
+        location_id: str,
+        device: DeviceData | ZoneData,
+        data: DeviceData | ZoneData
+    ) -> None:
         """Helper-function for _get_device_data().
 
         Determine climate-control device data.
         """
         loc_id = location_id
-        if (dev_loc := device.get("location")) is not None:
-            loc_id = dev_loc
+        if device.get("location") is not None:
+            loc_id = device["location"]
 
         # Presets
         data["preset_modes"] = None
@@ -285,7 +291,7 @@ class SmileData(SmileHelper):
         )
 
     def _get_schedule_states_with_off(
-        self, location: str, schedules: list[str], selected: str, data: DeviceData
+        self, location: str, schedules: list[str], selected: str, data: DeviceData | ZoneData
     ) -> None:
         """Collect schedules with states for each thermostat.
 

@@ -127,7 +127,7 @@ class SmileAPI(SmileData):
         """Perform an incremental update for updating the various device states."""
         self.gw_data: GatewayData = {}
         self.gw_devices: dict[str, DeviceData] = {}
-        self.zone_data: ZoneData = {}
+        self.zone_data: dict[str, ZoneData] = {}
         try:
             await self.full_update_device()
             self.get_all_devices()

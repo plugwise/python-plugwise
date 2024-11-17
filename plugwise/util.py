@@ -27,6 +27,7 @@ from plugwise.constants import (
     SensorType,
     SpecialType,
     SwitchType,
+    ZoneData,
 )
 
 from defusedxml import ElementTree as etree
@@ -122,7 +123,7 @@ def common_match_cases(
     measurement: str,
     attrs: DATA | UOM,
     location: etree,
-    data: DeviceData,
+    data: DeviceData | ZoneData,
 ) -> None:
     """Helper-function for common match-case execution."""
     value = location.text in ("on", "true")
