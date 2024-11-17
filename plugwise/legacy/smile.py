@@ -23,6 +23,7 @@ from plugwise.constants import (
     GatewayData,
     PlugwiseData,
     ThermoLoc,
+    ZoneData,
 )
 from plugwise.exceptions import ConnectionFailedError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
@@ -120,6 +121,7 @@ class SmileLegacyAPI(SmileLegacyData):
             )
             self.gw_data: GatewayData = {}
             self.gw_devices: dict[str, DeviceData] = {}
+            self.zones: dict[str, ZoneData] = {}
             await self.full_update_device()
             self.get_all_devices()
         # Otherwise perform an incremental update
@@ -134,7 +136,11 @@ class SmileLegacyAPI(SmileLegacyData):
             self._update_gw_devices()
 
         self._previous_day_number = day_number
-        return PlugwiseData(self.gw_data, self.gw_devices)
+        return PlugwiseData(
+            gateway=self.gw_data,
+            devices=self.gw_devices,
+            zones=self.zone_data,
+        )
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###
