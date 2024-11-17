@@ -42,6 +42,9 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
 
     echo "... pylint-ing ..." 
     pylint plugwise/ tests/
+
+    echo "... mypy-ing ..."
+    mypy plugwise/
 fi
 
 # As to not generated fixtures, leaving biome to re-do them

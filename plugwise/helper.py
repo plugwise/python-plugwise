@@ -882,8 +882,9 @@ class SmileHelper(SmileCommon):
             # Pre-elect new primary
             if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
                 # Demote former primary
-                if (tl_primary:= self._thermo_locs[loc_id]["primary"]):
-                    self._thermo_locs[loc_id]["secondary"].append(tl_primary)
+                if (tl_primary := self._thermo_locs[loc_id]["primary"]):
+                    self._thermo_locs[loc_id]["secondary"] = tl_primary
+                    self._thermo_locs[loc_id]["primary"] = []
 
                 # Crown primary
                 self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]

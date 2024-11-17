@@ -528,7 +528,7 @@ class ZoneData(TypedDict, total=False):
 
     dev_class: str
     name: str
-    members: dict[MemberData]
+    members: dict[str, list[str]]
     climate_mode: str
     # Extra for Adam Master Thermostats
     control_state: str | bool
