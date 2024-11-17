@@ -30,7 +30,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-04-05 00:00:01", testdata)
         assert smile.gateway_id == "0466eae8520144c78afb29628384edeb"
         assert smile._last_active["eb5309212bf5407bb143e5bfa3b18aee"] == "Standaard"
-        assert self.device_items == 58
+        assert self.device_items == 60
         assert not self.notifications
 
         assert not self.cooling_present

@@ -34,7 +34,8 @@ class SmileData(SmileHelper):
         Collect data for each device and add to self.gw_data and self.gw_devices.
         """
         self._update_gw_devices()
-        self._update_zones()
+        if self.smile(ADAM):
+            self._update_zones()
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
@@ -190,6 +191,10 @@ class SmileData(SmileHelper):
         # Adam data
         self._device_data_adam(device, data)
 
+        # Thermostat data for Anna (presets, temperatures etc)
+        if self.smile(ANNA) and device["dev_class"] == "thermostat":
+            self._device_data_climate(dev_id, device, data)
+
         return data
 
     def _check_availability(
@@ -232,11 +237,15 @@ class SmileData(SmileHelper):
                     self._count += 1
 
 
-    def _device_data_climate(self, loc_id: str, device: DeviceData, data: DeviceData) -> None:
+    def _device_data_climate(self, location_id: str, device: DeviceData, data: DeviceData) -> None:
         """Helper-function for _get_device_data().
 
         Determine climate-control device data.
         """
+        loc_id = location_id
+        if (dev_loc := device.get("location")) is not None:
+            loc_id = dev_loc
+
         # Presets
         data["preset_modes"] = None
         data["active_preset"] = None

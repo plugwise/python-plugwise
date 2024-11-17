@@ -855,7 +855,7 @@ class SmileHelper(SmileCommon):
             for appliance_details in self.gw_devices.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
-                        {"primary": set(), "primary_prio": 0, "secondary": set()}
+                        {"primary": [], "primary_prio": 0, "secondary": []}
                     )
                     matched_locations[location_id] = location_details
 
@@ -880,13 +880,13 @@ class SmileHelper(SmileCommon):
             if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
                 # Demote former primary
                 if (tl_primary:= self._thermo_locs[loc_id]["primary"]):
-                    self._thermo_locs[loc_id]["secondary"].add(tl_primary)
+                    self._thermo_locs[loc_id]["secondary"].append(tl_primary)
 
                 # Crown primary
                 self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]
-                self._thermo_locs[loc_id]["primary"].add(appliance_id)
+                self._thermo_locs[loc_id]["primary"].append(appliance_id)
             else:
-                self._thermo_locs[loc_id]["secondary"].add(appliance_id)
+                self._thermo_locs[loc_id]["secondary"].append(appliance_id)
 
     def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _device_data_adam().
