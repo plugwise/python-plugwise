@@ -121,7 +121,7 @@ class SmileLegacyAPI(SmileLegacyData):
             )
             self.gw_data: GatewayData = {}
             self.gw_devices: dict[str, DeviceData] = {}
-            self.zones: dict[str, ZoneData] = {}
+            self.zone_data: dict[str, ZoneData] = {}
             await self.full_update_device()
             self.get_all_devices()
         # Otherwise perform an incremental update

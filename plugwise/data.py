@@ -148,7 +148,7 @@ class SmileData(SmileHelper):
                 sensors.pop("setpoint")
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
-            self._count += 2
+            self._count += 2  # add 4, remove 2
 
 
     def _get_location_data(self, loc_id: str) -> DeviceData:

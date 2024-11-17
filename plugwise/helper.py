@@ -639,13 +639,13 @@ class SmileHelper(SmileCommon):
                 )
 
         if data.get("binary_sensors"):
-            self._count += len(data["binary_sensors"]) - 1
+            self._count += len(data["binary_sensors"])
         if data.get("sensors"):
-            self._count += len(data["sensors"]) -1
+            self._count += len(data["sensors"])
         if data.get("switches"):
-            self._count += len(data["switches"]) -1
+            self._count += len(data["switches"])
         # Don't count the above top-level dicts, only the remaining single items
-        #self._count += len(data) - 3
+        self._count += len(data) - 3
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
@@ -684,7 +684,9 @@ class SmileHelper(SmileCommon):
             # Skip max_dhw_temperature, not initially valid,
             # skip thermostat for all but zones with thermostats
             if item == "max_dhw_temperature" or (
-                item == "thermostat" and device["dev_class"] != "climate"
+                item == "thermostat" and (
+                    device["dev_class"] != "climate" if self.smile(ADAM) else device["dev_class"] != "thermostat"
+                )
             ):
                 continue
 
@@ -844,6 +846,7 @@ class SmileHelper(SmileCommon):
                         }
                     }
                 )
+                self._count += 3
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().

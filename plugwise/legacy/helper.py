@@ -33,6 +33,7 @@ from plugwise.constants import (
     GatewayData,
     SensorType,
     ThermoLoc,
+    ZoneData,
 )
 from plugwise.util import (
     common_match_cases,
@@ -89,6 +90,7 @@ class SmileLegacyHelper(SmileCommon):
         self.smile_name: str
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
+        self.zone_data: ZoneData = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:

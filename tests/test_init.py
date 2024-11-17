@@ -546,7 +546,52 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         skip_testing=False,
     ):
         """Perform basic device tests."""
-        bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
+
+        def test_and_assert(test_dict, data, header):
+            """Test-and-assert helper-function."""
+            tests = 0
+            asserts = 0
+            bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
+            for testitem, measurements in test_dict.items():
+                tests += 1
+                assert testitem in data
+                asserts += 1
+                for data_id, details in data.items():
+                    if testitem == data_id:
+                        _LOGGER.info(
+                            "%s",
+                            f"- Testing data for {header} {details['name']} ({data_id})",
+                        )
+                        _LOGGER.info("%s", f"  + {header} data: {details}")
+                        for measure_key, measure_assert in measurements.items():
+                            _LOGGER.info(
+                                "%s",
+                                f"  + Testing {measure_key}/{type(measure_key)} with {details[measure_key]}/{type(details[measure_key])} (should be {measure_assert}/{type(measure_assert)} )",
+                            )
+                            tests += 1
+                            if (
+                                measure_key in bsw_list
+                                or measure_key in pw_constants.ACTIVE_ACTUATORS
+                            ):
+                                tests -= 1
+                                for key_1, val_1 in measure_assert.items():
+                                    tests += 1
+                                    for key_2, val_2 in details[measure_key].items():
+                                        if key_1 != key_2:
+                                            continue
+
+                                        _LOGGER.info(
+                                            "%s",
+                                            f"  + Testing {key_1} ({val_1} should be {val_2})",
+                                        )
+                                        assert val_1 == val_2
+                                        asserts += 1
+                            else:
+                                assert details[measure_key] == measure_assert
+                                asserts += 1
+
+            assert tests == asserts
+            _LOGGER.debug("Number of zone test-assert: %s", asserts)
 
         # pragma warning disable S3776
 
@@ -606,103 +651,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Perform tests and asserts in two steps: devices and zones
         for header, data_dict in testdata.items():
             # Test devices
-            if header != "devices":
-                continue
-
-            tests = 0
-            asserts = 0
-            for testdevice, measurements in data_dict.items():
-                tests += 1
-                assert testdevice in data.devices
-                asserts += 1
-                for dev_id, details in data.devices.items():
-                    if testdevice == dev_id:
-                        _LOGGER.info(
-                            "%s",
-                            "- Testing data for device {} ({})".format(
-                                details["name"], dev_id
-                            ),
-                        )
-                        _LOGGER.info("  + Device data: %s", details)
-                        for measure_key, measure_assert in measurements.items():
-                            _LOGGER.info(
-                                "%s",
-                                f"  + Testing {measure_key}/{type(measure_key)} with {details[measure_key]}/{type(details[measure_key])} (should be {measure_assert}/{type(measure_assert)} )",
-                            )
-                            tests += 1
-                            if (
-                                measure_key in bsw_list
-                                or measure_key in pw_constants.ACTIVE_ACTUATORS
-                            ):
-                                tests -= 1
-                                for key_1, val_1 in measure_assert.items():
-                                    tests += 1
-                                    for key_2, val_2 in details[measure_key].items():
-                                        if key_1 != key_2:
-                                            continue
-
-                                        _LOGGER.info(
-                                            "%s",
-                                            f"  + Testing {key_1} ({val_1} should be {val_2})",
-                                        )
-                                        assert val_1 == val_2
-                                        asserts += 1
-                            else:
-                                assert details[measure_key] == measure_assert
-                                asserts += 1
-
-            assert tests == asserts
-            _LOGGER.debug("Number of device test-assert: %s", asserts)
+            if header == "devices":
+                test_and_assert(data_dict, data.devices, header)
 
         for header, data_dict in testdata.items():
             # Test zones
-            if header != "zones":
-                continue
-
-            tests = 0
-            asserts = 0
-            for testzone, measurements in data_dict.items():
-                tests += 1
-                assert testzone in data.zones
-                asserts += 1
-                for loc_id, details in data.zones.items():
-                    if testzone == loc_id:
-                        _LOGGER.info(
-                            "%s",
-                            "- Testing data for zone {} ({})".format(
-                                details["name"], loc_id
-                            ),
-                        )
-                        _LOGGER.info("  + Zone data: %s", details)
-                        for measure_key, measure_assert in measurements.items():
-                            _LOGGER.info(
-                                "%s",
-                                f"  + Testing {measure_key}/{type(measure_key)} with {details[measure_key]}/{type(details[measure_key])} (should be {measure_assert}/{type(measure_assert)} )",
-                            )
-                            tests += 1
-                            if (
-                                measure_key in bsw_list
-                                or measure_key in pw_constants.ACTIVE_ACTUATORS
-                            ):
-                                tests -= 1
-                                for key_1, val_1 in measure_assert.items():
-                                    tests += 1
-                                    for key_2, val_2 in details[measure_key].items():
-                                        if key_1 != key_2:
-                                            continue
-
-                                        _LOGGER.info(
-                                            "%s",
-                                            f"  + Testing {key_1} ({val_1} should be {val_2})",
-                                        )
-                                        assert val_1 == val_2
-                                        asserts += 1
-                            else:
-                                assert details[measure_key] == measure_assert
-                                asserts += 1
-
-            assert tests == asserts
-            _LOGGER.debug("Number of zone test-assert: %s", asserts)
+            if header == "zones":
+                test_and_assert(data_dict, data.zones, header)
 
         # pragma warning restore S3776
 

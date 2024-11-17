@@ -74,7 +74,7 @@ m_adam_cooling["devices"].pop("67d73d0bd469422db25a618a5fb8eeb0")
 m_adam_cooling["devices"].pop("10016900610d4c7481df78c89606ef22")
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
+m_adam_cooling["zones"]["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"][
     "setpoint"
 ] = 23.5
 
@@ -115,7 +115,7 @@ m_adam_cooling["devices"]["1772a4ea304041adb83f357b751341ff"]["sensors"][
 ] = 21.6
 
 # Go for e2f4
-m_adam_cooling["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["thermostat"][
+m_adam_cooling["zones"]["f871b8c4d63549319221e294e4f88074"]["thermostat"][
     "setpoint"
 ] = 25.0
 m_adam_cooling["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
@@ -163,7 +163,7 @@ m_adam_heating = m_adam_cooling.copy()
 m_adam_heating["gateway"]["cooling_present"] = False
 
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
-m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["thermostat"][
+m_adam_heating["zones"]["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"][
     "setpoint"
 ] = 20.0
 
@@ -187,7 +187,7 @@ m_adam_heating["devices"]["1772a4ea304041adb83f357b751341ff"]["sensors"][
 ] = 18.6
 
 # Go for e2f4
-m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["thermostat"][
+m_adam_heating["zones"]["f871b8c4d63549319221e294e4f88074"]["thermostat"][
     "setpoint"
 ] = 15.0
 
