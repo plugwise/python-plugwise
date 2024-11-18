@@ -583,5 +583,4 @@ class PlugwiseData:
     """Plugwise data provided as output."""
 
     gateway: GatewayData
-    devices: dict[str, DeviceZoneData]
-    zones: dict[str, DeviceZoneData]
+    device_zones: dict[str, DeviceZoneData]

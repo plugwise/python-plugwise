@@ -250,7 +250,7 @@ class SmileHelper(SmileCommon):
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceZoneData] = {}
+        self.gw_device_zones: dict[str, DeviceZoneData] = {}
         self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
@@ -322,13 +322,13 @@ class SmileHelper(SmileCommon):
             if appl.pwclass == "gateway" and self.smile_type == "power":
                 appl.dev_id = appl.location
 
-            self._create_gw_devices(appl)
+            self._create_gw_device_zones(appl)
 
         # For P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder(appl)
             # P1: for gateway and smartmeter switch device_id - part 2
-            for item in self.gw_devices:
+            for item in self.gw_device_zones:
                 if item != self.gateway_id:
                     self.gateway_id = item
                     # Leave for-loop to avoid a 2nd device_id switch
@@ -336,13 +336,13 @@ class SmileHelper(SmileCommon):
 
         # Place the gateway and optional heater_central devices as 1st and 2nd
         for dev_class in ("heater_central", "gateway"):
-            for dev_id, device in dict(self.gw_devices).items():
+            for dev_id, device in dict(self.gw_device_zones).items():
                 if device["dev_class"] == dev_class:
                     tmp_device = device
-                    self.gw_devices.pop(dev_id)
-                    cleared_dict = self.gw_devices
+                    self.gw_device_zones.pop(dev_id)
+                    cleared_dict = self.gw_device_zones
                     add_to_front = {dev_id: tmp_device}
-                    self.gw_devices = {**add_to_front, **cleared_dict}
+                    self.gw_device_zones = {**add_to_front, **cleared_dict}
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -378,7 +378,7 @@ class SmileHelper(SmileCommon):
         appl.vendor_name = module_data["vendor_name"]
         appl.zigbee_mac = None
 
-        self._create_gw_devices(appl)
+        self._create_gw_device_zones(appl)
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect info for all appliances found."""
@@ -483,7 +483,7 @@ class SmileHelper(SmileCommon):
         return therm_list
 
     def _get_zone_data(self, loc_id: str) -> DeviceZoneData:
-        """Helper-function for smile.py: _get_device_data().
+        """Helper-function for smile.py: _get_device_zone_data().
 
         Collect the location-data based on location id.
         """
@@ -499,13 +499,13 @@ class SmileHelper(SmileCommon):
         return data
 
     def _get_measurement_data(self, dev_id: str) -> DeviceZoneData:
-        """Helper-function for smile.py: _get_device_data().
+        """Helper-function for smile.py: _get_device_zone_data().
 
         Collect the appliance-data based on device id.
         """
         data: DeviceZoneData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS
-        device = self.gw_devices[dev_id]
+        device = self.gw_device_zones[dev_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
             if device["dev_class"] == "smartmeter":
@@ -588,7 +588,7 @@ class SmileHelper(SmileCommon):
         return data
 
     def _power_data_from_location(self, loc_id: str) -> DeviceZoneData:
-        """Helper-function for smile.py: _get_device_data().
+        """Helper-function for smile.py: _get_device_zone_data().
 
         Collect the power-data based on Location ID, from LOCATIONS.
         """
@@ -753,7 +753,7 @@ class SmileHelper(SmileCommon):
             self._count += 1
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
+        """Helper-function for smile.py: _get_device_zone_data() and _device_data_anna().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
@@ -831,7 +831,7 @@ class SmileHelper(SmileCommon):
         }
 
         for loc_id in self._thermo_locs:
-            for dev_id, device in self.gw_devices.items():
+            for dev_id, device in self.gw_device_zones.items():
                 self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
 
         for loc_id, loc_data in list(self._thermo_locs.items()):
@@ -854,7 +854,7 @@ class SmileHelper(SmileCommon):
         """
         matched_locations: dict[str, ThermoLoc] = {}
         for location_id, location_details in self.loc_data.items():
-            for appliance_details in self.gw_devices.values():
+            for appliance_details in self.gw_device_zones.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
                         {"primary": [], "primary_prio": 0, "secondary": []}

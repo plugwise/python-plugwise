@@ -28,14 +28,16 @@ class SmileData(SmileHelper):
         SmileHelper.__init__(self)
 
 
-    def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
+    def _all_device_zone_data(self) -> None:
+        """Helper-function for get_all_device_zones().
 
-        Collect data for each device and add to self.gw_data and self.gw_devices.
+        Collect data for each device/zone and add to self.gw_data and self.gw_device_zones.
         """
-        self._update_gw_devices()
+        self._update_gw_device_zones()
         if self.smile(ADAM):
             self._update_zones()
+            self.gw_device_zones.update(self.zone_data)
+
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
@@ -51,7 +53,7 @@ class SmileData(SmileHelper):
             )
 
     def _update_zones(self) -> None:
-        """Helper-function for _all_device_data() and async_update().
+        """Helper-function for _all_device_zone_data() and async_update().
 
         Collect data for each zone/location and add to self.zone_data.
         """
@@ -59,31 +61,31 @@ class SmileData(SmileHelper):
             data = self._get_location_data(location_id)
             zone.update(data)
 
-    def _update_gw_devices(self) -> None:
-        """Helper-function for _all_device_data() and async_update().
+    def _update_gw_device_zones(self) -> None:
+        """Helper-function for _all_device_zone_data() and async_update().
 
-        Collect data for each device and add to self.gw_devices.
+        Collect data for each device and add to self.gw_device_zones.
         """
         mac_list: list[str] = []
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            if device_id == self.gateway_id:
+        for devzone_id, devzone in self.gw_device_zones.items():
+            data = self._get_device_zone_data(devzone_id)
+            if devzone_id == self.gateway_id:
                 mac_list = self._detect_low_batteries()
-                self._add_or_update_notifications(device_id, device, data)
+                self._add_or_update_notifications(devzone_id, devzone, data)
 
-            device.update(data)
+            devzone.update(data)
             is_battery_low = (
                 mac_list
-                and "low_battery" in device["binary_sensors"]
-                and device["zigbee_mac_address"] in mac_list
-                and device["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
+                and "low_battery" in devzone["binary_sensors"]
+                and devzone["zigbee_mac_address"] in mac_list
+                and devzone["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
             )
             if is_battery_low:
-                device["binary_sensors"]["low_battery"] = True
+                devzone["binary_sensors"]["low_battery"] = True
 
-            self._update_for_cooling(device)
+            self._update_for_cooling(devzone)
 
-            remove_empty_platform_dicts(device)
+            remove_empty_platform_dicts(devzone)
 
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the low-battery binary_sensor status from a Battery-is-low message."""
@@ -107,31 +109,31 @@ class SmileData(SmileHelper):
         return mac_address_list
 
     def _add_or_update_notifications(
-        self, device_id: str, device: DeviceZoneData, data: DeviceZoneData
+        self, devzone_id: str, devzone: DeviceZoneData, data: DeviceZoneData
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
-            device_id == self.gateway_id
+            devzone_id == self.gateway_id
             and (
                 self._is_thermostat or self.smile_type == "power"
             )
         ) or (
-            "binary_sensors" in device
-            and "plugwise_notification" in device["binary_sensors"]
+            "binary_sensors" in devzone
+            and "plugwise_notification" in devzone["binary_sensors"]
         ):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             self._count += 1
 
-    def _update_for_cooling(self, device: DeviceZoneData) -> None:
+    def _update_for_cooling(self, devzone: DeviceZoneData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         # For Anna and heating + cooling, replace setpoint with setpoint_high/_low
         if (
             self.smile(ANNA)
             and self._cooling_present
-            and device["dev_class"] == "thermostat"
+            and devzone["dev_class"] == "thermostat"
         ):
-            thermostat = device["thermostat"]
-            sensors = device["sensors"]
+            thermostat = devzone["thermostat"]
+            sensors = devzone["sensors"]
             temp_dict: ActuatorData = {
                 "setpoint_low": thermostat["setpoint"],
                 "setpoint_high": MAX_SETPOINT,
@@ -143,7 +145,7 @@ class SmileData(SmileHelper):
                 }
             thermostat.pop("setpoint")
             temp_dict.update(thermostat)
-            device["thermostat"] = temp_dict
+            devzone["thermostat"] = temp_dict
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
@@ -152,7 +154,7 @@ class SmileData(SmileHelper):
 
 
     def _get_location_data(self, loc_id: str) -> DeviceZoneData:
-        """Helper-function for _all_device_data() and async_update().
+        """Helper-function for _all_device_zone_data() and async_update().
 
         Provide device-data, based on Location ID (= loc_id).
         """
@@ -163,16 +165,16 @@ class SmileData(SmileHelper):
             self._count += 1
 
         # Thermostat data (presets, temperatures etc)
-        self._device_data_climate(loc_id, zone, data)
+        self._devzone_data_climate(loc_id, zone, data)
 
         return data
 
-    def _get_device_data(self, dev_id: str) -> DeviceZoneData:
+    def _get_device_zone_data(self, dev_id: str) -> DeviceZoneData:
         """Helper-function for _update_gw_devices() and async_update().
 
-        Provide device-data, based on appliance_id ()= dev_id).
+        Provide device-data, based on appliance_id (= dev_id).
         """
-        device = self.gw_devices[dev_id]
+        device = self.gw_device_zones[dev_id]
         data = self._get_measurement_data(dev_id)
 
         # Check availability of wired-connected devices
@@ -193,14 +195,14 @@ class SmileData(SmileHelper):
 
         # Thermostat data for Anna (presets, temperatures etc)
         if self.smile(ANNA) and device["dev_class"] == "thermostat":
-            self._device_data_climate(dev_id, device, data)
+            self._devzone_data_climate(dev_id, device, data)
 
         return data
 
     def _check_availability(
         self, device: DeviceZoneData, dev_class: str, data: DeviceZoneData, message: str
     ) -> None:
-        """Helper-function for _get_device_data().
+        """Helper-function for _get_device_zone_data().
 
         Provide availability status for the wired-commected devices.
         """
@@ -213,7 +215,7 @@ class SmileData(SmileHelper):
                         data["available"] = False
 
     def _device_data_adam(self, device: DeviceZoneData, data: DeviceZoneData) -> None:
-        """Helper-function for _get_device_data().
+        """Helper-function for _get_device_zone_data().
 
         Determine Adam heating-status for on-off heating via valves,
         available regulations_modes and thermostat control_states.
@@ -237,19 +239,19 @@ class SmileData(SmileHelper):
                     self._count += 1
 
 
-    def _device_data_climate(
+    def _devzone_data_climate(
         self,
         location_id: str,
-        device: DeviceZoneData,
+        devzone: DeviceZoneData,
         data: DeviceZoneData
     ) -> None:
-        """Helper-function for _get_device_data().
+        """Helper-function for _get_device_zone_data().
 
         Determine climate-control device data.
         """
         loc_id = location_id
-        if device.get("location") is not None:
-            loc_id = device["location"]
+        if devzone.get("location") is not None:
+            loc_id = devzone["location"]
 
         # Presets
         data["preset_modes"] = None
@@ -284,7 +286,7 @@ class SmileData(SmileHelper):
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""
-        gateway = self.gw_devices[self.gateway_id]
+        gateway = self.gw_device_zones[self.gateway_id]
         return (
             "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
         )

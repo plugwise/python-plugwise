@@ -99,7 +99,7 @@ class SmileAPI(SmileData):
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
 
-    def get_all_devices(self) -> None:
+    def get_all_device_zones(self) -> None:
         """Determine the evices present from the obtained XML-data.
 
         Run this functions once to gather the initial device configuration,
@@ -117,21 +117,21 @@ class SmileAPI(SmileData):
 
         # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
+            self.gw_device_zones.update(group_data)
 
         # Collect the remaining data for all devices
-        self._all_device_data()
+        self._all_device_zone_data()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceZoneData] = {}
+        self.gw_device_zones: dict[str, DeviceZoneData] = {}
         self.zone_data: dict[str, DeviceZoneData] = {}
         try:
             await self.full_update_device()
-            self.get_all_devices()
+            self.get_all_device_zones()
             if "heater_id" in self.gw_data:
-                heat_cooler = self.gw_devices[self.gw_data["heater_id"]]
+                heat_cooler = self.gw_device_zones[self.gw_data["heater_id"]]
                 if (
                     "binary_sensors" in heat_cooler
                     and "cooling_enabled" in heat_cooler["binary_sensors"]
@@ -141,9 +141,8 @@ class SmileAPI(SmileData):
             raise DataMissingError("No Plugwise data received") from err
 
         return PlugwiseData(
-            devices=self.gw_devices,
+            device_zones=self.gw_device_zones,
             gateway=self.gw_data,
-            zones=self.zone_data,
         )
 
 ########################################################################################################

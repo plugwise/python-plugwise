@@ -516,24 +516,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await server.close()
 
     @staticmethod
-    def show_setup(location_list, device_list):
+    def show_setup(location_list, device_zone_list):
         """Show informative outline of the setup."""
         _LOGGER.info("This environment looks like:")
         for loc_id, loc_info in location_list.items():
             _LOGGER.info(
                 "  --> Location: %s", "{} ({})".format(loc_info["name"], loc_id)
             )
-            device_count = 0
-            for dev_id, dev_info in device_list.items():
-                if dev_info.get("location", "not_found") == loc_id:
-                    device_count += 1
+            devzone_count = 0
+            for devzone_id, devzone_info in device_zone_list.items():
+                if devzone_info.get("location", "not_found") == loc_id:
+                    devzone_count += 1
                     _LOGGER.info(
-                        "      + Device: %s",
+                        "      + Device_Zone: %s",
                         "{} ({} - {})".format(
-                            dev_info["name"], dev_info["dev_class"], dev_id
+                            devzone_info["name"], devzone_info["dev_class"], devzone_id
                         ),
                     )
-            if device_count == 0:  # pragma: no cover
+            if devzone_count == 0:  # pragma: no cover
                 _LOGGER.info("      ! no devices found in this location")
 
     @pytest.mark.asyncio
@@ -602,7 +602,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("Asserting testdata:")
                 if smile.smile_legacy:
                     await smile.full_update_device()
-                    smile.get_all_devices()
+                    smile.get_all_device_zones()
                     data = await smile.async_update()
                     assert smile._timeout == 30
                 else:
@@ -622,42 +622,34 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._cooling_active = False
         self._cooling_enabled = False
         if "heater_id" in data.gateway:
-            heat_cooler = data.devices[data.gateway["heater_id"]]
+            heat_cooler = data.device_zones[data.gateway["heater_id"]]
             if "binary_sensors" in heat_cooler:
                 if "cooling_enabled" in heat_cooler["binary_sensors"]:
                     self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
                 if "cooling_state" in heat_cooler["binary_sensors"]:
                     self._cooling_active = heat_cooler["binary_sensors"]["cooling_state"]
 
-        self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices, "zones": data.zones})
+        self._write_json("all_data", {"device_zones": data.device_zones, "gateway": data.gateway})
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-        self.device_list = list(data.devices.keys())
+        self.device_list = list(data.device_zones.keys())
         location_list = smile.loc_data
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
-        _LOGGER.info("Zone data = %s", data.zones)
-        _LOGGER.info("Device list = %s", data.devices)
-        self.show_setup(location_list, data.devices)
+        _LOGGER.info("Device_zone list = %s", data.device_zones)
+        self.show_setup(location_list, data.device_zones)
 
         if skip_testing:
             return
 
         # Perform tests and asserts in two steps: devices and zones
         for header, data_dict in testdata.items():
-            # Test devices
-            if header == "devices":
-                test_and_assert(data_dict, data.devices, header)
-
-        for header, data_dict in testdata.items():
-            # Test zones
-            if header == "zones":
-                test_and_assert(data_dict, data.zones, header)
+            test_and_assert(data_dict, data.device_zones, header)
 
         # pragma warning restore S3776
 

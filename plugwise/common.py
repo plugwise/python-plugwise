@@ -40,7 +40,7 @@ class SmileCommon:
         self._heater_id: str
         self._on_off_device: bool
         self._opentherm_device: bool
-        self.gw_devices: dict[str, DeviceZoneData]
+        self.gw_device_zones: dict[str, DeviceZoneData]
         self.smile_name: str
         self.smile_type: str
 
@@ -186,9 +186,9 @@ class SmileCommon:
 
         return direct_data
 
-    def _create_gw_devices(self, appl: Munch) -> None:
-        """Helper-function for creating/updating gw_devices."""
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+    def _create_gw_device_zones(self, appl: Munch) -> None:
+        """Helper-function for creating/updating gw_device_zones."""
+        self.gw_device_zones[appl.dev_id] = {"dev_class": appl.pwclass}
         self._count += 1
         for key, value in {
             "available": appl.available,
@@ -204,26 +204,26 @@ class SmileCommon:
         }.items():
             if value is not None or key == "location":
                 appl_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][appl_key] = value
+                self.gw_device_zones[appl.dev_id][appl_key] = value
                 self._count += 1
 
     def _device_data_switching_group(
         self, device: DeviceZoneData, data: DeviceZoneData
     ) -> None:
-        """Helper-function for _get_device_data().
+        """Helper-function for _get_device_zone_data().
 
         Determine switching group device data.
         """
         if device["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
             for member in device["members"]:
-                if self.gw_devices[member]["switches"].get("relay"):
+                if self.gw_device_zones[member]["switches"].get("relay"):
                     counter += 1
             data["switches"]["relay"] = counter != 0
             self._count += 1
 
     def _get_group_switches(self) -> dict[str, DeviceZoneData]:
-        """Helper-function for smile.py: get_all_devices().
+        """Helper-function for smile.py: get_all_device_zones().
 
         Collect switching- or pump-group info.
         """
@@ -240,7 +240,7 @@ class SmileCommon:
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
                 # Check if members are not orphaned - stretch
-                if item.attrib["id"] in self.gw_devices:
+                if item.attrib["id"] in self.gw_device_zones:
                     members.append(item.attrib["id"])
 
             if group_type in SWITCH_GROUP_TYPES and members:

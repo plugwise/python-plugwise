@@ -302,13 +302,13 @@ class Smile(SmileComm):
         """Helper-function used for testing."""
         await self._smile_api.full_update_device()
 
-    def get_all_devices(self) -> None:
+    def get_all_device_zones(self) -> None:
         """Helper-function used for testing."""
         self._smile_api.get_all_devices()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        data = PlugwiseData(devices={}, gateway={}, zones={})
+        data = PlugwiseData(device_zones={}, gateway={})
         try:
             data = await self._smile_api.async_update()
             self.gateway_id = data.gateway["gateway_id"]
