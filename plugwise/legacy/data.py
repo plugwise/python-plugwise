@@ -6,7 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, OFF, DeviceData
+from plugwise.constants import NONE, OFF, DeviceZoneData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -46,7 +46,7 @@ class SmileLegacyData(SmileLegacyHelper):
             device.update(data)
             remove_empty_platform_dicts(device)
 
-    def _get_device_data(self, dev_id: str) -> DeviceData:
+    def _get_device_data(self, dev_id: str) -> DeviceZoneData:
         """Helper-function for _all_device_data() and async_update().
 
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
@@ -66,7 +66,7 @@ class SmileLegacyData(SmileLegacyHelper):
 
         return data
 
-    def _device_data_climate(self, device: DeviceData, data: DeviceData) -> None:
+    def _device_data_climate(self, device: DeviceZoneData, data: DeviceZoneData) -> None:
         """Helper-function for _get_device_data().
 
         Determine climate-control device data.

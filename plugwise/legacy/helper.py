@@ -29,11 +29,10 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     ApplianceType,
-    DeviceData,
+    DeviceZoneData,
     GatewayData,
     SensorType,
     ThermoLoc,
-    ZoneData,
 )
 from plugwise.util import (
     common_match_cases,
@@ -81,7 +80,7 @@ class SmileLegacyHelper(SmileCommon):
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceData] = {}
+        self.gw_devices: dict[str, DeviceZoneData] = {}
         self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
@@ -90,7 +89,7 @@ class SmileLegacyHelper(SmileCommon):
         self.smile_name: str
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
-        self.zone_data: dict[str, ZoneData] = {}
+        self.zone_data: dict[str, DeviceZoneData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -268,12 +267,12 @@ class SmileLegacyHelper(SmileCommon):
 
         self._create_gw_devices(appl)
 
-    def _get_measurement_data(self, dev_id: str) -> DeviceData:
+    def _get_measurement_data(self, dev_id: str) -> DeviceZoneData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the appliance-data based on device id.
         """
-        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
+        data: DeviceZoneData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS or MODULES
         device = self.gw_devices[dev_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
@@ -312,12 +311,12 @@ class SmileLegacyHelper(SmileCommon):
 
         return data
 
-    def _power_data_from_modules(self) -> DeviceData:
+    def _power_data_from_modules(self) -> DeviceZoneData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the power-data from MODULES (P1 legacy only).
         """
-        direct_data: DeviceData = {"sensors": {}}
+        direct_data: DeviceZoneData = {"sensors": {}}
         loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         t_string = "tariff_indicator"
@@ -336,7 +335,7 @@ class SmileLegacyHelper(SmileCommon):
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceData | ZoneData,
+        data: DeviceZoneData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
@@ -370,8 +369,8 @@ class SmileLegacyHelper(SmileCommon):
     def _get_actuator_functionalities(
         self,
         xml: etree,
-        device: DeviceData | ZoneData,
-        data: DeviceData | ZoneData
+        device: DeviceZoneData,
+        data: DeviceZoneData
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:

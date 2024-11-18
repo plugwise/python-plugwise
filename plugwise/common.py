@@ -11,7 +11,7 @@ from plugwise.constants import (
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     ApplianceType,
-    DeviceData,
+    DeviceZoneData,
     ModelData,
     SensorType,
 )
@@ -40,7 +40,7 @@ class SmileCommon:
         self._heater_id: str
         self._on_off_device: bool
         self._opentherm_device: bool
-        self.gw_devices: dict[str, DeviceData]
+        self.gw_devices: dict[str, DeviceZoneData]
         self.smile_name: str
         self.smile_type: str
 
@@ -108,7 +108,7 @@ class SmileCommon:
 
         return appl
 
-    def _collect_power_values(self, data: DeviceData, loc: Munch, tariff: str, legacy: bool = False) -> None:
+    def _collect_power_values(self, data: DeviceZoneData, loc: Munch, tariff: str, legacy: bool = False) -> None:
         """Something."""
         for loc.peak_select in ("nl_peak", "nl_offpeak"):
             loc.locator = (
@@ -160,8 +160,8 @@ class SmileCommon:
         measurement: str,
         net_string: SensorType,
         f_val: float | int,
-        direct_data: DeviceData,
-    ) -> DeviceData:
+        direct_data: DeviceZoneData,
+    ) -> DeviceZoneData:
         """Calculate differential energy."""
         if (
             "electricity" in measurement
@@ -208,7 +208,7 @@ class SmileCommon:
                 self._count += 1
 
     def _device_data_switching_group(
-        self, device: DeviceData, data: DeviceData
+        self, device: DeviceZoneData, data: DeviceZoneData
     ) -> None:
         """Helper-function for _get_device_data().
 
@@ -222,12 +222,12 @@ class SmileCommon:
             data["switches"]["relay"] = counter != 0
             self._count += 1
 
-    def _get_group_switches(self) -> dict[str, DeviceData]:
+    def _get_group_switches(self) -> dict[str, DeviceZoneData]:
         """Helper-function for smile.py: get_all_devices().
 
         Collect switching- or pump-group info.
         """
-        switch_groups: dict[str, DeviceData] = {}
+        switch_groups: dict[str, DeviceZoneData] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile(ANNA):
             return switch_groups
@@ -258,7 +258,7 @@ class SmileCommon:
 
         return switch_groups
 
-    def _get_lock_state(self, xml: etree, data: DeviceData, stretch_v2: bool = False) -> None:
+    def _get_lock_state(self, xml: etree, data: DeviceZoneData, stretch_v2: bool = False) -> None:
         """Helper-function for _get_measurement_data().
 
         Adam & Stretches: obtain the relay-switch lock state.

@@ -516,35 +516,11 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class MemberData:
-    """ZoneData Member data class."""
+class DeviceZoneData(TypedDict, total=False):
+    """The DeviceZone data class.
 
-    primary: list[str]
-    secondary: list[str]
-
-
-class ZoneData(TypedDict, total=False):
-    """The Climate Data class, covering the collected and ordered output-data per location."""
-
-    dev_class: str
-    name: str
-    members: dict[str, list[str]]
-    climate_mode: str
-    # Extra for Adam Master Thermostats
-    control_state: str | bool
-    # Presets:
-    active_preset: str | None
-    preset_modes: list[str] | None
-    # Schedules:
-    available_schedules: list[str]
-    select_schedule: str
-
-    sensors: SmileSensors
-    thermostat: ActuatorData
-
-
-class DeviceData(TypedDict, total=False):
-    """The Device Data class, covering the collected and ordered output-data per device."""
+    Covering the collected output-data per device or location.
+    """
 
     # Appliance base data
     dev_class: str
@@ -579,7 +555,8 @@ class DeviceData(TypedDict, total=False):
     select_gateway_mode: str
     select_regulation_mode: str
 
-    # Single thermostat (Anna)
+    # Thermostat-related
+    thermostats: dict[str, list[str]]
     # Presets:
     active_preset: str | None
     preset_modes: list[str] | None
@@ -606,5 +583,5 @@ class PlugwiseData:
     """Plugwise data provided as output."""
 
     gateway: GatewayData
-    devices: dict[str, DeviceData]
-    zones: dict[str, ZoneData]
+    devices: dict[str, DeviceZoneData]
+    zones: dict[str, DeviceZoneData]

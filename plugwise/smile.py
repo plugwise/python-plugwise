@@ -22,11 +22,10 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
-    DeviceData,
+    DeviceZoneData,
     GatewayData,
     PlugwiseData,
     ThermoLoc,
-    ZoneData,
 )
 from plugwise.data import SmileData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
@@ -126,8 +125,8 @@ class SmileAPI(SmileData):
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceData] = {}
-        self.zone_data: dict[str, ZoneData] = {}
+        self.gw_devices: dict[str, DeviceZoneData] = {}
+        self.zone_data: dict[str, DeviceZoneData] = {}
         try:
             await self.full_update_device()
             self.get_all_devices()

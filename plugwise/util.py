@@ -22,12 +22,11 @@ from plugwise.constants import (
     TEMP_CELSIUS,
     UOM,
     BinarySensorType,
-    DeviceData,
+    DeviceZoneData,
     ModelData,
     SensorType,
     SpecialType,
     SwitchType,
-    ZoneData,
 )
 
 from defusedxml import ElementTree as etree
@@ -123,7 +122,7 @@ def common_match_cases(
     measurement: str,
     attrs: DATA | UOM,
     location: etree,
-    data: DeviceData | ZoneData,
+    data: DeviceZoneData,
 ) -> None:
     """Helper-function for common match-case execution."""
     value = location.text in ("on", "true")
@@ -203,7 +202,7 @@ def power_data_local_format(
     return format_measure(val, attrs_uom)
 
 
-def remove_empty_platform_dicts(data: DeviceData) -> None:
+def remove_empty_platform_dicts(data: DeviceZoneData) -> None:
     """Helper-function for removing any empty platform dicts."""
     if not data["binary_sensors"]:
         data.pop("binary_sensors")

@@ -19,11 +19,10 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
-    DeviceData,
+    DeviceZoneData,
     GatewayData,
     PlugwiseData,
     ThermoLoc,
-    ZoneData,
 )
 from plugwise.exceptions import ConnectionFailedError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
@@ -120,8 +119,8 @@ class SmileLegacyAPI(SmileLegacyData):
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
             self.gw_data: GatewayData = {}
-            self.gw_devices: dict[str, DeviceData] = {}
-            self.zone_data: dict[str, ZoneData] = {}
+            self.gw_devices: dict[str, DeviceZoneData] = {}
+            self.zone_data: dict[str, DeviceZoneData] = {}
             await self.full_update_device()
             self.get_all_devices()
         # Otherwise perform an incremental update

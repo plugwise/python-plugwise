@@ -14,8 +14,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     ActuatorData,
-    DeviceData,
-    ZoneData,
+    DeviceZoneData,
 )
 from plugwise.helper import SmileHelper
 from plugwise.util import remove_empty_platform_dicts
@@ -108,7 +107,7 @@ class SmileData(SmileHelper):
         return mac_address_list
 
     def _add_or_update_notifications(
-        self, device_id: str, device: DeviceData, data: DeviceData
+        self, device_id: str, device: DeviceZoneData, data: DeviceZoneData
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
@@ -123,7 +122,7 @@ class SmileData(SmileHelper):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             self._count += 1
 
-    def _update_for_cooling(self, device: DeviceData) -> None:
+    def _update_for_cooling(self, device: DeviceZoneData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         # For Anna and heating + cooling, replace setpoint with setpoint_high/_low
         if (
@@ -152,7 +151,7 @@ class SmileData(SmileHelper):
             self._count += 2  # add 4, remove 2
 
 
-    def _get_location_data(self, loc_id: str) -> ZoneData:
+    def _get_location_data(self, loc_id: str) -> DeviceZoneData:
         """Helper-function for _all_device_data() and async_update().
 
         Provide device-data, based on Location ID (= loc_id).
@@ -168,7 +167,7 @@ class SmileData(SmileHelper):
 
         return data
 
-    def _get_device_data(self, dev_id: str) -> DeviceData:
+    def _get_device_data(self, dev_id: str) -> DeviceZoneData:
         """Helper-function for _update_gw_devices() and async_update().
 
         Provide device-data, based on appliance_id ()= dev_id).
@@ -199,7 +198,7 @@ class SmileData(SmileHelper):
         return data
 
     def _check_availability(
-        self, device: DeviceData, dev_class: str, data: DeviceData, message: str
+        self, device: DeviceZoneData, dev_class: str, data: DeviceZoneData, message: str
     ) -> None:
         """Helper-function for _get_device_data().
 
@@ -213,7 +212,7 @@ class SmileData(SmileHelper):
                     if message in msg:
                         data["available"] = False
 
-    def _device_data_adam(self, device: DeviceData, data: DeviceData) -> None:
+    def _device_data_adam(self, device: DeviceZoneData, data: DeviceZoneData) -> None:
         """Helper-function for _get_device_data().
 
         Determine Adam heating-status for on-off heating via valves,
@@ -241,8 +240,8 @@ class SmileData(SmileHelper):
     def _device_data_climate(
         self,
         location_id: str,
-        device: DeviceData | ZoneData,
-        data: DeviceData | ZoneData
+        device: DeviceZoneData,
+        data: DeviceZoneData
     ) -> None:
         """Helper-function for _get_device_data().
 
@@ -291,7 +290,7 @@ class SmileData(SmileHelper):
         )
 
     def _get_schedule_states_with_off(
-        self, location: str, schedules: list[str], selected: str, data: DeviceData | ZoneData
+        self, location: str, schedules: list[str], selected: str, data: DeviceZoneData
     ) -> None:
         """Collect schedules with states for each thermostat.
 

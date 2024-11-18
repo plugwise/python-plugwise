@@ -36,12 +36,11 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    DeviceData,
+    DeviceZoneData,
     GatewayData,
     SensorType,
     ThermoLoc,
     ToggleNameType,
-    ZoneData,
 )
 from plugwise.exceptions import (
     ConnectionFailedError,
@@ -251,7 +250,7 @@ class SmileHelper(SmileCommon):
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceData] = {}
+        self.gw_devices: dict[str, DeviceZoneData] = {}
         self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
@@ -262,7 +261,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
-        self.zone_data: dict[str, ZoneData] = {}
+        self.zone_data: dict[str, DeviceZoneData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -483,12 +482,12 @@ class SmileHelper(SmileCommon):
 
         return therm_list
 
-    def _get_zone_data(self, loc_id: str) -> ZoneData:
+    def _get_zone_data(self, loc_id: str) -> DeviceZoneData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the location-data based on location id.
         """
-        data: ZoneData = {"sensors": {}}
+        data: DeviceZoneData = {"sensors": {}}
         zone = self.zone_data[loc_id]
         measurements = ZONE_MEASUREMENTS
         if (
@@ -499,12 +498,12 @@ class SmileHelper(SmileCommon):
 
         return data
 
-    def _get_measurement_data(self, dev_id: str) -> DeviceData:
+    def _get_measurement_data(self, dev_id: str) -> DeviceZoneData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the appliance-data based on device id.
         """
-        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
+        data: DeviceZoneData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS
         device = self.gw_devices[dev_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
@@ -588,12 +587,12 @@ class SmileHelper(SmileCommon):
 
         return data
 
-    def _power_data_from_location(self, loc_id: str) -> DeviceData:
+    def _power_data_from_location(self, loc_id: str) -> DeviceZoneData:
         """Helper-function for smile.py: _get_device_data().
 
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceData = {"sensors": {}}
+        direct_data: DeviceZoneData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         t_string = "tariff"
@@ -610,7 +609,7 @@ class SmileHelper(SmileCommon):
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceData,
+        data: DeviceZoneData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
@@ -648,7 +647,7 @@ class SmileHelper(SmileCommon):
         self._count += len(data) - 3
 
     def _get_toggle_state(
-        self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
+        self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceZoneData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -677,7 +676,7 @@ class SmileHelper(SmileCommon):
                 )
 
     def _get_actuator_functionalities(
-        self, xml: etree, device: DeviceData, data: DeviceData
+        self, xml: etree, device: DeviceZoneData, data: DeviceZoneData
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
@@ -732,7 +731,7 @@ class SmileHelper(SmileCommon):
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
-    def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
+    def _get_regulation_mode(self, appliance: etree, data: DeviceZoneData) -> None:
         """Helper-function for _get_measurement_data().
 
         Collect the gateway regulation_mode.
@@ -743,7 +742,7 @@ class SmileHelper(SmileCommon):
             self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
 
-    def _get_gateway_mode(self, appliance: etree, data: DeviceData) -> None:
+    def _get_gateway_mode(self, appliance: etree, data: DeviceZoneData) -> None:
         """Helper-function for _get_measurement_data().
 
         Collect the gateway mode.
@@ -766,7 +765,7 @@ class SmileHelper(SmileCommon):
 
         return val
 
-    def _process_c_heating_state(self, data: DeviceData) -> None:
+    def _process_c_heating_state(self, data: DeviceZoneData) -> None:
         """Helper-function for _get_measurement_data().
 
         Process the central_heating_state value.
@@ -794,7 +793,7 @@ class SmileHelper(SmileCommon):
         if self._elga:
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
-    def _cleanup_data(self, data: DeviceData) -> None:
+    def _cleanup_data(self, data: DeviceZoneData) -> None:
         """Helper-function for _get_measurement_data().
 
         Clean up the data dict.
@@ -842,7 +841,7 @@ class SmileHelper(SmileCommon):
                         loc_id: {
                             "dev_class": "climate",
                             "name": loc_data["name"],
-                            "members": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}
+                            "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}
                         }
                     }
                 )
@@ -869,7 +868,7 @@ class SmileHelper(SmileCommon):
         thermo_matching: dict[str, int],
         loc_id: str,
         appliance_id: str,
-        appliance_details: DeviceData,
+        appliance_details: DeviceZoneData,
     ) -> None:
         """Helper-function for _scan_thermostats().
 
