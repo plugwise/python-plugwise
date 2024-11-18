@@ -308,7 +308,7 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
-        data = PlugwiseData({}, {}, {})
+        data = PlugwiseData(devices={}, gateway={}, zones={})
         try:
             data = await self._smile_api.async_update()
             self.gateway_id = data.gateway["gateway_id"]

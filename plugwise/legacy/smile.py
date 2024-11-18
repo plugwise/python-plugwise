@@ -136,8 +136,8 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._previous_day_number = day_number
         return PlugwiseData(
-            gateway=self.gw_data,
             devices=self.gw_devices,
+            gateway=self.gw_data,
             zones=self.zone_data,
         )
 
