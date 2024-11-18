@@ -248,12 +248,6 @@
       "climate_mode": "auto",
       "control_state": "heating",
       "dev_class": "climate",
-      "members": {
-        "primary": [
-          "ad4838d7d35c4d6ea796ee12ae5aedf8"
-        ],
-        "secondary": []
-      },
       "name": "Living room",
       "preset_modes": [
         "no_frost",
@@ -273,6 +267,12 @@
         "resolution": 0.01,
         "setpoint": 18.5,
         "upper_bound": 35.0
+      },
+      "thermostats": {
+        "primary": [
+          "ad4838d7d35c4d6ea796ee12ae5aedf8"
+        ],
+        "secondary": []
       }
     },
     "f871b8c4d63549319221e294e4f88074": {
@@ -287,14 +287,6 @@
       "climate_mode": "auto",
       "control_state": "preheating",
       "dev_class": "climate",
-      "members": {
-        "primary": [
-          "e2f4322d57924fa090fbbc48b3a140dc"
-        ],
-        "secondary": [
-          "1772a4ea304041adb83f357b751341ff"
-        ]
-      },
       "name": "Bathroom",
       "preset_modes": [
         "no_frost",
@@ -314,6 +306,14 @@
         "resolution": 0.01,
         "setpoint": 18.0,
         "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "e2f4322d57924fa090fbbc48b3a140dc"
+        ],
+        "secondary": [
+          "1772a4ea304041adb83f357b751341ff"
+        ]
       }
     }
   }
