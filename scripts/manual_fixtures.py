@@ -81,13 +81,13 @@ m_adam_cooling["zones"]["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"][
 # Add new key available
 m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["available"] = True
 
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
+m_adam_cooling["zones"]["f2bf9048bef64cc5b6d5110154e33c81"][
     "select_schedule"
 ] = "off"
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
+m_adam_cooling["zones"]["f2bf9048bef64cc5b6d5110154e33c81"][
     "control_state"
 ] = "cooling"
-m_adam_cooling["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["climate_mode"] = "cool"
+m_adam_cooling["zones"]["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "cool"
 
 # (following diff, now 2954 is removed)
 # Remove device "29542b2b6a6a4169acecc15c72a599b8" from anywhere
@@ -167,11 +167,11 @@ m_adam_heating["zones"]["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"][
     "setpoint"
 ] = 20.0
 
-m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"][
+m_adam_heating["zones"]["f2bf9048bef64cc5b6d5110154e33c81"][
     "control_state"
 ] = "preheating"
 
-m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["climate_mode"] = "heat"
+m_adam_heating["zones"]["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "heat"
 
 # Back at ad48
 m_adam_heating["devices"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"][
