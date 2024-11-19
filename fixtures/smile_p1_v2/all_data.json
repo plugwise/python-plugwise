@@ -1,5 +1,5 @@
 {
-  "devices": {
+  "device_zones": {
     "938696c4bcdb4b8a9a595cb38ed43913": {
       "dev_class": "smartmeter",
       "location": "938696c4bcdb4b8a9a595cb38ed43913",
@@ -37,6 +37,5 @@
     "gateway_id": "aaaa0000aaaa0000aaaa0000aaaa00aa",
     "item_count": 26,
     "smile_name": "Smile P1"
-  },
-  "zones": {}
+  }
 }
