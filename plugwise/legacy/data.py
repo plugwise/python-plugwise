@@ -21,7 +21,7 @@ class SmileLegacyData(SmileLegacyHelper):
     def _all_device_data(self) -> None:
         """Helper-function for get_all_devices().
 
-        Collect data for each device and add to self.gw_data and self.gw_devices.
+        Collect data for each device and add to self.gw_data and self.gw_device_zones.
         """
         self._update_gw_devices()
         self.gw_data.update(
@@ -39,9 +39,9 @@ class SmileLegacyData(SmileLegacyHelper):
     def _update_gw_devices(self) -> None:
         """Helper-function for _all_device_data() and async_update().
 
-        Collect data for each device and add to self.gw_devices.
+        Collect data for each device and add to self.gw_device_zones.
         """
-        for device_id, device in self.gw_devices.items():
+        for device_id, device in self.gw_device_zones.items():
             data = self._get_device_data(device_id)
             device.update(data)
             remove_empty_platform_dicts(device)
@@ -51,7 +51,7 @@ class SmileLegacyData(SmileLegacyHelper):
 
         Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
         """
-        device = self.gw_devices[dev_id]
+        device = self.gw_device_zones[dev_id]
         data = self._get_measurement_data(dev_id)
 
         # Switching groups data

@@ -102,7 +102,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
+            self.gw_device_zones.update(group_data)
 
         # Collect the remaining data for all devices
         self._all_device_data()
@@ -119,8 +119,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
             self.gw_data: GatewayData = {}
-            self.gw_devices: dict[str, DeviceZoneData] = {}
-            self.zone_data: dict[str, DeviceZoneData] = {}
+            self.gw_device_zones: dict[str, DeviceZoneData] = {}
             await self.full_update_device()
             self.get_all_devices()
         # Otherwise perform an incremental update
@@ -136,9 +135,8 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._previous_day_number = day_number
         return PlugwiseData(
-            devices=self.gw_devices,
+            device_zones=self.gw_device_zones,
             gateway=self.gw_data,
-            zones=self.zone_data,
         )
 
 ########################################################################################################

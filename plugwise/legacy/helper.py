@@ -80,7 +80,7 @@ class SmileLegacyHelper(SmileCommon):
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceZoneData] = {}
+        self.gw_device_zones: dict[str, DeviceZoneData] = {}
         self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
@@ -143,17 +143,17 @@ class SmileLegacyHelper(SmileCommon):
             if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
                 continue  # pragma: no cover
 
-            self._create_gw_devices(appl)
+            self._create_gw_device_zones(appl)
 
         # Place the gateway and optional heater_central devices as 1st and 2nd
         for dev_class in ("heater_central", "gateway"):
-            for dev_id, device in dict(self.gw_devices).items():
+            for dev_id, device in dict(self.gw_device_zones).items():
                 if device["dev_class"] == dev_class:
                     tmp_device = device
-                    self.gw_devices.pop(dev_id)
-                    cleared_dict = self.gw_devices
+                    self.gw_device_zones.pop(dev_id)
+                    cleared_dict = self.gw_device_zones
                     add_to_front = {dev_id: tmp_device}
-                    self.gw_devices = {**add_to_front, **cleared_dict}
+                    self.gw_device_zones = {**add_to_front, **cleared_dict}
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -194,7 +194,7 @@ class SmileLegacyHelper(SmileCommon):
         if self.smile_type == "power":
             self.gateway_id = FAKE_APPL
 
-        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
+        self.gw_device_zones[self.gateway_id] = {"dev_class": "gateway"}
         self._count += 1
         for key, value in {
             "firmware": str(self.smile_fw_version),
@@ -207,7 +207,7 @@ class SmileLegacyHelper(SmileCommon):
         }.items():
             if value is not None:
                 gw_key = cast(ApplianceType, key)
-                self.gw_devices[self.gateway_id][gw_key] = value
+                self.gw_device_zones[self.gateway_id][gw_key] = value
                 self._count += 1
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
@@ -265,7 +265,7 @@ class SmileLegacyHelper(SmileCommon):
         location = self._locations.find(f'./location[@id="{loc_id}"]')
         appl = self._energy_device_info_finder(location, appl)
 
-        self._create_gw_devices(appl)
+        self._create_gw_device_zones(appl)
 
     def _get_measurement_data(self, dev_id: str) -> DeviceZoneData:
         """Helper-function for smile.py: _get_device_data().
@@ -274,7 +274,7 @@ class SmileLegacyHelper(SmileCommon):
         """
         data: DeviceZoneData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS or MODULES
-        device = self.gw_devices[dev_id]
+        device = self.gw_device_zones[dev_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
             if device["dev_class"] == "smartmeter":
