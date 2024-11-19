@@ -50,9 +50,9 @@ fi
 # As to not generated fixtures, leaving biome to re-do them
 # so no auto-generation during github run of testing
 # Creating todo #313 to 'gracefully' do this on merge on github action
-if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
-    echo "... crafting manual fixtures ..." 
-    PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
-fi
+# if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
+#    echo "... crafting manual fixtures ..." 
+#    PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
+# fi
 echo "... biome-ing (fixtures and testdata) ..." 
 ./tmp/biome lint --staged --files-ignore-unknown=true --no-errors-on-unmatched
