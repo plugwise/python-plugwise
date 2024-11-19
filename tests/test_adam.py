@@ -49,7 +49,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "854f8a9b0e7e425db97f1f110e1ce4b3",
             "2568cc4b9c1e401495d4741a5f89bee1",
             "e8ef2a01ed3b4139a53bf749204fe6b4",
-            "f2bf9048bef64cc5b6d5110154e33c81", 
+            "f2bf9048bef64cc5b6d5110154e33c81",
             "f871b8c4d63549319221e294e4f88074",
         ]
 
