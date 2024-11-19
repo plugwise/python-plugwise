@@ -91,8 +91,8 @@ class SmileLegacyAPI(SmileLegacyData):
         if self.smile_type != "power":
             self._appliances = await self.request(APPLIANCES)
 
-    def get_all_devices(self) -> None:
-        """Determine the evices present from the obtained XML-data.
+    def get_all_device_zones(self) -> None:
+        """Determine the devices present from the obtained XML-data.
 
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
@@ -121,7 +121,7 @@ class SmileLegacyAPI(SmileLegacyData):
             self.gw_data: GatewayData = {}
             self.gw_device_zones: dict[str, DeviceZoneData] = {}
             await self.full_update_device()
-            self.get_all_devices()
+            self.get_all_device_zones()
         # Otherwise perform an incremental update
         else:
             self._domain_objects = await self.request(DOMAIN_OBJECTS)

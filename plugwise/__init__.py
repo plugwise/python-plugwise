@@ -304,7 +304,7 @@ class Smile(SmileComm):
 
     def get_all_device_zones(self) -> None:
         """Helper-function used for testing."""
-        self._smile_api.get_all_devices()
+        self._smile_api.get_all_device_zones()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
