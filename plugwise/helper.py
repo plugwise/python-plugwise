@@ -547,6 +547,8 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and self.smile(ANNA):
             self._update_anna_cooling(entity_id, data)
 
+        self._cleanup_data(data)
+
         return data
 
     def _power_data_from_location(self, loc_id: str) -> GwEntityData:
@@ -795,8 +797,6 @@ class SmileHelper(SmileCommon):
             self._update_elga_cooling(data)
         elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
             self._update_loria_cooling(data)
-
-        self._cleanup_data(data)
 
     def _update_elga_cooling(self, data: GwEntityData) -> None:
         """# Anna+Elga: base cooling_state on the elga-status-code."""

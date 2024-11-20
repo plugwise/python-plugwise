@@ -28,7 +28,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "a455b61e52394b2db5081ce025a430f3"
-        assert self.device_items == 32
+        assert self.entity_items == 32
         assert not self.notifications
 
         # Now change some data and change directory reading xml from
