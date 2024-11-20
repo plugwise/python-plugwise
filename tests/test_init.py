@@ -516,7 +516,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await server.close()
 
     @staticmethod
-    def show_setup(location_list, device_zone_list):
+    def show_setup(location_list, entity_list):
         """Show informative outline of the setup."""
         _LOGGER.info("This environment looks like:")
         for loc_id, loc_info in location_list.items():
@@ -524,11 +524,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 "  --> Location: %s", "{} ({})".format(loc_info["name"], loc_id)
             )
             devzone_count = 0
-            for devzone_id, devzone_info in device_zone_list.items():
+            for devzone_id, devzone_info in entity_list.items():
                 if devzone_info.get("location", "not_found") == loc_id:
                     devzone_count += 1
                     _LOGGER.info(
-                        "      + Device_Zone: %s",
+                        "      + Entity: %s",
                         "{} ({} - {})".format(
                             devzone_info["name"], devzone_info["dev_class"], devzone_id
                         ),
@@ -595,7 +595,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.debug("Item %s test-asserts: %s", testitem, item_asserts)
 
             assert tests == asserts
-            _LOGGER.debug("Total device_zone test-asserts: %s", asserts)
+            _LOGGER.debug("Total entity test-asserts: %s", asserts)
 
         # pragma warning disable S3776
 
@@ -639,14 +639,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-        self.device_list = list(data.device_zones.keys())
+        self.entity_list = list(data.entities.keys())
         location_list = smile.loc_data
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
         _LOGGER.info("Entities list = %s", data.entities)
-        self.show_setup(location_list, data.device_zones)
+        self.show_setup(location_list, data.entities)
 
         if skip_testing:
             return
