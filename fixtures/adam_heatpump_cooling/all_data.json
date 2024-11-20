@@ -1,5 +1,43 @@
 {
-  "devices": {
+  "entities": {
+    "04b15f6e884448288f811d29fb7b1b30": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "cool",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Slaapkamer SJ",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "off",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
+        "temperature": 22.6
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 20.5,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "d3a276aeb3114a509bab1e4bf8c40348"
+        ],
+        "secondary": []
+      }
+    },
     "0ca13e8176204ca7bf6f09de59f81c83": {
       "available": true,
       "binary_sensors": {
@@ -40,19 +78,10 @@
       "vendor": "Remeha B.V."
     },
     "1053c8bbf8be43c6921742b146a625f1": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
       "binary_sensors": {
         "low_battery": false
       },
-      "climate_mode": "cool",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -60,14 +89,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat BK",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "off",
       "sensors": {
         "battery": 55,
         "setpoint": 18.0,
@@ -78,12 +99,6 @@
         "resolution": 0.1,
         "setpoint": 0.0,
         "upper_bound": 2.0
-      },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 18.0,
-        "upper_bound": 99.9
       },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A17"
@@ -107,6 +122,44 @@
       },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A05"
+    },
+    "20e735858f8146cead98b873177a4f99": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "cool",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Slaapkamer DB",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "off",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
+        "temperature": 22.0
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 18.0,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "47e2c550a33846b680725aa3fb229473"
+        ],
+        "secondary": []
+      }
     },
     "2e0fc4db2a6d4cbeb7cf786143543961": {
       "available": true,
@@ -169,16 +222,7 @@
       "zigbee_mac_address": "ABCD012345670A18"
     },
     "47e2c550a33846b680725aa3fb229473": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "cool",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -186,14 +230,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat DB",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "off",
       "sensors": {
         "setpoint": 18.0,
         "temperature": 22.0
@@ -204,14 +240,45 @@
         "setpoint": 0.0,
         "upper_bound": 2.0
       },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "ABCD012345670A20"
+    },
+    "5cc21042f87f4b4c94ccb5537c47a53f": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "auto",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Badkamer 2",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "Werkdag schema",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "temperature": 21.9
+      },
       "thermostat": {
         "lower_bound": 0.0,
         "resolution": 0.01,
-        "setpoint": 18.0,
+        "setpoint": 20.5,
         "upper_bound": 99.9
       },
-      "vendor": "Plugwise",
-      "zigbee_mac_address": "ABCD012345670A20"
+      "thermostats": {
+        "primary": [
+          "f04c985c11ad4848b8fcd710343f9dcf"
+        ],
+        "secondary": []
+      }
     },
     "5ead63c65e5f44e7870ba2bd680ceb9e": {
       "available": true,
@@ -266,16 +333,7 @@
       "zigbee_mac_address": "ABCD012345670101"
     },
     "7fda9f84f01342f8afe9ebbbbff30c0f": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "cool",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -283,14 +341,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat JM",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "off",
       "sensors": {
         "setpoint": 18.0,
         "temperature": 20.0
@@ -300,12 +350,6 @@
         "resolution": 0.1,
         "setpoint": 0.0,
         "upper_bound": 2.0
-      },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 18.0,
-        "upper_bound": 99.9
       },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A01"
@@ -350,6 +394,81 @@
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A10"
     },
+    "8cf650a4c10c44819e426bed406aec34": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "auto",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Badkamer 1",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "Werkdag schema",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
+        "temperature": 21.5
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 20.5,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "eac5db95d97241f6b17790897847ccf5"
+        ],
+        "secondary": []
+      }
+    },
+    "93ac3f7bf25342f58cbb77c4a99ac0b3": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "cool",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Slaapkamer RB",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "off",
+      "sensors": {
+        "electricity_consumed": 3.13,
+        "temperature": 20.7
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 17.0,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "c4ed311d54e341f58b4cdd201d1fde7e"
+        ],
+        "secondary": []
+      }
+    },
     "96714ad90fc948bcbcb5021c4b9f5ae9": {
       "available": true,
       "dev_class": "valve_actuator_plug",
@@ -370,6 +489,44 @@
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A03"
     },
+    "9a27714b970547ee9a6bdadc2b815ad5": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "cool",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Slaapkamer SQ",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "off",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
+        "temperature": 21.4
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 18.5,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "beb32da072274e698146db8b022f3c36"
+        ],
+        "secondary": []
+      }
+    },
     "a03b6e8e76dd4646af1a77c31dd9370c": {
       "available": true,
       "dev_class": "valve_actuator_plug",
@@ -389,6 +546,82 @@
       },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A08"
+    },
+    "a562019b0b1f47a4bde8ebe3dbe3e8a9": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "auto",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Keuken",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "Werkdag schema",
+      "sensors": {
+        "electricity_consumed": 2.13,
+        "electricity_produced": 0.0,
+        "temperature": 22.5
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 21.5,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "ea8372c0e3ad4622ad45a041d02425f5"
+        ],
+        "secondary": []
+      }
+    },
+    "b52908550469425b812c87f766fe5303": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "cool",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Bijkeuken",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "off",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
+        "temperature": 18.8
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 18.0,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "1053c8bbf8be43c6921742b146a625f1"
+        ],
+        "secondary": []
+      }
     },
     "bbcffa48019f4b09b8368bbaf9559e68": {
       "available": true,
@@ -411,16 +644,7 @@
       "zigbee_mac_address": "ABCD012345670A16"
     },
     "beb32da072274e698146db8b022f3c36": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "cool",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -428,14 +652,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat SQ",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "off",
       "sensors": {
         "setpoint": 18.5,
         "temperature": 21.4
@@ -446,26 +662,11 @@
         "setpoint": 0.0,
         "upper_bound": 2.0
       },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 18.5,
-        "upper_bound": 99.9
-      },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A07"
     },
     "c4ed311d54e341f58b4cdd201d1fde7e": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "cool",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -473,14 +674,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat RB",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "off",
       "sensors": {
         "setpoint": 17.0,
         "temperature": 20.7
@@ -491,61 +684,23 @@
         "setpoint": 0.0,
         "upper_bound": 2.0
       },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 17.0,
-        "upper_bound": 99.9
-      },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A04"
     },
     "ca79d23ae0094120b877558734cff85c": {
-      "active_preset": "away",
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "auto",
-      "control_state": "off",
       "dev_class": "thermostat",
       "location": "fa5fa6b34f6b40a0972988b20e888ed4",
       "model": "ThermoTouch",
       "model_id": "143.1",
       "name": "Thermostaat WK",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "Werkdag schema",
       "sensors": {
         "setpoint": 21.5,
         "temperature": 22.5
       },
-      "thermostat": {
-        "lower_bound": 1.0,
-        "resolution": 0.01,
-        "setpoint": 21.5,
-        "upper_bound": 35.0
-      },
       "vendor": "Plugwise"
     },
     "d3a276aeb3114a509bab1e4bf8c40348": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "cool",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -553,14 +708,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat SJ",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "off",
       "sensors": {
         "setpoint": 20.5,
         "temperature": 22.6
@@ -571,36 +718,21 @@
         "setpoint": 0.0,
         "upper_bound": 2.0
       },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 20.5,
-        "upper_bound": 99.9
-      },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A13"
     },
-    "ea8372c0e3ad4622ad45a041d02425f5": {
+    "e39529c79ab54fda9bed26cfc0447546": {
       "active_preset": "away",
-      "available": true,
       "available_schedules": [
         "Opstaan weekdag",
         "Werkdag schema",
         "Weekend",
         "off"
       ],
-      "binary_sensors": {
-        "low_battery": false
-      },
-      "climate_mode": "auto",
+      "climate_mode": "cool",
       "control_state": "off",
-      "dev_class": "zone_thermostat",
-      "firmware": "2016-10-10T02:00:00+02:00",
-      "hardware": "255",
-      "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
-      "model": "Lisa",
-      "model_id": "158-01",
-      "name": "Thermostaat KK",
+      "dev_class": "climate",
+      "name": "Slaapkamer JM",
       "preset_modes": [
         "no_frost",
         "vacation",
@@ -608,7 +740,37 @@
         "home",
         "asleep"
       ],
-      "select_schedule": "Werkdag schema",
+      "select_schedule": "off",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
+        "temperature": 20.0
+      },
+      "thermostat": {
+        "lower_bound": 0.0,
+        "resolution": 0.01,
+        "setpoint": 18.0,
+        "upper_bound": 99.9
+      },
+      "thermostats": {
+        "primary": [
+          "7fda9f84f01342f8afe9ebbbbff30c0f"
+        ],
+        "secondary": []
+      }
+    },
+    "ea8372c0e3ad4622ad45a041d02425f5": {
+      "available": true,
+      "binary_sensors": {
+        "low_battery": false
+      },
+      "dev_class": "zone_thermostat",
+      "firmware": "2016-10-10T02:00:00+02:00",
+      "hardware": "255",
+      "location": "a562019b0b1f47a4bde8ebe3dbe3e8a9",
+      "model": "Lisa",
+      "model_id": "158-01",
+      "name": "Thermostaat KK",
       "sensors": {
         "battery": 53,
         "setpoint": 21.5,
@@ -620,26 +782,11 @@
         "setpoint": 0.0,
         "upper_bound": 2.0
       },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 21.5,
-        "upper_bound": 99.9
-      },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A02"
     },
     "eac5db95d97241f6b17790897847ccf5": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "auto",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -647,14 +794,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat BK1",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "Werkdag schema",
       "sensors": {
         "setpoint": 20.5,
         "temperature": 21.5
@@ -665,26 +804,11 @@
         "setpoint": 0.0,
         "upper_bound": 2.0
       },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 20.5,
-        "upper_bound": 99.9
-      },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A09"
     },
     "f04c985c11ad4848b8fcd710343f9dcf": {
-      "active_preset": "away",
       "available": true,
-      "available_schedules": [
-        "Opstaan weekdag",
-        "Werkdag schema",
-        "Weekend",
-        "off"
-      ],
-      "climate_mode": "auto",
-      "control_state": "off",
       "dev_class": "zone_thermostat",
       "firmware": "2016-10-10T02:00:00+02:00",
       "hardware": "255",
@@ -692,14 +816,6 @@
       "model": "Lisa",
       "model_id": "158-01",
       "name": "Thermostaat  BK2",
-      "preset_modes": [
-        "no_frost",
-        "vacation",
-        "away",
-        "home",
-        "asleep"
-      ],
-      "select_schedule": "Werkdag schema",
       "sensors": {
         "setpoint": 20.5,
         "temperature": 21.9
@@ -710,21 +826,53 @@
         "setpoint": 0.0,
         "upper_bound": 2.0
       },
-      "thermostat": {
-        "lower_bound": 0.0,
-        "resolution": 0.01,
-        "setpoint": 20.5,
-        "upper_bound": 99.9
-      },
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A11"
+    },
+    "fa5fa6b34f6b40a0972988b20e888ed4": {
+      "active_preset": "away",
+      "available_schedules": [
+        "Opstaan weekdag",
+        "Werkdag schema",
+        "Weekend",
+        "off"
+      ],
+      "climate_mode": "auto",
+      "control_state": "off",
+      "dev_class": "climate",
+      "name": "Woonkamer",
+      "preset_modes": [
+        "no_frost",
+        "vacation",
+        "away",
+        "home",
+        "asleep"
+      ],
+      "select_schedule": "Werkdag schema",
+      "sensors": {
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
+        "temperature": 22.5
+      },
+      "thermostat": {
+        "lower_bound": 1.0,
+        "resolution": 0.01,
+        "setpoint": 21.5,
+        "upper_bound": 35.0
+      },
+      "thermostats": {
+        "primary": [
+          "ca79d23ae0094120b877558734cff85c"
+        ],
+        "secondary": []
+      }
     }
   },
   "gateway": {
     "cooling_present": true,
     "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
     "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
-    "item_count": 439,
+    "item_count": 497,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"

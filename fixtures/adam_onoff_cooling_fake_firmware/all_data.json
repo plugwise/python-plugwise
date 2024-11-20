@@ -1,5 +1,5 @@
 {
-  "devices": {
+  "entities": {
     "0ca13e8176204ca7bf6f09de59f81c83": {
       "binary_sensors": {
         "cooling_state": true,
@@ -69,6 +69,18 @@
       "zigbee_mac_address": "ABCD012345670101"
     },
     "ca79d23ae0094120b877558734cff85c": {
+      "dev_class": "thermostat",
+      "location": "fa5fa6b34f6b40a0972988b20e888ed4",
+      "model": "ThermoTouch",
+      "model_id": "143.1",
+      "name": "Thermostaat WK",
+      "sensors": {
+        "setpoint": 21.5,
+        "temperature": 22.5
+      },
+      "vendor": "Plugwise"
+    },
+    "fa5fa6b34f6b40a0972988b20e888ed4": {
       "active_preset": "away",
       "available_schedules": [
         "Opstaan weekdag",
@@ -78,11 +90,8 @@
       ],
       "climate_mode": "auto",
       "control_state": "off",
-      "dev_class": "thermostat",
-      "location": "fa5fa6b34f6b40a0972988b20e888ed4",
-      "model": "ThermoTouch",
-      "model_id": "143.1",
-      "name": "Thermostaat WK",
+      "dev_class": "climate",
+      "name": "Woonkamer",
       "preset_modes": [
         "no_frost",
         "vacation",
@@ -92,7 +101,8 @@
       ],
       "select_schedule": "Werkdag schema",
       "sensors": {
-        "setpoint": 21.5,
+        "electricity_consumed": 0.0,
+        "electricity_produced": 0.0,
         "temperature": 22.5
       },
       "thermostat": {
@@ -101,14 +111,19 @@
         "setpoint": 21.5,
         "upper_bound": 35.0
       },
-      "vendor": "Plugwise"
+      "thermostats": {
+        "primary": [
+          "ca79d23ae0094120b877558734cff85c"
+        ],
+        "secondary": []
+      }
     }
   },
   "gateway": {
     "cooling_present": true,
     "gateway_id": "7d97fc3117784cfdafe347bcedcbbbcb",
     "heater_id": "0ca13e8176204ca7bf6f09de59f81c83",
-    "item_count": 58,
+    "item_count": 64,
     "notifications": {},
     "reboot": true,
     "smile_name": "Adam"
