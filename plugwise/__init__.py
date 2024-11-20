@@ -173,7 +173,7 @@ class Smile(SmileComm):
         )
 
         # Update all endpoints on first connect
-        await self._smile_api.full_update_device()
+        await self._smile_api.full_xml_update()
 
         return self.smile_version
 
