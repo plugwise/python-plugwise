@@ -171,7 +171,7 @@ class SmileCommon:
             diff = 1
             if "produced" in measurement:
                 diff = -1
-            if net_string not in direct_data["sensors"]:
+            if net_string not in data["sensors"]:
                 tmp_val: float | int = 0
             else:
                 tmp_val = data["sensors"][net_string]

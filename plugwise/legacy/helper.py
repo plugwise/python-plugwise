@@ -316,7 +316,7 @@ class SmileLegacyHelper(SmileCommon):
 
         Collect the power-data from MODULES (P1 legacy only).
         """
-        direct_data: GwEntityData = {"sensors": {}}
+        data: GwEntityData = {"sensors": {}}
         loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         t_string = "tariff_indicator"
@@ -327,10 +327,10 @@ class SmileLegacyHelper(SmileCommon):
             loc.meas_list = loc.measurement.split("_")
             for loc.logs in mod_logs:
                 for loc.log_type in mod_list:
-                    self._collect_power_values(direct_data, loc, t_string, legacy=True)
+                    self._collect_power_values(data, loc, t_string, legacy=True)
 
-        self._count += len(direct_data["sensors"])
-        return direct_data
+        self._count += len(data["sensors"])
+        return data
 
     def _appliance_measurements(
         self,

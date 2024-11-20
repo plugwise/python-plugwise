@@ -261,7 +261,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
-        self.zone_data: dict[str, GwEntityData] = {}
+        self.zones: dict[str, GwEntityData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -488,7 +488,7 @@ class SmileHelper(SmileCommon):
         Collect the location-data based on location id.
         """
         data: GwEntityData = {"sensors": {}}
-        zone = self.zone_data[loc_id]
+        zone = self.zones[loc_id]
         measurements = ZONE_MEASUREMENTS
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
@@ -552,7 +552,7 @@ class SmileHelper(SmileCommon):
 
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: GwEntityData = {"sensors": {}}
+        data: GwEntityData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         t_string = "tariff"
@@ -561,10 +561,10 @@ class SmileHelper(SmileCommon):
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
-                self._collect_power_values(direct_data, loc, t_string)
+                self._collect_power_values(data, loc, t_string)
 
-        self._count += len(direct_data["sensors"])
-        return direct_data
+        self._count += len(data["sensors"])
+        return data
 
     def _appliance_measurements(
         self,
@@ -866,7 +866,7 @@ class SmileHelper(SmileCommon):
 
         for loc_id, loc_data in list(self._thermo_locs.items()):
             if loc_data["primary_prio"] != 0:
-                self.zone_data[loc_id] = {
+                self.zones[loc_id] = {
                     "dev_class": "climate",
                     "name": loc_data["name"],
                     "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}

@@ -23,7 +23,7 @@ from plugwise.constants import (
     UOM,
     BinarySensorType,
     GwEntityData,
-    ModelData,
+    ModuleData,
     SensorType,
     SpecialType,
     SwitchType,
@@ -179,7 +179,7 @@ def format_measure(measure: str, unit: str) -> float | int:
     return result
 
 
-def get_vendor_name(module: etree, model_data: ModelData) -> ModelData:
+def get_vendor_name(module: etree, model_data: ModuleData) -> ModuleData:
     """Helper-function for _get_model_data()."""
     if (vendor_name := module.find("vendor_name").text) is not None:
         model_data["vendor_name"] = vendor_name
