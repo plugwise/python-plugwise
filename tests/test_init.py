@@ -550,13 +550,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         def test_and_assert(test_dict, data, header):
             """Test-and-assert helper-function."""
             tests = 0
+            tested_items = 0
             asserts = 0
             bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
             for testitem, measurements in test_dict.items():
                 item_asserts = 0
                 tests += 1
                 assert testitem in data
-                asserts += 1
+                tested_items += 1
                 for data_id, details in data.items():
                     if testitem == data_id:
                         _LOGGER.info(
@@ -594,7 +595,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 item_asserts += 1
                 _LOGGER.debug("Item %s test-asserts: %s", testitem, item_asserts)
 
-            assert tests == asserts
+            assert tests == asserts + tested_items
+            _LOGGER.debug("Total items tested: %s", tested_items)
             _LOGGER.debug("Total entity test-asserts: %s", asserts)
 
         # pragma warning disable S3776
