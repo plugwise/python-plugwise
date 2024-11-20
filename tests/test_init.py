@@ -553,6 +553,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             asserts = 0
             bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
             for testitem, measurements in test_dict.items():
+                item_asserts = 0
                 tests += 1
                 assert testitem in data
                 asserts += 1
@@ -586,12 +587,15 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                         )
                                         assert val_1 == val_2
                                         asserts += 1
+                                        item_asserts += 1
                             else:
                                 assert details[measure_key] == measure_assert
                                 asserts += 1
+                                item_asserts += 1
+                _LOGGER.debug("Item %s test-asserts: %s", testitem, item_asserts)        
 
             assert tests == asserts
-            _LOGGER.debug("Number of zone test-assert: %s", asserts)
+            _LOGGER.debug("Total device_zone test-asserts: %s", asserts)
 
         # pragma warning disable S3776
 
