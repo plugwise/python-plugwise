@@ -786,36 +786,42 @@ class SmileHelper(SmileCommon):
 
         Support added for Techneco Elga and Thercon Loria/Thermastage.
         """
-        if dev_id == self._heater_id:
-            # Anna+Elga: base cooling_state on the elga-status-code
-            if "elga_status_code" in data:
-                if data["thermostat_supports_cooling"]:
-                    # Techneco Elga has cooling-capability
-                    self._cooling_present = True
-                    data["model"] = "Generic heater/cooler"
-                    self._cooling_enabled = data["elga_status_code"] in (8, 9)
-                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
-                        data["elga_status_code"] == 8
-                    )
-                    # Elga has no cooling-switch
-                    if "cooling_ena_switch" in data["switches"]:
-                        data["switches"].pop("cooling_ena_switch")
-                        self._count -= 1
+        if dev_id != self._heater_id:
+            return
+        
+        if "elga_status_code" in data:
+            self._update_elga_cooling(data)
+        elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
+            self._update_loria_cooling(data)
+        
+        self._cleanup_data(data)
 
-                data.pop("elga_status_code", None)
+    def _update_elga_cooling(self, data: DeviceZoneData) -> None:
+        """# Anna+Elga: base cooling_state on the elga-status-code."""
+        if data["thermostat_supports_cooling"]:
+            # Techneco Elga has cooling-capability
+            self._cooling_present = True
+            data["model"] = "Generic heater/cooler"
+            self._cooling_enabled = data["elga_status_code"] in (8, 9)
+            data["binary_sensors"]["cooling_state"] = self._cooling_active = (
+                data["elga_status_code"] == 8
+            )
+            # Elga has no cooling-switch
+            if "cooling_ena_switch" in data["switches"]:
+                data["switches"].pop("cooling_ena_switch")
                 self._count -= 1
 
-            # Loria/Thermastage: cooling-related is based on cooling_state
-            # and modulation_level
-            elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
-                self._cooling_enabled = data["binary_sensors"]["cooling_state"]
-                self._cooling_active = data["sensors"]["modulation_level"] == 100
-                # For Loria the above does not work (pw-beta issue #301)
-                if "cooling_ena_switch" in data["switches"]:
-                    self._cooling_enabled = data["switches"]["cooling_ena_switch"]
-                    self._cooling_active = data["binary_sensors"]["cooling_state"]
+        data.pop("elga_status_code", None)
+        self._count -= 1
 
-        self._cleanup_data(data)
+    def _update_loria_cooling(self, data: DeviceZoneData) -> None:
+        """Loria/Thermastage: base cooling-related on cooling_state and modulation_level."""
+        self._cooling_enabled = data["binary_sensors"]["cooling_state"]
+        self._cooling_active = data["sensors"]["modulation_level"] == 100
+        # For Loria the above does not work (pw-beta issue #301)
+        if "cooling_ena_switch" in data["switches"]:
+            self._cooling_enabled = data["switches"]["cooling_ena_switch"]
+            self._cooling_active = data["binary_sensors"]["cooling_state"]
 
     def _cleanup_data(self, data: DeviceZoneData) -> None:
         """Helper-function for _get_measurement_data().
@@ -860,15 +866,11 @@ class SmileHelper(SmileCommon):
 
         for loc_id, loc_data in list(self._thermo_locs.items()):
             if loc_data["primary_prio"] != 0:
-                self.zone_data.update(
-                    {
-                        loc_id: {
-                            "dev_class": "climate",
-                            "name": loc_data["name"],
-                            "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}
-                        }
-                    }
-                )
+                self.zone_data[loc_id] = {
+                    "dev_class": "climate",
+                    "name": loc_data["name"],
+                    "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}
+                }
                 self._count += 3
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
