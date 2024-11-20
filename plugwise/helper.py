@@ -534,19 +534,9 @@ class SmileHelper(SmileCommon):
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, device, data)
 
-        if dev_id == self.gateway_id and self.smile(ADAM):
-            self._get_regulation_mode(appliance, data)
-            self._get_gateway_mode(appliance, data)
-
-        # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-        # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-        if self._is_thermostat and dev_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
-                self._count += 1
+        self._get_regulation_mode(appliance, dev_id, data)
+        self._get_gateway_mode(appliance, dev_id, data)
+        self._get_gateway_outdoor_temp(dev_id, data)
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
@@ -554,38 +544,8 @@ class SmileHelper(SmileCommon):
             data.pop("c_heating_state")
             self._count -= 1
 
-        if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
-            # Anna+Elga: base cooling_state on the elga-status-code
-            if "elga_status_code" in data:
-                if data["thermostat_supports_cooling"]:
-                    # Techneco Elga has cooling-capability
-                    self._cooling_present = True
-                    data["model"] = "Generic heater/cooler"
-                    self._cooling_enabled = data["elga_status_code"] in (8, 9)
-                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
-                        data["elga_status_code"] == 8
-                    )
-                    # Elga has no cooling-switch
-                    if "cooling_ena_switch" in data["switches"]:
-                        data["switches"].pop("cooling_ena_switch")
-                        self._count -= 1
-
-                data.pop("elga_status_code", None)
-                self._count -= 1
-
-            # Loria/Thermastage: cooling-related is based on cooling_state
-            # and modulation_level
-            elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
-                self._cooling_enabled = data["binary_sensors"]["cooling_state"]
-                self._cooling_active = data["sensors"]["modulation_level"] == 100
-                # For Loria the above does not work (pw-beta issue #301)
-                if "cooling_ena_switch" in data["switches"]:
-                    self._cooling_enabled = data["switches"]["cooling_ena_switch"]
-                    self._cooling_active = data["binary_sensors"]["cooling_state"]
-
-        self._cleanup_data(data)
-
-        return data
+        if self._is_thermostat and self.smile(ANNA):
+            self._update_anna_cooling(dev_id, data)
 
     def _power_data_from_location(self, loc_id: str) -> DeviceZoneData:
         """Helper-function for smile.py: _get_device_zone_data().
@@ -731,26 +691,49 @@ class SmileHelper(SmileCommon):
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
-    def _get_regulation_mode(self, appliance: etree, data: DeviceZoneData) -> None:
+    def _get_regulation_mode(
+        self, appliance: etree, dev_id: str, data: DeviceZoneData
+    ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Collect the gateway regulation_mode.
+        Adam: collect the gateway regulation_mode.
         """
+        if not (self.smile(ADAM) and dev_id == self.gateway_id):
+            return
+
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
             data["select_regulation_mode"] = search.find("mode").text
             self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
 
-    def _get_gateway_mode(self, appliance: etree, data: DeviceZoneData) -> None:
+    def _get_gateway_mode(
+        self, appliance: etree, dev_id: str, data: DeviceZoneData
+    ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Collect the gateway mode.
+        Adam: collect the gateway mode.
         """
+        if not (self.smile(ADAM) and dev_id == self.gateway_id):
+            return
+
         locator = "./actuator_functionalities/gateway_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
             data["select_gateway_mode"] = search.find("mode").text
             self._count += 1
+
+    def _get_gateway_outdoor_temp(self, dev_id: str, data: DeviceZoneData) -> None:
+        """Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS.
+
+        Available under the Home location.
+        """
+        if self._is_thermostat and dev_id == self.gateway_id:
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+                self._count += 1
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_device_zone_data() and _device_data_anna().
@@ -770,28 +753,69 @@ class SmileHelper(SmileCommon):
 
         Process the central_heating_state value.
         """
+        # Adam or Anna + OnOff device
         if self._on_off_device:
-            # Anna + OnOff heater: use central_heating_state to show heating_state
-            # Solution for Core issue #81839
-            if self.smile(ANNA):
-                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
-
-            # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
-            if self.smile(ADAM):
-                if "heating_state" not in data["binary_sensors"]:
-                    self._count += 1
-                data["binary_sensors"]["heating_state"] = False
-                if "cooling_state" not in data["binary_sensors"]:
-                    self._count += 1
-                data["binary_sensors"]["cooling_state"] = False
-                if self._cooling_enabled:
-                    data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
-                else:
-                    data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+            self._process_on_off_device_c_heating_state(data)
 
         # Anna + Elga: use central_heating_state to show heating_state
         if self._elga:
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+    def _process_on_off_device_c_heating_state(self, data: DeviceZoneData) -> None:
+        """Adam or Anna + OnOff device - use central_heating_state to show heating/cooling_state.
+
+        Solution for Core issue #81839.
+        """
+        if self.smile(ANNA):
+            data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+        if self.smile(ADAM):
+            if "heating_state" not in data["binary_sensors"]:
+                self._count += 1
+            data["binary_sensors"]["heating_state"] = False
+            if "cooling_state" not in data["binary_sensors"]:
+                self._count += 1
+            data["binary_sensors"]["cooling_state"] = False
+            if self._cooling_enabled:
+                data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
+            else:
+                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+    def _update_anna_cooling(self, dev_id: str, data: DeviceZoneData) -> None:
+        """Update the Anna heater_central device for cooling.
+
+        Support added for Techneco Elga and Thercon Loria/Thermastage.
+        """
+        if dev_id == self._heater_id:
+            # Anna+Elga: base cooling_state on the elga-status-code
+            if "elga_status_code" in data:
+                if data["thermostat_supports_cooling"]:
+                    # Techneco Elga has cooling-capability
+                    self._cooling_present = True
+                    data["model"] = "Generic heater/cooler"
+                    self._cooling_enabled = data["elga_status_code"] in (8, 9)
+                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
+                        data["elga_status_code"] == 8
+                    )
+                    # Elga has no cooling-switch
+                    if "cooling_ena_switch" in data["switches"]:
+                        data["switches"].pop("cooling_ena_switch")
+                        self._count -= 1
+
+                data.pop("elga_status_code", None)
+                self._count -= 1
+
+            # Loria/Thermastage: cooling-related is based on cooling_state
+            # and modulation_level
+            elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
+                self._cooling_enabled = data["binary_sensors"]["cooling_state"]
+                self._cooling_active = data["sensors"]["modulation_level"] == 100
+                # For Loria the above does not work (pw-beta issue #301)
+                if "cooling_ena_switch" in data["switches"]:
+                    self._cooling_enabled = data["switches"]["cooling_ena_switch"]
+                    self._cooling_active = data["binary_sensors"]["cooling_state"]
+
+        self._cleanup_data(data)
 
     def _cleanup_data(self, data: DeviceZoneData) -> None:
         """Helper-function for _get_measurement_data().
