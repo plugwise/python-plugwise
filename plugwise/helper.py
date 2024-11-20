@@ -608,7 +608,7 @@ class SmileHelper(SmileCommon):
             self._count += len(data["sensors"]) - 1
         if "switches" in data:
             self._count += len(data["switches"]) -1
-        # Count the remaining single data items, 
+        # Count the remaining single data items, with the sub-dicts present already subtracted
         self._count += len(data)
 
     def _get_toggle_state(
