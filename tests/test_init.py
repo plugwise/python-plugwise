@@ -592,7 +592,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                                 assert details[measure_key] == measure_assert
                                 asserts += 1
                                 item_asserts += 1
-                _LOGGER.debug("Item %s test-asserts: %s", testitem, item_asserts)        
+                _LOGGER.debug("Item %s test-asserts: %s", testitem, item_asserts)
 
             assert tests == asserts
             _LOGGER.debug("Total device_zone test-asserts: %s", asserts)
