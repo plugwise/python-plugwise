@@ -405,8 +405,8 @@ class GatewayData(TypedDict, total=False):
     smile_name: str
 
 
-class ModelData(TypedDict):
-    """The ModelData class."""
+class ModuleData(TypedDict):
+    """The Module data class."""
 
     contents: bool
     firmware_version: str | None
@@ -516,8 +516,8 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class DeviceZoneData(TypedDict, total=False):
-    """The DeviceZone data class.
+class GwEntityData(TypedDict, total=False):
+    """The Gateway Entity data class.
 
     Covering the collected output-data per device or location.
     """
@@ -582,5 +582,6 @@ class DeviceZoneData(TypedDict, total=False):
 class PlugwiseData:
     """Plugwise data provided as output."""
 
+    entities: dict[str, GwEntityData]
     gateway: GatewayData
-    device_zones: dict[str, DeviceZoneData]
+

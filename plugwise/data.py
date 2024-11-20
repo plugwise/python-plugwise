@@ -14,7 +14,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     ActuatorData,
-    DeviceZoneData,
+    GwEntityData,
 )
 from plugwise.helper import SmileHelper
 from plugwise.util import remove_empty_platform_dicts
@@ -28,15 +28,15 @@ class SmileData(SmileHelper):
         SmileHelper.__init__(self)
 
 
-    def _all_device_zone_data(self) -> None:
-        """Helper-function for get_all_device_zones().
+    def _all_entity_data(self) -> None:
+        """Helper-function for get_all_gateway_entities().
 
-        Collect data for each device/zone and add to self.gw_data and self.gw_device_zones.
+        Collect data for each entity and add to self.gw_data and self.gw_entities.
         """
-        self._update_gw_device_zones()
+        self._update_gw_entities()
         if self.smile(ADAM):
             self._update_zones()
-            self.gw_device_zones.update(self.zone_data)
+            self.gw_entities.update(self.zones)
 
         self.gw_data.update(
             {
@@ -53,39 +53,39 @@ class SmileData(SmileHelper):
             )
 
     def _update_zones(self) -> None:
-        """Helper-function for _all_device_zone_data() and async_update().
+        """Helper-function for _all_entity_data() and async_update().
 
-        Collect data for each zone/location and add to self.zone_data.
+        Collect data for each zone/location and add to self.zones.
         """
-        for location_id, zone in self.zone_data.items():
+        for location_id, zone in self.zones.items():
             data = self._get_location_data(location_id)
             zone.update(data)
 
-    def _update_gw_device_zones(self) -> None:
-        """Helper-function for _all_device_zone_data() and async_update().
+    def _update_gw_entities(self) -> None:
+        """Helper-function for _all_entities_data() and async_update().
 
-        Collect data for each device and add to self.gw_device_zones.
+        Collect data for each entity and add to self.gw_entities.
         """
         mac_list: list[str] = []
-        for devzone_id, devzone in self.gw_device_zones.items():
-            data = self._get_device_zone_data(devzone_id)
-            if devzone_id == self.gateway_id:
+        for entity_id, entity in self.gw_entities.items():
+            data = self._get_entity_data(entity_id)
+            if entity_id == self.gateway_id:
                 mac_list = self._detect_low_batteries()
-                self._add_or_update_notifications(devzone_id, devzone, data)
+                self._add_or_update_notifications(entity_id, entity, data)
 
-            devzone.update(data)
+            entity.update(data)
             is_battery_low = (
                 mac_list
-                and "low_battery" in devzone["binary_sensors"]
-                and devzone["zigbee_mac_address"] in mac_list
-                and devzone["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
+                and "low_battery" in entity["binary_sensors"]
+                and entity["zigbee_mac_address"] in mac_list
+                and entity["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
             )
             if is_battery_low:
-                devzone["binary_sensors"]["low_battery"] = True
+                entity["binary_sensors"]["low_battery"] = True
 
-            self._update_for_cooling(devzone)
+            self._update_for_cooling(entity)
 
-            remove_empty_platform_dicts(devzone)
+            remove_empty_platform_dicts(entity)
 
     def _detect_low_batteries(self) -> list[str]:
         """Helper-function updating the low-battery binary_sensor status from a Battery-is-low message."""
@@ -109,31 +109,31 @@ class SmileData(SmileHelper):
         return mac_address_list
 
     def _add_or_update_notifications(
-        self, devzone_id: str, devzone: DeviceZoneData, data: DeviceZoneData
+        self, entity_id: str, entity: GwEntityData, data: GwEntityData
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
-            devzone_id == self.gateway_id
+            entity_id == self.gateway_id
             and (
                 self._is_thermostat or self.smile_type == "power"
             )
         ) or (
-            "binary_sensors" in devzone
-            and "plugwise_notification" in devzone["binary_sensors"]
+            "binary_sensors" in entity
+            and "plugwise_notification" in entity["binary_sensors"]
         ):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
             self._count += 1
 
-    def _update_for_cooling(self, devzone: DeviceZoneData) -> None:
+    def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
         # For Anna and heating + cooling, replace setpoint with setpoint_high/_low
         if (
             self.smile(ANNA)
             and self._cooling_present
-            and devzone["dev_class"] == "thermostat"
+            and entity["dev_class"] == "thermostat"
         ):
-            thermostat = devzone["thermostat"]
-            sensors = devzone["sensors"]
+            thermostat = entity["thermostat"]
+            sensors = entity["sensors"]
             temp_dict: ActuatorData = {
                 "setpoint_low": thermostat["setpoint"],
                 "setpoint_high": MAX_SETPOINT,
@@ -145,7 +145,7 @@ class SmileData(SmileHelper):
                 }
             thermostat.pop("setpoint")
             temp_dict.update(thermostat)
-            devzone["thermostat"] = temp_dict
+            entity["thermostat"] = temp_dict
             if "setpoint" in sensors:
                 sensors.pop("setpoint")
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
@@ -153,60 +153,60 @@ class SmileData(SmileHelper):
             self._count += 2  # add 4, remove 2
 
 
-    def _get_location_data(self, loc_id: str) -> DeviceZoneData:
-        """Helper-function for _all_device_zone_data() and async_update().
+    def _get_location_data(self, loc_id: str) -> GwEntityData:
+        """Helper-function for _all_entity_data() and async_update().
 
-        Provide device-data, based on Location ID (= loc_id).
+        Provide entity-data, based on Location ID (= loc_id).
         """
-        zone = self.zone_data[loc_id]
+        zone = self.zones[loc_id]
         data = self._get_zone_data(loc_id)
         if ctrl_state := self._control_state(loc_id):
             data["control_state"] = ctrl_state
             self._count += 1
 
         # Thermostat data (presets, temperatures etc)
-        self._devzone_data_climate(loc_id, zone, data)
+        self._climate_data(loc_id, zone, data)
 
         return data
 
-    def _get_device_zone_data(self, dev_id: str) -> DeviceZoneData:
-        """Helper-function for _update_gw_devices() and async_update().
+    def _get_entity_data(self, entity_id: str) -> GwEntityData:
+        """Helper-function for _update_gw_entities() and async_update().
 
-        Provide device-data, based on appliance_id (= dev_id).
+        Provide entity-data, based on appliance_id (= entity_id).
         """
-        device = self.gw_device_zones[dev_id]
-        data = self._get_measurement_data(dev_id)
+        entity = self.gw_entities[entity_id]
+        data = self._get_measurement_data(entity_id)
 
-        # Check availability of wired-connected devices
+        # Check availability of wired-connected entities
         # Smartmeter
         self._check_availability(
-            device, "smartmeter", data, "P1 does not seem to be connected"
+            entity, "smartmeter", data, "P1 does not seem to be connected"
         )
-        # OpenTherm device
-        if device["name"] != "OnOff":
+        # OpenTherm entity
+        if entity["name"] != "OnOff":
             self._check_availability(
-                device, "heater_central", data, "no OpenTherm communication"
+                entity, "heater_central", data, "no OpenTherm communication"
             )
 
         # Switching groups data
-        self._device_data_switching_group(device, data)
+        self._entity_switching_group(entity, data)
         # Adam data
-        self._device_data_adam(device, data)
+        self._get_adam_data(entity, data)
 
         # Thermostat data for Anna (presets, temperatures etc)
-        if self.smile(ANNA) and device["dev_class"] == "thermostat":
-            self._devzone_data_climate(dev_id, device, data)
+        if self.smile(ANNA) and entity["dev_class"] == "thermostat":
+            self._climate_data(entity_id, entity, data)
 
         return data
 
     def _check_availability(
-        self, device: DeviceZoneData, dev_class: str, data: DeviceZoneData, message: str
+        self, entity: GwEntityData, dev_class: str, data: GwEntityData, message: str
     ) -> None:
-        """Helper-function for _get_device_zone_data().
+        """Helper-function for _get_entity_data().
 
-        Provide availability status for the wired-commected devices.
+        Provide availability status for the wired-connected devices.
         """
-        if device["dev_class"] == dev_class:
+        if entity["dev_class"] == dev_class:
             data["available"] = True
             self._count += 1
             for item in self._notifications.values():
@@ -214,8 +214,8 @@ class SmileData(SmileHelper):
                     if message in msg:
                         data["available"] = False
 
-    def _device_data_adam(self, device: DeviceZoneData, data: DeviceZoneData) -> None:
-        """Helper-function for _get_device_zone_data().
+    def _get_adam_data(self, entity: GwEntityData, data: GwEntityData) -> None:
+        """Helper-function for _get_entity_data().
 
         Determine Adam heating-status for on-off heating via valves,
         available regulations_modes and thermostat control_states.
@@ -223,14 +223,14 @@ class SmileData(SmileHelper):
         if self.smile(ADAM):
             # Indicate heating_state based on valves being open in case of city-provided heating
             if (
-                device["dev_class"] == "heater_central"
+                entity["dev_class"] == "heater_central"
                 and self._on_off_device
                 and isinstance(self._heating_valves(), int)
             ):
                 data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
             # Show the allowed regulation_modes and gateway_modes
-            if device["dev_class"] == "gateway":
+            if entity["dev_class"] == "gateway":
                 if self._reg_allowed_modes:
                     data["regulation_modes"] = self._reg_allowed_modes
                     self._count += 1
@@ -239,19 +239,19 @@ class SmileData(SmileHelper):
                     self._count += 1
 
 
-    def _devzone_data_climate(
+    def _climate_data(
         self,
         location_id: str,
-        devzone: DeviceZoneData,
-        data: DeviceZoneData
+        entity: GwEntityData,
+        data: GwEntityData
     ) -> None:
-        """Helper-function for _get_device_zone_data().
+        """Helper-function for _get_entity_data().
 
-        Determine climate-control device data.
+        Determine climate-control entity data.
         """
         loc_id = location_id
-        if devzone.get("location") is not None:
-            loc_id = devzone["location"]
+        if entity.get("location") is not None:
+            loc_id = entity["location"]
 
         # Presets
         data["preset_modes"] = None
@@ -286,13 +286,13 @@ class SmileData(SmileHelper):
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""
-        gateway = self.gw_device_zones[self.gateway_id]
+        gateway = self.gw_entities[self.gateway_id]
         return (
             "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
         )
 
     def _get_schedule_states_with_off(
-        self, location: str, schedules: list[str], selected: str, data: DeviceZoneData
+        self, location: str, schedules: list[str], selected: str, data: GwEntityData
     ) -> None:
         """Collect schedules with states for each thermostat.
 

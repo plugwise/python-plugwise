@@ -298,17 +298,17 @@ class Smile(SmileComm):
         self.smile_legacy = True
         return return_model
 
-    async def full_update_device(self) -> None:
+    async def full_xml_update(self) -> None:
         """Helper-function used for testing."""
-        await self._smile_api.full_update_device()
+        await self._smile_api.full_xml_update()
 
-    def get_all_device_zones(self) -> None:
+    def get_all_gateway_entities(self) -> None:
         """Helper-function used for testing."""
-        self._smile_api.get_all_device_zones()
+        self._smile_api.get_all_gateway_entities()
 
     async def async_update(self) -> PlugwiseData:
-        """Perform an incremental update for updating the various device states."""
-        data = PlugwiseData(device_zones={}, gateway={})
+        """Update the various entities and their states."""
+        data = PlugwiseData(entities={}, gateway={})
         try:
             data = await self._smile_api.async_update()
             self.gateway_id = data.gateway["gateway_id"]

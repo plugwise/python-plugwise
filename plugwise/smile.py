@@ -22,8 +22,8 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
-    DeviceZoneData,
     GatewayData,
+    GwEntityData,
     PlugwiseData,
     ThermoLoc,
 )
@@ -94,18 +94,18 @@ class SmileAPI(SmileData):
         self._heater_id: str
         self._cooling_enabled = False
 
-    async def full_update_device(self) -> None:
+    async def full_xml_update(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
 
-    def get_all_device_zones(self) -> None:
-        """Determine the evices present from the obtained XML-data.
+    def get_all_gateway_entities(self) -> None:
+        """Collect the gateway entities from the received raw XML-data.
 
-        Run this functions once to gather the initial device configuration,
-        then regularly run async_update() to refresh the device data.
+        Run this functions once to gather the initial configuration,
+        then regularly run async_update() to refresh the entity data.
         """
-        # Gather all the devices and their initial data
+        # Gather all the entities and their initial data
         self._all_appliances()
         if self._is_thermostat:
             if self.smile(ADAM):
@@ -117,21 +117,21 @@ class SmileAPI(SmileData):
 
         # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
-            self.gw_device_zones.update(group_data)
+            self.gw_entities.update(group_data)
 
-        # Collect the remaining data for all devices
-        self._all_device_zone_data()
+        # Collect the remaining data for all entities
+        self._all_entity_data()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         self.gw_data: GatewayData = {}
-        self.gw_device_zones: dict[str, DeviceZoneData] = {}
-        self.zone_data: dict[str, DeviceZoneData] = {}
+        self.gw_entities: dict[str, GwEntityData] = {}
+        self.zones: dict[str, GwEntityData] = {}
         try:
-            await self.full_update_device()
-            self.get_all_device_zones()
+            await self.full_xml_update()
+            self.get_all_gateway_entities()
             if "heater_id" in self.gw_data:
-                heat_cooler = self.gw_device_zones[self.gw_data["heater_id"]]
+                heat_cooler = self.gw_entities[self.gw_data["heater_id"]]
                 if (
                     "binary_sensors" in heat_cooler
                     and "cooling_enabled" in heat_cooler["binary_sensors"]
@@ -141,7 +141,7 @@ class SmileAPI(SmileData):
             raise DataMissingError("No Plugwise data received") from err
 
         return PlugwiseData(
-            device_zones=self.gw_device_zones,
+            entities=self.gw_entities,
             gateway=self.gw_data,
         )
 

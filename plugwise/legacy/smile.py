@@ -19,8 +19,8 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
-    DeviceZoneData,
     GatewayData,
+    GwEntityData,
     PlugwiseData,
     ThermoLoc,
 )
@@ -82,7 +82,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._previous_day_number: str = "0"
 
-    async def full_update_device(self) -> None:
+    async def full_xml_update(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._locations = await self.request(LOCATIONS)
@@ -91,8 +91,8 @@ class SmileLegacyAPI(SmileLegacyData):
         if self.smile_type != "power":
             self._appliances = await self.request(APPLIANCES)
 
-    def get_all_device_zones(self) -> None:
-        """Determine the devices present from the obtained XML-data.
+    def get_all_gateway_entities(self) -> None:
+        """Collect the gateway entities from the received raw XML-data.
 
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
@@ -102,10 +102,10 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
-            self.gw_device_zones.update(group_data)
+            self.gw_entities.update(group_data)
 
-        # Collect the remaining data for all devices
-        self._all_device_data()
+        # Collect the remaining data for all entities
+        self._all_entity_data()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
@@ -119,9 +119,9 @@ class SmileLegacyAPI(SmileLegacyData):
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
             self.gw_data: GatewayData = {}
-            self.gw_device_zones: dict[str, DeviceZoneData] = {}
-            await self.full_update_device()
-            self.get_all_device_zones()
+            self.gw_entities: dict[str, GwEntityData] = {}
+            await self.full_xml_update()
+            self.get_all_gateway_entities()
         # Otherwise perform an incremental update
         else:
             self._domain_objects = await self.request(DOMAIN_OBJECTS)
@@ -131,11 +131,11 @@ class SmileLegacyAPI(SmileLegacyData):
                 case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
                     self._appliances = await self.request(APPLIANCES)
 
-            self._update_gw_devices()
+            self._update_gw_entities()
 
         self._previous_day_number = day_number
         return PlugwiseData(
-            device_zones=self.gw_device_zones,
+            entities=self.gw_entities,
             gateway=self.gw_data,
         )
 
