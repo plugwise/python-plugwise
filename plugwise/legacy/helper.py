@@ -29,8 +29,8 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     ApplianceType,
-    GwEntityData,
     GatewayData,
+    GwEntityData,
     SensorType,
     ThermoLoc,
 )
