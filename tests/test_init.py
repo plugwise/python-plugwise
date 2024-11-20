@@ -605,8 +605,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if initialize:
                 _LOGGER.info("Asserting testdata:")
                 if smile.smile_legacy:
-                    await smile.full_update_device()
-                    smile.get_all_device_zones()
+                    await smile.full_xml_update()
+                    smile.get_all_gateway_entities()
                     data = await smile.async_update()
                     assert smile._timeout == 30
                 else:
@@ -621,19 +621,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             self.cooling_present = data.gateway["cooling_present"]
         if "notifications" in data.gateway:
             self.notifications = data.gateway["notifications"]
-        self.device_items = data.gateway["item_count"]
+        self.entity_items = data.gateway["item_count"]
 
         self._cooling_active = False
         self._cooling_enabled = False
         if "heater_id" in data.gateway:
-            heat_cooler = data.device_zones[data.gateway["heater_id"]]
+            heat_cooler = data.entities[data.gateway["heater_id"]]
             if "binary_sensors" in heat_cooler:
                 if "cooling_enabled" in heat_cooler["binary_sensors"]:
                     self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
                 if "cooling_state" in heat_cooler["binary_sensors"]:
                     self._cooling_active = heat_cooler["binary_sensors"]["cooling_state"]
 
-        self._write_json("all_data", {"device_zones": data.device_zones, "gateway": data.gateway})
+        self._write_json("all_data", {"entities": data.entities, "gateway": data.gateway})
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
@@ -645,7 +645,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
-        _LOGGER.info("Device_zone list = %s", data.device_zones)
+        _LOGGER.info("Entities list = %s", data.entities)
         self.show_setup(location_list, data.device_zones)
 
         if skip_testing:
@@ -653,7 +653,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
         # Perform tests and asserts in two steps: devices and zones
         for header, data_dict in testdata.items():
-            test_and_assert(data_dict, data.device_zones, header)
+            test_and_assert(data_dict, data.entities, header)
 
         # pragma warning restore S3776
 
