@@ -188,7 +188,7 @@ class SmileCommon:
 
     def _create_gw_entities(self, appl: Munch) -> None:
         """Helper-function for creating/updating gw_entities."""
-        self.gw_entities[appl.dev_id] = {"dev_class": appl.pwclass}
+        self.gw_entities[appl.entity_id] = {"dev_class": appl.pwclass}
         self._count += 1
         for key, value in {
             "available": appl.available,
@@ -204,7 +204,7 @@ class SmileCommon:
         }.items():
             if value is not None or key == "location":
                 appl_key = cast(ApplianceType, key)
-                self.gw_entities[appl.dev_id][appl_key] = value
+                self.gw_entities[appl.entity_id][appl_key] = value
                 self._count += 1
 
     def _entity_switching_group(
