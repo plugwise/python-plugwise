@@ -601,14 +601,15 @@ class SmileHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        if data.get("binary_sensors"):
-            self._count += len(data["binary_sensors"])
-        if data.get("sensors"):
-            self._count += len(data["sensors"])
-        if data.get("switches"):
-            self._count += len(data["switches"])
-        # Don't count the above top-level dicts, only the remaining single items
-        self._count += len(data) - 3
+        # Don't count the below top-level dicts when present
+        if "binary_sensors" in data:
+            self._count += len(data["binary_sensors"]) -1
+        if "sensors" in data:
+            self._count += len(data["sensors"]) - 1
+        if "switches" in data:
+            self._count += len(data["switches"]) -1
+        # Count the remaining single data items, 
+        self._count += len(data)
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: GwEntityData
