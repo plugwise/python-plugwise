@@ -788,12 +788,12 @@ class SmileHelper(SmileCommon):
         """
         if dev_id != self._heater_id:
             return
-        
+
         if "elga_status_code" in data:
             self._update_elga_cooling(data)
         elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
             self._update_loria_cooling(data)
-        
+
         self._cleanup_data(data)
 
     def _update_elga_cooling(self, data: DeviceZoneData) -> None:
