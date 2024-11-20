@@ -547,6 +547,8 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and self.smile(ANNA):
             self._update_anna_cooling(entity_id, data)
 
+        return data
+
     def _power_data_from_location(self, loc_id: str) -> GwEntityData:
         """Helper-function for smile.py: _get_entity_data().
 
