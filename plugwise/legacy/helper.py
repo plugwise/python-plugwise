@@ -89,7 +89,7 @@ class SmileLegacyHelper(SmileCommon):
         self.smile_name: str
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
-        self.zone_data: dict[str, GwEntityData] = {}
+        self.zones: dict[str, GwEntityData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:

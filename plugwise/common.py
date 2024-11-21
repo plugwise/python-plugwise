@@ -137,11 +137,11 @@ class SmileCommon:
         Also, count the remaining single data items, the amount of dicts present have already been pre-subtracted in the previous step.
         """
         if "binary_sensors" in data:
-            self._count += len(data["binary_sensors"]) -1
+            self._count += len(data["binary_sensors"]) - 1
         if "sensors" in data:
             self._count += len(data["sensors"]) - 1
         if "switches" in data:
-            self._count += len(data["switches"]) -1
+            self._count += len(data["switches"]) - 1
         self._count += len(data)
 
     def _power_data_peak_value(self, loc: Munch, legacy: bool) -> Munch:
