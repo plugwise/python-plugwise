@@ -898,19 +898,22 @@ class SmileHelper(SmileCommon):
         """
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
+        thermo_loc = self._thermo_locs[loc_id]
         if loc_id == appl_d_loc and appl_class in thermo_matching:
+            if thermo_matching[appl_class] == thermo_loc["primary_prio"]:
+                thermo_loc["primary"].append(appliance_id)
             # Pre-elect new primary
-            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
+            elif (thermo_rank := thermo_matching[appl_class]) > thermo_loc["primary_prio"]:
+                thermo_loc["primary_prio"] = thermo_rank
                 # Demote former primary
-                if (tl_primary := self._thermo_locs[loc_id]["primary"]):
-                    self._thermo_locs[loc_id]["secondary"] = tl_primary
-                    self._thermo_locs[loc_id]["primary"] = []
+                if (tl_primary := thermo_loc["primary"]):
+                    thermo_loc["secondary"] += tl_primary
+                    thermo_loc["primary"] = []
 
                 # Crown primary
-                self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]
-                self._thermo_locs[loc_id]["primary"].append(appliance_id)
+                thermo_loc["primary"].append(appliance_id)
             else:
-                self._thermo_locs[loc_id]["secondary"].append(appliance_id)
+                thermo_loc["secondary"].append(appliance_id)
 
     def _control_state(self, loc_id: str) -> str | bool:
         """Helper-function for _get_adam_data().
