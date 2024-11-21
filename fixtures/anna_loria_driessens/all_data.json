@@ -1,5 +1,5 @@
 {
-  "devices": {
+  "entities": {
     "5c118b1842e943c0a5b6ef88a60bb17a": {
       "binary_sensors": {
         "plugwise_notification": false

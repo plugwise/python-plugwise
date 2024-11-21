@@ -2,7 +2,7 @@
 
 import pytest
 
-from .test_init import _LOGGER, TestPlugwise
+from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
 SMILE_TYPE = "anna"
 # Reoccuring constants

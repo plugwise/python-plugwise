@@ -1,5 +1,5 @@
 {
-  "device_zones": {
+  "entities": {
     "ba4de7613517478da82dd9b6abea36af": {
       "sensors": {
         "net_electricity_point": -2248.0,

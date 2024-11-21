@@ -1,5 +1,5 @@
 {
-  "devices": {
+  "entities": {
     "199aa40f126840f392983d171374ab0b": {
       "dev_class": "smartmeter",
       "location": "199aa40f126840f392983d171374ab0b",
