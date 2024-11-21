@@ -360,11 +360,7 @@ class SmileLegacyHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count += len(data["binary_sensors"])
-        self._count += len(data["sensors"])
-        self._count += len(data["switches"])
-        # Don't count the above top-level dicts, only the remaining single items
-        self._count += len(data) - 3
+        self._count_data_items(data)
 
     def _get_actuator_functionalities(
         self,

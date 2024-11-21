@@ -131,6 +131,19 @@ class SmileCommon:
             key = cast(SensorType, loc.key_string)
             data["sensors"][key] = loc.f_val
 
+    def _count_data_items(self, data: GwEntityData) -> None:
+        """When present, count the binary_sensors, sensors and switches dict-items, don't count the dicts.
+
+        Also, count the remaining single data items, the amount of dicts present have already been pre-subtracted in the previous step.
+        """
+        if "binary_sensors" in data:
+            self._count += len(data["binary_sensors"]) -1
+        if "sensors" in data:
+            self._count += len(data["sensors"]) - 1
+        if "switches" in data:
+            self._count += len(data["switches"]) -1
+        self._count += len(data)
+
     def _power_data_peak_value(self, loc: Munch, legacy: bool) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
         loc.found = True
