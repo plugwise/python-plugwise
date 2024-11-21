@@ -1,8 +1,10 @@
 # Changelog
 
-## Ongoing
+## v1.6.0
 
-- Implement collection of zone data: Plugwise thermostat representations are zone/location-based.
+- New Feature: implement collection of location/zone data: Plugwise Adam thermostat representations are zone-based
+  in case there are more than one equal type of thermostats in one zone (e.g. 2 Tom's and no Lisa).
+- In PlugwiseData the `devices`-dict is replaced by an `entities`-dict.
 
 ## v1.5.2
 
