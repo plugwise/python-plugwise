@@ -44,3 +44,33 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert result
         await smile.close_connection()
         await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_legacy_anna_2(self):
+        """Test another legacy Anna device."""
+        self.smile_setup = "legacy_anna_2"
+
+        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        server, smile, client = await self.connect_legacy_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        self.validate_test_basics(
+            _LOGGER,
+            smile,
+            smile_version="1.8.22",
+            smile_legacy=True,
+        )
+
+        await self.device_test(smile, "2020-05-03 00:00:01", testdata)
+
+        assert smile.gateway_id == "be81e3f8275b4129852c4d8d550ae2eb"
+        assert self.entity_items == 43
+
+        result = await self.tinker_legacy_thermostat(smile)
+        assert result
+
+        result = await self.tinker_legacy_thermostat_schedule(smile, "on")
+        assert result
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
