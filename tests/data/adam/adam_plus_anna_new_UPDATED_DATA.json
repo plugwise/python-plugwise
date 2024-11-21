@@ -1,5 +1,5 @@
 {
-  "device_zones": {
+  "entities": {
     "67d73d0bd469422db25a618a5fb8eeb0": {
       "switches": {
         "lock": true
