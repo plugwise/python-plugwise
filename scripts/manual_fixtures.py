@@ -223,7 +223,7 @@ m_adam_heating["entities"]["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"]
 m_adam_heating["entities"]["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
     "heating_state"
 ] = True
-m_adam_cooling["entities"]["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
+m_adam_heating["entities"]["056ee145a816487eaa69243c3280f8bf"]["binary_sensors"][
     "flame_state"
 ] = False
 m_adam_heating["entities"]["056ee145a816487eaa69243c3280f8bf"]["sensors"][
