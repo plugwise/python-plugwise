@@ -77,12 +77,12 @@ m_adam_cooling["entities"].pop("10016900610d4c7481df78c89606ef22")
 m_adam_cooling["entities"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"][
     "setpoint"
 ] = 23.5
-m_adam_cooling["entities"]["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"][
-    "setpoint"
-] = 23.5
 m_adam_cooling["entities"]["ad4838d7d35c4d6ea796ee12ae5aedf8"]["sensors"][
     "temperature"
 ] = 25.8
+m_adam_cooling["entities"]["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"][
+    "setpoint"
+] = 23.5
 m_adam_cooling["entities"]["f2bf9048bef64cc5b6d5110154e33c81"]["sensors"][
     "temperature"
 ] = 25.8
@@ -112,18 +112,23 @@ m_adam_cooling["entities"]["1772a4ea304041adb83f357b751341ff"]["sensors"][
 ] = 21.6
 
 # Go for e2f4
-m_adam_cooling["entities"]["f871b8c4d63549319221e294e4f88074"]["thermostat"][
-    "setpoint"
-] = 25.0
 m_adam_cooling["entities"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
+    "setpoint"
+] = 23.5
+m_adam_cooling["entities"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
+    "temperature"
+] = 23.9
+m_adam_cooling["entities"]["f871b8c4d63549319221e294e4f88074"]["thermostat"][
     "setpoint"
 ] = 25.0
 m_adam_cooling["entities"]["f871b8c4d63549319221e294e4f88074"]["sensors"][
     "temperature"
 ] = 23.9
-m_adam_cooling["entities"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
-    "temperature"
-] = 23.9
+m_adam_cooling["entities"]["f871b8c4d63549319221e294e4f88074"][
+    "control_state"
+] = "auto"
+m_adam_cooling["entities"]["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "cool"
+
 
 # Go for da22
 m_adam_cooling["entities"]["da224107914542988a88561b4452b0f6"][

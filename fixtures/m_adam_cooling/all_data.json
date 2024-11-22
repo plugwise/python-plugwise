@@ -133,7 +133,7 @@
       "name": "Lisa Badkamer",
       "sensors": {
         "battery": 14,
-        "setpoint": 25.0,
+        "setpoint": 23.5,
         "temperature": 23.9
       },
       "temperature_offset": {
@@ -205,8 +205,8 @@
         "Weekschema",
         "off"
       ],
-      "climate_mode": "auto",
-      "control_state": "preheating",
+      "climate_mode": "cool",
+      "control_state": "auto",
       "dev_class": "climate",
       "name": "Bathroom",
       "preset_modes": [
