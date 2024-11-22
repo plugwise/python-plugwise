@@ -182,12 +182,10 @@ m_adam_heating["entities"]["f2bf9048bef64cc5b6d5110154e33c81"][
 m_adam_heating["entities"]["f2bf9048bef64cc5b6d5110154e33c81"]["climate_mode"] = "heat"
 
 # Go for 1772
-m_adam_heating["entities"]["f871b8c4d63549319221e294e4f88074"]["sensors"][
-    "temperature"
-] = 18.6
 m_adam_heating["entities"]["1772a4ea304041adb83f357b751341ff"]["sensors"][
     "temperature"
 ] = 18.6
+# Related zone temperature is set below
 
 # Go for e2f4
 m_adam_heating["entities"]["f871b8c4d63549319221e294e4f88074"]["thermostat"][
