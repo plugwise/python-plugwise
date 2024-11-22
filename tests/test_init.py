@@ -642,7 +642,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             return  # pragma: no cover
 
         self.entity_list = list(data.entities.keys())
-        location_list = smile.loc_data
+        location_list = smile._loc_data
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)

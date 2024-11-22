@@ -36,7 +36,7 @@ class SmileData(SmileHelper):
         self._update_gw_entities()
         if self.smile(ADAM):
             self._update_zones()
-            self.gw_entities.update(self.zones)
+            self.gw_entities.update(self._zones)
 
         self.gw_data.update(
             {
@@ -55,9 +55,9 @@ class SmileData(SmileHelper):
     def _update_zones(self) -> None:
         """Helper-function for _all_entity_data() and async_update().
 
-        Collect data for each zone/location and add to self.zones.
+        Collect data for each zone/location and add to self._zones.
         """
-        for location_id, zone in self.zones.items():
+        for location_id, zone in self._zones.items():
             data = self._get_location_data(location_id)
             zone.update(data)
 
@@ -158,7 +158,7 @@ class SmileData(SmileHelper):
 
         Provide entity-data, based on Location ID (= loc_id).
         """
-        zone = self.zones[loc_id]
+        zone = self._zones[loc_id]
         data = self._get_zone_data(loc_id)
         if ctrl_state := self._control_state(loc_id):
             data["control_state"] = ctrl_state

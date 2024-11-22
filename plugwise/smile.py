@@ -53,11 +53,11 @@ class SmileAPI(SmileData):
         _elga: bool,
         _is_thermostat: bool,
         _last_active: dict[str, str | None],
+        _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
         gateway_id: str,
-        loc_data: dict[str, ThermoLoc],
         smile_fw_version: Version | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
@@ -76,11 +76,11 @@ class SmileAPI(SmileData):
         self._elga = _elga
         self._is_thermostat = _is_thermostat
         self._last_active = _last_active
+        self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
         self.gateway_id = gateway_id
-        self.loc_data = loc_data
         self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
@@ -126,7 +126,7 @@ class SmileAPI(SmileData):
         """Perform an incremental update for updating the various device states."""
         self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.zones: dict[str, GwEntityData] = {}
+        self._zones: dict[str, GwEntityData] = {}
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()

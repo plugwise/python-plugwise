@@ -68,6 +68,7 @@ class SmileLegacyHelper(SmileCommon):
         self._home_location: str
         self._is_thermostat: bool
         self._last_modified: dict[str, str] = {}
+        self._loc_data: dict[str, ThermoLoc]
         self._locations: etree
         self._modules: etree
         self._notifications: dict[str, dict[str, str]] = {}
@@ -81,7 +82,6 @@ class SmileLegacyHelper(SmileCommon):
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
@@ -161,7 +161,7 @@ class SmileLegacyHelper(SmileCommon):
         # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
         if not (locations := self._locations.findall("./location")):
             self._home_location = FAKE_LOC
-            self.loc_data[FAKE_LOC] = {"name": "Home"}
+            self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
 
         for location in locations:
@@ -182,7 +182,7 @@ class SmileLegacyHelper(SmileCommon):
                 loc.name = "Home"
                 self._home_location = loc.loc_id
 
-            self.loc_data[loc.loc_id] = {"name": loc.name}
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
     def _create_legacy_gateway(self) -> None:
         """Create the (missing) gateway entities for legacy Anna, P1 and Stretch.
@@ -251,7 +251,7 @@ class SmileLegacyHelper(SmileCommon):
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
-        loc_id = next(iter(self.loc_data.keys()))
+        loc_id = next(iter(self._loc_data.keys()))
         appl.available = None
         appl.entity_id = loc_id
         appl.location = loc_id

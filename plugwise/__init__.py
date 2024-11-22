@@ -69,6 +69,7 @@ class Smile(SmileComm):
         self._elga = False
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
+        self._loc_data: dict[str, ThermoLoc] = {}
         self._on_off_device = False
         self._opentherm_device = False
         self._schedule_old_states: dict[str, dict[str, str]] = {}
@@ -76,7 +77,6 @@ class Smile(SmileComm):
         self._stretch_v2 = False
         self._target_smile: str = NONE
         self.gateway_id: str = NONE
-        self.loc_data: dict[str, ThermoLoc] = {}
         self.smile_fw_version: Version | None = None
         self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
@@ -134,11 +134,11 @@ class Smile(SmileComm):
             self._elga,
             self._is_thermostat,
             self._last_active,
+            self._loc_data,
             self._on_off_device,
             self._opentherm_device,
             self._schedule_old_states,
             self.gateway_id,
-            self.loc_data,
             self.smile_fw_version,
             self.smile_hostname,
             self.smile_hw_version,
@@ -155,11 +155,11 @@ class Smile(SmileComm):
             self._request,
             self._websession,
             self._is_thermostat,
+            self._loc_data,
             self._on_off_device,
             self._opentherm_device,
             self._stretch_v2,
             self._target_smile,
-            self.loc_data,
             self.smile_fw_version,
             self.smile_hostname,
             self.smile_hw_version,

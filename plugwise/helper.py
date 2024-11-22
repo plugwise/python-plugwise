@@ -224,6 +224,7 @@ class SmileHelper(SmileCommon):
         self._is_thermostat: bool
         self._last_active: dict[str, str | None]
         self._last_modified: dict[str, str] = {}
+        self._loc_data: dict[str, ThermoLoc]
         self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device: bool
         self._opentherm_device: bool
@@ -251,7 +252,6 @@ class SmileHelper(SmileCommon):
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.loc_data: dict[str, ThermoLoc]
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
@@ -261,7 +261,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
-        self.zones: dict[str, GwEntityData] = {}
+        self._zones: dict[str, GwEntityData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -354,11 +354,11 @@ class SmileHelper(SmileCommon):
             if loc.name == "Home":
                 self._home_location = loc.loc_id
 
-            self.loc_data[loc.loc_id] = {"name": loc.name}
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR SmartMeter info."""
-        loc_id = next(iter(self.loc_data.keys()))
+        loc_id = next(iter(self._loc_data.keys()))
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(location, locator)
@@ -488,7 +488,7 @@ class SmileHelper(SmileCommon):
         Collect the location-data based on location id.
         """
         data: GwEntityData = {"sensors": {}}
-        zone = self.zones[loc_id]
+        zone = self._zones[loc_id]
         measurements = ZONE_MEASUREMENTS
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
@@ -861,7 +861,7 @@ class SmileHelper(SmileCommon):
 
         for loc_id, loc_data in list(self._thermo_locs.items()):
             if loc_data["primary_prio"] != 0:
-                self.zones[loc_id] = {
+                self._zones[loc_id] = {
                     "dev_class": "climate",
                     "name": loc_data["name"],
                     "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}
@@ -874,7 +874,7 @@ class SmileHelper(SmileCommon):
         Match appliances with locations.
         """
         matched_locations: dict[str, ThermoLoc] = {}
-        for location_id, location_details in self.loc_data.items():
+        for location_id, location_details in self._loc_data.items():
             for appliance_details in self.gw_entities.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(

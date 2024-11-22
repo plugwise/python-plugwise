@@ -44,11 +44,11 @@ class SmileLegacyAPI(SmileLegacyData):
         request: Callable[..., Awaitable[Any]],
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,
+        _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
         _stretch_v2: bool,
         _target_smile: str,
-        loc_data: dict[str, ThermoLoc],
         smile_fw_version: Version | None,
         smile_hostname: str,
         smile_hw_version: str | None,
@@ -65,11 +65,11 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._cooling_present = False
         self._is_thermostat = _is_thermostat
+        self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
-        self.loc_data = loc_data
         self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
