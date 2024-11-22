@@ -1,5 +1,5 @@
 {
-  "devices": {
+  "entities": {
     "056ee145a816487eaa69243c3280f8bf": {
       "available": true,
       "binary_sensors": {
@@ -53,16 +53,34 @@
       "vendor": "Plugwise",
       "zigbee_mac_address": "000D6F000C8FF5EE"
     },
+    "29542b2b6a6a4169acecc15c72a599b8": {
+      "available": true,
+      "dev_class": "computer_desktop_plug",
+      "firmware": "2020-11-10T01:00:00+01:00",
+      "location": "f2bf9048bef64cc5b6d5110154e33c81",
+      "model": "Plug",
+      "model_id": "160-01",
+      "name": "Plug Werkplek",
+      "sensors": {
+        "electricity_consumed": 91.3,
+        "electricity_consumed_interval": 23.0,
+        "electricity_produced": 0.0,
+        "electricity_produced_interval": 0.0
+      },
+      "switches": {
+        "lock": false,
+        "relay": true
+      },
+      "vendor": "Plugwise",
+      "zigbee_mac_address": "000D6F000D13CA9A"
+    },
     "ad4838d7d35c4d6ea796ee12ae5aedf8": {
       "available": true,
-      "climate_mode": "cool",
-      "control_state": "cooling",
       "dev_class": "thermostat",
       "location": "f2bf9048bef64cc5b6d5110154e33c81",
       "model": "ThermoTouch",
       "model_id": "143.1",
       "name": "Anna",
-      "select_schedule": "off",
       "sensors": {
         "setpoint": 23.5,
         "temperature": 25.8
@@ -115,7 +133,7 @@
       "name": "Lisa Badkamer",
       "sensors": {
         "battery": 14,
-        "setpoint": 23.5,
+        "setpoint": 25.0,
         "temperature": 23.9
       },
       "temperature_offset": {
@@ -138,18 +156,7 @@
       "switches": {
         "relay": true
       }
-    }
-  },
-  "gateway": {
-    "cooling_present": true,
-    "gateway_id": "da224107914542988a88561b4452b0f6",
-    "heater_id": "056ee145a816487eaa69243c3280f8bf",
-    "item_count": 89,
-    "notifications": {},
-    "reboot": true,
-    "smile_name": "Adam"
-  },
-  "zones": {
+    },
     "f2bf9048bef64cc5b6d5110154e33c81": {
       "active_preset": "home",
       "available_schedules": [
@@ -159,8 +166,8 @@
         "Weekschema",
         "off"
       ],
-      "climate_mode": "auto",
-      "control_state": "heating",
+      "climate_mode": "cool",
+      "control_state": "cooling",
       "dev_class": "climate",
       "name": "Living room",
       "preset_modes": [
@@ -170,11 +177,11 @@
         "home",
         "away"
       ],
-      "select_schedule": "Weekschema",
+      "select_schedule": "off",
       "sensors": {
         "electricity_consumed": 149.9,
         "electricity_produced": 0.0,
-        "temperature": 18.4
+        "temperature": 25.8
       },
       "thermostat": {
         "lower_bound": 1.0,
@@ -213,7 +220,7 @@
       "sensors": {
         "electricity_consumed": 0.0,
         "electricity_produced": 0.0,
-        "temperature": 16.5
+        "temperature": 23.9
       },
       "thermostat": {
         "lower_bound": 0.0,
@@ -230,5 +237,14 @@
         ]
       }
     }
+  },
+  "gateway": {
+    "cooling_present": true,
+    "gateway_id": "da224107914542988a88561b4452b0f6",
+    "heater_id": "056ee145a816487eaa69243c3280f8bf",
+    "item_count": 89,
+    "notifications": {},
+    "reboot": true,
+    "smile_name": "Adam"
   }
 }
