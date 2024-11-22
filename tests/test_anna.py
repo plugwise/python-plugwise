@@ -124,12 +124,6 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.smile_setup = "anna_v4_no_tag"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
-        #testdata = {
-        #    # Anna
-        #    "01b85360fdd243d0aaad4d6ac2a5ba7e": {
-        #        "active_preset": "home",
-        #    }
-        #}
         server, smile, client = await self.connect_wrapper()
         assert smile.smile_hostname == "smile000000"
 
