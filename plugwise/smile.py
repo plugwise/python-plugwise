@@ -70,10 +70,10 @@ class SmileAPI(SmileData):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        SmileData.__init__(self)
-
+        self._cooling_enabled = False
         self._cooling_present = _cooling_present
         self._elga = _elga
+        self._heater_id: str
         self._is_thermostat = _is_thermostat
         self._last_active = _last_active
         self._loc_data = _loc_data
@@ -90,9 +90,8 @@ class SmileAPI(SmileData):
         self.smile_model_id = smile_model_id
         self.smile_name = smile_name
         self.smile_type = smile_type
+        SmileData.__init__(self)
 
-        self._heater_id: str
-        self._cooling_enabled = False
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
