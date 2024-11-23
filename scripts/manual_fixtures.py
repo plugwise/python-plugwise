@@ -207,6 +207,7 @@ m_adam_heating["entities"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
     "temperature"
 ] = 17.9
 
+m_adam_heating["entities"]["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "auto"
 m_adam_heating["entities"]["f871b8c4d63549319221e294e4f88074"][
     "control_state"
 ] = "off"
