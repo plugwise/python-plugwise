@@ -69,7 +69,8 @@ m_adam_cooling = base.copy()
 m_adam_cooling["gateway"]["cooling_present"] = True
 m_adam_cooling["gateway"]["item_count"] = 89
 
-# Remove devices "67d73d0bd469422db25a618a5fb8eeb0" and "10016900610d4c7481df78c89606ef22" from anywhere
+# Remove devices 67d73d0bd469422db25a618a5fb8eeb0, 29542b2b6a6a4169acecc15c72a599b8 and 10016900610d4c7481df78c89606ef22 from anywhere
+m_adam_cooling["entities"].pop("29542b2b6a6a4169acecc15c72a599b8")
 m_adam_cooling["entities"].pop("67d73d0bd469422db25a618a5fb8eeb0")
 m_adam_cooling["entities"].pop("10016900610d4c7481df78c89606ef22")
 
