@@ -188,7 +188,7 @@
         "Weekschema",
         "off"
       ],
-      "climate_mode": "cool",
+      "climate_mode": "auto",
       "control_state": "off",
       "dev_class": "climate",
       "name": "Bathroom",
