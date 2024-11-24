@@ -8,6 +8,7 @@
       ],
       "climate_mode": "auto",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Living room",
       "preset_modes": [
         "home",
@@ -33,7 +34,8 @@
           "ee62cad889f94e8ca3d09021f03a660b"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "2743216f626f43948deec1f7ab3b3d70": {
       "available": false,

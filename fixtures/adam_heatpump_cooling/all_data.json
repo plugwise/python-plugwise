@@ -11,6 +11,7 @@
       "climate_mode": "cool",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Slaapkamer SJ",
       "preset_modes": [
         "no_frost",
@@ -36,7 +37,8 @@
           "d3a276aeb3114a509bab1e4bf8c40348"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "0ca13e8176204ca7bf6f09de59f81c83": {
       "available": true,
@@ -134,6 +136,7 @@
       "climate_mode": "cool",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Slaapkamer DB",
       "preset_modes": [
         "no_frost",
@@ -159,7 +162,8 @@
           "47e2c550a33846b680725aa3fb229473"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "2e0fc4db2a6d4cbeb7cf786143543961": {
       "available": true,
@@ -254,6 +258,7 @@
       "climate_mode": "auto",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Badkamer 2",
       "preset_modes": [
         "no_frost",
@@ -278,7 +283,8 @@
           "f04c985c11ad4848b8fcd710343f9dcf"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "5ead63c65e5f44e7870ba2bd680ceb9e": {
       "available": true,
@@ -405,6 +411,7 @@
       "climate_mode": "auto",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Badkamer 1",
       "preset_modes": [
         "no_frost",
@@ -430,7 +437,8 @@
           "eac5db95d97241f6b17790897847ccf5"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "93ac3f7bf25342f58cbb77c4a99ac0b3": {
       "active_preset": "away",
@@ -443,6 +451,7 @@
       "climate_mode": "cool",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Slaapkamer RB",
       "preset_modes": [
         "no_frost",
@@ -467,7 +476,8 @@
           "c4ed311d54e341f58b4cdd201d1fde7e"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "96714ad90fc948bcbcb5021c4b9f5ae9": {
       "available": true,
@@ -500,6 +510,7 @@
       "climate_mode": "cool",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Slaapkamer SQ",
       "preset_modes": [
         "no_frost",
@@ -525,7 +536,8 @@
           "beb32da072274e698146db8b022f3c36"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "a03b6e8e76dd4646af1a77c31dd9370c": {
       "available": true,
@@ -558,6 +570,7 @@
       "climate_mode": "auto",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Keuken",
       "preset_modes": [
         "no_frost",
@@ -583,7 +596,8 @@
           "ea8372c0e3ad4622ad45a041d02425f5"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "b52908550469425b812c87f766fe5303": {
       "active_preset": "away",
@@ -596,6 +610,7 @@
       "climate_mode": "cool",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Bijkeuken",
       "preset_modes": [
         "no_frost",
@@ -621,7 +636,8 @@
           "1053c8bbf8be43c6921742b146a625f1"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "bbcffa48019f4b09b8368bbaf9559e68": {
       "available": true,
@@ -732,6 +748,7 @@
       "climate_mode": "cool",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Slaapkamer JM",
       "preset_modes": [
         "no_frost",
@@ -757,7 +774,8 @@
           "7fda9f84f01342f8afe9ebbbbff30c0f"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "ea8372c0e3ad4622ad45a041d02425f5": {
       "available": true,
@@ -840,6 +858,7 @@
       "climate_mode": "auto",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Woonkamer",
       "preset_modes": [
         "no_frost",
@@ -865,7 +884,8 @@
           "ca79d23ae0094120b877558734cff85c"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     }
   },
   "gateway": {

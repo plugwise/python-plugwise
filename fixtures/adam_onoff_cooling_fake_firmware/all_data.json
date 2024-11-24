@@ -91,6 +91,7 @@
       "climate_mode": "auto",
       "control_state": "off",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Woonkamer",
       "preset_modes": [
         "no_frost",
@@ -116,7 +117,8 @@
           "ca79d23ae0094120b877558734cff85c"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     }
   },
   "gateway": {
