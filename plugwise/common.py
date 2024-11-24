@@ -262,6 +262,7 @@ class SmileCommon:
                     "model": "Switchgroup",
                     "name": group_name,
                     "members": members,
+                    "vendor": "Plugwise",
                 }
                 self._count += 4
 

@@ -863,8 +863,10 @@ class SmileHelper(SmileCommon):
             if loc_data["primary_prio"] != 0:
                 self._zones[loc_id] = {
                     "dev_class": "climate",
+                    "model": "ThermoZone",
                     "name": loc_data["name"],
-                    "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]}
+                    "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]},
+                    "vendor": "Plugwise",
                 }
                 self._count += 3
 
