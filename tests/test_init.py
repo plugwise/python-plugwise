@@ -628,34 +628,34 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._cooling_active = False
         self._cooling_enabled = False
         if "heater_id" in data.gateway:
-            heat_cooler = data.entities[data.gateway["heater_id"]]
+            heat_cooler = data.devices[data.gateway["heater_id"]]
             if "binary_sensors" in heat_cooler:
                 if "cooling_enabled" in heat_cooler["binary_sensors"]:
                     self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
                 if "cooling_state" in heat_cooler["binary_sensors"]:
                     self._cooling_active = heat_cooler["binary_sensors"]["cooling_state"]
 
-        self._write_json("all_data", {"entities": data.entities, "gateway": data.gateway})
+        self._write_json("all_data", {"devices": data.devices, "gateway": data.gateway})
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-        self.entity_list = list(data.entities.keys())
+        self.entity_list = list(data.devices.keys())
         location_list = smile._loc_data
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
-        _LOGGER.info("Entities list = %s", data.entities)
-        self.show_setup(location_list, data.entities)
+        _LOGGER.info("Entities list = %s", data.devices)
+        self.show_setup(location_list, data.devices)
 
         if skip_testing:
             return
 
         # Perform tests and asserts in two steps: devices and zones
         for header, data_dict in testdata.items():
-            test_and_assert(data_dict, data.entities, header)
+            test_and_assert(data_dict, data.devices, header)
 
         # pragma warning restore S3776
 

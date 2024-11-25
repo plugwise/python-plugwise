@@ -308,7 +308,7 @@ class Smile(SmileComm):
 
     async def async_update(self) -> PlugwiseData:
         """Update the various entities and their states."""
-        data = PlugwiseData(entities={}, gateway={})
+        data = PlugwiseData(devices={}, gateway={})
         try:
             data = await self._smile_api.async_update()
             self.gateway_id = data.gateway["gateway_id"]

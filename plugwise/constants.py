@@ -582,6 +582,6 @@ class GwEntityData(TypedDict, total=False):
 class PlugwiseData:
     """Plugwise data provided as output."""
 
-    entities: dict[str, GwEntityData]
+    devices: dict[str, GwEntityData]
     gateway: GatewayData
 

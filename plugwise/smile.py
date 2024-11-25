@@ -140,7 +140,7 @@ class SmileAPI(SmileData):
             raise DataMissingError("No Plugwise data received") from err
 
         return PlugwiseData(
-            entities=self.gw_entities,
+            devices=self.gw_entities,
             gateway=self.gw_data,
         )
 
