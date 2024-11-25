@@ -1,5 +1,5 @@
 {
-  "entities": {
+  "devices": {
     "02cf28bfec924855854c544690a609ef": {
       "available": true,
       "dev_class": "vcr_plug",

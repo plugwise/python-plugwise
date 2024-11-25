@@ -1,5 +1,5 @@
 {
-  "entities": {
+  "devices": {
     "573c152e7d4f4720878222bd75638f5b": {
       "available": true,
       "binary_sensors": {
