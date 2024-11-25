@@ -1,5 +1,5 @@
 {
-  "entities": {
+  "devices": {
     "06aecb3d00354375924f50c47af36bd2": {
       "active_preset": "no_frost",
       "climate_mode": "off",
