@@ -107,7 +107,6 @@ m_adam_cooling["devices"].pop("2568cc4b9c1e401495d4741a5f89bee1")
 m_adam_cooling["devices"].pop("854f8a9b0e7e425db97f1f110e1ce4b3")
 
 # Go for 1772
-m_adam_cooling["devices"]["1772a4ea304041adb83f357b751341ff"]["sensors"].pop("setpoint")
 m_adam_cooling["devices"]["1772a4ea304041adb83f357b751341ff"]["sensors"][
     "temperature"
 ] = 21.6
