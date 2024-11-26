@@ -1,5 +1,42 @@
 {
   "devices": {
+    "009490cc2f674ce6b576863fbb64f867": {
+      "active_preset": "home",
+      "available_schedules": [
+        "Weekschema",
+        "off"
+      ],
+      "climate_mode": "auto",
+      "dev_class": "climate",
+      "model": "ThermoZone",
+      "name": "Living room",
+      "preset_modes": [
+        "home",
+        "asleep",
+        "away",
+        "vacation",
+        "no_frost"
+      ],
+      "select_schedule": "Weekschema",
+      "sensors": {
+        "electricity_consumed": 74.2,
+        "electricity_produced": 0.0,
+        "temperature": 20.5
+      },
+      "thermostat": {
+        "lower_bound": 1.0,
+        "resolution": 0.01,
+        "setpoint": 20.5,
+        "upper_bound": 35.0
+      },
+      "thermostats": {
+        "primary": [
+          "ee62cad889f94e8ca3d09021f03a660b"
+        ],
+        "secondary": []
+      },
+      "vendor": "Plugwise"
+    },
     "2743216f626f43948deec1f7ab3b3d70": {
       "available": false,
       "binary_sensors": {
@@ -66,34 +103,14 @@
       "zigbee_mac_address": "ABCD012345670101"
     },
     "ee62cad889f94e8ca3d09021f03a660b": {
-      "active_preset": "home",
-      "available_schedules": [
-        "Weekschema",
-        "off"
-      ],
-      "climate_mode": "auto",
       "dev_class": "thermostat",
       "location": "009490cc2f674ce6b576863fbb64f867",
       "model": "ThermoTouch",
       "model_id": "143.1",
       "name": "Anna",
-      "preset_modes": [
-        "home",
-        "asleep",
-        "away",
-        "vacation",
-        "no_frost"
-      ],
-      "select_schedule": "Weekschema",
       "sensors": {
         "setpoint": 20.5,
         "temperature": 20.5
-      },
-      "thermostat": {
-        "lower_bound": 1.0,
-        "resolution": 0.01,
-        "setpoint": 20.5,
-        "upper_bound": 35.0
       },
       "vendor": "Plugwise"
     },
@@ -121,7 +138,7 @@
     "cooling_present": false,
     "gateway_id": "b128b4bbbd1f47e9bf4d756e8fb5ee94",
     "heater_id": "2743216f626f43948deec1f7ab3b3d70",
-    "item_count": 73,
+    "item_count": 79,
     "notifications": {
       "6fb89e35caeb4b1cb275184895202d84": {
         "error": "There is no OpenTherm communication with the boiler."

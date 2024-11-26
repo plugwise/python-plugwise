@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "plugwise"
-version         = "1.5.2"
+version         = "1.6.0"
 license         = {file = "LICENSE"}
 description     = "Plugwise Smile (Adam/Anna/P1) and Stretch module for Python 3."
 readme          = "README.md"
@@ -169,6 +169,7 @@ overgeneral-exceptions = [
 ]
 
 [tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "function"
 asyncio_mode = "strict"
 markers = [
     # mark a test as a asynchronous io test.
@@ -278,7 +279,7 @@ lint.select = [
     "TID251", # Banned imports
     "TRY004", # Prefer TypeError exception for invalid type
     # "TRY200", # TRY200 has been remapped to B904
-    "TRY302", # Remove exception handler; error is immediately re-raised
+    "TRY203", # Remove exception handler; error is immediately re-raised
     "UP",  # pyupgrade
     "W",  # pycodestyle
 ]

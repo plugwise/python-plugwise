@@ -6,7 +6,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, OFF, DeviceData
+from plugwise.constants import NONE, OFF, GwEntityData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -18,12 +18,12 @@ class SmileLegacyData(SmileLegacyHelper):
         """Init."""
         SmileLegacyHelper.__init__(self)
 
-    def _all_device_data(self) -> None:
-        """Helper-function for get_all_devices().
+    def _all_entity_data(self) -> None:
+        """Helper-function for get_all_gateway_entities().
 
-        Collect data for each device and add to self.gw_data and self.gw_devices.
+        Collect data for each entity and add to self.gw_data and self.gw_entities.
         """
-        self._update_gw_devices()
+        self._update_gw_entities()
         self.gw_data.update(
             {
                 "gateway_id": self.gateway_id,
@@ -36,40 +36,40 @@ class SmileLegacyData(SmileLegacyHelper):
                 {"heater_id": self._heater_id, "cooling_present": False}
             )
 
-    def _update_gw_devices(self) -> None:
-        """Helper-function for _all_device_data() and async_update().
+    def _update_gw_entities(self) -> None:
+        """Helper-function for _all_entity_data() and async_update().
 
-        Collect data for each device and add to self.gw_devices.
+        Collect data for each entity and add to self.gw_entities.
         """
-        for device_id, device in self.gw_devices.items():
-            data = self._get_device_data(device_id)
-            device.update(data)
-            remove_empty_platform_dicts(device)
+        for entity_id, entity in self.gw_entities.items():
+            data = self._get_entity_data(entity_id)
+            entity.update(data)
+            remove_empty_platform_dicts(entity)
 
-    def _get_device_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for _all_device_data() and async_update().
+    def _get_entity_data(self, entity_id: str) -> GwEntityData:
+        """Helper-function for _all_entity_data() and async_update().
 
-        Provide device-data, based on Location ID (= dev_id), from APPLIANCES.
+        Provide entity-data, based on Location ID (= entity_id), from APPLIANCES.
         """
-        device = self.gw_devices[dev_id]
-        data = self._get_measurement_data(dev_id)
+        entity = self.gw_entities[entity_id]
+        data = self._get_measurement_data(entity_id)
 
         # Switching groups data
-        self._device_data_switching_group(device, data)
+        self._entity_switching_group(entity, data)
 
         # Skip obtaining data when not a thermostat
-        if device["dev_class"] != "thermostat":
+        if entity["dev_class"] != "thermostat":
             return data
 
         # Thermostat data (presets, temperatures etc)
-        self._device_data_climate(device, data)
+        self._climate_data(entity, data)
 
         return data
 
-    def _device_data_climate(self, device: DeviceData, data: DeviceData) -> None:
-        """Helper-function for _get_device_data().
+    def _climate_data(self, entity: GwEntityData, data: GwEntityData) -> None:
+        """Helper-function for _get_entity_data().
 
-        Determine climate-control device data.
+        Determine climate-control entity data.
         """
         # Presets
         data["preset_modes"] = None

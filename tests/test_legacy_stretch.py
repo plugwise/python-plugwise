@@ -31,7 +31,7 @@ class TestPlugwiseStretch(
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "0000aaaa0000aaaa0000aaaa0000aa00"
-        assert self.device_items == 83
+        assert self.entity_items == 83
 
         switch_change = await self.tinker_switch(
             smile, "059e4d03c7a34d278add5c7a4a781d19",
@@ -69,7 +69,7 @@ class TestPlugwiseStretch(
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.device_items == 243
+        assert self.entity_items == 243
 
         switch_change = await self.tinker_switch(
             smile, "2587a7fcdd7e482dab03fda256076b4b"
@@ -104,7 +104,7 @@ class TestPlugwiseStretch(
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.device_items == 190
+        assert self.entity_items == 190
         _LOGGER.info(" # Assert no master thermostat")
 
         switch_change = await self.tinker_switch(

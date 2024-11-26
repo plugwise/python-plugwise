@@ -29,8 +29,8 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     ApplianceType,
-    DeviceData,
     GatewayData,
+    GwEntityData,
     SensorType,
     ThermoLoc,
 )
@@ -68,6 +68,7 @@ class SmileLegacyHelper(SmileCommon):
         self._home_location: str
         self._is_thermostat: bool
         self._last_modified: dict[str, str] = {}
+        self._loc_data: dict[str, ThermoLoc]
         self._locations: etree
         self._modules: etree
         self._notifications: dict[str, dict[str, str]] = {}
@@ -80,8 +81,7 @@ class SmileLegacyHelper(SmileCommon):
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceData] = {}
-        self.loc_data: dict[str, ThermoLoc]
+        self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
@@ -115,7 +115,7 @@ class SmileLegacyHelper(SmileCommon):
                 continue  # pragma: no cover
 
             appl.location = self._home_location
-            appl.dev_id = appliance.attrib["id"]
+            appl.entity_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             # Extend device_class name when a Circle/Stealth is type heater_central -- Pw-Beta Issue #739
             if (
@@ -139,20 +139,20 @@ class SmileLegacyHelper(SmileCommon):
                 continue
 
             # Skip orphaned heater_central (Core Issue #104433)
-            if appl.pwclass == "heater_central" and appl.dev_id != self._heater_id:
+            if appl.pwclass == "heater_central" and appl.entity_id != self._heater_id:
                 continue  # pragma: no cover
 
-            self._create_gw_devices(appl)
+            self._create_gw_entities(appl)
 
         # Place the gateway and optional heater_central devices as 1st and 2nd
         for dev_class in ("heater_central", "gateway"):
-            for dev_id, device in dict(self.gw_devices).items():
-                if device["dev_class"] == dev_class:
-                    tmp_device = device
-                    self.gw_devices.pop(dev_id)
-                    cleared_dict = self.gw_devices
-                    add_to_front = {dev_id: tmp_device}
-                    self.gw_devices = {**add_to_front, **cleared_dict}
+            for entity_id, entity in dict(self.gw_entities).items():
+                if entity["dev_class"] == dev_class:
+                    tmp_entity = entity
+                    self.gw_entities.pop(entity_id)
+                    cleared_dict = self.gw_entities
+                    add_to_front = {entity_id: tmp_entity}
+                    self.gw_entities = {**add_to_front, **cleared_dict}
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -161,7 +161,7 @@ class SmileLegacyHelper(SmileCommon):
         # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
         if not (locations := self._locations.findall("./location")):
             self._home_location = FAKE_LOC
-            self.loc_data[FAKE_LOC] = {"name": "Home"}
+            self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
 
         for location in locations:
@@ -182,18 +182,18 @@ class SmileLegacyHelper(SmileCommon):
                 loc.name = "Home"
                 self._home_location = loc.loc_id
 
-            self.loc_data[loc.loc_id] = {"name": loc.name}
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
     def _create_legacy_gateway(self) -> None:
-        """Create the (missing) gateway devices for legacy Anna, P1 and Stretch.
+        """Create the (missing) gateway entities for legacy Anna, P1 and Stretch.
 
-        Use the home_location or FAKE_APPL as device id.
+        Use the home_location or FAKE_APPL as entity id.
         """
         self.gateway_id = self._home_location
         if self.smile_type == "power":
             self.gateway_id = FAKE_APPL
 
-        self.gw_devices[self.gateway_id] = {"dev_class": "gateway"}
+        self.gw_entities[self.gateway_id] = {"dev_class": "gateway"}
         self._count += 1
         for key, value in {
             "firmware": str(self.smile_fw_version),
@@ -206,28 +206,28 @@ class SmileLegacyHelper(SmileCommon):
         }.items():
             if value is not None:
                 gw_key = cast(ApplianceType, key)
-                self.gw_devices[self.gateway_id][gw_key] = value
+                self.gw_entities[self.gateway_id][gw_key] = value
                 self._count += 1
 
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
-        """Collect device info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
+        """Collect entity info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         match appl.pwclass:
-        # Collect thermostat device info
+        # Collect thermostat entity info
             case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
                 return self._appl_thermostat_info(appl, appliance, self._modules)
-        # Collect heater_central device info
+        # Collect heater_central entity info
             case "heater_central":
                 return self._appl_heater_central_info(
                     appl, appliance, True, self._appliances, self._modules
                 )  # True means legacy device
         # Collect info from Stretches
             case _:
-                return self._energy_device_info_finder(appliance, appl)
+                return self._energy_entity_info_finder(appliance, appl)
 
-    def _energy_device_info_finder(self, appliance: etree, appl: Munch) -> Munch:
+    def _energy_entity_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Helper-function for _appliance_info_finder().
 
-        Collect energy device info (Smartmeter, Circle, Stealth, etc.): firmware, model and vendor name.
+        Collect energy entity info (Smartmeter, Circle, Stealth, etc.): firmware, model and vendor name.
         """
         if self.smile_type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
@@ -251,9 +251,9 @@ class SmileLegacyHelper(SmileCommon):
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR Smartmeter info."""
-        loc_id = next(iter(self.loc_data.keys()))
+        loc_id = next(iter(self._loc_data.keys()))
         appl.available = None
-        appl.dev_id = loc_id
+        appl.entity_id = loc_id
         appl.location = loc_id
         appl.mac = None
         appl.model = self.smile_model
@@ -262,41 +262,41 @@ class SmileLegacyHelper(SmileCommon):
         appl.pwclass = "smartmeter"
         appl.zigbee_mac = None
         location = self._locations.find(f'./location[@id="{loc_id}"]')
-        appl = self._energy_device_info_finder(location, appl)
+        appl = self._energy_entity_info_finder(location, appl)
 
-        self._create_gw_devices(appl)
+        self._create_gw_entities(appl)
 
-    def _get_measurement_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
+    def _get_measurement_data(self, entity_id: str) -> GwEntityData:
+        """Helper-function for smile.py: _get_entity_data().
 
-        Collect the appliance-data based on device id.
+        Collect the appliance-data based on entity_id.
         """
-        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
+        data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS or MODULES
-        device = self.gw_devices[dev_id]
+        entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
-            if device["dev_class"] == "smartmeter":
+            if entity["dev_class"] == "smartmeter":
                 data.update(self._power_data_from_modules())
 
             return data
 
         measurements = DEVICE_MEASUREMENTS
-        if self._is_thermostat and dev_id == self._heater_id:
+        if self._is_thermostat and entity_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
 
         if (
-            appliance := self._appliances.find(f'./appliance[@id="{dev_id}"]')
+            appliance := self._appliances.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data, self._stretch_v2)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, device, data)
+                self._get_actuator_functionalities(appliance, entity, data)
 
         # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
         # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-        if self._is_thermostat and dev_id == self.gateway_id:
+        if self._is_thermostat and entity_id == self.gateway_id:
             outdoor_temperature = self._object_value(
                 self._home_location, "outdoor_temperature"
             )
@@ -310,12 +310,12 @@ class SmileLegacyHelper(SmileCommon):
 
         return data
 
-    def _power_data_from_modules(self) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
+    def _power_data_from_modules(self) -> GwEntityData:
+        """Helper-function for smile.py: _get_entity_data().
 
         Collect the power-data from MODULES (P1 legacy only).
         """
-        direct_data: DeviceData = {"sensors": {}}
+        data: GwEntityData = {"sensors": {}}
         loc = Munch()
         mod_list: list[str] = ["interval_meter", "cumulative_meter", "point_meter"]
         t_string = "tariff_indicator"
@@ -326,15 +326,15 @@ class SmileLegacyHelper(SmileCommon):
             loc.meas_list = loc.measurement.split("_")
             for loc.logs in mod_logs:
                 for loc.log_type in mod_list:
-                    self._collect_power_values(direct_data, loc, t_string, legacy=True)
+                    self._collect_power_values(data, loc, t_string, legacy=True)
 
-        self._count += len(direct_data["sensors"])
-        return direct_data
+        self._count += len(data["sensors"])
+        return data
 
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceData,
+        data: GwEntityData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
@@ -359,21 +359,20 @@ class SmileLegacyHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count += len(data["binary_sensors"])
-        self._count += len(data["sensors"])
-        self._count += len(data["switches"])
-        # Don't count the above top-level dicts, only the remaining single items
-        self._count += len(data) - 3
+        self._count_data_items(data)
 
     def _get_actuator_functionalities(
-        self, xml: etree, device: DeviceData, data: DeviceData
+        self,
+        xml: etree,
+        entity: GwEntityData,
+        data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             # Skip max_dhw_temperature, not initially valid,
             # skip thermostat for thermo_sensors
             if item == "max_dhw_temperature" or (
-                item == "thermostat" and device["dev_class"] == "thermo_sensor"
+                item == "thermostat" and entity["dev_class"] == "thermo_sensor"
             ):
                 continue
 
@@ -401,7 +400,7 @@ class SmileLegacyHelper(SmileCommon):
                 data[act_item] = temp_dict
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
+        """Helper-function for smile.py: _get_entity_data().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
@@ -415,7 +414,7 @@ class SmileLegacyHelper(SmileCommon):
         return val
 
     def _preset(self) -> str | None:
-        """Helper-function for smile.py: device_data_climate().
+        """Helper-function for smile.py: _climate_data().
 
         Collect the active preset based on the active rule.
         """

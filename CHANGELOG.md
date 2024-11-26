@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.6.0
+
+- New Feature: implement collection of location/zone data: Plugwise Adam thermostat representations are zone-based instead of device-based.
+  Solution for HA Core issue [#130597](https://github.com/home-assistant/core/issues/130597)
+
 ## v1.5.2
 
 - Bugfix for Adam: improve recognition of unknown zigbee devices.

@@ -32,11 +32,12 @@ from plugwise.constants import (
     THERMOSTAT_CLASSES,
     TOGGLES,
     UOM,
+    ZONE_MEASUREMENTS,
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    DeviceData,
     GatewayData,
+    GwEntityData,
     SensorType,
     ThermoLoc,
     ToggleNameType,
@@ -223,6 +224,7 @@ class SmileHelper(SmileCommon):
         self._is_thermostat: bool
         self._last_active: dict[str, str | None]
         self._last_modified: dict[str, str] = {}
+        self._loc_data: dict[str, ThermoLoc]
         self._notifications: dict[str, dict[str, str]] = {}
         self._on_off_device: bool
         self._opentherm_device: bool
@@ -249,8 +251,7 @@ class SmileHelper(SmileCommon):
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceData] = {}
-        self.loc_data: dict[str, ThermoLoc]
+        self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
@@ -260,6 +261,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
+        self._zones: dict[str, GwEntityData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -301,7 +303,7 @@ class SmileHelper(SmileCommon):
                 continue
 
             appl.available = None
-            appl.dev_id = appliance.attrib["id"]
+            appl.entity_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             appl.model = None
             appl.model_id = None
@@ -315,18 +317,18 @@ class SmileHelper(SmileCommon):
             if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
-            # P1: for gateway and smartmeter switch device_id - part 1
+            # P1: for gateway and smartmeter switch entity_id - part 1
             # This is done to avoid breakage in HA Core
             if appl.pwclass == "gateway" and self.smile_type == "power":
-                appl.dev_id = appl.location
+                appl.entity_id = appl.location
 
-            self._create_gw_devices(appl)
+            self._create_gw_entities(appl)
 
         # For P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder(appl)
-            # P1: for gateway and smartmeter switch device_id - part 2
-            for item in self.gw_devices:
+            # P1: for gateway and smartmeter switch entity_id - part 2
+            for item in self.gw_entities:
                 if item != self.gateway_id:
                     self.gateway_id = item
                     # Leave for-loop to avoid a 2nd device_id switch
@@ -334,13 +336,13 @@ class SmileHelper(SmileCommon):
 
         # Place the gateway and optional heater_central devices as 1st and 2nd
         for dev_class in ("heater_central", "gateway"):
-            for dev_id, device in dict(self.gw_devices).items():
-                if device["dev_class"] == dev_class:
-                    tmp_device = device
-                    self.gw_devices.pop(dev_id)
-                    cleared_dict = self.gw_devices
-                    add_to_front = {dev_id: tmp_device}
-                    self.gw_devices = {**add_to_front, **cleared_dict}
+            for entity_id, entity in dict(self.gw_entities).items():
+                if entity["dev_class"] == dev_class:
+                    tmp_entity = entity
+                    self.gw_entities.pop(entity_id)
+                    cleared_dict = self.gw_entities
+                    add_to_front = {entity_id: tmp_entity}
+                    self.gw_entities = {**add_to_front, **cleared_dict}
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -352,11 +354,11 @@ class SmileHelper(SmileCommon):
             if loc.name == "Home":
                 self._home_location = loc.loc_id
 
-            self.loc_data[loc.loc_id] = {"name": loc.name}
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
     def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
         """Collect P1 DSMR SmartMeter info."""
-        loc_id = next(iter(self.loc_data.keys()))
+        loc_id = next(iter(self._loc_data.keys()))
         location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(location, locator)
@@ -364,7 +366,7 @@ class SmileHelper(SmileCommon):
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return None  # pragma: no cover
 
-        appl.dev_id = self.gateway_id
+        appl.entity_id = self.gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]
         appl.location = loc_id
@@ -376,7 +378,7 @@ class SmileHelper(SmileCommon):
         appl.vendor_name = module_data["vendor_name"]
         appl.zigbee_mac = None
 
-        self._create_gw_devices(appl)
+        self._create_gw_entities(appl)
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect info for all appliances found."""
@@ -392,7 +394,7 @@ class SmileHelper(SmileCommon):
                 self._appl_heater_central_info(appl, appliance, False)  # False means non-legacy device
                 self._appl_dhw_mode_info(appl, appliance)
                 # Skip orphaned heater_central (Core Issue #104433)
-                if appl.dev_id != self._heater_id:
+                if appl.entity_id != self._heater_id:
                     return Munch()
                 return appl
             case _ as s if s.endswith("_plug"):
@@ -480,24 +482,40 @@ class SmileHelper(SmileCommon):
 
         return therm_list
 
-    def _get_measurement_data(self, dev_id: str) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
+    def _get_zone_data(self, loc_id: str) -> GwEntityData:
+        """Helper-function for smile.py: _get_entity_data().
 
-        Collect the appliance-data based on device id.
+        Collect the location-data based on location id.
         """
-        data: DeviceData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
+        data: GwEntityData = {"sensors": {}}
+        zone = self._zones[loc_id]
+        measurements = ZONE_MEASUREMENTS
+        if (
+            location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        ) is not None:
+            self._appliance_measurements(location, data, measurements)
+            self._get_actuator_functionalities(location, zone, data)
+
+        return data
+
+    def _get_measurement_data(self, entity_id: str) -> GwEntityData:
+        """Helper-function for smile.py: _get_entity_data().
+
+        Collect the appliance-data based on entity_id.
+        """
+        data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
         # Get P1 smartmeter data from LOCATIONS
-        device = self.gw_devices[dev_id]
+        entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
-            if device["dev_class"] == "smartmeter":
-                 data.update(self._power_data_from_location(device["location"]))
+            if entity["dev_class"] == "smartmeter":
+                 data.update(self._power_data_from_location(entity["location"]))
 
             return data
 
         # Get non-P1 data from APPLIANCES
         measurements = DEVICE_MEASUREMENTS
-        if self._is_thermostat and dev_id == self._heater_id:
+        if self._is_thermostat and entity_id == self._heater_id:
             measurements = HEATER_CENTRAL_MEASUREMENTS
             # Show the allowed dhw_modes (Loria only)
             if self._dhw_allowed_modes:
@@ -505,7 +523,7 @@ class SmileHelper(SmileCommon):
                 # Counting of this item is done in _appliance_measurements()
 
         if (
-            appliance := self._domain_objects.find(f'./appliance[@id="{dev_id}"]')
+            appliance := self._domain_objects.find(f'./appliance[@id="{entity_id}"]')
         ) is not None:
             self._appliance_measurements(appliance, data, measurements)
             self._get_lock_state(appliance, data)
@@ -514,21 +532,11 @@ class SmileHelper(SmileCommon):
                 self._get_toggle_state(appliance, toggle, name, data)
 
             if appliance.find("type").text in ACTUATOR_CLASSES:
-                self._get_actuator_functionalities(appliance, device, data)
+                self._get_actuator_functionalities(appliance, entity, data)
 
-        if dev_id == self.gateway_id and self.smile(ADAM):
-            self._get_regulation_mode(appliance, data)
-            self._get_gateway_mode(appliance, data)
-
-        # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-        # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
-        if self._is_thermostat and dev_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
-                self._count += 1
+        self._get_regulation_mode(appliance, entity_id, data)
+        self._get_gateway_mode(appliance, entity_id, data)
+        self._get_gateway_outdoor_temp(entity_id, data)
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
@@ -536,45 +544,19 @@ class SmileHelper(SmileCommon):
             data.pop("c_heating_state")
             self._count -= 1
 
-        if self._is_thermostat and self.smile(ANNA) and dev_id == self._heater_id:
-            # Anna+Elga: base cooling_state on the elga-status-code
-            if "elga_status_code" in data:
-                if data["thermostat_supports_cooling"]:
-                    # Techneco Elga has cooling-capability
-                    self._cooling_present = True
-                    data["model"] = "Generic heater/cooler"
-                    self._cooling_enabled = data["elga_status_code"] in (8, 9)
-                    data["binary_sensors"]["cooling_state"] = self._cooling_active = (
-                        data["elga_status_code"] == 8
-                    )
-                    # Elga has no cooling-switch
-                    if "cooling_ena_switch" in data["switches"]:
-                        data["switches"].pop("cooling_ena_switch")
-                        self._count -= 1
-
-                data.pop("elga_status_code", None)
-                self._count -= 1
-
-            # Loria/Thermastage: cooling-related is based on cooling_state
-            # and modulation_level
-            elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
-                self._cooling_enabled = data["binary_sensors"]["cooling_state"]
-                self._cooling_active = data["sensors"]["modulation_level"] == 100
-                # For Loria the above does not work (pw-beta issue #301)
-                if "cooling_ena_switch" in data["switches"]:
-                    self._cooling_enabled = data["switches"]["cooling_ena_switch"]
-                    self._cooling_active = data["binary_sensors"]["cooling_state"]
+        if self._is_thermostat and self.smile(ANNA):
+            self._update_anna_cooling(entity_id, data)
 
         self._cleanup_data(data)
 
         return data
 
-    def _power_data_from_location(self, loc_id: str) -> DeviceData:
-        """Helper-function for smile.py: _get_device_data().
+    def _power_data_from_location(self, loc_id: str) -> GwEntityData:
+        """Helper-function for smile.py: _get_entity_data().
 
         Collect the power-data based on Location ID, from LOCATIONS.
         """
-        direct_data: DeviceData = {"sensors": {}}
+        data: GwEntityData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         t_string = "tariff"
@@ -583,15 +565,15 @@ class SmileHelper(SmileCommon):
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
-                self._collect_power_values(direct_data, loc, t_string)
+                self._collect_power_values(data, loc, t_string)
 
-        self._count += len(direct_data["sensors"])
-        return direct_data
+        self._count += len(data["sensors"])
+        return data
 
     def _appliance_measurements(
         self,
         appliance: etree,
-        data: DeviceData,
+        data: GwEntityData,
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
@@ -619,14 +601,10 @@ class SmileHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count += len(data["binary_sensors"])
-        self._count += len(data["sensors"])
-        self._count += len(data["switches"])
-        # Don't count the above top-level dicts, only the remaining single items
-        self._count += len(data) - 3
+        self._count_data_items(data)
 
     def _get_toggle_state(
-        self, xml: etree, toggle: str, name: ToggleNameType, data: DeviceData
+        self, xml: etree, toggle: str, name: ToggleNameType, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data().
 
@@ -655,14 +633,16 @@ class SmileHelper(SmileCommon):
                 )
 
     def _get_actuator_functionalities(
-        self, xml: etree, device: DeviceData, data: DeviceData
+        self, xml: etree, entity: GwEntityData, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
             # Skip max_dhw_temperature, not initially valid,
-            # skip thermostat for thermo_sensors
+            # skip thermostat for all but zones with thermostats
             if item == "max_dhw_temperature" or (
-                item == "thermostat" and device["dev_class"] == "thermo_sensor"
+                item == "thermostat" and (
+                    entity["dev_class"] != "climate" if self.smile(ADAM) else entity["dev_class"] != "thermostat"
+                )
             ):
                 continue
 
@@ -708,29 +688,52 @@ class SmileHelper(SmileCommon):
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
-    def _get_regulation_mode(self, appliance: etree, data: DeviceData) -> None:
+    def _get_regulation_mode(
+        self, appliance: etree, entity_id: str, data: GwEntityData
+    ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Collect the gateway regulation_mode.
+        Adam: collect the gateway regulation_mode.
         """
+        if not (self.smile(ADAM) and entity_id == self.gateway_id):
+            return
+
         locator = "./actuator_functionalities/regulation_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
             data["select_regulation_mode"] = search.find("mode").text
             self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
 
-    def _get_gateway_mode(self, appliance: etree, data: DeviceData) -> None:
+    def _get_gateway_mode(
+        self, appliance: etree, entity_id: str, data: GwEntityData
+    ) -> None:
         """Helper-function for _get_measurement_data().
 
-        Collect the gateway mode.
+        Adam: collect the gateway mode.
         """
+        if not (self.smile(ADAM) and entity_id == self.gateway_id):
+            return
+
         locator = "./actuator_functionalities/gateway_mode_control_functionality"
         if (search := appliance.find(locator)) is not None:
             data["select_gateway_mode"] = search.find("mode").text
             self._count += 1
 
+    def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
+        """Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS.
+
+        Available under the Home location.
+        """
+        if self._is_thermostat and entity_id == self.gateway_id:
+            outdoor_temperature = self._object_value(
+                self._home_location, "outdoor_temperature"
+            )
+            if outdoor_temperature is not None:
+                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+                self._count += 1
+
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_device_data() and _device_data_anna().
+        """Helper-function for smile.py: _get_entity_data().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
@@ -742,35 +745,80 @@ class SmileHelper(SmileCommon):
 
         return val
 
-    def _process_c_heating_state(self, data: DeviceData) -> None:
+    def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().
 
         Process the central_heating_state value.
         """
+        # Adam or Anna + OnOff device
         if self._on_off_device:
-            # Anna + OnOff heater: use central_heating_state to show heating_state
-            # Solution for Core issue #81839
-            if self.smile(ANNA):
-                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
-
-            # Adam + OnOff cooling: use central_heating_state to show heating/cooling_state
-            if self.smile(ADAM):
-                if "heating_state" not in data["binary_sensors"]:
-                    self._count += 1
-                data["binary_sensors"]["heating_state"] = False
-                if "cooling_state" not in data["binary_sensors"]:
-                    self._count += 1
-                data["binary_sensors"]["cooling_state"] = False
-                if self._cooling_enabled:
-                    data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
-                else:
-                    data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+            self._process_on_off_device_c_heating_state(data)
 
         # Anna + Elga: use central_heating_state to show heating_state
         if self._elga:
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
-    def _cleanup_data(self, data: DeviceData) -> None:
+    def _process_on_off_device_c_heating_state(self, data: GwEntityData) -> None:
+        """Adam or Anna + OnOff device - use central_heating_state to show heating/cooling_state.
+
+        Solution for Core issue #81839.
+        """
+        if self.smile(ANNA):
+            data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+        if self.smile(ADAM):
+            if "heating_state" not in data["binary_sensors"]:
+                self._count += 1
+            data["binary_sensors"]["heating_state"] = False
+            if "cooling_state" not in data["binary_sensors"]:
+                self._count += 1
+            data["binary_sensors"]["cooling_state"] = False
+            if self._cooling_enabled:
+                data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
+            else:
+                data["binary_sensors"]["heating_state"] = data["c_heating_state"]
+
+    def _update_anna_cooling(self, entity_id: str, data: GwEntityData) -> None:
+        """Update the Anna heater_central device for cooling.
+
+        Support added for Techneco Elga and Thercon Loria/Thermastage.
+        """
+        if entity_id != self._heater_id:
+            return
+
+        if "elga_status_code" in data:
+            self._update_elga_cooling(data)
+        elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
+            self._update_loria_cooling(data)
+
+    def _update_elga_cooling(self, data: GwEntityData) -> None:
+        """# Anna+Elga: base cooling_state on the elga-status-code."""
+        if data["thermostat_supports_cooling"]:
+            # Techneco Elga has cooling-capability
+            self._cooling_present = True
+            data["model"] = "Generic heater/cooler"
+            self._cooling_enabled = data["elga_status_code"] in (8, 9)
+            data["binary_sensors"]["cooling_state"] = self._cooling_active = (
+                data["elga_status_code"] == 8
+            )
+            # Elga has no cooling-switch
+            if "cooling_ena_switch" in data["switches"]:
+                data["switches"].pop("cooling_ena_switch")
+                self._count -= 1
+
+        data.pop("elga_status_code", None)
+        self._count -= 1
+
+    def _update_loria_cooling(self, data: GwEntityData) -> None:
+        """Loria/Thermastage: base cooling-related on cooling_state and modulation_level."""
+        self._cooling_enabled = data["binary_sensors"]["cooling_state"]
+        self._cooling_active = data["sensors"]["modulation_level"] == 100
+        # For Loria the above does not work (pw-beta issue #301)
+        if "cooling_ena_switch" in data["switches"]:
+            self._cooling_enabled = data["switches"]["cooling_ena_switch"]
+            self._cooling_active = data["binary_sensors"]["cooling_state"]
+
+    def _cleanup_data(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().
 
         Clean up the data dict.
@@ -793,7 +841,7 @@ class SmileHelper(SmileCommon):
             self._count -= 1
 
     def _scan_thermostats(self) -> None:
-        """Helper-function for smile.py: get_all_devices().
+        """Helper-function for smile.py: get_all_entities().
 
         Update locations with thermostat ranking results and use
         the result to update the device_class of secondary thermostats.
@@ -801,22 +849,26 @@ class SmileHelper(SmileCommon):
         self._thermo_locs = self._match_locations()
 
         thermo_matching: dict[str, int] = {
-            "thermostat": 3,
+            "thermostat": 2,
             "zone_thermometer": 2,
             "zone_thermostat": 2,
             "thermostatic_radiator_valve": 1,
         }
 
         for loc_id in self._thermo_locs:
-            for dev_id, device in self.gw_devices.items():
-                self._rank_thermostat(thermo_matching, loc_id, dev_id, device)
+            for entity_id, entity in self.gw_entities.items():
+                self._rank_thermostat(thermo_matching, loc_id, entity_id, entity)
 
-        # Update secondary thermostat class where needed
-        for dev_id, device in self.gw_devices.items():
-            if (loc_id := device["location"]) in self._thermo_locs:
-                tl_loc_id = self._thermo_locs[loc_id]
-                if "secondary" in tl_loc_id and dev_id in tl_loc_id["secondary"]:
-                    device["dev_class"] = "thermo_sensor"
+        for loc_id, loc_data in list(self._thermo_locs.items()):
+            if loc_data["primary_prio"] != 0:
+                self._zones[loc_id] = {
+                    "dev_class": "climate",
+                    "model": "ThermoZone",
+                    "name": loc_data["name"],
+                    "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]},
+                    "vendor": "Plugwise",
+                }
+                self._count += 3
 
     def _match_locations(self) -> dict[str, ThermoLoc]:
         """Helper-function for _scan_thermostats().
@@ -824,11 +876,11 @@ class SmileHelper(SmileCommon):
         Match appliances with locations.
         """
         matched_locations: dict[str, ThermoLoc] = {}
-        for location_id, location_details in self.loc_data.items():
-            for appliance_details in self.gw_devices.values():
+        for location_id, location_details in self._loc_data.items():
+            for appliance_details in self.gw_entities.values():
                 if appliance_details["location"] == location_id:
                     location_details.update(
-                        {"primary": None, "primary_prio": 0, "secondary": set()}
+                        {"primary": [], "primary_prio": 0, "secondary": []}
                     )
                     matched_locations[location_id] = location_details
 
@@ -839,30 +891,34 @@ class SmileHelper(SmileCommon):
         thermo_matching: dict[str, int],
         loc_id: str,
         appliance_id: str,
-        appliance_details: DeviceData,
+        appliance_details: GwEntityData,
     ) -> None:
         """Helper-function for _scan_thermostats().
 
         Rank the thermostat based on appliance_details: primary or secondary.
+        Note: there can be several primary and secondary thermostats.
         """
         appl_class = appliance_details["dev_class"]
         appl_d_loc = appliance_details["location"]
+        thermo_loc = self._thermo_locs[loc_id]
         if loc_id == appl_d_loc and appl_class in thermo_matching:
+            if thermo_matching[appl_class] == thermo_loc["primary_prio"]:
+                thermo_loc["primary"].append(appliance_id)
             # Pre-elect new primary
-            if thermo_matching[appl_class] > self._thermo_locs[loc_id]["primary_prio"]:
+            elif (thermo_rank := thermo_matching[appl_class]) > thermo_loc["primary_prio"]:
+                thermo_loc["primary_prio"] = thermo_rank
                 # Demote former primary
-                if (tl_primary:= self._thermo_locs[loc_id]["primary"]) is not None:
-                    self._thermo_locs[loc_id]["secondary"].add(tl_primary)
+                if (tl_primary := thermo_loc["primary"]):
+                    thermo_loc["secondary"] += tl_primary
+                    thermo_loc["primary"] = []
 
                 # Crown primary
-                self._thermo_locs[loc_id]["primary_prio"] = thermo_matching[appl_class]
-                self._thermo_locs[loc_id]["primary"] = appliance_id
-
+                thermo_loc["primary"].append(appliance_id)
             else:
-                self._thermo_locs[loc_id]["secondary"].add(appliance_id)
+                thermo_loc["secondary"].append(appliance_id)
 
     def _control_state(self, loc_id: str) -> str | bool:
-        """Helper-function for _device_data_adam().
+        """Helper-function for _get_adam_data().
 
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
         Represents the heating/cooling demand-state of the local primary thermostat.
@@ -877,7 +933,7 @@ class SmileHelper(SmileCommon):
         return False
 
     def _heating_valves(self) -> int | bool:
-        """Helper-function for smile.py: _device_data_adam().
+        """Helper-function for smile.py: _get_adam_data().
 
         Collect amount of open valves indicating active direct heating.
         For cases where the heat is provided from an external shared source (city heating).
@@ -962,7 +1018,7 @@ class SmileHelper(SmileCommon):
         return schedule_ids
 
     def _schedules(self, location: str) -> tuple[list[str], str]:
-        """Helper-function for smile.py: _device_data_climate().
+        """Helper-function for smile.py: _climate_data().
 
         Obtain the available schedules/schedules. Adam: a schedule can be connected to more than one location.
         NEW: when a location_id is present then the schedule is active. Valid for both Adam and non-legacy Anna.

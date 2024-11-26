@@ -11,8 +11,8 @@ from plugwise.constants import (
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     ApplianceType,
-    DeviceData,
-    ModelData,
+    GwEntityData,
+    ModuleData,
     SensorType,
 )
 from plugwise.util import (
@@ -40,7 +40,7 @@ class SmileCommon:
         self._heater_id: str
         self._on_off_device: bool
         self._opentherm_device: bool
-        self.gw_devices: dict[str, DeviceData]
+        self.gw_entities: dict[str, GwEntityData]
         self.smile_name: str
         self.smile_type: str
 
@@ -108,7 +108,7 @@ class SmileCommon:
 
         return appl
 
-    def _collect_power_values(self, data: DeviceData, loc: Munch, tariff: str, legacy: bool = False) -> None:
+    def _collect_power_values(self, data: GwEntityData, loc: Munch, tariff: str, legacy: bool = False) -> None:
         """Something."""
         for loc.peak_select in ("nl_peak", "nl_offpeak"):
             loc.locator = (
@@ -130,6 +130,19 @@ class SmileCommon:
             )
             key = cast(SensorType, loc.key_string)
             data["sensors"][key] = loc.f_val
+
+    def _count_data_items(self, data: GwEntityData) -> None:
+        """When present, count the binary_sensors, sensors and switches dict-items, don't count the dicts.
+
+        Also, count the remaining single data items, the amount of dicts present have already been pre-subtracted in the previous step.
+        """
+        if "binary_sensors" in data:
+            self._count += len(data["binary_sensors"]) - 1
+        if "sensors" in data:
+            self._count += len(data["sensors"]) - 1
+        if "switches" in data:
+            self._count += len(data["switches"]) - 1
+        self._count += len(data)
 
     def _power_data_peak_value(self, loc: Munch, legacy: bool) -> Munch:
         """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
@@ -160,8 +173,8 @@ class SmileCommon:
         measurement: str,
         net_string: SensorType,
         f_val: float | int,
-        direct_data: DeviceData,
-    ) -> DeviceData:
+        data: GwEntityData,
+    ) -> GwEntityData:
         """Calculate differential energy."""
         if (
             "electricity" in measurement
@@ -171,10 +184,10 @@ class SmileCommon:
             diff = 1
             if "produced" in measurement:
                 diff = -1
-            if net_string not in direct_data["sensors"]:
+            if net_string not in data["sensors"]:
                 tmp_val: float | int = 0
             else:
-                tmp_val = direct_data["sensors"][net_string]
+                tmp_val = data["sensors"][net_string]
 
             if isinstance(f_val, int):
                 tmp_val += f_val * diff
@@ -182,13 +195,13 @@ class SmileCommon:
                 tmp_val += float(f_val * diff)
                 tmp_val = float(f"{round(tmp_val, 3):.3f}")
 
-            direct_data["sensors"][net_string] = tmp_val
+            data["sensors"][net_string] = tmp_val
 
-        return direct_data
+        return data
 
-    def _create_gw_devices(self, appl: Munch) -> None:
-        """Helper-function for creating/updating gw_devices."""
-        self.gw_devices[appl.dev_id] = {"dev_class": appl.pwclass}
+    def _create_gw_entities(self, appl: Munch) -> None:
+        """Helper-function for creating/updating gw_entities."""
+        self.gw_entities[appl.entity_id] = {"dev_class": appl.pwclass}
         self._count += 1
         for key, value in {
             "available": appl.available,
@@ -204,30 +217,30 @@ class SmileCommon:
         }.items():
             if value is not None or key == "location":
                 appl_key = cast(ApplianceType, key)
-                self.gw_devices[appl.dev_id][appl_key] = value
+                self.gw_entities[appl.entity_id][appl_key] = value
                 self._count += 1
 
-    def _device_data_switching_group(
-        self, device: DeviceData, data: DeviceData
+    def _entity_switching_group(
+        self, entity: GwEntityData, data: GwEntityData
     ) -> None:
-        """Helper-function for _get_device_data().
+        """Helper-function for _get_device_zone_data().
 
         Determine switching group device data.
         """
-        if device["dev_class"] in SWITCH_GROUP_TYPES:
+        if entity["dev_class"] in SWITCH_GROUP_TYPES:
             counter = 0
-            for member in device["members"]:
-                if self.gw_devices[member]["switches"].get("relay"):
+            for member in entity["members"]:
+                if self.gw_entities[member]["switches"].get("relay"):
                     counter += 1
             data["switches"]["relay"] = counter != 0
             self._count += 1
 
-    def _get_group_switches(self) -> dict[str, DeviceData]:
-        """Helper-function for smile.py: get_all_devices().
+    def _get_group_switches(self) -> dict[str, GwEntityData]:
+        """Helper-function for smile.py: get_all_gateway_entities().
 
         Collect switching- or pump-group info.
         """
-        switch_groups: dict[str, DeviceData] = {}
+        switch_groups: dict[str, GwEntityData] = {}
         # P1 and Anna don't have switchgroups
         if self.smile_type == "power" or self.smile(ANNA):
             return switch_groups
@@ -240,25 +253,22 @@ class SmileCommon:
             group_appliances = group.findall("appliances/appliance")
             for item in group_appliances:
                 # Check if members are not orphaned - stretch
-                if item.attrib["id"] in self.gw_devices:
+                if item.attrib["id"] in self.gw_entities:
                     members.append(item.attrib["id"])
 
             if group_type in SWITCH_GROUP_TYPES and members:
-                switch_groups.update(
-                    {
-                        group_id: {
-                            "dev_class": group_type,
-                            "model": "Switchgroup",
-                            "name": group_name,
-                            "members": members,
-                        },
-                    },
-                )
+                switch_groups[group_id] = {
+                    "dev_class": group_type,
+                    "model": "Switchgroup",
+                    "name": group_name,
+                    "members": members,
+                    "vendor": "Plugwise",
+                }
                 self._count += 4
 
         return switch_groups
 
-    def _get_lock_state(self, xml: etree, data: DeviceData, stretch_v2: bool = False) -> None:
+    def _get_lock_state(self, xml: etree, data: GwEntityData, stretch_v2: bool = False) -> None:
         """Helper-function for _get_measurement_data().
 
         Adam & Stretches: obtain the relay-switch lock state.
@@ -280,12 +290,12 @@ class SmileCommon:
         locator: str,
         xml_2: etree = None,
         legacy: bool = False,
-    ) -> ModelData:
+    ) -> ModuleData:
         """Helper-function for _energy_device_info_finder() and _appliance_info_finder().
 
         Collect requested info from MODULES.
         """
-        model_data: ModelData = {
+        module_data: ModuleData = {
             "contents": False,
             "firmware_version": None,
             "hardware_version": None,
@@ -304,25 +314,25 @@ class SmileCommon:
             search = return_valid(xml_2, self._domain_objects)
             module = search.find(loc)
             if module is not None:  # pylint: disable=consider-using-assignment-expr
-                model_data["contents"] = True
-                get_vendor_name(module, model_data)
-                model_data["vendor_model"] = module.find("vendor_model").text
-                model_data["hardware_version"] = module.find("hardware_version").text
-                model_data["firmware_version"] = module.find("firmware_version").text
-                self._get_zigbee_data(module, model_data, legacy)
+                module_data["contents"] = True
+                get_vendor_name(module, module_data)
+                module_data["vendor_model"] = module.find("vendor_model").text
+                module_data["hardware_version"] = module.find("hardware_version").text
+                module_data["firmware_version"] = module.find("firmware_version").text
+                self._get_zigbee_data(module, module_data, legacy)
 
-        return model_data
+        return module_data
 
-    def _get_zigbee_data(self, module: etree, model_data: ModelData, legacy: bool) -> None:
-        """Helper-function for _get_model_data()."""
+    def _get_zigbee_data(self, module: etree, module_data: ModuleData, legacy: bool) -> None:
+        """Helper-function for _get_module_data()."""
         if legacy:
             # Stretches
             if (router := module.find("./protocols/network_router")) is not None:
-                model_data["zigbee_mac_address"] = router.find("mac_address").text
+                module_data["zigbee_mac_address"] = router.find("mac_address").text
             # Also look for the Circle+/Stealth M+
             if (coord := module.find("./protocols/network_coordinator")) is not None:
-                model_data["zigbee_mac_address"] = coord.find("mac_address").text
+                module_data["zigbee_mac_address"] = coord.find("mac_address").text
         # Adam
         elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
-                model_data["zigbee_mac_address"] = zb_node.find("mac_address").text
-                model_data["reachable"] = zb_node.find("reachable").text == "true"
+                module_data["zigbee_mac_address"] = zb_node.find("mac_address").text
+                module_data["reachable"] = zb_node.find("reachable").text == "true"

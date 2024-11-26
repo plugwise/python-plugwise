@@ -22,8 +22,8 @@ from plugwise.constants import (
     TEMP_CELSIUS,
     UOM,
     BinarySensorType,
-    DeviceData,
-    ModelData,
+    GwEntityData,
+    ModuleData,
     SensorType,
     SpecialType,
     SwitchType,
@@ -122,7 +122,7 @@ def common_match_cases(
     measurement: str,
     attrs: DATA | UOM,
     location: etree,
-    data: DeviceData,
+    data: GwEntityData,
 ) -> None:
     """Helper-function for common match-case execution."""
     value = location.text in ("on", "true")
@@ -179,7 +179,7 @@ def format_measure(measure: str, unit: str) -> float | int:
     return result
 
 
-def get_vendor_name(module: etree, model_data: ModelData) -> ModelData:
+def get_vendor_name(module: etree, model_data: ModuleData) -> ModuleData:
     """Helper-function for _get_model_data()."""
     if (vendor_name := module.find("vendor_name").text) is not None:
         model_data["vendor_name"] = vendor_name
@@ -202,7 +202,7 @@ def power_data_local_format(
     return format_measure(val, attrs_uom)
 
 
-def remove_empty_platform_dicts(data: DeviceData) -> None:
+def remove_empty_platform_dicts(data: GwEntityData) -> None:
     """Helper-function for removing any empty platform dicts."""
     if not data["binary_sensors"]:
         data.pop("binary_sensors")

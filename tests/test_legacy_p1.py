@@ -29,7 +29,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
         assert smile.gateway_id == "aaaa0000aaaa0000aaaa0000aaaa00aa"
-        assert self.device_items == 26
+        assert self.entity_items == 26
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -52,7 +52,7 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         )
 
         await self.device_test(smile, "2022-05-16 00:00:01", testdata)
-        assert self.device_items == 26
+        assert self.entity_items == 26
 
         # Now change some data and change directory reading xml from
         # emulating reading newer dataset after an update_interval
@@ -66,4 +66,3 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
 
         await smile.close_connection()
         await self.disconnect(server, client)
-

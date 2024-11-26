@@ -19,8 +19,8 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
-    DeviceData,
     GatewayData,
+    GwEntityData,
     PlugwiseData,
     ThermoLoc,
 )
@@ -44,11 +44,11 @@ class SmileLegacyAPI(SmileLegacyData):
         request: Callable[..., Awaitable[Any]],
         websession: aiohttp.ClientSession,
         _is_thermostat: bool,
+        _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
         _stretch_v2: bool,
         _target_smile: str,
-        loc_data: dict[str, ThermoLoc],
         smile_fw_version: Version | None,
         smile_hostname: str,
         smile_hw_version: str | None,
@@ -61,15 +61,13 @@ class SmileLegacyAPI(SmileLegacyData):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        SmileLegacyData.__init__(self)
-
         self._cooling_present = False
         self._is_thermostat = _is_thermostat
+        self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
-        self.loc_data = loc_data
         self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
@@ -79,10 +77,11 @@ class SmileLegacyAPI(SmileLegacyData):
         self.smile_name = smile_name
         self.smile_type = smile_type
         self.smile_zigbee_mac_address = smile_zigbee_mac_address
+        SmileLegacyData.__init__(self)
 
         self._previous_day_number: str = "0"
 
-    async def full_update_device(self) -> None:
+    async def full_xml_update(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._locations = await self.request(LOCATIONS)
@@ -91,8 +90,8 @@ class SmileLegacyAPI(SmileLegacyData):
         if self.smile_type != "power":
             self._appliances = await self.request(APPLIANCES)
 
-    def get_all_devices(self) -> None:
-        """Determine the evices present from the obtained XML-data.
+    def get_all_gateway_entities(self) -> None:
+        """Collect the gateway entities from the received raw XML-data.
 
         Run this functions once to gather the initial device configuration,
         then regularly run async_update() to refresh the device data.
@@ -102,10 +101,10 @@ class SmileLegacyAPI(SmileLegacyData):
 
         # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
+            self.gw_entities.update(group_data)
 
-        # Collect the remaining data for all devices
-        self._all_device_data()
+        # Collect the remaining data for all entities
+        self._all_entity_data()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
@@ -119,9 +118,9 @@ class SmileLegacyAPI(SmileLegacyData):
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
             self.gw_data: GatewayData = {}
-            self.gw_devices: dict[str, DeviceData] = {}
-            await self.full_update_device()
-            self.get_all_devices()
+            self.gw_entities: dict[str, GwEntityData] = {}
+            await self.full_xml_update()
+            self.get_all_gateway_entities()
         # Otherwise perform an incremental update
         else:
             self._domain_objects = await self.request(DOMAIN_OBJECTS)
@@ -131,10 +130,13 @@ class SmileLegacyAPI(SmileLegacyData):
                 case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
                     self._appliances = await self.request(APPLIANCES)
 
-            self._update_gw_devices()
+            self._update_gw_entities()
 
         self._previous_day_number = day_number
-        return PlugwiseData(self.gw_data, self.gw_devices)
+        return PlugwiseData(
+            devices=self.gw_entities,
+            gateway=self.gw_data,
+        )
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

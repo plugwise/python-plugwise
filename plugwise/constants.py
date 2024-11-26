@@ -190,6 +190,14 @@ OBSOLETE_MEASUREMENTS: Final[tuple[str, ...]] = (
     "outdoor_temperature",
 )
 
+# Zone/climate related measurements
+ZONE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
+    "electricity_consumed": UOM(POWER_WATT),
+    "electricity_produced": UOM(POWER_WATT),
+    "relay": UOM(NONE),
+    "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
+}
+
 # Literals
 SMILE_P1 = "Smile P1"
 POWER = "power"
@@ -397,8 +405,8 @@ class GatewayData(TypedDict, total=False):
     smile_name: str
 
 
-class ModelData(TypedDict):
-    """The ModelData class."""
+class ModuleData(TypedDict):
+    """The Module data class."""
 
     contents: bool
     firmware_version: str | None
@@ -492,9 +500,9 @@ class ThermoLoc(TypedDict, total=False):
     """Thermo Location class."""
 
     name: str
-    primary: str | None
+    primary: list[str]
     primary_prio: int
-    secondary: set[str]
+    secondary: list[str]
 
 
 class ActuatorData(TypedDict, total=False):
@@ -508,8 +516,11 @@ class ActuatorData(TypedDict, total=False):
     upper_bound: float
 
 
-class DeviceData(TypedDict, total=False):
-    """The Device Data class, covering the collected and ordered output-data per device."""
+class GwEntityData(TypedDict, total=False):
+    """The Gateway Entity data class.
+
+    Covering the collected output-data per device or location.
+    """
 
     # Appliance base data
     dev_class: str
@@ -544,13 +555,13 @@ class DeviceData(TypedDict, total=False):
     select_gateway_mode: str
     select_regulation_mode: str
 
-    # Master Thermostats
+    # Thermostat-related
+    thermostats: dict[str, list[str]]
     # Presets:
     active_preset: str | None
     preset_modes: list[str] | None
     # Schedules:
     available_schedules: list[str]
-    last_used: str | None
     select_schedule: str
 
     climate_mode: str
@@ -571,5 +582,6 @@ class DeviceData(TypedDict, total=False):
 class PlugwiseData:
     """Plugwise data provided as output."""
 
+    devices: dict[str, GwEntityData]
     gateway: GatewayData
-    devices: dict[str, DeviceData]
+

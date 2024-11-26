@@ -516,24 +516,24 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         await server.close()
 
     @staticmethod
-    def show_setup(location_list, device_list):
+    def show_setup(location_list, entity_list):
         """Show informative outline of the setup."""
         _LOGGER.info("This environment looks like:")
         for loc_id, loc_info in location_list.items():
             _LOGGER.info(
                 "  --> Location: %s", "{} ({})".format(loc_info["name"], loc_id)
             )
-            device_count = 0
-            for dev_id, dev_info in device_list.items():
-                if dev_info.get("location", "not_found") == loc_id:
-                    device_count += 1
+            devzone_count = 0
+            for devzone_id, devzone_info in entity_list.items():
+                if devzone_info.get("location", "not_found") == loc_id:
+                    devzone_count += 1
                     _LOGGER.info(
-                        "      + Device: %s",
+                        "      + Entity: %s",
                         "{} ({} - {})".format(
-                            dev_info["name"], dev_info["dev_class"], dev_id
+                            devzone_info["name"], devzone_info["dev_class"], devzone_id
                         ),
                     )
-            if device_count == 0:  # pragma: no cover
+            if devzone_count == 0:  # pragma: no cover
                 _LOGGER.info("      ! no devices found in this location")
 
     @pytest.mark.asyncio
@@ -546,7 +546,58 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         skip_testing=False,
     ):
         """Perform basic device tests."""
-        bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
+
+        def test_and_assert(test_dict, data, header):
+            """Test-and-assert helper-function."""
+            tests = 0
+            tested_items = 0
+            asserts = 0
+            bsw_list = ["binary_sensors", "central", "climate", "sensors", "switches"]
+            for testitem, measurements in test_dict.items():
+                item_asserts = 0
+                tests += 1
+                assert testitem in data
+                tested_items += 1
+                for data_id, details in data.items():
+                    if testitem == data_id:
+                        _LOGGER.info(
+                            "%s",
+                            f"- Testing data for {header} {details['name']} ({data_id})",
+                        )
+                        _LOGGER.info("%s", f"  + {header} data: {details}")
+                        for measure_key, measure_assert in measurements.items():
+                            _LOGGER.info(
+                                "%s",
+                                f"  + Testing {measure_key}/{type(measure_key)} with {details[measure_key]}/{type(details[measure_key])} (should be {measure_assert}/{type(measure_assert)} )",
+                            )
+                            tests += 1
+                            if (
+                                measure_key in bsw_list
+                                or measure_key in pw_constants.ACTIVE_ACTUATORS
+                            ):
+                                tests -= 1
+                                for key_1, val_1 in measure_assert.items():
+                                    tests += 1
+                                    for key_2, val_2 in details[measure_key].items():
+                                        if key_1 != key_2:
+                                            continue
+
+                                        _LOGGER.info(
+                                            "%s",
+                                            f"  + Testing {key_1} ({val_1} should be {val_2})",
+                                        )
+                                        assert val_1 == val_2
+                                        asserts += 1
+                                        item_asserts += 1
+                            else:
+                                assert details[measure_key] == measure_assert
+                                asserts += 1
+                                item_asserts += 1
+                _LOGGER.debug("Item %s test-asserts: %s", testitem, item_asserts)
+
+            assert tests == asserts + tested_items
+            _LOGGER.debug("Total items tested: %s", tested_items)
+            _LOGGER.debug("Total entity test-asserts: %s", asserts)
 
         # pragma warning disable S3776
 
@@ -556,8 +607,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             if initialize:
                 _LOGGER.info("Asserting testdata:")
                 if smile.smile_legacy:
-                    await smile.full_update_device()
-                    smile.get_all_devices()
+                    await smile.full_xml_update()
+                    smile.get_all_gateway_entities()
                     data = await smile.async_update()
                     assert smile._timeout == 30
                 else:
@@ -572,7 +623,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             self.cooling_present = data.gateway["cooling_present"]
         if "notifications" in data.gateway:
             self.notifications = data.gateway["notifications"]
-        self.device_items = data.gateway["item_count"]
+        self.entity_items = data.gateway["item_count"]
 
         self._cooling_active = False
         self._cooling_enabled = False
@@ -584,69 +635,27 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 if "cooling_state" in heat_cooler["binary_sensors"]:
                     self._cooling_active = heat_cooler["binary_sensors"]["cooling_state"]
 
-        self._write_json("all_data", {"gateway": data.gateway, "devices": data.devices})
+        self._write_json("all_data", {"devices": data.devices, "gateway": data.gateway})
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-        self.device_list = list(data.devices.keys())
-        location_list = smile.loc_data
+        self.entity_list = list(data.devices.keys())
+        location_list = smile._loc_data
 
         _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
-        _LOGGER.info("Device list = %s", data.devices)
+        _LOGGER.info("Entities list = %s", data.devices)
         self.show_setup(location_list, data.devices)
 
         if skip_testing:
             return
 
-        # Perform tests and asserts
-        tests = 0
-        asserts = 0
-        for testdevice, measurements in testdata.items():
-            tests += 1
-            assert testdevice in data.devices
-            asserts += 1
-            for dev_id, details in data.devices.items():
-                if testdevice == dev_id:
-                    _LOGGER.info(
-                        "%s",
-                        "- Testing data for device {} ({})".format(
-                            details["name"], dev_id
-                        ),
-                    )
-                    _LOGGER.info("  + Device data: %s", details)
-                    for measure_key, measure_assert in measurements.items():
-                        _LOGGER.info(
-                            "%s",
-                            f"  + Testing {measure_key}/{type(measure_key)} with {details[measure_key]}/{type(details[measure_key])} (should be {measure_assert}/{type(measure_assert)} )",
-                        )
-                        tests += 1
-                        if (
-                            measure_key in bsw_list
-                            or measure_key in pw_constants.ACTIVE_ACTUATORS
-                        ):
-                            tests -= 1
-                            for key_1, val_1 in measure_assert.items():
-                                tests += 1
-                                for key_2, val_2 in details[measure_key].items():
-                                    if key_1 != key_2:
-                                        continue
-
-                                    _LOGGER.info(
-                                        "%s",
-                                        f"  + Testing {key_1} ({val_1} should be {val_2})",
-                                    )
-                                    assert val_1 == val_2
-                                    asserts += 1
-                        else:
-                            assert details[measure_key] == measure_assert
-                            asserts += 1
-
-        assert tests == asserts
-        _LOGGER.debug("Number of test-assert: %s", asserts)
+        # Perform tests and asserts in two steps: devices and zones
+        for header, data_dict in testdata.items():
+            test_and_assert(data_dict, data.devices, header)
 
         # pragma warning restore S3776
 

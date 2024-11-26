@@ -1937,9 +1937,9 @@
 		</protocols>
 	</module>
 	<appliance id='f1fee6043d3642a9b0a65297455f008e'>
-		<name>Zone Thermostat Badkamer</name>
-		<description>A zone thermostat regulates the temperature in a heating zone (generally a room).</description>
-		<type>zone_thermostat</type>
+		<name>Thermostatic Radiator Badkamer 2</name>
+		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
+		<type>thermostatic_radiator_valve</type>
 		<created_date>2019-01-25T08:21:56.648+01:00</created_date>
 		<modified_date>2020-03-20T17:46:28.412+01:00</modified_date>
 		<deleted_date></deleted_date>
@@ -2094,7 +2094,7 @@
 		</contexts>
 	</rule>
 	<appliance id='680423ff840043738f42cc7f1ff97a36'>
-		<name>Thermostatic Radiator Badkamer</name>
+		<name>Thermostatic Radiator Badkamer 1</name>
 		<description>A thermostatic radiator valve allows hot water to be pumped into its radiator based on ambient temperature and the local temperature setpoint.</description>
 		<type>thermostatic_radiator_valve</type>
 		<created_date>2018-12-10T10:52:45.271+01:00</created_date>

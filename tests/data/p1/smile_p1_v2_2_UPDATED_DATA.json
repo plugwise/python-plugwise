@@ -1,16 +1,18 @@
 {
-  "199aa40f126840f392983d171374ab0b": {
-    "sensors": {
-      "net_electricity_point": -2248.0,
-      "electricity_consumed_point": 0.0,
-      "net_electricity_cumulative": 1019.101,
-      "electricity_consumed_peak_cumulative": 1155.295,
-      "electricity_consumed_off_peak_cumulative": 1642.84,
-      "electricity_produced_point": 2248.0,
-      "electricity_produced_peak_cumulative": 1296.336,
-      "electricity_produced_off_peak_cumulative": 482.698,
-      "gas_consumed_cumulative": 585.433,
-      "gas_consumed_interval": 0.0
+  "entities": {
+    "199aa40f126840f392983d171374ab0b": {
+      "sensors": {
+        "net_electricity_point": -2248.0,
+        "electricity_consumed_point": 0.0,
+        "net_electricity_cumulative": 1019.101,
+        "electricity_consumed_peak_cumulative": 1155.295,
+        "electricity_consumed_off_peak_cumulative": 1642.84,
+        "electricity_produced_point": 2248.0,
+        "electricity_produced_peak_cumulative": 1296.336,
+        "electricity_produced_off_peak_cumulative": 482.698,
+        "gas_consumed_cumulative": 585.433,
+        "gas_consumed_interval": 0.0
+      }
     }
   }
 }

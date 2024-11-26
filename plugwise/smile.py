@@ -22,8 +22,8 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
-    DeviceData,
     GatewayData,
+    GwEntityData,
     PlugwiseData,
     ThermoLoc,
 )
@@ -53,11 +53,11 @@ class SmileAPI(SmileData):
         _elga: bool,
         _is_thermostat: bool,
         _last_active: dict[str, str | None],
+        _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
         gateway_id: str,
-        loc_data: dict[str, ThermoLoc],
         smile_fw_version: Version | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
@@ -70,17 +70,17 @@ class SmileAPI(SmileData):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        SmileData.__init__(self)
-
+        self._cooling_enabled = False
         self._cooling_present = _cooling_present
         self._elga = _elga
+        self._heater_id: str
         self._is_thermostat = _is_thermostat
         self._last_active = _last_active
+        self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
         self.gateway_id = gateway_id
-        self.loc_data = loc_data
         self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
@@ -90,22 +90,21 @@ class SmileAPI(SmileData):
         self.smile_model_id = smile_model_id
         self.smile_name = smile_name
         self.smile_type = smile_type
+        SmileData.__init__(self)
 
-        self._heater_id: str
-        self._cooling_enabled = False
 
-    async def full_update_device(self) -> None:
+    async def full_xml_update(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
 
-    def get_all_devices(self) -> None:
-        """Determine the evices present from the obtained XML-data.
+    def get_all_gateway_entities(self) -> None:
+        """Collect the gateway entities from the received raw XML-data.
 
-        Run this functions once to gather the initial device configuration,
-        then regularly run async_update() to refresh the device data.
+        Run this functions once to gather the initial configuration,
+        then regularly run async_update() to refresh the entity data.
         """
-        # Gather all the devices and their initial data
+        # Gather all the entities and their initial data
         self._all_appliances()
         if self._is_thermostat:
             if self.smile(ADAM):
@@ -117,20 +116,21 @@ class SmileAPI(SmileData):
 
         # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
-            self.gw_devices.update(group_data)
+            self.gw_entities.update(group_data)
 
-        # Collect the remaining data for all devices
-        self._all_device_data()
+        # Collect the remaining data for all entities
+        self._all_entity_data()
 
     async def async_update(self) -> PlugwiseData:
         """Perform an incremental update for updating the various device states."""
         self.gw_data: GatewayData = {}
-        self.gw_devices: dict[str, DeviceData] = {}
+        self.gw_entities: dict[str, GwEntityData] = {}
+        self._zones: dict[str, GwEntityData] = {}
         try:
-            await self.full_update_device()
-            self.get_all_devices()
+            await self.full_xml_update()
+            self.get_all_gateway_entities()
             if "heater_id" in self.gw_data:
-                heat_cooler = self.gw_devices[self.gw_data["heater_id"]]
+                heat_cooler = self.gw_entities[self.gw_data["heater_id"]]
                 if (
                     "binary_sensors" in heat_cooler
                     and "cooling_enabled" in heat_cooler["binary_sensors"]
@@ -139,7 +139,10 @@ class SmileAPI(SmileData):
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
 
-        return PlugwiseData(self.gw_data, self.gw_devices)
+        return PlugwiseData(
+            devices=self.gw_entities,
+            gateway=self.gw_data,
+        )
 
 ########################################################################################################
 ###  API Set and HA Service-related Functions                                                        ###

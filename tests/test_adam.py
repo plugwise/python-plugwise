@@ -36,8 +36,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile.gateway_id == "da224107914542988a88561b4452b0f6"
         assert smile._last_active["f2bf9048bef64cc5b6d5110154e33c81"] == "Weekschema"
         assert smile._last_active["f871b8c4d63549319221e294e4f88074"] == "Badkamer"
-        assert self.device_items == 165
-        assert self.device_list == [
+        assert self.entity_items == 177
+        assert self.entity_list == [
             "da224107914542988a88561b4452b0f6",
             "056ee145a816487eaa69243c3280f8bf",
             "10016900610d4c7481df78c89606ef22",
@@ -49,6 +49,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             "854f8a9b0e7e425db97f1f110e1ce4b3",
             "2568cc4b9c1e401495d4741a5f89bee1",
             "e8ef2a01ed3b4139a53bf749204fe6b4",
+            "f2bf9048bef64cc5b6d5110154e33c81",
+            "f871b8c4d63549319221e294e4f88074",
         ]
 
         result = await self.tinker_thermostat(
@@ -187,7 +189,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.device_items == 340
+        assert self.entity_items == 364
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -265,7 +267,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.device_items == 340
+        assert self.entity_items == 364
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -303,7 +305,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["a562019b0b1f47a4bde8ebe3dbe3e8a9"] == WERKDAG_SCHEMA
         assert smile._last_active["8cf650a4c10c44819e426bed406aec34"] == WERKDAG_SCHEMA
         assert smile._last_active["5cc21042f87f4b4c94ccb5537c47a53f"] == WERKDAG_SCHEMA
-        assert self.device_items == 439
+        assert self.entity_items == 497
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -324,7 +326,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
 
         await self.device_test(smile, "2022-01-02 00:00:01", testdata)
-        assert self.device_items == 58
+        assert self.entity_items == 64
         assert self.cooling_present
         # assert self._cooling_enabled - no cooling_enabled indication present
 
@@ -349,7 +351,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert smile._last_active["009490cc2f674ce6b576863fbb64f867"] == "Weekschema"
-        assert self.device_items == 73
+        assert self.entity_items == 79
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(
@@ -393,7 +395,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["06aecb3d00354375924f50c47af36bd2"] is None
         assert smile._last_active["d27aede973b54be484f6842d1b2802ad"] is None
         assert smile._last_active["13228dab8ce04617af318a2888b3c548"] is None
-        assert self.device_items == 228
+        assert self.entity_items == 244
 
         # Negative test
         result = await self.tinker_thermostat(
