@@ -2,8 +2,8 @@
 
 ## v1.6.0
 
-- New Feature: implement collection of location/zone data: Plugwise Adam thermostat representations are zone-based
-  in case there are more than one equal type of thermostats in one zone (e.g. 2 Tom's and no Lisa).
+- New Feature: implement collection of location/zone data: Plugwise Adam thermostat representations are zone-based instead of device-based.
+  Solution for HA Core issue [#130597](https://github.com/home-assistant/core/issues/130597)
 
 ## v1.5.2
 
