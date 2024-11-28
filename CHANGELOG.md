@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.6.1
+
+- Support python 3.13
+
 ## v1.6.0
 
 - New Feature: implement collection of location/zone data: Plugwise Adam thermostat representations are zone-based instead of device-based.
