@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name            = "plugwise"
-version         = "1.6.0"
+version         = "1.6.1"
 license         = {file = "LICENSE"}
 description     = "Plugwise Smile (Adam/Anna/P1) and Stretch module for Python 3."
 readme          = "README.md"
@@ -15,6 +15,7 @@ classifiers     = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Home Automation",
 ]
 authors = [
@@ -24,7 +25,7 @@ maintainers = [
         { name = "bouwew"},
         { name = "CoMPaTech" }
 ]
-requires-python = ">=3.11.0"
+requires-python = ">=3.12.0"
 dependencies    = [
         "aiohttp",
         "defusedxml",
@@ -47,7 +48,7 @@ include-package-data = true
 include = ["plugwise*"]
 
 [tool.black]
-target-version = ["py312"]
+target-version = ["py313"]
 exclude = 'generated'
 
 [tool.isort]
@@ -185,7 +186,7 @@ norecursedirs = [
 ]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 show_error_codes = true
 follow_imports = "silent"
 ignore_missing_imports = true
@@ -215,7 +216,7 @@ omit= [
 ]
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py313"
 
 lint.select = [
     "B002", # Python does not support the unary prefix increment
