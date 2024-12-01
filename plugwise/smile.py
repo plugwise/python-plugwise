@@ -66,6 +66,7 @@ class SmileAPI(SmileData):
         smile_model_id: str | None,
         smile_name: str,
         smile_type: str,
+        smile_version: str,
         port: int = DEFAULT_PORT,
         username: str = DEFAULT_USERNAME,
     ) -> None:
@@ -90,6 +91,7 @@ class SmileAPI(SmileData):
         self.smile_model_id = smile_model_id
         self.smile_name = smile_name
         self.smile_type = smile_type
+        self.smile_version = smile_version
         SmileData.__init__(self)
 
 
