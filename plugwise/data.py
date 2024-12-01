@@ -19,6 +19,8 @@ from plugwise.constants import (
 from plugwise.helper import SmileHelper
 from plugwise.util import remove_empty_platform_dicts
 
+from packaging import version
+
 
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
@@ -164,7 +166,7 @@ class SmileData(SmileHelper):
             if str(ctrl_state) in ("cooling", "heating", "preheating"):
                 data["control_state"] = str(ctrl_state)
                 self._count += 1
-        elif self.smile_version > Version.parse("3.6.0"):
+        elif self.smile_version > version.parse("3.6.0"):
             data["control_state"] = "idle"
             self._count += 1
 
