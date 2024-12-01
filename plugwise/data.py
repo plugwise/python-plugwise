@@ -166,7 +166,7 @@ class SmileData(SmileHelper):
             if str(ctrl_state) in ("cooling", "heating", "preheating"):
                 data["control_state"] = str(ctrl_state)
                 self._count += 1
-        elif self.smile_version > version.parse("3.6.0"):
+        elif self.smile_version >= version.parse("3.2.0"):
             data["control_state"] = "idle"
             self._count += 1
 
