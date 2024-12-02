@@ -196,6 +196,7 @@ ZONE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "electricity_produced": UOM(POWER_WATT),
     "relay": UOM(NONE),
     "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
+    "thermostat": DATA("setpoint", TEMP_CELSIUS),  # HA Core thermostat setpoint
 }
 
 # Literals
