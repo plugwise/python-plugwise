@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.6.2
+
+- Improve control_state processing, move fix for [#776](https://github.com/plugwise/plugwise-beta/issues/776) into the backend.
+
 ## v1.6.1
 
 - Support python 3.13
