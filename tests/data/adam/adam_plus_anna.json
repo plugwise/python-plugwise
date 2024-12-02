@@ -1,5 +1,5 @@
 {
-  "entities": {
+  "devices": {
     "009490cc2f674ce6b576863fbb64f867": {
       "active_preset": "home",
       "available_schedules": [
@@ -7,7 +7,9 @@
         "off"
       ],
       "climate_mode": "auto",
+      "control_state": "idle",
       "dev_class": "climate",
+      "model": "ThermoZone",
       "name": "Living room",
       "preset_modes": [
         "home",
@@ -33,7 +35,8 @@
           "ee62cad889f94e8ca3d09021f03a660b"
         ],
         "secondary": []
-      }
+      },
+      "vendor": "Plugwise"
     },
     "2743216f626f43948deec1f7ab3b3d70": {
       "available": false,
