@@ -566,7 +566,7 @@ class GwEntityData(TypedDict, total=False):
 
     climate_mode: str
     # Extra for Adam Master Thermostats
-    control_state: str | bool
+    control_state: str
 
     # Dict-types
     binary_sensors: SmileBinarySensors
