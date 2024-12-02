@@ -918,7 +918,7 @@ class SmileHelper(SmileCommon):
             else:
                 thermo_loc["secondary"].append(appliance_id)
 
-    def _control_state(self, data: GwEntityData, loc_id: str) -> str:
+    def _control_state(self, data: GwEntityData, loc_id: str) -> str | bool:
         """Helper-function for _get_adam_data().
 
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
@@ -929,7 +929,7 @@ class SmileHelper(SmileCommon):
         if (location := self._domain_objects.find(locator)) is not None:
             locator = './actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
             if (ctrl_state := location.find(locator)) is not None:
-                return ctrl_state.text
+                return str(ctrl_state.text)
 
         # control_state not present in regulation_mode off (issue #776)
         if self.smile_version is not None:
@@ -942,6 +942,8 @@ class SmileHelper(SmileCommon):
             temperature = data["sensors"]["temperature"]
             # No cooling available in older firmware
             return "heating" if temperature < setpoint else "off"
+
+        return False
 
     def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _get_adam_data().
