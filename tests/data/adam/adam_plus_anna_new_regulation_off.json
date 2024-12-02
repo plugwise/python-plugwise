@@ -235,7 +235,7 @@
         "off"
       ],
       "climate_mode": "off",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "name": "Living room",
       "preset_modes": [
@@ -274,7 +274,7 @@
         "off"
       ],
       "climate_mode": "off",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "name": "Bathroom",
       "preset_modes": [
