@@ -174,8 +174,8 @@ class SmileData(SmileHelper):
             data["control_state"] = "idle"
             self._count += 1
 
-        data.pop("setpoint")  # remove, only used in _control_state()
-        self._count -= 1
+        # data.pop("setpoint")  # remove, only used in _control_state()
+        # self._count -= 1
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(loc_id, zone, data)

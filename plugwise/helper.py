@@ -925,6 +925,7 @@ class SmileHelper(SmileCommon):
         Represents the heating/cooling demand-state of the local primary thermostat.
         Note: heating or cooling can still be active when the setpoint has been reached.
         """
+        LOGGER.debug("HOI data: %s", data)
         locator = f'location[@id="{loc_id}"]'
         if (location := self._domain_objects.find(locator)) is not None:
             locator = './actuator_functionalities/thermostat_functionality[type="thermostat"]/control_state'
@@ -933,7 +934,6 @@ class SmileHelper(SmileCommon):
 
         # Older Adam firmware does not have the control_state key
         # Work around this by comparing the reported temperature and setpoint for a location
-        LOGGER.debug("HOI data: %s", data)
         setpoint = data["setpoint"]
         temperature = data["temperature"]
         # No cooling available in older firmware
