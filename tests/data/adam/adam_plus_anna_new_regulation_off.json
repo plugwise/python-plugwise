@@ -245,7 +245,7 @@
         "home",
         "away"
       ],
-      "select_schedule": "Off",
+      "select_schedule": "off",
       "sensors": {
         "electricity_consumed": 149.9,
         "electricity_produced": 0.0,
@@ -284,7 +284,7 @@
         "home",
         "away"
       ],
-      "select_schedule": "Off",
+      "select_schedule": "off",
       "sensors": {
         "electricity_consumed": 0.0,
         "electricity_produced": 0.0,
