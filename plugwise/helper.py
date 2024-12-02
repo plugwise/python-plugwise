@@ -943,7 +943,7 @@ class SmileHelper(SmileCommon):
             # No cooling available in older firmware
             return "heating" if temperature < setpoint else "off"
 
-        return False
+        return False  # pragma: no cover
 
     def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _get_adam_data().
