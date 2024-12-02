@@ -185,7 +185,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='7bd4f266ed9844c4b1598cffb63db579'/>
 				<period start_date="2023-12-22T16:18:09.838+01:00" end_date="2023-12-22T16:18:09.838+01:00">
-					<measurement log_date="2023-12-22T16:18:09.838+01:00">16.50</measurement>
+					<measurement log_date="2023-12-22T16:18:09.838+01:00">21.50</measurement>
 				</period>
 			</point_log>
 			<point_log id='c1bce48c1ff8480283e46c8afdaac872'>
@@ -465,7 +465,7 @@
 				<last_consecutive_log_date>2023-08-17T00:01:50.312+02:00</last_consecutive_log_date>
 				<interval>PT3H</interval>
 				<period start_date="2023-12-22T16:30:42.829+01:00" end_date="2023-12-22T16:30:42.829+01:00">
-					<measurement log_date="2023-12-22T16:30:42.829+01:00">18.36</measurement>
+					<measurement log_date="2023-12-22T16:30:42.829+01:00">22.36</measurement>
 				</period>
 			</point_log>
 			<point_log id='773b9b2fc57e4d76b1f5523758d24afa'>
@@ -634,7 +634,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='198a5c5f98c74ad08b4324950fa16e49'/>
 				<period start_date="2023-12-22T16:30:42.829+01:00" end_date="2023-12-22T16:30:42.829+01:00">
-					<measurement log_date="2023-12-22T16:30:42.829+01:00">18.36</measurement>
+					<measurement log_date="2023-12-22T16:30:42.829+01:00">22.36</measurement>
 				</period>
 			</point_log>
 			<point_log id='d5015dd0420049f69e63609a824eaffd'>
@@ -740,7 +740,7 @@
 				<interval/>
 				<boiler_state id='73c61ab09f1e4022b053cb08f9917451'/>
 				<period start_date="2023-12-22T16:30:24.455+01:00" end_date="2023-12-22T16:30:24.455+01:00">
-					<measurement log_date="2023-12-22T16:30:24.455+01:00">on</measurement>
+					<measurement log_date="2023-12-22T16:30:24.455+01:00">off</measurement>
 				</period>
 			</point_log>
 			<point_log id='6cecac3b09ca4d00bbc6241842228bcd'>
@@ -751,7 +751,7 @@
 				<interval/>
 				<boiler_state id='6616578f7cfd44688e77e2d1c74d80bc'/>
 				<period start_date="2023-12-22T16:30:02.548+01:00" end_date="2023-12-22T16:30:02.548+01:00">
-					<measurement log_date="2023-12-22T16:30:02.548+01:00">on</measurement>
+					<measurement log_date="2023-12-22T16:30:02.548+01:00">off</measurement>
 				</period>
 			</point_log>
 			<cumulative_log id='75ce23b163044bf8921cbf00232429c7'>
@@ -806,7 +806,7 @@
 				<interval/>
 				<thermo_meter id='333fb9a147e84bb992829e1d2c9e7269'/>
 				<period start_date="2023-12-22T16:30:50.291+01:00" end_date="2023-12-22T16:30:50.291+01:00">
-					<measurement log_date="2023-12-22T16:30:50.291+01:00">23.92</measurement>
+					<measurement log_date="2023-12-22T16:30:50.291+01:00">0.00</measurement>
 				</period>
 			</point_log>
 			<point_log id='a5a0def0fcd642a8ba3868055ab8311a'>
@@ -861,7 +861,7 @@
 				<interval/>
 				<boiler_state id='f2bcc85d2fd946d7885e444cc1483c2c'/>
 				<period start_date="2023-12-22T16:30:24.472+01:00" end_date="2023-12-22T16:30:24.472+01:00">
-					<measurement log_date="2023-12-22T16:30:24.472+01:00">on</measurement>
+					<measurement log_date="2023-12-22T16:30:24.472+01:00">off</measurement>
 				</period>
 			</point_log>
 			<point_log id='d9140a5d2a80420d9b626435a47e3aa6'>
@@ -992,7 +992,7 @@
 				<interval>PT3H</interval>
 				<thermo_meter id='7f1b55be879c431393e84cdf048bc741'/>
 				<period start_date="2023-12-22T16:22:29.981+01:00" end_date="2023-12-22T16:22:29.981+01:00">
-					<measurement log_date="2023-12-22T16:22:29.981+01:00">17.56</measurement>
+					<measurement log_date="2023-12-22T16:22:29.981+01:00">21.56</measurement>
 				</period>
 			</point_log>
 			<point_log id='975d4f20243745e5a1815babef134045'>
@@ -1374,7 +1374,7 @@
 				<last_consecutive_log_date>2023-08-16T23:52:07.632+02:00</last_consecutive_log_date>
 				<interval>PT3H</interval>
 				<period start_date="2023-12-22T16:18:09.838+01:00" end_date="2023-12-22T16:18:09.838+01:00">
-					<measurement log_date="2023-12-22T16:18:09.838+01:00">16.50</measurement>
+					<measurement log_date="2023-12-22T16:18:09.838+01:00">21.50</measurement>
 				</period>
 			</point_log>
 			<point_log id='964ac8f1aba94c5f96a9fc12f2c1188f'>

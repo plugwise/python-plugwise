@@ -52,7 +52,7 @@
       "sensors": {
         "battery": 99,
         "setpoint": 18.0,
-        "temperature": 17.6,
+        "temperature": 21.6,
         "temperature_difference": -0.2,
         "valve_position": 100
       },
@@ -152,7 +152,7 @@
       "name": "Anna",
       "sensors": {
         "setpoint": 18.5,
-        "temperature": 18.4
+        "temperature": 22.4
       },
       "vendor": "Plugwise"
     },
@@ -202,7 +202,7 @@
       "sensors": {
         "battery": 14,
         "setpoint": 18.0,
-        "temperature": 16.5
+        "temperature": 21.5
       },
       "temperature_offset": {
         "lower_bound": -2.0,
