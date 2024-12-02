@@ -933,6 +933,7 @@ class SmileHelper(SmileCommon):
 
         # Older Adam firmware does not have the control_state key
         # Work around this by comparing the reported temperature and setpoint for a location
+        LOGGER.debug("HOI data: %s", data)
         setpoint = data["setpoint"]
         temperature = data["temperature"]
         # No cooling available in older firmware
