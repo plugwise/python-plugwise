@@ -162,7 +162,7 @@ class SmileData(SmileHelper):
         """
         zone = self._zones[loc_id]
         data = self._get_zone_data(loc_id)
-        if ctrl_state := self._control_state(loc_id):
+        if ctrl_state := self._control_state(data, loc_id):
             if str(ctrl_state) in ("cooling", "heating", "preheating"):
                 data["control_state"] = str(ctrl_state)
                 self._count += 1
@@ -173,6 +173,9 @@ class SmileData(SmileHelper):
         elif self.smile_version is not None and self.smile_version >= version.parse("3.2.0"):
             data["control_state"] = "idle"
             self._count += 1
+
+        data.pop("setpoint")  # remove, only used in _control_state()
+        self._count -= 1
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(loc_id, zone, data)
