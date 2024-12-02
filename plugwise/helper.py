@@ -6,7 +6,6 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
-from packaging import version
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -65,7 +64,7 @@ from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
-from packaging.version import Version
+from packaging import version
 
 
 class SmileComm:
@@ -253,14 +252,14 @@ class SmileHelper(SmileCommon):
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_fw_version: Version | None
+        self.smile_fw_version: version.Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_model_id: str | None
         self.smile_name: str
         self.smile_type: str
-        self.smile_version: Version | None
+        self.smile_version: version.Version | None
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
         self._zones: dict[str, GwEntityData] = {}
