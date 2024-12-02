@@ -169,7 +169,7 @@ class SmileData(SmileHelper):
             if str(ctrl_state) == "off":
                 data["control_state"] = "idle"
                 self._count += 1
-        # control_state not present in regulation+mode off (issue #776)
+        # control_state not present in regulation_mode off (issue #776)
         elif self.smile_version is not None and self.smile_version >= version.parse("3.2.0"):
             data["control_state"] = "idle"
             self._count += 1
