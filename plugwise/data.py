@@ -170,7 +170,7 @@ class SmileData(SmileHelper):
                 data["control_state"] = "idle"
                 self._count += 1
         # control_state not present in regulation+mode off (issue #776)
-        elif self.smile_version >= version.parse("3.2.0"):
+        elif self.smile_version is not None and self.smile_version >= version.parse("3.2.0"):
             data["control_state"] = "idle"
             self._count += 1
             # TODO: add testcase with regulation_mode off and control_state key not present
