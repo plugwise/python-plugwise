@@ -18,7 +18,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
-        """Test extended Adam (firmware 3.8) with Anna and a switch-group setup."""
+        """Test extended Adam (firmware 3.7) with Anna and a switch-group setup."""
         self.smile_setup = "adam_plus_anna_new"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
@@ -166,6 +166,17 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await smile.close_connection()
         await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new_regulation_off(self):
+        """Test regultaion_mode off with control_state key missing for Adam."""
+        self.smile_setup = "adam_plus_anna_new_regulation_off"
+
+        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        await self.device_test(smile, "2023-12-17 00:00:01", testdata)
 
     @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
