@@ -178,6 +178,9 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         await self.device_test(smile, "2023-12-17 00:00:01", testdata)
 
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
     @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test an extensive setup of Adam with a zone per device."""
