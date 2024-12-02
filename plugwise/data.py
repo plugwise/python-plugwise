@@ -173,7 +173,6 @@ class SmileData(SmileHelper):
         elif self.smile_version is not None and self.smile_version >= version.parse("3.2.0"):
             data["control_state"] = "idle"
             self._count += 1
-            # TODO: add testcase with regulation_mode off and control_state key not present
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(loc_id, zone, data)
