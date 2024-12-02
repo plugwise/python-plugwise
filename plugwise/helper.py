@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+from packaging import version
 from typing import cast
 
 from plugwise.common import SmileCommon
@@ -932,12 +933,17 @@ class SmileHelper(SmileCommon):
             if (ctrl_state := location.find(locator)) is not None:
                 return ctrl_state.text
 
-        # Older Adam firmware does not have the control_state key
-        # Work around this by comparing the reported temperature and setpoint for a location
-        setpoint = data["setpoint"]
-        temperature = data["temperature"]
-        # No cooling available in older firmware
-        return "heating" if temperature < setpoint else "idle"
+        # control_state not present in regulation_mode off (issue #776)
+        if self.smile_version is not None:
+            if self.smile_version >= version.parse("3.2.0"):
+                return "off"
+
+            # Older Adam firmware does not have the control_state key
+            # Work around this by comparing the reported temperature and setpoint for a location
+            setpoint = data["sensors"]["setpoint"]
+            temperature = data["sensors"]["temperature"]
+            # No cooling available in older firmware
+            return "heating" if temperature < setpoint else "off"
 
     def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _get_adam_data().

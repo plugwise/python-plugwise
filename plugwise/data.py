@@ -19,8 +19,6 @@ from plugwise.constants import (
 from plugwise.helper import SmileHelper
 from plugwise.util import remove_empty_platform_dicts
 
-from packaging import version
-
 
 class SmileData(SmileHelper):
     """The Plugwise Smile main class."""
@@ -169,13 +167,9 @@ class SmileData(SmileHelper):
             if str(ctrl_state) == "off":
                 data["control_state"] = "idle"
                 self._count += 1
-        # control_state not present in regulation_mode off (issue #776)
-        elif self.smile_version is not None and self.smile_version >= version.parse("3.2.0"):
-            data["control_state"] = "idle"
-            self._count += 1
 
-        # data.pop("setpoint")  # remove, only used in _control_state()
-        # self._count -= 1
+        data["sensors"].pop("setpoint")  # remove, only used in _control_state()
+        self._count -= 1
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(loc_id, zone, data)
