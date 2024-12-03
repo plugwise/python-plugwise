@@ -64,7 +64,7 @@ from dateutil import tz
 from dateutil.parser import parse
 from defusedxml import ElementTree as etree
 from munch import Munch
-from packaging.version import Version
+from packaging import version
 
 
 class SmileComm:
@@ -252,13 +252,14 @@ class SmileHelper(SmileCommon):
         self.gateway_id: str
         self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_fw_version: Version | None
+        self.smile_fw_version: version.Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_model_id: str | None
         self.smile_name: str
         self.smile_type: str
+        self.smile_version: version.Version | None
         self.smile_zigbee_mac_address: str | None
         self.therms_with_offset_func: list[str] = []
         self._zones: dict[str, GwEntityData] = {}
@@ -917,7 +918,7 @@ class SmileHelper(SmileCommon):
             else:
                 thermo_loc["secondary"].append(appliance_id)
 
-    def _control_state(self, loc_id: str) -> str | bool:
+    def _control_state(self, data: GwEntityData, loc_id: str) -> str | bool:
         """Helper-function for _get_adam_data().
 
         Adam: find the thermostat control_state of a location, from DOMAIN_OBJECTS.
@@ -930,7 +931,20 @@ class SmileHelper(SmileCommon):
             if (ctrl_state := location.find(locator)) is not None:
                 return str(ctrl_state.text)
 
-        return False
+        # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
+        # In newer firmware versions, default to "off" when control_state is not present
+        if self.smile_version is not None:
+            if self.smile_version >= version.parse("3.2.0"):
+                return "off"
+
+            # Older Adam firmware does not have the control_state xml-key
+            # Work around this by comparing the reported temperature and setpoint for a location
+            setpoint = data["sensors"]["setpoint"]
+            temperature = data["sensors"]["temperature"]
+            # No cooling available in older firmware
+            return "heating" if temperature < setpoint else "off"
+
+        return False  # pragma: no cover
 
     def _heating_valves(self) -> int | bool:
         """Helper-function for smile.py: _get_adam_data().

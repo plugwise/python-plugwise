@@ -9,7 +9,7 @@
         "off"
       ],
       "climate_mode": "cool",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Slaapkamer SJ",
@@ -134,7 +134,7 @@
         "off"
       ],
       "climate_mode": "cool",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Slaapkamer DB",
@@ -256,7 +256,7 @@
         "off"
       ],
       "climate_mode": "auto",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Badkamer 2",
@@ -409,7 +409,7 @@
         "off"
       ],
       "climate_mode": "auto",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Badkamer 1",
@@ -449,7 +449,7 @@
         "off"
       ],
       "climate_mode": "cool",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Slaapkamer RB",
@@ -508,7 +508,7 @@
         "off"
       ],
       "climate_mode": "cool",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Slaapkamer SQ",
@@ -568,7 +568,7 @@
         "off"
       ],
       "climate_mode": "auto",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Keuken",
@@ -608,7 +608,7 @@
         "off"
       ],
       "climate_mode": "cool",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Bijkeuken",
@@ -746,7 +746,7 @@
         "off"
       ],
       "climate_mode": "cool",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Slaapkamer JM",
@@ -856,7 +856,7 @@
         "off"
       ],
       "climate_mode": "auto",
-      "control_state": "off",
+      "control_state": "idle",
       "dev_class": "climate",
       "model": "ThermoZone",
       "name": "Woonkamer",

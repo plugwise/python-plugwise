@@ -18,7 +18,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
     @pytest.mark.asyncio
     async def test_connect_adam_plus_anna_new(self):
-        """Test extended Adam (firmware 3.8) with Anna and a switch-group setup."""
+        """Test extended Adam (firmware 3.7) with Anna and a switch-group setup."""
         self.smile_setup = "adam_plus_anna_new"
 
         testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
@@ -168,6 +168,20 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.disconnect(server, client)
 
     @pytest.mark.asyncio
+    async def test_connect_adam_plus_anna_new_regulation_off(self):
+        """Test regultaion_mode off with control_state key missing for Adam."""
+        self.smile_setup = "adam_plus_anna_new_regulation_off"
+
+        testdata = self.load_testdata(SMILE_TYPE, self.smile_setup)
+        server, smile, client = await self.connect_wrapper()
+        assert smile.smile_hostname == "smile000000"
+
+        await self.device_test(smile, "2023-12-17 00:00:01", testdata)
+
+        await smile.close_connection()
+        await self.disconnect(server, client)
+
+    @pytest.mark.asyncio
     async def test_connect_adam_zone_per_device(self):
         """Test an extensive setup of Adam with a zone per device."""
         self.smile_setup = "adam_zone_per_device"
@@ -189,7 +203,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.entity_items == 364
+        assert self.entity_items == 369
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
         await smile.delete_notification()
@@ -267,7 +281,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["82fa13f017d240daa0d0ea1775420f24"] == CV_JESSIE
         assert smile._last_active["08963fec7c53423ca5680aa4cb502c63"] == BADKAMER_SCHEMA
         assert smile._last_active["446ac08dd04d4eff8ac57489757b7314"] == BADKAMER_SCHEMA
-        assert self.entity_items == 364
+        assert self.entity_items == 369
 
         assert "af82e4ccf9c548528166d38e560662a4" in self.notifications
 
@@ -351,7 +365,7 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         await self.device_test(smile, "2020-03-22 00:00:01", testdata)
         assert smile.gateway_id == "b128b4bbbd1f47e9bf4d756e8fb5ee94"
         assert smile._last_active["009490cc2f674ce6b576863fbb64f867"] == "Weekschema"
-        assert self.entity_items == 79
+        assert self.entity_items == 80
         assert "6fb89e35caeb4b1cb275184895202d84" in self.notifications
 
         result = await self.tinker_thermostat(

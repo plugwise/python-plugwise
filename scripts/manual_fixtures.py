@@ -209,7 +209,7 @@ m_adam_heating["devices"]["e2f4322d57924fa090fbbc48b3a140dc"]["sensors"][
 m_adam_heating["devices"]["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "auto"
 m_adam_heating["devices"]["f871b8c4d63549319221e294e4f88074"][
     "control_state"
-] = "off"
+] = "idle"
 
 # Go for da22
 m_adam_heating["devices"]["da224107914542988a88561b4452b0f6"][
