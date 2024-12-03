@@ -2,7 +2,12 @@
 
 ## v1.6.2
 
-- Improve control_state processing, move fix for [#776](https://github.com/plugwise/plugwise-beta/issues/776) into the backend.
+- Improve control_state processing:
+  - Change value from `off` to `idle` to better match HA Core `HVACAction` states.
+  - Handle difference between old and new Adam firmware: set `control_state` based on `setpoint` vs `temperature` for older firmware.
+  - Implement fix for [#776](https://github.com/plugwise/plugwise-beta/issues/776), move it from the integration to the backend library.
+  - Add a test to cover the code that fixes #776.
+  - Update related fixtures and test-data json files.
 
 ## v1.6.1
 
