@@ -931,12 +931,13 @@ class SmileHelper(SmileCommon):
             if (ctrl_state := location.find(locator)) is not None:
                 return str(ctrl_state.text)
 
-        # control_state not present in regulation_mode off (issue #776)
+        # Handle missing control_state in regulation_mode off for firmware >= 3.2.0 (issue #776)
+        # In newer firmware versions, default to "off" when control_state is not present
         if self.smile_version is not None:
             if self.smile_version >= version.parse("3.2.0"):
                 return "off"
 
-            # Older Adam firmware does not have the control_state key
+            # Older Adam firmware does not have the control_state xml-key
             # Work around this by comparing the reported temperature and setpoint for a location
             setpoint = data["sensors"]["setpoint"]
             temperature = data["sensors"]["temperature"]
