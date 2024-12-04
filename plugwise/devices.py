@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import TypedDict
 
 
+@dataclass
 class BaseGateway:
     """Plugwise Base Gateway data class."""
 
@@ -17,6 +18,7 @@ class BaseGateway:
     vendor: str
 
 
+@dataclass
 class SmileP1Gateway(BaseGateway):
     """Plugwise Smile P1 Gateway data class."""
 
@@ -25,6 +27,46 @@ class SmileP1Gateway(BaseGateway):
     model_id: str
 
 
+@dataclass
+class StretchGateway(BaseGateway):
+    """Plugwise Stretch Gateway data class."""
+
+    zigbee_mac_address: str
+
+
+@dataclass
+class SmileThermostatGateway(SmileP1Gateway):
+    """Plugwise Anna Smile-T Gateway data class."""
+
+    sensors: GatewaySensors
+
+
+@dataclass
+class GatewayBinarySensors:
+    """Gateway binary_sensors class."""
+
+    plugwise_notification: bool
+
+
+@dataclass
+class GatewaySensors:
+    """Gateway sensors class."""
+
+    outdoor_temperature: float
+
+
+@dataclass
+class AdamGateway(SmileThermostatGateway):
+    """Plugwise Adam HA Gateway data class."""
+
+    gateway_modes: list[str]
+    regulation_modes: list[str]
+    select_gateway_mode: str
+    select_regulation_mode: str
+    zigbee_mac_address: str
+
+
+@dataclass
 class SmartEnergyMeter:
     """DSMR Energy Meter data class."""
 
@@ -39,6 +81,7 @@ class SmartEnergyMeter:
 
 class SmartEnergySensors(TypedDict, total=False):
     """DSMR Energy Meter sensors class."""
+
     electricity_consumed_off_peak_cumulative: float
     electricity_consumed_off_peak_interval: int
     electricity_consumed_off_peak_point: int
@@ -66,68 +109,11 @@ class SmartEnergySensors(TypedDict, total=False):
     voltage_phase_two: float
 
 
-class StretchGateway(BaseGateway):
-    """Plugwise Stretch Gateway data class."""
-
-    zigbee_mac_address: str
-
-
-class SmileThermostatGateway(SmileP1Gateway):
-    """Plugwise Anna Smile-T Gateway data class."""
-
-    sensors: GatewaySensors
-
-
-class AdamGateway(SmileThermostatGateway):
-    """Plugwise Adam HA Gateway data class."""
-
-    gateway_modes: list[str]
-    regulation_modes: list[str]
-    select_gateway_mode: str
-    select_regulation_mode: str
-    zigbee_mac_address: str
-
-
-class GatewayBinarySensors
-    """Gateway binary_sensors class."""
-
-    plugwise_notification: bool
-
-
-class GatewaySensors
-    """Gateway sensors class."""
-
-    outdoor_temperature: float
-
-
 class AnnaData(TypedDict, total=False):
     """Plugwise Anna data class."""
 
     active_preset: str
     available_schedules: list[str]
-    dev_class: str
-    firmware: str
-    hardware: str
-    location: str
-    mode: str
-    model: str
-    model_id: str
-    name: str
-    preset_modes: list[str]
-    select_schedule: str
-    sensors: AnnaSensors
-    temperature_offset: SetpointDict
-    thermostat: ThermostatDict
-    vendor: str
-
-
-class AnnaAdamData(TypedDict, total=False):
-    """Plugwise Anna-connected-to-Adam data class."""
-
-    active_preset: str
-    available: bool
-    available_schedules: list[str]
-    control_state: str
     dev_class: str
     firmware: str
     hardware: str
@@ -156,6 +142,87 @@ class AnnaSensors(TypedDict, total=False):
     temperature: float
 
 
+@dataclass
+class ThermoZone:
+    """Plugwise Adam ThermoZone data class."""
+    active_preset: str
+    available_schedules: list[str]
+    climate_mode: str
+    control_state: str
+    preset_modes: list[str]
+    select_schedule: str
+    sensors: ThermoZoneSensors
+    thermostat: ThermostatDict
+
+
+class ThermoZoneSensors(TypedDict, total=False):
+    """ThermoZone sensors class."""
+
+    electricity_consumed: float
+    electricity_produced: float
+    temperature: float
+
+
+class AnnaAdamData(TypedDict, total=False):
+    """Plugwise Anna-connected-to-Adam data class."""
+
+    available: bool
+    dev_class: str
+    firmware: str
+    hardware: str
+    location: str
+    mode: str
+    model: str
+    model_id: str
+    name: str
+    sensors: AnnaSensors
+    temperature_offset: SetpointDict
+    vendor: str
+
+
+class JipLisaTomData(TypedDict, total=False):
+    """JipLisaTomData data class.
+
+    Covering Plugwise Jip, Lisa and Tom/Floor devices.
+    """
+
+    available: bool
+    binary_sensors: WirelessThermostatBinarySensors
+    dev_class: str
+    firmware: str
+    hardware: str
+    location: str
+    mode: str
+    model: str
+    model_id: str
+    name: str
+    sensors: JipLisaTomSensors
+    temperature_offset: SetpointDict
+    vendor: str
+    zigbee_mac_address: str
+
+
+class JipLisaTomSensors(TypedDict, total=False):
+    """Tom sensors class."""
+    
+    battery: int
+    humidity: int
+    setpoint: float
+    setpoint_high: float
+    setpoint_low: float
+    temperature: float
+    temperature_difference: float
+    valve_position: float
+
+
+@dataclass
+class WirelessThermostatBinarySensors:
+    """Lisa sensors class."""
+
+    low_battery: bool
+
+
+@dataclass
 class SetpointDict:
     """Generic setpoint dict class.
     
@@ -179,6 +246,7 @@ class ThermostatDict(TypedDict, total=False):
     upper_bound: float
 
 
+@dataclass
 class OnOffTherm:
     """On-off heater/cooler device class."""
 
@@ -239,103 +307,6 @@ class HeaterCentralSwitches(TypedDict, total=False):
 
 
 @dataclass
-class LisaData(TypedDict, total=False):
-    """Plugwise Lisa data class."""
-
-    active_preset: str
-    available: bool
-    available_schedules: list[str]
-    binary_sensors: LisaBinarySensors
-    control_state: str
-    dev_class: str
-    firmware: str
-    hardware: str
-    location: str
-    mode: str
-    model: str
-    model_id: str
-    name: str
-    preset_modes: list[str]
-    select_schedule: str
-    sensors: WirelessThermostatBinarySensors
-    temperature_offset: SetpointDict
-    thermostat: ThermostatDict
-    vendor: str
-    zigbee_mac_address: str
-
-
-class LisaSensors(TypedDict, total=False):
-    """Lisa sensors class."""
-
-    battery: int
-    setpoint: float
-    setpoint_high: float
-    setpoint_low: float
-    temperature: float
-
-
-class WirelessThermostatBinarySensors:
-    """Lisa sensors class."""
-
-    low_battery: bool
-
-@dataclass
-class TomParentData(TypedDict, total=False):
-    """Plugwise Lisa data class."""
-
-    active_preset: str
-    available: bool
-    available_schedules: list[str]
-    binary_sensors: WirelessThermostatBinarySensors
-    control_state: str
-    dev_class: str
-    firmware: str
-    hardware: str
-    location: str
-    mode: str
-    model: str
-    model_id: str
-    name: str
-    preset_modes: list[str]
-    select_schedule: str
-    sensors: TomSensors
-    temperature_offset: SetpointDict
-    thermostat: ThermostatDict
-    vendor: str
-    zigbee_mac_address: str
-
-
-@dataclass
-class TomChildData(TypedDict, total=False):
-    """Plugwise Lisa data class."""
-
-    available: bool
-    binary_sensors: WirelessThermostatBinarySensors
-    dev_class: str
-    firmware: str
-    hardware: str
-    location: str
-    model: str
-    model_id: str
-    name: str
-    sensors: TomSensors
-    temperature_offset: SetpointDict
-    vendor: str
-    zigbee_mac_address: str
-
-
-class TomSensors(TypedDict, total=False):
-    """Tom sensors class."""
-    
-    battery: int
-    setpoint: float
-    setpoint_high: float
-    setpoint_low: float
-    temperature: float
-    temperature_difference: float
-    valve_position: float
-
-
 class PlugData:
     """Plug data class."""
 
@@ -353,6 +324,7 @@ class PlugData:
     zigbee_mac_address: str
 
 
+@dataclass
 class PlugSensors:
     """Plug sensors class."""
 
@@ -362,8 +334,21 @@ class PlugSensors:
     electricity_produced_interval: float
 
 
+@dataclass
 class PlugSwitches(TypedDict, total=False):
     """Plug switches class."""
 
     lock: bool
     relay: bool
+
+
+class PlugwiseP1:
+    """Plugwise P1 data class."""
+    data: dict[str, SmileP1Gateway|SmartEnergyMeter]
+
+class Anna(SmileThermostatGateway, AnnaData, OnOffTherm, OpenTherm):
+    """Plugwise Anna data class."""
+
+
+class Adam(AdamGateway, AnnaAdamData, JipLisaTomData, ThermoZone, PlugData, OnOffTherm, OpenTherm):
+    """Plugwise Anna data class."""
