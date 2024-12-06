@@ -771,7 +771,7 @@
 				<interval/>
 				<boiler_state id='9c0a03f4a7f94290997bef767e5a81c2'/>
 				<period start_date="2022-03-10T18:58:40.743+01:00" end_date="2022-03-10T18:58:40.743+01:00">
-					<measurement log_date="2022-03-10T18:58:40.743+01:00">off</measurement>
+					<measurement log_date="2022-03-10T18:58:40.743+01:00">on</measurement>
 				</period>
 			</point_log>
 			<point_log id='02b66447758049fab71cfc396d0b4423'>
@@ -1472,7 +1472,7 @@
 				<interval/>
 				<cooling_toggle id='b556a934246f4d99979288841e7ee58a'/>
 				<period start_date="2022-11-02T03:57:23.207+01:00" end_date="2022-11-02T03:57:23.207+01:00">
-					<measurement log_date="2022-11-02T03:57:23.207+01:00">on</measurement>
+					<measurement log_date="2022-11-02T03:57:23.207+01:00">off</measurement>
 				</period>
 			</point_log>
 		</logs>
