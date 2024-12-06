@@ -62,7 +62,7 @@
         "illuminance": 0.5,
         "setpoint_high": 30.0,
         "setpoint_low": 19.5,
-        "temperature": 24.9
+        "temperature": 18.9
       },
       "temperature_offset": {
         "lower_bound": -2.0,
