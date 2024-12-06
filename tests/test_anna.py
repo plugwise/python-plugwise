@@ -412,7 +412,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
         )
 
-        self.smile_setup = "updated/anna_heatpump_cooling"
+        self.smile_setup = "updated/anna_elga_2_switch_heating"
         await self.device_test(
             smile, "2020-04-05 00:00:01", testdata_updated, initialize=False
         )
