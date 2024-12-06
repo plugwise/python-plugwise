@@ -247,7 +247,7 @@ class SmileHelper(SmileCommon):
         # 'cooling_state' = on means cooling is active.
         ###################################################################
         self._cooling_active = False
-        self._cooling_enabled = False
+        self._cooling_enabled: bool
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}
@@ -798,7 +798,7 @@ class SmileHelper(SmileCommon):
             # Techneco Elga has cooling-capability
             self._cooling_present = True
             data["model"] = "Generic heater/cooler"
-            self._cooling_enabled = data["elga_status_code"] in (8, 9)
+            self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data["elga_status_code"] in (8, 9)
             data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                 data["elga_status_code"] == 8
             )
