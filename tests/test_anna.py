@@ -407,6 +407,19 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self._cooling_enabled
         assert self._cooling_active
 
+        # Simulate a change of season: from cooling to heating after an update_interval
+        testdata_updated = self.load_testdata(
+            SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
+        )
+
+        self.smile_setup = "updated/anna_heatpump_cooling"
+        await self.device_test(
+            smile, "2020-04-05 00:00:01", testdata_updated, initialize=False
+        )
+        assert self.cooling_present
+        assert not self._cooling_enabled
+        assert not self._cooling_active
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
