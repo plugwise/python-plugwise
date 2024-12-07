@@ -407,6 +407,13 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self._cooling_enabled
         assert self._cooling_active
 
+        result = await self.tinker_thermostat(
+            smile,
+            "d3ce834534114348be628b61b26d9220",
+            good_schedules=["Thermostat schedule"],
+        )
+        assert result
+
         # Simulate a change of season: from cooling to heating after an update_interval
         testdata_updated = self.load_testdata(
             SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
