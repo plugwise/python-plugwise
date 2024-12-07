@@ -704,14 +704,20 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     @pytest.mark.asyncio
     async def tinker_thermostat_temp(
-        self, smile, loc_id, block_cooling=False, unhappy=False
+        self, smile, loc_id, block_cooling=False, fail_cooling=False, unhappy=False
     ):
         """Toggle temperature to test functionality."""
         _LOGGER.info("Asserting modifying settings in location (%s):", loc_id)
         tinker_temp_passed = False
         test_temp = {"setpoint": 22.9}
         if self.cooling_present and not block_cooling:
-            test_temp = {"setpoint_low": 19.5, "setpoint_high": 23.5}
+            if smile.smile_name == "Smile Anna":
+                if self._cooling_enabled:
+                    test_temp = {"setpoint_low": 4.0, "setpoint_high": 23.0}
+                else:
+                    test_temp = {"setpoint_low": 19.0, "setpoint_high": 30.0}
+                if fail_cooling:
+                    test_temp = {"setpoint_low": 19.0, "setpoint_high": 23.0}
         _LOGGER.info("- Adjusting temperature to %s", test_temp)
         try:
             await smile.set_temperature(loc_id, test_temp)
@@ -826,6 +832,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         good_schedules=None,
         single=False,
         block_cooling=False,
+        fail_cooling=False,
         unhappy=False,
     ):
         """Toggle various climate settings to test functionality."""
@@ -833,7 +840,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             good_schedules = ["Weekschema"]
 
         result_1 = await self.tinker_thermostat_temp(
-            smile, loc_id, block_cooling, unhappy
+            smile, loc_id, block_cooling, fail_cooling, unhappy
         )
         result_2 = await self.tinker_thermostat_preset(smile, loc_id, unhappy)
         if smile._schedule_old_states != {}:
@@ -858,11 +865,12 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         smile,
         schedule_on=True,
         block_cooling=False,
+        fail_cooling=False,
         unhappy=False,
     ):
         """Toggle various climate settings to test functionality."""
         result_1 = await self.tinker_thermostat_temp(
-            smile, "dummy", block_cooling, unhappy
+            smile, "dummy", block_cooling, fail_cooling, unhappy
         )
         result_2 = await self.tinker_thermostat_preset(smile, None, unhappy)
         result_3 = await self.tinker_legacy_thermostat_schedule(smile, unhappy)
