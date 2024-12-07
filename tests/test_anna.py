@@ -205,6 +205,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 good_schedules=[
                     "standaard",
                 ],
+                fail_cooling=True,
             )
             _LOGGER.debug(
                 "ERROR raised setting good schedule standaard: %s", exc.value
@@ -261,6 +262,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 good_schedules=[
                     "standaard",
                 ],
+                fail_cooling=True,
             )
             _LOGGER.debug(
                 "ERROR raised good schedule to standaard: %s", exc.value
@@ -465,6 +467,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 good_schedules=[
                     "Winter",
                 ],
+                fail_cooling=True,
             )
             _LOGGER.debug(
                 "ERROR raised setting to schedule Winter: %s", exc.value
