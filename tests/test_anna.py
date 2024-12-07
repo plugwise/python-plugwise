@@ -34,7 +34,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert not self.notifications
 
         assert not self.cooling_present
-        assert not self._cooling_active
+        assert not smile._cooling_active
         assert not smile._cooling_enabled
 
         result = await self.tinker_thermostat(
@@ -196,7 +196,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert not self.notifications
         assert self.cooling_present
         assert not smile._cooling_enabled
-        assert not self._cooling_active
+        assert not smile._cooling_active
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
             await self.tinker_thermostat(
@@ -252,7 +252,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert not self.notifications
 
         assert smile._cooling_enabled
-        assert self._cooling_active
+        assert smile._cooling_active
 
         with pytest.raises(pw_exceptions.PlugwiseError) as exc:
             await self.tinker_thermostat(
@@ -295,7 +295,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self.entity_items == 64
         assert self.cooling_present
         assert smile._cooling_enabled
-        assert self._cooling_active
+        assert smile._cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
@@ -405,7 +405,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
 
         assert self.cooling_present
         assert smile._cooling_enabled
-        assert self._cooling_active
+        assert smile._cooling_active
 
         # Simulate a change of season: from cooling to heating after an update_interval
         testdata_updated = self.load_testdata(
@@ -418,7 +418,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         )
         assert self.cooling_present
         assert not smile._cooling_enabled
-        assert not self._cooling_active
+        assert not smile._cooling_active
 
         await smile.close_connection()
         await self.disconnect(server, client)
