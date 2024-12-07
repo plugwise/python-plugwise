@@ -320,6 +320,8 @@ class TestPlugwiseAdam(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert smile._last_active["8cf650a4c10c44819e426bed406aec34"] == WERKDAG_SCHEMA
         assert smile._last_active["5cc21042f87f4b4c94ccb5537c47a53f"] == WERKDAG_SCHEMA
         assert self.entity_items == 497
+        assert self.cooling_present
+        assert smile._cooling_enabled
 
         await smile.close_connection()
         await self.disconnect(server, client)
