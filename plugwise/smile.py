@@ -71,6 +71,7 @@ class SmileAPI(SmileData):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
+        self._cooling_enabled = False
         self._cooling_present = _cooling_present
         self._elga = _elga
         self._heater_id: str
