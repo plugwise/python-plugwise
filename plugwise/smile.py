@@ -132,13 +132,8 @@ class SmileAPI(SmileData):
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()
-            if "heater_id" in self.gw_data:
-                _ = self.gw_entities[self.gw_data["heater_id"]]
-                # if (
-                #     "binary_sensors" in heat_cooler
-                #     and "cooling_enabled" in heat_cooler["binary_sensors"]
-                # ):
-                #     self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
+            # Check for a failed data-retrieval
+            _ = self.gw_entities[self.gw_data["gateway_id"]]
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
 
