@@ -429,6 +429,13 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert not self._cooling_enabled
         assert not self._cooling_active
 
+        result = await self.tinker_thermostat(
+            smile,
+            "d3ce834534114348be628b61b26d9220",
+            good_schedules=["Thermostat schedule"],
+        )
+        assert result
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
