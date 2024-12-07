@@ -225,7 +225,8 @@ class SmileData(SmileHelper):
         """Helper-function for _get_entity_data().
 
         Determine Adam heating-status for on-off heating via valves,
-        available regulations_modes and thermostat control_states.
+        available regulations_modes and thermostat control_states,
+        and add missing cooling_enabled when required.
         """
         if self.smile(ADAM):
             # Indicate heating_state based on valves being open in case of city-provided heating
@@ -236,6 +237,11 @@ class SmileData(SmileHelper):
             ):
                 data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
 
+            # Add cooling_enabled binary_sensor
+            if entity["dev_class"] == "heater_central" and "binary_sensors" in data:
+                if "cooling_enabled" not in data["binary_sensors"] and self._cooling_present:
+                    data["binary_sensors"].update({"cooling_enabled": self._cooling_enabled})
+
             # Show the allowed regulation_modes and gateway_modes
             if entity["dev_class"] == "gateway":
                 if self._reg_allowed_modes:
@@ -244,7 +250,6 @@ class SmileData(SmileHelper):
                 if self._gw_allowed_modes:
                     data["gateway_modes"] = self._gw_allowed_modes
                     self._count += 1
-
 
     def _climate_data(
         self,
