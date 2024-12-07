@@ -49,7 +49,6 @@ class SmileAPI(SmileData):
         password: str,
         request: Callable[..., Awaitable[Any]],
         websession: aiohttp.ClientSession,
-        _cooling_enabled: bool,
         _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
@@ -72,7 +71,6 @@ class SmileAPI(SmileData):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        self._cooling_enabled = _cooling_enabled
         self._cooling_present = _cooling_present
         self._elga = _elga
         self._heater_id: str

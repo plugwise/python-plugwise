@@ -247,7 +247,7 @@ class SmileHelper(SmileCommon):
         # 'cooling_state' = on means cooling is active.
         ###################################################################
         self._cooling_active = False
-        self._cooling_enabled: bool
+        self._cooling_enabled = False
 
         self.gateway_id: str
         self.gw_data: GatewayData = {}

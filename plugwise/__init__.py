@@ -65,7 +65,6 @@ class Smile(SmileComm):
             self._websession,
          )
 
-        self._cooling_enabled = False
         self._cooling_present = False
         self._elga = False
         self._is_thermostat = False
@@ -131,7 +130,6 @@ class Smile(SmileComm):
             self._password,
             self._request,
             self._websession,
-            self._cooling_enabled,
             self._cooling_present,
             self._elga,
             self._is_thermostat,
