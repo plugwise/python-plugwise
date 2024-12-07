@@ -2,6 +2,7 @@
   "entities": {
     "0ca13e8176204ca7bf6f09de59f81c83": {
       "binary_sensors": {
+        "cooling_enabled": true,
         "cooling_state": true,
         "dhw_state": true,
         "flame_state": false,
