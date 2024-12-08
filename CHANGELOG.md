@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Code optimizing
+
 ## v1.6.3
 
 - Implement cooling-related fixes, trying to solve HA Core issue [#132479](https://github.com/home-assistant/core/issues/132479)
