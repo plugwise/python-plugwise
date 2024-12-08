@@ -2,6 +2,7 @@
 
 Plugwise Smile protocol data-collection helpers.
 """
+
 from __future__ import annotations
 
 import re
@@ -26,7 +27,6 @@ class SmileData(SmileHelper):
     def __init__(self) -> None:
         """Init."""
         SmileHelper.__init__(self)
-
 
     def _all_entity_data(self) -> None:
         """Helper-function for get_all_gateway_entities().
@@ -78,7 +78,13 @@ class SmileData(SmileHelper):
                 mac_list
                 and "low_battery" in entity["binary_sensors"]
                 and entity["zigbee_mac_address"] in mac_list
-                and entity["dev_class"] in ("thermo_sensor", "thermostatic_radiator_valve", "zone_thermometer", "zone_thermostat")
+                and entity["dev_class"]
+                in (
+                    "thermo_sensor",
+                    "thermostatic_radiator_valve",
+                    "zone_thermometer",
+                    "zone_thermostat",
+                )
             )
             if is_battery_low:
                 entity["binary_sensors"]["low_battery"] = True
@@ -98,7 +104,11 @@ class SmileData(SmileHelper):
                 message: str | None = notification.get("message")
                 warning: str | None = notification.get("warning")
                 notify = message or warning
-                if notify is not None and all(x in notify for x in matches) and (mac_addresses := mac_pattern.findall(notify)):
+                if (
+                    notify is not None
+                    and all(x in notify for x in matches)
+                    and (mac_addresses := mac_pattern.findall(notify))
+                ):
                     mac_address = mac_addresses[0]  # re.findall() outputs a list
 
                 if mac_address is not None:
@@ -114,9 +124,7 @@ class SmileData(SmileHelper):
         """Helper-function adding or updating the Plugwise notifications."""
         if (
             entity_id == self.gateway_id
-            and (
-                self._is_thermostat or self.smile_type == "power"
-            )
+            and (self._is_thermostat or self.smile_type == "power")
         ) or (
             "binary_sensors" in entity
             and "plugwise_notification" in entity["binary_sensors"]
@@ -151,7 +159,6 @@ class SmileData(SmileHelper):
             sensors["setpoint_low"] = temp_dict["setpoint_low"]
             sensors["setpoint_high"] = temp_dict["setpoint_high"]
             self._count += 2  # add 4, remove 2
-
 
     def _get_location_data(self, loc_id: str) -> GwEntityData:
         """Helper-function for _all_entity_data() and async_update().
@@ -235,7 +242,10 @@ class SmileData(SmileHelper):
                 data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
             # Add cooling_enabled binary_sensor
             if "binary_sensors" in data:
-                if "cooling_enabled" not in data["binary_sensors"] and self._cooling_present:
+                if (
+                    "cooling_enabled" not in data["binary_sensors"]
+                    and self._cooling_present
+                ):
                     data["binary_sensors"]["cooling_enabled"] = self._cooling_enabled
 
         # Show the allowed regulation_modes and gateway_modes
@@ -248,10 +258,7 @@ class SmileData(SmileHelper):
                 self._count += 1
 
     def _climate_data(
-        self,
-        location_id: str,
-        entity: GwEntityData,
-        data: GwEntityData
+        self, location_id: str, entity: GwEntityData, data: GwEntityData
     ) -> None:
         """Helper-function for _get_entity_data().
 
@@ -282,7 +289,9 @@ class SmileData(SmileHelper):
         if sel_schedule in (NONE, OFF):
             data["climate_mode"] = "heat"
             if self._cooling_present:
-                data["climate_mode"] = "cool" if self.check_reg_mode("cooling") else "heat_cool"
+                data["climate_mode"] = (
+                    "cool" if self.check_reg_mode("cooling") else "heat_cool"
+                )
 
         if self.check_reg_mode("off"):
             data["climate_mode"] = "off"

@@ -2,6 +2,7 @@
 
 Plugwise Smile protocol helpers.
 """
+
 from __future__ import annotations
 
 from typing import cast
@@ -83,21 +84,23 @@ class SmileCommon:
         appl.hardware = module_data["hardware_version"]
         appl.model_id = module_data["vendor_model"] if not legacy else None
         appl.model = (
-            "Generic heater/cooler"
-            if self._cooling_present
-            else "Generic heater"
+            "Generic heater/cooler" if self._cooling_present else "Generic heater"
         )
 
         return appl
 
-    def _appl_thermostat_info(self, appl: Munch, xml_1: etree, xml_2: etree = None) -> Munch:
+    def _appl_thermostat_info(
+        self, appl: Munch, xml_1: etree, xml_2: etree = None
+    ) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         locator = "./logs/point_log[type='thermostat']/thermostat"
         xml_2 = return_valid(xml_2, self._domain_objects)
         module_data = self._get_module_data(xml_1, locator, xml_2)
         appl.vendor_name = module_data["vendor_name"]
         appl.model = module_data["vendor_model"]
-        if appl.model != "ThermoTouch":  # model_id for Anna not present as stand-alone device
+        if (
+            appl.model != "ThermoTouch"
+        ):  # model_id for Anna not present as stand-alone device
             appl.model_id = appl.model
             appl.model = check_model(appl.model, appl.vendor_name)
 
@@ -108,7 +111,9 @@ class SmileCommon:
 
         return appl
 
-    def _collect_power_values(self, data: GwEntityData, loc: Munch, tariff: str, legacy: bool = False) -> None:
+    def _collect_power_values(
+        self, data: GwEntityData, loc: Munch, tariff: str, legacy: bool = False
+    ) -> None:
         """Something."""
         for loc.peak_select in ("nl_peak", "nl_offpeak"):
             loc.locator = (
@@ -220,9 +225,7 @@ class SmileCommon:
                 self.gw_entities[appl.entity_id][appl_key] = value
                 self._count += 1
 
-    def _entity_switching_group(
-        self, entity: GwEntityData, data: GwEntityData
-    ) -> None:
+    def _entity_switching_group(self, entity: GwEntityData, data: GwEntityData) -> None:
         """Helper-function for _get_device_zone_data().
 
         Determine switching group device data.
@@ -268,7 +271,9 @@ class SmileCommon:
 
         return switch_groups
 
-    def _get_lock_state(self, xml: etree, data: GwEntityData, stretch_v2: bool = False) -> None:
+    def _get_lock_state(
+        self, xml: etree, data: GwEntityData, stretch_v2: bool = False
+    ) -> None:
         """Helper-function for _get_measurement_data().
 
         Adam & Stretches: obtain the relay-switch lock state.
@@ -323,7 +328,9 @@ class SmileCommon:
 
         return module_data
 
-    def _get_zigbee_data(self, module: etree, module_data: ModuleData, legacy: bool) -> None:
+    def _get_zigbee_data(
+        self, module: etree, module_data: ModuleData, legacy: bool
+    ) -> None:
         """Helper-function for _get_module_data()."""
         if legacy:
             # Stretches
@@ -334,5 +341,5 @@ class SmileCommon:
                 module_data["zigbee_mac_address"] = coord.find("mac_address").text
         # Adam
         elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
-                module_data["zigbee_mac_address"] = zb_node.find("mac_address").text
-                module_data["reachable"] = zb_node.find("reachable").text == "true"
+            module_data["zigbee_mac_address"] = zb_node.find("mac_address").text
+            module_data["reachable"] = zb_node.find("reachable").text == "true"
