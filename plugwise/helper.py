@@ -2,6 +2,7 @@
 
 Plugwise Smile protocol helpers.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -179,7 +180,9 @@ class SmileComm:
                 # Command accepted gives empty body with status 202
                 return
             case 401:
-                msg = "Invalid Plugwise login, please retry with the correct credentials."
+                msg = (
+                    "Invalid Plugwise login, please retry with the correct credentials."
+                )
                 LOGGER.error("%s", msg)
                 raise InvalidAuthentication
             case 405:
@@ -392,7 +395,9 @@ class SmileHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance)
             case "heater_central":
                 # Collect heater_central device info
-                self._appl_heater_central_info(appl, appliance, False)  # False means non-legacy device
+                self._appl_heater_central_info(
+                    appl, appliance, False
+                )  # False means non-legacy device
                 self._appl_dhw_mode_info(appl, appliance)
                 # Skip orphaned heater_central (Core Issue #104433)
                 if appl.entity_id != self._heater_id:
@@ -430,7 +435,9 @@ class SmileHelper(SmileCommon):
 
         # Adam: collect the ZigBee MAC address of the Smile
         if self.smile(ADAM):
-            if (found := self._domain_objects.find(".//protocols/zig_bee_coordinator")) is not None:
+            if (
+                found := self._domain_objects.find(".//protocols/zig_bee_coordinator")
+            ) is not None:
                 appl.zigbee_mac = found.find("mac_address").text
 
             # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
@@ -463,7 +470,9 @@ class SmileHelper(SmileCommon):
         Collect dhw control operation modes - Anna + Loria.
         """
         dhw_mode_list: list[str] = []
-        locator = "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
+        locator = (
+            "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
+        )
         if (search := appliance.find(locator)) is not None:
             if search.find("allowed_modes") is not None:
                 for mode in search.find("allowed_modes"):
@@ -510,7 +519,7 @@ class SmileHelper(SmileCommon):
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
             if entity["dev_class"] == "smartmeter":
-                 data.update(self._power_data_from_location(entity["location"]))
+                data.update(self._power_data_from_location(entity["location"]))
 
             return data
 
@@ -641,8 +650,11 @@ class SmileHelper(SmileCommon):
             # Skip max_dhw_temperature, not initially valid,
             # skip thermostat for all but zones with thermostats
             if item == "max_dhw_temperature" or (
-                item == "thermostat" and (
-                    entity["dev_class"] != "climate" if self.smile(ADAM) else entity["dev_class"] != "thermostat"
+                item == "thermostat"
+                and (
+                    entity["dev_class"] != "climate"
+                    if self.smile(ADAM)
+                    else entity["dev_class"] != "thermostat"
                 )
             ):
                 continue
@@ -800,7 +812,9 @@ class SmileHelper(SmileCommon):
             data["model"] = "Generic heater/cooler"
             # Cooling_enabled in xml does NOT show the correct status!
             # Setting it specifically:
-            self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data["elga_status_code"] in (8, 9)
+            self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data[
+                "elga_status_code"
+            ] in (8, 9)
             data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                 data["elga_status_code"] == 8
             )
@@ -816,11 +830,15 @@ class SmileHelper(SmileCommon):
         """Loria/Thermastage: base cooling-related on cooling_state and modulation_level."""
         # For Loria/Thermastage it's not clear if cooling_enabled in xml shows the correct status,
         # setting it specifically:
-        self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data["binary_sensors"]["cooling_state"]
+        self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data[
+            "binary_sensors"
+        ]["cooling_state"]
         self._cooling_active = data["sensors"]["modulation_level"] == 100
         # For Loria the above does not work (pw-beta issue #301)
         if "cooling_ena_switch" in data["switches"]:
-            self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data["switches"]["cooling_ena_switch"]
+            self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data[
+                "switches"
+            ]["cooling_ena_switch"]
             self._cooling_active = data["binary_sensors"]["cooling_state"]
 
     def _cleanup_data(self, data: GwEntityData) -> None:
@@ -870,7 +888,10 @@ class SmileHelper(SmileCommon):
                     "dev_class": "climate",
                     "model": "ThermoZone",
                     "name": loc_data["name"],
-                    "thermostats": {"primary": loc_data["primary"], "secondary": loc_data["secondary"]},
+                    "thermostats": {
+                        "primary": loc_data["primary"],
+                        "secondary": loc_data["secondary"],
+                    },
                     "vendor": "Plugwise",
                 }
                 self._count += 3
@@ -910,10 +931,12 @@ class SmileHelper(SmileCommon):
             if thermo_matching[appl_class] == thermo_loc["primary_prio"]:
                 thermo_loc["primary"].append(appliance_id)
             # Pre-elect new primary
-            elif (thermo_rank := thermo_matching[appl_class]) > thermo_loc["primary_prio"]:
+            elif (thermo_rank := thermo_matching[appl_class]) > thermo_loc[
+                "primary_prio"
+            ]:
                 thermo_loc["primary_prio"] = thermo_rank
                 # Demote former primary
-                if (tl_primary := thermo_loc["primary"]):
+                if tl_primary := thermo_loc["primary"]:
                     thermo_loc["secondary"] += tl_primary
                     thermo_loc["primary"] = []
 
@@ -1010,9 +1033,17 @@ class SmileHelper(SmileCommon):
         for rule in self._domain_objects.findall(f'./rule[name="{name}"]'):
             active = rule.find("active").text
             if rule.find(locator) is not None:
-                schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
+                schedule_ids[rule.attrib["id"]] = {
+                    "location": loc_id,
+                    "name": name,
+                    "active": active,
+                }
             else:
-                schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
+                schedule_ids[rule.attrib["id"]] = {
+                    "location": NONE,
+                    "name": name,
+                    "active": active,
+                }
 
         return schedule_ids
 
@@ -1029,9 +1060,17 @@ class SmileHelper(SmileCommon):
                 name = rule.find("name").text
                 active = rule.find("active").text
                 if rule.find(locator2) is not None:
-                    schedule_ids[rule.attrib["id"]] = {"location": loc_id, "name": name, "active": active}
+                    schedule_ids[rule.attrib["id"]] = {
+                        "location": loc_id,
+                        "name": name,
+                        "active": active,
+                    }
                 else:
-                    schedule_ids[rule.attrib["id"]] = {"location": NONE, "name": name, "active": active}
+                    schedule_ids[rule.attrib["id"]] = {
+                        "location": NONE,
+                        "name": name,
+                        "active": active,
+                    }
 
         return schedule_ids
 

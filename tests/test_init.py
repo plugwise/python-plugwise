@@ -1,5 +1,6 @@
 # pylint: disable=protected-access
 """Test Plugwise Home Assistant module and generate test JSON fixtures."""
+
 import importlib
 import json
 
@@ -109,27 +110,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         # Introducte timeout with 2 seconds, test by setting response to 10ms
         # Don't actually wait 2 seconds as this will prolongue testing
         if not raise_timeout:
-            app.router.add_route(
-                "POST", CORE_GATEWAYS_TAIL, self.smile_http_accept
-            )
+            app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_http_accept)
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_http_accept)
             app.router.add_route(
                 "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_http_accept
             )
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_http_accept)
-            app.router.add_route(
-                "PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept
-            )
+            app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_http_accept)
         else:
-            app.router.add_route(
-                "POST", CORE_GATEWAYS_TAIL, self.smile_timeout
-            )
+            app.router.add_route("POST", CORE_GATEWAYS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_LOCATIONS_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_RULES_TAIL, self.smile_timeout)
             app.router.add_route("PUT", CORE_APPLIANCES_TAIL, self.smile_timeout)
-            app.router.add_route(
-                "DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout
-            )
+            app.router.add_route("DELETE", CORE_NOTIFICATIONS_TAIL, self.smile_timeout)
 
         return app
 
@@ -373,7 +366,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         )
 
         # Happy flow
-        app = await self.setup_legacy_app(broken, timeout, raise_timeout, fail_auth, stretch)
+        app = await self.setup_legacy_app(
+            broken, timeout, raise_timeout, fail_auth, stretch
+        )
 
         server = aiohttp.test_utils.TestServer(
             app, port=port, scheme="http", host="127.0.0.1"
@@ -631,9 +626,13 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             heat_cooler = data.devices[data.gateway["heater_id"]]
             if "binary_sensors" in heat_cooler:
                 if "cooling_enabled" in heat_cooler["binary_sensors"]:
-                    self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
+                    self._cooling_enabled = heat_cooler["binary_sensors"][
+                        "cooling_enabled"
+                    ]
                 if "cooling_state" in heat_cooler["binary_sensors"]:
-                    self._cooling_active = heat_cooler["binary_sensors"]["cooling_state"]
+                    self._cooling_active = heat_cooler["binary_sensors"][
+                        "cooling_state"
+                    ]
 
         self._write_json("all_data", {"devices": data.devices, "gateway": data.gateway})
 
@@ -692,7 +691,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + locked, not switched as expected")
                 return False
-            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
                 if unhappy:
                     return True  # test is pass!
                     _LOGGER.info("  + failed as expected")
@@ -750,7 +751,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid preset, as expected")
                 tinker_preset_passed = True
-            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + tinker_thermostat_preset failed as expected")
                     return True
@@ -778,13 +781,17 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     new_schedule = new_schedule[1:]
                 _LOGGER.info("- Adjusting schedule to %s", f"{new_schedule}{warning}")
                 try:
-                    await smile.set_select("select_schedule", loc_id, new_schedule, state)
+                    await smile.set_select(
+                        "select_schedule", loc_id, new_schedule, state
+                    )
                     tinker_schedule_passed = True
                     _LOGGER.info("  + working as intended")
                 except pw_exceptions.PlugwiseError:
                     _LOGGER.info("  + failed as expected")
                     tinker_schedule_passed = True
-                except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+                except (
+                    pw_exceptions.ConnectionFailedError
+                ):  # leave for-loop at connect-error
                     tinker_schedule_passed = False
                     if unhappy:
                         _LOGGER.info("  + failed as expected before intended failure")
@@ -812,7 +819,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + failed as expected")
                 tinker_schedule_passed = True
-            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
                 tinker_schedule_passed = False
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
@@ -896,7 +905,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_dhw_mode found invalid mode, as expected")
                 tinker_dhw_mode_passed = False
-            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
                     return True
@@ -925,7 +936,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                     "  + tinker_regulation_mode found invalid mode, as expected"
                 )
                 tinker_reg_mode_passed = False
-            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
                     return True
@@ -941,7 +954,11 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         tinker_max_boiler_temp_passed = False
         new_temp = 60.0
         _LOGGER.info("- Adjusting temperature to %s", new_temp)
-        for test in ["maximum_boiler_temperature", "max_dhw_temperature", "bogus_temperature"]:
+        for test in [
+            "maximum_boiler_temperature",
+            "max_dhw_temperature",
+            "bogus_temperature",
+        ]:
             _LOGGER.info("  + for %s", test)
             try:
                 await smile.set_number("dummy", test, new_temp)
@@ -950,7 +967,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + tinker_max_boiler_temp failed as intended")
                 tinker_max_boiler_temp_passed = False
-            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
                     return True
@@ -997,7 +1016,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             except pw_exceptions.PlugwiseError:
                 _LOGGER.info("  + found invalid mode, as expected")
                 tinker_gateway_mode_passed = False
-            except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
+            except (
+                pw_exceptions.ConnectionFailedError
+            ):  # leave for-loop at connect-error
                 if unhappy:
                     _LOGGER.info("  + failed as expected before intended failure")
                     return True

@@ -2,6 +2,7 @@
 
 Plugwise backend module for Home Assistant Core.
 """
+
 from __future__ import annotations
 
 from plugwise.constants import (
@@ -63,7 +64,7 @@ class Smile(SmileComm):
             self._timeout,
             self._username,
             self._websession,
-         )
+        )
 
         self._cooling_present = False
         self._elga = False
@@ -125,52 +126,56 @@ class Smile(SmileComm):
         # Determine smile specifics
         await self._smile_detect(result, dsmrmain)
 
-        self._smile_api = SmileAPI(
-            self._host,
-            self._password,
-            self._request,
-            self._websession,
-            self._cooling_present,
-            self._elga,
-            self._is_thermostat,
-            self._last_active,
-            self._loc_data,
-            self._on_off_device,
-            self._opentherm_device,
-            self._schedule_old_states,
-            self.gateway_id,
-            self.smile_fw_version,
-            self.smile_hostname,
-            self.smile_hw_version,
-            self.smile_mac_address,
-            self.smile_model,
-            self.smile_model_id,
-            self.smile_name,
-            self.smile_type,
-            self.smile_version,
-            self._port,
-            self._username,
-         ) if not self.smile_legacy else SmileLegacyAPI(
-            self._host,
-            self._password,
-            self._request,
-            self._websession,
-            self._is_thermostat,
-            self._loc_data,
-            self._on_off_device,
-            self._opentherm_device,
-            self._stretch_v2,
-            self._target_smile,
-            self.smile_fw_version,
-            self.smile_hostname,
-            self.smile_hw_version,
-            self.smile_mac_address,
-            self.smile_model,
-            self.smile_name,
-            self.smile_type,
-            self.smile_zigbee_mac_address,
-            self._port,
-            self._username,
+        self._smile_api = (
+            SmileAPI(
+                self._host,
+                self._password,
+                self._request,
+                self._websession,
+                self._cooling_present,
+                self._elga,
+                self._is_thermostat,
+                self._last_active,
+                self._loc_data,
+                self._on_off_device,
+                self._opentherm_device,
+                self._schedule_old_states,
+                self.gateway_id,
+                self.smile_fw_version,
+                self.smile_hostname,
+                self.smile_hw_version,
+                self.smile_mac_address,
+                self.smile_model,
+                self.smile_model_id,
+                self.smile_name,
+                self.smile_type,
+                self.smile_version,
+                self._port,
+                self._username,
+            )
+            if not self.smile_legacy
+            else SmileLegacyAPI(
+                self._host,
+                self._password,
+                self._request,
+                self._websession,
+                self._is_thermostat,
+                self._loc_data,
+                self._on_off_device,
+                self._opentherm_device,
+                self._stretch_v2,
+                self._target_smile,
+                self.smile_fw_version,
+                self.smile_hostname,
+                self.smile_hw_version,
+                self.smile_mac_address,
+                self.smile_model,
+                self.smile_name,
+                self.smile_type,
+                self.smile_zigbee_mac_address,
+                self._port,
+                self._username,
+            )
         )
 
         # Update all endpoints on first connect
@@ -203,7 +208,7 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        version_major= str(self.smile_fw_version.major)
+        version_major = str(self.smile_fw_version.major)
         self._target_smile = f"{model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
@@ -318,9 +323,9 @@ class Smile(SmileComm):
 
         return data
 
-########################################################################################################
-###  API Set and HA Service-related Functions                                                        ###
-########################################################################################################
+    ########################################################################################################
+    ###  API Set and HA Service-related Functions                                                        ###
+    ########################################################################################################
 
     async def set_select(
         self,
@@ -333,7 +338,9 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_select(key, loc_id, option, state)
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set select option '{option}': {str(exc)}") from exc
+            raise ConnectionFailedError(
+                f"Failed to set select option '{option}': {str(exc)}"
+            ) from exc
 
     async def set_schedule_state(
         self,
@@ -345,8 +352,9 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_schedule_state(loc_id, state, name)
         except ConnectionFailedError as exc:  # pragma no cover
-            raise ConnectionFailedError(f"Failed to set schedule state: {str(exc)}") from exc  # pragma no cover
-
+            raise ConnectionFailedError(
+                f"Failed to set schedule state: {str(exc)}"
+            ) from exc  # pragma no cover
 
     async def set_preset(self, loc_id: str, preset: str) -> None:
         """Set the given Preset on the relevant Thermostat."""
@@ -360,7 +368,9 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_temperature(loc_id, items)
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set temperature: {str(exc)}") from exc
+            raise ConnectionFailedError(
+                f"Failed to set temperature: {str(exc)}"
+            ) from exc
 
     async def set_number(
         self,
@@ -372,14 +382,18 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_number(dev_id, key, temperature)
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set number '{key}': {str(exc)}") from exc
+            raise ConnectionFailedError(
+                f"Failed to set number '{key}': {str(exc)}"
+            ) from exc
 
     async def set_temperature_offset(self, dev_id: str, offset: float) -> None:
         """Set the Temperature offset for thermostats that support this feature."""
         try:  # pragma no cover
             await self._smile_api.set_offset(dev_id, offset)  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
-            raise ConnectionFailedError(f"Failed to set temperature offset: {str(exc)}") from exc  # pragma no cover
+            raise ConnectionFailedError(
+                f"Failed to set temperature offset: {str(exc)}"
+            ) from exc  # pragma no cover
 
     async def set_switch_state(
         self, appl_id: str, members: list[str] | None, model: str, state: str
@@ -388,39 +402,51 @@ class Smile(SmileComm):
         try:
             await self._smile_api.set_switch_state(appl_id, members, model, state)
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to set switch state: {str(exc)}") from exc
+            raise ConnectionFailedError(
+                f"Failed to set switch state: {str(exc)}"
+            ) from exc
 
     async def set_gateway_mode(self, mode: str) -> None:
         """Set the gateway mode."""
         try:  # pragma no cover
             await self._smile_api.set_gateway_mode(mode)  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
-            raise ConnectionFailedError(f"Failed to set gateway mode: {str(exc)}") from exc  # pragma no cover
+            raise ConnectionFailedError(
+                f"Failed to set gateway mode: {str(exc)}"
+            ) from exc  # pragma no cover
 
     async def set_regulation_mode(self, mode: str) -> None:
         """Set the heating regulation mode."""
         try:  # pragma no cover
             await self._smile_api.set_regulation_mode(mode)  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
-            raise ConnectionFailedError(f"Failed to set regulation mode: {str(exc)}") from exc  # pragma no cover
+            raise ConnectionFailedError(
+                f"Failed to set regulation mode: {str(exc)}"
+            ) from exc  # pragma no cover
 
     async def set_dhw_mode(self, mode: str) -> None:
         """Set the domestic hot water heating regulation mode."""
         try:  # pragma no cover
             await self._smile_api.set_dhw_mode(mode)  # pragma: no cover
         except ConnectionFailedError as exc:  # pragma no cover
-            raise ConnectionFailedError(f"Failed to set dhw mode: {str(exc)}") from exc  # pragma no cover
+            raise ConnectionFailedError(
+                f"Failed to set dhw mode: {str(exc)}"
+            ) from exc  # pragma no cover
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
         try:
             await self._smile_api.delete_notification()
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to delete notification: {str(exc)}") from exc
+            raise ConnectionFailedError(
+                f"Failed to delete notification: {str(exc)}"
+            ) from exc
 
     async def reboot_gateway(self) -> None:
         """Reboot the Plugwise Gateway."""
         try:
             await self._smile_api.reboot_gateway()
         except ConnectionFailedError as exc:
-            raise ConnectionFailedError(f"Failed to reboot gateway: {str(exc)}") from exc
+            raise ConnectionFailedError(
+                f"Failed to reboot gateway: {str(exc)}"
+            ) from exc
