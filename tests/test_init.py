@@ -52,6 +52,10 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
 
     def _write_json(self, call, data):
         """Store JSON data to per-setup files for HA component testing."""
+        no_fixtures = os.getenv("NO_FIXTURES") == "1"
+        if no_fixtures:
+            return
+
         path = os.path.join(
             os.path.dirname(__file__), "../fixtures/" + self.smile_setup
         )
