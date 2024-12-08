@@ -69,7 +69,7 @@ from packaging import version
 
 
 def search_actuator_functionalities(appliance: etree, actuator: str) -> etree | None:
-    """Helper-function for finding the relevant xml-structure."""
+    """Helper-function for finding the relevant actuator xml-structure."""
     locator = f"./actuator_functionalities/{actuator}"
     if (search := appliance.find(locator)) is not None:
         return search
@@ -461,14 +461,16 @@ class SmileHelper(SmileCommon):
 
         return appl
 
+    def _appl_actuator_modes()
+
     def _appl_regulation_mode_info(self, appliance: etree) -> None:
         """Helper-function for _appliance_info_finder()."""
         reg_mode_list: list[str] = []
         if (search := search_actuator_functionalities(
             appliance, "regulation_mode_control_functionality"
         )) is not None:
-            if search.find("allowed_modes") is not None:
-                for mode in search.find("allowed_modes"):
+            if (modes := search.find("allowed_modes")) is not None:
+                for mode in modes:
                     reg_mode_list.append(mode.text)
                     if mode.text == "cooling":
                         self._cooling_present = True
@@ -483,8 +485,8 @@ class SmileHelper(SmileCommon):
         if (search := search_actuator_functionalities(
             appliance, "domestic_hot_water_mode_control_functionality"
         )) is not None:
-            if search.find("allowed_modes") is not None:
-                for mode in search.find("allowed_modes"):
+            if (modes := search.find("allowed_modes")) is not None:
+                for mode in modes:
                     dhw_mode_list.append(mode.text)
                 self._dhw_allowed_modes = dhw_mode_list
 
