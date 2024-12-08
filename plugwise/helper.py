@@ -404,10 +404,10 @@ class SmileHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance)
             case "heater_central":
                 # Collect heater_central device info
-                self._appl_heater_central_info(
-                    appl, appliance, False
-                )  # False means non-legacy device
-                self._appl_dhw_mode_info(appl, appliance)
+                self._appl_heater_central_info(appl, appliance, False)  # False means non-legacy device
+                self._dhw_allowed_modes = self._get_appl_actuator_modes(
+                    appliance, "domestic_hot_water_mode_control_functionality"
+                )
                 # Skip orphaned heater_central (Core Issue #104433)
                 if appl.entity_id != self._heater_id:
                     return Munch()
@@ -450,7 +450,9 @@ class SmileHelper(SmileCommon):
                 appl.zigbee_mac = found.find("mac_address").text
 
             # Also, collect regulation_modes and check for cooling, indicating cooling-mode is present
-            self._appl_regulation_mode_info(appliance)
+            self._reg_allowed_modes = self._get_appl_actuator_modes(
+                appliance, "regulation_mode_control_functionality"
+            )
 
             # Finally, collect the gateway_modes
             self._gw_allowed_modes = []
@@ -461,36 +463,18 @@ class SmileHelper(SmileCommon):
 
         return appl
 
-    def _appl_actuator_modes()
-
-    def _appl_regulation_mode_info(self, appliance: etree) -> None:
+    def _get_appl_actuator_modes(self, appliance: etree, actuator_type: str) -> list[str]:
         """Helper-function for _appliance_info_finder()."""
-        reg_mode_list: list[str] = []
-        if (search := search_actuator_functionalities(
-            appliance, "regulation_mode_control_functionality"
-        )) is not None:
+        mode_list: list[str] = []
+        if (search := search_actuator_functionalities(appliance, actuator_type)) is not None:
             if (modes := search.find("allowed_modes")) is not None:
                 for mode in modes:
-                    reg_mode_list.append(mode.text)
+                    mode_list.append(mode.text)
+                    # Collect cooling_present state from the available regulation_modes
                     if mode.text == "cooling":
                         self._cooling_present = True
-                self._reg_allowed_modes = reg_mode_list
 
-    def _appl_dhw_mode_info(self, appl: Munch, appliance: etree) -> Munch:
-        """Helper-function for _appliance_info_finder().
-
-        Collect dhw control operation modes - Anna + Loria.
-        """
-        dhw_mode_list: list[str] = []
-        if (search := search_actuator_functionalities(
-            appliance, "domestic_hot_water_mode_control_functionality"
-        )) is not None:
-            if (modes := search.find("allowed_modes")) is not None:
-                for mode in modes:
-                    dhw_mode_list.append(mode.text)
-                self._dhw_allowed_modes = dhw_mode_list
-
-        return appl
+        return mode_list
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
