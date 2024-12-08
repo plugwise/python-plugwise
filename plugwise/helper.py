@@ -68,6 +68,15 @@ from munch import Munch
 from packaging import version
 
 
+def search_actuator_functionalities(appliance: etree, actuator: str) -> etree | None:
+    """Helper-function for finding the relevant xml-structure."""
+    locator = f"./actuator_functionalities/{actuator}"
+    if (search := appliance.find(locator)) is not None:
+        return search
+
+    return None
+
+
 class SmileComm:
     """The SmileComm class."""
 
@@ -455,8 +464,9 @@ class SmileHelper(SmileCommon):
     def _appl_regulation_mode_info(self, appliance: etree) -> None:
         """Helper-function for _appliance_info_finder()."""
         reg_mode_list: list[str] = []
-        locator = "./actuator_functionalities/regulation_mode_control_functionality"
-        if (search := appliance.find(locator)) is not None:
+        if (search := search_actuator_functionalities(
+            appliance, "regulation_mode_control_functionality"
+        )) is not None:
             if search.find("allowed_modes") is not None:
                 for mode in search.find("allowed_modes"):
                     reg_mode_list.append(mode.text)
@@ -470,10 +480,9 @@ class SmileHelper(SmileCommon):
         Collect dhw control operation modes - Anna + Loria.
         """
         dhw_mode_list: list[str] = []
-        locator = (
-            "./actuator_functionalities/domestic_hot_water_mode_control_functionality"
-        )
-        if (search := appliance.find(locator)) is not None:
+        if (search := search_actuator_functionalities(
+            appliance, "domestic_hot_water_mode_control_functionality"
+        )) is not None:
             if search.find("allowed_modes") is not None:
                 for mode in search.find("allowed_modes"):
                     dhw_mode_list.append(mode.text)
@@ -711,8 +720,9 @@ class SmileHelper(SmileCommon):
         if not (self.smile(ADAM) and entity_id == self.gateway_id):
             return
 
-        locator = "./actuator_functionalities/regulation_mode_control_functionality"
-        if (search := appliance.find(locator)) is not None:
+        if (search := search_actuator_functionalities(
+            appliance, "regulation_mode_control_functionality"
+        )) is not None:
             data["select_regulation_mode"] = search.find("mode").text
             self._count += 1
             self._cooling_enabled = data["select_regulation_mode"] == "cooling"
@@ -727,8 +737,9 @@ class SmileHelper(SmileCommon):
         if not (self.smile(ADAM) and entity_id == self.gateway_id):
             return
 
-        locator = "./actuator_functionalities/gateway_mode_control_functionality"
-        if (search := appliance.find(locator)) is not None:
+        if (search := search_actuator_functionalities(
+            appliance, "gateway_mode_control_functionality"
+        )) is not None:
             data["select_gateway_mode"] = search.find("mode").text
             self._count += 1
 
