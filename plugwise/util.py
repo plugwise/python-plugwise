@@ -1,4 +1,5 @@
 """Plugwise protocol helpers."""
+
 from __future__ import annotations
 
 import datetime as dt
@@ -41,9 +42,7 @@ def check_alternative_location(loc: Munch, legacy: bool) -> Munch:
             loc.found = False
             return loc
 
-        loc.locator = (
-            f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
-        )
+        loc.locator = f'./{loc.log_type}[type="{loc.measurement}"]/period/measurement'
         if legacy:
             loc.locator = (
                 f"./{loc.meas_list[0]}_{loc.log_type}/"
@@ -67,11 +66,11 @@ def in_alternative_location(loc: Munch, legacy: bool) -> bool:
     """
     present = "log" in loc.log_type and (
         "gas" in loc.measurement or "phase" in loc.measurement
-        )
+    )
     if legacy:
         present = "meter" in loc.log_type and (
             "point" in loc.log_type or "gas" in loc.measurement
-            )
+        )
 
     return present
 
@@ -222,8 +221,7 @@ def skip_obsolete_measurements(xml: etree, measurement: str) -> bool:
     locator = f".//logs/point_log[type='{measurement}']/updated_date"
     if (
         measurement in OBSOLETE_MEASUREMENTS
-        and (updated_date_key := xml.find(locator))
-        is not None
+        and (updated_date_key := xml.find(locator)) is not None
     ):
         updated_date = updated_date_key.text.split("T")[0]
         date_1 = dt.datetime.strptime(updated_date, "%Y-%m-%d")
