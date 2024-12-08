@@ -694,8 +694,8 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 return False
             except pw_exceptions.ConnectionFailedError:  # leave for-loop at connect-error
                 if unhappy:
-                    return True  # test is pass!
                     _LOGGER.info("  + failed as expected")
+                    return True  # test is pass!
                 else:  # pragma: no cover
                     _LOGGER.info("  - failed unexpectedly")
                     return False
