@@ -35,7 +35,8 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "test_and_coverage" ] ; then
 fi
 
 if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "linting" ] ; then
-    # Black first to ensure nothings roughing up ruff
+    echo "... biome-ing (prettier) ..."
+    ./tmp/biome check plugwise/ tests/ --files-ignore-unknown=true --no-errors-on-unmatched --indent-width=2 --indent-style=space --write
     echo "... ruff checking ..."
     ruff check plugwise/ tests/
     echo "... ruff formatting ..."
@@ -55,5 +56,3 @@ if [ -z "${GITHUB_ACTIONS}" ] || [ "$1" == "fixtures" ] ; then
    echo "... crafting manual fixtures ..." 
    PYTHONPATH=$(pwd) python3 scripts/manual_fixtures.py
 fi
-echo "... biome-ing (fixtures and testdata) ..." 
-./tmp/biome lint --staged --files-ignore-unknown=true --no-errors-on-unmatched
