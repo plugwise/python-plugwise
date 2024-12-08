@@ -696,6 +696,19 @@ class SmileHelper(SmileCommon):
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
+    def _get_actuator_mode(self, appliance: etree, entity_id: str, key: str) -> str | None:
+        """Helper-function for _get_regulation_mode and _get_gateway_mode.
+
+        Collect the requested gateway mode.
+        """
+        if not (self.smile(ADAM) and entity_id == self.gateway_id):
+            return None
+
+        if (search := search_actuator_functionalities(appliance, key)) is not None:
+            return str(search.find("mode").text)
+
+        return None
+
     def _get_regulation_mode(
         self, appliance: etree, entity_id: str, data: GwEntityData
     ) -> None:
@@ -703,15 +716,10 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway regulation_mode.
         """
-        if not (self.smile(ADAM) and entity_id == self.gateway_id):
-            return
-
-        if (search := search_actuator_functionalities(
-            appliance, "regulation_mode_control_functionality"
-        )) is not None:
-            data["select_regulation_mode"] = search.find("mode").text
+        if (mode := self._get_actuator_mode(appliance, entity_id, "regulation_mode_control_functionality")) is not None:
+            data["select_regulation_mode"] = mode
             self._count += 1
-            self._cooling_enabled = data["select_regulation_mode"] == "cooling"
+            self._cooling_enabled = mode == "cooling"
 
     def _get_gateway_mode(
         self, appliance: etree, entity_id: str, data: GwEntityData
@@ -720,13 +728,8 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway mode.
         """
-        if not (self.smile(ADAM) and entity_id == self.gateway_id):
-            return
-
-        if (search := search_actuator_functionalities(
-            appliance, "gateway_mode_control_functionality"
-        )) is not None:
-            data["select_gateway_mode"] = search.find("mode").text
+        if (mode := self._get_actuator_mode(appliance, entity_id, "gateway_mode_control_functionality")) is not None:
+            data["select_gateway_mode"] = mode
             self._count += 1
 
     def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
