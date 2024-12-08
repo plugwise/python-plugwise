@@ -131,6 +131,8 @@ class SmileAPI(SmileData):
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()
+            # Set self._cooling_enabled -required for set_temperature,
+            #also, check for a failed data-retrieval
             if "heater_id" in self.gw_data:
                 heat_cooler = self.gw_entities[self.gw_data["heater_id"]]
                 if (

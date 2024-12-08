@@ -798,7 +798,9 @@ class SmileHelper(SmileCommon):
             # Techneco Elga has cooling-capability
             self._cooling_present = True
             data["model"] = "Generic heater/cooler"
-            self._cooling_enabled = data["elga_status_code"] in (8, 9)
+            # Cooling_enabled in xml does NOT show the correct status!
+            # Setting it specifically:
+            self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data["elga_status_code"] in (8, 9)
             data["binary_sensors"]["cooling_state"] = self._cooling_active = (
                 data["elga_status_code"] == 8
             )
@@ -812,11 +814,13 @@ class SmileHelper(SmileCommon):
 
     def _update_loria_cooling(self, data: GwEntityData) -> None:
         """Loria/Thermastage: base cooling-related on cooling_state and modulation_level."""
-        self._cooling_enabled = data["binary_sensors"]["cooling_state"]
+        # For Loria/Thermastage it's not clear if cooling_enabled in xml shows the correct status,
+        # setting it specifically:
+        self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data["binary_sensors"]["cooling_state"]
         self._cooling_active = data["sensors"]["modulation_level"] == 100
         # For Loria the above does not work (pw-beta issue #301)
         if "cooling_ena_switch" in data["switches"]:
-            self._cooling_enabled = data["switches"]["cooling_ena_switch"]
+            self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data["switches"]["cooling_ena_switch"]
             self._cooling_active = data["binary_sensors"]["cooling_state"]
 
     def _cleanup_data(self, data: GwEntityData) -> None:

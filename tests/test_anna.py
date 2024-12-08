@@ -205,6 +205,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 good_schedules=[
                     "standaard",
                 ],
+                fail_cooling=True,
             )
             _LOGGER.debug(
                 "ERROR raised setting good schedule standaard: %s", exc.value
@@ -261,6 +262,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 good_schedules=[
                     "standaard",
                 ],
+                fail_cooling=True,
             )
             _LOGGER.debug(
                 "ERROR raised good schedule to standaard: %s", exc.value
@@ -407,6 +409,33 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         assert self._cooling_enabled
         assert self._cooling_active
 
+        result = await self.tinker_thermostat(
+            smile,
+            "d3ce834534114348be628b61b26d9220",
+            good_schedules=["Thermostat schedule"],
+        )
+        assert result
+
+        # Simulate a change of season: from cooling to heating after an update_interval
+        testdata_updated = self.load_testdata(
+            SMILE_TYPE, f"{self.smile_setup}_UPDATED_DATA"
+        )
+
+        self.smile_setup = "updated/anna_elga_2_switch_heating"
+        await self.device_test(
+            smile, "2020-04-05 00:00:01", testdata_updated, initialize=False
+        )
+        assert self.cooling_present
+        assert not self._cooling_enabled
+        assert not self._cooling_active
+
+        result = await self.tinker_thermostat(
+            smile,
+            "d3ce834534114348be628b61b26d9220",
+            good_schedules=["Thermostat schedule"],
+        )
+        assert result
+
         await smile.close_connection()
         await self.disconnect(server, client)
 
@@ -445,6 +474,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
                 good_schedules=[
                     "Winter",
                 ],
+                fail_cooling=True,
             )
             _LOGGER.debug(
                 "ERROR raised setting to schedule Winter: %s", exc.value

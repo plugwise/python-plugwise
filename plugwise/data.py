@@ -198,7 +198,8 @@ class SmileData(SmileHelper):
         # Switching groups data
         self._entity_switching_group(entity, data)
         # Adam data
-        self._get_adam_data(entity, data)
+        if self.smile(ADAM):
+            self._get_adam_data(entity, data)
 
         # Thermostat data for Anna (presets, temperatures etc)
         if self.smile(ANNA) and entity["dev_class"] == "thermostat":
@@ -225,26 +226,26 @@ class SmileData(SmileHelper):
         """Helper-function for _get_entity_data().
 
         Determine Adam heating-status for on-off heating via valves,
-        available regulations_modes and thermostat control_states.
+        available regulations_modes and thermostat control_states,
+        and add missing cooling_enabled when required.
         """
-        if self.smile(ADAM):
+        if entity["dev_class"] == "heater_central":
             # Indicate heating_state based on valves being open in case of city-provided heating
-            if (
-                entity["dev_class"] == "heater_central"
-                and self._on_off_device
-                and isinstance(self._heating_valves(), int)
-            ):
+            if self._on_off_device and isinstance(self._heating_valves(), int):
                 data["binary_sensors"]["heating_state"] = self._heating_valves() != 0
+            # Add cooling_enabled binary_sensor
+            if "binary_sensors" in data:
+                if "cooling_enabled" not in data["binary_sensors"] and self._cooling_present:
+                    data["binary_sensors"]["cooling_enabled"] = self._cooling_enabled
 
-            # Show the allowed regulation_modes and gateway_modes
-            if entity["dev_class"] == "gateway":
-                if self._reg_allowed_modes:
-                    data["regulation_modes"] = self._reg_allowed_modes
-                    self._count += 1
-                if self._gw_allowed_modes:
-                    data["gateway_modes"] = self._gw_allowed_modes
-                    self._count += 1
-
+        # Show the allowed regulation_modes and gateway_modes
+        if entity["dev_class"] == "gateway":
+            if self._reg_allowed_modes:
+                data["regulation_modes"] = self._reg_allowed_modes
+                self._count += 1
+            if self._gw_allowed_modes:
+                data["gateway_modes"] = self._gw_allowed_modes
+                self._count += 1
 
     def _climate_data(
         self,
