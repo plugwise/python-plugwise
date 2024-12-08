@@ -2,6 +2,7 @@
 
 Plugwise Smile protocol helpers.
 """
+
 from __future__ import annotations
 
 from typing import cast
@@ -169,10 +170,7 @@ class SmileLegacyHelper(SmileCommon):
             loc.loc_id = location.attrib["id"]
             # Filter the valid single location for P1 legacy: services not empty
             locator = "./services"
-            if (
-                self.smile_type == "power"
-                and len(location.find(locator)) == 0
-            ):
+            if self.smile_type == "power" and len(location.find(locator)) == 0:
                 continue
 
             if loc.name == "Home":
@@ -212,15 +210,15 @@ class SmileLegacyHelper(SmileCommon):
     def _appliance_info_finder(self, appliance: etree, appl: Munch) -> Munch:
         """Collect entity info (Smile/Stretch, Thermostats, OpenTherm/On-Off): firmware, model and vendor name."""
         match appl.pwclass:
-        # Collect thermostat entity info
+            # Collect thermostat entity info
             case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
                 return self._appl_thermostat_info(appl, appliance, self._modules)
-        # Collect heater_central entity info
+            # Collect heater_central entity info
             case "heater_central":
                 return self._appl_heater_central_info(
                     appl, appliance, True, self._appliances, self._modules
                 )  # True means legacy device
-        # Collect info from Stretches
+            # Collect info from Stretches
             case _:
                 return self._energy_entity_info_finder(appliance, appl)
 
@@ -231,7 +229,9 @@ class SmileLegacyHelper(SmileCommon):
         """
         if self.smile_type in ("power", "stretch"):
             locator = "./services/electricity_point_meter"
-            module_data = self._get_module_data(appliance, locator, self._modules, legacy=True)
+            module_data = self._get_module_data(
+                appliance, locator, self._modules, legacy=True
+            )
             appl.zigbee_mac = module_data["zigbee_mac_address"]
             # Filter appliance without zigbee_mac, it's an orphaned device
             if appl.zigbee_mac is None and self.smile_type != "power":
@@ -362,10 +362,7 @@ class SmileLegacyHelper(SmileCommon):
         self._count_data_items(data)
 
     def _get_actuator_functionalities(
-        self,
-        xml: etree,
-        entity: GwEntityData,
-        data: GwEntityData
+        self, xml: etree, entity: GwEntityData, data: GwEntityData
     ) -> None:
         """Helper-function for _get_measurement_data()."""
         for item in ACTIVE_ACTUATORS:
@@ -458,7 +455,9 @@ class SmileLegacyHelper(SmileCommon):
             active = result.text == "on"
 
         # Show an empty schedule as no schedule found
-        directives = search.find(f'./rule[@id="{rule_id}"]/directives/when/then') is not None
+        directives = (
+            search.find(f'./rule[@id="{rule_id}"]/directives/when/then') is not None
+        )
         if directives and name is not None:
             available = [name, OFF]
             selected = name if active else OFF
