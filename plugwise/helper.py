@@ -472,13 +472,12 @@ class SmileHelper(SmileCommon):
         mode_list: list[str] = []
         if (
             search := search_actuator_functionalities(appliance, actuator_type)
-        ) is not None:
-            if (modes := search.find("allowed_modes")) is not None:
-                for mode in modes:
-                    mode_list.append(mode.text)
-                    # Collect cooling_present state from the available regulation_modes
-                    if mode.text == "cooling":
-                        self._cooling_present = True
+        ) is not None and (modes := search.find("allowed_modes")) is not None:
+            for mode in modes:
+                mode_list.append(mode.text)
+                # Collect cooling_present state from the available regulation_modes
+                if mode.text == "cooling":
+                    self._cooling_present = True
 
         return mode_list
 
