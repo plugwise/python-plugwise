@@ -337,6 +337,9 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
+        ######################################################
+        #TODO: at this indent appl is not available/defined!!#
+        ######################################################
         # For P1 collect the connected SmartMeter info
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder(appl)
