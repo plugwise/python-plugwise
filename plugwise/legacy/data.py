@@ -2,6 +2,7 @@
 
 Plugwise Smile protocol data-collection helpers for legacy devices.
 """
+
 from __future__ import annotations
 
 # Dict as class

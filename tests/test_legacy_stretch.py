@@ -7,9 +7,7 @@ from .test_init import _LOGGER, TestPlugwise
 SMILE_TYPE = "stretch"
 
 
-class TestPlugwiseStretch(
-    TestPlugwise
-):  # pylint: disable=attribute-defined-outside-init
+class TestPlugwiseStretch(TestPlugwise):  # pylint: disable=attribute-defined-outside-init
     """Tests for Stretch."""
 
     @pytest.mark.asyncio
@@ -34,7 +32,8 @@ class TestPlugwiseStretch(
         assert self.entity_items == 83
 
         switch_change = await self.tinker_switch(
-            smile, "059e4d03c7a34d278add5c7a4a781d19",
+            smile,
+            "059e4d03c7a34d278add5c7a4a781d19",
         )
         assert not switch_change
 

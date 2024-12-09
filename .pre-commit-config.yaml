@@ -1,9 +1,3 @@
-ci:
-  # Defer autoupdate to quarterly (there is no 'off' button) to have renovate pick up first
-  autoupdate_schedule: quarterly
-  skip: [setup, setup_test, pylint, markdownlint, testing, biome]
-  submodules: true
-
 default_language_version:
   # force all unspecified python hooks to run python3
   python: python3.13
@@ -14,31 +8,39 @@ repos:
     rev: v0.8.2
     hooks:
       - id: ruff
+        name: "Ruff check"
         args:
           - --fix
+      - id: ruff-format
+        name: "Ruff format"
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: check-executables-have-shebangs
+        name: "Check scripts"
         stages: [manual]
       - id: no-commit-to-branch
+        name: "Check branch"
         args:
           - --branch=main
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.19.0
     hooks:
       - id: pyupgrade
-        args: [--py39-plus]
+        name: "Check Py upgrade"
+        args: [--py311-plus]
   #  Moved codespell configuration to setup.cfg as per 'all-files' issues not reading args
   - repo: https://github.com/codespell-project/codespell
     rev: v2.3.0
     hooks:
       - id: codespell
+        name: "Check spelling"
         exclude_types: [csv, json]
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.0
     hooks:
       - id: bandit
+        name: "Bandit checking"
         args:
           - --quiet
           - --format=custom
@@ -48,6 +50,7 @@ repos:
     rev: v1.35.1
     hooks:
       - id: yamllint
+        name: "YAML linting"
   - repo: https://github.com/cdce8p/python-typing-update
     rev: v0.7.0
     hooks:
@@ -55,6 +58,7 @@ repos:
       # to update python typing syntax.
       # Will require manual work, before submitting changes!
       - id: python-typing-update
+        name: "Python typing"
         stages: [manual]
         args:
           - --py39-plus
@@ -68,41 +72,41 @@ repos:
       # committing from a GUI tool that was not launched from an activated
       # shell.
       - id: setup
-        name: Setup python
+        name: "Setup"
         entry: /usr/bin/env bash -c 'test -d ./venv || scripts/setup.sh'
         language: script
       - id: setup_test
-        name: Setup testing
+        name: "Setup (extended for testing"
         entry: /usr/bin/env bash -c 'test -f ./tmp/biome || scripts/setup_test.sh pre-commit'
         language: script
       - id: userdata
-        name: userdata
+        name: "Validating userdata"
         entry: scripts/pre-commit.sh
         language: script
         types: [python]
         pass_filenames: false
       - id: mypy
-        name: mypy
+        name: "Running MyPy"
         entry: scripts/run-in-env.sh mypy
         language: script
         types: [python]
         require_serial: true
         files: ^plugwise/$
       - id: pylint
-        name: pylint
+        name: "PyLinting"
         entry: scripts/run-in-env.sh pylint -j 0
         language: script
         types: [python]
         files: ^plugwise/.+\.py$
       - id: testing
-        name: "Local Testing - Performing Tests"
+        name: "Performing Tests"
         # yamllint disable-line rule:line-length
-        entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" scripts/tests_and_coverage.sh test_and_coverage'
+        entry: /usr/bin/env bash -c 'exec env GITHUB_ACTIONS="1" NO_FIXTURES="1" scripts/tests_and_coverage.sh test_and_coverage'
         language: script
         pass_filenames: false
       - id: biome
-        name: "Local Linting - Biome"
-        entry: ./tmp/biome lint --staged --files-ignore-unknown=true --no-errors-on-unmatched
+        name: "Biome (prettier)"
+        entry: ./tmp/biome check fixtures/ plugwise/ tests/ --files-ignore-unknown=true --no-errors-on-unmatched --json-formatter-indent-width=2 --json-formatter-indent-style=space
         language: script
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.43.0

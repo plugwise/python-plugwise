@@ -1,4 +1,5 @@
 """Plugwise Smile constants."""
+
 from __future__ import annotations
 
 from collections import namedtuple
@@ -167,9 +168,7 @@ HEATER_CENTRAL_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "intended_boiler_state": DATA(
         "heating_state", NONE
     ),  # Legacy Anna: shows when heating is active, we don't show dhw_state, cannot be determined reliably
-    "flame_state": UOM(
-        NONE
-    ),  # Also present when there is a single gas-heater
+    "flame_state": UOM(NONE),  # Also present when there is a single gas-heater
     "intended_boiler_temperature": UOM(
         TEMP_CELSIUS
     ),  # Non-zero when heating, zero when dhw-heating
@@ -585,4 +584,3 @@ class PlugwiseData:
 
     devices: dict[str, GwEntityData]
     gateway: GatewayData
-

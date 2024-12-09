@@ -2,6 +2,7 @@
 
 Plugwise backend module for Home Assistant Core.
 """
+
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
@@ -94,7 +95,6 @@ class SmileAPI(SmileData):
         self.smile_version = smile_version
         SmileData.__init__(self)
 
-
     async def full_xml_update(self) -> None:
         """Perform a first fetch of all XML data, needed for initialization."""
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
@@ -132,14 +132,16 @@ class SmileAPI(SmileData):
             await self.full_xml_update()
             self.get_all_gateway_entities()
             # Set self._cooling_enabled -required for set_temperature,
-            #also, check for a failed data-retrieval
+            # also, check for a failed data-retrieval
             if "heater_id" in self.gw_data:
                 heat_cooler = self.gw_entities[self.gw_data["heater_id"]]
                 if (
                     "binary_sensors" in heat_cooler
                     and "cooling_enabled" in heat_cooler["binary_sensors"]
                 ):
-                    self._cooling_enabled = heat_cooler["binary_sensors"]["cooling_enabled"]
+                    self._cooling_enabled = heat_cooler["binary_sensors"][
+                        "cooling_enabled"
+                    ]
         except KeyError as err:
             raise DataMissingError("No Plugwise data received") from err
 
@@ -148,9 +150,9 @@ class SmileAPI(SmileData):
             gateway=self.gw_data,
         )
 
-########################################################################################################
-###  API Set and HA Service-related Functions                                                        ###
-########################################################################################################
+    ########################################################################################################
+    ###  API Set and HA Service-related Functions                                                        ###
+    ########################################################################################################
 
     async def delete_notification(self) -> None:
         """Delete the active Plugwise Notification."""
@@ -222,7 +224,9 @@ class SmileAPI(SmileData):
 
         await self.call_request(uri, method="put", data=data)
 
-    async def set_select(self, key: str, loc_id: str, option: str, state: str | None) -> None:
+    async def set_select(
+        self, key: str, loc_id: str, option: str, state: str | None
+    ) -> None:
         """Set a dhw/gateway/regulation mode or the thermostat schedule option."""
         match key:
             case "select_dhw_mode":
@@ -254,7 +258,12 @@ class SmileAPI(SmileData):
         valid = ""
         if mode == "away":
             time_1 = self._domain_objects.find("./gateway/time").text
-            away_time = dt.datetime.fromisoformat(time_1).astimezone(dt.UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+            away_time = (
+                dt.datetime.fromisoformat(time_1)
+                .astimezone(dt.UTC)
+                .isoformat(timespec="milliseconds")
+                .replace("+00:00", "Z")
+            )
             valid = (
                 f"<valid_from>{away_time}</valid_from><valid_to>{end_time}</valid_to>"
             )
@@ -448,8 +457,8 @@ class SmileAPI(SmileData):
 
         if setpoint is None:
             raise PlugwiseError(
-                    "Plugwise: failed setting temperature: no valid input provided"
-                )  # pragma: no cover"
+                "Plugwise: failed setting temperature: no valid input provided"
+            )  # pragma: no cover"
 
         temperature = str(setpoint)
         uri = self._thermostat_uri(loc_id)
