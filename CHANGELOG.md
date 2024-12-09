@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Code optimizing
+- Continuous improvements
 
 ## v1.6.3
 
