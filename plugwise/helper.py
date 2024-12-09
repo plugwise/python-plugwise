@@ -468,18 +468,21 @@ class SmileHelper(SmileCommon):
     def _get_appl_actuator_modes(
         self, appliance: etree, actuator_type: str
     ) -> list[str]:
-        """Helper-function for _appliance_info_finder()."""
+        """Get allowed modes for the given actuator type."""
         mode_list: list[str] = []
         if (
             search := search_actuator_functionalities(appliance, actuator_type)
         ) is not None and (modes := search.find("allowed_modes")) is not None:
             for mode in modes:
                 mode_list.append(mode.text)
-                # Collect cooling_present state from the available regulation_modes
-                if mode.text == "cooling":
-                    self._cooling_present = True
+                self._check_cooling_mode(mode.text)
 
         return mode_list
+
+    def _check_cooling_mode(self, mode: str) -> None:
+        """Check if cooling mode is present and update state."""
+        if mode == "cooling":
+            self._cooling_present = True
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
@@ -645,7 +648,10 @@ class SmileHelper(SmileCommon):
     def _get_actuator_functionalities(
         self, xml: etree, entity: GwEntityData, data: GwEntityData
     ) -> None:
-        """Helper-function for _get_measurement_data()."""
+        """Get and process the actuator_functionalities details for an entity.
+
+        Add the resulting dict(s) to the entity's data.
+        """
         for item in ACTIVE_ACTUATORS:
             # Skip max_dhw_temperature, not initially valid,
             # skip thermostat for all but zones with thermostats
