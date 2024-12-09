@@ -404,7 +404,9 @@ class SmileHelper(SmileCommon):
                 return self._appl_thermostat_info(appl, appliance)
             case "heater_central":
                 # Collect heater_central device info
-                self._appl_heater_central_info(appl, appliance, False)  # False means non-legacy device
+                self._appl_heater_central_info(
+                    appl, appliance, False
+                )  # False means non-legacy device
                 self._dhw_allowed_modes = self._get_appl_actuator_modes(
                     appliance, "domestic_hot_water_mode_control_functionality"
                 )
@@ -463,10 +465,14 @@ class SmileHelper(SmileCommon):
 
         return appl
 
-    def _get_appl_actuator_modes(self, appliance: etree, actuator_type: str) -> list[str]:
+    def _get_appl_actuator_modes(
+        self, appliance: etree, actuator_type: str
+    ) -> list[str]:
         """Helper-function for _appliance_info_finder()."""
         mode_list: list[str] = []
-        if (search := search_actuator_functionalities(appliance, actuator_type)) is not None:
+        if (
+            search := search_actuator_functionalities(appliance, actuator_type)
+        ) is not None:
             if (modes := search.find("allowed_modes")) is not None:
                 for mode in modes:
                     mode_list.append(mode.text)
@@ -696,7 +702,9 @@ class SmileHelper(SmileCommon):
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
-    def _get_actuator_mode(self, appliance: etree, entity_id: str, key: str) -> str | None:
+    def _get_actuator_mode(
+        self, appliance: etree, entity_id: str, key: str
+    ) -> str | None:
         """Helper-function for _get_regulation_mode and _get_gateway_mode.
 
         Collect the requested gateway mode.
@@ -716,7 +724,11 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway regulation_mode.
         """
-        if (mode := self._get_actuator_mode(appliance, entity_id, "regulation_mode_control_functionality")) is not None:
+        if (
+            mode := self._get_actuator_mode(
+                appliance, entity_id, "regulation_mode_control_functionality"
+            )
+        ) is not None:
             data["select_regulation_mode"] = mode
             self._count += 1
             self._cooling_enabled = mode == "cooling"
@@ -728,7 +740,11 @@ class SmileHelper(SmileCommon):
 
         Adam: collect the gateway mode.
         """
-        if (mode := self._get_actuator_mode(appliance, entity_id, "gateway_mode_control_functionality")) is not None:
+        if (
+            mode := self._get_actuator_mode(
+                appliance, entity_id, "gateway_mode_control_functionality"
+            )
+        ) is not None:
             data["select_gateway_mode"] = mode
             self._count += 1
 
