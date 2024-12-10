@@ -359,11 +359,11 @@ class SmileHelper(SmileCommon):
         for dev_class in ("heater_central", "gateway"):
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
-                    tmp_entity = entity
+                    priority_entity = entity
                     self.gw_entities.pop(entity_id)
-                    cleared_dict = self.gw_entities
-                    add_to_front = {entity_id: tmp_entity}
-                    self.gw_entities = {**add_to_front, **cleared_dict}
+                    other_entities = self.gw_entities
+                    priority_entities = {entity_id: priority_entity}
+                    self.gw_entities = {**priority_entities, **other_entities}
 
     def _all_locations(self) -> None:
         """Collect all locations."""
