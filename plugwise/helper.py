@@ -337,12 +337,9 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        ######################################################
-        #TODO: at this indent appl is not available/defined!!#
-        ######################################################
         # For P1 collect the connected SmartMeter info
         if self.smile_type == "power":
-            self._p1_smartmeter_info_finder(appl)
+            self._p1_smartmeter_info_finder()
             # P1: for gateway and smartmeter switch entity_id - part 2
             for item in self.gw_entities:
                 if item != self.gateway_id:
@@ -372,16 +369,19 @@ class SmileHelper(SmileCommon):
 
             self._loc_data[loc.loc_id] = {"name": loc.name}
 
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
+    def _p1_smartmeter_info_finder(self) -> None:
         """Collect P1 DSMR SmartMeter info."""
+        appl = Munch()
         loc_id = next(iter(self._loc_data.keys()))
-        location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        if (location := self._domain_objects.find(f'./location[@id="{loc_id}"]')) is None:
+            return None
+
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(location, locator)
         if not module_data["contents"]:
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return None  # pragma: no cover
-
+        appl.available = None
         appl.entity_id = self.gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]
