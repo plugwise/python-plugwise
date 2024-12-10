@@ -126,7 +126,9 @@ class SmileLegacyAPI(SmileLegacyData):
                 # Detect failed data-retrieval
                 _ = self.gw_entities[self.gateway_id]["location"]
             except KeyError as err:  # pragma: no cover
-                raise DataMissingError("No (full) Plugwise legacy data received") from err
+                raise DataMissingError(
+                    "No (full) Plugwise legacy data received"
+                ) from err
         # Otherwise perform an incremental update
         else:
             try:
