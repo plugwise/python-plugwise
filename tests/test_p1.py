@@ -2,7 +2,7 @@
 
 import pytest
 
-from .test_init import _LOGGER, TestPlugwise
+from .test_init import _LOGGER, TestPlugwise, pw_exceptions
 
 SMILE_TYPE = "p1"
 
@@ -40,6 +40,22 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         await self.device_test(
             smile, "2022-05-16 00:00:01", testdata_updated, initialize=False
         )
+
+        # Simulate receiving no xml-data after a requesting a reboot of the gateway
+        self.smile_setup = "reboot/p1v4_442_single"
+        try:
+            await self.device_test(smile, initialize=False)
+        except pw_exceptions.PlugwiseError as err:
+            _LOGGER.debug(
+                f"Receiving no data after a reboot is properly handled: {err}"
+            )
+
+        # Simulate receiving xml-data with <error>
+        self.smile_setup = "error/p1v4_442_single"
+        try:
+            await self.device_test(smile, initialize=False)
+        except pw_exceptions.ResponseError:
+            _LOGGER.debug("Receiving error-data from the Gateway")
 
         await smile.close_connection()
         await self.disconnect(server, client)

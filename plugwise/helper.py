@@ -337,9 +337,16 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        # For P1 collect the connected SmartMeter info
+        self._get_smartmeter_info()
+        self._sort_gw_entities()
+
+    def _get_smartmeter_info(self) -> None:
+        """For P1 collect the connected SmartMeter info from the Home/buildinglocation.
+
+        There is no appliance available for this device.
+        """
         if self.smile_type == "power":
-            self._p1_smartmeter_info_finder(appl)
+            self._p1_smartmeter_info_finder()
             # P1: for gateway and smartmeter switch entity_id - part 2
             for item in self.gw_entities:
                 if item != self.gateway_id:
@@ -347,15 +354,16 @@ class SmileHelper(SmileCommon):
                     # Leave for-loop to avoid a 2nd device_id switch
                     break
 
-        # Place the gateway and optional heater_central devices as 1st and 2nd
+    def _sort_gw_entities(self) -> None:
+        """Place the gateway and optional heater_central devices as 1st and 2nd."""
         for dev_class in ("heater_central", "gateway"):
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
-                    tmp_entity = entity
+                    priority_entity = entity
                     self.gw_entities.pop(entity_id)
-                    cleared_dict = self.gw_entities
-                    add_to_front = {entity_id: tmp_entity}
-                    self.gw_entities = {**add_to_front, **cleared_dict}
+                    other_entities = self.gw_entities
+                    priority_entities = {entity_id: priority_entity}
+                    self.gw_entities = {**priority_entities, **other_entities}
 
     def _all_locations(self) -> None:
         """Collect all locations."""
@@ -369,16 +377,21 @@ class SmileHelper(SmileCommon):
 
             self._loc_data[loc.loc_id] = {"name": loc.name}
 
-    def _p1_smartmeter_info_finder(self, appl: Munch) -> None:
+    def _p1_smartmeter_info_finder(self) -> None:
         """Collect P1 DSMR SmartMeter info."""
+        appl = Munch()
         loc_id = next(iter(self._loc_data.keys()))
-        location = self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        if (
+            location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        ) is None:
+            return None
+
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(location, locator)
         if not module_data["contents"]:
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return None  # pragma: no cover
-
+        appl.available = None
         appl.entity_id = self.gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]

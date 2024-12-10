@@ -25,7 +25,7 @@ from plugwise.constants import (
     PlugwiseData,
     ThermoLoc,
 )
-from plugwise.exceptions import ConnectionFailedError, PlugwiseError
+from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
 
 import aiohttp
@@ -120,18 +120,30 @@ class SmileLegacyAPI(SmileLegacyData):
             )
             self.gw_data: GatewayData = {}
             self.gw_entities: dict[str, GwEntityData] = {}
-            await self.full_xml_update()
-            self.get_all_gateway_entities()
+            try:
+                await self.full_xml_update()
+                self.get_all_gateway_entities()
+                # Detect failed data-retrieval
+                _ = self.gw_entities[self.gateway_id]["location"]
+            except KeyError as err:  # pragma: no cover
+                raise DataMissingError(
+                    "No (full) Plugwise legacy data received"
+                ) from err
         # Otherwise perform an incremental update
         else:
-            self._domain_objects = await self.request(DOMAIN_OBJECTS)
-            match self._target_smile:
-                case "smile_v2":
-                    self._modules = await self.request(MODULES)
-                case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
-                    self._appliances = await self.request(APPLIANCES)
+            try:
+                self._domain_objects = await self.request(DOMAIN_OBJECTS)
+                match self._target_smile:
+                    case "smile_v2":
+                        self._modules = await self.request(MODULES)
+                    case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
+                        self._appliances = await self.request(APPLIANCES)
 
-            self._update_gw_entities()
+                self._update_gw_entities()
+                # Detect failed data-retrieval
+                _ = self.gw_entities[self.gateway_id]["location"]
+            except KeyError as err:  # pragma: no cover
+                raise DataMissingError("No legacy Plugwise data received") from err
 
         self._previous_day_number = day_number
         return PlugwiseData(
