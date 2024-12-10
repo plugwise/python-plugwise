@@ -125,7 +125,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 self.get_all_gateway_entities()
                 # Detect failed data-retrieval
                 _ = self.gw_entities[self.gateway_id]["location"]
-            except KeyError as err:
+            except KeyError as err:  # pragma: no cover
                 raise DataMissingError("No (full) Plugwise legacy data received") from err
         # Otherwise perform an incremental update
         else:
@@ -140,7 +140,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 self._update_gw_entities()
                 # Detect failed data-retrieval
                 _ = self.gw_entities[self.gateway_id]["location"]
-            except KeyError as err:
+            except KeyError as err:  # pragma: no cover
                 raise DataMissingError("No legacy Plugwise data received") from err
 
         self._previous_day_number = day_number
