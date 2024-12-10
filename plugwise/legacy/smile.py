@@ -141,7 +141,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 # Detect failed data-retrieval
                 _ = self.gw_entities[self.gateway_id]["location"]
             except KeyError as err:
-                raise DataMissingError("No Plugwise data received") from err
+                raise DataMissingError("No legacy Plugwise data received") from err
 
         self._previous_day_number = day_number
         return PlugwiseData(

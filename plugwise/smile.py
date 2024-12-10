@@ -145,7 +145,7 @@ class SmileAPI(SmileData):
             else:  # cover failed data-retrieval for P1
                 _ = self.gw_entities[self.gateway_id]["location"]
         except KeyError as err:
-            raise DataMissingError("No Plugwise data received") from err
+            raise DataMissingError("No Plugwise actual data received") from err
 
         return PlugwiseData(
             devices=self.gw_entities,
