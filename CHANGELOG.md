@@ -2,7 +2,10 @@
 
 ## Ongoing
 
-- Continuous improvements
+- Continuous improvements (#662)
+- Rework tooling (#664)
+- Archive p1v4 userdata (#666)
+- Correct manual_fixtures script (#668)
 
 ## v1.6.3
 
