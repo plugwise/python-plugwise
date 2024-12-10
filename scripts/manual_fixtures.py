@@ -126,8 +126,8 @@ m_adam_cooling["devices"]["f871b8c4d63549319221e294e4f88074"]["sensors"][
 ] = 23.9
 m_adam_cooling["devices"]["f871b8c4d63549319221e294e4f88074"][
     "control_state"
-] = "auto"
-m_adam_cooling["devices"]["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "cool"
+] = "cooling"
+m_adam_cooling["devices"]["f871b8c4d63549319221e294e4f88074"]["climate_mode"] = "auto"
 
 
 # Go for da22

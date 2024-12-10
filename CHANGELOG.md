@@ -2,7 +2,10 @@
 
 ## Ongoing
 
-- Continuous improvements
+- Continuous improvements [#662](https://github.com/plugwise/python-plugwise/pull/662)
+- Rework tooling [#664](https://github.com/plugwise/python-plugwise/pull/664)
+- Archive p1v4 userdata [#666](https://github.com/plugwise/python-plugwise/pull/666)
+- Correct manual_fixtures script [#668](https://github.com/plugwise/python-plugwise/pull/668)
 
 ## v1.6.3
 
