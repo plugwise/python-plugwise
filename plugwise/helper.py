@@ -373,7 +373,9 @@ class SmileHelper(SmileCommon):
         """Collect P1 DSMR SmartMeter info."""
         appl = Munch()
         loc_id = next(iter(self._loc_data.keys()))
-        if (location := self._domain_objects.find(f'./location[@id="{loc_id}"]')) is None:
+        if (
+            location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
+        ) is None:
             return None
 
         locator = MODULE_LOCATOR

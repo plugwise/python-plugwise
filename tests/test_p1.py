@@ -46,7 +46,9 @@ class TestPlugwiseP1(TestPlugwise):  # pylint: disable=attribute-defined-outside
         try:
             await self.device_test(smile, initialize=False)
         except pw_exceptions.PlugwiseError as err:
-            _LOGGER.debug(f"Receiving no data after a reboot is properly handled: {err}")
+            _LOGGER.debug(
+                f"Receiving no data after a reboot is properly handled: {err}"
+            )
 
         # Simulate receiving xml-data with <error>
         self.smile_setup = "error/p1v4_442_single"
