@@ -337,8 +337,14 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        # For P1 collect the connected SmartMeter info from the Home/building
-        # location, there is no appliance available for this device.
+        self._get_smartmeter_info()
+        self._sort_gw_entities()
+
+    def _get_smartmeter_info(self) -> None:
+        """For P1 collect the connected SmartMeter info from the Home/buildinglocation.
+
+        There is no appliance available for this device.
+        """
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder()
             # P1: for gateway and smartmeter switch entity_id - part 2
@@ -348,7 +354,8 @@ class SmileHelper(SmileCommon):
                     # Leave for-loop to avoid a 2nd device_id switch
                     break
 
-        # Place the gateway and optional heater_central devices as 1st and 2nd
+    def _sort_gw_entities(self) -> None:
+        """Place the gateway and optional heater_central devices as 1st and 2nd."""
         for dev_class in ("heater_central", "gateway"):
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
