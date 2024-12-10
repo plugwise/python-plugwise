@@ -337,7 +337,8 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
-        # For P1 collect the connected SmartMeter info
+        # For P1 collect the connected SmartMeter info from the Home/building
+        # location, there is no appliance available for this device.
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder()
             # P1: for gateway and smartmeter switch entity_id - part 2
