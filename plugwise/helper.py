@@ -814,12 +814,16 @@ class SmileHelper(SmileCommon):
             data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
         if self.smile(ADAM):
+            # First count when not present, then create and init to False.
+            # When present init to False
             if "heating_state" not in data["binary_sensors"]:
                 self._count += 1
             data["binary_sensors"]["heating_state"] = False
+
             if "cooling_state" not in data["binary_sensors"]:
                 self._count += 1
             data["binary_sensors"]["cooling_state"] = False
+
             if self._cooling_enabled:
                 data["binary_sensors"]["cooling_state"] = data["c_heating_state"]
             else:
