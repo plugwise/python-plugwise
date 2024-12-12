@@ -312,8 +312,7 @@ class SmileData(SmileHelper):
     def _get_anna_control_state(self, data: GwEntityData) -> None:
         """Set the thermostat control_state based on the opentherm/onoff device state."""
         data["control_state"] = "idle"
-        for entity_id in self.gw_entities:
-            entity = self.gw_entities[entity_id]
+        for entity in self.gw_entities.values():
             if entity["dev_class"] != "heater_central":
                 continue
 
