@@ -283,7 +283,7 @@ class SmileHelper(SmileCommon):
 
         Also, collect the P1 smartmeter info from a location
         as this one is not available as an appliance.
-        Note: For P1 devices, the entity_id for the gateway and smartmeter are
+        Note: For P1, the entity_id for the gateway and smartmeter are
         switched to maintain backward compatibility with existing implementations.
         """
         self._count = 0
@@ -358,11 +358,11 @@ class SmileHelper(SmileCommon):
             for item in self.gw_entities:
                 if item != self.gateway_id:
                     self.gateway_id = item
-                    # Leave for-loop to avoid a 2nd device_id switch
+                    # Leave for-loop to avoid a 2nd entity_id switch
                     break
 
     def _sort_gw_entities(self) -> None:
-        """Place the gateway and optional heater_central devices as 1st and 2nd."""
+        """Place the gateway and optional heater_central entities as 1st and 2nd."""
         for dev_class in PRIORITY_DEVICE_CLASSES:
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
@@ -417,16 +417,16 @@ class SmileHelper(SmileCommon):
         """Collect info for all appliances found."""
         match appl.pwclass:
             case "gateway":
-                # Collect gateway device info
+                # Collect gateway entity info
                 return self._appl_gateway_info(appl, appliance)
             case _ as dev_class if dev_class in THERMOSTAT_CLASSES:
-                # Collect thermostat device info
+                # Collect thermostat entity info
                 return self._appl_thermostat_info(appl, appliance)
             case "heater_central":
-                # Collect heater_central device info
+                # Collect heater_central entity info
                 self._appl_heater_central_info(
                     appl, appliance, False
-                )  # False means non-legacy device
+                )  # False means non-legacy entity
                 self._dhw_allowed_modes = self._get_appl_actuator_modes(
                     appliance, "domestic_hot_water_mode_control_functionality"
                 )
@@ -837,7 +837,7 @@ class SmileHelper(SmileCommon):
                 data["binary_sensors"]["heating_state"] = data["c_heating_state"]
 
     def _update_anna_cooling(self, entity_id: str, data: GwEntityData) -> None:
-        """Update the Anna heater_central device for cooling.
+        """Update the Anna heater_central entity for cooling.
 
         Support added for Techneco Elga and Thercon Loria/Thermastage.
         """
