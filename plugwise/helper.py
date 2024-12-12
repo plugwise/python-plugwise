@@ -283,8 +283,6 @@ class SmileHelper(SmileCommon):
 
         Also, collect the P1 smartmeter info from a location
         as this one is not available as an appliance.
-        Note: For P1, the entity_id for the gateway and smartmeter are
-        switched to maintain backward compatibility with existing implementations.
         """
         self._count = 0
         self._all_locations()
@@ -337,55 +335,20 @@ class SmileHelper(SmileCommon):
             if not (appl := self._appliance_info_finder(appl, appliance)):
                 continue
 
-            # P1: for gateway and smartmeter switch entity_id - part 1
-            # This is done to avoid breakage in HA Core
-            if appl.pwclass == "gateway" and self.smile_type == "power":
-                appl.entity_id = appl.location
-
             self._create_gw_entities(appl)
 
-        # Collect P1 Smartmeter info
-        self._get_smartmeter_info()
+        if self.smile_type == "power":
+            self._get_p1_smartmeter_info()
 
         # Sort the gw_entities
         self._sort_gw_entities()
 
-    def _get_smartmeter_info(self) -> None:
-        """For P1 collect the connected SmartMeter info from the Home/building location."""
-        if self.smile_type == "power":
-            self._p1_smartmeter_info_finder()
-            # P1: for gateway and smartmeter switch entity_id - part 2
-            for item in self.gw_entities:
-                if item != self.gateway_id:
-                    self.gateway_id = item
-                    # Leave for-loop to avoid a 2nd entity_id switch
-                    break
+    def _get_p1_smartmeter_info(self) -> None:
+        """For P1 collect the connected SmartMeter info from the Home/building location.
 
-    def _sort_gw_entities(self) -> None:
-        """Place the gateway and optional heater_central entities as 1st and 2nd."""
-        for dev_class in PRIORITY_DEVICE_CLASSES:
-            for entity_id, entity in dict(self.gw_entities).items():
-                if entity["dev_class"] == dev_class:
-                    priority_entity = entity
-                    self.gw_entities.pop(entity_id)
-                    other_entities = self.gw_entities
-                    priority_entities = {entity_id: priority_entity}
-                    self.gw_entities = {**priority_entities, **other_entities}
-
-    def _all_locations(self) -> None:
-        """Collect all locations."""
-        loc = Munch()
-        locations = self._domain_objects.findall("./location")
-        for location in locations:
-            loc.name = location.find("name").text
-            loc.loc_id = location.attrib["id"]
-            if loc.name == "Home":
-                self._home_location = loc.loc_id
-
-            self._loc_data[loc.loc_id] = {"name": loc.name}
-
-    def _p1_smartmeter_info_finder(self) -> None:
-        """Collect P1 DSMR SmartMeter info."""
+        Note: For P1, the entity_id for the gateway and smartmeter are
+        switched to maintain backward compatibility with existing implementations.
+        """
         appl = Munch()
         loc_id = next(iter(self._loc_data.keys()))
         if (
@@ -411,7 +374,34 @@ class SmileHelper(SmileCommon):
         appl.vendor_name = module_data["vendor_name"]
         appl.zigbee_mac = None
 
+        # Replace the entity_id of the gateway by the smartmeter location_id
+        self.gw_entities[loc_id] = self.gw_entities.pop(self.gateway_id)
+        self.gateway_id = loc_id
+
         self._create_gw_entities(appl)
+
+    def _sort_gw_entities(self) -> None:
+        """Place the gateway and optional heater_central entities as 1st and 2nd."""
+        for dev_class in PRIORITY_DEVICE_CLASSES:
+            for entity_id, entity in dict(self.gw_entities).items():
+                if entity["dev_class"] == dev_class:
+                    priority_entity = entity
+                    self.gw_entities.pop(entity_id)
+                    other_entities = self.gw_entities
+                    priority_entities = {entity_id: priority_entity}
+                    self.gw_entities = {**priority_entities, **other_entities}
+
+    def _all_locations(self) -> None:
+        """Collect all locations."""
+        loc = Munch()
+        locations = self._domain_objects.findall("./location")
+        for location in locations:
+            loc.name = location.find("name").text
+            loc.loc_id = location.attrib["id"]
+            if loc.name == "Home":
+                self._home_location = loc.loc_id
+
+            self._loc_data[loc.loc_id] = {"name": loc.name}
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect info for all appliances found."""
