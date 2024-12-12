@@ -313,12 +313,14 @@ class SmileData(SmileHelper):
         """Set the thermostat control_state based on the opentherm/onoff device state."""
         data["control_state"] = "idle"
         for entity_id in self.gw_entities:
-            if self.gw_entities[entity_id]["dev_class"] != "heater_central":
+            entity = self.gw_entities[entity_id]
+            if entity["dev_class"] != "heater_central":
                 continue
 
-            if self.gw_entities[entity_id]["binary_sensors"]["heating_state"]:
+            binary_sensors = entity["binary_sensors"]
+            if binary_sensors["heating_state"]:
                 data["control_state"] = "heating"
-            if self.gw_entities[entity_id]["binary_sensors"].get("cooling_state"):
+            if binary_sensors.get("cooling_state"):
                 data["control_state"] = "cooling"
 
     def _get_schedule_states_with_off(
