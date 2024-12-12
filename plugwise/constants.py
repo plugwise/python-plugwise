@@ -85,6 +85,7 @@ MIN_SETPOINT: Final[float] = 4.0
 MODULE_LOCATOR: Final = "./logs/point_log/*[@id]"
 NONE: Final = "None"
 OFF: Final = "off"
+PRIORITY_DEVICE_CLASSES = ("heater_central", "gateway")
 
 # XML data paths
 APPLIANCES: Final = "/core/appliances"
