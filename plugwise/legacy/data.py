@@ -104,4 +104,3 @@ class SmileLegacyData(SmileLegacyHelper):
             binary_sensors = entity["binary_sensors"]
             if binary_sensors["heating_state"]:
                 data["control_state"] = "heating"
-
