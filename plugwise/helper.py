@@ -279,7 +279,13 @@ class SmileHelper(SmileCommon):
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
-        """Collect all appliances with relevant info."""
+        """Collect all appliances with relevant info.
+
+        Also, collect the P1 smartmeter info from a location
+        as this one is not available as an appliance.
+        Note: For P1 devices, the entity_id for the gateway and smartmeter are
+        switched to maintain backward compatibility with existing implementations.
+        """
         self._count = 0
         self._all_locations()
 
@@ -338,16 +344,14 @@ class SmileHelper(SmileCommon):
 
             self._create_gw_entities(appl)
 
+        # Collect P1 Smartmeter info
         self._get_smartmeter_info()
+
+        # Sort the gw_entities
         self._sort_gw_entities()
 
     def _get_smartmeter_info(self) -> None:
-        """For P1 collect the connected SmartMeter info from the Home/buildinglocation.
-
-        There is no appliance available for this device.
-        Note: For P1 devices, we switch the gateway_id to the smartmeter device_id
-        to maintain backward compatibility with existing implementations.
-        """
+        """For P1 collect the connected SmartMeter info from the Home/building location."""
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder()
             # P1: for gateway and smartmeter switch entity_id - part 2
