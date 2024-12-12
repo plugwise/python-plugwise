@@ -64,6 +64,7 @@ class SmileLegacyData(SmileLegacyHelper):
 
         # Thermostat data (presets, temperatures etc)
         self._climate_data(entity, data)
+        self._get_anna_control_state(data)
 
         return data
 
@@ -92,3 +93,15 @@ class SmileLegacyData(SmileLegacyHelper):
         self._count += 1
         if sel_schedule in (NONE, OFF):
             data["climate_mode"] = "heat"
+
+    def _get_anna_control_state(self, data: GwEntityData) -> None:
+        """Set the thermostat control_state based on the opentherm/onoff device state."""
+        data["control_state"] = "idle"
+        for entity in self.gw_entities.values():
+            if entity["dev_class"] != "heater_central":
+                continue
+
+            binary_sensors = entity["binary_sensors"]
+            if binary_sensors["heating_state"]:
+                data["control_state"] = "heating"
+
