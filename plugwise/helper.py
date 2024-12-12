@@ -29,6 +29,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     P1_MEASUREMENTS,
+    PRIORITY_DEVICE_CLASSES,
     TEMP_CELSIUS,
     THERMOSTAT_CLASSES,
     TOGGLES,
@@ -344,6 +345,8 @@ class SmileHelper(SmileCommon):
         """For P1 collect the connected SmartMeter info from the Home/buildinglocation.
 
         There is no appliance available for this device.
+        Note: For P1 devices, we switch the gateway_id to the smartmeter device_id
+        to maintain backward compatibility with existing implementations.
         """
         if self.smile_type == "power":
             self._p1_smartmeter_info_finder()
@@ -356,7 +359,7 @@ class SmileHelper(SmileCommon):
 
     def _sort_gw_entities(self) -> None:
         """Place the gateway and optional heater_central devices as 1st and 2nd."""
-        for dev_class in ("heater_central", "gateway"):
+        for dev_class in PRIORITY_DEVICE_CLASSES:
             for entity_id, entity in dict(self.gw_entities).items():
                 if entity["dev_class"] == dev_class:
                     priority_entity = entity
