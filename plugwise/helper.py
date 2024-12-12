@@ -354,13 +354,13 @@ class SmileHelper(SmileCommon):
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
         ) is None:
-            return None
+            return
 
         locator = MODULE_LOCATOR
         module_data = self._get_module_data(location, locator)
         if not module_data["contents"]:
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
-            return None  # pragma: no cover
+            return  # pragma: no cover
         appl.available = None
         appl.entity_id = self.gateway_id
         appl.firmware = module_data["firmware_version"]
