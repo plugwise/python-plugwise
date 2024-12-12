@@ -211,6 +211,7 @@ class SmileData(SmileHelper):
         # Thermostat data for Anna (presets, temperatures etc)
         if self.smile(ANNA) and entity["dev_class"] == "thermostat":
             self._climate_data(entity_id, entity, data)
+            self._get_anna_control_state(data)
 
         return data
 
@@ -307,6 +308,18 @@ class SmileData(SmileHelper):
         return (
             "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
         )
+
+    def _get_anna_control_state(self, data: GwEntityData) -> None:
+        """Set the thermostat control_state based on the opentherm/onoff device state."""
+        data["control_state"] = "idle"
+        for entity_id in self.gw_entities:
+            if self.gw_entities[entity_id]["dev_class"] != "heater_central":
+                continue
+
+            if self.gw_entities[entity_id]["binary_sensors"]["heating_state"]:
+                data["control_state"] = "heating"
+            if self.gw_entities[entity_id]["binary_sensors"].get("cooling_state"):
+                data["control_state"] = "cooling"
 
     def _get_schedule_states_with_off(
         self, location: str, schedules: list[str], selected: str, data: GwEntityData
