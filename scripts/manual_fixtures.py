@@ -51,6 +51,7 @@ adam_jip = base.copy()
 
 # Change mode to off for "06aecb3d00354375924f50c47af36bd2"
 adam_jip["devices"]["06aecb3d00354375924f50c47af36bd2"]["climate_mode"] = "off"
+adam_jip["devices"]["06aecb3d00354375924f50c47af36bd2"].pop("control_state")
 
 json_writer("m_adam_jip", adam_jip)
 
