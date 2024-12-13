@@ -352,7 +352,7 @@ m_anna_heatpump_idle["devices"]["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
 
 
 # Go for 3cb7
-m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["control_state"] = "idle"
+m_anna_heatpump_idle["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["control_state"] = "idle"
 m_anna_heatpump_idle["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
     "temperature"
 ] = 23.0
