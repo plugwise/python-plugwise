@@ -49,8 +49,10 @@ base = json.load(io)
 
 adam_jip = base.copy()
 
-# Change mode to off for "06aecb3d00354375924f50c47af36bd2"
+# Change mode to off for "06aecb3d00354375924f50c47af36bd2" for testcoverage in HA Core
 adam_jip["devices"]["06aecb3d00354375924f50c47af36bd2"]["climate_mode"] = "off"
+# Remove control_state for testcoverage of missing control_state in HA Core
+adam_jip["devices"]["06aecb3d00354375924f50c47af36bd2"].pop("control_state")
 
 json_writer("m_adam_jip", adam_jip)
 
@@ -298,6 +300,7 @@ m_anna_heatpump_cooling["devices"]["015ae9ea3f964e668e490fa39da3870b"]["sensors"
 ] = 28.2
 
 # Go for 3cb7
+m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["control_state"] = "cooling"
 m_anna_heatpump_cooling["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["thermostat"][
     "setpoint_low"
 ] = 20.5
@@ -350,7 +353,7 @@ m_anna_heatpump_idle["devices"]["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"][
 
 
 # Go for 3cb7
-
+m_anna_heatpump_idle["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["control_state"] = "idle"
 m_anna_heatpump_idle["devices"]["3cb70739631c4d17a86b8b12e8a5161b"]["sensors"][
     "temperature"
 ] = 23.0

@@ -1,12 +1,13 @@
 # Changelog
 
-## Ongoing
+## v1.6.4
 
 - Continuous improvements [#662](https://github.com/plugwise/python-plugwise/pull/662)
 - Rework tooling [#664](https://github.com/plugwise/python-plugwise/pull/664)
 - Archive p1v4 userdata [#666](https://github.com/plugwise/python-plugwise/pull/666)
 - Correct manual_fixtures script [#668](https://github.com/plugwise/python-plugwise/pull/668)
 - Improve P1 fault-handling, continuous improvements [#670](https://github.com/plugwise/python-plugwise/pull/670)
+- Add control_state to Anna output [#671](https://github.com/plugwise/python-plugwise/pull/671)
 
 ## v1.6.3
 
