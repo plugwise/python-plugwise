@@ -49,8 +49,9 @@ base = json.load(io)
 
 adam_jip = base.copy()
 
-# Change mode to off for "06aecb3d00354375924f50c47af36bd2"
+# Change mode to off for "06aecb3d00354375924f50c47af36bd2" for testcoverage in HA Core
 adam_jip["devices"]["06aecb3d00354375924f50c47af36bd2"]["climate_mode"] = "off"
+# Remove control_state for testcoverage of missing control_state in HA Core
 adam_jip["devices"]["06aecb3d00354375924f50c47af36bd2"].pop("control_state")
 
 json_writer("m_adam_jip", adam_jip)
