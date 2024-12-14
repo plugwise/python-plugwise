@@ -167,13 +167,14 @@ class SmileData(SmileHelper):
         """
         zone = self._zones[loc_id]
         data = self._get_zone_data(loc_id)
-        if ctrl_state := self._control_state(data, loc_id):
-            if str(ctrl_state) in ("cooling", "heating", "preheating"):
-                data["control_state"] = str(ctrl_state)
-                self._count += 1
-            if str(ctrl_state) == "off":
-                data["control_state"] = "idle"
-                self._count += 1
+        data["control_state"] = "idle"
+        self._count += 1
+        if (ctrl_state := self._control_state(data, loc_id)) and str(ctrl_state) in (
+            "cooling",
+            "heating",
+            "preheating",
+        ):
+            data["control_state"] = str(ctrl_state)
 
         data["sensors"].pop("setpoint")  # remove, only used in _control_state()
         self._count -= 1
