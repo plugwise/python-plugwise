@@ -119,7 +119,7 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
 
 def common_match_cases(
     measurement: str,
-    attrs: DATA | UOM,
+    attr: DATA | UOM,
     location: etree,
     data: GwEntityData,
 ) -> None:
@@ -132,7 +132,7 @@ def common_match_cases(
         case _ as measurement if measurement in SENSORS:
             s_key = cast(SensorType, measurement)
             s_value = format_measure(
-                location.text, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                location.text, getattr(attr, ATTR_UNIT_OF_MEASUREMENT)
             )
             data["sensors"][s_key] = s_value
         case _ as measurement if measurement in SWITCHES:
@@ -189,16 +189,16 @@ def get_vendor_name(module: etree, model_data: ModuleData) -> ModuleData:
 
 
 def power_data_local_format(
-    attrs: dict[str, str], key_string: str, val: str
+    attr: dict[str, str], key_string: str, val: str
 ) -> float | int:
     """Format power data."""
     # Special formatting of P1_MEASUREMENT POWER_WATT values, do not move to util-format_measure() function!
     if all(item in key_string for item in ("electricity", "cumulative")):
         return format_measure(val, ENERGY_KILO_WATT_HOUR)
-    if (attrs_uom := getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)) == POWER_WATT:
+    if (attr_uom := getattr(atts, ATTR_UNIT_OF_MEASUREMENT)) == POWER_WATT:
         return int(round(float(val)))
 
-    return format_measure(val, attrs_uom)
+    return format_measure(val, attr_uom)
 
 
 def remove_empty_platform_dicts(data: GwEntityData) -> None:
