@@ -791,13 +791,17 @@ class SmileHelper(SmileCommon):
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
             value = found.text
-            if isinstance(value, str):
-                return value
-
-            if measurement == "humidity":
-                value = float(value/100)
-
-            return format_measure(value, attr)
+            match measurement:
+                case "humidity": 
+                    return format_measure(float(value)/100, attr)
+                case "outdoor_temperature":
+                    return format_measure(float(value), attr)
+                case "solar_irradiance":
+                    return format_measure(float(value), attr)
+                case "weather_description":
+                    return value
+                case "wind_vector":
+                    return value
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().
