@@ -786,19 +786,15 @@ class SmileHelper(SmileCommon):
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
-        val: float | int | str | None = None
+        value: float | int | str | None = None
         search = self._domain_objects
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
-            LOGGER.debug("HOI found!")
             value = found.text
-            LOGGER.debug("HOI found_value: %s", value)
             if isinstance(value, str):
-                return val
+                return value
 
             return format_measure(value, NONE)
-
-        return None
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().
