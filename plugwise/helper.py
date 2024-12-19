@@ -772,7 +772,7 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and entity_id == self.gateway_id:
             for measurement, attr in measurements.items():
                 LOGGER.debug("HOI meas: %s", measurement)
-                LOGGER.debug("HOI loc: %s", self._home_location)
+                LOGGER.debug("HOI attr: %s", attr)
                 value = self._object_value(self._home_location, measurement, attr)
                 LOGGER.debug("HOI value: %s", value)
                 if value is not None:
