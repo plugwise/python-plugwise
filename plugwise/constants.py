@@ -145,8 +145,8 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "relay": UOM(NONE),
     #####################
     # Gateway weather related
-    "humidity": UOM(NONE),  # also present for a Jip
-    "outdoor_temperature": UOM(NONE),
+    "humidity": UOM(PERCENTAGE),  # also present for a Jip
+    "outdoor_temperature": UOM(TEMP_CELSIUS),
     "solar_irradiance": UOM(NONE),
     "weather_description": UOM(NONE),
     "wind_vector": UOM(NONE),
