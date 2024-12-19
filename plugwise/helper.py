@@ -794,6 +794,9 @@ class SmileHelper(SmileCommon):
             if isinstance(value, str):
                 return value
 
+            if measurement == "humidity":
+                value = float(value/100)
+
             return format_measure(value, attr)
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
