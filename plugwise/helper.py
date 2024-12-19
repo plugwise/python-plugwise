@@ -792,8 +792,10 @@ class SmileHelper(SmileCommon):
         if (found := search.find(locator)) is not None:
             value = found.text
             match measurement:
-                case "humidity": 
-                    return format_measure(float(value)/100, attr)
+                case "humidity":
+                    value = float(value)/100
+                    LOGGER.debug("HOI hum_val: %s", value)
+                    return format_measure(value, attr)
                 case "outdoor_temperature":
                     return format_measure(float(value), attr)
                 case "solar_irradiance":
