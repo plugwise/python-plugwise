@@ -126,7 +126,6 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
 DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
-    "humidity": UOM(NONE),  # Specific for a Jip
     "illuminance": UOM(UNIT_LUMEN),  # Specific for an Anna
     "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
     "thermostat": DATA("setpoint", TEMP_CELSIUS),  # HA Core thermostat setpoint
@@ -144,6 +143,13 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "relay": UOM(NONE),
+    #####################
+    # Gateway weather related
+    "humidity": UOM(NONE),  # also present for a Jip
+    "outdoor_temperature": UOM(NONE),
+    "solar_irradiance": UOM(NONE),
+    "weather_description": UOM(NONE),
+    "wind_vector": UOM(NONE),
 }
 
 # Heater Central related measurements
