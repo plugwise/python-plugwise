@@ -768,16 +768,13 @@ class SmileHelper(SmileCommon):
 
         Available under the Home location.
         """
-        measurements = HEATER_CENTRAL_MEASUREMENTS
-        if self._is_thermostat:
-            if entity_id != self.gateway_id:
-                return
-
-            location_id = self.gw_entities[entity_id]["location"]
-            if (
-                location := self._domain_objects.find(f'./location[@id="{location_id}"]')
-            ) is not None:
-                self._appliance_measurements(location, data, measurements)
+        measurements = DEVICE_MEASUREMENTS
+        if self._is_thermostat and entity_id == self.gateway_id:
+            for measurement, attrs in measurements.items():
+                value = self._object_value(self._home_location, measurement)
+                if value is not None:
+                    data[measurement] = value
+                    self._count += 1
         
         return
 
