@@ -771,14 +771,17 @@ class SmileHelper(SmileCommon):
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.gateway_id:
             for measurement, attrs in measurements.items():
+                LOGGER.debug("HOI meas: %s", measurement)
+                LOGGER.debug("HOI loc: %s", self._home_location)
                 value = self._object_value(self._home_location, measurement)
+                LOGGER.debug("HOI value: %s", value)
                 if value is not None:
                     data[measurement] = value
                     self._count += 1
         
         return
 
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
+    def _object_value(self, obj_id: str, measurement: str) -> float | int | str| None:
         """Helper-function for smile.py: _get_entity_data().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
@@ -787,7 +790,9 @@ class SmileHelper(SmileCommon):
         search = self._domain_objects
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
+            LOGGER.debug("HOI found!")
             value = found.text
+            LOGGER.debug("HOI found_value: %s", value)
             if isinstance(value, str):
                 return val
 
