@@ -586,7 +586,7 @@ class SmileHelper(SmileCommon):
 
         search = self._domain_objects
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
-        for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
+        for loc.measurement, loc.attr in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 self._collect_power_values(data, loc, t_string)
 
@@ -600,13 +600,13 @@ class SmileHelper(SmileCommon):
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
-        for measurement, attrs in measurements.items():
+        for measurement, attr in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if skip_obsolete_measurements(appliance, measurement):
                     continue
 
-                if new_name := getattr(attrs, ATTR_NAME, None):
+                if new_name := getattr(attr, ATTR_NAME, None):
                     measurement = new_name
 
                 match measurement:
@@ -615,7 +615,7 @@ class SmileHelper(SmileCommon):
                     case "select_dhw_mode":
                         data["select_dhw_mode"] = appl_p_loc.text
 
-                common_match_cases(measurement, attrs, appl_p_loc, data)
+                common_match_cases(measurement, attr, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
@@ -770,10 +770,10 @@ class SmileHelper(SmileCommon):
         """
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.gateway_id:
-            for measurement, attrs in measurements.items():
+            for measurement, attr in measurements.items():
                 LOGGER.debug("HOI meas: %s", measurement)
                 LOGGER.debug("HOI loc: %s", self._home_location)
-                value = self._object_value(self._home_location, measurement)
+                value = self._object_value(self._home_location, measurement, attr)
                 LOGGER.debug("HOI value: %s", value)
                 if value is not None:
                     data[measurement] = value
@@ -781,7 +781,7 @@ class SmileHelper(SmileCommon):
         
         return
 
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | str| None:
+    def _object_value(self, obj_id: str, measurement: str, attr: str) -> float | int | str| None:
         """Helper-function for smile.py: _get_entity_data().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
@@ -794,7 +794,7 @@ class SmileHelper(SmileCommon):
             if isinstance(value, str):
                 return value
 
-            return format_measure(value, NONE)
+            return format_measure(value, attr)
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().
