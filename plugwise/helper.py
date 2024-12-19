@@ -16,6 +16,7 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     ATTR_NAME,
+    ATTR_UNIT_OF_MEASUREMENT,
     DATA,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
@@ -772,14 +773,17 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and entity_id == self.gateway_id:
             for measurement, attr in measurements.items():
                 LOGGER.debug("HOI meas: %s", measurement)
-                LOGGER.debug("HOI attr: %s", attr)
                 value = self._object_value(self._home_location, measurement, attr)
                 LOGGER.debug("HOI value: %s", value)
                 if value is not None:
-                    data[measurement] = value
-                    self._count += 1
-        
-        return
+                    if measurement == "wind_vector":
+                        value = value.split(",")
+                        data["wind_speed"] =  format_measure(value[0].strip("("), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
+                        data["wind_direction"] = format_measure(value[1].strip(")"), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
+                        self._count += 2
+                    else:
+                        data[measurement] = value
+                        self._count += 1
 
     def _object_value(self, obj_id: str, measurement: str, attr: str) -> float | int | str| None:
         """Helper-function for smile.py: _get_entity_data().
@@ -795,11 +799,13 @@ class SmileHelper(SmileCommon):
                 case "humidity":
                     value = float(value)/100
                     LOGGER.debug("HOI hum_val: %s", value)
-                    return format_measure(value, attr)
+                    value = format_measure(str(value), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
+                    LOGGER.debug("HOI hum_val_fm: %s", value)
+                    return value
                 case "outdoor_temperature":
-                    return format_measure(float(value), attr)
+                    return format_measure(value, getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
                 case "solar_irradiance":
-                    return format_measure(float(value), attr)
+                    return format_measure(value, getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
                 case "weather_description":
                     return value
                 case "wind_vector":
