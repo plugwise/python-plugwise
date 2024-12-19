@@ -559,7 +559,7 @@ class SmileHelper(SmileCommon):
 
         self._get_regulation_mode(appliance, entity_id, data)
         self._get_gateway_mode(appliance, entity_id, data)
-        self._get_gateway_outdoor_temp(entity_id, data)
+        self._get_gateway_measurements(entity_id, data)
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
@@ -763,18 +763,20 @@ class SmileHelper(SmileCommon):
             data["select_gateway_mode"] = mode
             self._count += 1
 
-    def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
-        """Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS.
+    def _get_gateway_measurements(self, entity_id: str, data: GwEntityData) -> None:
+        """Adam & Anna: the Gateway weather-data is present in DOMAIN_OBJECTS and LOCATIONS.
 
         Available under the Home location.
         """
-        if self._is_thermostat and entity_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
-                self._count += 1
+        measurements = HEATER_CENTRAL_MEASUREMENTS
+        if entity_id != self.gateway_id:
+            return
+
+        location_id = self.gw_entities[entity_id]["location"]
+        if (
+            location := self._domain_objects.find(f'./location[@id="{location_id}"]')
+        ) is not None:
+            self._appliance_measurements(location, data, measurements)
 
     def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_entity_data().
