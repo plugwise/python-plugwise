@@ -203,12 +203,14 @@ def power_data_local_format(
 
 def remove_empty_platform_dicts(data: GwEntityData) -> None:
     """Helper-function for removing any empty platform dicts."""
-    if not data["binary_sensors"]:
+    if "binary_sensors" in data and not data["binary_sensors"]:
         data.pop("binary_sensors")
-    if not data["sensors"]:
+    if "sensors" in data and not data["sensors"]:
         data.pop("sensors")
-    if not data["switches"]:
+    if "switches" in data and not data["switches"]:
         data.pop("switches")
+    if "weather" in data and not data["weather"]:
+        data.pop("weather")
 
 
 def return_valid(value: etree | None, default: etree) -> etree:

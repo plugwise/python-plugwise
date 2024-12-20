@@ -521,8 +521,7 @@ class ThermoLoc(TypedDict, total=False):
     secondary: list[str]
 
 
-@dataclass
-class WeatherData:
+class WeatherData(TypedDict, total=False):
     """Smile Weather data class."""
 
     humidity: int

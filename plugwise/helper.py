@@ -44,6 +44,7 @@ from plugwise.constants import (
     SensorType,
     ThermoLoc,
     ToggleNameType,
+    WeatherType,
 )
 from plugwise.exceptions import (
     ConnectionFailedError,
@@ -527,7 +528,12 @@ class SmileHelper(SmileCommon):
 
         Collect the appliance-data based on entity_id.
         """
-        data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
+        data: GwEntityData = {
+            "binary_sensors": {},
+            "sensors": {},
+            "switches": {},
+            "weather": {},
+        }
         # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
@@ -771,29 +777,33 @@ class SmileHelper(SmileCommon):
         """
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.gateway_id:
-            data["weather"] =  {}
             for measurement, attrs in measurements.items():
                 value = self._object_value(self._home_location, measurement, attrs)
                 if value is not None:
                     if measurement == "wind_vector":
-                        value = value.split(",")
+                        value_list: list[str] = str(value).split(",")
                         data["weather"]["wind_speed"] = format_measure(
-                            value[0].strip("("), getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                            value_list[0].strip("("),
+                            getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
                         )
                         data["weather"]["wind_bearing"] = format_measure(
-                            value[1].strip(")"), getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                            value_list[1].strip(")"),
+                            getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
                         )
                         self._count += 2
                     else:
-                        data["weather"][measurement] = value
+                        key = cast(WeatherType, measurement)
+                        data["weather"][key] = value
                         self._count += 1
 
-    def _object_value(self, obj_id: str, measurement: str, attrs: str) -> float | int | str| None:
+    def _object_value(
+        self, obj_id: str, measurement: str, attrs: DATA | UOM
+    ) -> float | int | str | None:
         """Helper-function for smile.py: _get_entity_data().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
-        value: float | int | str | None = None
+        value: str = ""
         search = self._domain_objects
         locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
         if (found := search.find(locator)) is not None:
@@ -802,13 +812,19 @@ class SmileHelper(SmileCommon):
                 case "humidity":
                     return int(float(value))
                 case "outdoor_temperature":
-                    return format_measure(value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))
+                    return format_measure(
+                        value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    )
                 case "solar_irradiance":
-                    return format_measure(value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))
+                    return format_measure(
+                        value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
+                    )
                 case "weather_description":
                     return value
                 case "wind_vector":
                     return value
+
+        return None
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().
