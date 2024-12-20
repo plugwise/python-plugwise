@@ -169,7 +169,7 @@ class SmileCommon:
         # --------------------------------------#
         loc.net_string = f"net_electricity_{log_found}"
         val = loc.logs.find(loc.locator).text
-        loc.f_val = power_data_local_format(loc.attr, loc.key_string, val)
+        loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
 
         return loc
 

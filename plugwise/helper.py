@@ -587,7 +587,7 @@ class SmileHelper(SmileCommon):
 
         search = self._domain_objects
         loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
-        for loc.measurement, loc.attr in P1_MEASUREMENTS.items():
+        for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 self._collect_power_values(data, loc, t_string)
 
@@ -601,13 +601,13 @@ class SmileHelper(SmileCommon):
         measurements: dict[str, DATA | UOM],
     ) -> None:
         """Helper-function for _get_measurement_data() - collect appliance measurement data."""
-        for measurement, attr in measurements.items():
+        for measurement, attrs in measurements.items():
             p_locator = f'.//logs/point_log[type="{measurement}"]/period/measurement'
             if (appl_p_loc := appliance.find(p_locator)) is not None:
                 if skip_obsolete_measurements(appliance, measurement):
                     continue
 
-                if new_name := getattr(attr, ATTR_NAME, None):
+                if new_name := getattr(attrs, ATTR_NAME, None):
                     measurement = new_name
 
                 match measurement:
@@ -616,7 +616,7 @@ class SmileHelper(SmileCommon):
                     case "select_dhw_mode":
                         data["select_dhw_mode"] = appl_p_loc.text
 
-                common_match_cases(measurement, attr, appl_p_loc, data)
+                common_match_cases(measurement, attrs, appl_p_loc, data)
 
             i_locator = f'.//logs/interval_log[type="{measurement}"]/period/measurement'
             if (appl_i_loc := appliance.find(i_locator)) is not None:
@@ -772,25 +772,25 @@ class SmileHelper(SmileCommon):
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.gateway_id:
             data["weather"] =  {}
-            for measurement, attr in measurements.items():
+            for measurement, attrs in measurements.items():
                 LOGGER.debug("HOI meas: %s", measurement)
-                value = self._object_value(self._home_location, measurement, attr)
+                value = self._object_value(self._home_location, measurement, attrs)
                 LOGGER.debug("HOI value: %s", value)
                 if value is not None:
                     if measurement == "wind_vector":
                         value = value.split(",")
                         data["weather"]["wind_speed"] = format_measure(
-                            value[0].strip("("), getattr(attr, ATTR_UNIT_OF_MEASUREMENT)
+                            value[0].strip("("), getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                         )
                         data["weather"]["wind_bearing"] = format_measure(
-                            value[1].strip(")"), getattr(attr, ATTR_UNIT_OF_MEASUREMENT)
+                            value[1].strip(")"), getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                         )
                         self._count += 2
                     else:
                         data["weather"][measurement] = value
                         self._count += 1
 
-    def _object_value(self, obj_id: str, measurement: str, attr: str) -> float | int | str| None:
+    def _object_value(self, obj_id: str, measurement: str, attrs: str) -> float | int | str| None:
         """Helper-function for smile.py: _get_entity_data().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
@@ -804,9 +804,9 @@ class SmileHelper(SmileCommon):
                 case "humidity":
                     return int(float(value))
                 case "outdoor_temperature":
-                    return format_measure(value, getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
+                    return format_measure(value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))
                 case "solar_irradiance":
-                    return format_measure(value, getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
+                    return format_measure(value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))
                 case "weather_description":
                     return value
                 case "wind_vector":
