@@ -773,9 +773,7 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and entity_id == self.gateway_id:
             data["weather"] =  {}
             for measurement, attrs in measurements.items():
-                LOGGER.debug("HOI meas: %s", measurement)
                 value = self._object_value(self._home_location, measurement, attrs)
-                LOGGER.debug("HOI value: %s", value)
                 if value is not None:
                     if measurement == "wind_vector":
                         value = value.split(",")
