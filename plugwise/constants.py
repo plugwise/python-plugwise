@@ -391,6 +391,15 @@ TOGGLES: Final[dict[str, ToggleNameType]] = {
     "cooling_enabled": "cooling_ena_switch",
     "domestic_hot_water_comfort_mode": "dhw_cm_switch",
 }
+WeatherType = Literal[
+    "humidity",
+    "outdoor_temperature",
+    "solar_irradiance",
+    "weather_description",
+    "wind_bearing",
+    "wind_speed",
+]
+WEATHER: Final[tuple[str, ...]] = get_args(WeatherType)
 
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
     "thermostat",
@@ -512,6 +521,18 @@ class ThermoLoc(TypedDict, total=False):
     secondary: list[str]
 
 
+@dataclass
+class WeatherData:
+    """Smile Weather data class."""
+
+    humidity: int
+    outdoor_temperature: float
+    solar_irradiance: float
+    weather_description: str
+    wind_bearing: float
+    wind_speed: float
+
+
 class ActuatorData(TypedDict, total=False):
     """Actuator data for thermostat types."""
 
@@ -583,6 +604,7 @@ class GwEntityData(TypedDict, total=False):
     switches: SmileSwitches
     temperature_offset: ActuatorData
     thermostat: ActuatorData
+    weather: WeatherData
 
 
 @dataclass
