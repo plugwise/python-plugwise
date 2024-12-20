@@ -811,17 +811,11 @@ class SmileHelper(SmileCommon):
             match measurement:
                 case "humidity":
                     return int(float(value))
-                case "outdoor_temperature":
+                case "outdoor_temperature" | "solar_irradiance":
                     return format_measure(
                         value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
                     )
-                case "solar_irradiance":
-                    return format_measure(
-                        value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT)
-                    )
-                case "weather_description":
-                    return value
-                case "wind_vector":
+                case _:
                     return value
 
         return None
