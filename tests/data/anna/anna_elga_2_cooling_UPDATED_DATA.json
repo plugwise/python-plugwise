@@ -83,10 +83,15 @@
       "model": "Gateway",
       "model_id": "smile_thermo",
       "name": "Smile Anna",
-      "sensors": {
-        "outdoor_temperature": 3.0
-      },
-      "vendor": "Plugwise"
+      "vendor": "Plugwise",
+      "weather": {
+        "humidity": 42,
+        "outdoor_temperature": 3.0,
+        "solar_irradiance": 0.0,
+        "weather_description": "cloudy",
+        "wind_bearing": 120.0,
+        "wind_speed": 3.6
+      }
     }
   }
 }
