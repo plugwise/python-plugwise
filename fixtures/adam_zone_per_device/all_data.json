@@ -577,10 +577,15 @@
       "model_id": "smile_open_therm",
       "name": "Adam",
       "select_regulation_mode": "heating",
-      "sensors": {
-        "outdoor_temperature": 7.69
-      },
       "vendor": "Plugwise",
+      "weather": {
+        "humidity": 70,
+        "outdoor_temperature": 7.69,
+        "solar_irradiance": 86.2,
+        "weather_description": "cloudy",
+        "wind_bearing": 40.0,
+        "wind_speed": 7.2
+      },
       "zigbee_mac_address": "ABCD012345670101"
     }
   },
@@ -588,7 +593,7 @@
     "cooling_present": false,
     "gateway_id": "fe799307f1624099878210aa0b9f1475",
     "heater_id": "90986d591dcd426cae3ec3e8111ff730",
-    "item_count": 369,
+    "item_count": 374,
     "notifications": {
       "af82e4ccf9c548528166d38e560662a4": {
         "warning": "Node Plug (with MAC address 000D6F000D13CB01, in room 'n.a.') has been unreachable since 23:03 2020-01-18. Please check the connection and restart the device."
