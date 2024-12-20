@@ -779,7 +779,7 @@ class SmileHelper(SmileCommon):
                     if measurement == "wind_vector":
                         value = value.split(",")
                         data["wind_speed"] =  format_measure(value[0].strip("("), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
-                        data["wind_direction"] = format_measure(value[1].strip(")"), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
+                        data["wind_bearing"] = format_measure(value[1].strip(")"), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
                         self._count += 2
                     else:
                         data[measurement] = value
@@ -797,11 +797,7 @@ class SmileHelper(SmileCommon):
             value = found.text
             match measurement:
                 case "humidity":
-                    value = float(value)/100
-                    LOGGER.debug("HOI hum_val: %s", value)
-                    value = format_measure(str(value), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
-                    LOGGER.debug("HOI hum_val_fm: %s", value)
-                    return value
+                    return int(value)
                 case "outdoor_temperature":
                     return format_measure(value, getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
                 case "solar_irradiance":
