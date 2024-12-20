@@ -778,11 +778,15 @@ class SmileHelper(SmileCommon):
                 if value is not None:
                     if measurement == "wind_vector":
                         value = value.split(",")
-                        data["wind_speed"] =  format_measure(value[0].strip("("), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
-                        data["wind_bearing"] = format_measure(value[1].strip(")"), getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
+                        data["weather"]["wind_speed"] = format_measure(
+                            value[0].strip("("), getattr(attr, ATTR_UNIT_OF_MEASUREMENT)
+                        )
+                        data["weather"]["wind_bearing"] = format_measure(
+                            value[1].strip(")"), getattr(attr, ATTR_UNIT_OF_MEASUREMENT)
+                        )
                         self._count += 2
                     else:
-                        data[measurement] = value
+                        data["weather"][measurement] = value
                         self._count += 1
 
     def _object_value(self, obj_id: str, measurement: str, attr: str) -> float | int | str| None:
