@@ -771,6 +771,7 @@ class SmileHelper(SmileCommon):
         """
         measurements = DEVICE_MEASUREMENTS
         if self._is_thermostat and entity_id == self.gateway_id:
+            data["weather"] =  {}
             for measurement, attr in measurements.items():
                 LOGGER.debug("HOI meas: %s", measurement)
                 value = self._object_value(self._home_location, measurement, attr)
@@ -801,7 +802,7 @@ class SmileHelper(SmileCommon):
             value = found.text
             match measurement:
                 case "humidity":
-                    return int(value)
+                    return int(float(value))
                 case "outdoor_temperature":
                     return format_measure(value, getattr(attr, ATTR_UNIT_OF_MEASUREMENT))
                 case "solar_irradiance":
