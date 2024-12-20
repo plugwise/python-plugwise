@@ -580,10 +580,15 @@
       "model_id": "smile_open_therm",
       "name": "Adam",
       "select_regulation_mode": "heating",
-      "sensors": {
-        "outdoor_temperature": 7.81
-      },
       "vendor": "Plugwise",
+      "weather": {
+        "humidity": 75,
+        "outdoor_temperature": 7.81,
+        "solar_irradiance": 157.5,
+        "weather_description": "cloudy",
+        "wind_bearing": 40.0,
+        "wind_speed": 8.2
+      },
       "zigbee_mac_address": "ABCD012345670101"
     }
   }
