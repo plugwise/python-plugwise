@@ -47,10 +47,12 @@
       }
     },
     "0466eae8520144c78afb29628384edeb": {
+      "sensors": {
+        "solar_irradiance": 449.4
+      },
       "weather": {
         "humidity": 81,
         "outdoor_temperature": 6.44,
-        "solar_irradiance": 449.4,
         "weather_description": "clear",
         "wind_bearing": 240.0,
         "wind_speed": 3.6

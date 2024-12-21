@@ -172,11 +172,13 @@
       "regulation_modes": ["bleeding_hot", "bleeding_cold", "off", "heating"],
       "select_gateway_mode": "full",
       "select_regulation_mode": "heating",
+      "sensors": {
+        "solar_irradiance": 3.0
+      },
       "vendor": "Plugwise",
       "weather": {
         "humidity": 90,
         "outdoor_temperature": 9.19,
-        "solar_irradiance": 3.0,
         "weather_description": "rain",
         "wind_bearing": 291.0,
         "wind_speed": 6.26

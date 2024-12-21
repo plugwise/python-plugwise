@@ -59,11 +59,13 @@
       ],
       "select_gateway_mode": "full",
       "select_regulation_mode": "cooling",
+      "sensors": {
+        "solar_irradiance": 208.2
+      },
       "vendor": "Plugwise",
       "weather": {
         "humidity": 88,
         "outdoor_temperature": 13.4,
-        "solar_irradiance": 208.2,
         "weather_description": "clouded",
         "wind_bearing": 228.0,
         "wind_speed": 1.79

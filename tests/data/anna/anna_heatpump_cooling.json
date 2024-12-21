@@ -12,11 +12,13 @@
       "model": "Gateway",
       "model_id": "smile_thermo",
       "name": "Smile Anna",
+      "sensors": {
+        "solar_irradiance": 207.2
+      },
       "vendor": "Plugwise",
       "weather": {
         "humidity": 35,
         "outdoor_temperature": 22.0,
-        "solar_irradiance": 207.2,
         "weather_description": "overcast",
         "wind_bearing": 0.0,
         "wind_speed": 2.1
