@@ -16,6 +16,7 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     ATTR_NAME,
+    ATTR_UNIT_OF_MEASUREMENT,
     DATA,
     DEVICE_MEASUREMENTS,
     DHW_SETPOINT,
@@ -43,6 +44,7 @@ from plugwise.constants import (
     SensorType,
     ThermoLoc,
     ToggleNameType,
+    WeatherType,
 )
 from plugwise.exceptions import (
     ConnectionFailedError,
@@ -526,7 +528,12 @@ class SmileHelper(SmileCommon):
 
         Collect the appliance-data based on entity_id.
         """
-        data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
+        data: GwEntityData = {
+            "binary_sensors": {},
+            "sensors": {},
+            "switches": {},
+            "weather": {},
+        }
         # Get P1 smartmeter data from LOCATIONS
         entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
@@ -559,7 +566,7 @@ class SmileHelper(SmileCommon):
 
         self._get_regulation_mode(appliance, entity_id, data)
         self._get_gateway_mode(appliance, entity_id, data)
-        self._get_gateway_outdoor_temp(entity_id, data)
+        self._get_gateway_measurements(entity_id, data)
 
         if "c_heating_state" in data:
             self._process_c_heating_state(data)
@@ -763,31 +770,62 @@ class SmileHelper(SmileCommon):
             data["select_gateway_mode"] = mode
             self._count += 1
 
-    def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
-        """Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS.
+    def _get_gateway_measurements(self, entity_id: str, data: GwEntityData) -> None:
+        """Adam & Anna: the Gateway weather-data is present under the Home location.
 
         Available under the Home location.
         """
-        if self._is_thermostat and entity_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
-                self._count += 1
+        if not (self._is_thermostat and entity_id == self.gateway_id):
+            return
 
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
+        measurements = DEVICE_MEASUREMENTS
+        for measurement, attrs in measurements.items():
+            if (
+                value := self._loc_value(self._home_location, measurement, attrs)
+            ) is None:
+                continue
+
+            match measurement:
+                case "solar_irradiance":
+                    # Not available in HA weather platform -> sensor
+                    sensor = cast(SensorType, measurement)
+                    data["sensors"][sensor] = float(value)
+                    self._count += 1
+                case "wind_vector":
+                    value_list: list[str] = str(value).split(",")
+                    data["weather"]["wind_speed"] = format_measure(
+                        value_list[0].strip("("),
+                        getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
+                    )
+                    data["weather"]["wind_bearing"] = format_measure(
+                        value_list[1].strip(")"),
+                        getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
+                    )
+                    self._count += 2
+                case _:
+                    key = cast(WeatherType, measurement)
+                    data["weather"][key] = value
+                    self._count += 1
+
+    def _loc_value(
+        self, loc_id: str, measurement: str, attrs: DATA | UOM
+    ) -> float | int | str | None:
         """Helper-function for smile.py: _get_entity_data().
 
         Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
         """
-        val: float | int | None = None
-        search = self._domain_objects
-        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
-        if (found := search.find(locator)) is not None:
-            val = format_measure(found.text, NONE)
+        locator = f"./location[@id='{loc_id}']/logs/point_log[type='{measurement}']/period/measurement"
+        if (found := self._domain_objects.find(locator)) is None:
+            return None
 
-        return val
+        value: str = found.text
+        match measurement:
+            case "humidity":
+                return int(float(value))
+            case "outdoor_temperature" | "solar_irradiance":
+                return format_measure(value, getattr(attrs, ATTR_UNIT_OF_MEASUREMENT))
+            case _:
+                return value
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().

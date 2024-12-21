@@ -139,7 +139,7 @@ m_adam_cooling["devices"]["da224107914542988a88561b4452b0f6"][
 m_adam_cooling["devices"]["da224107914542988a88561b4452b0f6"][
     "regulation_modes"
 ].append("cooling")
-m_adam_cooling["devices"]["da224107914542988a88561b4452b0f6"]["sensors"][
+m_adam_cooling["devices"]["da224107914542988a88561b4452b0f6"]["weather"][
     "outdoor_temperature"
 ] = 29.65
 
@@ -220,7 +220,7 @@ m_adam_heating["devices"]["da224107914542988a88561b4452b0f6"][
 m_adam_heating["devices"]["da224107914542988a88561b4452b0f6"][
     "regulation_modes"
 ].remove("cooling")
-m_adam_heating["devices"]["da224107914542988a88561b4452b0f6"]["sensors"][
+m_adam_heating["devices"]["da224107914542988a88561b4452b0f6"]["weather"][
     "outdoor_temperature"
 ] = -1.25
 
@@ -295,7 +295,7 @@ m_anna_heatpump_cooling["devices"]["1cbf783bb11e4a7c8a6843dee3a86927"]["sensors"
 ] = 28.0
 
 # Go for 015a
-m_anna_heatpump_cooling["devices"]["015ae9ea3f964e668e490fa39da3870b"]["sensors"][
+m_anna_heatpump_cooling["devices"]["015ae9ea3f964e668e490fa39da3870b"]["weather"][
     "outdoor_temperature"
 ] = 28.2
 

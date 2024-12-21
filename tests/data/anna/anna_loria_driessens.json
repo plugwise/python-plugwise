@@ -13,9 +13,16 @@
       "model_id": "smile_thermo",
       "name": "Smile Anna",
       "sensors": {
-        "outdoor_temperature": 6.81
+        "solar_irradiance": 97.6
       },
-      "vendor": "Plugwise"
+      "vendor": "Plugwise",
+      "weather": {
+        "humidity": 88,
+        "outdoor_temperature": 6.81,
+        "weather_description": "clouded",
+        "wind_bearing": 230.0,
+        "wind_speed": 4.12
+      }
     },
     "9fb768d699e44c7fb5cc50309dc4e7d4": {
       "active_preset": "home",

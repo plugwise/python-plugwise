@@ -126,7 +126,6 @@ P1_LEGACY_MEASUREMENTS: Final[dict[str, UOM]] = {
 # radiator_valve: 'uncorrected_temperature', 'temperature_offset'
 
 DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
-    "humidity": UOM(NONE),  # Specific for a Jip
     "illuminance": UOM(UNIT_LUMEN),  # Specific for an Anna
     "temperature": UOM(TEMP_CELSIUS),  # HA Core thermostat current_temperature
     "thermostat": DATA("setpoint", TEMP_CELSIUS),  # HA Core thermostat setpoint
@@ -144,6 +143,13 @@ DEVICE_MEASUREMENTS: Final[dict[str, DATA | UOM]] = {
     "electricity_consumed": UOM(POWER_WATT),
     "electricity_produced": UOM(POWER_WATT),
     "relay": UOM(NONE),
+    #####################
+    # Gateway weather related
+    "humidity": UOM(PERCENTAGE),  # also present for a Jip
+    "outdoor_temperature": UOM(TEMP_CELSIUS),
+    "solar_irradiance": UOM(NONE),
+    "weather_description": UOM(NONE),
+    "wind_vector": UOM(NONE),
 }
 
 # Heater Central related measurements
@@ -334,6 +340,7 @@ SensorType = Literal[
     "setpoint",
     "setpoint_high",
     "setpoint_low",
+    "solar_irradiance",
     "temperature_difference",
     "valve_position",
     "voltage_phase_one",
@@ -385,6 +392,14 @@ TOGGLES: Final[dict[str, ToggleNameType]] = {
     "cooling_enabled": "cooling_ena_switch",
     "domestic_hot_water_comfort_mode": "dhw_cm_switch",
 }
+WeatherType = Literal[
+    "humidity",
+    "outdoor_temperature",
+    "weather_description",
+    "wind_bearing",
+    "wind_speed",
+]
+WEATHER: Final[tuple[str, ...]] = get_args(WeatherType)
 
 ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
     "thermostat",
@@ -478,6 +493,7 @@ class SmileSensors(TypedDict, total=False):
     return_temperature: float
     setpoint: float
     setpoint_high: float
+    solar_irradiance: float
     setpoint_low: float
     temperature_difference: float
     valve_position: int
@@ -504,6 +520,16 @@ class ThermoLoc(TypedDict, total=False):
     primary: list[str]
     primary_prio: int
     secondary: list[str]
+
+
+class WeatherData(TypedDict, total=False):
+    """Smile Weather data class."""
+
+    humidity: int
+    outdoor_temperature: float
+    weather_description: str
+    wind_bearing: float
+    wind_speed: float
 
 
 class ActuatorData(TypedDict, total=False):
@@ -577,6 +603,7 @@ class GwEntityData(TypedDict, total=False):
     switches: SmileSwitches
     temperature_offset: ActuatorData
     thermostat: ActuatorData
+    weather: WeatherData
 
 
 @dataclass

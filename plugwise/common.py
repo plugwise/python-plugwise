@@ -147,6 +147,8 @@ class SmileCommon:
             self._count += len(data["sensors"]) - 1
         if "switches" in data:
             self._count += len(data["switches"]) - 1
+        if "weather" in data:
+            self._count += len(data["weather"]) - 1
         self._count += len(data)
 
     def _power_data_peak_value(self, loc: Munch, legacy: bool) -> Munch:
