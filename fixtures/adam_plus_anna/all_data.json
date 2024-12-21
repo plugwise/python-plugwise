@@ -86,11 +86,13 @@
       "model_id": "smile_open_therm",
       "name": "Adam",
       "select_regulation_mode": "heating",
+      "sensors": {
+        "solar_irradiance": 53.8
+      },
       "vendor": "Plugwise",
       "weather": {
         "humidity": 58,
         "outdoor_temperature": 11.9,
-        "solar_irradiance": 53.8,
         "weather_description": "overcast",
         "wind_bearing": 220.0,
         "wind_speed": 2.6
