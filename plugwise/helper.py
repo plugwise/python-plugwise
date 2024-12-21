@@ -788,8 +788,8 @@ class SmileHelper(SmileCommon):
             match measurement:
                 case "solar_irradiance":
                     # Not available in HA weather platform -> sensor
-                    key = cast(SensorType, measurement)
-                    data["sensors"][key] = value
+                    sensor = cast(SensorType, measurement)
+                    data["sensors"][sensor] = float(value)
                     self._count += 1
                 case "wind_vector":
                     value_list: list[str] = str(value).split(",")

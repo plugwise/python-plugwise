@@ -340,6 +340,7 @@ SensorType = Literal[
     "setpoint",
     "setpoint_high",
     "setpoint_low",
+    "solar_irradiance",
     "temperature_difference",
     "valve_position",
     "voltage_phase_one",
@@ -394,7 +395,6 @@ TOGGLES: Final[dict[str, ToggleNameType]] = {
 WeatherType = Literal[
     "humidity",
     "outdoor_temperature",
-    "solar_irradiance",
     "weather_description",
     "wind_bearing",
     "wind_speed",
@@ -493,6 +493,7 @@ class SmileSensors(TypedDict, total=False):
     return_temperature: float
     setpoint: float
     setpoint_high: float
+    solar_irradiance: float
     setpoint_low: float
     temperature_difference: float
     valve_position: int
@@ -526,7 +527,6 @@ class WeatherData(TypedDict, total=False):
 
     humidity: int
     outdoor_temperature: float
-    solar_irradiance: float
     weather_description: str
     wind_bearing: float
     wind_speed: float
