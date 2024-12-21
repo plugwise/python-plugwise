@@ -785,21 +785,27 @@ class SmileHelper(SmileCommon):
             ) is None:
                 continue
 
-            if measurement == "wind_vector":
-                value_list: list[str] = str(value).split(",")
-                data["weather"]["wind_speed"] = format_measure(
-                    value_list[0].strip("("),
-                    getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
-                )
-                data["weather"]["wind_bearing"] = format_measure(
-                    value_list[1].strip(")"),
-                    getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
-                )
-                self._count += 2
-            else:
-                key = cast(WeatherType, measurement)
-                data["weather"][key] = value
-                self._count += 1
+            match measurement:
+                case "solar_irradiance":
+                    # Not available in HA weather platform -> sensor
+                    key = cast(SensorType, measurement)
+                    data["sensors"][key] = value
+                    self._count += 1
+                case "wind_vector":
+                    value_list: list[str] = str(value).split(",")
+                    data["weather"]["wind_speed"] = format_measure(
+                        value_list[0].strip("("),
+                        getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
+                    )
+                    data["weather"]["wind_bearing"] = format_measure(
+                        value_list[1].strip(")"),
+                        getattr(attrs, ATTR_UNIT_OF_MEASUREMENT),
+                    )
+                    self._count += 2
+                case _:
+                    key = cast(WeatherType, measurement)
+                    data["weather"][key] = value
+                    self._count += 1
 
     def _loc_value(
         self, loc_id: str, measurement: str, attrs: DATA | UOM
