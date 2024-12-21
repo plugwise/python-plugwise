@@ -157,6 +157,7 @@ def format_measure(measure: str, unit: str) -> float | int:
     try:
         result = int(measure)
         if unit == TEMP_CELSIUS:
+            # Return for instance 20 (degrees) as 20.0
             result = float(measure)
     except ValueError:
         float_measure = float(measure)
