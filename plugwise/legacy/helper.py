@@ -66,7 +66,7 @@ class SmileLegacyHelper(SmileCommon):
         self._count: int
         self._domain_objects: etree
         self._heater_id: str
-        self._home_location: str
+        self._home_loc_id: str
         self._is_thermostat: bool
         self._last_modified: dict[str, str] = {}
         self._loc_data: dict[str, ThermoLoc]
@@ -115,7 +115,7 @@ class SmileLegacyHelper(SmileCommon):
             ):
                 continue  # pragma: no cover
 
-            appl.location = self._home_location
+            appl.location = self._home_loc_id
             appl.entity_id = appliance.attrib["id"]
             appl.name = appliance.find("name").text
             # Extend device_class name when a Circle/Stealth is type heater_central -- Pw-Beta Issue #739
@@ -161,7 +161,7 @@ class SmileLegacyHelper(SmileCommon):
 
         # Legacy Anna without outdoor_temp and Stretches have no locations, create fake location-data
         if not (locations := self._locations.findall("./location")):
-            self._home_location = FAKE_LOC
+            self._home_loc_id = FAKE_LOC
             self._loc_data[FAKE_LOC] = {"name": "Home"}
             return
 
@@ -174,11 +174,11 @@ class SmileLegacyHelper(SmileCommon):
                 continue
 
             if loc.name == "Home":
-                self._home_location = loc.loc_id
+                self._home_loc_id = loc.loc_id
             # Replace location-name for P1 legacy, can contain privacy-related info
             if self.smile_type == "power":
                 loc.name = "Home"
-                self._home_location = loc.loc_id
+                self._home_loc_id = loc.loc_id
 
             self._loc_data[loc.loc_id] = {"name": loc.name}
 
@@ -187,7 +187,7 @@ class SmileLegacyHelper(SmileCommon):
 
         Use the home_location or FAKE_APPL as entity id.
         """
-        self.gateway_id = self._home_location
+        self.gateway_id = self._home_loc_id
         if self.smile_type == "power":
             self.gateway_id = FAKE_APPL
 
@@ -195,7 +195,7 @@ class SmileLegacyHelper(SmileCommon):
         self._count += 1
         for key, value in {
             "firmware": str(self.smile_fw_version),
-            "location": self._home_location,
+            "location": self._home_loc_id,
             "mac_address": self.smile_mac_address,
             "model": self.smile_model,
             "name": self.smile_name,
@@ -298,7 +298,7 @@ class SmileLegacyHelper(SmileCommon):
         # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
         if self._is_thermostat and entity_id == self.gateway_id:
             outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
+                self._home_loc_id, "outdoor_temperature"
             )
             if outdoor_temperature is not None:
                 data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
