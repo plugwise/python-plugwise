@@ -294,8 +294,8 @@ class SmileLegacyHelper(SmileCommon):
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, entity, data)
 
-        # Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS or LOCATIONS - under Home
-        # Some Anna's have an empty LOCATIONS!
+        # Anna: the Smile outdoor_temperature is present in the Home location
+        # For some Anna's LOCATIONS is empty, falling back to domain_objects!
         if self._is_thermostat and entity_id == self.gateway_id:
             locator = f"./location[@id='{self._home_loc_id}']/logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._domain_objects.find(locator)) is not None:
