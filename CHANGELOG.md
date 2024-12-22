@@ -2,7 +2,7 @@
 
 ## Ongoing
 
-- Continuous improvements
+- Continuous improvements [#678](https://github.com/plugwise/python-plugwise/pull/678)
 
 ## v1.6.4
 
