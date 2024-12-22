@@ -531,7 +531,7 @@ class SmileHelper(SmileCommon):
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
             if entity["dev_class"] == "smartmeter":
-                data.update(self._power_data_from_location(entity["location"]))
+                data.update(self._power_data_from_location())
 
             return data
 
@@ -573,18 +573,17 @@ class SmileHelper(SmileCommon):
 
         return data
 
-    def _power_data_from_location(self, loc_id: str) -> GwEntityData:
+    def _power_data_from_location(self) -> GwEntityData:
         """Helper-function for smile.py: _get_entity_data().
 
-        Collect the power-data based on Location ID, from LOCATIONS.
+        Collect the power-data from the Home location.
         """
         data: GwEntityData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         t_string = "tariff"
 
-        search = self._domain_objects
-        loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
+        loc.logs = self._home_location.find("./logs")
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 self._collect_power_values(data, loc, t_string)
@@ -768,22 +767,19 @@ class SmileHelper(SmileCommon):
         Available under the Home location.
         """
         if self._is_thermostat and entity_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_loc_id, "outdoor_temperature"
-            )
+            outdoor_temperature = self._home_loc_value("outdoor_temperature")
             if outdoor_temperature is not None:
                 data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
                 self._count += 1
 
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
+    def _home_loc_value(self, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_entity_data().
 
-        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
+        Obtain the value/state for the given measurement from the Home location
         """
         val: float | int | None = None
-        search = self._domain_objects
-        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
-        if (found := search.find(locator)) is not None:
+        locator = f'./logs/point_log[type="{measurement}"]/period/measurement'
+        if (found := self._home_location.find(locator)) is not None:
             val = format_measure(found.text, NONE)
 
         return val
