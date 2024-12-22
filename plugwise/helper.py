@@ -762,27 +762,13 @@ class SmileHelper(SmileCommon):
             self._count += 1
 
     def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
-        """Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS.
-
-        Available under the Home location.
-        """
+        """Adam & Anna: the Smile outdoor_temperature is present in the Home location."""
         if self._is_thermostat and entity_id == self.gateway_id:
-            outdoor_temperature = self._home_loc_value("outdoor_temperature")
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+            locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
+            if (found := self._home_location.find(locator)) is not None:
+                val = format_measure(found.text, NONE)
+                data.update({"sensors": {"outdoor_temperature": val}})
                 self._count += 1
-
-    def _home_loc_value(self, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_entity_data().
-
-        Obtain the value/state for the given measurement from the Home location
-        """
-        val: float | int | None = None
-        locator = f'./logs/point_log[type="{measurement}"]/period/measurement'
-        if (found := self._home_location.find(locator)) is not None:
-            val = format_measure(found.text, NONE)
-
-        return val
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().
