@@ -338,6 +338,7 @@ class SmileHelper(SmileCommon):
             self._create_gw_entities(appl)
 
         if self.smile_type == "power":
+            LOGGER.debug("HOI home-loc: %s", self._home_location)
             self._get_p1_smartmeter_info()
 
         # Sort the gw_entities
@@ -351,6 +352,7 @@ class SmileHelper(SmileCommon):
         """
         appl = Munch()
         loc_id = next(iter(self._loc_data.keys()))
+        LOGGER.debug("HOI loc_id: %s", loc_id)
         if (
             location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
         ) is None:
