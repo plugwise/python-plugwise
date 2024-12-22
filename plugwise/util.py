@@ -20,7 +20,6 @@ from plugwise.constants import (
     SPECIAL_FORMAT,
     SPECIALS,
     SWITCHES,
-    TEMP_CELSIUS,
     UOM,
     BinarySensorType,
     GwEntityData,
@@ -151,30 +150,25 @@ def escape_illegal_xml_characters(xmldata: str) -> str:
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)
 
 
-def format_measure(measure: str, unit: str) -> float | int:
+def format_measure(measure: str, unit: str) -> float:
     """Format measure to correct type."""
-    result: float | int = 0
-    try:
-        result = int(measure)
-        # Return for instance 20 (degrees) as 20.0
-        if unit == TEMP_CELSIUS:
-            result = float(measure)
-    except ValueError:
-        float_measure = float(measure)
-        if unit == PERCENTAGE and 0 < float_measure <= 1:
-            return int(float_measure * 100)
+    result: float = 0.0
 
-        if unit == ENERGY_KILO_WATT_HOUR:
-            float_measure = float_measure / 1000
+    float_measure = float(measure)
+    if unit == PERCENTAGE and 0 < float_measure <= 1:
+        return int(float_measure * 100)
 
-        if unit in SPECIAL_FORMAT:
-            result = float(f"{round(float_measure, 3):.3f}")
-        elif unit == ELECTRIC_POTENTIAL_VOLT:
-            result = float(f"{round(float_measure, 1):.1f}")
-        elif abs(float_measure) < 10:
-            result = float(f"{round(float_measure, 2):.2f}")
-        elif abs(float_measure) >= 10:
-            result = float(f"{round(float_measure, 1):.1f}")
+    if unit == ENERGY_KILO_WATT_HOUR:
+        float_measure = float_measure / 1000
+
+    if unit in SPECIAL_FORMAT:
+        result = float(f"{round(float_measure, 3):.3f}")
+    elif unit == ELECTRIC_POTENTIAL_VOLT:
+        result = float(f"{round(float_measure, 1):.1f}")
+    elif abs(float_measure) < 10:
+        result = float(f"{round(float_measure, 2):.2f}")
+    elif abs(float_measure) >= 10:
+        result = float(f"{round(float_measure, 1):.1f}")
 
     return result
 
