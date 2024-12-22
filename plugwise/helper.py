@@ -766,8 +766,8 @@ class SmileHelper(SmileCommon):
         if self._is_thermostat and entity_id == self.gateway_id:
             locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._home_location.find(locator)) is not None:
-                val = format_measure(found.text, NONE)
-                data.update({"sensors": {"outdoor_temperature": val}})
+                value = format_measure(found.text, NONE)
+                data.update({"sensors": {"outdoor_temperature": value}})
                 self._count += 1
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
