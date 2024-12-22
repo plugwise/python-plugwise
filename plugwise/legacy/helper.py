@@ -294,12 +294,13 @@ class SmileLegacyHelper(SmileCommon):
             if appliance.find("type").text in ACTUATOR_CLASSES:
                 self._get_actuator_functionalities(appliance, entity, data)
 
-        # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
-        # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
+        # Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS or LOCATIONS - under Home
+        # Some Anna's have an empty LOCATIONS!
         if self._is_thermostat and entity_id == self.gateway_id:
-            outdoor_temperature = self._home_loc_value("outdoor_temperature")
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+            locator = f"./location[@id='{self._home_loc_id}']/logs/point_log[type='outdoor_temperature']/period/measurement"
+            if (found := self._domain_objects.find(locator)) is not None:
+                value = format_measure(found.text, NONE)
+                data.update({"sensors": {"outdoor_temperature": value}})
                 self._count += 1
 
         if "c_heating_state" in data:
@@ -393,20 +394,6 @@ class SmileLegacyHelper(SmileCommon):
             if temp_dict:
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
-
-    def _home_loc_value(self, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_entity_data().
-
-        Obtain the value/state for the given measurement from the Home location
-        """
-        val: float | int | None = None
-        search = self._domain_objects
-        locator = f"./location[@id='{self._home_loc_id}']/logs/point_log[type='{measurement}']/period/measurement"
-        if (found := search.find(locator)) is not None:
-            val = format_measure(found.text, NONE)
-            return val
-
-        return val
 
     def _preset(self) -> str | None:
         """Helper-function for smile.py: _climate_data().
