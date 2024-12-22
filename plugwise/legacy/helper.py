@@ -297,9 +297,7 @@ class SmileLegacyHelper(SmileCommon):
         # Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS - under Home
         # The outdoor_temperature present in APPLIANCES is a local sensor connected to the active device
         if self._is_thermostat and entity_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_loc_id, "outdoor_temperature"
-            )
+            outdoor_temperature = self._home_loc_value("outdoor_temperature")
             if outdoor_temperature is not None:
                 data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
                 self._count += 1
@@ -396,14 +394,14 @@ class SmileLegacyHelper(SmileCommon):
                 act_item = cast(ActuatorType, item)
                 data[act_item] = temp_dict
 
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
+    def _home_loc_value(self, measurement: str) -> float | int | None:
         """Helper-function for smile.py: _get_entity_data().
 
-        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
+        Obtain the value/state for the given measurement from the Home location
         """
         val: float | int | None = None
         search = self._domain_objects
-        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
+        locator = f"./location[@id='{self._home_loc_id}']/logs/point_log[type='{measurement}']/period/measurement"
         if (found := search.find(locator)) is not None:
             val = format_measure(found.text, NONE)
             return val
