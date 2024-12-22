@@ -233,7 +233,8 @@ class SmileHelper(SmileCommon):
         self._elga: bool
         self._gw_allowed_modes: list[str] = []
         self._heater_id: str
-        self._home_location: str
+        self._home_loc_id: str
+        self._home_location: etree
         self._is_thermostat: bool
         self._last_active: dict[str, str | None]
         self._last_modified: dict[str, str] = {}
@@ -311,10 +312,10 @@ class SmileHelper(SmileCommon):
             appl.location = None
             if (appl_loc := appliance.find("location")) is not None:
                 appl.location = appl_loc.attrib["id"]
-            # Don't assign the _home_location to thermostat-devices without a location,
+            # Don't assign the _home_loc_id to thermostat-devices without a location,
             # they are not active
             elif appl.pwclass not in THERMOSTAT_CLASSES:
-                appl.location = self._home_location
+                appl.location = self._home_loc_id
 
             # Don't show orphaned thermostat-types
             if appl.pwclass in THERMOSTAT_CLASSES and appl.location is None:
@@ -350,14 +351,8 @@ class SmileHelper(SmileCommon):
         switched to maintain backward compatibility with existing implementations.
         """
         appl = Munch()
-        loc_id = next(iter(self._loc_data.keys()))
-        if (
-            location := self._domain_objects.find(f'./location[@id="{loc_id}"]')
-        ) is None:
-            return
-
         locator = MODULE_LOCATOR
-        module_data = self._get_module_data(location, locator)
+        module_data = self._get_module_data(self._home_location, locator)
         if not module_data["contents"]:
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return  # pragma: no cover
@@ -365,7 +360,7 @@ class SmileHelper(SmileCommon):
         appl.entity_id = self.gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]
-        appl.location = loc_id
+        appl.location = self._home_loc_id
         appl.mac = None
         appl.model = module_data["vendor_model"]
         appl.model_id = None  # don't use model_id for SmartMeter
@@ -375,8 +370,8 @@ class SmileHelper(SmileCommon):
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
-        self.gw_entities[loc_id] = self.gw_entities.pop(self.gateway_id)
-        self.gateway_id = loc_id
+        self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self.gateway_id)
+        self.gateway_id = self._home_loc_id
 
         self._create_gw_entities(appl)
 
@@ -398,10 +393,14 @@ class SmileHelper(SmileCommon):
         for location in locations:
             loc.name = location.find("name").text
             loc.loc_id = location.attrib["id"]
-            if loc.name == "Home":
-                self._home_location = loc.loc_id
-
             self._loc_data[loc.loc_id] = {"name": loc.name}
+            if loc.name != "Home":
+                continue
+
+            self._home_loc_id = loc.loc_id
+            self._home_location = self._domain_objects.find(
+                f"./location[@id='{loc.loc_id}']"
+            )
 
     def _appliance_info_finder(self, appl: Munch, appliance: etree) -> Munch:
         """Collect info for all appliances found."""
@@ -532,7 +531,7 @@ class SmileHelper(SmileCommon):
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
             if entity["dev_class"] == "smartmeter":
-                data.update(self._power_data_from_location(entity["location"]))
+                data.update(self._power_data_from_location())
 
             return data
 
@@ -574,18 +573,17 @@ class SmileHelper(SmileCommon):
 
         return data
 
-    def _power_data_from_location(self, loc_id: str) -> GwEntityData:
+    def _power_data_from_location(self) -> GwEntityData:
         """Helper-function for smile.py: _get_entity_data().
 
-        Collect the power-data based on Location ID, from LOCATIONS.
+        Collect the power-data from the Home location.
         """
         data: GwEntityData = {"sensors": {}}
         loc = Munch()
         log_list: list[str] = ["point_log", "cumulative_log", "interval_log"]
         t_string = "tariff"
 
-        search = self._domain_objects
-        loc.logs = search.find(f'./location[@id="{loc_id}"]/logs')
+        loc.logs = self._home_location.find("./logs")
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
                 self._collect_power_values(data, loc, t_string)
@@ -764,30 +762,13 @@ class SmileHelper(SmileCommon):
             self._count += 1
 
     def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
-        """Adam & Anna: the Smile outdoor_temperature is present in DOMAIN_OBJECTS and LOCATIONS.
-
-        Available under the Home location.
-        """
+        """Adam & Anna: the Smile outdoor_temperature is present in the Home location."""
         if self._is_thermostat and entity_id == self.gateway_id:
-            outdoor_temperature = self._object_value(
-                self._home_location, "outdoor_temperature"
-            )
-            if outdoor_temperature is not None:
-                data.update({"sensors": {"outdoor_temperature": outdoor_temperature}})
+            locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
+            if (found := self._home_location.find(locator)) is not None:
+                value = format_measure(found.text, NONE)
+                data.update({"sensors": {"outdoor_temperature": value}})
                 self._count += 1
-
-    def _object_value(self, obj_id: str, measurement: str) -> float | int | None:
-        """Helper-function for smile.py: _get_entity_data().
-
-        Obtain the value/state for the given object from a location in DOMAIN_OBJECTS
-        """
-        val: float | int | None = None
-        search = self._domain_objects
-        locator = f'./location[@id="{obj_id}"]/logs/point_log[type="{measurement}"]/period/measurement'
-        if (found := search.find(locator)) is not None:
-            val = format_measure(found.text, NONE)
-
-        return val
 
     def _process_c_heating_state(self, data: GwEntityData) -> None:
         """Helper-function for _get_measurement_data().

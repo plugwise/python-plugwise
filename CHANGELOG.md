@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Continuous improvements [#678](https://github.com/plugwise/python-plugwise/pull/678)
+
 ## v1.6.4
 
 - Continuous improvements [#662](https://github.com/plugwise/python-plugwise/pull/662)
