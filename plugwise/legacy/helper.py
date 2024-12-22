@@ -272,7 +272,7 @@ class SmileLegacyHelper(SmileCommon):
         Collect the appliance-data based on entity_id.
         """
         data: GwEntityData = {"binary_sensors": {}, "sensors": {}, "switches": {}}
-        # Get P1 smartmeter data from LOCATIONS or MODULES
+        # Get P1 smartmeter data from MODULES
         entity = self.gw_entities[entity_id]
         # !! DON'T CHANGE below two if-lines, will break stuff !!
         if self.smile_type == "power":
