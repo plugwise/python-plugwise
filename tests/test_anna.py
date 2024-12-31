@@ -344,7 +344,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
         self.validate_test_basics(
             _LOGGER,
             smile,
-            smile_version="4.2.1",
+            smile_version="4.4.1",
         )
 
         await self.device_test(smile, "2022-03-13 00:00:01", testdata)
@@ -352,7 +352,7 @@ class TestPlugwiseAnna(TestPlugwise):  # pylint: disable=attribute-defined-outsi
             smile._last_active["d3ce834534114348be628b61b26d9220"]
             == THERMOSTAT_SCHEDULE
         )
-        assert self.entity_items == 64
+        assert self.entity_items == 60
         assert smile.gateway_id == "fb49af122f6e4b0f91267e1cf7666d6f"
         assert self.cooling_present
         assert not self._cooling_enabled
