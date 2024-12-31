@@ -1,5 +1,5 @@
 {
-  "device_zones": {
+  "devices": {
     "aac7b735042c4832ac9ff33aae4f453b": {
       "sensors": {
         "electricity_consumed": 1000.0,
