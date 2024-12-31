@@ -1875,6 +1875,7 @@
 				<regulations><ame_regulation id='1c8b1a395ed848a2a67d65996bf0bb75'/></regulations>
 				<cooling_allowed>true</cooling_allowed>
 				<preheating_allowed>true</preheating_allowed>
+				<control_state>off</control_state>
 				<regulation_control>active</regulation_control>
 			</thermostat_functionality>
 		</actuator_functionalities>
