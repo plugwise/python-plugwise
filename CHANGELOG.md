@@ -3,6 +3,7 @@
 ## Ongoing
 
 - Continuous improvements [#678](https://github.com/plugwise/python-plugwise/pull/678)
+- Refresh Anna_Elga_2 userdata and adapt, add missing item-count, line-up test-data headers [#679](https://github.com/plugwise/python-plugwise/pull/679)
 
 ## v1.6.4
 
