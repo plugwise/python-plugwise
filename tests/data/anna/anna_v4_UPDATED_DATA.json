@@ -1,5 +1,5 @@
 {
-  "entities": {
+  "devices": {
     "cd0e6156b1f04d5f952349ffbe397481": {
       "maximum_boiler_temperature": {
         "setpoint": 69.0,

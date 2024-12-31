@@ -1,5 +1,5 @@
 {
-  "entities": {
+  "devices": {
     "582dfbdace4d4aeb832923ce7d1ddda0": {
       "active_preset": "home",
       "available_schedules": ["Winter", "Test ", "off"],
