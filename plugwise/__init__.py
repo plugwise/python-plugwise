@@ -186,7 +186,7 @@ class Smile(SmileComm):
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
 
-        Detect which type of Smile is connected.
+        Detect which type of Plugwise Gateway is being connected.
         """
         model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
@@ -260,7 +260,10 @@ class Smile(SmileComm):
     async def _smile_detect_legacy(
         self, result: etree, dsmrmain: etree, model: str
     ) -> str:
-        """Helper-function for _smile_detect()."""
+        """Helper-function for _smile_detect().
+
+        Detect which type of legacy Plugwise Gateway is being connected.
+        """
         return_model = model
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if (network := result.find("./module/protocols/master_controller")) is not None:
