@@ -34,7 +34,7 @@ from packaging.version import Version
 
 
 class SmileLegacyAPI(SmileLegacyData):
-    """The Plugwise SmileLegacyAPI class."""
+    """The Plugwise SmileLegacyAPI helper class for actual Plugwise legacy devices."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 

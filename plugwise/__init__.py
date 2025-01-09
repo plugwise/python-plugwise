@@ -38,7 +38,7 @@ from packaging.version import Version, parse
 
 
 class Smile(SmileComm):
-    """The Plugwise SmileConnect class."""
+    """The main Plugwise Smile API class."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 
@@ -91,7 +91,7 @@ class Smile(SmileComm):
         self.smile_zigbee_mac_address: str | None = None
 
     async def connect(self) -> Version | None:
-        """Connect to Plugwise device and determine its name, type and version."""
+        """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
         result = await self._request(DOMAIN_OBJECTS)
         # Work-around for Stretch fw 2.7.18
         if not (vendor_names := result.findall("./module/vendor_name")):
@@ -186,7 +186,7 @@ class Smile(SmileComm):
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
 
-        Detect which type of Smile is connected.
+        Detect which type of Plugwise Gateway is being connected.
         """
         model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
@@ -260,7 +260,10 @@ class Smile(SmileComm):
     async def _smile_detect_legacy(
         self, result: etree, dsmrmain: etree, model: str
     ) -> str:
-        """Helper-function for _smile_detect()."""
+        """Helper-function for _smile_detect().
+
+        Detect which type of legacy Plugwise Gateway is being connected.
+        """
         return_model = model
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if (network := result.find("./module/protocols/master_controller")) is not None:
@@ -309,11 +312,11 @@ class Smile(SmileComm):
         await self._smile_api.full_xml_update()
 
     def get_all_gateway_entities(self) -> None:
-        """Collect the Plugwise gateway entities and their data and states from the received raw XML-data."""
+        """Collect the Plugwise Gateway entities and their data and states from the received raw XML-data."""
         self._smile_api.get_all_gateway_entities()
 
     async def async_update(self) -> PlugwiseData:
-        """Update the Plughwise gateway entities and their data and states."""
+        """Update the Plughwise Gateway entities and their data and states."""
         data = PlugwiseData(devices={}, gateway={})
         try:
             data = await self._smile_api.async_update()
