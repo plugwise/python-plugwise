@@ -34,7 +34,7 @@ from packaging.version import Version
 
 
 class SmileLegacyAPI(SmileLegacyData):
-    """The Plugwise SmileLegacyAPI class."""
+    """The Plugwise SmileLegacyAPI helper class for actual Plugwise legacy devices."""
 
     # pylint: disable=too-many-instance-attributes, too-many-public-methods
 
@@ -83,7 +83,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self._previous_day_number: str = "0"
 
     async def full_xml_update(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
+        """Perform a first fetch of the Plugwise server XML data."""
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._locations = await self.request(LOCATIONS)
         self._modules = await self.request(MODULES)
@@ -92,24 +92,23 @@ class SmileLegacyAPI(SmileLegacyData):
             self._appliances = await self.request(APPLIANCES)
 
     def get_all_gateway_entities(self) -> None:
-        """Collect the gateway entities from the received raw XML-data.
+        """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
 
-        Run this functions once to gather the initial device configuration,
-        then regularly run async_update() to refresh the device data.
+        First, collect all the connected entities and their initial data.
+        Collect and add switching- and/or pump-group entities.
+        Finally, collect the data and states for each entity.
         """
-        # Gather all the devices and their initial data
         self._all_appliances()
-
-        # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
             self.gw_entities.update(group_data)
 
-        # Collect the remaining data for all entities
         self._all_entity_data()
 
     async def async_update(self) -> PlugwiseData:
-        """Perform an incremental update for updating the various device states."""
-        # Perform a full update at day-change
+        """Perform an full update update at day-change: re-collect all gateway entities and their data and states.
+
+        Otherwise perform an incremental update: only collect the entities updated data and states.
+        """
         day_number = dt.datetime.now().strftime("%w")
         if (
             day_number  # pylint: disable=consider-using-assignment-expr
@@ -129,7 +128,6 @@ class SmileLegacyAPI(SmileLegacyData):
                 raise DataMissingError(
                     "No (full) Plugwise legacy data received"
                 ) from err
-        # Otherwise perform an incremental update
         else:
             try:
                 self._domain_objects = await self.request(DOMAIN_OBJECTS)

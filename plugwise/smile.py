@@ -93,45 +93,47 @@ class SmileAPI(SmileData):
         self.smile_name = smile_name
         self.smile_type = smile_type
         self.smile_version = smile_version
+        self.therms_with_offset_func: list[str] = []
         SmileData.__init__(self)
 
     async def full_xml_update(self) -> None:
-        """Perform a first fetch of all XML data, needed for initialization."""
+        """Perform a first fetch of the Plugwise server XML data."""
         self._domain_objects = await self.request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
-        """Collect the gateway entities from the received raw XML-data.
+        """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
 
-        Run this functions once to gather the initial configuration,
-        then regularly run async_update() to refresh the entity data.
+        First, collect all the connected entities and their initial data.
+        If a thermostat-gateway, collect a list of thermostats with offset-capability.
+        Collect and add switching- and/or pump-group entities.
+        Finally, collect the data and states for each entity.
         """
-        # Gather all the entities and their initial data
         self._all_appliances()
         if self._is_thermostat:
-            if self.smile(ADAM):
-                self._scan_thermostats()
-            # Collect a list of thermostats with offset-capability
             self.therms_with_offset_func = (
                 self._get_appliances_with_offset_functionality()
             )
+            if self.smile(ADAM):
+                self._scan_thermostats()
 
-        # Collect and add switching- and/or pump-group devices
         if group_data := self._get_group_switches():
             self.gw_entities.update(group_data)
 
-        # Collect the remaining data for all entities
         self._all_entity_data()
 
     async def async_update(self) -> PlugwiseData:
-        """Perform an incremental update for updating the various device states."""
+        """Perform an full update: re-collect all gateway entities and their data and states.
+
+        Any change in the connected entities will be detected immediately.
+        """
         self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
         self._zones: dict[str, GwEntityData] = {}
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()
-            # Set self._cooling_enabled - required for set_temperature,
+            # Set self._cooling_enabled - required for set_temperature(),
             # also, check for a failed data-retrieval
             if "heater_id" in self.gw_data:
                 heat_cooler = self.gw_entities[self.gw_data["heater_id"]]
