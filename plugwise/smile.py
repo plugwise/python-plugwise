@@ -93,7 +93,6 @@ class SmileAPI(SmileData):
         self.smile_name = smile_name
         self.smile_type = smile_type
         self.smile_version = smile_version
-        self.therms_with_offset_func: list[str] = []
         SmileData.__init__(self)
 
     async def full_xml_update(self) -> None:

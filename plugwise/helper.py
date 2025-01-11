@@ -275,6 +275,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_version: version.Version | None
         self.smile_zigbee_mac_address: str | None
+        self.therms_with_offset_func: list[str] = []
         self._zones: dict[str, GwEntityData] = {}
         SmileCommon.__init__(self)
 
