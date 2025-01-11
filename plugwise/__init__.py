@@ -186,7 +186,7 @@ class Smile(SmileComm):
     async def _smile_detect(self, result: etree, dsmrmain: etree) -> None:
         """Helper-function for connect().
 
-        Detect which type of Plugwise Gateway is being connected.
+        Detect which type of Smile is connected.
         """
         model: str = "Unknown"
         if (gateway := result.find("./gateway")) is not None:
@@ -260,10 +260,7 @@ class Smile(SmileComm):
     async def _smile_detect_legacy(
         self, result: etree, dsmrmain: etree, model: str
     ) -> str:
-        """Helper-function for _smile_detect().
-
-        Detect which type of legacy Plugwise Gateway is being connected.
-        """
+        """Helper-function for _smile_detect()."""
         return_model = model
         # Stretch: find the MAC of the zigbee master_controller (= Stick)
         if (network := result.find("./module/protocols/master_controller")) is not None:
@@ -308,15 +305,15 @@ class Smile(SmileComm):
         return return_model
 
     async def full_xml_update(self) -> None:
-        """Perform a first fetch of the Plugwise server XML data."""
+        """Helper-function used for testing."""
         await self._smile_api.full_xml_update()
 
     def get_all_gateway_entities(self) -> None:
-        """Collect the Plugwise gateway entities and their data and states from the received raw XML-data."""
+        """Helper-function used for testing."""
         self._smile_api.get_all_gateway_entities()
 
     async def async_update(self) -> PlugwiseData:
-        """Update the Plughwise gateway entities and their data and states."""
+        """Update the various entities and their states."""
         data = PlugwiseData(devices={}, gateway={})
         try:
             data = await self._smile_api.async_update()
