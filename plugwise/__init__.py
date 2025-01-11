@@ -305,15 +305,15 @@ class Smile(SmileComm):
         return return_model
 
     async def full_xml_update(self) -> None:
-        """Perform a first fetch of the Plugwise server XML data."""
+        """Helper-function used for testing."""
         await self._smile_api.full_xml_update()
 
     def get_all_gateway_entities(self) -> None:
-        """Collect the Plugwise gateway entities and their data and states from the received raw XML-data."""
+        """Helper-function used for testing."""
         self._smile_api.get_all_gateway_entities()
 
     async def async_update(self) -> PlugwiseData:
-        """Update the Plughwise gateway entities and their data and states."""
+        """Update the various entities and their states."""
         data = PlugwiseData(devices={}, gateway={})
         try:
             data = await self._smile_api.async_update()
