@@ -28,9 +28,9 @@ from plugwise.exceptions import (
     ResponseError,
     UnsupportedDeviceError,
 )
-from plugwise.helper import SmileComm
 from plugwise.legacy.smile import SmileLegacyAPI
 from plugwise.smile import SmileAPI
+from plugwise.smilecomm import SmileComm
 
 import aiohttp
 from defusedxml import ElementTree as etree

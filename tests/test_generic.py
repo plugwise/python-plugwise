@@ -48,7 +48,7 @@ class TestPlugwiseGeneric(TestPlugwise):  # pylint: disable=attribute-defined-ou
 
     # Test connect for timeout
     @patch(
-        "plugwise.helper.ClientSession.get",
+        "plugwise.smilecomm.ClientSession.get",
         side_effect=aiohttp.ServerTimeoutError,
     )
     @pytest.mark.asyncio
