@@ -51,19 +51,15 @@ class Smile(SmileComm):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        self._host = host
-        self._password = password
-        self._port = port
+
         self._timeout = DEFAULT_LEGACY_TIMEOUT
-        self._username = username
-        self._websession = websession
         super().__init__(
-            self._host,
-            self._password,
-            self._port,
+            host,
+            password,
+            port,
             self._timeout,
-            self._username,
-            self._websession,
+            username,
+            websession,
         )
 
         self._cooling_present = False
@@ -128,10 +124,7 @@ class Smile(SmileComm):
 
         self._smile_api = (
             SmileAPI(
-                self._host,
-                self._password,
                 self._request,
-                self._websession,
                 self._cooling_present,
                 self._elga,
                 self._is_thermostat,
@@ -150,15 +143,10 @@ class Smile(SmileComm):
                 self.smile_name,
                 self.smile_type,
                 self.smile_version,
-                self._port,
-                self._username,
             )
             if not self.smile_legacy
             else SmileLegacyAPI(
-                self._host,
-                self._password,
                 self._request,
-                self._websession,
                 self._is_thermostat,
                 self._loc_data,
                 self._on_off_device,
@@ -173,8 +161,6 @@ class Smile(SmileComm):
                 self.smile_name,
                 self.smile_type,
                 self.smile_zigbee_mac_address,
-                self._port,
-                self._username,
             )
         )
 

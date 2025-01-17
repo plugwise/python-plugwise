@@ -11,8 +11,6 @@ from typing import Any
 
 from plugwise.constants import (
     APPLIANCES,
-    DEFAULT_PORT,
-    DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
@@ -28,7 +26,6 @@ from plugwise.constants import (
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
 
-import aiohttp
 from munch import Munch
 from packaging.version import Version
 
@@ -40,10 +37,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
     def __init__(
         self,
-        host: str,
-        password: str,
         request: Callable[..., Awaitable[Any]],
-        websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
@@ -58,8 +52,6 @@ class SmileLegacyAPI(SmileLegacyData):
         smile_name: str,
         smile_type: str,
         smile_zigbee_mac_address: str | None,
-        port: int = DEFAULT_PORT,
-        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_present = False
