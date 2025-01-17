@@ -13,8 +13,6 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     APPLIANCES,
-    DEFAULT_PORT,
-    DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
@@ -31,7 +29,6 @@ from plugwise.constants import (
 from plugwise.data import SmileData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 
-import aiohttp
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -46,10 +43,7 @@ class SmileAPI(SmileData):
 
     def __init__(
         self,
-        host: str,
-        password: str,
         request: Callable[..., Awaitable[Any]],
-        websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
@@ -68,8 +62,6 @@ class SmileAPI(SmileData):
         smile_name: str,
         smile_type: str,
         smile_version: Version | None,
-        port: int = DEFAULT_PORT,
-        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_enabled = False
