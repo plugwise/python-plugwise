@@ -18,6 +18,7 @@ from plugwise.constants import (
     LOCATIONS,
     MAX_SETPOINT,
     MIN_SETPOINT,
+    NONE,
     NOTIFICATIONS,
     OFF,
     RULES,
@@ -52,7 +53,7 @@ class SmileAPI(SmileData):
         _on_off_device: bool,
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
-        gateway_id: str,
+        gw_data: GatewayData,
         smile_fw_version: Version | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
@@ -67,14 +68,15 @@ class SmileAPI(SmileData):
         self._cooling_enabled = False
         self._cooling_present = _cooling_present
         self._elga = _elga
-        self._heater_id: str
+        self._gateway_id: str = NONE
+        self._heater_id: str = NONE
         self._is_thermostat = _is_thermostat
         self._last_active = _last_active
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._schedule_old_states = _schedule_old_states
-        self.gateway_id = gateway_id
+        self.gw_data = gw_data
         self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
@@ -119,7 +121,6 @@ class SmileAPI(SmileData):
 
         Any change in the connected entities will be detected immediately.
         """
-        self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
         self._zones: dict[str, GwEntityData] = {}
         try:
@@ -137,7 +138,7 @@ class SmileAPI(SmileData):
                         "cooling_enabled"
                     ]
             else:  # cover failed data-retrieval for P1
-                _ = self.gw_entities[self.gateway_id]["location"]
+                _ = self.gw_entities[self._gateway_id]["location"]
         except KeyError as err:
             raise DataMissingError("No Plugwise actual data received") from err
 
@@ -268,7 +269,7 @@ class SmileAPI(SmileData):
             vacation_time = time_2 + "T23:00:00.000Z"
             valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
-        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
+        uri = f"{APPLIANCES};id={self._gateway_id}/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
 
         await self.call_request(uri, method="put", data=data)

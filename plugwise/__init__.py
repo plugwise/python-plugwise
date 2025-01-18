@@ -17,6 +17,7 @@ from plugwise.constants import (
     SMILES,
     STATUS,
     SYSTEM,
+    GatewayData,
     PlugwiseData,
     ThermoLoc,
 )
@@ -73,7 +74,7 @@ class Smile(SmileComm):
         self._smile_api: SmileAPI | SmileLegacyAPI
         self._stretch_v2 = False
         self._target_smile: str = NONE
-        self.gateway_id: str = NONE
+        self.gw_data: GatewayData = {}
         self.smile_fw_version: Version | None = None
         self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
@@ -85,6 +86,16 @@ class Smile(SmileComm):
         self.smile_type: str = NONE
         self.smile_version: Version | None = None
         self.smile_zigbee_mac_address: str | None = None
+
+    @property
+    def gateway_id(self) -> str:
+        """Return the Smile gateway-id."""
+        return self.gw_data["gateway_id"]
+
+    @property
+    def heater_id(self) -> str:
+        """Return the Smile heater-id."""
+        return self.gw_data["heater_id"]
 
     async def connect(self) -> Version | None:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
@@ -133,7 +144,7 @@ class Smile(SmileComm):
                 self._on_off_device,
                 self._opentherm_device,
                 self._schedule_old_states,
-                self.gateway_id,
+                self.gw_data,
                 self.smile_fw_version,
                 self.smile_hostname,
                 self.smile_hw_version,
@@ -153,6 +164,7 @@ class Smile(SmileComm):
                 self._opentherm_device,
                 self._stretch_v2,
                 self._target_smile,
+                self.gw_data,
                 self.smile_fw_version,
                 self.smile_hostname,
                 self.smile_hw_version,
@@ -306,7 +318,6 @@ class Smile(SmileComm):
         data = PlugwiseData(devices={}, gateway={})
         try:
             data = await self._smile_api.async_update()
-            self.gateway_id = data.gateway["gateway_id"]
         except (DataMissingError, KeyError) as err:
             raise PlugwiseError("No Plugwise data received") from err
 
