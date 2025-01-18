@@ -52,7 +52,6 @@ class Smile(SmileComm):
         username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-
         self._timeout = DEFAULT_LEGACY_TIMEOUT
         super().__init__(
             host,
@@ -149,15 +148,15 @@ class Smile(SmileComm):
 
         self._smile_api = (
             SmileAPI(
-                self._request,
-                self.cooling_present,
                 self._elga,
                 self._is_thermostat,
                 self._last_active,
                 self._loc_data,
                 self._on_off_device,
                 self._opentherm_device,
+                self._request,
                 self._schedule_old_states,
+                self.cooling_present,
                 self.gw_data,
                 self.smile_hostname,
                 self.smile_hw_version,
@@ -170,11 +169,11 @@ class Smile(SmileComm):
             )
             if not self.smile_legacy
             else SmileLegacyAPI(
-                self._request,
                 self._is_thermostat,
                 self._loc_data,
                 self._on_off_device,
                 self._opentherm_device,
+                self._request,
                 self._stretch_v2,
                 self._target_smile,
                 self.gw_data,

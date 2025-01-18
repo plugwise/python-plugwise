@@ -37,11 +37,11 @@ class SmileLegacyAPI(SmileLegacyData):
 
     def __init__(
         self,
-        request: Callable[..., Awaitable[Any]],
         _is_thermostat: bool,
         _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
+        _request: Callable[..., Awaitable[Any]],
         _stretch_v2: bool,
         _target_smile: str,
         gw_data: GatewayData,
@@ -59,11 +59,11 @@ class SmileLegacyAPI(SmileLegacyData):
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
+        self._request = _request
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
         self.cooling_present = False
         self.gw_data = gw_data
-        self.request = request
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
@@ -78,12 +78,12 @@ class SmileLegacyAPI(SmileLegacyData):
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self.request(DOMAIN_OBJECTS)
-        self._locations = await self.request(LOCATIONS)
-        self._modules = await self.request(MODULES)
+        self._domain_objects = await self._request(DOMAIN_OBJECTS)
+        self._locations = await self._request(LOCATIONS)
+        self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
         if self.smile_type != "power":
-            self._appliances = await self.request(APPLIANCES)
+            self._appliances = await self._request(APPLIANCES)
 
     def get_all_gateway_entities(self) -> None:
         """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
@@ -123,12 +123,12 @@ class SmileLegacyAPI(SmileLegacyData):
                 ) from err
         else:
             try:
-                self._domain_objects = await self.request(DOMAIN_OBJECTS)
+                self._domain_objects = await self._request(DOMAIN_OBJECTS)
                 match self._target_smile:
                     case "smile_v2":
-                        self._modules = await self.request(MODULES)
+                        self._modules = await self._request(MODULES)
                     case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
-                        self._appliances = await self.request(APPLIANCES)
+                        self._appliances = await self._request(APPLIANCES)
 
                 self._update_gw_entities()
                 # Detect failed data-retrieval
@@ -300,6 +300,6 @@ class SmileLegacyAPI(SmileLegacyData):
         method: str = kwargs["method"]
         data: str | None = kwargs.get("data")
         try:
-            await self.request(uri, method=method, data=data)
+            await self._request(uri, method=method, data=data)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError from exc
