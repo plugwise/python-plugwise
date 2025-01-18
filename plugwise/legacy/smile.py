@@ -55,13 +55,13 @@ class SmileLegacyAPI(SmileLegacyData):
         smile_zigbee_mac_address: str | None,
     ) -> None:
         """Set the constructor for this class."""
-        self._cooling_present = False
         self._is_thermostat = _is_thermostat
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
+        self.cooling_present = False
         self.gw_data = gw_data
         self.request = request
         self.smile_fw_version = smile_fw_version

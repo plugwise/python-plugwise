@@ -71,7 +71,7 @@ class SmileHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._cooling_present: bool
+        self.cooling_present: bool
         self._count: int
         self._dhw_allowed_modes: list[str] = []
         self._domain_objects: etree
@@ -327,14 +327,8 @@ class SmileHelper(SmileCommon):
         ) is not None and (modes := search.find("allowed_modes")) is not None:
             for mode in modes:
                 mode_list.append(mode.text)
-                self._check_cooling_mode(mode.text)
 
         return mode_list
-
-    def _check_cooling_mode(self, mode: str) -> None:
-        """Check if cooling mode is present and update state."""
-        if mode == "cooling":
-            self._cooling_present = True
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
@@ -660,14 +654,14 @@ class SmileHelper(SmileCommon):
 
         if "elga_status_code" in data:
             self._update_elga_cooling(data)
-        elif self._cooling_present and "cooling_state" in data["binary_sensors"]:
+        elif self.cooling_present and "cooling_state" in data["binary_sensors"]:
             self._update_loria_cooling(data)
 
     def _update_elga_cooling(self, data: GwEntityData) -> None:
         """# Anna+Elga: base cooling_state on the elga-status-code."""
         if data["thermostat_supports_cooling"]:
             # Techneco Elga has cooling-capability
-            self._cooling_present = True
+            self.cooling_present = True
             data["model"] = "Generic heater/cooler"
             # Cooling_enabled in xml does NOT show the correct status!
             # Setting it specifically:
@@ -707,7 +701,7 @@ class SmileHelper(SmileCommon):
         """
         # Don't show cooling-related when no cooling present,
         # but, keep cooling_enabled for Elga
-        if not self._cooling_present:
+        if not self.cooling_present:
             if "cooling_state" in data["binary_sensors"]:
                 data["binary_sensors"].pop("cooling_state")
                 self._count -= 1
