@@ -37,7 +37,6 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    GatewayData,
     GwEntityData,
     SensorType,
     ThermoLoc,
@@ -78,8 +77,8 @@ class SmileHelper(SmileCommon):
         self._domain_objects: etree
         self._endpoint: str
         self._elga: bool
+        self._gateway_id: str
         self._gw_allowed_modes: list[str] = []
-        self._heater_id: str
         self._home_loc_id: str
         self._home_location: etree
         self._is_thermostat: bool
@@ -110,8 +109,6 @@ class SmileHelper(SmileCommon):
         self._cooling_active = False
         self._cooling_enabled = False
 
-        self.gateway_id: str
-        self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_fw_version: version.Version | None
         self.smile_hw_version: str | None
@@ -203,7 +200,7 @@ class SmileHelper(SmileCommon):
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return  # pragma: no cover
         appl.available = None
-        appl.entity_id = self.gateway_id
+        appl.entity_id = self._gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]
         appl.location = self._home_loc_id
@@ -216,8 +213,8 @@ class SmileHelper(SmileCommon):
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
-        self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self.gateway_id)
-        self.gateway_id = self._home_loc_id
+        self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self._gateway_id)
+        self._gateway_id = self._home_loc_id
 
         self._create_gw_entities(appl)
 
@@ -290,7 +287,7 @@ class SmileHelper(SmileCommon):
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder()."""
-        self.gateway_id = appliance.attrib["id"]
+        self._gateway_id = appliance.attrib["id"]
         appl.firmware = str(self.smile_fw_version)
         appl.hardware = self.smile_hw_version
         appl.mac = self.smile_mac_address
@@ -568,7 +565,7 @@ class SmileHelper(SmileCommon):
 
         Collect the requested gateway mode.
         """
-        if not (self.smile(ADAM) and entity_id == self.gateway_id):
+        if not (self.smile(ADAM) and entity_id == self._gateway_id):
             return None
 
         if (search := search_actuator_functionalities(appliance, key)) is not None:
@@ -609,7 +606,7 @@ class SmileHelper(SmileCommon):
 
     def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
         """Adam & Anna: the Smile outdoor_temperature is present in the Home location."""
-        if self._is_thermostat and entity_id == self.gateway_id:
+        if self._is_thermostat and entity_id == self._gateway_id:
             locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._home_location.find(locator)) is not None:
                 value = format_measure(found.text, NONE)

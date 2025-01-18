@@ -44,6 +44,7 @@ class SmileLegacyAPI(SmileLegacyData):
         _opentherm_device: bool,
         _stretch_v2: bool,
         _target_smile: str,
+        gw_data: GatewayData,
         smile_fw_version: Version | None,
         smile_hostname: str,
         smile_hw_version: str | None,
@@ -61,6 +62,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self._opentherm_device = _opentherm_device
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
+        self.gw_data = gw_data
         self.request = request
         self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
@@ -109,7 +111,6 @@ class SmileLegacyAPI(SmileLegacyData):
             LOGGER.info(
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
-            self.gw_data: GatewayData = {}
             self.gw_entities: dict[str, GwEntityData] = {}
             try:
                 await self.full_xml_update()

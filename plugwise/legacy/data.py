@@ -7,7 +7,7 @@ from __future__ import annotations
 
 # Dict as class
 # Version detection
-from plugwise.constants import NONE, OFF, GwEntityData
+from plugwise.constants import NONE, OFF, GatewayData, GwEntityData
 from plugwise.legacy.helper import SmileLegacyHelper
 from plugwise.util import remove_empty_platform_dicts
 
@@ -17,6 +17,7 @@ class SmileLegacyData(SmileLegacyHelper):
 
     def __init__(self) -> None:
         """Init."""
+        self.gw_data: GatewayData
         SmileLegacyHelper.__init__(self)
 
     def _all_entity_data(self) -> None:
@@ -25,17 +26,12 @@ class SmileLegacyData(SmileLegacyHelper):
         Collect data for each entity and add to self.gw_data and self.gw_entities.
         """
         self._update_gw_entities()
-        self.gw_data.update(
-            {
-                "gateway_id": self.gateway_id,
-                "item_count": self._count,
-                "smile_name": self.smile_name,
-            }
-        )
+        self.gw_data["gateway_id"] = self.gateway_id
+        self.gw_data["item_count"] = self._count
+        self.gw_data["smile_name"] = self.smile_name
         if self._is_thermostat:
-            self.gw_data.update(
-                {"heater_id": self._heater_id, "cooling_present": False}
-            )
+            self.gw_data["heater_id"] = self._heater_id
+            self.gw_data["cooling_present"] = False
 
     def _update_gw_entities(self) -> None:
         """Helper-function for _all_entity_data() and async_update().

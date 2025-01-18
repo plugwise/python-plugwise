@@ -30,7 +30,6 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     ApplianceType,
-    GatewayData,
     GwEntityData,
     SensorType,
     ThermoLoc,
@@ -81,7 +80,6 @@ class SmileLegacyHelper(SmileCommon):
         self._system: etree
 
         self.gateway_id: str
-        self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_fw_version: Version | None
         self.smile_hw_version: str | None

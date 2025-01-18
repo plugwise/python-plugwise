@@ -15,6 +15,7 @@ from plugwise.constants import (
     NONE,
     OFF,
     ActuatorData,
+    GatewayData,
     GwEntityData,
 )
 from plugwise.helper import SmileHelper
@@ -26,6 +27,7 @@ class SmileData(SmileHelper):
 
     def __init__(self) -> None:
         """Init."""
+        self.gw_data: GatewayData
         SmileHelper.__init__(self)
 
     def _all_entity_data(self) -> None:
@@ -38,19 +40,14 @@ class SmileData(SmileHelper):
             self._update_zones()
             self.gw_entities.update(self._zones)
 
-        self.gw_data.update(
-            {
-                "gateway_id": self.gateway_id,
-                "item_count": self._count,
-                "notifications": self._notifications,
-                "reboot": True,
-                "smile_name": self.smile_name,
-            }
-        )
+        self.gw_data["gateway_id"] = self._gateway_id
+        self.gw_data["item_count"] = self._count
+        self.gw_data["notifications"] = self._notifications
+        self.gw_data["reboot"] = True
+        self.gw_data["smile_name"] = self.smile_name
         if self._is_thermostat:
-            self.gw_data.update(
-                {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
-            )
+            self.gw_data["heater_id"] = self._heater_id
+            self.gw_data["cooling_present"] = self._cooling_present
 
     def _update_zones(self) -> None:
         """Helper-function for _all_entity_data() and async_update().
@@ -69,7 +66,7 @@ class SmileData(SmileHelper):
         mac_list: list[str] = []
         for entity_id, entity in self.gw_entities.items():
             data = self._get_entity_data(entity_id)
-            if entity_id == self.gateway_id:
+            if entity_id == self._gateway_id:
                 mac_list = self._detect_low_batteries()
                 self._add_or_update_notifications(entity_id, entity, data)
 
@@ -123,7 +120,7 @@ class SmileData(SmileHelper):
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
-            entity_id == self.gateway_id
+            entity_id == self._gateway_id
             and (self._is_thermostat or self.smile_type == "power")
         ) or (
             "binary_sensors" in entity
@@ -305,7 +302,7 @@ class SmileData(SmileHelper):
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""
-        gateway = self.gw_entities[self.gateway_id]
+        gateway = self.gw_entities[self._gateway_id]
         return (
             "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
         )
