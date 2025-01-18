@@ -47,7 +47,7 @@ class SmileData(SmileHelper):
         self.gw_data["smile_name"] = self.smile_name
         if self._is_thermostat:
             self.gw_data["heater_id"] = self._heater_id
-            self.gw_data["cooling_present"] = self._cooling_present
+            self.gw_data["cooling_present"] = self.cooling_present
 
     def _update_zones(self) -> None:
         """Helper-function for _all_entity_data() and async_update().
@@ -134,7 +134,7 @@ class SmileData(SmileHelper):
         # For Anna and heating + cooling, replace setpoint with setpoint_high/_low
         if (
             self.smile(ANNA)
-            and self._cooling_present
+            and self.cooling_present
             and entity["dev_class"] == "thermostat"
         ):
             thermostat = entity["thermostat"]
@@ -243,7 +243,7 @@ class SmileData(SmileHelper):
             if "binary_sensors" in data:
                 if (
                     "cooling_enabled" not in data["binary_sensors"]
-                    and self._cooling_present
+                    and self.cooling_present
                 ):
                     data["binary_sensors"]["cooling_enabled"] = self._cooling_enabled
 
@@ -287,7 +287,7 @@ class SmileData(SmileHelper):
         self._count += 1
         if sel_schedule in (NONE, OFF):
             data["climate_mode"] = "heat"
-            if self._cooling_present:
+            if self.cooling_present:
                 data["climate_mode"] = (
                     "cool" if self.check_reg_mode("cooling") else "heat_cool"
                 )

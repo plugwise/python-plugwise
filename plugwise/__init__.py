@@ -63,7 +63,6 @@ class Smile(SmileComm):
             websession,
         )
 
-        self._cooling_present = False
         self._elga = False
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
@@ -74,6 +73,7 @@ class Smile(SmileComm):
         self._smile_api: SmileAPI | SmileLegacyAPI
         self._stretch_v2 = False
         self._target_smile: str = NONE
+        self.cooling_present = False
         self.gw_data: GatewayData = {}
         self.smile_fw_version: Version | None = None
         self.smile_hostname: str = NONE
@@ -89,13 +89,28 @@ class Smile(SmileComm):
 
     @property
     def gateway_id(self) -> str:
-        """Return the Smile gateway-id."""
+        """Return the gateway-id."""
         return self.gw_data["gateway_id"]
 
     @property
     def heater_id(self) -> str:
-        """Return the Smile heater-id."""
+        """Return the heater-id."""
         return self.gw_data["heater_id"]
+
+    @property
+    def item_count(self) -> int:
+        """Return the item-count."""
+        return self.gw_data["item_count"]
+
+    @property
+    def notifications(self) -> dict[str, dict[str, str]]:
+        """Return the Plugwise notifications."""
+        return self.gw_data["notifications"]
+
+    @property
+    def reboot(self) -> bool:
+        """Return the reboot capability."""
+        return self.gw_data["reboot"]
 
     async def connect(self) -> Version | None:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
@@ -136,7 +151,7 @@ class Smile(SmileComm):
         self._smile_api = (
             SmileAPI(
                 self._request,
-                self._cooling_present,
+                self.cooling_present,
                 self._elga,
                 self._is_thermostat,
                 self._last_active,
@@ -251,7 +266,7 @@ class Smile(SmileComm):
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
             if result.find(locator_1) is not None:
-                self._cooling_present = True
+                self.cooling_present = True
             if result.find(locator_2) is not None:
                 self._elga = True
 
