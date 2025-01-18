@@ -110,7 +110,6 @@ class SmileHelper(SmileCommon):
         self._cooling_enabled = False
 
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_fw_version: version.Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
@@ -288,7 +287,7 @@ class SmileHelper(SmileCommon):
     def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder()."""
         self._gateway_id = appliance.attrib["id"]
-        appl.firmware = str(self.smile_fw_version)
+        appl.firmware = str(self.smile_version)
         appl.hardware = self.smile_hw_version
         appl.mac = self.smile_mac_address
         appl.model = self.smile_model

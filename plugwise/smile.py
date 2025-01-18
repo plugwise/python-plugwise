@@ -54,7 +54,6 @@ class SmileAPI(SmileData):
         _opentherm_device: bool,
         _schedule_old_states: dict[str, dict[str, str]],
         gw_data: GatewayData,
-        smile_fw_version: Version | None,
         smile_hostname: str | None,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
@@ -78,7 +77,6 @@ class SmileAPI(SmileData):
         self._schedule_old_states = _schedule_old_states
         self.gw_data = gw_data
         self.request = request
-        self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
