@@ -82,12 +82,12 @@ class SmileLegacyHelper(SmileCommon):
         self.cooling_present: bool
         self.gateway_id: str
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_fw_version: Version | None
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_name: str
         self.smile_type: str
+        self.smile_version: Version | None
         self.smile_zigbee_mac_address: str | None
         SmileCommon.__init__(self)
 
@@ -193,7 +193,7 @@ class SmileLegacyHelper(SmileCommon):
         self.gw_entities[self.gateway_id] = {"dev_class": "gateway"}
         self._count += 1
         for key, value in {
-            "firmware": str(self.smile_fw_version),
+            "firmware": str(self.smile_version),
             "location": self._home_loc_id,
             "mac_address": self.smile_mac_address,
             "model": self.smile_model,

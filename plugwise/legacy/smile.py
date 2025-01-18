@@ -45,13 +45,13 @@ class SmileLegacyAPI(SmileLegacyData):
         _stretch_v2: bool,
         _target_smile: str,
         gw_data: GatewayData,
-        smile_fw_version: Version | None,
         smile_hostname: str,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
         smile_model: str,
         smile_name: str,
         smile_type: str,
+        smile_version: Version | None,
         smile_zigbee_mac_address: str | None,
     ) -> None:
         """Set the constructor for this class."""
@@ -64,13 +64,13 @@ class SmileLegacyAPI(SmileLegacyData):
         self.cooling_present = False
         self.gw_data = gw_data
         self.request = request
-        self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
         self.smile_name = smile_name
         self.smile_type = smile_type
+        self.smile_version = smile_version
         self.smile_zigbee_mac_address = smile_zigbee_mac_address
         SmileLegacyData.__init__(self)
 

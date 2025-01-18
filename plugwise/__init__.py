@@ -75,7 +75,6 @@ class Smile(SmileComm):
         self._target_smile: str = NONE
         self.cooling_present = False
         self.gw_data: GatewayData = {}
-        self.smile_fw_version: Version | None = None
         self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
@@ -160,7 +159,6 @@ class Smile(SmileComm):
                 self._opentherm_device,
                 self._schedule_old_states,
                 self.gw_data,
-                self.smile_fw_version,
                 self.smile_hostname,
                 self.smile_hw_version,
                 self.smile_mac_address,
@@ -180,13 +178,13 @@ class Smile(SmileComm):
                 self._stretch_v2,
                 self._target_smile,
                 self.gw_data,
-                self.smile_fw_version,
                 self.smile_hostname,
                 self.smile_hw_version,
                 self.smile_mac_address,
                 self.smile_model,
                 self.smile_name,
                 self.smile_type,
+                self.smile_version,
                 self.smile_zigbee_mac_address,
             )
         )
@@ -205,7 +203,7 @@ class Smile(SmileComm):
         if (gateway := result.find("./gateway")) is not None:
             if (v_model := gateway.find("vendor_model")) is not None:
                 model = v_model.text
-            self.smile_fw_version = parse(gateway.find("firmware_version").text)
+            self.smile_version = parse(gateway.find("firmware_version").text)
             self.smile_hw_version = gateway.find("hardware_version").text
             self.smile_hostname = gateway.find("hostname").text
             self.smile_mac_address = gateway.find("mac_address").text
@@ -213,7 +211,7 @@ class Smile(SmileComm):
         else:
             model = await self._smile_detect_legacy(result, dsmrmain, model)
 
-        if model == "Unknown" or self.smile_fw_version is None:  # pragma: no cover
+        if model == "Unknown" or self.smile_version is None:  # pragma: no cover
             # Corner case check
             LOGGER.error(
                 "Unable to find model or version information, please create"
@@ -221,7 +219,7 @@ class Smile(SmileComm):
             )
             raise UnsupportedDeviceError
 
-        version_major = str(self.smile_fw_version.major)
+        version_major = str(self.smile_version.major)
         self._target_smile = f"{model}_v{version_major}"
         LOGGER.debug("Plugwise identified as %s", self._target_smile)
         if self._target_smile not in SMILES:
@@ -245,7 +243,6 @@ class Smile(SmileComm):
         self.smile_model = "Gateway"
         self.smile_name = SMILES[self._target_smile].smile_name
         self.smile_type = SMILES[self._target_smile].smile_type
-        self.smile_version = self.smile_fw_version
 
         if self.smile_type == "stretch":
             self._stretch_v2 = int(version_major) == 2
@@ -294,7 +291,7 @@ class Smile(SmileComm):
             or network is not None
         ):
             system = await self._request(SYSTEM)
-            self.smile_fw_version = parse(system.find("./gateway/firmware").text)
+            self.smile_version = parse(system.find("./gateway/firmware").text)
             return_model = system.find("./gateway/product").text
             self.smile_hostname = system.find("./gateway/hostname").text
             # If wlan0 contains data it's active, so eth0 should be checked last
@@ -305,7 +302,7 @@ class Smile(SmileComm):
         # P1 legacy:
         elif dsmrmain is not None:
             status = await self._request(STATUS)
-            self.smile_fw_version = parse(status.find("./system/version").text)
+            self.smile_version = parse(status.find("./system/version").text)
             return_model = status.find("./system/product").text
             self.smile_hostname = status.find("./network/hostname").text
             self.smile_mac_address = status.find("./network/mac_address").text
