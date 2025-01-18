@@ -18,9 +18,9 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
-    GatewayData,
     GwEntityData,
     PlugwiseData,
+    SmileProps,
     ThermoLoc,
 )
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
@@ -42,9 +42,9 @@ class SmileLegacyAPI(SmileLegacyData):
         _on_off_device: bool,
         _opentherm_device: bool,
         _request: Callable[..., Awaitable[Any]],
+        _smile_props: SmileProps,
         _stretch_v2: bool,
         _target_smile: str,
-        gw_data: GatewayData,
         smile_hostname: str,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
@@ -60,10 +60,10 @@ class SmileLegacyAPI(SmileLegacyData):
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
         self._request = _request
+        self._smile_props = _smile_props
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
         self.cooling_present = False
-        self.gw_data = gw_data
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
@@ -139,7 +139,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self._previous_day_number = day_number
         return PlugwiseData(
             devices=self.gw_entities,
-            gateway=self.gw_data,
+            gateway=self._smile_props,
         )
 
     ########################################################################################################

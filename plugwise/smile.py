@@ -22,9 +22,9 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
-    GatewayData,
     GwEntityData,
     PlugwiseData,
+    SmileProps,
     ThermoLoc,
 )
 from plugwise.data import SmileData
@@ -52,8 +52,8 @@ class SmileAPI(SmileData):
         _opentherm_device: bool,
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
+        _smile_props: SmileProps,
         cooling_present: bool,
-        gw_data: GatewayData,
         smile_hostname: str | None,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
@@ -75,8 +75,8 @@ class SmileAPI(SmileData):
         self._opentherm_device = _opentherm_device
         self._request = _request
         self._schedule_old_states = _schedule_old_states
+        self._smile_props = _smile_props
         self.cooling_present = cooling_present
-        self.gw_data = gw_data
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
@@ -126,8 +126,8 @@ class SmileAPI(SmileData):
             self.get_all_gateway_entities()
             # Set self._cooling_enabled - required for set_temperature(),
             # also, check for a failed data-retrieval
-            if "heater_id" in self.gw_data:
-                heat_cooler = self.gw_entities[self.gw_data["heater_id"]]
+            if "heater_id" in self._smile_props:
+                heat_cooler = self.gw_entities[self._smile_props["heater_id"]]
                 if (
                     "binary_sensors" in heat_cooler
                     and "cooling_enabled" in heat_cooler["binary_sensors"]
@@ -142,7 +142,7 @@ class SmileAPI(SmileData):
 
         return PlugwiseData(
             devices=self.gw_entities,
-            gateway=self.gw_data,
+            gateway=self._smile_props,
         )
 
     ########################################################################################################
