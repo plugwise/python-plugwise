@@ -17,8 +17,8 @@ from plugwise.constants import (
     SMILES,
     STATUS,
     SYSTEM,
-    GatewayData,
     PlugwiseData,
+    SmileProps,
     ThermoLoc,
 )
 from plugwise.exceptions import (
@@ -70,10 +70,10 @@ class Smile(SmileComm):
         self._opentherm_device = False
         self._schedule_old_states: dict[str, dict[str, str]] = {}
         self._smile_api: SmileAPI | SmileLegacyAPI
+        self._smile_props: SmileProps = {}
         self._stretch_v2 = False
         self._target_smile: str = NONE
         self.cooling_present = False
-        self.gw_data: GatewayData = {}
         self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
@@ -88,27 +88,27 @@ class Smile(SmileComm):
     @property
     def gateway_id(self) -> str:
         """Return the gateway-id."""
-        return self.gw_data["gateway_id"]
+        return self._smile_props["gateway_id"]
 
     @property
     def heater_id(self) -> str:
         """Return the heater-id."""
-        return self.gw_data["heater_id"]
+        return self._smile_props["heater_id"]
 
     @property
     def item_count(self) -> int:
         """Return the item-count."""
-        return self.gw_data["item_count"]
+        return self._smile_props["item_count"]
 
     @property
     def notifications(self) -> dict[str, dict[str, str]]:
         """Return the Plugwise notifications."""
-        return self.gw_data["notifications"]
+        return self._smile_props["notifications"]
 
     @property
     def reboot(self) -> bool:
         """Return the reboot capability."""
-        return self.gw_data["reboot"]
+        return self._smile_props["reboot"]
 
     async def connect(self) -> Version | None:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
@@ -156,8 +156,8 @@ class Smile(SmileComm):
                 self._opentherm_device,
                 self._request,
                 self._schedule_old_states,
+                self._smile_props,
                 self.cooling_present,
-                self.gw_data,
                 self.smile_hostname,
                 self.smile_hw_version,
                 self.smile_mac_address,
@@ -174,9 +174,9 @@ class Smile(SmileComm):
                 self._on_off_device,
                 self._opentherm_device,
                 self._request,
+                self._smile_props,
                 self._stretch_v2,
                 self._target_smile,
-                self.gw_data,
                 self.smile_hostname,
                 self.smile_hw_version,
                 self.smile_mac_address,

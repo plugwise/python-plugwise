@@ -394,8 +394,8 @@ ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
 )
 
 
-class GatewayData(TypedDict, total=False):
-    """The Gateway Data class."""
+class SmileProps(TypedDict, total=False):
+    """The SmileProps Data class."""
 
     cooling_present: bool
     gateway_id: str
@@ -584,4 +584,4 @@ class PlugwiseData:
     """Plugwise data provided as output."""
 
     devices: dict[str, GwEntityData]
-    gateway: GatewayData
+    gateway: SmileProps
