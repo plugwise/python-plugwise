@@ -44,15 +44,15 @@ class SmileAPI(SmileData):
 
     def __init__(
         self,
-        request: Callable[..., Awaitable[Any]],
-        cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
         _last_active: dict[str, str | None],
         _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
+        _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
+        cooling_present: bool,
         gw_data: GatewayData,
         smile_hostname: str | None,
         smile_hw_version: str | None,
@@ -65,7 +65,6 @@ class SmileAPI(SmileData):
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_enabled = False
-        self.cooling_present = cooling_present
         self._elga = _elga
         self._gateway_id: str = NONE
         self._heater_id: str = NONE
@@ -74,9 +73,10 @@ class SmileAPI(SmileData):
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
+        self._request = _request
         self._schedule_old_states = _schedule_old_states
+        self.cooling_present = cooling_present
         self.gw_data = gw_data
-        self.request = request
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
@@ -90,7 +90,7 @@ class SmileAPI(SmileData):
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self.request(DOMAIN_OBJECTS)
+        self._domain_objects = await self._request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
@@ -469,6 +469,6 @@ class SmileAPI(SmileData):
         method: str = kwargs["method"]
         data: str | None = kwargs.get("data")
         try:
-            await self.request(uri, method=method, data=data)
+            await self._request(uri, method=method, data=data)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError from exc
