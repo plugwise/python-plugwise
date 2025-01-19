@@ -50,6 +50,7 @@
       "model": "Gateway",
       "model_id": "smile_open_therm",
       "name": "Adam",
+      "notifications": {},
       "regulation_modes": [
         "heating",
         "off",
