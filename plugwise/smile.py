@@ -18,7 +18,6 @@ from plugwise.constants import (
     LOCATIONS,
     MAX_SETPOINT,
     MIN_SETPOINT,
-    NONE,
     NOTIFICATIONS,
     OFF,
     RULES,
@@ -63,11 +62,8 @@ class SmileAPI(SmileData):
         smile_version: Version | None,
     ) -> None:
         """Set the constructor for this class."""
-        self._cooling_enabled = False
         self._cooling_present = _cooling_present
         self._elga = _elga
-        self._gateway_id: str = NONE
-        self._heater_id: str = NONE
         self._is_thermostat = _is_thermostat
         self._last_active = _last_active
         self._loc_data = _loc_data

@@ -62,29 +62,14 @@ class SmileLegacyHelper(SmileCommon):
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._appliances: etree
-        self._count: int
-        self._domain_objects: etree
-        self._heater_id: str
-        self._home_loc_id: str
         self._is_thermostat: bool
-        self._last_modified: dict[str, str] = {}
         self._loc_data: dict[str, ThermoLoc]
         self._locations: etree
         self._modules: etree
-        self._notifications: dict[str, dict[str, str]] = {}
-        self._on_off_device: bool
-        self._opentherm_device: bool
-        self._outdoor_temp: float
-        self._status: etree
         self._stretch_v2: bool
-        self._system: etree
-        self.gateway_id: str
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
-        self.smile_name: str
-        self.smile_type: str
         self.smile_version: Version | None
         self.smile_zigbee_mac_address: str | None
         SmileCommon.__init__(self)

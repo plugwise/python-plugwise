@@ -34,13 +34,10 @@ class SmileCommon:
 
     def __init__(self) -> None:
         """Init."""
-        self._appliances: etree
         self._cooling_present: bool
         self._count: int
         self._domain_objects: etree
-        self._heater_id: str
         self._on_off_device: bool
-        self._opentherm_device: bool
         self.gw_entities: dict[str, GwEntityData]
         self.smile_name: str
         self.smile_type: str
