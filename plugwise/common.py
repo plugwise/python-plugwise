@@ -35,9 +35,9 @@ class SmileCommon:
     def __init__(self) -> None:
         """Init."""
         self._appliances: etree
+        self._cooling_present: bool
         self._count: int
         self._domain_objects: etree
-        self.cooling_present: bool
         self._heater_id: str
         self._on_off_device: bool
         self._opentherm_device: bool
@@ -84,7 +84,7 @@ class SmileCommon:
         appl.hardware = module_data["hardware_version"]
         appl.model_id = module_data["vendor_model"] if not legacy else None
         appl.model = (
-            "Generic heater/cooler" if self.cooling_present else "Generic heater"
+            "Generic heater/cooler" if self._cooling_present else "Generic heater"
         )
 
         return appl

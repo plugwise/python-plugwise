@@ -78,8 +78,6 @@ class SmileLegacyHelper(SmileCommon):
         self._status: etree
         self._stretch_v2: bool
         self._system: etree
-
-        self.cooling_present: bool
         self.gateway_id: str
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_hw_version: str | None

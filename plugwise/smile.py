@@ -44,6 +44,7 @@ class SmileAPI(SmileData):
 
     def __init__(
         self,
+        _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
         _last_active: dict[str, str | None],
@@ -53,7 +54,6 @@ class SmileAPI(SmileData):
         _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
         _smile_props: SmileProps,
-        cooling_present: bool,
         smile_hostname: str | None,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
@@ -65,6 +65,7 @@ class SmileAPI(SmileData):
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_enabled = False
+        self._cooling_present = _cooling_present
         self._elga = _elga
         self._gateway_id: str = NONE
         self._heater_id: str = NONE
@@ -76,7 +77,6 @@ class SmileAPI(SmileData):
         self._request = _request
         self._schedule_old_states = _schedule_old_states
         self._smile_props = _smile_props
-        self.cooling_present = cooling_present
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
@@ -430,7 +430,7 @@ class SmileAPI(SmileData):
         if "setpoint" in items:
             setpoint = items["setpoint"]
 
-        if self.smile(ANNA) and self.cooling_present:
+        if self.smile(ANNA) and self._cooling_present:
             if "setpoint_high" not in items:
                 raise PlugwiseError(
                     "Plugwise: failed setting temperature: no valid input provided"

@@ -62,6 +62,7 @@ class Smile(SmileComm):
             websession,
         )
 
+        self._cooling_present = False
         self._elga = False
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
@@ -73,7 +74,6 @@ class Smile(SmileComm):
         self._smile_props: SmileProps = {}
         self._stretch_v2 = False
         self._target_smile: str = NONE
-        self.cooling_present = False
         self.smile_hostname: str = NONE
         self.smile_hw_version: str | None = None
         self.smile_legacy = False
@@ -84,6 +84,11 @@ class Smile(SmileComm):
         self.smile_type: str = NONE
         self.smile_version: Version | None = None
         self.smile_zigbee_mac_address: str | None = None
+
+    @property
+    def cooling_present(self) -> str:
+        """Return the cooling capability."""
+        return self._smile_props["cooling_present"]
 
     @property
     def gateway_id(self) -> str:
@@ -148,6 +153,7 @@ class Smile(SmileComm):
 
         self._smile_api = (
             SmileAPI(
+                self._cooling_present,
                 self._elga,
                 self._is_thermostat,
                 self._last_active,
@@ -157,7 +163,6 @@ class Smile(SmileComm):
                 self._request,
                 self._schedule_old_states,
                 self._smile_props,
-                self.cooling_present,
                 self.smile_hostname,
                 self.smile_hw_version,
                 self.smile_mac_address,
@@ -262,7 +267,7 @@ class Smile(SmileComm):
             locator_1 = "./gateway/features/cooling"
             locator_2 = "./gateway/features/elga_support"
             if result.find(locator_1) is not None:
-                self.cooling_present = True
+                self._cooling_present = True
             if result.find(locator_2) is not None:
                 self._elga = True
 
