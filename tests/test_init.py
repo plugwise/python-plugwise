@@ -608,19 +608,19 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 if smile.smile_legacy:
                     await smile.full_xml_update()
                     smile.get_all_gateway_entities()
-                    await smile.async_update()
+                    data = await smile.async_update()
                     assert smile._timeout == 30
                 else:
-                    await smile.async_update()
+                    data = await smile.async_update()
                     assert smile._timeout == 10
             else:
                 _LOGGER.info("Asserting updated testdata:")
-                await smile.async_update()
+                data = await smile.async_update()
 
         _LOGGER.info("Gateway id = %s", smile.gateway_id)
         _LOGGER.info("Heater id = %s", smile.heater_id)
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
-        _LOGGER.info("Entities list = %s", smile.devices)
+        _LOGGER.info("Entities list = %s", data)
 
         self.cooling_present = smile.cooling_present
         self.notifications = smile.notifications
@@ -629,7 +629,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self._cooling_active = False
         self._cooling_enabled = False
         if smile.heater_id != "None":
-            heat_cooler = smile.devices[smile.heater_id]
+            heat_cooler = data[smile.heater_id]
             if "binary_sensors" in heat_cooler:
                 if "cooling_enabled" in heat_cooler["binary_sensors"]:
                     self._cooling_enabled = heat_cooler["binary_sensors"][
@@ -640,23 +640,23 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                         "cooling_state"
                     ]
 
-        self._write_json("all_data", {"devices": smile.devices})
+        self._write_json("all_data", {"devices": data})
 
         if "FIXTURES" in os.environ:
             _LOGGER.info("Skipping tests: Requested fixtures only")  # pragma: no cover
             return  # pragma: no cover
 
-        self.entity_list = list(smile.devices.keys())
+        self.entity_list = list(data.keys())
         location_list = smile._loc_data
 
-        self.show_setup(location_list, smile.devices)
+        self.show_setup(location_list, data)
 
         if skip_testing:
             return
 
         # Perform tests and asserts in two steps: devices and zones
         for header, data_dict in testdata.items():
-            test_and_assert(data_dict, smile.devices, header)
+            test_and_assert(data_dict, data, header)
 
         # pragma warning restore S3776
 
