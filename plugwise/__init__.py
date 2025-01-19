@@ -112,12 +112,17 @@ class Smile(SmileComm):
     @property
     def notifications(self) -> dict[str, dict[str, str]]:
         """Return the Plugwise notifications."""
-        return self._smile_props["notifications"]
+        if "notifications" in self._smile_props:
+            return self._smile_props["notifications"]
+        return {}
 
     @property
     def reboot(self) -> bool:
-        """Return the reboot capability."""
-        return self._smile_props["reboot"]
+        """Return the reboot capability.
+
+        All non-legacy devices support gateway-rebooting.
+        """
+        return not self.smile_legacy
 
     async def connect(self) -> Version | None:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
