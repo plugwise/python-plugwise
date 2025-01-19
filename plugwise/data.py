@@ -43,7 +43,6 @@ class SmileData(SmileHelper):
 
         self._smile_props["gateway_id"] = self._gateway_id
         self._smile_props["item_count"] = self._count
-        self._smile_props["notifications"] = self._notifications
         self._smile_props["reboot"] = True
         self._smile_props["smile_name"] = self.smile_name
         if self._is_thermostat:
@@ -128,7 +127,8 @@ class SmileData(SmileHelper):
             and "plugwise_notification" in entity["binary_sensors"]
         ):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
-            self._count += 1
+            data["notifications"] = self._notifications
+            self._count += 2
 
     def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
