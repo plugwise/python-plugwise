@@ -623,7 +623,9 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         _LOGGER.info("Entities list = %s", data)
 
         self.cooling_present = smile.cooling_present
-        self.notifications = data[smile.gateway_id]["notifications"]
+        self.notifications = None
+        if "notifications" in data[smile.gateway_id]:
+            self.notifications = data[smile.gateway_id]["notifications"]
         self.entity_items = smile.item_count
 
         self._cooling_active = False
