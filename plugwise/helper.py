@@ -71,53 +71,18 @@ class SmileHelper(SmileCommon):
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._cooling_present: bool
-        self._count: int
-        self._dhw_allowed_modes: list[str] = []
-        self._domain_objects: etree
         self._endpoint: str
         self._elga: bool
         self._gateway_id: str
-        self._gw_allowed_modes: list[str] = []
-        self._home_loc_id: str
-        self._home_location: etree
         self._is_thermostat: bool
         self._last_active: dict[str, str | None]
-        self._last_modified: dict[str, str] = {}
         self._loc_data: dict[str, ThermoLoc]
-        self._notifications: dict[str, dict[str, str]] = {}
-        self._on_off_device: bool
-        self._opentherm_device: bool
-        self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]]
-        self._status: etree
-        self._stretch_v2: bool
-        self._system: etree
-        self._thermo_locs: dict[str, ThermoLoc] = {}
-        ###################################################################
-        # '_cooling_enabled' can refer to the state of the Elga heatpump
-        # connected to an Anna. For Elga, 'elga_status_code' in (8, 9)
-        # means cooling mode is available, next to heating mode.
-        # 'elga_status_code' = 8 means cooling is active, 9 means idle.
-        #
-        # '_cooling_enabled' cam refer to the state of the Loria or
-        # Thermastage heatpump connected to an Anna. For these,
-        # 'cooling_enabled' = on means set to cooling mode, instead of to
-        # heating mode.
-        # 'cooling_state' = on means cooling is active.
-        ###################################################################
-        self._cooling_active = False
-        self._cooling_enabled = False
-
-        self.gw_entities: dict[str, GwEntityData]
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_model_id: str | None
-        self.smile_name: str
-        self.smile_type: str
         self.smile_version: version.Version | None
-        self.smile_zigbee_mac_address: str | None
         self._zones: dict[str, GwEntityData]
         SmileCommon.__init__(self)
 
@@ -657,7 +622,11 @@ class SmileHelper(SmileCommon):
             self._update_loria_cooling(data)
 
     def _update_elga_cooling(self, data: GwEntityData) -> None:
-        """# Anna+Elga: base cooling_state on the elga-status-code."""
+        """# Anna+Elga: base cooling_state on the elga-status-code.
+
+        For Elga, 'elga_status_code' in (8, 9) means cooling is enabled.
+        'elga_status_code' = 8 means cooling is active, 9 means idle.
+        """
         if data["thermostat_supports_cooling"]:
             # Techneco Elga has cooling-capability
             self._cooling_present = True
@@ -679,7 +648,11 @@ class SmileHelper(SmileCommon):
         self._count -= 1
 
     def _update_loria_cooling(self, data: GwEntityData) -> None:
-        """Loria/Thermastage: base cooling-related on cooling_state and modulation_level."""
+        """Loria/Thermastage: base cooling-related on cooling_state and modulation_level.
+
+        For the Loria or Thermastage heatpump connected to an Anna cooling-enabled is
+        indicated via the Cooling Enable switch in the Plugwise App.
+        """
         # For Loria/Thermastage it's not clear if cooling_enabled in xml shows the correct status,
         # setting it specifically:
         self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data[
