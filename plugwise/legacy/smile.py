@@ -19,7 +19,6 @@ from plugwise.constants import (
     REQUIRE_APPLIANCES,
     RULES,
     GwEntityData,
-    PlugwiseData,
     SmileProps,
     ThermoLoc,
 )
@@ -98,7 +97,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._all_entity_data()
 
-    async def async_update(self) -> PlugwiseData:
+    async def async_update(self) -> dict[str, GwEntityData]:
         """Perform an full update update at day-change: re-collect all gateway entities and their data and states.
 
         Otherwise perform an incremental update: only collect the entities updated data and states.
@@ -137,10 +136,7 @@ class SmileLegacyAPI(SmileLegacyData):
                 raise DataMissingError("No legacy Plugwise data received") from err
 
         self._previous_day_number = day_number
-        return PlugwiseData(
-            devices=self.gw_entities,
-            gateway=self._smile_props,
-        )
+        return self.gw_entities
 
     ########################################################################################################
     ###  API Set and HA Service-related Functions                                                        ###

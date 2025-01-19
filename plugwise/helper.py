@@ -109,7 +109,7 @@ class SmileHelper(SmileCommon):
         self._cooling_active = False
         self._cooling_enabled = False
 
-        self.gw_entities: dict[str, GwEntityData] = {}
+        self.gw_entities: dict[str, GwEntityData]
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
@@ -118,7 +118,7 @@ class SmileHelper(SmileCommon):
         self.smile_type: str
         self.smile_version: version.Version | None
         self.smile_zigbee_mac_address: str | None
-        self._zones: dict[str, GwEntityData] = {}
+        self._zones: dict[str, GwEntityData]
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:

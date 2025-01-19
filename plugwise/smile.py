@@ -23,7 +23,6 @@ from plugwise.constants import (
     OFF,
     RULES,
     GwEntityData,
-    PlugwiseData,
     SmileProps,
     ThermoLoc,
 )
@@ -114,7 +113,7 @@ class SmileAPI(SmileData):
 
         self._all_entity_data()
 
-    async def async_update(self) -> PlugwiseData:
+    async def async_update(self) -> dict[str, GwEntityData]:
         """Perform an full update: re-collect all gateway entities and their data and states.
 
         Any change in the connected entities will be detected immediately.
@@ -140,10 +139,7 @@ class SmileAPI(SmileData):
         except KeyError as err:
             raise DataMissingError("No Plugwise actual data received") from err
 
-        return PlugwiseData(
-            devices=self.gw_entities,
-            gateway=self._smile_props,
-        )
+        return self.gw_entities
 
     ########################################################################################################
     ###  API Set and HA Service-related Functions                                                        ###

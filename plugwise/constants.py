@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections import namedtuple
-from dataclasses import dataclass
 import logging
 from typing import Final, Literal, TypedDict, get_args
 
@@ -577,11 +576,3 @@ class GwEntityData(TypedDict, total=False):
     switches: SmileSwitches
     temperature_offset: ActuatorData
     thermostat: ActuatorData
-
-
-@dataclass
-class PlugwiseData:
-    """Plugwise data provided as output."""
-
-    devices: dict[str, GwEntityData]
-    gateway: SmileProps
