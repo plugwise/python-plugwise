@@ -617,17 +617,14 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
                 _LOGGER.info("Asserting updated testdata:")
                 data = await smile.async_update()
 
-        self.cooling_present = False
-        if "cooling_present" in data.gateway:
-            self.cooling_present = data.gateway["cooling_present"]
-        if "notifications" in data.gateway:
-            self.notifications = data.gateway["notifications"]
-        self.entity_items = data.gateway["item_count"]
+        self.cooling_present = smile.cooling_present
+        self.notifications = smile.notifications
+        self.entity_items = smile.item_count
 
         self._cooling_active = False
         self._cooling_enabled = False
-        if "heater_id" in data.gateway:
-            heat_cooler = data.devices[data.gateway["heater_id"]]
+        if smile.heater_id != "None":
+            heat_cooler = data.devices[smile.heater_id]
             if "binary_sensors" in heat_cooler:
                 if "cooling_enabled" in heat_cooler["binary_sensors"]:
                     self._cooling_enabled = heat_cooler["binary_sensors"][
@@ -647,7 +644,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.entity_list = list(data.devices.keys())
         location_list = smile._loc_data
 
-        _LOGGER.info("Gateway id = %s", data.gateway["gateway_id"])
+        _LOGGER.info("Gateway id = %s", smile.gateway_id)
         _LOGGER.info("Hostname = %s", smile.smile_hostname)
         _LOGGER.info("Gateway data = %s", data.gateway)
         _LOGGER.info("Entities list = %s", data.devices)
