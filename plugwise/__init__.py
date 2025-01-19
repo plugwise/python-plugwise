@@ -110,13 +110,6 @@ class Smile(SmileComm):
         return self._smile_props["item_count"]
 
     @property
-    def notifications(self) -> dict[str, dict[str, str]]:
-        """Return the Plugwise notifications."""
-        if "notifications" in self._smile_props:
-            return self._smile_props["notifications"]
-        return {}
-
-    @property
     def reboot(self) -> bool:
         """Return the reboot capability.
 
