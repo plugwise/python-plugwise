@@ -28,6 +28,8 @@ class SmileLegacyData(SmileLegacyHelper):
         self._update_gw_entities()
         self._smile_props["gateway_id"] = self.gateway_id
         self._smile_props["item_count"] = self._count
+        self._smile_props["notifications"] = {}
+        self._smile_props["reboot"] = False
         self._smile_props["smile_name"] = self.smile_name
         if self._is_thermostat:
             self._smile_props["heater_id"] = self._heater_id
