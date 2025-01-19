@@ -67,10 +67,6 @@ base = json.load(io)
 
 m_adam_cooling = base.copy()
 
-# Set cooling_present to true, item_count to 89
-m_adam_cooling["gateway"]["cooling_present"] = True
-m_adam_cooling["gateway"]["item_count"] = 89
-
 # Remove devices 67d73d0bd469422db25a618a5fb8eeb0, 29542b2b6a6a4169acecc15c72a599b8 and 10016900610d4c7481df78c89606ef22 from anywhere
 m_adam_cooling["devices"].pop("29542b2b6a6a4169acecc15c72a599b8")
 m_adam_cooling["devices"].pop("67d73d0bd469422db25a618a5fb8eeb0")
@@ -166,9 +162,6 @@ json_writer("m_adam_cooling", m_adam_cooling)
 
 m_adam_heating = m_adam_cooling.copy()
 
-# Set cooling_present to false
-m_adam_heating["gateway"]["cooling_present"] = False
-
 # Correct setpoint for "ad4838d7d35c4d6ea796ee12ae5aedf8"
 m_adam_heating["devices"]["f2bf9048bef64cc5b6d5110154e33c81"]["thermostat"][
     "setpoint"
@@ -257,9 +250,6 @@ basefile = f"./fixtures/{base_anna_manual}/all_data.json"
 io = open(basefile)
 base = json.load(io)
 m_anna_heatpump_cooling = base.copy()
-
-# Set cooling_present to true
-m_anna_heatpump_cooling["gateway"]["cooling_present"] = True
 
 # Go for 1cbf
 m_anna_heatpump_cooling["devices"]["1cbf783bb11e4a7c8a6843dee3a86927"][
