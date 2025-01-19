@@ -649,7 +649,6 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
         self.entity_list = list(smile.devices.keys())
         location_list = smile._loc_data
 
-
         self.show_setup(location_list, smile.devices)
 
         if skip_testing:
