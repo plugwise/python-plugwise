@@ -5,8 +5,6 @@ Plugwise Smile communication protocol helpers.
 
 from __future__ import annotations
 
-import asyncio
-
 from plugwise.constants import LOGGER
 from plugwise.exceptions import (
     ConnectionFailedError,
@@ -36,17 +34,7 @@ class SmileComm:
         """Set the constructor for this class."""
         if not websession:
             aio_timeout = ClientTimeout(total=timeout)
-
-            async def _create_session() -> ClientSession:
-                return ClientSession(timeout=aio_timeout)  # pragma: no cover
-
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                self._websession = ClientSession(timeout=aio_timeout)
-            else:
-                self._websession = loop.run_until_complete(
-                    _create_session()
-                )  # pragma: no cover
+            self._websession = ClientSession(timeout=aio_timeout)
         else:
             self._websession = websession
 
