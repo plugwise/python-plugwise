@@ -86,11 +86,11 @@ class Smile(SmileComm):
         self.smile_zigbee_mac_address: str | None = None
 
     @property
-    def cooling_present(self) -> str | None:
+    def cooling_present(self) -> bool:
         """Return the cooling capability."""
         if "cooling_present" in self._smile_props:
             return self._smile_props["cooling_present"]
-        return None
+        return False
 
     @property
     def gateway_id(self) -> str:
