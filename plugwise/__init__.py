@@ -100,7 +100,9 @@ class Smile(SmileComm):
     @property
     def heater_id(self) -> str:
         """Return the heater-id."""
-        return self._smile_props["heater_id"]
+        if "heater_id" in self._smile_props:
+            return self._smile_props["heater_id"]
+        return NONE
 
     @property
     def item_count(self) -> int:
