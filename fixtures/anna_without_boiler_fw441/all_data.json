@@ -58,14 +58,5 @@
       "model": "Unknown",
       "name": "OnOff"
     }
-  },
-  "gateway": {
-    "cooling_present": false,
-    "gateway_id": "a270735e4ccd45239424badc0578a2b1",
-    "heater_id": "c46b4794d28149699eacf053deedd003",
-    "item_count": 40,
-    "notifications": {},
-    "reboot": true,
-    "smile_name": "Smile Anna"
   }
 }

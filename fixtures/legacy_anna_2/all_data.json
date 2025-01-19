@@ -62,12 +62,5 @@
         "water_temperature": 54.0
       }
     }
-  },
-  "gateway": {
-    "cooling_present": false,
-    "gateway_id": "be81e3f8275b4129852c4d8d550ae2eb",
-    "heater_id": "ea5d8a7177e541b0a4b52da815166de4",
-    "item_count": 43,
-    "smile_name": "Smile Anna"
   }
 }

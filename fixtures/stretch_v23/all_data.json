@@ -352,10 +352,5 @@
       "vendor": "Plugwise",
       "zigbee_mac_address": "ABCD012345670A06"
     }
-  },
-  "gateway": {
-    "gateway_id": "0000aaaa0000aaaa0000aaaa0000aa00",
-    "item_count": 243,
-    "smile_name": "Stretch"
   }
 }
