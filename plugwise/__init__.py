@@ -63,7 +63,6 @@ class Smile(SmileComm):
         )
 
         self._cooling_present = False
-        self._devices: dict[str, GwEntityData] = {}
         self._elga = False
         self._is_thermostat = False
         self._last_active: dict[str, str | None] = {}
@@ -92,11 +91,6 @@ class Smile(SmileComm):
         if "cooling_present" in self._smile_props:
             return self._smile_props["cooling_present"]
         return False
-
-    @property
-    def devices(self) -> dict[str, GwEntityData]:
-        """Return all devices and their data."""
-        return self._devices
 
     @property
     def gateway_id(self) -> str:
@@ -344,12 +338,15 @@ class Smile(SmileComm):
         """Collect the Plugwise Gateway entities and their data and states from the received raw XML-data."""
         self._smile_api.get_all_gateway_entities()
 
-    async def async_update(self) -> None:
+    async def async_update(self) -> dict[str, GwEntityData]:
         """Update the Plughwise Gateway entities and their data and states."""
+        data: dict[str, GwEntityData] = {}
         try:
-            self._devices = await self._smile_api.async_update()
+            data = await self._smile_api.async_update()
         except (DataMissingError, KeyError) as err:
             raise PlugwiseError("No Plugwise data received") from err
+
+        return data
 
     ########################################################################################################
     ###  API Set and HA Service-related Functions                                                        ###
