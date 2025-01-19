@@ -446,7 +446,7 @@ class SmileHelper(SmileCommon):
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
-                self._notifications.update({msg_id: {msg_type: msg}})
+                self._notifications[msg_id] = {msg_type: msg}
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
                 LOGGER.debug(

@@ -400,7 +400,6 @@ class SmileProps(TypedDict, total=False):
     gateway_id: str
     heater_id: str
     item_count: int
-    notifications: dict[str, dict[str, str]]
     reboot: bool
     smile_name: str
 
@@ -551,6 +550,7 @@ class GwEntityData(TypedDict, total=False):
 
     # Gateway
     gateway_modes: list[str]
+    notifications: dict[str, dict[str, str]]
     regulation_modes: list[str]
     select_gateway_mode: str
     select_regulation_mode: str
