@@ -43,7 +43,7 @@ class SmileComm:
             host = f"[{host}]"
 
         self._auth = BasicAuth(username, password=password)
-        self._endpoint = f"http://{host}:{str(port)}"
+        self._endpoint = f"http://{host}:{str(port)}" # Sensitive
 
     async def _request(
         self,
