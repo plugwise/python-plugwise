@@ -131,7 +131,7 @@ class SmileAPI(SmileData):
                         "cooling_enabled"
                     ]
             else:  # cover failed data-retrieval for P1
-                _ = self.gw_entities[self._gateway_id]["location"]
+                _ = self.gw_entities[self._smile_props["gateway_id"]]["location"]
         except KeyError as err:
             raise DataMissingError("No Plugwise actual data received") from err
 
@@ -259,7 +259,7 @@ class SmileAPI(SmileData):
             vacation_time = time_2 + "T23:00:00.000Z"
             valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
-        uri = f"{APPLIANCES};id={self._gateway_id}/gateway_mode_control"
+        uri = f"{APPLIANCES};id={self._smile_props['gateway_id']}/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
 
         await self.call_request(uri, method="put", data=data)

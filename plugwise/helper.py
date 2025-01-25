@@ -73,11 +73,11 @@ class SmileHelper(SmileCommon):
         """Set the constructor for this class."""
         self._endpoint: str
         self._elga: bool
-        self._gateway_id: str
         self._is_thermostat: bool
         self._last_active: dict[str, str | None]
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
+        self._gateway_id: str = NONE
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
