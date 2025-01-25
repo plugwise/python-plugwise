@@ -52,6 +52,7 @@ class SmileLegacyAPI(SmileLegacyData):
         smile_type: str,
         smile_version: Version | None,
         smile_zigbee_mac_address: str | None,
+        gw_entities: dict[str, GwEntityData] = {},
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_present = False

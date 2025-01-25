@@ -60,6 +60,8 @@ class SmileAPI(SmileData):
         smile_name: str,
         smile_type: str,
         smile_version: Version | None,
+        _zones: dict[str, GwEntityData] = {},
+        gw_entities: dict[str, GwEntityData] = {},
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_present = _cooling_present
