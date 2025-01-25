@@ -51,36 +51,33 @@ class SmileComm:
         retry: int = 3,
         method: str = "get",
         data: str | None = None,
-        headers: dict[str, str] | None = None,
     ) -> etree:
         """Get/put/delete data from a give URL."""
         resp: ClientResponse
         url = f"{self._endpoint}{command}"
-        use_headers = headers
-
         try:
             match method:
                 case "delete":
                     resp = await self._websession.delete(url, auth=self._auth)
                 case "get":
                     # Work-around for Stretchv2, should not hurt the other smiles
-                    use_headers = {"Accept-Encoding": "gzip"}
+                    headers = {"Accept-Encoding": "gzip"}
                     resp = await self._websession.get(
-                        url, headers=use_headers, auth=self._auth
+                        url, headers=headers, auth=self._auth
                     )
                 case "post":
-                    use_headers = {"Content-type": "text/xml"}
+                    headers = {"Content-type": "text/xml"}
                     resp = await self._websession.post(
                         url,
-                        headers=use_headers,
+                        headers=headers,
                         data=data,
                         auth=self._auth,
                     )
                 case "put":
-                    use_headers = {"Content-type": "text/xml"}
+                    headers = {"Content-type": "text/xml"}
                     resp = await self._websession.put(
                         url,
-                        headers=use_headers,
+                        headers=headers,
                         data=data,
                         auth=self._auth,
                     )
