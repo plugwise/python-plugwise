@@ -78,6 +78,7 @@ class SmileHelper(SmileCommon):
         self._loc_data: dict[str, ThermoLoc]
         self._schedule_old_states: dict[str, dict[str, str]]
         self._gateway_id: str = NONE
+        self.gw_entities: dict[str, GwEntityData]
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
