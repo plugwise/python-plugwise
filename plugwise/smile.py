@@ -60,8 +60,6 @@ class SmileAPI(SmileData):
         smile_name: str,
         smile_type: str,
         smile_version: Version | None,
-        _zones: dict[str, GwEntityData] = {},
-        gw_entities: dict[str, GwEntityData] = {},
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_present = _cooling_present
@@ -116,8 +114,8 @@ class SmileAPI(SmileData):
 
         Any change in the connected entities will be detected immediately.
         """
-        self.gw_entities: dict[str, GwEntityData] = {}
-        self._zones: dict[str, GwEntityData] = {}
+        self._zones = {}
+        self.gw_entities = {}
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()
