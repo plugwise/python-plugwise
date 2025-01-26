@@ -54,6 +54,21 @@ def collect_power_values(
         data["sensors"][key] = loc.f_val
 
 
+def get_zigbee_data(module: etree, module_data: ModuleData, legacy: bool) -> None:
+    """Helper-function for _get_module_data()."""
+    if legacy:
+        # Stretches
+        if (router := module.find("./protocols/network_router")) is not None:
+            module_data["zigbee_mac_address"] = router.find("mac_address").text
+        # Also look for the Circle+/Stealth M+
+        if (coord := module.find("./protocols/network_coordinator")) is not None:
+            module_data["zigbee_mac_address"] = coord.find("mac_address").text
+    # Adam
+    elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
+        module_data["zigbee_mac_address"] = zb_node.find("mac_address").text
+        module_data["reachable"] = zb_node.find("reachable").text == "true"
+
+
 def power_data_peak_value(loc: Munch, legacy: bool) -> Munch:
     """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
     loc.found = True
@@ -310,22 +325,6 @@ class SmileCommon:
                 module_data["vendor_model"] = module.find("vendor_model").text
                 module_data["hardware_version"] = module.find("hardware_version").text
                 module_data["firmware_version"] = module.find("firmware_version").text
-                self._get_zigbee_data(module, module_data, legacy)
+                get_zigbee_data(module, module_data, legacy)
 
         return module_data
-
-    def _get_zigbee_data(
-        self, module: etree, module_data: ModuleData, legacy: bool
-    ) -> None:
-        """Helper-function for _get_module_data()."""
-        if legacy:
-            # Stretches
-            if (router := module.find("./protocols/network_router")) is not None:
-                module_data["zigbee_mac_address"] = router.find("mac_address").text
-            # Also look for the Circle+/Stealth M+
-            if (coord := module.find("./protocols/network_coordinator")) is not None:
-                module_data["zigbee_mac_address"] = coord.find("mac_address").text
-        # Adam
-        elif (zb_node := module.find("./protocols/zig_bee_node")) is not None:
-            module_data["zigbee_mac_address"] = zb_node.find("mac_address").text
-            module_data["reachable"] = zb_node.find("reachable").text == "true"
