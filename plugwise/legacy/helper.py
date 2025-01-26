@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import cast
 
-from plugwise.common import SmileCommon, collect_power_values
+from plugwise.common import SmileCommon
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -35,6 +35,7 @@ from plugwise.constants import (
     ThermoLoc,
 )
 from plugwise.util import (
+    collect_power_values,
     common_match_cases,
     count_data_items,
     format_measure,
