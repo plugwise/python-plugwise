@@ -41,8 +41,6 @@ from packaging.version import Version, parse
 class Smile(SmileComm):
     """The main Plugwise Smile API class."""
 
-    # pylint: disable=too-many-instance-attributes, too-many-public-methods
-
     def __init__(
         self,
         host: str,
