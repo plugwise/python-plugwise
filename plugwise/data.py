@@ -28,7 +28,7 @@ class SmileData(SmileHelper):
     def __init__(self) -> None:
         """Init."""
         self._smile_props: SmileProps
-        self.gw_entities: dict[str, GwEntityData]
+        self._zones: dict[str, GwEntityData] = {}
         SmileHelper.__init__(self)
 
     def _all_entity_data(self) -> None:

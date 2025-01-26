@@ -38,7 +38,7 @@ class SmileCommon:
         self._count: int
         self._domain_objects: etree
         self._on_off_device: bool
-        self.gw_entities: dict[str, GwEntityData]
+        self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_name: str
         self.smile_type: str
 
