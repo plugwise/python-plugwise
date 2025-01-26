@@ -9,6 +9,7 @@ from typing import cast
 
 from plugwise.constants import (
     ANNA,
+    NONE,
     SPECIAL_PLUG_TYPES,
     SWITCH_GROUP_TYPES,
     ApplianceType,
@@ -37,6 +38,7 @@ class SmileCommon:
         self._cooling_present: bool
         self._count: int
         self._domain_objects: etree
+        self._heater_id: str = NONE
         self._on_off_device: bool
         self.gw_entities: dict[str, GwEntityData] = {}
         self.smile_name: str
