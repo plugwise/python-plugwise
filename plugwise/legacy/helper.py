@@ -36,6 +36,7 @@ from plugwise.constants import (
 )
 from plugwise.util import (
     common_match_cases,
+    count_data_items,
     format_measure,
     skip_obsolete_measurements,
     version_to_model,
@@ -340,7 +341,7 @@ class SmileLegacyHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count_data_items(data)
+        self._count = count_data_items(self._count, data)
 
     def _get_actuator_functionalities(
         self, xml: etree, entity: GwEntityData, data: GwEntityData

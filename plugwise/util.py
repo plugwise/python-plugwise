@@ -145,6 +145,22 @@ def common_match_cases(
         data["binary_sensors"]["low_battery"] = False
 
 
+def count_data_items(count: int, data: GwEntityData) -> int:
+    """When present, count the binary_sensors, sensors and switches dict-items, don't count the dicts.
+
+    Also, count the remaining single data items, the amount of dicts present have already been pre-subtracted in the previous step.
+    """
+    if "binary_sensors" in data:
+        count += len(data["binary_sensors"]) - 1
+    if "sensors" in data:
+        count += len(data["sensors"]) - 1
+    if "switches" in data:
+        count += len(data["switches"]) - 1
+
+    count += len(data)
+    return count
+
+
 def escape_illegal_xml_characters(xmldata: str) -> str:
     """Replace illegal &-characters."""
     return re.sub(r"&([^a-zA-Z#])", r"&amp;\1", xmldata)

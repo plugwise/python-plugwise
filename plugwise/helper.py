@@ -45,6 +45,7 @@ from plugwise.constants import (
 from plugwise.util import (
     check_model,
     common_match_cases,
+    count_data_items,
     format_measure,
     skip_obsolete_measurements,
 )
@@ -424,7 +425,7 @@ class SmileHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count_data_items(data)
+        self._count = count_data_items(self._count, data)
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: GwEntityData
