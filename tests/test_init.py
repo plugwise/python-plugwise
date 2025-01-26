@@ -340,7 +340,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert smile._timeout == 30
 
         # Connect to the smile
-        version = None
+        version = None  # pylint: disable=redefined-outer-name
         try:
             version = await smile.connect()
             assert version is not None
@@ -426,7 +426,7 @@ class TestPlugwise:  # pylint: disable=attribute-defined-outside-init
             assert smile._timeout == 30
 
         # Connect to the smile
-        version = None
+        version = None  # pylint: disable=redefined-outer-name
         try:
             version = await smile.connect()
             assert version is not None
