@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import cast
 
-from plugwise.common import SmileCommon
+from plugwise.common import SmileCommon, collect_power_values
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -308,7 +308,7 @@ class SmileLegacyHelper(SmileCommon):
             loc.meas_list = loc.measurement.split("_")
             for loc.logs in mod_logs:
                 for loc.log_type in mod_list:
-                    self._collect_power_values(data, loc, t_string, legacy=True)
+                    collect_power_values(data, loc, t_string, legacy=True)
 
         self._count += len(data["sensors"])
         return data

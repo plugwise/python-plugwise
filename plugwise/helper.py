@@ -8,7 +8,7 @@ from __future__ import annotations
 import datetime as dt
 from typing import cast
 
-from plugwise.common import SmileCommon
+from plugwise.common import SmileCommon, collect_power_values
 from plugwise.constants import (
     ACTIVE_ACTUATORS,
     ACTUATOR_CLASSES,
@@ -389,7 +389,7 @@ class SmileHelper(SmileCommon):
         loc.logs = self._home_location.find("./logs")
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
-                self._collect_power_values(data, loc, t_string)
+                collect_power_values(data, loc, t_string)
 
         self._count += len(data["sensors"])
         return data
