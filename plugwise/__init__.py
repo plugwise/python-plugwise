@@ -321,10 +321,6 @@ class Smile(SmileComm):
         self.smile_legacy = True
         return return_model
 
-    async def full_xml_update(self) -> None:
-        """Perform a first fetch of the Plugwise server XML data."""
-        await self._smile_api.full_xml_update()
-
     def get_all_gateway_entities(self) -> None:
         """Collect the Plugwise Gateway entities and their data and states from the received raw XML-data."""
         self._smile_api.get_all_gateway_entities()
