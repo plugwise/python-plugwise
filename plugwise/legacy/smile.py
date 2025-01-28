@@ -73,7 +73,7 @@ class SmileLegacyAPI(SmileLegacyData):
         self.smile_zigbee_mac_address = smile_zigbee_mac_address
         SmileLegacyData.__init__(self)
 
-        self._previous_day_number: str = "0"
+        self._previous_day_number: str = "7"
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
