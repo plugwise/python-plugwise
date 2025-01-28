@@ -73,7 +73,8 @@ class SmileLegacyAPI(SmileLegacyData):
         self.smile_zigbee_mac_address = smile_zigbee_mac_address
         SmileLegacyData.__init__(self)
 
-        self._previous_day_number: str = "7"
+        self._first_update = True
+        self._previous_day_number: str = "0"
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
@@ -103,10 +104,7 @@ class SmileLegacyAPI(SmileLegacyData):
         Otherwise perform an incremental update: only collect the entities updated data and states.
         """
         day_number = dt.datetime.now().strftime("%w")
-        if (
-            day_number  # pylint: disable=consider-using-assignment-expr
-            != self._previous_day_number
-        ):
+        if self._first_update or day_number != self._previous_day_number:
             LOGGER.info(
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
@@ -134,6 +132,7 @@ class SmileLegacyAPI(SmileLegacyData):
             except KeyError as err:  # pragma: no cover
                 raise DataMissingError("No legacy Plugwise data received") from err
 
+        self._first_update = False
         self._previous_day_number = day_number
         return self.gw_entities
 
