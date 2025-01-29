@@ -31,7 +31,7 @@ repos:
         args: [--py311-plus]
   #  Moved codespell configuration to setup.cfg as per 'all-files' issues not reading args
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         name: "Check spelling"
