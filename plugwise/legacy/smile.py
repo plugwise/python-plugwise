@@ -103,6 +103,7 @@ class SmileLegacyAPI(SmileLegacyData):
 
         Otherwise perform an incremental update: only collect the entities updated data and states.
         """
+        LOGGER.debug("HOI First update: %s", self._first_update)
         day_number = dt.datetime.now().strftime("%w")
         if self._first_update or day_number != self._previous_day_number:
             LOGGER.info(
