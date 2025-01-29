@@ -321,10 +321,6 @@ class Smile(SmileComm):
         self.smile_legacy = True
         return return_model
 
-    def get_all_gateway_entities(self) -> None:
-        """Collect the Plugwise Gateway entities and their data and states from the received raw XML-data."""
-        self._smile_api.get_all_gateway_entities()
-
     async def async_update(self) -> dict[str, GwEntityData]:
         """Update the Plughwise Gateway entities and their data and states."""
         data: dict[str, GwEntityData] = {}
