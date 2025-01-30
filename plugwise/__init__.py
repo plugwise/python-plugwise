@@ -80,7 +80,7 @@ class Smile(SmileComm):
         self.smile_model_id: str | None = None
         self.smile_name: str = NONE
         self.smile_type: str = NONE
-        self.smile_version: Version | None = None
+        self.smile_version: Version = Version("0.0.0")
         self.smile_zigbee_mac_address: str | None = None
 
     @property
