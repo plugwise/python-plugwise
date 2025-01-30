@@ -30,13 +30,14 @@ from plugwise.constants import (
     ActuatorDataType,
     ActuatorType,
     ApplianceType,
-    GatewayData,
     GwEntityData,
     SensorType,
     ThermoLoc,
 )
 from plugwise.util import (
+    collect_power_values,
     common_match_cases,
+    count_data_items,
     format_measure,
     skip_obsolete_measurements,
     version_to_model,
@@ -63,32 +64,15 @@ class SmileLegacyHelper(SmileCommon):
     def __init__(self) -> None:
         """Set the constructor for this class."""
         self._appliances: etree
-        self._count: int
-        self._domain_objects: etree
-        self._heater_id: str
-        self._home_loc_id: str
         self._is_thermostat: bool
-        self._last_modified: dict[str, str] = {}
         self._loc_data: dict[str, ThermoLoc]
         self._locations: etree
         self._modules: etree
-        self._notifications: dict[str, dict[str, str]] = {}
-        self._on_off_device: bool
-        self._opentherm_device: bool
-        self._outdoor_temp: float
-        self._status: etree
         self._stretch_v2: bool
-        self._system: etree
-
-        self.gateway_id: str
-        self.gw_data: GatewayData = {}
         self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_fw_version: Version | None
-        self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
-        self.smile_name: str
-        self.smile_type: str
+        self.smile_version: Version | None
         self.smile_zigbee_mac_address: str | None
         SmileCommon.__init__(self)
 
@@ -194,7 +178,7 @@ class SmileLegacyHelper(SmileCommon):
         self.gw_entities[self.gateway_id] = {"dev_class": "gateway"}
         self._count += 1
         for key, value in {
-            "firmware": str(self.smile_fw_version),
+            "firmware": str(self.smile_version),
             "location": self._home_loc_id,
             "mac_address": self.smile_mac_address,
             "model": self.smile_model,
@@ -325,7 +309,7 @@ class SmileLegacyHelper(SmileCommon):
             loc.meas_list = loc.measurement.split("_")
             for loc.logs in mod_logs:
                 for loc.log_type in mod_list:
-                    self._collect_power_values(data, loc, t_string, legacy=True)
+                    collect_power_values(data, loc, t_string, legacy=True)
 
         self._count += len(data["sensors"])
         return data
@@ -358,7 +342,7 @@ class SmileLegacyHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count_data_items(data)
+        self._count = count_data_items(self._count, data)
 
     def _get_actuator_functionalities(
         self, xml: etree, entity: GwEntityData, data: GwEntityData

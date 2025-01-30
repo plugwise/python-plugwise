@@ -11,8 +11,6 @@ from typing import Any
 
 from plugwise.constants import (
     APPLIANCES,
-    DEFAULT_PORT,
-    DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     LOCATIONS,
     LOGGER,
@@ -20,15 +18,13 @@ from plugwise.constants import (
     OFF,
     REQUIRE_APPLIANCES,
     RULES,
-    GatewayData,
     GwEntityData,
-    PlugwiseData,
+    SmileProps,
     ThermoLoc,
 )
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 from plugwise.legacy.data import SmileLegacyData
 
-import aiohttp
 from munch import Munch
 from packaging.version import Version
 
@@ -40,26 +36,22 @@ class SmileLegacyAPI(SmileLegacyData):
 
     def __init__(
         self,
-        host: str,
-        password: str,
-        request: Callable[..., Awaitable[Any]],
-        websession: aiohttp.ClientSession,
         _is_thermostat: bool,
         _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
+        _request: Callable[..., Awaitable[Any]],
+        _smile_props: SmileProps,
         _stretch_v2: bool,
         _target_smile: str,
-        smile_fw_version: Version | None,
         smile_hostname: str,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
         smile_model: str,
         smile_name: str,
         smile_type: str,
+        smile_version: Version | None,
         smile_zigbee_mac_address: str | None,
-        port: int = DEFAULT_PORT,
-        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
         self._cooling_present = False
@@ -67,29 +59,31 @@ class SmileLegacyAPI(SmileLegacyData):
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
+        self._request = _request
+        self._smile_props = _smile_props
         self._stretch_v2 = _stretch_v2
         self._target_smile = _target_smile
-        self.request = request
-        self.smile_fw_version = smile_fw_version
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
         self.smile_model = smile_model
         self.smile_name = smile_name
         self.smile_type = smile_type
+        self.smile_version = smile_version
         self.smile_zigbee_mac_address = smile_zigbee_mac_address
         SmileLegacyData.__init__(self)
 
+        self._first_update = True
         self._previous_day_number: str = "0"
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self.request(DOMAIN_OBJECTS)
-        self._locations = await self.request(LOCATIONS)
-        self._modules = await self.request(MODULES)
+        self._domain_objects = await self._request(DOMAIN_OBJECTS)
+        self._locations = await self._request(LOCATIONS)
+        self._modules = await self._request(MODULES)
         # P1 legacy has no appliances
         if self.smile_type != "power":
-            self._appliances = await self.request(APPLIANCES)
+            self._appliances = await self._request(APPLIANCES)
 
     def get_all_gateway_entities(self) -> None:
         """Collect the Plugwise gateway entities and their data and states from the received raw XML-data.
@@ -104,21 +98,16 @@ class SmileLegacyAPI(SmileLegacyData):
 
         self._all_entity_data()
 
-    async def async_update(self) -> PlugwiseData:
+    async def async_update(self) -> dict[str, GwEntityData]:
         """Perform an full update update at day-change: re-collect all gateway entities and their data and states.
 
         Otherwise perform an incremental update: only collect the entities updated data and states.
         """
         day_number = dt.datetime.now().strftime("%w")
-        if (
-            day_number  # pylint: disable=consider-using-assignment-expr
-            != self._previous_day_number
-        ):
+        if self._first_update or day_number != self._previous_day_number:
             LOGGER.info(
                 "Performing daily full-update, reload the Plugwise integration when a single entity becomes unavailable."
             )
-            self.gw_data: GatewayData = {}
-            self.gw_entities: dict[str, GwEntityData] = {}
             try:
                 await self.full_xml_update()
                 self.get_all_gateway_entities()
@@ -130,12 +119,12 @@ class SmileLegacyAPI(SmileLegacyData):
                 ) from err
         else:
             try:
-                self._domain_objects = await self.request(DOMAIN_OBJECTS)
+                self._domain_objects = await self._request(DOMAIN_OBJECTS)
                 match self._target_smile:
                     case "smile_v2":
-                        self._modules = await self.request(MODULES)
+                        self._modules = await self._request(MODULES)
                     case self._target_smile if self._target_smile in REQUIRE_APPLIANCES:
-                        self._appliances = await self.request(APPLIANCES)
+                        self._appliances = await self._request(APPLIANCES)
 
                 self._update_gw_entities()
                 # Detect failed data-retrieval
@@ -143,11 +132,9 @@ class SmileLegacyAPI(SmileLegacyData):
             except KeyError as err:  # pragma: no cover
                 raise DataMissingError("No legacy Plugwise data received") from err
 
+        self._first_update = False
         self._previous_day_number = day_number
-        return PlugwiseData(
-            devices=self.gw_entities,
-            gateway=self.gw_data,
-        )
+        return self.gw_entities
 
     ########################################################################################################
     ###  API Set and HA Service-related Functions                                                        ###
@@ -307,6 +294,6 @@ class SmileLegacyAPI(SmileLegacyData):
         method: str = kwargs["method"]
         data: str | None = kwargs.get("data")
         try:
-            await self.request(uri, method=method, data=data)
+            await self._request(uri, method=method, data=data)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError from exc

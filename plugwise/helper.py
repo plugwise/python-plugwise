@@ -5,7 +5,6 @@ Plugwise Smile protocol helpers.
 
 from __future__ import annotations
 
-import asyncio
 import datetime as dt
 from typing import cast
 
@@ -38,28 +37,19 @@ from plugwise.constants import (
     ActuatorData,
     ActuatorDataType,
     ActuatorType,
-    GatewayData,
     GwEntityData,
     SensorType,
     ThermoLoc,
     ToggleNameType,
 )
-from plugwise.exceptions import (
-    ConnectionFailedError,
-    InvalidAuthentication,
-    InvalidXMLError,
-    ResponseError,
-)
 from plugwise.util import (
     check_model,
+    collect_power_values,
     common_match_cases,
-    escape_illegal_xml_characters,
+    count_data_items,
     format_measure,
     skip_obsolete_measurements,
 )
-
-# This way of importing aiohttp is because of patch/mocking in testing (aiohttp timeouts)
-from aiohttp import BasicAuth, ClientError, ClientResponse, ClientSession, ClientTimeout
 
 # Time related
 from dateutil import tz
@@ -78,204 +68,25 @@ def search_actuator_functionalities(appliance: etree, actuator: str) -> etree | 
     return None
 
 
-class SmileComm:
-    """The SmileComm class."""
-
-    def __init__(
-        self,
-        host: str,
-        password: str,
-        port: int,
-        timeout: int,
-        username: str,
-        websession: ClientSession | None,
-    ) -> None:
-        """Set the constructor for this class."""
-        if not websession:
-            aio_timeout = ClientTimeout(total=timeout)
-
-            async def _create_session() -> ClientSession:
-                return ClientSession(timeout=aio_timeout)  # pragma: no cover
-
-            loop = asyncio.get_event_loop()
-            if loop.is_running():
-                self._websession = ClientSession(timeout=aio_timeout)
-            else:
-                self._websession = loop.run_until_complete(
-                    _create_session()
-                )  # pragma: no cover
-        else:
-            self._websession = websession
-
-        # Quickfix IPv6 formatting, not covering
-        if host.count(":") > 2:  # pragma: no cover
-            host = f"[{host}]"
-
-        self._auth = BasicAuth(username, password=password)
-        self._endpoint = f"http://{host}:{str(port)}"
-
-    async def _request(
-        self,
-        command: str,
-        retry: int = 3,
-        method: str = "get",
-        data: str | None = None,
-        headers: dict[str, str] | None = None,
-    ) -> etree:
-        """Get/put/delete data from a give URL."""
-        resp: ClientResponse
-        url = f"{self._endpoint}{command}"
-        use_headers = headers
-
-        try:
-            match method:
-                case "delete":
-                    resp = await self._websession.delete(url, auth=self._auth)
-                case "get":
-                    # Work-around for Stretchv2, should not hurt the other smiles
-                    use_headers = {"Accept-Encoding": "gzip"}
-                    resp = await self._websession.get(
-                        url, headers=use_headers, auth=self._auth
-                    )
-                case "post":
-                    use_headers = {"Content-type": "text/xml"}
-                    resp = await self._websession.post(
-                        url,
-                        headers=use_headers,
-                        data=data,
-                        auth=self._auth,
-                    )
-                case "put":
-                    use_headers = {"Content-type": "text/xml"}
-                    resp = await self._websession.put(
-                        url,
-                        headers=use_headers,
-                        data=data,
-                        auth=self._auth,
-                    )
-        except (
-            ClientError
-        ) as exc:  # ClientError is an ancestor class of ServerTimeoutError
-            if retry < 1:
-                LOGGER.warning(
-                    "Failed sending %s %s to Plugwise Smile, error: %s",
-                    method,
-                    command,
-                    exc,
-                )
-                raise ConnectionFailedError from exc
-            return await self._request(command, retry - 1)
-
-        if resp.status == 504:
-            if retry < 1:
-                LOGGER.warning(
-                    "Failed sending %s %s to Plugwise Smile, error: %s",
-                    method,
-                    command,
-                    "504 Gateway Timeout",
-                )
-                raise ConnectionFailedError
-            return await self._request(command, retry - 1)
-
-        return await self._request_validate(resp, method)
-
-    async def _request_validate(self, resp: ClientResponse, method: str) -> etree:
-        """Helper-function for _request(): validate the returned data."""
-        match resp.status:
-            case 200:
-                # Cornercases for server not responding with 202
-                if method in ("post", "put"):
-                    return
-            case 202:
-                # Command accepted gives empty body with status 202
-                return
-            case 401:
-                msg = (
-                    "Invalid Plugwise login, please retry with the correct credentials."
-                )
-                LOGGER.error("%s", msg)
-                raise InvalidAuthentication
-            case 405:
-                msg = "405 Method not allowed."
-                LOGGER.error("%s", msg)
-                raise ConnectionFailedError
-
-        if not (result := await resp.text()) or (
-            "<error>" in result and "Not started" not in result
-        ):
-            LOGGER.warning("Smile response empty or error in %s", result)
-            raise ResponseError
-
-        try:
-            # Encode to ensure utf8 parsing
-            xml = etree.XML(escape_illegal_xml_characters(result).encode())
-        except etree.ParseError as exc:
-            LOGGER.warning("Smile returns invalid XML for %s", self._endpoint)
-            raise InvalidXMLError from exc
-
-        return xml
-
-    async def close_connection(self) -> None:
-        """Close the Plugwise connection."""
-        await self._websession.close()
-
-
 class SmileHelper(SmileCommon):
     """The SmileHelper class."""
 
     def __init__(self) -> None:
         """Set the constructor for this class."""
-        self._cooling_present: bool
-        self._count: int
-        self._dhw_allowed_modes: list[str] = []
-        self._domain_objects: etree
         self._endpoint: str
         self._elga: bool
-        self._gw_allowed_modes: list[str] = []
-        self._heater_id: str
-        self._home_loc_id: str
-        self._home_location: etree
         self._is_thermostat: bool
         self._last_active: dict[str, str | None]
-        self._last_modified: dict[str, str] = {}
         self._loc_data: dict[str, ThermoLoc]
-        self._notifications: dict[str, dict[str, str]] = {}
-        self._on_off_device: bool
-        self._opentherm_device: bool
-        self._reg_allowed_modes: list[str] = []
         self._schedule_old_states: dict[str, dict[str, str]]
-        self._status: etree
-        self._stretch_v2: bool
-        self._system: etree
-        self._thermo_locs: dict[str, ThermoLoc] = {}
-        ###################################################################
-        # '_cooling_enabled' can refer to the state of the Elga heatpump
-        # connected to an Anna. For Elga, 'elga_status_code' in (8, 9)
-        # means cooling mode is available, next to heating mode.
-        # 'elga_status_code' = 8 means cooling is active, 9 means idle.
-        #
-        # '_cooling_enabled' cam refer to the state of the Loria or
-        # Thermastage heatpump connected to an Anna. For these,
-        # 'cooling_enabled' = on means set to cooling mode, instead of to
-        # heating mode.
-        # 'cooling_state' = on means cooling is active.
-        ###################################################################
-        self._cooling_active = False
-        self._cooling_enabled = False
-
-        self.gateway_id: str
-        self.gw_data: GatewayData = {}
-        self.gw_entities: dict[str, GwEntityData] = {}
-        self.smile_fw_version: version.Version | None
+        self._gateway_id: str = NONE
+        self._zones: dict[str, GwEntityData]
+        self.gw_entities: dict[str, GwEntityData]
         self.smile_hw_version: str | None
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_model_id: str | None
-        self.smile_name: str
-        self.smile_type: str
         self.smile_version: version.Version | None
-        self.smile_zigbee_mac_address: str | None
-        self._zones: dict[str, GwEntityData] = {}
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:
@@ -356,7 +167,7 @@ class SmileHelper(SmileCommon):
             LOGGER.error("No module data found for SmartMeter")  # pragma: no cover
             return  # pragma: no cover
         appl.available = None
-        appl.entity_id = self.gateway_id
+        appl.entity_id = self._gateway_id
         appl.firmware = module_data["firmware_version"]
         appl.hardware = module_data["hardware_version"]
         appl.location = self._home_loc_id
@@ -369,8 +180,8 @@ class SmileHelper(SmileCommon):
         appl.zigbee_mac = None
 
         # Replace the entity_id of the gateway by the smartmeter location_id
-        self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self.gateway_id)
-        self.gateway_id = self._home_loc_id
+        self.gw_entities[self._home_loc_id] = self.gw_entities.pop(self._gateway_id)
+        self._gateway_id = self._home_loc_id
 
         self._create_gw_entities(appl)
 
@@ -443,8 +254,8 @@ class SmileHelper(SmileCommon):
 
     def _appl_gateway_info(self, appl: Munch, appliance: etree) -> Munch:
         """Helper-function for _appliance_info_finder()."""
-        self.gateway_id = appliance.attrib["id"]
-        appl.firmware = str(self.smile_fw_version)
+        self._gateway_id = appliance.attrib["id"]
+        appl.firmware = str(self.smile_version)
         appl.hardware = self.smile_hw_version
         appl.mac = self.smile_mac_address
         appl.model = self.smile_model
@@ -483,14 +294,8 @@ class SmileHelper(SmileCommon):
         ) is not None and (modes := search.find("allowed_modes")) is not None:
             for mode in modes:
                 mode_list.append(mode.text)
-                self._check_cooling_mode(mode.text)
 
         return mode_list
-
-    def _check_cooling_mode(self, mode: str) -> None:
-        """Check if cooling mode is present and update state."""
-        if mode == "cooling":
-            self._cooling_present = True
 
     def _get_appliances_with_offset_functionality(self) -> list[str]:
         """Helper-function collecting all appliance that have offset_functionality."""
@@ -585,7 +390,7 @@ class SmileHelper(SmileCommon):
         loc.logs = self._home_location.find("./logs")
         for loc.measurement, loc.attrs in P1_MEASUREMENTS.items():
             for loc.log_type in log_list:
-                self._collect_power_values(data, loc, t_string)
+                collect_power_values(data, loc, t_string)
 
         self._count += len(data["sensors"])
         return data
@@ -621,7 +426,7 @@ class SmileHelper(SmileCommon):
                     appl_i_loc.text, ENERGY_WATT_HOUR
                 )
 
-        self._count_data_items(data)
+        self._count = count_data_items(self._count, data)
 
     def _get_toggle_state(
         self, xml: etree, toggle: str, name: ToggleNameType, data: GwEntityData
@@ -644,7 +449,7 @@ class SmileHelper(SmileCommon):
                 msg_id = notification.attrib["id"]
                 msg_type = notification.find("type").text
                 msg = notification.find("message").text
-                self._notifications.update({msg_id: {msg_type: msg}})
+                self._notifications[msg_id] = {msg_type: msg}
                 LOGGER.debug("Plugwise notifications: %s", self._notifications)
             except AttributeError:  # pragma: no cover
                 LOGGER.debug(
@@ -721,7 +526,7 @@ class SmileHelper(SmileCommon):
 
         Collect the requested gateway mode.
         """
-        if not (self.smile(ADAM) and entity_id == self.gateway_id):
+        if not (self.smile(ADAM) and entity_id == self._gateway_id):
             return None
 
         if (search := search_actuator_functionalities(appliance, key)) is not None:
@@ -762,7 +567,7 @@ class SmileHelper(SmileCommon):
 
     def _get_gateway_outdoor_temp(self, entity_id: str, data: GwEntityData) -> None:
         """Adam & Anna: the Smile outdoor_temperature is present in the Home location."""
-        if self._is_thermostat and entity_id == self.gateway_id:
+        if self._is_thermostat and entity_id == self._gateway_id:
             locator = "./logs/point_log[type='outdoor_temperature']/period/measurement"
             if (found := self._home_location.find(locator)) is not None:
                 value = format_measure(found.text, NONE)
@@ -820,7 +625,11 @@ class SmileHelper(SmileCommon):
             self._update_loria_cooling(data)
 
     def _update_elga_cooling(self, data: GwEntityData) -> None:
-        """# Anna+Elga: base cooling_state on the elga-status-code."""
+        """# Anna+Elga: base cooling_state on the elga-status-code.
+
+        For Elga, 'elga_status_code' in (8, 9) means cooling is enabled.
+        'elga_status_code' = 8 means cooling is active, 9 means idle.
+        """
         if data["thermostat_supports_cooling"]:
             # Techneco Elga has cooling-capability
             self._cooling_present = True
@@ -842,7 +651,11 @@ class SmileHelper(SmileCommon):
         self._count -= 1
 
     def _update_loria_cooling(self, data: GwEntityData) -> None:
-        """Loria/Thermastage: base cooling-related on cooling_state and modulation_level."""
+        """Loria/Thermastage: base cooling-related on cooling_state and modulation_level.
+
+        For the Loria or Thermastage heatpump connected to an Anna cooling-enabled is
+        indicated via the Cooling Enable switch in the Plugwise App.
+        """
         # For Loria/Thermastage it's not clear if cooling_enabled in xml shows the correct status,
         # setting it specifically:
         self._cooling_enabled = data["binary_sensors"]["cooling_enabled"] = data[

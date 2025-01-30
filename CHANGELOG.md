@@ -1,9 +1,10 @@
 # Changelog
 
-## Ongoing
+## v1.7.0
 
 - Continuous improvements [#678](https://github.com/plugwise/python-plugwise/pull/678)
 - Refresh Anna_Elga_2 userdata and adapt, add missing item-count, line-up test-data headers [#679](https://github.com/plugwise/python-plugwise/pull/679)
+- Rework code: output a single dict, add gw_data items as Smile-properties [#698](https://github.com/plugwise/python-plugwise/pull/698)
 
 ## v1.6.4
 

@@ -116,6 +116,30 @@ def check_model(name: str | None, vendor_name: str | None) -> str | None:
     return None
 
 
+def collect_power_values(
+    data: GwEntityData, loc: Munch, tariff: str, legacy: bool = False
+) -> None:
+    """Something."""
+    for loc.peak_select in ("nl_peak", "nl_offpeak"):
+        loc.locator = (
+            f'./{loc.log_type}[type="{loc.measurement}"]/period/'
+            f'measurement[@{tariff}="{loc.peak_select}"]'
+        )
+        if legacy:
+            loc.locator = (
+                f"./{loc.meas_list[0]}_{loc.log_type}/measurement"
+                f'[@directionality="{loc.meas_list[1]}"][@{tariff}="{loc.peak_select}"]'
+            )
+
+        loc = power_data_peak_value(loc, legacy)
+        if not loc.found:
+            continue
+
+        data = power_data_energy_diff(loc.measurement, loc.net_string, loc.f_val, data)
+        key = cast(SensorType, loc.key_string)
+        data["sensors"][key] = loc.f_val
+
+
 def common_match_cases(
     measurement: str,
     attrs: DATA | UOM,
@@ -143,6 +167,22 @@ def common_match_cases(
 
     if "battery" in data["sensors"]:
         data["binary_sensors"]["low_battery"] = False
+
+
+def count_data_items(count: int, data: GwEntityData) -> int:
+    """When present, count the binary_sensors, sensors and switches dict-items, don't count the dicts.
+
+    Also, count the remaining single data items, the amount of dicts present have already been pre-subtracted in the previous step.
+    """
+    if "binary_sensors" in data:
+        count += len(data["binary_sensors"]) - 1
+    if "sensors" in data:
+        count += len(data["sensors"]) - 1
+    if "switches" in data:
+        count += len(data["switches"]) - 1
+
+    count += len(data)
+    return count
 
 
 def escape_illegal_xml_characters(xmldata: str) -> str:
@@ -183,6 +223,37 @@ def get_vendor_name(module: etree, model_data: ModuleData) -> ModuleData:
     return model_data
 
 
+def power_data_energy_diff(
+    measurement: str,
+    net_string: SensorType,
+    f_val: float | int,
+    data: GwEntityData,
+) -> GwEntityData:
+    """Calculate differential energy."""
+    if (
+        "electricity" in measurement
+        and "phase" not in measurement
+        and "interval" not in net_string
+    ):
+        diff = 1
+        if "produced" in measurement:
+            diff = -1
+        if net_string not in data["sensors"]:
+            tmp_val: float | int = 0
+        else:
+            tmp_val = data["sensors"][net_string]
+
+        if isinstance(f_val, int):
+            tmp_val += f_val * diff
+        else:
+            tmp_val += float(f_val * diff)
+            tmp_val = float(f"{round(tmp_val, 3):.3f}")
+
+        data["sensors"][net_string] = tmp_val
+
+    return data
+
+
 def power_data_local_format(
     attrs: dict[str, str], key_string: str, val: str
 ) -> float | int:
@@ -194,6 +265,31 @@ def power_data_local_format(
         return int(round(float(val)))
 
     return format_measure(val, attrs_uom)
+
+
+def power_data_peak_value(loc: Munch, legacy: bool) -> Munch:
+    """Helper-function for _power_data_from_location() and _power_data_from_modules()."""
+    loc.found = True
+    if loc.logs.find(loc.locator) is None:
+        loc = check_alternative_location(loc, legacy)
+        if not loc.found:
+            return loc
+
+    if (peak := loc.peak_select.split("_")[1]) == "offpeak":
+        peak = "off_peak"
+    log_found = loc.log_type.split("_")[0]
+    loc.key_string = f"{loc.measurement}_{peak}_{log_found}"
+    if "gas" in loc.measurement or loc.log_type == "point_meter":
+        loc.key_string = f"{loc.measurement}_{log_found}"
+    # Only for P1 Actual -------------------#
+    if "phase" in loc.measurement:
+        loc.key_string = f"{loc.measurement}"
+    # --------------------------------------#
+    loc.net_string = f"net_electricity_{log_found}"
+    val = loc.logs.find(loc.locator).text
+    loc.f_val = power_data_local_format(loc.attrs, loc.key_string, val)
+
+    return loc
 
 
 def remove_empty_platform_dicts(data: GwEntityData) -> None:

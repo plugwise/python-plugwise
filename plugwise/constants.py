@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections import namedtuple
-from dataclasses import dataclass
 import logging
 from typing import Final, Literal, TypedDict, get_args
 
@@ -394,14 +393,13 @@ ZONE_THERMOSTATS: Final[tuple[str, ...]] = (
 )
 
 
-class GatewayData(TypedDict, total=False):
-    """The Gateway Data class."""
+class SmileProps(TypedDict, total=False):
+    """The SmileProps Data class."""
 
     cooling_present: bool
     gateway_id: str
     heater_id: str
     item_count: int
-    notifications: dict[str, dict[str, str]]
     reboot: bool
     smile_name: str
 
@@ -552,6 +550,7 @@ class GwEntityData(TypedDict, total=False):
 
     # Gateway
     gateway_modes: list[str]
+    notifications: dict[str, dict[str, str]]
     regulation_modes: list[str]
     select_gateway_mode: str
     select_regulation_mode: str
@@ -577,11 +576,3 @@ class GwEntityData(TypedDict, total=False):
     switches: SmileSwitches
     temperature_offset: ActuatorData
     thermostat: ActuatorData
-
-
-@dataclass
-class PlugwiseData:
-    """Plugwise data provided as output."""
-
-    devices: dict[str, GwEntityData]
-    gateway: GatewayData

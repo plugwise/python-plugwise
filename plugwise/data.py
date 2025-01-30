@@ -16,6 +16,7 @@ from plugwise.constants import (
     OFF,
     ActuatorData,
     GwEntityData,
+    SmileProps,
 )
 from plugwise.helper import SmileHelper
 from plugwise.util import remove_empty_platform_dicts
@@ -26,31 +27,27 @@ class SmileData(SmileHelper):
 
     def __init__(self) -> None:
         """Init."""
+        self._smile_props: SmileProps
+        self._zones: dict[str, GwEntityData] = {}
         SmileHelper.__init__(self)
 
     def _all_entity_data(self) -> None:
         """Helper-function for get_all_gateway_entities().
 
-        Collect data for each entity and add to self.gw_data and self.gw_entities.
+        Collect data for each entity and add to self._smile_props and self.gw_entities.
         """
         self._update_gw_entities()
         if self.smile(ADAM):
             self._update_zones()
             self.gw_entities.update(self._zones)
 
-        self.gw_data.update(
-            {
-                "gateway_id": self.gateway_id,
-                "item_count": self._count,
-                "notifications": self._notifications,
-                "reboot": True,
-                "smile_name": self.smile_name,
-            }
-        )
+        self._smile_props["gateway_id"] = self._gateway_id
+        self._smile_props["item_count"] = self._count
+        self._smile_props["reboot"] = True
+        self._smile_props["smile_name"] = self.smile_name
         if self._is_thermostat:
-            self.gw_data.update(
-                {"heater_id": self._heater_id, "cooling_present": self._cooling_present}
-            )
+            self._smile_props["heater_id"] = self._heater_id
+            self._smile_props["cooling_present"] = self._cooling_present
 
     def _update_zones(self) -> None:
         """Helper-function for _all_entity_data() and async_update().
@@ -69,7 +66,7 @@ class SmileData(SmileHelper):
         mac_list: list[str] = []
         for entity_id, entity in self.gw_entities.items():
             data = self._get_entity_data(entity_id)
-            if entity_id == self.gateway_id:
+            if entity_id == self._gateway_id:
                 mac_list = self._detect_low_batteries()
                 self._add_or_update_notifications(entity_id, entity, data)
 
@@ -123,14 +120,15 @@ class SmileData(SmileHelper):
     ) -> None:
         """Helper-function adding or updating the Plugwise notifications."""
         if (
-            entity_id == self.gateway_id
+            entity_id == self._gateway_id
             and (self._is_thermostat or self.smile_type == "power")
         ) or (
             "binary_sensors" in entity
             and "plugwise_notification" in entity["binary_sensors"]
         ):
             data["binary_sensors"]["plugwise_notification"] = bool(self._notifications)
-            self._count += 1
+            data["notifications"] = self._notifications
+            self._count += 2
 
     def _update_for_cooling(self, entity: GwEntityData) -> None:
         """Helper-function for adding/updating various cooling-related values."""
@@ -305,7 +303,7 @@ class SmileData(SmileHelper):
 
     def check_reg_mode(self, mode: str) -> bool:
         """Helper-function for device_data_climate()."""
-        gateway = self.gw_entities[self.gateway_id]
+        gateway = self.gw_entities[self._gateway_id]
         return (
             "regulation_modes" in gateway and gateway["select_regulation_mode"] == mode
         )

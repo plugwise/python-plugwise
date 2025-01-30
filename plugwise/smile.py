@@ -13,8 +13,6 @@ from plugwise.constants import (
     ADAM,
     ANNA,
     APPLIANCES,
-    DEFAULT_PORT,
-    DEFAULT_USERNAME,
     DOMAIN_OBJECTS,
     GATEWAY_REBOOT,
     LOCATIONS,
@@ -23,15 +21,13 @@ from plugwise.constants import (
     NOTIFICATIONS,
     OFF,
     RULES,
-    GatewayData,
     GwEntityData,
-    PlugwiseData,
+    SmileProps,
     ThermoLoc,
 )
 from plugwise.data import SmileData
 from plugwise.exceptions import ConnectionFailedError, DataMissingError, PlugwiseError
 
-import aiohttp
 from defusedxml import ElementTree as etree
 
 # Dict as class
@@ -46,10 +42,6 @@ class SmileAPI(SmileData):
 
     def __init__(
         self,
-        host: str,
-        password: str,
-        request: Callable[..., Awaitable[Any]],
-        websession: aiohttp.ClientSession,
         _cooling_present: bool,
         _elga: bool,
         _is_thermostat: bool,
@@ -57,9 +49,9 @@ class SmileAPI(SmileData):
         _loc_data: dict[str, ThermoLoc],
         _on_off_device: bool,
         _opentherm_device: bool,
+        _request: Callable[..., Awaitable[Any]],
         _schedule_old_states: dict[str, dict[str, str]],
-        gateway_id: str,
-        smile_fw_version: Version | None,
+        _smile_props: SmileProps,
         smile_hostname: str | None,
         smile_hw_version: str | None,
         smile_mac_address: str | None,
@@ -68,23 +60,18 @@ class SmileAPI(SmileData):
         smile_name: str,
         smile_type: str,
         smile_version: Version | None,
-        port: int = DEFAULT_PORT,
-        username: str = DEFAULT_USERNAME,
     ) -> None:
         """Set the constructor for this class."""
-        self._cooling_enabled = False
         self._cooling_present = _cooling_present
         self._elga = _elga
-        self._heater_id: str
         self._is_thermostat = _is_thermostat
         self._last_active = _last_active
         self._loc_data = _loc_data
         self._on_off_device = _on_off_device
         self._opentherm_device = _opentherm_device
+        self._request = _request
         self._schedule_old_states = _schedule_old_states
-        self.gateway_id = gateway_id
-        self.request = request
-        self.smile_fw_version = smile_fw_version
+        self._smile_props = _smile_props
         self.smile_hostname = smile_hostname
         self.smile_hw_version = smile_hw_version
         self.smile_mac_address = smile_mac_address
@@ -98,7 +85,7 @@ class SmileAPI(SmileData):
 
     async def full_xml_update(self) -> None:
         """Perform a first fetch of the Plugwise server XML data."""
-        self._domain_objects = await self.request(DOMAIN_OBJECTS)
+        self._domain_objects = await self._request(DOMAIN_OBJECTS)
         self._get_plugwise_notifications()
 
     def get_all_gateway_entities(self) -> None:
@@ -122,21 +109,20 @@ class SmileAPI(SmileData):
 
         self._all_entity_data()
 
-    async def async_update(self) -> PlugwiseData:
+    async def async_update(self) -> dict[str, GwEntityData]:
         """Perform an full update: re-collect all gateway entities and their data and states.
 
         Any change in the connected entities will be detected immediately.
         """
-        self.gw_data: GatewayData = {}
-        self.gw_entities: dict[str, GwEntityData] = {}
-        self._zones: dict[str, GwEntityData] = {}
+        self._zones = {}
+        self.gw_entities = {}
         try:
             await self.full_xml_update()
             self.get_all_gateway_entities()
             # Set self._cooling_enabled - required for set_temperature(),
             # also, check for a failed data-retrieval
-            if "heater_id" in self.gw_data:
-                heat_cooler = self.gw_entities[self.gw_data["heater_id"]]
+            if "heater_id" in self._smile_props:
+                heat_cooler = self.gw_entities[self._smile_props["heater_id"]]
                 if (
                     "binary_sensors" in heat_cooler
                     and "cooling_enabled" in heat_cooler["binary_sensors"]
@@ -145,14 +131,11 @@ class SmileAPI(SmileData):
                         "cooling_enabled"
                     ]
             else:  # cover failed data-retrieval for P1
-                _ = self.gw_entities[self.gateway_id]["location"]
+                _ = self.gw_entities[self._smile_props["gateway_id"]]["location"]
         except KeyError as err:
             raise DataMissingError("No Plugwise actual data received") from err
 
-        return PlugwiseData(
-            devices=self.gw_entities,
-            gateway=self.gw_data,
-        )
+        return self.gw_entities
 
     ########################################################################################################
     ###  API Set and HA Service-related Functions                                                        ###
@@ -276,7 +259,7 @@ class SmileAPI(SmileData):
             vacation_time = time_2 + "T23:00:00.000Z"
             valid = f"<valid_from>{vacation_time}</valid_from><valid_to>{end_time}</valid_to>"
 
-        uri = f"{APPLIANCES};id={self.gateway_id}/gateway_mode_control"
+        uri = f"{APPLIANCES};id={self._smile_props['gateway_id']}/gateway_mode_control"
         data = f"<gateway_mode_control_functionality><mode>{mode}</mode>{valid}</gateway_mode_control_functionality>"
 
         await self.call_request(uri, method="put", data=data)
@@ -478,6 +461,6 @@ class SmileAPI(SmileData):
         method: str = kwargs["method"]
         data: str | None = kwargs.get("data")
         try:
-            await self.request(uri, method=method, data=data)
+            await self._request(uri, method=method, data=data)
         except ConnectionFailedError as exc:
             raise ConnectionFailedError from exc
