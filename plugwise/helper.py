@@ -86,7 +86,7 @@ class SmileHelper(SmileCommon):
         self.smile_mac_address: str | None
         self.smile_model: str
         self.smile_model_id: str | None
-        self.smile_version: version.Version | None
+        self.smile_version: version.Version
         SmileCommon.__init__(self)
 
     def _all_appliances(self) -> None:

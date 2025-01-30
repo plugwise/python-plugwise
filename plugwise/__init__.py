@@ -115,7 +115,7 @@ class Smile(SmileComm):
         """
         return not self.smile_legacy
 
-    async def connect(self) -> Version | None:
+    async def connect(self) -> Version:
         """Connect to the Plugwise Gateway and determine its name, type, version, and other data."""
         result = await self._request(DOMAIN_OBJECTS)
         # Work-around for Stretch fw 2.7.18
