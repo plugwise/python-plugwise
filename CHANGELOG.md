@@ -1,5 +1,9 @@
 # Changelog
 
+## Ongoing
+
+- Avoid None-init for smile_version [#699](https://github.com/plugwise/python-plugwise/pull/699)
+
 ## v1.7.0
 
 - Continuous improvements [#678](https://github.com/plugwise/python-plugwise/pull/678)
